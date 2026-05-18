@@ -81,12 +81,12 @@ read_when:
 <Warning>
 **重要的運行時規則**
 
-- Trusted-proxy auth 預設會拒絕來自回環來源的請求（`127.0.0.1`、`::1`、loopback CIDRs）。
-- 同主機回環反向代理**不**滿足 trusted-proxy auth，除非您明確設定 `gateway.auth.trustedProxy.allowLoopback = true` 並將回環位址包含在 `gateway.trustedProxies` 中。
-- `allowLoopback` 對 Gateway 主機上的本機程序給予與反向代理相同的信任度。僅當 Gateway 仍透過防火牆與遠端直接存取隔離，且本機代理會移除或覆寫用戶端提供的識別標頭時，才啟用它。
-- 未通過反向代理的內部 Gateway 用戶端應使用 `gateway.auth.password` / `OPENCLAW_GATEWAY_PASSWORD`，而非 trusted-proxy 識別標頭。
+- 預設情況下，Trusted-proxy auth 會拒絕來自回環來源的請求（`127.0.0.1`、`::1`、回環 CIDRs）。
+- 除非您明確設定 `gateway.auth.trustedProxy.allowLoopback = true` 並將回環位址包含在 `gateway.trustedProxies` 中，否則同主機回環反向代理**不會**滿足 trusted-proxy auth 的要求。
+- `allowLoopback` 會以與反向代理相同的程度信任 Gateway 主機上的本機程序。僅當 Gateway 仍被防火牆阻隔無法直接從遠端存取，且本機代理會移除或覆寫用戶端提供的身分標頭時，才啟用此功能。
+- 未通過反向代理的內部 Gateway 用戶端應使用 `gateway.auth.password` / `OPENCLAW_GATEWAY_PASSWORD`，而不是 trusted-proxy 身分標頭。
 - 非回環 Control UI 部署仍需要明確的 `gateway.controlUi.allowedOrigins`。
-- **轉送標頭證據會覆寫本機直接後援的回環本地性。** 如果請求到達回環介面但帶有指向非本機來源的 `X-Forwarded-For` / `X-Forwarded-Host` / `X-Forwarded-Proto` 標頭，該證據將取消本機直接密碼後援和裝置身分閘門的資格。在 `allowLoopback: true` 的情況下，trusted-proxy auth 仍可將請求作為同主機代理請求接受，而 `requiredHeaders` 和 `allowUsers` 繼續適用。
+- **轉送標頭證據會覆蓋本機直接回退的回環本機性。** 如果請求到達回環但帶有 `Forwarded`、任何 `X-Forwarded-*` 或 `X-Real-IP` 標頭證據，該證據將使本機直接密碼回退和裝置身分閘門失效。若使用 `allowLoopback: true`，trusted-proxy auth 仍可將請求作為同主機代理請求接受，同時 `requiredHeaders` 和 `allowUsers` 繼續套用。
 
 </Warning>
 

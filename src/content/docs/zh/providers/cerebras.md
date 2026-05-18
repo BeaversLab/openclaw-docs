@@ -6,7 +6,7 @@ read_when:
   - You need the Cerebras API key env var or CLI auth choice
 ---
 
-[Cerebras](https://www.cerebras.ai) 在定制推理硬件上提供高速的 OpenAI 兼容推理。OpenClaw 包含一个捆绑的 Cerebras 提供商插件，具有静态的四模型目录。
+[Cerebras](https://www.cerebras.ai) 在自定义推理硬件上提供高速的 OpenAI 兼容推理。OpenClaw 包含一个捆绑的 Cerebras 提供商插件，具有静态的四模型目录。
 
 | 属性             | 值                                 |
 | ---------------- | ---------------------------------- |
@@ -23,7 +23,7 @@ read_when:
 
 <Steps>
   <Step title="获取 API 密钥">
-    在 [Cerebras Cloud Console](https://cloud.cerebras.ai) 中创建一个 API 密钥。
+    在 [Cerebras Cloud Console](https://cloud.cerebras.ai) 中创建 API 密钥。
   </Step>
   <Step title="运行新手引导">
     <CodeGroup>
@@ -106,7 +106,7 @@ OpenClaw 附带了一个静态 Cerebras 目录，该目录镜像了公共 OpenAI
 }
 ```
 
-<Note>如果 Gateway(网关) 作为守护进程（launchd、systemd、Docker）运行，请确保 `CEREBRAS_API_KEY` 对该进程可用——例如在 `~/.openclaw/.env` 中或通过 `env.shellEnv`。仅存在于 `~/.profile` 中的密钥对托管服务没有帮助，除非环境被单独导入。</Note>
+<Note>如果 Gateway(网关) 作为守护进程（launchd、systemd、Docker）运行，请确保 `CEREBRAS_API_KEY` 对该进程可用——例如在 `~/.openclaw/.env` 中或通过 `env.shellEnv`。仅在交互式 shell 中导出的密钥对托管服务没有帮助，除非单独导入环境变量。</Note>
 
 ## 相关
 

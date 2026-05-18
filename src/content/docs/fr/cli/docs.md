@@ -8,7 +8,7 @@ title: "Docs"
 
 # `openclaw docs`
 
-Recherchez l'index de la documentation OpenClaw en direct depuis le terminal. La commande fait appel au point de terminaison de recherche MCP de la documentation hébergée publiquement par Mintlify sur OpenClaw`https://docs.openclaw.ai/mcp.SearchOpenClaw` et affiche les résultats dans votre terminal.
+Recherchez l'index de la documentation en direct d'OpenClaw depuis le terminal. La commande appelle le point de terminaison de recherche MCP de la documentation hébergée publiquement par Mintlify à l'adresse OpenClaw`https://docs.openclaw.ai/mcp.search_open_claw` et affiche les résultats dans votre terminal.
 
 ## Utilisation
 

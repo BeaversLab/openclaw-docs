@@ -113,31 +113,34 @@ déjà générés. Il prend en charge :
 
 ## Génération de sous-agents
 
-`sessions_spawn` crée une session isolée pour une tâche en arrière-plan par défaut.
-C'est toujours non bloquant -- il retourne immédiatement un `runId` et
-`childSessionKey`.
+`sessions_spawn` crée une session isolée pour une tâche d'arrière-plan par défaut.
+Il est toujours non bloquant -- il retourne immédiatement un `runId` et
+`childSessionKey`. Les exécutions natives de sous-agents reçoivent la tâche déléguée dans
+le premier message `[Subagent Task]` visible de la session enfant, tandis que le
+prompt système ne contient que les règles d'exécution du sous-agent et le contexte de routage.
 
 Options clés :
 
 - `runtime: "subagent"` (par défaut) ou `"acp"` pour les agents de harnais externes.
-- `model` et substitutions `thinking` pour la session enfant.
-- `thread: true` pour lier la génération à un fil de discussion (Discord, Slack, etc.).
-- `sandbox: "require"` pour appliquer la sandboxing sur l'enfant.
-- `context: "fork"` pour les sous-agents natifs lorsque l'enfant a besoin de la transcription du demandeur actuel ; omettez-le ou utilisez `context: "isolated"` pour un enfant propre.
-  Les sous-agents natifs liés au fil d'exécution sont par défaut `context: "fork"`, sauf si `threadBindings.defaultSpawnContext` indique le contraire.
+- `model` et `thinking` remplacements pour la session enfant.
+- `thread: true` pour lier le spawn à un fil de discussion (Discord, Slack, etc.).
+- `sandbox: "require"` pour imposer le sandboxing sur l'enfant.
+- `context: "fork"` pour les sous-agents natifs lorsque l'enfant a besoin de la
+  transcription du demandeur actuel ; omettez-le ou utilisez `context: "isolated"` pour un enfant propre.
+  Les sous-agents natifs liés à un fil sont par défaut sur `context: "fork"` à moins
+  que `threadBindings.defaultSpawnContext` n'en dise autrement.
 
-Les sous-agents feuilles par défaut ne reçoivent pas d'outils de session. Lorsque `maxSpawnDepth >= 2`, les sous-agents orchestrateurs de profondeur 1 reçoivent en outre
-`sessions_spawn`, `subagents`, `sessions_list` et `sessions_history` afin qu'ils
-puissent gérer leurs propres enfants. Les exécutions feuilles ne reçoivent toujours pas d'outils d'orchestration
-récursifs.
+Les sous-agents feuilles par défaut ne reçoivent pas d'outils de session. Lorsque
+`maxSpawnDepth >= 2`, les sous-agents orchestrateurs de profondeur 1 reçoivent en outre
+`sessions_spawn`, `subagents`, `sessions_list`, et `sessions_history` afin qu'ils
+puissent gérer leurs propres enfants. Les exécutions feuilles ne reçoivent toujours pas d'outils d'orchestration récursifs.
 
-Après achèvement, une étape d'annonce publie le résultat sur le channel du demandeur.
-La livraison de l'achèvement préserve le routage lié au fil/sujet lorsqu'il est disponible, et si
-l'origine de l'achèvement identifie uniquement un channel, OpenClaw peut toujours réutiliser la
-route stockée de la session du demandeur (`lastChannel` / `lastTo`) pour une livraison
-directe.
+Après achèvement, une étape d'annonce publie le résultat dans le canal du demandeur.
+La livraison de l'achèvement préserve le routage du fil/sujet lié lorsqu'il est disponible, et si
+l'origine de l'achèvement n'identifie qu'un canal, OpenClaw peut toujours réutiliser
+la route stockée de la session du demandeur (`lastChannel` / `lastTo`) pour une livraison directe.
 
-Pour le comportement spécifique à l'ACP, voir [ACP Agents](/fr/tools/acp-agents).
+Pour un comportement spécifique à l'ACP, voir [ACP Agents](/fr/tools/acp-agents).
 
 ## Visibilité
 
@@ -154,12 +157,12 @@ La valeur par défaut est `tree`. Les sessions sandboxed sont limitées à `tree
 
 ## Pour aller plus loin
 
-- [Session Management](/fr/concepts/session) -- routage, cycle de vie, maintenance
-- [ACP Agents](/fr/tools/acp-agents) -- génération de harnais externe
+- [Gestion de session](/fr/concepts/session) -- routage, cycle de vie, maintenance
+- [Agents ACP](/fr/tools/acp-agents) -- génération de harnais externes
 - [Multi-agent](/fr/concepts/multi-agent) -- architecture multi-agent
-- [Gateway Configuration](/fr/gateway/configuration) -- paramètres de configuration des outils de session
+- [Configuration Gateway](Gateway/en/gateway/configuration) -- paramètres de configuration de l'outil de session
 
 ## Connexes
 
-- [Session management](/fr/concepts/session)
-- [Session pruning](/fr/concepts/session-pruning)
+- [Gestion de session](/fr/concepts/session)
+- [Nettoyage de session](/fr/concepts/session-pruning)

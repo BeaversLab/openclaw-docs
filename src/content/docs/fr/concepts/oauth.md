@@ -45,10 +45,7 @@ Pour réduire cela, OpenClaw traite `auth-profiles.json` comme un **puits de jet
 
 - le runtime lit les identifiants à partir d'**un seul endroit**
 - nous pouvons conserver plusieurs profils et les router de manière déterministe
-- la réutilisation externe de la CLI est spécifique au provider : la CLI Codex peut amorcer un profil
-  `openai-codex:default` vide, mais une fois qu'OpenClaw dispose d'un profil OAuth local,
-  le jeton d'actualisation local est canonique ; les autres intégrations peuvent rester
-  gérées externement et relire leur magasin d'auth CLI
+- la réutilisation externe du CLI est spécifique au provider : le CLI Codex peut amorcer un profil `openai-codex:default` vide, mais une fois que OpenClaw possède un profil OAuth local, le jeton d'actualisation local est canonique. Si ce jeton d'actualisation local est rejeté, OpenClaw peut utiliser un jeton CLI Codex du même compte utilisable comme solution de repli uniquement au moment de l'exécution ; les autres intégrations peuvent rester gérées externement et relire leur magasin d'auth CLI
 - les chemins de statut et de démarrage qui connaissent déjà l'ensemble de providers configurés limitent
   la découverte CLI externe à cet ensemble, afin qu'un magasin de connexion CLI non lié ne soit pas
   sondé pour une configuration à fournisseur unique
@@ -79,14 +76,15 @@ agent lorsqu'il a besoin d'un compte indépendant.
 ## Compatibilité des jetons hérités Anthropic
 
 <Warning>
-La documentation publique de Claude Code de Anthropic indique que l'utilisation directe de Claude Code reste dans les limites de l'abonnement Claude, et le personnel de Anthropic nous a informés que l'utilisation de Claude OpenClaw de type CLI est à nouveau autorisée. OpenClaw considère donc la réutilisation de Claude CLI et l'utilisation de `claude -p` comme étant autorisées pour cette intégration, à moins que Anthropic ne publie une nouvelle politique.
+La documentation publique de Anthropic indique que l'utilisation directe de Claude Code reste dans les limites de l'abonnement Claude, et le personnel de Anthropic nous a indiqué que l'utilisation du OpenClaw Claude de type CLI est à nouveau autorisée. OpenClaw traite donc la réutilisation du CLI Claude et l'utilisation de `claude -p` comme étant autorisées pour cette intégration, sauf si Anthropic publie une nouvelle politique.
 
-Pour la documentation actuelle du plan direct-Claude-Code de Anthropic, consultez [Utilisation de Claude Code avec votre plan Pro ou Max
-](https://support.claude.com/en/articles/11145838-using-claude-code-with-your-pro-or-max-plan)
-et [Utilisation de Claude Code avec votre plan Team ou Enterprise
-](https://support.anthropic.com/en/articles/11845131-using-claude-code-with-your-team-or-enterprise-plan/).
+Pour la documentation actuelle de Anthropic sur le plan direct-Claude-Code, voir [Using Claude Code
+with your Pro or Max
+plan](https://support.claude.com/en/articles/11145838-using-claude-code-with-your-pro-or-max-plan)
+et [Using Claude Code with your Team or Enterprise
+plan](https://support.anthropic.com/en/articles/11845131-using-claude-code-with-your-team-or-enterprise-plan/).
 
-Si vous souhaitez d'autres options de type abonnement dans OpenClaw, consultez [OpenAI
+Si vous souhaitez d'autres options de style abonnement dans OpenClaw, voir [OpenAI
 Codex](/fr/providers/openai), [Plan de codage cloud Qwen
 ](/fr/providers/qwen), [Plan de codage MiniMax](/fr/providers/minimax),
 et [Plan de codage Z.AI / GLM](/fr/providers/glm).
@@ -139,10 +137,13 @@ Les profils stockent un horodatage `expires`.
 - si un agent secondaire lit un profil OAuth hérité d'un agent principal, l'actualisation
   réécrit dans le stock de l'agent principal au lieu de copier le jeton d'actualisation dans
   le stock de l'agent secondaire
-- exception : certains identifiants CLI externes restent gérés en externe ; OpenClaw
-  relit ces magasins d'auth CLI au lieu de dépenser les jetons d'actualisation copiés.
-  L'amorçage du CLI Codex est intentionnellement plus restreint : il crée un profil `openai-codex:default` vide,
-  puis les actualisations détenues par OpenClaw gardent le profil local comme source canonique.
+- exception : certaines identifiants CLI externes restent gérés de manière externe ; CLIOpenClawCLICLI
+  relit ces magasins d'auth CLI au lieu de dépenser des jetons d'actualisation copiés.
+  L'amorçage de la CLI Codex est intentionnellement plus étroit : il initialise un profil
+  `openai-codex:default` vide, puis les actualisations appartenant à OpenClawCLI maintiennent le profil
+  local comme canonique. Si l'actualisation Codex locale échoue et que la CLI Codex possède un
+  jeton utilisable pour le même compte, OpenClaw peut utiliser ce jeton pour la requête
+  d'exécution actuelle sans le réécrire dans `auth-profiles.json`.
 
 Le flux d'actualisation est automatique ; vous n'avez généralement pas besoin de gérer les jetons manuellement.
 
@@ -163,7 +164,7 @@ Configurez ensuite l'authentification par agent (assistant) et acheminez les dis
 
 ### 2) Avancé : plusieurs profils dans un seul agent
 
-`auth-profiles.json` prend en charge plusieurs ID de profil pour le même provider.
+`auth-profiles.json` prend en charge plusieurs ID de profil pour le même fournisseur.
 
 Choisissez le profil utilisé :
 
@@ -180,11 +181,11 @@ Comment voir quels ID de profil existent :
 
 Documentation connexe :
 
-- [Basculement de model](/fr/concepts/model-failover) (règles de rotation + temps de recharge)
-- [Commandes slash](/fr/tools/slash-commands) (interface de commande)
+- [Basculement de modèle](/fr/concepts/model-failover) (règles de rotation + temps de recharge)
+- [Commandes slash](/fr/tools/slash-commands) (surface de commande)
 
 ## Connexes
 
-- [Authentification](/fr/gateway/authentication) - aperçu de l'authentification des providers de modèles
+- [Authentification](/fr/gateway/authentication) - aperçu de l'authentification du fournisseur de modèles
 - [Secrets](/fr/gateway/secrets) - stockage des identifiants et SecretRef
 - [Référence de configuration](/fr/gateway/configuration-reference#auth-storage) - clés de configuration d'authentification

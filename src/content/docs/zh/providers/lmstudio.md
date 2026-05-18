@@ -94,7 +94,7 @@ openclaw onboard \
 `lmstudio:default` 身份验证配置文件。
 
 交互式设置可以提示输入可选的首选加载上下文长度，并将其应用于已发现并保存到配置中的 LM Studio 模型。
-LM Studio 插件配置信任配置的 LM Studio 端点以进行模型请求，包括环回、LAN 和 tailnet 主机。您可以通过设置 `models.providers.lmstudio.request.allowPrivateNetwork: false` 来选择退出。
+LM Studio 插件配置信任配置的 LM Studio 端点以进行模型请求，包括环回、局域网和 tailnet 主机。元数据/链路本地源仍然需要显式选择加入。您可以通过设置 `models.providers.lmstudio.request.allowPrivateNetwork: false` 选择退出。
 
 ## 配置
 
@@ -215,7 +215,7 @@ LM Studio 支持即时 (JIT) 模型加载，即在首次请求时加载模型。
 }
 ```
 
-与通用的 OpenAI 兼容提供商不同，`lmstudio` 会自动信任其配置的本地/私有端点以进行受保护的模型请求。自定义环回提供商 ID（如 `localhost` 或 `127.0.0.1`）也会自动受信任；对于 LAN、tailnet 或私有 DNS 自定义提供商 ID，请显式设置 `models.providers.<id>.request.allowPrivateNetwork: true`。
+`lmstudio` 自动信任其配置的本地/私有端点以进行受保护的模型请求。自定义/本地 OpenAI 兼容提供商条目也信任其确切的已配置 `baseUrl` 源，元数据/链路本地源除外；对不同的私有端口或目标的请求仍然需要 `models.providers.<id>.request.allowPrivateNetwork: true`。设置 `models.providers.<id>.request.allowPrivateNetwork: false` 以选择退出确切的源信任。
 
 ## 相关
 

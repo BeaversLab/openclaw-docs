@@ -125,6 +125,9 @@ OpenClaw.
 
 ## Exemple ds4
 
+Pour la configuration complète, les conseils sur la taille du contexte et les commandes de vérification, consultez
+[ds4](/fr/providers/ds4).
+
 ```json5
 {
   models: {
@@ -135,9 +138,9 @@ OpenClaw.
         api: "openai-completions",
         timeoutSeconds: 300,
         localService: {
-          command: "/Users/you/Projects/oss/ds4/ds4-server",
-          args: ["--model", "/Users/you/Projects/oss/ds4/ds4flash.gguf", "--host", "127.0.0.1", "--port", "18000", "--ctx", "393216"],
-          cwd: "/Users/you/Projects/oss/ds4",
+          command: "<DS4_DIR>/ds4-server",
+          args: ["--model", "<DS4_DIR>/ds4flash.gguf", "--host", "127.0.0.1", "--port", "18000", "--ctx", "32768", "--tokens", "128"],
+          cwd: "<DS4_DIR>",
           healthUrl: "http://127.0.0.1:18000/v1/models",
           readyTimeoutMs: 300000,
           idleStopMs: 0,
@@ -153,22 +156,22 @@ OpenClaw.
 
 - Un processus OpenClaw gère l'enfant qu'il a démarré. Un autre processus OpenClaw
   qui voit la même URL de santé déjà active la réutilisera sans l'adopter.
-- Le démarrage est sérialisé par commande de fournisseur et ensemble d'arguments, de sorte que les requêtes
+- Le démarrage est sérialisé par commande de fournisseur et ensemble d'arguments, de sorte que les demandes
   simultanées ne génèrent pas de serveurs en double pour la même configuration.
-- Les réponses en flux actives détiennent un bail ; l'arrêt après inactivité attend que le traitement
+- Les réponses en streaming actives détiennent un bail ; l'arrêt au repos attend que le traitement
   du corps de la réponse soit terminé.
 - Utilisez `timeoutSeconds` sur les fournisseurs locaux lents afin que les démarrages à froid et les longues générations
-  n'atteignent pas le délai d'expiration de requête de modèle par défaut.
+  ne déclenchent pas le délai d'expiration de la demande de modèle par défaut.
 - Utilisez un `healthUrl` explicite si votre serveur expose la disponibilité ailleurs
-  qu'à `/v1/models`.
+  que `/v1/models`.
 
 ## Connexes
 
 <CardGroup cols={2}>
   <Card title="Local models" href="/fr/gateway/local-models" icon="server">
-    Configuration de modèles locaux, choix de fournisseurs et conseils de sécurité.
+    Configuration des modèles locaux, choix de fournisseurs et conseils de sécurité.
   </Card>
-  <Card title="Inferrs" href="/fr/providers/inferrs" icon="cpu" OpenClawOpenAI>
+  <Card title="Inferrs" href="/fr/providers/inferrs" icon="cpu">
     Exécuter OpenClaw via le serveur local compatible OpenAI d'inferrs.
   </Card>
 </CardGroup>

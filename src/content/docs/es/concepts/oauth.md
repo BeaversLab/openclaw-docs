@@ -44,10 +44,7 @@ Para reducir eso, OpenClaw trata `auth-profiles.json` como un **sumidero de toke
 
 - el tiempo de ejecución lee las credenciales de **un solo lugar**
 - podemos mantener múltiples perfiles y enrutarlos de manera determinista
-- el reuso de CLI externo es específico del proveedor: Codex CLI puede iniciar un perfil
-  `openai-codex:default` vacío, pero una vez que OpenClaw tiene un perfil OAuth local,
-  el token de actualización local es el canónico; otras integraciones pueden permanecer
-  administradas externamente y volver a leer su almacén de autenticación CLI
+- la reutilización de la CLI externa es específica del proveedor: la CLI de Codex puede arrancar un perfil `openai-codex:default` vacío, pero una vez que OpenClaw tiene un perfil OAuth local, el token de actualización local es canónico. Si ese token de actualización local es rechazado, OpenClaw puede usar un token utilizable de la CLI de Codex de la misma cuenta como alternativa solo en tiempo de ejecución; otras integraciones pueden permanecer gestionadas externamente y releer su almacén de autenticación de la CLI
 - rutas de estado e inicio que ya conocen el conjunto de proveedores configurados limitan
   el descubrimiento de CLI externo a ese conjunto, de modo que no se sondea un almacén de inicio de sesión de CLI no relacionado
   para una configuración de un solo proveedor
@@ -66,7 +63,7 @@ Archivo heredado solo de importación (aún admitido, pero no el almacenamiento 
 
 Todo lo anterior también respeta `$OPENCLAW_STATE_DIR` (anulación del directorio de estado). Referencia completa: [/gateway/configuration](/es/gateway/configuration-reference#auth-storage)
 
-Para las referencias estáticas de secretos y el comportamiento de activación de instantáneas en tiempo de ejecución, consulte [Secrets Management](/es/gateway/secrets).
+Para ver las referencias de secretos estáticos y el comportamiento de activación de instantáneas en tiempo de ejecución, consulte [Secrets Management](/es/gateway/secrets).
 
 Cuando un agente secundario no tiene un perfil de autenticación local, OpenClaw utiliza la herencia
 read-through desde el almacén del agente predeterminado/principal. No clona el
@@ -78,14 +75,18 @@ agente cuando necesite una cuenta independiente.
 ## Compatibilidad con tokens heredados de Anthropic
 
 <Warning>
-Los documentos públicos de Claude Code de Anthropic indican que el uso directo de Claude Code se mantiene dentro de los límites de suscripción de Claude, y el personal de Anthropic nos informó que el uso de Claude CLI al estilo de OpenClaw está permitido nuevamente. Por lo tanto, OpenClaw trata el uso de Claude CLI reutilizado y `claude -p` como autorizado para esta integración, a menos que Anthropic publique una nueva política.
+Los documentos públicos de Claude Code de Anthropic indican que el uso directo de Claude Code se mantiene dentro de los límites de la suscripción Claude, y el personal de Anthropic nos informó que el uso de la CLI Claude estilo OpenClaw está permitido nuevamente. Por lo tanto, OpenClaw trata la reutilización de la CLI Claude y el uso de `claude -p` como autorizados para esta integración, a menos que Anthropic publique una nueva política.
 
-Para ver los documentos actuales del plan directo de Claude Code de Anthropic, consulte [Uso de Claude Code con su plan Pro o Max](https://support.claude.com/en/articles/11145838-using-claude-code-with-your-pro-or-max-plan)
-y [Uso de Claude Code con su plan de Team o Enterprise](https://support.anthropic.com/en/articles/11845131-using-claude-code-with-your-team-or-enterprise-plan/).
+Para ver los documentos actuales del plan directo-Claude-Code de Anthropic, consulte [Using Claude Code
+with your Pro or Max
+plan](https://support.claude.com/en/articles/11145838-using-claude-code-with-your-pro-or-max-plan)
+y [Using Claude Code with your Team or Enterprise
+plan](https://support.anthropic.com/en/articles/11845131-using-claude-code-with-your-team-or-enterprise-plan/).
 
-Si desea otras opciones de estilo de suscripción en OpenClaw, consulte [OpenAI
-Codex](/es/providers/openai), [Plan de codificación en la nube de Qwen](/es/providers/qwen), [Plan de codificación de MiniMax](/es/providers/minimax)
-y [Plan de codificación de Z.AI / GLM](/es/providers/glm).
+Si desea otras opciones de tipo suscripción en OpenClaw, consulte [OpenAI
+Codex](/es/providers/openai), [Qwen Cloud Coding
+Plan](/es/providers/qwen), [MiniMax Coding Plan](/es/providers/minimax)
+y [Z.AI / GLM Coding Plan](/es/providers/glm).
 
 </Warning>
 
@@ -134,11 +135,7 @@ En tiempo de ejecución:
 - si un agente secundario lee un perfil OAuth heredado del agente principal, la actualización
   escribe de nuevo en el almacén del agente principal en lugar de copiar el token de actualización en
   el almacén del agente secundario
-- excepción: algunas credenciales externas de CLI permanecen administradas externamente; OpenClaw
-  vuelve a leer esos almacenes de autenticación de CLI en lugar de gastar tokens de actualización copiados.
-  El arranque de la CLI de Codex es intencionalmente más limitado: inicializa un perfil
-  `openai-codex:default` vacío y, a continuación, las actualizaciones propiedad de OpenClaw mantienen el perfil
-  local como canónico.
+- excepción: algunas credenciales externas de la CLI permanecen gestionadas externamente; OpenClaw vuelve a leer esos almacenes de autenticación de la CLI en lugar de gastar tokens de actualización copiados. El arranque de la CLI de Codex es intencionalmente más limitado: inicializa un perfil `openai-codex:default` vacío y luego las actualizaciones propiedad de OpenClaw mantienen el perfil local como canónico. Si la actualización local de Codex falla y la CLI de Codex tiene un token utilizable para la misma cuenta, OpenClaw puede usar ese token para la solicitud de tiempo de ejecución actual sin escribirlo de nuevo en `auth-profiles.json`.
 
 El flujo de actualización es automático; por lo general, no necesitas gestionar los tokens manualmente.
 
@@ -159,7 +156,7 @@ A continuación, configura la autenticación por agente (asistente) y enruta los
 
 ### 2) Avanzado: múltiples perfiles en un agente
 
-`auth-profiles.json` soporta múltiples IDs de perfil para el mismo proveedor.
+`auth-profiles.json` admite múltiples ID de perfil para el mismo proveedor.
 
 Elige qué perfil se usa:
 
@@ -176,7 +173,7 @@ Cómo ver qué IDs de perfil existen:
 
 Documentos relacionados:
 
-- [Conmutación por error de modelos](/es/concepts/model-failover) (reglas de rotación + enfriamiento)
+- [Conmutación por error del modelo](/es/concepts/model-failover) (reglas de rotación + enfriamiento)
 - [Comandos de barra](/es/tools/slash-commands) (superficie de comandos)
 
 ## Relacionado

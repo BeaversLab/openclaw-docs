@@ -10,7 +10,7 @@ title: "Installer"
 ## Configuration système requise
 
 - **Node 24** (recommandé) ou Node 22.16+ - le script d'installation gère cela automatiquement
-- **macOS, Linux ou Windows** - Windows natif et WSL2 sont tous deux pris en charge ; WSL2 est plus stable. Voir [Windows](macOSLinuxWindowsWindowsWSL2WSL2Windows/en/platforms/windows).
+- **macOS, Linux ou Windows** - le Windows natif et WSL2 sont tous deux pris en charge ; WSL2 est plus stable. Voir [Windows](/fr/platforms/windows).
 - `pnpm` n'est nécessaire que si vous compilez depuis les sources
 
 ## Recommandé : script d'installation
@@ -29,7 +29,7 @@ Pour installer sans lancer l'intégration :
   <Tab title="WindowsWindows (PowerShell)">```powershell & ([scriptblock]::Create((iwr -useb https://openclaw.ai/install.ps1))) -NoOnboard ```</Tab>
 </Tabs>
 
-Pour toutes les options de drapeaux et d'automatisation CI, voir [Fonctionnement interne de l'installateur](/fr/install/installer).
+Pour tous les indicateurs et options d'automatisation CI, consultez [Détails de l'installateur](/fr/install/installer).
 
 ## Méthodes d'installation alternatives
 
@@ -42,9 +42,10 @@ OpenClaw`~/.openclaw`, sans dépendre d'une installation Node à l'échelle du s
 curl -fsSL https://openclaw.ai/install-cli.sh | bash
 ```
 
-Il prend en charge les installations npm par défaut, ainsi que les installations via git-checkout dans le même flux de préfixe. Référence complète : [Installer internals](/fr/install/installer#install-clish).
+Il prend en charge les installations npm par défaut, ainsi que les installations par git-checkout dans le même
+flux de préfixe. Référence complète : [Détails de l'installateur](/fr/install/installer#install-clish).
 
-Déjà installé ? Basculez entre les installations de paquets et git avec
+Déjà installé ? Basculez entre les installations de package et git avec
 `openclaw update --channel dev` et `openclaw update --channel stable`. Voir
 [Mise à jour](/fr/install/updating#switch-between-npm-and-git-installs).
 
@@ -58,6 +59,13 @@ Si vous gérez déjà Node vous-même :
     npm install -g openclaw@latest
     openclaw onboard --install-daemon
     ```
+
+    <Note>
+    L'installateur hébergé efface les filtres de fraîcheur npm tels que `min-release-age`
+    pour l'installation du package OpenClaw. Si vous installez manuellement avec npm, votre propre
+    stratégie npm s'applique toujours.
+    </Note>
+
   </Tab>
   <Tab title="pnpm">
     ```bash
@@ -67,7 +75,7 @@ Si vous gérez déjà Node vous-même :
     ```
 
     <Note>
-    pnpm nécessite une approbation explicite pour les paquets avec des scripts de build. Exécutez `pnpm approve-builds -g` après la première installation.
+    pnpm nécessite une approbation explicite pour les packages contenant des scripts de construction. Exécutez `pnpm approve-builds -g` après la première installation.
     </Note>
 
   </Tab>
@@ -84,7 +92,7 @@ Si vous gérez déjà Node vous-même :
   </Tab>
 </Tabs>
 
-<Accordion title="Dépannage : erreurs de build sharp (npm)">
+<Accordion title="Dépannage : erreurs de construction sharp (npm)">
   Si `sharp` échoue en raison d'une libvips installée globalement :
 
 ```bash
@@ -105,7 +113,7 @@ pnpm link --global
 openclaw onboard --install-daemon
 ```
 
-Ou ignorez le lien et utilisez `pnpm openclaw ...` depuis l'intérieur du dépôt. Voir [Configuration](/fr/start/setup) pour les flux de travail de développement complets.
+Ou ignorez le lien et utilisez `pnpm openclaw ...` depuis l'intérieur du dépôt. Voir [Configuration](/fr/start/setup) pour les flux de travail complets de développement.
 
 ### Installer depuis la branche main de GitHub
 
@@ -143,7 +151,7 @@ openclaw gateway status # verify the Gateway is running
 
 Si vous souhaitez un démarrage géré après l'installation :
 
-- macOS : LaunchAgent via macOS`openclaw onboard --install-daemon` ou `openclaw gateway install`
+- macOS : LaunchAgent via `openclaw onboard --install-daemon` ou `openclaw gateway install`
 - Linux/WSL2 : service utilisateur systemd via les mêmes commandes
 - Windows natif : Tâche planifiée d'abord, avec un élément de connexion de dossier Démarrage par utilisateur en repli si la création de la tâche est refusée
 
@@ -194,4 +202,4 @@ Si `$(npm prefix -g)/bin` n'est pas dans votre `$PATH`, ajoutez-le à votre fich
 export PATH="$(npm prefix -g)/bin:$PATH"
 ```
 
-Ouvrez ensuite un nouveau terminal. Consultez la page [Configuration de Node](/fr/install/node) pour plus de détails.
+Ouvrez ensuite un nouveau terminal. Consultez [Configuration de Node](/fr/install/node) pour plus de détails.

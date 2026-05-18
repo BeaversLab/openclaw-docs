@@ -152,7 +152,7 @@ macOS 应用可以选择性地尝试**静默批准**，当：
 
 ## Locality and forwarded headers
 
-Gateway 配对仅在原始套接字和任何上游代理证据一致时才将连接视为环回。如果请求到达环回但携带指向非本地来源的 Gateway(网关)`X-Forwarded-For` / `X-Forwarded-Host` / `X-Forwarded-Proto` 标头，则该转发标头证据将使环回本地性声明失效。配对路径随后需要显式批准，而不是静默地将请求视为同主机连接。有关 operator 身份验证的等效规则，请参阅 [Trusted Proxy Auth](/zh/gateway/trusted-proxy-auth)。
+仅当原始套接字和任何上游代理证据一致时，Gateway(网关)配对才会将连接视为本地回环。如果一个请求在本地回环上到达但携带 Gateway(网关)`Forwarded`、任何 `X-Forwarded-*` 或 `X-Real-IP` 头部证据，该转发头部证据将取消本地回环归属的声明。配对路径随后需要显式批准，而不是静默地将请求视为同主机连接。有关操作员身份验证的等效规则，请参阅 [Trusted Proxy Auth](/zh/gateway/trusted-proxy-auth)。
 
 ## Storage (local, private)
 

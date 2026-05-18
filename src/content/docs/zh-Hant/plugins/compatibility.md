@@ -100,40 +100,49 @@ OpenClaw 不應在引入取代方案的同一個版本中
 
 - 舊版廣泛的 SDK 匯入，例如 `openclaw/plugin-sdk/compat`
 - 舊版僅包含掛鉤的插件形狀以及 `before_agent_start`
-- 舊版 `activate(api)` 插件進入點，同時插件遷移至
+- 傳統 `api.on("deactivate", ...)` 清理掛鉤名稱，同時外掛程式遷移至
+  `gateway_stop`
+- 傳統 `activate(api)` 外掛程式進入點，同時外掛程式遷移至
   `register(api)`
-- 舊版 SDK 別名，例如 `openclaw/extension-api`、
+- 傳統 SDK 別名，例如 `openclaw/extension-api`、
   `openclaw/plugin-sdk/channel-runtime`、`openclaw/plugin-sdk/command-auth`
-  狀態建構器、`openclaw/plugin-sdk/test-utils`（已被專用的
+  狀態建構器、`openclaw/plugin-sdk/test-utils`（已被專注的
   `openclaw/plugin-sdk/*` 測試子路徑取代），以及 `ClawdbotConfig` /
   `OpenClawSchemaType` 型別別名
-- 隨附插件允許清單和啟用行為
-- 舊版提供者/通道環境變數清單元資料
-- 舊版提供者插件掛鉤和型別別名，同時提供者轉移至
-  明確的目錄、身份驗證、思考、重播和傳輸掛鉤
-- 舊版執行時期別名，例如 `api.runtime.taskFlow`、
+- 隨附外掛程式允許清單與啟用行為
+- 傳統提供者/通道環境變數清單元資料
+- 傳統提供者外掛程式掛鉤與型別別名，同時提供者轉移至
+  明確的目錄、驗證、思考、重放與傳輸掛鉤
+- 傳統執行時別名，例如 `api.runtime.taskFlow`、
   `api.runtime.subagent.getSession`、`api.runtime.stt`，以及已棄用的
   `api.runtime.config.loadConfig()` / `api.runtime.config.writeConfigFile(...)`
-- 舊版記憶體插件分割註冊，同時記憶體插件轉移至
+- 傳統記憶體外掛程式分冊註冊，同時記憶體外掛程式轉移至
   `registerMemoryCapability`
-- 舊版通道 SDK 輔助函式，用於原生訊息架構、提及閘道、
-  入站信封格式化以及核准功能巢狀結構
-- 舊版通道路由金鑰和可比較目標輔助別名，同時插件
+- 傳統通道 SDK 輔助程式，用於原生訊息架構、提及閘道、
+  進行信封格式設定與核准功能巢狀結構
+- 傳統通道路由金鑰與可比較目標輔助程式別名，同時外掛程式
   轉移至 `openclaw/plugin-sdk/channel-route`
-- 即將被清單貢獻所有權取代的啟用提示
-- `setup-api` 執行時期後備機制，同時設定描述元轉移至冷
+- 即將被清單貢獻擁有權取代的啟用提示
+- `setup-api` 執行時後備機制，同時設定描述子轉移至冷
   `setup.requiresRuntime: false` 元資料
 - 提供者 `discovery` 掛鉤，同時提供者目錄掛鉤轉移至
   `catalog.run(...)`
-- 在通道套件移至 `openclaw.channel.exposure` 時，維護通道 `showConfigured` / `showInSetup` 元數據
-- 在 doctor 將操作員遷移至 `agentRuntime` 時，維護舊版 runtime-policy 配置鍵
-- 在以註冊表為首的 `channelConfigs` 元數據落地時，提供生成的捆綁通道配置元數據後備
-- 在修復流程將操作員遷移至 `openclaw plugins registry --refresh` 和 `openclaw doctor --fix` 時，維護持久化的插件註冊表禁用和安裝遷移環境標誌
-- 在 doctor 將其遷移至 `plugins.entries.<plugin>.config` 時，維護舊版插件擁有的 web search、web fetch 和 x_search 配置路徑
-- 在安裝元數據移至狀態管理的插件分賬帳時，維護舊版 `plugins.installs` 編寫的配置和捆綁插件加載路徑別名
+- 通道 `showConfigured` / `showInSetup` 元資料，同時通道套件轉移
+  至 `openclaw.channel.exposure`
+- 傳統執行時原則設定金鑰，同時 doctor 將操作員遷移至
+  `agentRuntime`
+- 產生的隨附通道設定元資料後備機制，同時以登錄優先的
+  `channelConfigs` 元資料落地
+- 持續性外掛程式登錄停用與安裝遷移環境旗標，同時
+  修復流程將操作員遷移至 `openclaw plugins registry --refresh` 與
+  `openclaw doctor --fix`
+- 舊版外掛擁有的 web 搜尋、web 擷取和 x_search 設定路徑，
+  同時 doctor 會將它們遷移至 `plugins.entries.<plugin>.config`
+- 舊版 `plugins.installs` 撰寫的設定和套件外掛載入路徑
+  別名，同時安裝中繼資料會移至狀態管理的外掛總帳
 
-新插件代碼應優先選擇註冊表和具體遷移指南中列出的替代方案。現有插件可以繼續使用兼容性路徑，直到文檔、診斷和發行說明宣布移除時間窗口。
+新外掛程式碼應優先採用註冊表中列出及特定遷移指南中提及的取代項目。現有外掛可繼續使用相容性路徑，直到文件、診斷和發行說明公告移除期限為止。
 
 ## 發行說明
 
-發行說明應包含即將到來的插件棄用信息，並附上目標日期和遷移文檔鏈接。該警告需要在兼容性路徑轉移到 `removal-pending` 或 `removed` 之前發布。
+發行說明應包含即將進行的外掛棄用事項，並註明目標日期和遷移文件連結。該警告必須在相容性路徑移至 `removal-pending` 或 `removed` 之前發出。

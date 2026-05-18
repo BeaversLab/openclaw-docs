@@ -46,8 +46,9 @@ title: "反应"
   </Accordion>
 
   <Accordion title="WhatsAppWhatsApp">
-    - 空 `emoji` 会移除机器人的反应。
-    - `remove: true` 在内部映射为空表情符号（在工具调用中仍然需要 `emoji`）。
+    - 空的 `emoji` 会移除机器人反应。
+    - `remove: true` 在内部映射为空表情符号（在工具调用中仍然需要 `emoji`WhatsApp）。
+    - WhatsApp 每条消息只有一个机器人反应槽位；状态反应更新会替换该槽位，而不是堆叠多个表情符号。
 
   </Accordion>
 

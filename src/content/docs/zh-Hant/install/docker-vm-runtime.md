@@ -120,19 +120,20 @@ docker compose logs -f openclaw-gateway
 OpenClaw 在 Docker 中運行，但 Docker 並非單一真實來源。
 所有長期存在的狀態都必須在重啟、重建和重新啟動後保留。
 
-| 組件           | 位置                                                   | 持久化機制        | 備註                                                          |
-| -------------- | ------------------------------------------------------ | ----------------- | ------------------------------------------------------------- |
-| Gateway 設定   | `/home/node/.openclaw/`                                | 主機磁碟區掛載    | 包含 `openclaw.json`, `.env`                                  |
-| 模型授權設定檔 | `/home/node/.openclaw/agents/`                         | 主機磁碟區掛載    | `agents/<agentId>/agent/auth-profiles.json` (OAuth, API 金鑰) |
-| Skill 設定     | `/home/node/.openclaw/skills/`                         | 主機磁碟區掛載    | Skill 層級狀態                                                |
-| Agent 工作區   | `/home/node/.openclaw/workspace/`                      | 主機磁碟區掛載    | 程式碼和 agent 產生件                                         |
-| WhatsApp 會話  | `/home/node/.openclaw/`                                | 主機磁碟區掛載    | 保留 QR 登入                                                  |
-| Gmail 鑰匙圈   | `/home/node/.openclaw/`                                | 主機磁碟區 + 密碼 | 需要 `GOG_KEYRING_PASSWORD`                                   |
-| 外掛程式套件   | `/home/node/.openclaw/npm`, `/home/node/.openclaw/git` | 主機磁碟區掛載    | 可下載的外掛程式套件根目錄                                    |
-| 外部二進位檔案 | `/usr/local/bin/`                                      | Docker 映像檔     | 必須在建置時納入                                              |
-| Node 執行環境  | 容器檔案系統                                           | Docker 映像檔     | 每次建置映像檔時重新建置                                      |
-| OS 套件        | 容器檔案系統                                           | Docker 映像檔     | 請勿在執行時安裝                                              |
-| Docker 容器    | 暫時性                                                 | 可重新啟動        | 可安全刪除                                                    |
+| 組件              | 位置                                                   | 持久化機制        | 備註                                                          |
+| ----------------- | ------------------------------------------------------ | ----------------- | ------------------------------------------------------------- |
+| Gateway 設定      | `/home/node/.openclaw/`                                | 主機磁碟區掛載    | 包含 `openclaw.json`, `.env`                                  |
+| 模型授權設定檔    | `/home/node/.openclaw/agents/`                         | 主機磁碟區掛載    | `agents/<agentId>/agent/auth-profiles.json` (OAuth, API 金鑰) |
+| 認證設定檔金鑰    | `/home/node/.config/openclaw/`                         | 主機磁碟區掛載    | OAuth 認證設定檔權杖本機加密金鑰                              |
+| Skill 設定        | `/home/node/.openclaw/skills/`                         | 主機磁碟區掛載    | Skill 層級狀態                                                |
+| Agent 工作區      | `/home/node/.openclaw/workspace/`                      | 主機磁碟區掛載    | 程式碼與 Agent 成品                                           |
+| WhatsApp 工作階段 | `/home/node/.openclaw/`                                | 主機磁碟區掛載    | 保留 QR 登入                                                  |
+| Gmail 金鑰圈      | `/home/node/.openclaw/`                                | 主機磁碟區 + 密碼 | 需要 `GOG_KEYRING_PASSWORD`                                   |
+| 外掛套件          | `/home/node/.openclaw/npm`, `/home/node/.openclaw/git` | 主機磁碟區掛載    | 可下載的外掛套件根目錄                                        |
+| 外部二進位檔      | `/usr/local/bin/`                                      | Docker 映像檔     | 必須在建構時期烘焙進去                                        |
+| Node 執行環境     | 容器檔案系統                                           | Docker 映像檔     | 每次建構映像檔時重新建構                                      |
+| OS 套件           | 容器檔案系統                                           | Docker 映像檔     | 請勿在執行時期安裝                                            |
+| Docker 容器       | 暫時性                                                 | 可重新啟動        | 可安全銷毀                                                    |
 
 ## 更新
 

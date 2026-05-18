@@ -173,15 +173,15 @@ openclaw memory rem-backfill --path ./memory --stage-short-term
 
   </Accordion>
   <Accordion title="2. 舊版配置鍵遷移">
-    當配置包含已棄用的鍵時，其他命令將拒絕執行並要求您執行 `openclaw doctor`。
+    當配置包含已棄用的鍵時，其他指令將拒絕運行並要求您執行 `openclaw doctor`。
 
     Doctor 將會：
 
-    - 說明發現了哪些舊版鍵。
-    - 顯示它所套用的遷移。
-    - 使用更新後的架構重寫 `~/.openclaw/openclaw.json`。
+    - 說明找到了哪些舊版鍵。
+    - 顯示其套用的遷移。
+    - 使用更新的架構重寫 `~/.openclaw/openclaw.json`。
 
-    Gateway 啟動時會拒絕舊版配置格式，並要求您執行 `openclaw doctor --fix`；它不會在啟動時重寫 `openclaw.json`。Cron job 存儲遷移也由 `openclaw doctor --fix` 處理。
+    Gateway 啟動程序會拒絕舊版配置格式，並要求您執行 `openclaw doctor --fix`；它不會在啟動時重寫 `openclaw.json`。Cron 任務儲存遷移也由 `openclaw doctor --fix` 處理。
 
     目前的遷移：
 
@@ -190,12 +190,12 @@ openclaw memory rem-backfill --path ./memory --stage-short-term
     - `routing.groupChat.historyLimit` → `messages.groupChat.historyLimit`
     - `routing.groupChat.mentionPatterns` → `messages.groupChat.mentionPatterns`
     - `channels.telegram.requireMention` → `channels.telegram.groups."*".requireMention`
-    - configured-channel configs missing visible reply policy → `messages.groupChat.visibleReplies: "message_tool"`
+    - 缺少可見回覆原則的已配置通道設定 → `messages.groupChat.visibleReplies: "message_tool"`
     - `routing.queue` → `messages.queue`
-    - `routing.bindings` → top-level `bindings`
+    - `routing.bindings` → 頂層 `bindings`
     - `routing.agents`/`routing.defaultAgentId` → `agents.list` + `agents.list[].default`
-    - legacy `talk.voiceId`/`talk.voiceAliases`/`talk.modelId`/`talk.outputFormat`/`talk.apiKey` → `talk.provider` + `talk.providers.<provider>`
-    - legacy top-level realtime Talk selectors (`talk.mode`/`talk.transport`/`talk.brain`/`talk.model`/`talk.voice`) + `talk.provider`/`talk.providers` → `talk.realtime`
+    - 舊版 `talk.voiceId`/`talk.voiceAliases`/`talk.modelId`/`talk.outputFormat`/`talk.apiKey` → `talk.provider` + `talk.providers.<provider>`
+    - 舊版頂層即時 Talk 選擇器 (`talk.mode`/`talk.transport`/`talk.brain`/`talk.model`/`talk.voice`) + `talk.provider`/`talk.providers` → `talk.realtime`
     - `routing.agentToAgent` → `tools.agentToAgent`
     - `routing.transcribeAudio` → `tools.media.audio.models`
     - `messages.tts.<provider>` (`openai`/`elevenlabs`/`microsoft`/`edge`) → `messages.tts.providers.<provider>`
@@ -209,21 +209,21 @@ openclaw memory rem-backfill --path ./memory --stage-short-term
     - `plugins.entries.voice-call.config.streaming.sttProvider` → `plugins.entries.voice-call.config.streaming.provider`
     - `plugins.entries.voice-call.config.streaming.openaiApiKey|sttModel|silenceDurationMs|vadThreshold` → `plugins.entries.voice-call.config.streaming.providers.openai.*`
     - `bindings[].match.accountID` → `bindings[].match.accountId`
-    - 對於具有命名 `accounts` 但仍遺留單一帳號頂層頻道值的頻道，將這些帳號範圍的值移至為該頻道選擇的升級帳號中（大多數頻道為 `accounts.default`；Matrix 可以保留現有的匹配命名/預設目標）
+    - 對於具有命名 `accounts` 但仍存在單一帳戶頂層通道值的通道，將這些帳戶範圍的值移動至為該通道選擇的升級帳戶中 (大多數通道為 `accounts.default`；Matrix 可以保留現有的匹配命名/預設目標)
     - `identity` → `agents.list[].identity`
     - `agent.*` → `agents.defaults` + `tools.*` (tools/elevated/exec/sandbox/subagents)
     - `agent.model`/`allowedModels`/`modelAliases`/`modelFallbacks`/`imageModelFallbacks` → `agents.defaults.models` + `agents.defaults.model.primary/fallbacks` + `agents.defaults.imageModel.primary/fallbacks`
-    - 移除 `agents.defaults.llm`；針對緩慢的提供商/模型逾時使用 `models.providers.<id>.timeoutSeconds`
+    - 移除 `agents.defaults.llm`；使用 `models.providers.<id>.timeoutSeconds` 處理緩慢的提供者/模型逾時，並且當整個運行需要更長時間時，將 agent/run 逾時保持在該值之上
     - `browser.ssrfPolicy.allowPrivateNetwork` → `browser.ssrfPolicy.dangerouslyAllowPrivateNetwork`
     - `browser.profiles.*.driver: "extension"` → `"existing-session"`
-    - 移除 `browser.relayBindHost` (舊版擴充轉送設定)
-    - legacy `models.providers.*.api: "openai"` → `"openai-completions"` (gateway 啟動時也會跳過其 `api` 設定為未來或未知列舉值的提供商，而不是封閉式失敗)
-    - 移除 `plugins.entries.codex.config.codexDynamicToolsProfile`；Codex app-server 始終保持 Codex 原生工作區工具的原生狀態
+    - 移除 `browser.relayBindHost` (舊版擴充功能轉送設定)
+    - 舊版 `models.providers.*.api: "openai"` → `"openai-completions"` (gateway 啟動也會跳過其 `api` 設定為未來或未知列舉值的提供者，而不是失敗關閉)
+    - 移除 `plugins.entries.codex.config.codexDynamicToolsProfile`；Codex app-server 始終將 Codex 原生工作區工具保持為原生
 
-    Doctor 警告還包括多帳號頻道的帳號預設指導：
+    Doctor 警告還包含多帳戶通道的帳戶預設指引：
 
-    - 如果配置了兩個或多個 `channels.<channel>.accounts` 項目，但沒有 `channels.<channel>.defaultAccount` 或 `accounts.default`，doctor 會警告備援路由可能會選擇非預期的帳號。
-    - 如果 `channels.<channel>.defaultAccount` 設定為未知的帳號 ID，doctor 會發出警告並列出已配置的帳號 ID。
+    - 如果配置了兩個或更多 `channels.<channel>.accounts` 項目而沒有 `channels.<channel>.defaultAccount` 或 `accounts.default`，doctor 會警告備援路由可能會選擇意外的帳戶。
+    - 如果 `channels.<channel>.defaultAccount` 設定為未知的帳戶 ID，doctor 會警告並列出已配置的帳戶 ID。
 
   </Accordion>
   <Accordion title="2b. OpenCode 提供者覆寫">

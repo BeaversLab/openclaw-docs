@@ -15,13 +15,13 @@ OpenClaw 有三個 Vitest 套件（單元/整合、e2e、live）和一小組 Doc
 - 如何為真實世界的模型/提供者問題加入回歸測試。
 
 <Note>
-**QA stack (qa-lab, qa-channel, live transport lanes)** 在其他文件中記載：
+**QA stack (qa-lab, qa-channel, live transport lanes)** 另有記載：
 
-- [QA 概覽](/zh-Hant/concepts/qa-e2e-automation) - 架構、命令介面、場景撰寫。
+- [QA overview](/zh-Hant/concepts/qa-e2e-automation) - 架構、命令介面、場景編寫。
 - [Matrix QA](/zh-Hant/concepts/qa-matrix) - `pnpm openclaw qa matrix` 的參考資料。
-- [QA channel](/zh-Hant/channels/qa-channel) - repo-backed scenarios 使用的合成傳輸外掛。
+- [QA channel](/zh-Hant/channels/qa-channel) - 由 repo 支援的場景所使用的合成傳輸外掛。
 
-本頁涵蓋執行一般測試套件和 Docker/Parallels runner。下方的 QA-specific runners 章節 ([QA-specific runners](#qa-specific-runners)) 列出具體的 `qa` 呼叫，並指回上述參考資料。
+本頁涵蓋執行一般測試套件和 Docker/Parallels runner。下方的 QA 專屬 runner 章節 ([QA-specific runners](#qa-specific-runners)) 列出了具體的 `qa` 叫用，並回連至上述參考資料。
 
 </Note>
 
@@ -215,7 +215,7 @@ gh workflow run package-acceptance.yml --ref main \
   - 僅啟動本機 AIMock 提供者伺服器，以進行直接協定的煙霧測試。
 - `pnpm openclaw qa matrix`
   - 針對一次性的 Docker 支援 Tuwunel homeserver 執行 Matrix live QA lane。僅限原始碼簽出 — 封裝安裝版本不附帶 `qa-lab`。
-  - 完整的 CLI、設定檔/場景目錄、環境變數以及工件版面配置：[Matrix QA](/zh-Hant/concepts/qa-matrix)。
+  - 完整的 CLI、設定檔/場景目錄、環境變數和成果佈局：[Matrix QA](/zh-Hant/concepts/qa-matrix)。
 - `pnpm openclaw qa telegram`
   - 使用環境變數中的驅動程式和 SUT 機器人權杖，針對真實的私人群組執行 Telegram 即時 QA 通道。
   - 需要 `OPENCLAW_QA_TELEGRAM_GROUP_ID`、`OPENCLAW_QA_TELEGRAM_DRIVER_BOT_TOKEN` 和 `OPENCLAW_QA_TELEGRAM_SUT_BOT_TOKEN`。群組 ID 必須是數值形式的 Telegram 聊天 ID。
@@ -250,7 +250,7 @@ Mantis agent 會閱讀 PR，決定哪些 Telegram 上可見的行為能證明此
   - Telegram Desktop 仍需用戶登入/設定檔。bot token 僅用於配置 OpenClaw。使用 `--telegram-profile-archive-env <name>` 指定 base64 `.tgz` 設定檔壓縮檔，或使用 `--keep-lease` 並透過 VNC 手動登入一次。
   - 在輸出目錄下寫入 `mantis-telegram-desktop-builder-report.md`、`mantis-telegram-desktop-builder-summary.json`、`telegram-desktop-builder.png` 和 `telegram-desktop-builder.mp4`。
 
-Live transport 跑道共用一個標準合約，以免新傳輸方式出現差異；各跑道覆蓋率矩陣位於 [QA overview → Live transport coverage](/zh-Hant/concepts/qa-e2e-automation#live-transport-coverage)。`qa-channel` 是廣泛的綜合套件，並不屬於該矩陣的一部分。
+Live transport lanes 共用一份標準合約，以確保新的傳輸方式不會偏離；各 lane 的覆蓋率矩陣位於 [QA overview → Live transport coverage](/zh-Hant/concepts/qa-e2e-automation#live-transport-coverage)。`qa-channel` 是廣泛的合成套件，並不屬於該矩陣的一部分。
 
 ### 透過 Convex 共用 Telegram 憑證 (v1)
 
@@ -394,7 +394,7 @@ Slack 頻道也可以從集區租用，但 Slack payload 驗證目前位於 Slac
 
 ### 將頻道加入 QA
 
-新通道配接器的架構與 scenario-helper 名稱位於 [QA overview → Adding a channel](/zh-Hant/concepts/qa-e2e-automation#adding-a-channel)。最低門檻：在共享的 `qa-lab` host seam 上實作傳輸 runner，在插件清單中宣告 `qaRunners`，掛載為 `openclaw qa <runner>`，並在 `qa/scenarios/` 下撰寫情境。
+新通道配接器的架構和場景輔助名稱位於 [QA overview → Adding a channel](/zh-Hant/concepts/qa-e2e-automation#adding-a-channel)。最低要求：在共用的 `qa-lab` host seam 上實作傳輸 runner，在外掛清單中宣告 `qaRunners`，掛載為 `openclaw qa <runner>`，並在 `qa/scenarios/` 下編寫場景。
 
 ## 測試套件 (在哪裡執行什麼)
 
@@ -579,211 +579,221 @@ Slack 頻道也可以從集區租用，但 Slack payload 驗證目前位於 Slac
   - 設計上不保證 CI 穩定性（真實網路、真實供應商策略、配額、服務中斷）
   - 需要花費金錢/使用速率限制
   - 優先執行縮小的子集而非「全部」
-- Live 執行會 source `~/.profile` 以取得缺失的 API 金鑰。
-- 預設情況下，Live 執行仍會隔離 `HOME` 並將設定/認證資料複製到臨時測試目錄，以確保單元 fixture 不會變更您的真實 `~/.openclaw`。
-- 僅當您有意需要 Live 測試使用您的真實主目錄時，才設定 `OPENCLAW_LIVE_USE_REAL_HOME=1`。
-- `pnpm test:live` 現在預設為較安靜的模式：它會保留 `[live] ...` 進度輸出，但會抑制額外的 `~/.profile` 通知並靜音 gateway 啟動日誌/Bonjour 雜訊。如果您想要完整的啟動日誌，請設定 `OPENCLAW_LIVE_TEST_QUIET=0`。
-- API 金鑰輪替（特定供應商）：使用逗號/分號格式設定 `*_API_KEYS` 或 `*_API_KEY_1`、`*_API_KEY_2`（例如 `OPENAI_API_KEYS`、`ANTHROPIC_API_KEYS`、`GEMINI_API_KEYS`）或透過 `OPENCLAW_LIVE_*_KEY` 進行單一 live 覆蓋；測試會在速率限制回應時重試。
+- Live 執行使用已匯出的 API 金鑰和已暫存的認證設定檔。
+- 預設情況下，live 執行仍會隔離 `HOME` 並將設定/認證資料複製到暫存測試目錄中，以免單元夾具修改您真實的 `~/.openclaw`。
+- 僅當您刻意需要 live 測試使用您真實的家目錄時，才設定 `OPENCLAW_LIVE_USE_REAL_HOME=1`。
+- `pnpm test:live` 預設為較安靜的模式：它保留 `[live] ...` 進度輸出，並靜音 gateway bootstrap 日誌/Bonjour 閒談。如果您想要完整的啟動日誌，請設定 `OPENCLAW_LIVE_TEST_QUIET=0`。
+- API 金鑰輪換（特定提供者）：使用逗號/分號格式設定 `*_API_KEYS` 或 `*_API_KEY_1`、`*_API_KEY_2`（例如 `OPENAI_API_KEYS`、`ANTHROPIC_API_KEYS`、`GEMINI_API_KEYS`），或透過 `OPENCLAW_LIVE_*_KEY` 針對每次即時執行進行覆寫；測試會在收到速率限制回應時重試。
 - 進度/心跳輸出：
   - Live 測試套件現在會發出進度行至 stderr，因此即使 Vitest 主控台擷取處於安靜狀態，長時間的供應商呼叫也能顯示為活動狀態。
-  - `vitest.live.config.ts` 會停用 Vitest 主控台攔截，使供應商/gateway 進度行在 live 執行期間立即串流輸出。
+  - `vitest.live.config.ts` 會停用 Vitest 主控台攔截，讓提供者/閘道的進度行在即時執行期間立即串流輸出。
   - 使用 `OPENCLAW_LIVE_HEARTBEAT_MS` 調整直接模型心跳。
-  - 使用 `OPENCLAW_LIVE_GATEWAY_HEARTBEAT_MS` 調整 gateway/probe 心跳。
+  - 使用 `OPENCLAW_LIVE_GATEWAY_HEARTBEAT_MS` 調整閘道/探測心跳。
 
 ## 我應該執行哪個測試套件？
 
 使用此決策表：
 
-- 編輯邏輯/測試：執行 `pnpm test`（如果您變更很多，則執行 `pnpm test:coverage`）
-- 涉及 gateway 網路/WS 協定/配對：加入 `pnpm test:e2e`
-- 除錯「我的 bot 掛了」/特定供應商失敗/工具呼叫：執行縮小的 `pnpm test:live`
+- 編輯邏輯/測試：執行 `pnpm test`（如果變更很多則執行 `pnpm test:coverage`）
+- 涉及閘道網路功能/WS 協定/配對：新增 `pnpm test:e2e`
+- 除錯「我的機器人當機」/ 特定提供者失敗 / 工具呼叫：執行縮小範圍的 `pnpm test:live`
 
 ## Live（涉及網路）測試
 
-關於即時模型矩陣、CLI 後端冒煙測試、ACP 冒煙測試、Codex 應用伺服器套件，以及所有媒體提供者即時測試（Deepgram、BytePlus、ComfyUI、圖片、音樂、影片、媒體套件）——加上即時執行的憑證處理——請參閱[測試即時套件](/zh-Hant/help/testing-live)。關於專用的更新和外掛驗證檢查清單，請參閱[測試更新與外掛](/zh-Hant/help/testing-updates-plugins)。
+關於即時模型矩陣、CLI 後端冒煙測試、ACP 冒煙測試、Codex app-server
+harness，以及所有媒體提供者即時測試（Deepgram、BytePlus、ComfyUI、影像、
+音樂、影片、媒體 harness）——加上即時執行的憑證處理——請參閱
+[測試即時套件](/zh-Hant/help/testing-live)。關於專用的更新和
+插件驗證檢查清單，請參閱
+[測試更新與插件](/zh-Hant/help/testing-updates-plugins)。
 
 ## Docker 執行器（可選的「適用於 Linux」檢查）
 
 這些 Docker 執行器分為兩類：
 
-- 即時模型執行器：`test:docker:live-models` 和 `test:docker:live-gateway` 僅在倉儲 Docker 映像檔內執行其對應的設定檔鍵值即時檔案（`src/agents/models.profiles.live.test.ts` 和 `src/gateway/gateway-models.profiles.live.test.ts`），並掛載您的本機設定目錄和工作區（如果已掛載，則會載入 `~/.profile`）。對應的本機進入點為 `test:live:models-profiles` 和 `test:live:gateway-profiles`。
-- Docker 即時執行器預設使用較小的冒煙測試上限，以便完整的 Docker 掃描能保持實用性：
-  `test:docker:live-models` 預設為 `OPENCLAW_LIVE_MAX_MODELS=12`，而
+- 即時模型執行器：`test:docker:live-models` 和 `test:docker:live-gateway` 僅在儲存庫 Docker 映像檔（`src/agents/models.profiles.live.test.ts` 和 `src/gateway/gateway-models.profiles.live.test.ts`）內執行其相符的設定檔金鑰即時檔案，並掛載您的本機設定目錄、工作區和可選的設定檔環境檔案。相符的本機進入點為 `test:live:models-profiles` 和 `test:live:gateway-profiles`。
+- Docker live 執行器預設使用較小的 smoke 上限，以便完整的 Docker 掃描保持實用：
+  `test:docker:live-models` 預設為 `OPENCLAW_LIVE_MAX_MODELS=12`，且
   `test:docker:live-gateway` 預設為 `OPENCLAW_LIVE_GATEWAY_SMOKE=1`、
   `OPENCLAW_LIVE_GATEWAY_MAX_MODELS=8`、
   `OPENCLAW_LIVE_GATEWAY_STEP_TIMEOUT_MS=45000` 和
-  `OPENCLAW_LIVE_GATEWAY_MODEL_TIMEOUT_MS=90000`。當您
-  明確需要進行較大的完整掃描時，請覆寫這些環境變數。
-- `test:docker:all` 透過 `test:docker:live-build` 建置一次 live Docker 映像檔，透過 `scripts/package-openclaw-for-docker.mjs` 將 OpenClaw 打包一次為 npm tarball，然後建置/重用兩個 `scripts/e2e/Dockerfile` 映像檔。Bare 映像檔僅為 install/update/plugin-dependency lanes 提供的 Node/Git runner；這些 lanes 掛載預先建置的 tarball。Functional 映像檔則將相同的 tarball 安裝到 `/app` 中，用於 built-app functionality lanes。Docker lane 定義位於 `scripts/lib/docker-e2e-scenarios.mjs`；planner 邏輯位於 `scripts/lib/docker-e2e-plan.mjs`；`scripts/test-docker-all.mjs` 執行選定的計畫。此聚合使用加權的本機排程器：`OPENCLAW_DOCKER_ALL_PARALLELISM` 控制程序插槽，而資源上限可防止繁重的 live、npm-install 和多服務 lanes 同時啟動。如果單一 lane 的負載超過目前上限，排程器仍可在集區為空時啟動它，並讓其單獨執行直到容量再次可用。預設值為 10 個插槽、`OPENCLAW_DOCKER_ALL_LIVE_LIMIT=9`、`OPENCLAW_DOCKER_ALL_NPM_LIMIT=10` 和 `OPENCLAW_DOCKER_ALL_SERVICE_LIMIT=7`；僅在 Docker 主機有更多餘裕時才調整 `OPENCLAW_DOCKER_ALL_WEIGHT_LIMIT` 或 `OPENCLAW_DOCKER_ALL_DOCKER_LIMIT`。Runner 預設會執行 Docker preflight，移除過時的 OpenClaw E2E 容器，每 30 秒列印一次狀態，將成功的 lane 執行時間儲存在 `.artifacts/docker-tests/lane-timings.json` 中，並在後續執行中利用這些執行時間優先啟動較長的 lanes。使用 `OPENCLAW_DOCKER_ALL_DRY_RUN=1` 來列印加權 lane 清單而不建置或執行 Docker，或使用 `node scripts/test-docker-all.mjs --plan-json` 來列印所選 lanes、套件/映像檔需求與認證的 CI 計畫。
-- `Package Acceptance` 是 GitHub 原生套件閘道，用於檢驗「此可安裝 tarball 是否能作為產品正常運作？」。它會從 `source=npm`、`source=ref`、`source=url` 或 `source=artifact` 中解析出一個候選套件，將其上傳為 `package-under-test`，然後對該特定 tarball 執行可重複使用的 Docker E2E 軌道，而非重新打包選定的 ref。設定檔按廣度排序：`smoke`、`package`、`product` 和 `full`。請參閱[測試更新和外掛](/zh-Hant/help/testing-updates-plugins)以了解套件/更新/外掛合約、已發布升級存留者矩陣、發布預設值和失敗分診。
-- 建置和發布檢查會在 tsdown 之後執行 `scripts/check-cli-bootstrap-imports.mjs`。此守衝程式會遍歷來自 `dist/entry.js` 和 `dist/cli/run-main.js` 的靜態建置圖，如果在命令分發之前的預分派啟動匯入了 Commander、prompt UI、undici 或 logging 等套件相依性，則會失敗；它還會將打包的 gateway run chunk 保持在預算內，並拒絕對已知 cold gateway 路徑的靜態匯入。打包的 CLI 煙霧測試也涵蓋根說明、onboard 說明、doctor 說明、status、config schema 以及 model-list 命令。
-- Package Acceptance 舊版相容性上限為 `2026.4.25`（包含 `2026.4.25-beta.*`）。在該截止版本之前，測試工具僅容忍已發布套件的元數據缺口：省略的私人 QA 清單項目、遺失的 `gateway install --wrapper`、tarball 衍生 git fixture 中遺失的修補檔案、遺失的持久化 `update.channel`、舊版外掛安裝記錄位置、遺失的 marketplace 安裝記錄持久化，以及 `plugins update` 期間的設定元數據移轉。對於 `2026.4.25` 之後的套件，這些路徑皆屬於嚴重失敗。
-- 容器冒煙測試執行器：`test:docker:openwebui`、`test:docker:onboard`、`test:docker:npm-onboard-channel-agent`、`test:docker:skill-install`、`test:docker:update-channel-switch`、`test:docker:upgrade-survivor`、`test:docker:published-upgrade-survivor`、`test:docker:session-runtime-context`、`test:docker:agents-delete-shared-workspace`、`test:docker:gateway-network`、`test:docker:browser-cdp-snapshot`、`test:docker:mcp-channels`、`test:docker:pi-bundle-mcp-tools`、`test:docker:cron-mcp-cleanup`、`test:docker:plugins`、`test:docker:plugin-update`、`test:docker:plugin-lifecycle-matrix` 和 `test:docker:config-reload` 會啟動一個或多個真實容器，並驗證更高層級的整合路徑。
+  `OPENCLAW_LIVE_GATEWAY_MODEL_TIMEOUT_MS=90000`。當您明確想要進行較大的完整掃描時，請覆寫這些環境變數。
+- `test:docker:all` 透過 `test:docker:live-build` 建構一次 live Docker 映像檔，透過 `scripts/package-openclaw-for-docker.mjs` 將 OpenClaw 打包一次為 npm tarball，然後建構/重用兩個 `scripts/e2e/Dockerfile` 映像檔。Bare 映像檔僅包含用於 install/update/plugin-dependency lanes 的 Node/Git 執行器；這些 lanes 會掛載預先建構的 tarball。Functional 映像檔則將相同的 tarball 安裝到 `/app` 中，以用於 built-app functionality lanes。Docker lane 定義位於 `scripts/lib/docker-e2e-scenarios.mjs`；planner 邏輯位於 `scripts/lib/docker-e2e-plan.mjs`；`scripts/test-docker-all.mjs` 執行選定的計劃。Aggregator 使用加權的本機排程器：`OPENCLAW_DOCKER_ALL_PARALLELISM` 控制程序插槽，而資源上限則防止繁重的 live、npm-install 和 multi-service lanes 同時啟動。如果單一 lane 的負載高於目前上限，排程器仍可集區為空時啟動它，然後讓其單獨執行直到容量恢復可用。預設值為 10 個插槽、`OPENCLAW_DOCKER_ALL_LIVE_LIMIT=9`、`OPENCLAW_DOCKER_ALL_NPM_LIMIT=10` 和 `OPENCLAW_DOCKER_ALL_SERVICE_LIMIT=7`；僅當 Docker 主機有更多餘裕時，才調整 `OPENCLAW_DOCKER_ALL_WEIGHT_LIMIT` 或 `OPENCLAW_DOCKER_ALL_DOCKER_LIMIT`。執行器預設會執行 Docker preflight，移除過時的 OpenClaw E2E 容器，每 30 秒列印狀態，將成功的 lane 執行時間儲存在 `.artifacts/docker-tests/lane-timings.json` 中，並在後續執行時利用這些時間優先啟動較長的 lanes。使用 `OPENCLAW_DOCKER_ALL_DRY_RUN=1` 來列印加權 lane 清單而不建構或執行 Docker，或使用 `node scripts/test-docker-all.mjs --plan-json` 來列印所選 lanes、套件/映像需求及認證的 CI 計劃。
+- `Package Acceptance` 是 GitHub 原生套件閘道，用於驗證「此可安裝 tarball 是否能作為產品正常運作？」。它會從 `source=npm`、`source=ref`、`source=url` 或 `source=artifact` 解析出一個候選套件，將其上傳為 `package-under-test`，然後針對該特定 tarball 執行可重複使用的 Docker E2E 通道，而不是重新打包所選的引用。設定檔按廣度排序：`smoke`、`package`、`product` 和 `full`。請參閱[測試更新與外掛](/zh-Hant/help/testing-updates-plugins)以了解套件/更新/外掛合約、已發布升級存取者矩陣、發行預設值及失敗分流。
+- 建置與發行檢查會在 tsdown 之後執行 `scripts/check-cli-bootstrap-imports.mjs`。此防護機制會從 `dist/entry.js` 和 `dist/cli/run-main.js` 遍歷靜態建置圖形，若在分派指令前於啟動階段匯入 Commander、prompt UI、undici 或 logging 等套件相依性，即會失敗；它也會將打包後的 gateway 執行區塊控制在預算內，並拒絕對已知冷路徑 gateway 的靜態匯入。打包的 CLI 測試也涵蓋根目錄說明、入門說明、診斷說明、狀態、設定架構以及 model-list 指令。
+- 套件驗收的舊版相容性上限為 `2026.4.25`（含 `2026.4.25-beta.*`）。在該截止版本之前，測試架構僅容忍已發佈套件的 metadata 遺漏：遺漏的私人 QA 清單項目、缺失的 `gateway install --wrapper`、衍生自 tarball 的 git fixture 中遺漏的修補檔案、遺漏的已持續化 `update.channel`、舊版外掛安裝記錄位置、遺漏的 marketplace 安裝記錄持續性，以及在 `plugins update` 期間的設定 metadata 遷移。對於 `2026.4.25` 之後的套件，這些路徑均屬嚴重失敗。
+- Container smoke runners: `test:docker:openwebui`, `test:docker:onboard`, `test:docker:npm-onboard-channel-agent`, `test:docker:release-user-journey`, `test:docker:release-typed-onboarding`, `test:docker:release-media-memory`, `test:docker:release-upgrade-user-journey`, `test:docker:release-plugin-marketplace`, `test:docker:skill-install`, `test:docker:update-channel-switch`, `test:docker:upgrade-survivor`, `test:docker:published-upgrade-survivor`, `test:docker:session-runtime-context`, `test:docker:agents-delete-shared-workspace`, `test:docker:gateway-network`, `test:docker:browser-cdp-snapshot`, `test:docker:mcp-channels`, `test:docker:pi-bundle-mcp-tools`, `test:docker:cron-mcp-cleanup`, `test:docker:plugins`, `test:docker:plugin-update`, `test:docker:plugin-lifecycle-matrix`, 和 `test:docker:config-reload` 啟動一個或多個真實容器並驗證更高層級的整合路徑。
 
 即時模型 Docker 執行器也只會 bind-mount 所需的 CLI 認證主目錄（或者在執行範圍未縮小時掛載所有支援的目錄），然後在執行前將其複製到容器主目錄中，以便外部 CLI OAuth 可以重新整理權杖，而無需變更主機認證儲存區：
 
-- 直接模型：`pnpm test:docker:live-models`（腳本：`scripts/test-live-models-docker.sh`）
-- ACP bind 冒煙測試：`pnpm test:docker:live-acp-bind`（腳本：`scripts/test-live-acp-bind-docker.sh`；預設涵蓋 Claude、Codex 和 Gemini，並透過 `pnpm test:docker:live-acp-bind:droid` 和 `pnpm test:docker:live-acp-bind:opencode` 提供嚴格的 Droid/OpenCode 涵蓋範圍）
-- CLI 後端冒煙測試：`pnpm test:docker:live-cli-backend`（腳本：`scripts/test-live-cli-backend-docker.sh`）
-- Codex app-server harness 冒煙測試：`pnpm test:docker:live-codex-harness`（腳本：`scripts/test-live-codex-harness-docker.sh`）
-- Gateway + dev agent：`pnpm test:docker:live-gateway`（腳本：`scripts/test-live-gateway-models-docker.sh`）
-- 可觀測性冒煙測試：`pnpm qa:otel:smoke` 是一個私有的 QA 原始碼結帳通道。它刻意不屬於套件 Docker 發布通道的一部分，因為 npm tarball 省略了 QA Lab。
-- Open WebUI 即時冒煙測試：`pnpm test:docker:openwebui`（腳本：`scripts/e2e/openwebui-docker.sh`）
-- 入門嚮導（TTY、完整腳手架）：`pnpm test:docker:onboard`（腳本：`scripts/e2e/onboard-docker.sh`）
-- Npm tarball onboarding/channel/agent smoke: `pnpm test:docker:npm-onboard-channel-agent` 在 Docker 中全域安裝打包的 OpenClaw tarball，透過 env-ref onboarding 加上預設的 Telegram 設定 OpenAI，執行 doctor，並執行一個模擬的 OpenAI agent 週期。使用 `OPENCLAW_CURRENT_PACKAGE_TGZ=/path/to/openclaw-*.tgz` 重複使用預先建置的 tarball，使用 `OPENCLAW_NPM_ONBOARD_HOST_BUILD=0` 跳過主機重建，或使用 `OPENCLAW_NPM_ONBOARD_CHANNEL=discord` 或 `OPENCLAW_NPM_ONBOARD_CHANNEL=slack` 切換 channel。
-- Skill install smoke: `pnpm test:docker:skill-install` 在 Docker 中全域安裝打包的 OpenClaw tarball，在設定中停用上傳的封存安裝，從搜尋中解析當前的即時 ClawHub skill slug，使用 `openclaw skills install` 進行安裝，並驗證已安裝的 skill 以及 `.clawhub` origin/lock 元資料。
-- Update channel switch smoke: `pnpm test:docker:update-channel-switch` 在 Docker 中全域安裝打包的 OpenClaw tarball，從 package `stable` 切換到 git `dev`，驗證持續存在的 channel 和更新後的外掛程式運作正常，然後切換回 package `stable` 並檢查更新狀態。
-- Upgrade survivor smoke: `pnpm test:docker:upgrade-survivor` 將打包的 OpenClaw tarball 安裝在包含 agent、channel 設定、外掛程式允許清單、陳舊的外掛程式依賴狀態以及現有工作區/工作階段檔案的骯髒舊使用者測試裝置之上。它在沒有即時 provider 或 channel 金鑰的情況下執行 package 更新和非互動式 doctor，然後啟動迴路 Gateway 並檢查設定/狀態保留以及啟動/狀態預算。
-- 已發布升級倖存者冒煙測試：`pnpm test:docker:published-upgrade-survivor` 預設安裝 `openclaw@latest`，植入寫實的現有使用者檔案，使用預先烘焙的指令配方設定該基準，驗證結果配置，將該已發布的安裝更新為候選 tarball，執行非互動式 doctor，寫入 `.artifacts/upgrade-survivor/summary.json`，然後啟動回送 Gateway 並檢查已配置的意圖、狀態保留、啟動、`/healthz`、`/readyz` 和 RPC 狀態預算。使用 `OPENCLAW_UPGRADE_SURVIVOR_BASELINE_SPEC` 覆寫其中一個基準，要求聚合排程器使用 `OPENCLAW_UPGRADE_SURVIVOR_BASELINE_SPECS`（例如 `openclaw@2026.5.2 openclaw@2026.4.23 openclaw@2026.4.15`）展開精確的本機基準，並使用 `OPENCLAW_UPGRADE_SURVIVOR_SCENARIOS`（例如 `reported-issues`）展開 issue 形狀的 fixture；回報的 issues 集合包含 `configured-plugin-installs`，用於自動修復外部 OpenClaw 外掛程式的安裝。Package Acceptance 將這些公開為 `published_upgrade_survivor_baseline`、`published_upgrade_survivor_baselines` 和 `published_upgrade_survivor_scenarios`，解析元基準 token（如 `last-stable-4` 或 `all-since-2026.4.23`），而 Full Release Validation 將 release-soak 套件閘門擴展為 `last-stable-4 2026.4.23 2026.5.2 2026.4.15` 加上 `reported-issues`。
-- Session 執行時期上下文冒煙測試：`pnpm test:docker:session-runtime-context` 驗證隱藏的執行時期上下文記錄持久性，以及 doctor 對受影響的重複提示重寫分支的修復。
-- Bun 全域安裝冒煙測試：`bash scripts/e2e/bun-global-install-smoke.sh` 打包當前樹，在獨立的 home 目錄中使用 `bun install -g` 安裝它，並驗證 `openclaw infer image providers --json` 返回打包的映像提供者而不是掛起。使用 `OPENCLAW_BUN_GLOBAL_SMOKE_PACKAGE_TGZ=/path/to/openclaw-*.tgz` 重用預先建置的 tarball，使用 `OPENCLAW_BUN_GLOBAL_SMOKE_HOST_BUILD=0` 跳過主機建置，或使用 `OPENCLAW_BUN_GLOBAL_SMOKE_DIST_IMAGE=openclaw-dockerfile-smoke:local` 從已建置的 Docker 映像複製 `dist/`。
-- Installer Docker smoke：`bash scripts/test-install-sh-docker.sh` 在其 root、update 和 direct-npm 容器之間共享一個 npm 快取。Update smoke 預設以 npm `latest` 作為升級至候選 tarball 之前的穩定基準。可在本地使用 `OPENCLAW_INSTALL_SMOKE_UPDATE_BASELINE=2026.4.22` 覆寫，或在 GitHub 上使用 Install Smoke workflow 的 `update_baseline_version` 輸入覆寫。非 root 安裝程式檢查會保持獨立的 npm 快取，以免 root 擁有的快取條目遮蔽使用者本機的安裝行為。設定 `OPENCLAW_INSTALL_SMOKE_NPM_CACHE_DIR=/path/to/cache` 以在本地重新執行時重複使用 root/update/direct-npm 快取。
-- Install Smoke CI 會使用 `OPENCLAW_INSTALL_SMOKE_SKIP_NPM_GLOBAL=1` 跳過重複的 direct-npm 全域更新；當需要直接的 `npm install -g` 涵蓋率時，請在本地不帶該環境變數的情況下執行腳本。
-- Agents delete shared workspace CLI smoke：`pnpm test:docker:agents-delete-shared-workspace` (腳本：`scripts/e2e/agents-delete-shared-workspace-docker.sh`) 預設會建置 root Dockerfile 映像檔，在隔離的容器 home 中使用一個 workspace 植入兩個 agents，執行 `agents delete --json`，並驗證有效的 JSON 以及保留的 workspace 行為。使用 `OPENCLAW_AGENTS_DELETE_SHARED_WORKSPACE_E2E_IMAGE=openclaw-dockerfile-smoke:local OPENCLAW_AGENTS_DELETE_SHARED_WORKSPACE_E2E_SKIP_BUILD=1` 重複使用 install-smoke 映像檔。
-- Gateway networking (兩個容器，WS auth + health)：`pnpm test:docker:gateway-network` (腳本：`scripts/e2e/gateway-network-docker.sh`)
-- Browser CDP snapshot smoke：`pnpm test:docker:browser-cdp-snapshot` (腳本：`scripts/e2e/browser-cdp-snapshot-docker.sh`) 會建置來源 E2E 映像檔加上 Chromium 層，使用原始 CDP 啟動 Chromium，執行 `browser doctor --deep`，並驗證 CDP role snapshot 涵蓋了連結 URL、游標提昇的可點擊元素、iframe 參照以及 frame 元數據。
-- OpenAI Responses web_search minimal reasoning regression：`pnpm test:docker:openai-web-search-minimal` (腳本：`scripts/e2e/openai-web-search-minimal-docker.sh`) 會透過 Gateway 執行模擬的 OpenAI 伺服器，驗證 `web_search` 將 `reasoning.effort` 從 `minimal` 提升至 `low`，然後強制供應商 schema 拒絕並檢查原始詳細資訊是否出現在 Gateway 記錄中。
-- MCP 頻道橋接器（帶有種子的 Gateway + stdio 橋接器 + 原始 Claude 通知框架冒煙測試）：`pnpm test:docker:mcp-channels`（腳本：`scripts/e2e/mcp-channels-docker.sh`）
-- Pi 捆綁 MCP 工具（真實 stdio MCP 伺服器 + 嵌入式 Pi 設定檔允許/拒絕冒煙測試）：`pnpm test:docker:pi-bundle-mcp-tools`（腳本：`scripts/e2e/pi-bundle-mcp-tools-docker.sh`）
-- Cron/子代理 MCP 清理（真實 Gateway + stdio MCP 子進程在隔離的 cron 和一次性子代理運行後拆除）：`pnpm test:docker:cron-mcp-cleanup`（腳本：`scripts/e2e/cron-mcp-cleanup-docker.sh`）
-- 外掛程式（針對本地路徑、`file:`、具有提升依賴項的 npm 註冊表、git 移動引用、ClawHub 樣本套件、市集更新以及 Claude 捆綁啟用/檢查的安裝/更新冒煙測試）：`pnpm test:docker:plugins`（腳本：`scripts/e2e/plugins-docker.sh`）
-  設定 `OPENCLAW_PLUGINS_E2E_CLAWHUB=0` 以跳過 ClawHub 區塊，或使用 `OPENCLAW_PLUGINS_E2E_CLAWHUB_SPEC` 和 `OPENCLAW_PLUGINS_E2E_CLAWHUB_ID` 覆蓋預設的樣本套件套件/執行時間對。如果沒有 `OPENCLAW_CLAWHUB_URL`/`CLAWHUB_URL`，測試將使用封閉的本地 ClawHub 夾具伺服器。
-- 外掛程式更新未變更冒煙測試：`pnpm test:docker:plugin-update`（腳本：`scripts/e2e/plugin-update-unchanged-docker.sh`）
-- 外掛程式生命週期矩陣冒煙測試：`pnpm test:docker:plugin-lifecycle-matrix` 在裸容器中安裝打包的 OpenClaw tarball，安裝 npm 外掛程式，切換啟用/停用，透過本地 npm 註冊表升級和降級，刪除已安裝的程式碼，然後驗證解除安裝仍會移除陳舊狀態，同時記錄每個生命週期階段的 RSS/CPU 指標。
-- 設定重新載入元數據冒煙測試：`pnpm test:docker:config-reload`（腳本：`scripts/e2e/config-reload-source-docker.sh`）
-- 外掛程式：`pnpm test:docker:plugins` 涵蓋針對本地路徑、`file:`、具有提升依賴項的 npm 註冊表、git 移動引用、ClawHub 夾具、市集更新以及 Claude 捆綁啟用/檢查的安裝/更新冒煙測試。`pnpm test:docker:plugin-update` 涵蓋已安裝外掛程式的未變更新行為。`pnpm test:docker:plugin-lifecycle-matrix` 涵蓋資源追蹤的 npm 外掛程式安裝、啟用、停用、升級、降級以及遺失程式碼解除安裝。
+- Direct models: `pnpm test:docker:live-models` (script: `scripts/test-live-models-docker.sh`)
+- ACP bind smoke: `pnpm test:docker:live-acp-bind` (script: `scripts/test-live-acp-bind-docker.sh`; 預設覆蓋 Claude、Codex 和 Gemini，並透過 `pnpm test:docker:live-acp-bind:droid` 和 `pnpm test:docker:live-acp-bind:opencode` 嚴格覆蓋 Droid/OpenCode)
+- CLI backend smoke: `pnpm test:docker:live-cli-backend` (script: `scripts/test-live-cli-backend-docker.sh`)
+- Codex app-server harness smoke: `pnpm test:docker:live-codex-harness` (script: `scripts/test-live-codex-harness-docker.sh`)
+- Gateway + dev agent: `pnpm test:docker:live-gateway` (script: `scripts/test-live-gateway-models-docker.sh`)
+- Observability smoke: `pnpm qa:otel:smoke` 是一個私有的 QA source-checkout lane。它故意不包含在 package Docker release lanes 中，因為 npm tarball 省略了 QA Lab。
+- Open WebUI live smoke: `pnpm test:docker:openwebui` (script: `scripts/e2e/openwebui-docker.sh`)
+- Onboarding wizard (TTY, full scaffolding): `pnpm test:docker:onboard` (script: `scripts/e2e/onboard-docker.sh`)
+- Npm tarball onboarding/channel/agent smoke: `pnpm test:docker:npm-onboard-channel-agent` 會在 Docker 中全域安裝打包好的 OpenClaw tarball，透過 env-ref onboarding 預設設定 OpenAI 以及 Telegram，執行 doctor，並執行一次模擬的 OpenAI agent 週期。使用 `OPENCLAW_CURRENT_PACKAGE_TGZ=/path/to/openclaw-*.tgz` 重複使用預先建置的 tarball，使用 `OPENCLAW_NPM_ONBOARD_HOST_BUILD=0` 跳過主機重建，或使用 `OPENCLAW_NPM_ONBOARD_CHANNEL=discord` 與 `OPENCLAW_NPM_ONBOARD_CHANNEL=slack` 切換通道。
 
-若要手動預先建置並重複使用共享的功能映像檔：
+- Release user journey smoke: `pnpm test:docker:release-user-journey` 會在一個乾淨的 Docker home 中全域安裝打包好的 OpenClaw tarball，執行 onboarding，設定一個模擬的 OpenAI provider，執行 agent 週期，安裝/解除安裝外掛程式，針對本地 fixture 設定 ClickClack，驗證輸出/輸入訊息，重新啟動 Gateway，並執行 doctor。
+- Release typed onboarding smoke: `pnpm test:docker:release-typed-onboarding` 會安裝打包好的 tarball，透過真實 TTY 驅動 `openclaw onboard`，將 OpenAI 設定為 env-ref provider，驗證沒有原始金鑰持久化，並執行模擬的 agent 週期。
+- Release media/memory smoke: `pnpm test:docker:release-media-memory` 會安裝打包好的 tarball，驗證來自 PNG 附件的圖片理解、OpenAI 相容的圖片生成輸出、記憶體搜尋召回，以及 Gateway 重新啟動後的召回存活。
+- Release upgrade user journey smoke: `pnpm test:docker:release-upgrade-user-journey` 預設會安裝 `openclaw@latest`，在已發布的套件上設定 provider/plugin/ClickClack 狀態，升級至候選 tarball，然後重新執行核心 agent/plugin/channel 旅程。使用 `OPENCLAW_RELEASE_UPGRADE_BASELINE_SPEC=openclaw@<version>` 覆寫基準。
+- Release plugin marketplace smoke: `pnpm test:docker:release-plugin-marketplace` 會從本地 fixture marketplace 安裝，更新已安裝的外掛程式，將其解除安裝，並驗證外掛程式 CLI 隨安裝元資料修剪而消失。
+- Skill install smoke: `pnpm test:docker:skill-install` 在 Docker 中全域安裝打包好的 OpenClaw tarball，在設定中停用已上傳的 archive 安裝，從搜尋解析目前 live ClawHub skill slug，使用 `openclaw skills install` 安裝它，並驗證已安裝的 skill 以及 `.clawhub` origin/lock 中繼資料。
+- Update channel switch smoke: `pnpm test:docker:update-channel-switch` 在 Docker 中全域安裝打包好的 OpenClaw tarball，從 package `stable` 切換到 git `dev`，驗證持久化的 channel 和外掛更新後的運作，然後切換回 package `stable` 並檢查更新狀態。
+- Upgrade survivor smoke: `pnpm test:docker:upgrade-survivor` 將打包好的 OpenClaw tarball 安裝在一個包含 agents、channel config、plugin allowlists、陳舊的 plugin dependency 狀態以及既有 workspace/session files 的 dirty old-user fixture 上。它在沒有 live provider 或 channel keys 的情況下執行 package update 和非互動式 doctor，然後啟動 loopback Gateway 並檢查 config/state 的保留以及啟動/狀態的預算。
+- 已發布升級存留者測試：`pnpm test:docker:published-upgrade-survivor` 預設安裝 `openclaw@latest`，植入真實的現有使用者檔案，使用內建的指令配方設定該基準，驗證產生的設定，將該已發布的安裝更新為候選 tarball，執行非互動式 doctor，寫入 `.artifacts/upgrade-survivor/summary.json`，然後啟動一個迴路 Gateway 並檢查已設定的 intents、狀態保留、啟動、`/healthz`、`/readyz` 和 RPC 狀態預算。使用 `OPENCLAW_UPGRADE_SURVIVOR_BASELINE_SPEC` 覆寫一個基準，要求聚合排程器使用 `OPENCLAW_UPGRADE_SURVIVOR_BASELINE_SPECS`（例如 `openclaw@2026.5.2 openclaw@2026.4.23 openclaw@2026.4.15`）擴展精確的本機基準，並使用 `OPENCLAW_UPGRADE_SURVIVOR_SCENARIOS`（例如 `reported-issues`）擴展 issue-shaped fixtures；回報的問題集包含 `configured-plugin-installs`，用於自動修復外部 OpenClaw 外掛程式安裝。Package Acceptance 將其公開為 `published_upgrade_survivor_baseline`、`published_upgrade_survivor_baselines` 和 `published_upgrade_survivor_scenarios`，解析元基準 token（例如 `last-stable-4` 或 `all-since-2026.4.23`），而 Full Release Validation 則將 release-soak package gate 擴展為 `last-stable-4 2026.4.23 2026.5.2 2026.4.15` 加上 `reported-issues`。
+- Session runtime context 測試：`pnpm test:docker:session-runtime-context` 驗證隱藏的 runtime context 文字記錄持久性，以及 doctor 對受影響的重複 prompt-rewrite 分支的修復。
+- Bun 全域安裝測試：`bash scripts/e2e/bun-global-install-smoke.sh` 打包當前樹狀結構，在隔離的 home 目錄中使用 `bun install -g` 進行安裝，並驗證 `openclaw infer image providers --json` 回傳打包的圖像提供者而非卡住。使用 `OPENCLAW_BUN_GLOBAL_SMOKE_PACKAGE_TGZ=/path/to/openclaw-*.tgz` 重複使用預先建置的 tarball，使用 `OPENCLAW_BUN_GLOBAL_SMOKE_HOST_BUILD=0` 跳過主機建置，或使用 `OPENCLAW_BUN_GLOBAL_SMOKE_DIST_IMAGE=openclaw-dockerfile-smoke:local` 從已建置的 Docker 映像複製 `dist/`。
+- 安裝程式 Docker smoke：`bash scripts/test-install-sh-docker.sh` 在其 root、update 和 direct-npm 容器之間共享一個 npm 快取。Update smoke 預設以 npm `latest` 作為升級到候選 tarball 之前的穩定基線。可以在本機使用 `OPENCLAW_INSTALL_SMOKE_UPDATE_BASELINE=2026.4.22` 覆寫，或在 GitHub 上使用 Install Smoke workflow 的 `update_baseline_version` 輸入。非 root 安裝程式檢查會保持獨立的 npm 快取，因此 root 擁有的快取條目不會掩蓋使用者本機的安裝行為。設定 `OPENCLAW_INSTALL_SMOKE_NPM_CACHE_DIR=/path/to/cache` 以在本地重新執行時重用 root/update/direct-npm 快取。
+- Install Smoke CI 使用 `OPENCLAW_INSTALL_SMOKE_SKIP_NPM_GLOBAL=1` 跳過重複的 direct-npm 全域更新；當需要 direct `npm install -g` 覆蓋率時，請在本地不帶該環境變數的情況下執行腳本。
+- Agents delete shared workspace CLI smoke：`pnpm test:docker:agents-delete-shared-workspace` (腳本: `scripts/e2e/agents-delete-shared-workspace-docker.sh`) 預設建構 root Dockerfile 映像檔，在獨立的容器 home 中為兩個 agents 植入一個 workspace，執行 `agents delete --json`，並驗證有效的 JSON 以及保留的 workspace 行為。使用 `OPENCLAW_AGENTS_DELETE_SHARED_WORKSPACE_E2E_IMAGE=openclaw-dockerfile-smoke:local OPENCLAW_AGENTS_DELETE_SHARED_WORKSPACE_E2E_SKIP_BUILD=1` 重用 install-smoke 映像檔。
+- Gateway networking (兩個容器, WS auth + health)：`pnpm test:docker:gateway-network` (腳本: `scripts/e2e/gateway-network-docker.sh`)
+- Browser CDP snapshot smoke：`pnpm test:docker:browser-cdp-snapshot` (腳本: `scripts/e2e/browser-cdp-snapshot-docker.sh`) 建構來源 E2E 映像檔加上 Chromium 層，使用原始 CDP 啟動 Chromium，執行 `browser doctor --deep`，並驗證 CDP role 快照涵蓋連結 URL、游標提升的可點擊元素、iframe 參照和 frame 中繼資料。
+- OpenAI Responses web_search minimal reasoning regression：`pnpm test:docker:openai-web-search-minimal` (腳本: `scripts/e2e/openai-web-search-minimal-docker.sh`) 透過 Gateway 執行模擬的 OpenAI 伺服器，驗證 `web_search` 將 `reasoning.effort` 從 `minimal` 提升至 `low`，然後強制供應商 schema 拒絕並檢查原始詳細資訊是否出現在 Gateway 日誌中。
+- MCP 通道橋接器（已植入的 Gateway + stdio 橋接器 + 原始 Claude 通知幀冒煙測試）：`pnpm test:docker:mcp-channels` (腳本： `scripts/e2e/mcp-channels-docker.sh`)
+- Pi 捆綁 MCP 工具（真實 stdio MCP 伺服器 + 嵌入式 Pi 設定檔允許/拒絕冒煙測試）：`pnpm test:docker:pi-bundle-mcp-tools` (腳本： `scripts/e2e/pi-bundle-mcp-tools-docker.sh`)
+- Cron/子代理 MCP 清理（真實 Gateway + stdio MCP 子程序在獨立 cron 和一次性子代理運行後的拆解）：`pnpm test:docker:cron-mcp-cleanup` (腳本： `scripts/e2e/cron-mcp-cleanup-docker.sh`)
+- 外掛程式（本地路徑、`file:`、具有提升依賴關係的 npm 註冊表、格式錯誤的 npm 套件元數據、git 移動參照、ClawHub 百寶箱、市集更新以及 Claude-bundle 啟用/檢查的安裝/更新冒煙測試）： `pnpm test:docker:plugins` (腳本： `scripts/e2e/plugins-docker.sh`)
+  設定 `OPENCLAW_PLUGINS_E2E_CLAWHUB=0` 以跳過 ClawHub 區塊，或使用 `OPENCLAW_PLUGINS_E2E_CLAWHUB_SPEC` 和 `OPENCLAW_PLUGINS_E2E_CLAWHUB_ID` 覆寫預設的百寶箱套件/運行時對。如果沒有 `OPENCLAW_CLAWHUB_URL`/`CLAWHUB_URL`，測試將使用封閉的本地 ClawHub fixture 伺服器。
+- 外掛程式更新未變更冒煙測試： `pnpm test:docker:plugin-update` (腳本： `scripts/e2e/plugin-update-unchanged-docker.sh`)
+- 外掛程式生命週期矩陣冒煙測試： `pnpm test:docker:plugin-lifecycle-matrix` 在裸容器中安裝打包的 OpenClaw tarball，安裝 npm 外掛程式，切換啟用/停用，透過本地 npm 註冊表升級和降級它，刪除已安裝的程式碼，然後驗證解除安裝仍會移除過時狀態，同時記錄每個生命週期階段的 RSS/CPU 指標。
+- 設定重新載入元數據冒煙測試： `pnpm test:docker:config-reload` (腳本： `scripts/e2e/config-reload-source-docker.sh`)
+- 外掛程式： `pnpm test:docker:plugins` 涵蓋本地路徑、`file:`、具有提升依賴關係的 npm 註冊表、git 移動參照、ClawHub fixture、市集更新以及 Claude-bundle 啟用/檢查的安裝/更新冒煙測試。 `pnpm test:docker:plugin-update` 涵蓋已安裝外掛程式的未變更更新行為。 `pnpm test:docker:plugin-lifecycle-matrix` 涵蓋資源追蹤的 npm 外掛程式安裝、啟用、停用、升級、降級和缺少程式碼的解除安裝。
+
+若要手動預先建置並重複使用共用的功能映像檔：
 
 ```bash
 OPENCLAW_DOCKER_E2E_IMAGE=openclaw-docker-e2e-functional:local pnpm test:docker:e2e-build
 OPENCLAW_DOCKER_E2E_IMAGE=openclaw-docker-e2e-functional:local OPENCLAW_SKIP_DOCKER_BUILD=1 pnpm test:docker:mcp-channels
 ```
 
-若設定了特定套件的映像檔覆寫（例如 `OPENCLAW_GATEWAY_NETWORK_E2E_IMAGE`），該設定仍然優先。當 `OPENCLAW_SKIP_DOCKER_BUILD=1` 指向遠端共享映像檔時，如果本機尚未存在，腳本會將其拉取下來。QR 和安裝程式的 Docker 測試保留自己的 Dockerfile，因為它們驗證的是套件/安裝行為，而不是共享的建置應用程式執行環境。
+諸如 `OPENCLAW_GATEWAY_NETWORK_E2E_IMAGE` 等特定套件的映像檔覆寫設定在被設定後仍然優先。當 `OPENCLAW_SKIP_DOCKER_BUILD=1` 指向遠端共用映像檔時，如果該映像檔尚未在本地，腳本會將其拉取下來。QR 碼與安裝程式 Docker 測試保留自己的 Dockerfile，因為它們驗證的是套件/安裝行為，而不是共用建置應用程式的執行環境。
 
-live-model Docker 執行器也會以唯讀方式掛載目前的 checkout，並將其暫存到容器內的暫時工作目錄中。這既保持了執行時映像檔的精簡，又能針對您的確切本機來源/設定執行 Vitest。暫存步驟會跳過大型僅限本機的快取和應用程式建置輸出，例如 `.pnpm-store`、`.worktrees`、`__openclaw_vitest__`，以及應用程式本機的 `.build` 或 Gradle 輸出目錄，以免 Docker live 執行花費數分鐘時間複製機器特定的構件。它們也會設定 `OPENCLAW_SKIP_CHANNELS=1`，使 gateway live probes 不會在容器內啟動真正的 Telegram/Discord 等頻道 worker。`test:docker:live-models` 仍會執行 `pnpm test:live`，因此當您需要縮小或排除該 Docker lane 中的 gateway live 涵蓋範圍時，請一併傳遞 `OPENCLAW_LIVE_GATEWAY_*`。`test:docker:openwebui` 是更高層級的相容性測試：它會啟動一個啟用 OpenAI 相容 HTTP 端點的 OpenClaw gateway 容器，對該 gateway 啟動一個固定的 Open WebUI 容器，透過 Open WebUI 登入，驗證 `/api/models` 是否公開 `openclaw/default`，然後透過 Open WebUI 的 `/api/chat/completions` proxy 發送真實的聊天請求。針對應在 Open WebUI 登入和模型探索後停止、而不等待 live model 完成的 release-path CI 檢查，請設定 `OPENWEBUI_SMOKE_MODE=models`。首次執行可能會明顯較慢，因為 Docker 可能需要提取 Open WebUI 映像檔，而 Open WebUI 可能需要完成自己的冷啟動設定。此 lane 需要可用的 live model 金鑰，而 `OPENCLAW_PROFILE_FILE`（預設為 `~/.profile`）是在 Docker 化執行中提供它的主要方式。成功的執行會列印一個小型 JSON payload，例如 `{ "ok": true, "model": "openclaw/default", ... }`。`test:docker:mcp-channels` 是刻意設計為確定性的，不需要真實的 Telegram、Discord 或 iMessage 帳號。它會啟動一個已設定種子的 Gateway 容器，啟動第二個產生 `openclaw mcp serve` 的容器，然後驗證路由的對話探索、逐字稿讀取、附件中繼資料、即時事件佇列行為、輸出傳送路由，以及透過真實 stdio MCP 橋接器的 Claude 樣式頻道與權限通知。通知檢查會直接檢查原始 stdio MCP 幀，因此測試驗證的是橋接器實際發出的內容，而不僅僅是特定客戶端 SDK 呈現的內容。`test:docker:pi-bundle-mcp-tools` 是確定性的，不需要 live model 金鑰。它會建置 repo Docker 映像檔，在容器內啟動真實的 stdio MCP probe server，透過內嵌的 Pi bundle MCP 執行時具現化該 server，執行工具，然後驗證 `coding` 和 `messaging` 保留 `bundle-mcp` 工具，而 `minimal` 和 `tools.deny: ["bundle-mcp"]` 會將其過濾掉。`test:docker:cron-mcp-cleanup` 是確定性的，不需要 live model 金鑰。它會啟動一個帶有真實 stdio MCP probe server 的已設定種子的 Gateway，執行獨立的 cron 周期和 `/subagents spawn` 單次子周期，然後驗證 MCP 子程序在每次執行後會退出。
+live-model Docker 執行器也會以唯讀方式掛載目前的 checkout，並將其暫存到容器內的暫時工作目錄中。這讓執行時映像檔保持精簡，同時仍能針對您確切的本地來源/設定執行 Vitest。暫存步驟會跳過大型本地專用快取和應用程式建置輸出，例如 `.pnpm-store`、`.worktrees`、`__openclaw_vitest__`，以及應用程式本地的 `.build` 或 Gradle 輸出目錄，以免 Docker live 執行花費數分鐘複製機器特定的成品。它們也會設定 `OPENCLAW_SKIP_CHANNELS=1`，讓 gateway live probes 不會在容器內啟動真實的 Telegram/Discord/等通道工作者。`test:docker:live-models` 仍會執行 `pnpm test:live`，因此當您需要縮小或從該 Docker 軌道排除 gateway live 涵蓋範圍時，也請傳遞 `OPENCLAW_LIVE_GATEWAY_*`。`test:docker:openwebui` 是較高層級的相容性檢測：它會啟動啟用 OpenAI 相容 HTTP 端點的 OpenClaw gateway 容器，對該 gateway 啟動固定版本的 Open WebUI 容器，透過 Open WebUI 登入，驗證 `/api/models` 是否公開 `openclaw/default`，然後透過 Open WebUI 的 `/api/chat/completions` 代理傳送真實的聊天請求。針對應在 Open WebUI 登入和模型探索後停止，而不等待 live model 完成的發行版本路徑 CI 檢查，請設定 `OPENWEBUI_SMOKE_MODE=models`。第一次執行可能會明顯較慢，因為 Docker 可能需要拉取 Open WebUI 映像檔，且 Open WebUI 可能需要完成自身的冷啟動設定。此軌道需要可用的 live model 金鑰。您可以透過流程環境、已暫存的 auth 設定檔或明確的 `OPENCLAW_PROFILE_FILE` 來提供。成功的執行會列印小型 JSON 載荷，例如 `{ "ok": true, "model": "openclaw/default", ... }`。`test:docker:mcp-channels` 刻意為確定性，不需要真實的 Telegram、Discord 或 iMessage 帳戶。它會啟動帶有種子的 Gateway 容器，啟動第二個產生 `openclaw mcp serve` 的容器，然後驗證路由的對話探索、逐字稿讀取、附件中繼資料、即時事件佇列行為、傳出傳送路由，以及透過真實 stdio MCP 橋接器的 Claude 風格通道 + 權限通知。通知檢查會直接檢查原始 stdio MCP 框架，因此檢測驗證的是橋接器實際發出的內容，而不僅是特定客戶端 SDK 恰好呈現的內容。`test:docker:pi-bundle-mcp-tools` 是確定性的，不需要 live model 金鑰。它會建置 repo Docker 映像檔，在容器內啟動真實的 stdio MCP probe server，透過內嵌的 Pi bundle MCP 執行時具現化該 server，執行工具，然後驗證 `coding` 和 `messaging` 保留 `bundle-mcp` 工具，而 `minimal` 和 `tools.deny: ["bundle-mcp"]` 則會將其過濾掉。`test:docker:cron-mcp-cleanup` 是確定性的，不需要 live model 金鑰。它會啟動帶有真實 stdio MCP probe server 的已植入種子 Gateway，執行隔離的 cron 週期和 `/subagents spawn` 一次性子週期，然後驗證 MCP 子程序在每次執行後會結束。
 
-手動 ACP 自然語言執行緒冒煙測試（非 CI）：
+手動 ACP 純語言執行緒冒煙測試（非 CI）：
 
 - `bun scripts/dev/discord-acp-plain-language-smoke.ts --channel <discord-channel-id> ...`
-- 保留此腳本用於迴歸/除錯工作流程。它可能再次需要用於 ACP 執行緒路由驗證，因此請勿刪除它。
+- 保留此腳本以用於迴歸/除錯工作流程。可能需要再次用它來驗證 ACP 執行緒路由，因此請勿刪除。
 
-有用的環境變數：
+實用的環境變數：
 
-- `OPENCLAW_CONFIG_DIR=...`（預設：`~/.openclaw`）掛載至 `/home/node/.openclaw`
-- `OPENCLAW_WORKSPACE_DIR=...`（預設：`~/.openclaw/workspace`）掛載至 `/home/node/.openclaw/workspace`
-- `OPENCLAW_PROFILE_FILE=...`（預設：`~/.profile`）掛載至 `/home/node/.profile` 並在執行測試前載入
-- `OPENCLAW_DOCKER_PROFILE_ENV_ONLY=1` 以僅驗證從 `OPENCLAW_PROFILE_FILE` 載入的環境變數，使用臨時設定/工作區目錄且無外部 CLI 認證掛載
-- `OPENCLAW_DOCKER_CLI_TOOLS_DIR=...`（預設：`~/.cache/openclaw/docker-cli-tools`）掛載至 `/home/node/.npm-global` 用於 Docker 內的快取 CLI 安裝
-- `$HOME` 下的外部 CLI 認證目錄/檔案以唯讀方式掛載於 `/host-auth...` 下，然後在測試開始前複製到 `/home/node/...` 中
-  - 預設目錄：`.minimax`
-  - 預設檔案：`~/.codex/auth.json`、`~/.codex/config.toml`、`.claude.json`、`~/.claude/.credentials.json`、`~/.claude/settings.json`、`~/.claude/settings.local.json`
-  - 縮小的供應商執行僅掛載從 `OPENCLAW_LIVE_PROVIDERS` / `OPENCLAW_LIVE_GATEWAY_PROVIDERS` 推斷出的所需目錄/檔案
-  - 使用 `OPENCLAW_DOCKER_AUTH_DIRS=all`、`OPENCLAW_DOCKER_AUTH_DIRS=none` 或像 `OPENCLAW_DOCKER_AUTH_DIRS=.claude,.codex` 這樣的逗號清單手動覆寫
-- `OPENCLAW_LIVE_GATEWAY_MODELS=...` / `OPENCLAW_LIVE_MODELS=...` 以縮小執行範圍
+- `OPENCLAW_CONFIG_DIR=...` （預設：`~/.openclaw`） 掛載至 `/home/node/.openclaw`
+- `OPENCLAW_WORKSPACE_DIR=...` （預設：`~/.openclaw/workspace`） 掛載至 `/home/node/.openclaw/workspace`
+- `OPENCLAW_PROFILE_FILE=...` 已掛載並在執行測試前載入
+- `OPENCLAW_DOCKER_PROFILE_ENV_ONLY=1` 以僅驗證從 `OPENCLAW_PROFILE_FILE` 載入的環境變數，使用臨時的設定/工作區目錄且無外部 CLI 認證掛載
+- `OPENCLAW_DOCKER_CLI_TOOLS_DIR=...` （預設：`~/.cache/openclaw/docker-cli-tools`） 掛載至 `/home/node/.npm-global` 以在 Docker 內部快取 CLI 安裝
+- `$HOME` 下的外部 CLI 認證目錄/檔案會以唯讀方式掛載於 `/host-auth...` 下，然後在測試開始前複製到 `/home/node/...`
+  - 預設目錄： `.minimax`
+  - 預設檔案： `~/.codex/auth.json` 、 `~/.codex/config.toml` 、 `.claude.json` 、 `~/.claude/.credentials.json` 、 `~/.claude/settings.json` 、 `~/.claude/settings.local.json`
+  - 縮減的供應商執行僅掛載從 `OPENCLAW_LIVE_PROVIDERS` / `OPENCLAW_LIVE_GATEWAY_PROVIDERS` 推斷出的所需目錄/檔案
+  - 使用 `OPENCLAW_DOCKER_AUTH_DIRS=all` 、 `OPENCLAW_DOCKER_AUTH_DIRS=none` 或逗號分隔列表（如 `OPENCLAW_DOCKER_AUTH_DIRS=.claude,.codex` ）手動覆寫
+- `OPENCLAW_LIVE_GATEWAY_MODELS=...` / `OPENCLAW_LIVE_MODELS=...` 以縮減執行範圍
 - `OPENCLAW_LIVE_GATEWAY_PROVIDERS=...` / `OPENCLAW_LIVE_PROVIDERS=...` 以在容器內過濾供應商
-- `OPENCLAW_SKIP_DOCKER_BUILD=1` 以重用現有的 `openclaw:local-live` 映像檔用於不需要重新建置的重新執行
-- `OPENCLAW_LIVE_REQUIRE_PROFILE_KEYS=1` 以確保認證來自設定檔儲存（而非環境變數）
-- `OPENCLAW_OPENWEBUI_MODEL=...` 以選擇閘道為 Open WebUI 冒煙測試公開的模型
-- `OPENCLAW_OPENWEBUI_PROMPT=...` 覆寫 Open WebUI 測試所使用的 nonce-check 提示
-- `OPENWEBUI_IMAGE=...` 覆寫固定的 Open WebUI 映像檔標籤
+- `OPENCLAW_SKIP_DOCKER_BUILD=1` 以重用現有的 `openclaw:local-live` 映像檔，用於不需重新建置的重新執行
+- `OPENCLAW_LIVE_REQUIRE_PROFILE_KEYS=1` 以確保憑證來自設定檔儲存（非環境變數）
+- `OPENCLAW_OPENWEBUI_MODEL=...` 以選擇 Gateway 為 Open WebUI 冒煙測試暴露的模型
+- `OPENCLAW_OPENWEBUI_PROMPT=...` 用來覆寫 Open WebUI smoke 測試使用的 nonce-check 提示
+- `OPENWEBUI_IMAGE=...` 用來覆寫固定的 Open WebUI 映像檔標籤
 
-## 文件健全性檢查
+## Docs sanity
 
-文件編輯後執行檢查：`pnpm check:docs`。
-當您也需要頁內標題檢查時，執行完整的 Mintlify 錨點驗證：`pnpm docs:check-links:anchors`。
+在文件編輯後執行文件檢查：`pnpm check:docs`。
+當您也需要頁面內標題檢查時，執行完整的 Mintlify 錨點驗證：`pnpm docs:check-links:anchors`。
 
 ## 離線回歸測試 (CI-safe)
 
 這些是沒有真實供應商的「真實管線」回歸測試：
 
-- Gateway 工具呼叫 (模擬 OpenAI，真實 gateway + agent 迴圈)：`src/gateway/gateway.test.ts` (案例："runs a mock OpenAI tool call end-to-end via gateway agent loop")
+- Gateway 工具呼叫 (模擬 OpenAI、真實 gateway + agent 迴圈)：`src/gateway/gateway.test.ts` (案例："runs a mock OpenAI tool call end-to-end via gateway agent loop")
 - Gateway 精靈 (WS `wizard.start`/`wizard.next`，寫入設定 + 強制執行驗證)：`src/gateway/gateway.test.ts` (案例："runs wizard over ws and writes auth token config")
 
-## Agent 可靠性評估 (skills)
+## Agent 可靠性評估
 
-我們已經有一些 CI-safe 的測試，其行為類似「agent 可靠性評估」：
+我們已經有一些 CI-safe 測試，其行為類似於「agent 可靠性評估」：
 
 - 透過真實 gateway + agent 迴圈進行模擬工具呼叫 (`src/gateway/gateway.test.ts`)。
-- 端對端精靈流程，用於驗證 session 連線和設定效果 (`src/gateway/gateway.test.ts`)。
+- 驗證 session 連線和配置效果的端對端精靈流程 (`src/gateway/gateway.test.ts`)。
 
-對於 skills 仍然缺少什麼 (請參閱 [Skills](/zh-Hant/tools/skills))：
+技能 (Skills) 目前仍缺失的部分 (請參閱 [Skills](/zh-Hant/tools/skills))：
 
-- **決策：** 當 skills 在 prompt 中列出時，agent 是否會選擇正確的 skill (或避免不相關的)？
-- **合規性：** agent 在使用前是否會讀取 `SKILL.md` 並遵循必要的步驟/引數？
-- **工作流程合約：** 斷言工具順序、session 歷史傳遞和沙箱邊界的多輪情境。
+- **決策：** 當提示中列出了技能時，agent 是否會選擇正確的技能 (或避免不相關的技能)？
+- **合規性：** agent 是否在使用前讀取 `SKILL.md` 並遵循必要的步驟/參數？
+- **工作流程契約：** 多輪對話情境，用來斷言工具順序、session 歷史傳遞，以及沙箱邊界。
 
 未來的評估應首先保持確定性：
 
-- 使用模擬供應商的情境執行器，以斷言工具呼叫 + 順序、skill 檔案讀取和 session 連線。
-- 一小套專注於 skill 的情境 (使用 vs 避免、閘道、prompt 注入)。
-- 僅在 CI-safe 測試套件到位後，才進行選用的即時評估 (選用、環境閘道)。
+- 使用模擬供應商的情境執行器，以斷言工具呼叫 + 順序、技能檔案讀取和 session 連線。
+- 一小套專注於技能的情境 (使用 vs 避免、閘道控制、提示注入)。
+- 僅在 CI-safe 測試套件就位後，才進行選用的即時評估 (opt-in、env-gated)。
 
-## 合約測試 (plugin 和 channel 形狀)
+## 契約測試 (plugin 和 channel 形狀)
 
-合約測試驗證每個已註冊的外掛和頻道都符合其介面合約。它們會遍歷所有已發現的外掛並執行一系列形狀和行為斷言。預設的 `pnpm test` unit 軌道會刻意跳過這些共享縫合和冒煙檔案；當您接觸共享頻道或供應商介面時，請明確執行合約指令。
+合約測試會驗證每個已註冊的外掛和通道都符合其介面合約。它們會迭代所有發現的外掛，並執行一組形狀和行為斷言。預設的 `pnpm test` unit 軌道會刻意跳過這些共享邊界 和基礎測試檔案；當您接觸共享通道或供應商 介面時，請明確執行合約指令。
 
 ### 指令
 
 - 所有合約：`pnpm test:contracts`
-- 僅頻道合約：`pnpm test:contracts:channels`
-- 僅供應商合約：`pnpm test:contracts:plugins`
+- 僅限通道合約：`pnpm test:contracts:channels`
+- 僅限供應商合約：`pnpm test:contracts:plugins`
 
-### 頻道合約
+### 通道合約
 
 位於 `src/channels/plugins/contracts/*.contract.test.ts`：
 
 - **plugin** - 基本外掛形狀 (id、name、capabilities)
 - **setup** - 設定精靈合約
-- **session-binding** - 會話綁定行為
-- **outbound-payload** - 訊息 Payload 結構
+- **session-binding** - Session 繫結行為
+- **outbound-payload** - 訊息 payload 結構
 - **inbound** - 傳入訊息處理
-- **actions** - 頻道動作處理器
+- **actions** - 通道動作處理器
 - **threading** - Thread ID 處理
 - **directory** - Directory/roster API
-- **group-policy** - 群組政策執行
+- **group-policy** - 群組原則執行
 
 ### 供應商狀態合約
 
 位於 `src/plugins/contracts/*.contract.test.ts`。
 
-- **status** - 頻道狀態探測
+- **status** - 通道狀態探測
 - **registry** - 外掛註冊表形狀
 
 ### 供應商合約
 
 位於 `src/plugins/contracts/*.contract.test.ts`：
 
-- **auth** - Auth flow 合約
+- **auth** - Auth 流程合約
 - **auth-choice** - Auth 選擇/選取
 - **catalog** - 模型目錄 API
-- **discovery** - 外掛發現
+- **discovery** - 外掛探索
 - **loader** - 外掛載入
 - **runtime** - 供應商執行時
 - **shape** - 外掛形狀/介面
 - **wizard** - 設定精靈
 
-### 執行時機
+### 何時執行
 
 - 變更 plugin-sdk 匯出或子路徑之後
-- 新增或修改頻道或供應商外掛之後
-- 重構外掛註冊或發現之後
+- 新增或修改通道或供應商外掛之後
+- 重構外掛註冊或探索之後
 
 合約測試在 CI 中執行，不需要真實的 API 金鑰。
 
 ## 新增回歸測試 (指引)
 
-當您修正在 live 中發現的供應商/模型問題時：
+當您修復在 live 環境中發現的供應商/模型問題時：
 
-- 如果可能，請加入一個對 CI 安全的回歸測試 (模擬/存根供應商，或擷取確切的請求形狀轉換)
-- 如果它本質上僅限 live (速率限制、身份驗證政策)，請保持 live 測試狹窄並透過環境變數選擇加入
-- 優先定位能捕捉該 Bug 的最小層級：
-  - 供應商請求轉換/重放 Bug → 直接模型測試
-  - gateway session/history/tool 管線 Bug → gateway live smoke 或對 CI 安全的 gateway mock 測試
-- SecretRef 遍遍防護：
-  - `src/secrets/exec-secret-ref-id-parity.test.ts` 從註冊表元數據 (`listSecretTargetRegistryEntries()`) 為每個 SecretRef 類別衍生一個採樣目標，然後斷言遍歷區段執行 ID 會被拒絕。
-  - 如果您在 `src/secrets/target-registry-data.ts` 中新增新的 `includeInPlan` SecretRef 目標系列，請更新該測試中的 `classifyTargetClass`。該測試會在未分類的目標 ID 上故意失敗，以免新類別被無聲跳過。
+- 如果可能的話，新增一個 CI 安全的回歸測試 (模擬/存根供應商，或是擷取確切的請求形狀轉換)
+- 如果本質上僅限 live (速率限制、驗證策略)，請保持 live 測試範圍狹窄，並透過環境變數選擇加入
+- 優先針對能捕捉該錯誤的最小層級：
+  - 供應商請求轉換/重播錯誤 → 直接模型測試
+  - gateway session/history/tool 管線錯誤 → gateway live 基礎測試或 CI 安全的 gateway mock 測試
+- SecretRef 遍歷防護：
+  - `src/secrets/exec-secret-ref-id-parity.test.ts` 從登錄表元資料 (`listSecretTargetRegistryEntries()`) 為每個 SecretRef 類別推導一個採樣目標，然後斷言遍歷區段執行 ID 會被拒絕。
+  - 如果您在 `src/secrets/target-registry-data.ts` 中新增 `includeInPlan` SecretRef 目標系列，請更新該測試中的 `classifyTargetClass`。該測試會針對未分類的目標 ID 故意失敗，以確保新類別不會被無聲跳過。
 
 ## 相關
 

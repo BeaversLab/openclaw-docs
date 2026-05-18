@@ -47,6 +47,7 @@ El agente puede añadir y eliminar reacciones de emoji en los mensajes utilizand
   <Accordion title="WhatsApp">
     - Un `emoji` vacío elimina la reacción del bot.
     - `remove: true` se asigna internamente a un emoji vacío (aún requiere `emoji` en la llamada a la herramienta).
+    - WhatsApp tiene un espacio de reacción del bot por mensaje; las actualizaciones de estado de reacción reemplazan ese espacio en lugar de apilar varios emojis.
 
   </Accordion>
 

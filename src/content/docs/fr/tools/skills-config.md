@@ -79,32 +79,27 @@ Règles :
 - Les racines de Skills intégrées incluent toujours `~/.openclaw/skills`, `~/.agents/skills`, `<workspace>/.agents/skills` et `<workspace>/skills`.
 - `allowBundled` : liste d'autorisation facultative pour les Skills **groupés** uniquement. Lorsqu'elle est définie, seuls les Skills groupés dans la liste sont éligibles (les Skills gérés, d'agent et d'espace de travail ne sont pas concernés).
 - `load.extraDirs` : répertoires de Skills supplémentaires à analyser (la priorité la plus basse).
-- `load.allowSymlinkTargets` : répertoires cibles réels approuvés vers lesquels les dossiers de Skills liés par lien symbolique peuvent être résolus, même lorsque le lien symbolique se trouve en dehors de cette racine cible. Utilisez ceci pour des dispositions intentionnelles de dépôts frères, comme `~/.agents/skills/manager -> ~/Projects/manager/skills`.
+- `load.allowSymlinkTargets` : répertoires cibles réels approuvés vers lesquels les dossiers de compétences liés par lien symbolique de l'espace de travail, de l'agent de projet ou du répertoire supplémentaire peuvent être résolus, même lorsque le lien symbolique se trouve en dehors de cette racine cible. Utilisez ceci pour des dispositions intentionnelles de dépôts frères, telles que `<workspace>/skills/manager -> ~/Projects/manager/skills`. Les racines gérées `~/.openclaw/skills` et personnelles `~/.agents/skills` peuvent suivre les liens symboliques des répertoires de compétences provenant des gestionnaires de compétences locaux par défaut, mais chaque `SKILL.md` doit toujours être résolu à l'intérieur de son propre répertoire de compétences.
 - `load.watch` : surveiller les dossiers de compétences et actualiser l'instantané des compétences (par défaut : true).
-- `load.watchDebounceMs` : délai anti-rebond (debounce) pour les événements du surveillant de compétences en millisecondes (par défaut : 250).
-- `install.preferBrew` : préférer les installateurs brew lorsqu'ils sont disponibles (par défaut : true).
-- `install.nodeManager` : préférence d'installateur node (`npm` | `pnpm` | `yarn` | `bun`, par défaut : npm).
-  Cela n'affecte que les **installations de compétences** ; le runtime Gateway doit toujours être Node
-  (Bun n'est pas recommandé pour WhatsApp/Telegram).
-  - `openclaw setup --node-manager` est plus restreint et accepte actuellement `npm`,
+- `load.watchDebounceMs` : délai (debounce) pour les événements de surveillance des compétences en millisecondes (par défaut : 250).
+- `install.preferBrew` : privilégier les installateurs brew lorsqu'ils sont disponibles (par défaut : true).
+- `install.nodeManager` : préférence de l'installateur Node (`npm` | `pnpm` | `yarn` | `bun`, par défaut : npm).
+  Cela n'affecte que **les installations de compétences** ; l'exécution Gateway doit toujours être Node
+  (Bun non recommandé pour WhatsApp/Telegram).
+  - `openclaw setup --node-manager` est plus restrictif et accepte actuellement `npm`,
     `pnpm` ou `bun`. Définissez `skills.install.nodeManager: "yarn"` manuellement si vous
     souhaitez des installations de compétences basées sur Yarn.
-- `install.allowUploadedArchives``operator.admin` : autoriser les clients Gateway de confiance
-  à installer des archives zip privées mises en scène via `skills.upload.*`
-  (par défaut : false). Cela n'active que le chemin des archives téléchargées ; les installations ClawHub
-  normales ne l'exigent pas.
-- `entries.<skillKey>` : remplacements par compétence.
-- `agents.defaults.skills` : liste d'autorisation de compétences par défaut optionnelle héritée par les agents
+- `install.allowUploadedArchives` : autoriser les clients Gateway de confiance `operator.admin` à installer des archives zip privées mises en scène via `skills.upload.*`
+  (par défaut : false). Cela n'active que le chemin de l'archive téléchargée ; les installations ClawHub normales ne l'exigent pas.
+- `entries.<skillKey>` : substitutions spécifiques à chaque compétence.
+- `agents.defaults.skills` : liste blanche de compétences par défaut facultative héritée par les agents
   qui omettent `agents.list[].skills`.
-- `agents.list[].skills` : liste d'autorisation finale des compétences par agent optionnelle ; les listes
+- `agents.list[].skills` : liste blanche finale de compétences par agent facultative ; les listes
   explicites remplacent les valeurs par défaut héritées au lieu de fusionner.
 
 ## Dépôts frères liés symboliquement
 
-Par défaut, chaque racine de compétence est une limite de confinement. Si un dossier de compétence sous
-`~/.agents/skills` est un lien symbolique qui résout en dehors de `~/.agents/skills`,
-OpenClaw l'ignore et enregistre `Skipping escaped skill path outside its configured
-root`.
+Par défaut, les racines des compétences workspace, project-agent, extra-dir et bundled sont des limites de confinement. Si un dossier de compétence sous `<workspace>/skills` est un lien symbolique qui se résout en dehors de `<workspace>/skills`, OpenClaw l'ignore et consigne `Skipping escaped skill path outside its configured root`.
 
 Conservez la disposition des liens symboliques et n'autorisez que la racine cible de confiance :
 
@@ -119,23 +114,18 @@ Conservez la disposition des liens symboliques et n'autorisez que la racine cibl
 }
 ```
 
-Avec cette configuration, un lien symbolique tel que
-`~/.agents/skills/manager -> ~/Projects/manager/skills` est accepté après
-la résolution de realpath. `extraDirs` analyse également directement le dépôt frère, tandis que
-`allowSymlinkTargets` préserve le chemin du lien symbolique pour les dispositions de compétences d'agent existantes. Gardez les entrées cibles étroites ; ne pointez pas vers des racines larges telles que `~` ou
-`~/Projects` sauf si chaque arborescence de compétences sous cette racine est approuvée.
+Avec cette configuration, un lien symbolique tel que `<workspace>/skills/manager -> ~/Projects/manager/skills` est accepté après la résolution du chemin réel (realpath). `extraDirs` analyse également directement le dépôt frère, tandis que `allowSymlinkTargets` préserve le chemin symbolisé pour les configurations existantes de compétences d'espace de travail. Les répertoires gérés `~/.openclaw/skills` et personnels `~/.agents/skills` acceptent déjà les liens symboliques de répertoires de compétences car ces racines sont des surfaces locales du gestionnaire de compétences appartenant à l'utilisateur ; le confinement par compétence `SKILL.md` s'applique toujours. Gardez les entrées cibles étroites ; ne pointez pas vers des racines larges telles que `~` ou `~/Projects` sauf si chaque arborescence de compétences sous cette racine est approuvée.
 
 Champs par compétence :
 
 - `enabled` : définissez `false` pour désactiver une compétence même si elle est groupée/installée.
-- `env` : variables d'environnement injectées pour l'exécution de l'agent (seulement si elles ne sont pas déjà définies).
+- `env` : variables d'environnement injectées pour l'exécution de l'agent (uniquement si elles ne sont pas déjà définies).
 - `apiKey` : commodité facultative pour les compétences qui déclarent une variable d'environnement principale.
-  Prend en charge une chaîne en texte brut ou un objet SecretRef (`{ source, provider, id }`).
+  Prend en charge une chaîne en texte clair ou un objet SecretRef (`{ source, provider, id }`).
 
 ## Notes
 
-- Les clés sous `entries` correspondent au nom de la compétence par défaut. Si une compétence définit
-  `metadata.openclaw.skillKey`, utilisez cette clé à la place.
+- Les clés sous `entries` correspondent au nom de la compétence par défaut. Si une compétence définit `metadata.openclaw.skillKey`, utilisez plutôt cette clé.
 - La priorité de chargement est `<workspace>/skills` → `<workspace>/.agents/skills` →
   `~/.agents/skills` → `~/.openclaw/skills` → compétences groupées →
   `skills.load.extraDirs`.
@@ -143,30 +133,32 @@ Champs par compétence :
 
 ### Compétences sandboxées et variables d'environnement
 
-Lorsqu'une session est **sandboxée**, les processus de compétence s'exécutent dans le backend de sandbox configuré. La sandbox **n'hérite pas** de `process.env` de l'hôte.
+Lorsqu'une session est **sandboxed**, les processus de compétence s'exécutent à l'intérieur du backend de bac à sable configuré. Le bac à sable n'hérite **pas** du `process.env` de l'hôte.
 
 <Warning>
-  Les `env` et `skills.entries.<skill>.env`/`apiKey` globaux s'appliquent uniquement aux exécutions sur l'**hôte**. À l'intérieur d'une sandbox, ils n'ont aucun effet, une compétence dépendant de `GEMINI_API_KEY` échouera donc avec `apiKey not configured` à moins que la variable ne soit fournie séparément à la sandbox.
+  Global `env` and `skills.entries.<skill>.env`/`apiKey` apply to **host** runs only. Inside a sandbox they have no effect, so a skill that depends on `GEMINI_API_KEY` will fail with `apiKey not configured` unless the sandbox is given the variable separately.
 </Warning>
 
 Utilisez l'une des options suivantes :
 
-- `agents.defaults.sandbox.docker.env` pour le backend Docker (ou `agents.list[].sandbox.docker.env` par agent).
+- `agents.defaults.sandbox.docker.env` for the Docker backend (or per-agent `agents.list[].sandbox.docker.env`).
 - Intégrez la variable d'environnement dans votre image de sandbox personnalisée ou votre environnement de sandbox distant.
 
-## Connexes
+For Docker sandboxes, configured `sandbox.docker.env` values become explicit container environment variables. Users with Docker daemon access can inspect them through Docker metadata, so use a mounted secret file, custom image, or another delivery path when that exposure is not acceptable.
+
+## Related
 
 <CardGroup cols={2}>
   <Card title="Skills" href="/fr/tools/skills" icon="puzzle-piece">
-    Ce que sont les compétences et comment elles se chargent.
+    What skills are and how they load.
   </Card>
-  <Card title="Créer des compétences" href="/fr/tools/creating-skills" icon="hammer">
-    Créer des packs de compétences personnalisés.
+  <Card title="Creating skills" href="/fr/tools/creating-skills" icon="hammer">
+    Authoring custom skill packs.
   </Card>
-  <Card title="Commandes slash" href="/fr/tools/slash-commands" icon="terminal">
-    Catalogue de commandes natives et directives de chat.
+  <Card title="Slash commands" href="/fr/tools/slash-commands" icon="terminal">
+    Native command catalog and chat directives.
   </Card>
-  <Card title="Référence de configuration" href="/fr/gateway/configuration-reference" icon="gear">
-    Schéma complet `skills` et `agents.skills`.
+  <Card title="Configuration reference" href="/fr/gateway/configuration-reference" icon="gear">
+    Full `skills` and `agents.skills` schema.
   </Card>
 </CardGroup>

@@ -82,7 +82,14 @@ pnpm test:docker:update-migration
 
 Carriles importantes:
 
-- `test:docker:plugins` valida la prueba de humo de instalación del complemento, instalaciones de carpetas locales, comportamiento de omisión de actualización de carpetas locales, carpetas locales con dependencias preinstaladas, instalaciones de paquetes `file:`, instalaciones de git con ejecución CLI, actualizaciones de referencias móviles de git, instalaciones del registro npm con dependencias transitivas elevadas, no-op de actualización npm, instalaciones y actualizaciones no-op de accesorios locales de ClawHub, comportamiento de actualización del mercado, y habilitación/inspección de Claude-bundle. Establece `OPENCLAW_PLUGINS_E2E_CLAWHUB=0` para mantener el bloque ClawHub hermético/sin conexión.
+- `test:docker:plugins` valida el smoke test de instalación de complementos, instalaciones de carpetas locales,
+  comportamiento de omisión de actualización de carpetas locales, carpetas locales con dependencias
+  preinstaladas, instalaciones de paquetes `file:`, instalaciones de git con ejecución de CLI, actualizaciones
+  de referencia móvil en git, instalaciones del registro npm con dependencias transitivas izadas, no-ops de
+  actualización npm, rechazo de metadatos de paquete npm mal formados, instalaciones de fixtures locales
+  de ClawHub y no-ops de actualización, comportamiento de actualización del marketplace,
+  y habilitación/inspección de Claude-bundle. Configure `OPENCLAW_PLUGINS_E2E_CLAWHUB=0` para
+  mantener el bloque ClawHub hermético/fuera de línea.
 - `test:docker:plugin-lifecycle-matrix` instala el paquete candidato en un contenedor vacío, ejecuta un complemento npm a través de instalación, inspección, desactivación, activación, actualización explícita, downgrade explícito y desinstalación después de eliminar el código del complemento. Registra métricas de RSS y CPU para cada fase.
 - `test:docker:plugin-update` valida que un complemento instalado sin cambios no se reinstale ni pierda los metadatos de instalación durante `openclaw plugins update`.
 - `test:docker:upgrade-survivor` instala el archivo tar del candidato sobre un accesorio de usuario antiguo sucio, ejecuta la actualización del paquete más el doctor no interactivo, luego inicia un Gateway de bucle de retorno y verifica la preservación del estado.

@@ -258,8 +258,8 @@ OpenClaw 可以在回复管道运行之前**总结传入媒体**（图像/音频
 <Note>
 **MiniMax 说明**
 
-- MiniMax`minimax` 和 `minimax-portal` 的图像理解来自插件拥有的 `MiniMax-VL-01`MiniMax 媒体提供商。
-- 捆绑的 MiniMax 文本目录仍然以仅文本开始；显式的 `models.providers.minimax` 条目会实例化支持图像的 M2.7 聊天引用。
+- `minimax`、`minimax-cn`、`minimax-portal` 和 `minimax-portal-cn` 的图像理解功能来自插件拥有的 `MiniMax-VL-01` 媒体提供商。
+- 即使旧版 MiniMax M2.x 聊天元数据声称包含图像输入，自动图像路由仍继续使用 `MiniMax-VL-01`。
 
 </Note>
 
@@ -268,12 +268,12 @@ OpenClaw 可以在回复管道运行之前**总结传入媒体**（图像/音频
 - 当质量和安全性至关重要时，针对每种媒体能力，请优先使用可用的最强最新一代模型。
 - 对于处理不受信任输入的启用工具的代理，请避免使用较旧或较弱的媒体模型。
 - 为了确保可用性，请为每种能力至少保留一个后备（高质量模型 + 更快/更便宜的模型）。
-- CLI 回退选项（CLI`whisper-cli`、`whisper`、`gemini`）在提供商 API 不可用时非常有用。
-- `parakeet-mlx` 注意：使用 `--output-dir`OpenClaw 时，当输出格式为 `txt`（或未指定）时，OpenClaw 会读取 `<output-dir>/<media-basename>.txt`；非 `txt` 格式则回退到 stdout。
+- 当提供商 API 不可用时，CLI 回退机制（`whisper-cli`、`whisper`、`gemini`）非常有用。
+- `parakeet-mlx` 说明：使用 `--output-dir` 时，当输出格式为 `txt`（或未指定）时，OpenClaw 会读取 `<output-dir>/<media-basename>.txt`；非 `txt` 格式则回退到 stdout。
 
 ## 附件策略
 
-按能力划分的 `attachments` 控制处理哪些附件：
+基于功能的 `attachments` 控制处理哪些附件：
 
 <ParamField path="mode" type='"first" | "all"' default="first">
   是处理第一个选定的附件还是处理所有附件。
@@ -285,13 +285,13 @@ OpenClaw 可以在回复管道运行之前**总结传入媒体**（图像/音频
   候选附件之间的选择偏好。
 </ParamField>
 
-当 `mode: "all"` 时，输出会标记为 `[Image 1/2]`、`[Audio 2/2]` 等。
+当 `mode: "all"` 时，输出被标记为 `[Image 1/2]`、`[Audio 2/2]` 等。
 
 <AccordionGroup>
-  <Accordion title="File-attachment extraction behavior">
-    - 提取的文件文本在附加到媒体提示之前会被包装为**不受信任的外部内容**。
-    - 注入的块使用显式的边界标记，如 `<<<EXTERNAL_UNTRUSTED_CONTENT id="...">>>` / `<<<END_EXTERNAL_UNTRUSTED_CONTENT id="...">>>`，并包含 `Source: External` 元数据行。
-    - 此附件提取路径有意省略了冗长的 `SECURITY NOTICE:`OpenClaw 横幅，以避免臃肿媒体提示；边界标记和元数据仍然保留。
+  <Accordion title="文件附件提取行为">
+    - 提取的文件文本在附加到媒体提示之前会被包装为 **不受信任的外部内容**。
+    - 注入的块使用显式边界标记，如 `<<<EXTERNAL_UNTRUSTED_CONTENT id="...">>>` / `<<<END_EXTERNAL_UNTRUSTED_CONTENT id="...">>>`，并包含 `Source: External` 元数据行。
+    - 此附件提取路径有意省略了冗长的 `SECURITY NOTICE:` 标语，以避免使媒体提示膨胀；边界标记和元数据仍然保留。
     - 如果文件没有可提取的文本，OpenClaw 会注入 `[No extractable text]`。
     - 如果 PDF 在此路径中回退到渲染页面图像，媒体提示将保留占位符 `[PDF content rendered to images; images not forwarded to model]`，因为此附件提取步骤转发的是文本块，而不是渲染的 PDF 图像。
 
@@ -447,7 +447,7 @@ OpenClaw 可以在回复管道运行之前**总结传入媒体**（图像/音频
 
 ## 状态输出
 
-当运行媒体理解时，`/status` 会包含一个简短的摘要行：
+当媒体理解运行时，`/status` 包含一个简短的摘要行：
 
 ```
 📎 Media: image ok (openai/gpt-5.4) · audio skipped (maxBytes)
@@ -459,9 +459,9 @@ OpenClaw 可以在回复管道运行之前**总结传入媒体**（图像/音频
 
 - 理解是 **尽力而为** 的。错误不会阻止回复。
 - 即使禁用了理解功能，附件仍会传递给模型。
-- 使用 `scope` 来限制理解运行的地点（例如仅限私信）。
+- 使用 `scope` 限制运行理解功能的范围（例如仅限私信）。
 
 ## 相关内容
 
 - [配置](/zh/gateway/configuration)
-- [图像和媒体支持](/zh/nodes/images)
+- [图片和媒体支持](/zh/nodes/images)

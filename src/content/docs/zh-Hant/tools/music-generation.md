@@ -1,5 +1,5 @@
 ---
-summary: "透過 music_generate 跨 Google Lyria、MiniMax 和 ComfyUI 工作流程產生音樂"
+summary: "透過 ComfyUI、fal、Google Lyria、MiniMax 和 OpenRouter 工作流程，使用 music_generate 生成音樂"
 read_when:
   - Generating music or audio via the agent
   - Configuring music-generation providers and models
@@ -8,19 +8,19 @@ title: "音樂生成"
 sidebarTitle: "音樂生成"
 ---
 
-`music_generate` 工具讓代理透過共用的音樂生成功能及設定的供應商（目前包括 Google、MiniMax 和工作流程設定的 ComfyUI）來建立音樂或音訊。
+`music_generate` 工具允許代理透過已設定的提供者（目前包括 ComfyUI、fal、Google、MiniMax 和 OpenRouter）使用共享的音樂生成功能來建立音樂或音訊。
 
-對於基於會話的代理執行，OpenClaw 會將音樂生成啟動為背景任務，在任務帳本中追蹤它，然後當音軌準備好時再次喚醒代理，以便代理可以通知用戶並附加完成的音頻。在僅使用訊息工具可見交付的群組/頻道聊天中，代理會透過訊息工具轉發結果。如果完成代理僅編寫私人最終回覆，OpenClaw 將回退到直接通道發送生成的媒體。完成喚醒會明確警告代理，在那些路徑中正常的最終回覆是私人的。
+對於由 session 支援的代理執行，OpenClaw 會將音樂生成啟動為背景任務，在任務帳本中追蹤它，然後當音軌準備好時再次喚醒代理，以便代理可以通知用戶並附加完成的音訊。生成的媒體完成內容由代理透過訊息工具傳遞；如果完成代理僅撰寫私人最終回覆，OpenClaw 不會自動發布檔案作為後備。完成喚醒會明確警告代理，正常的最終回覆對於此路由是私人的。
 
-<Note>內建的共用工具僅在至少有一個音樂生成供應商可用時才會出現。如果您在代理的工具中看不到 `music_generate`，請設定 `agents.defaults.musicGenerationModel` 或設定供應商 API 金鑰。</Note>
+<Note>內建的共享工具僅在至少有一個音樂生成提供者可用時才會出現。如果您在代理的工具中看不到 `music_generate`，請設定 `agents.defaults.musicGenerationModel` 或設定提供者 API 金鑰。</Note>
 
 ## 快速入門
 
 <Tabs>
-  <Tab title="共用供應商支援">
+  <Tab title="共享提供者支援">
     <Steps>
       <Step title="設定驗證">
-        為至少一個供應商設定 API 金鑰 — 例如
+        為至少一個提供者設定 API 金鑰 — 例如
         `GEMINI_API_KEY` 或 `MINIMAX_API_KEY`。
       </Step>
       <Step title="選擇預設模型（選用）">
@@ -36,25 +36,26 @@ sidebarTitle: "音樂生成"
         }
         ```
       </Step>
-      <Step title="要求代理">
-        _「產生一首關於在霓虹城市夜駕的愉快合成器流行曲目。」_
+      <Step title="詢問代理">
+        _「生成一首關於在霓虹城市中夜駛的歡快合成器流行音樂。」_
 
         代理會自動呼叫 `music_generate`。無需工具允許清單。
       </Step>
     </Steps>
 
-    對於不具會話支援代理執行的直接同步內容，
-    內建工具仍會回退為內嵌生成，並在工具結果中
-    傳回最終媒體路徑。
+    對於沒有由 session 支援的代理執行的直接同步上下文，
+    內建工具仍然會後備到內聯生成，並在工具結果中返回
+    最終媒體路徑。
 
   </Tab>
-  <Tab title="ComfyUI workflow">
+  <Tab title="ComfyUI 工作流程">
     <Steps>
       <Step title="設定工作流程">
-        使用工作流程 JSON 與 prompt/output 節點設定 `plugins.entries.comfy.config.music`。
+        使用工作流程
+        JSON 以及 prompt/output 節點來設定 `plugins.entries.comfy.config.music`。
       </Step>
       <Step title="雲端驗證 (選用)">
-        對於 Comfy Cloud，請設定 `COMFY_API_KEY` 或 `COMFY_CLOUD_API_KEY`。
+        若使用 Comfy Cloud，請設定 `COMFY_API_KEY` 或 `COMFY_CLOUD_API_KEY`。
       </Step>
       <Step title="呼叫工具">
         ```text
@@ -77,29 +78,34 @@ Generate an energetic chiptune loop about launching a rocket at sunrise.
 
 ## 支援的提供商
 
-| 提供商  | 預設模型               | 參考輸入       | 支援的控制項                                              | 驗證                                   |
-| ------- | ---------------------- | -------------- | --------------------------------------------------------- | -------------------------------------- |
-| ComfyUI | `workflow`             | 最多 1 張圖片  | 工作流程定義的音樂或音訊                                  | `COMFY_API_KEY`、`COMFY_CLOUD_API_KEY` |
-| Google  | `lyria-3-clip-preview` | 最多 10 張圖片 | `lyrics`、`instrumental`、`format`                        | `GEMINI_API_KEY`、`GOOGLE_API_KEY`     |
-| MiniMax | `music-2.6`            | 無             | `lyrics`、`instrumental`、`durationSeconds`、`format=mp3` | `MINIMAX_API_KEY` 或 MiniMax OAuth     |
+| 提供商     | 預設模型                     | 參考輸入       | 支援的控制項                                              | 驗證                                   |
+| ---------- | ---------------------------- | -------------- | --------------------------------------------------------- | -------------------------------------- |
+| ComfyUI    | `workflow`                   | 最多 1 張圖片  | 工作流程定義的音樂或音訊                                  | `COMFY_API_KEY`、`COMFY_CLOUD_API_KEY` |
+| fal        | `fal-ai/minimax-music/v2.6`  | 無             | `lyrics`、`instrumental`、`durationSeconds`、`format`     | `FAL_KEY` 或 `FAL_API_KEY`             |
+| Google     | `lyria-3-clip-preview`       | 最多 10 張圖片 | `lyrics`、`instrumental`、`format`                        | `GEMINI_API_KEY`、`GOOGLE_API_KEY`     |
+| MiniMax    | `music-2.6`                  | 無             | `lyrics`、`instrumental`、`durationSeconds`、`format=mp3` | `MINIMAX_API_KEY` 或 MiniMax OAuth     |
+| OpenRouter | `google/lyria-3-pro-preview` | 最多 1 張圖片  | `lyrics`、`instrumental`、`durationSeconds`、`format`     | `OPENROUTER_API_KEY`                   |
 
 ### 功能矩陣
 
-由 `music_generate`、合約測試以及共用即時 sweep 使用的明確模式合約：
+`music_generate`、合約測試以及
+共用的 live sweep 所使用的明確模式合約：
 
-| 提供商  | `generate` | `edit` | 編輯限制  | 共用即時通道                                                     |
-| ------- | :--------: | :----: | --------- | ---------------------------------------------------------------- |
-| ComfyUI |     ✓      |   ✓    | 1 張圖片  | 不在共用 sweep 中；由 `extensions/comfy/comfy.live.test.ts` 涵蓋 |
-| Google  |     ✓      |   ✓    | 10 張圖片 | `generate`、`edit`                                               |
-| MiniMax |     ✓      |   —    | 無        | `generate`                                                       |
+| 提供者     | `generate` | `edit` | 編輯限制  | 共享即時通道                                                         |
+| ---------- | :--------: | :----: | --------- | -------------------------------------------------------------------- |
+| ComfyUI    |     ✓      |   ✓    | 1 張圖片  | 未包含在共用 sweep 中；由 `extensions/comfy/comfy.live.test.ts` 涵蓋 |
+| fal        |     ✓      |   —    | 無        | `generate`                                                           |
+| Google     |     ✓      |   ✓    | 10 張圖片 | `generate`、`edit`                                                   |
+| MiniMax    |     ✓      |   —    | 無        | `generate`                                                           |
+| OpenRouter |     ✓      |   ✓    | 1 張圖片  | `generate`, `edit`                                                   |
 
-使用 `action: "list"` 在執行時檢查可用的共用提供商和模型：
+使用 `action: "list"` 在執行時檢視可用的共享提供者和模型：
 
 ```text
 /tool music_generate action=list
 ```
 
-使用 `action: "status"` 檢查使用中受工作階段支援的音樂工作：
+使用 `action: "status"` 檢視使用中連線階段的音樂任務：
 
 ```text
 /tool music_generate action=status
@@ -114,28 +120,28 @@ Generate an energetic chiptune loop about launching a rocket at sunrise.
 ## 工具參數
 
 <ParamField path="prompt" type="string" required>
-  音樂生成提示詞。`action: "generate"` 的必填項。
+  音樂生成提示。`action: "generate"` 所需。
 </ParamField>
 <ParamField path="action" type='"generate" | "status" | "list"' default="generate">
-  `"status"` 返回目前的工作階段任務；`"list"` 檢視提供者。
+  `"status"` 傳回目前連線階段任務；`"list"` 檢視提供者。
 </ParamField>
 <ParamField path="model" type="string">
-  提供者/模型覆寫（例如 `google/lyria-3-pro-preview`、 `comfy/workflow`）。
+  提供者/模型覆寫（例如 `google/lyria-3-pro-preview`, `comfy/workflow`）。
 </ParamField>
 <ParamField path="lyrics" type="string">
-  當提供者支援明確歌詞輸入時的可選歌詞。
+  當提供者支援明確歌詞輸入時的選用歌詞。
 </ParamField>
 <ParamField path="instrumental" type="boolean">
-  當提供者支援時請求僅樂器輸出。
+  當提供者支援時，請求僅器樂輸出。
 </ParamField>
 <ParamField path="image" type="string">
   單一參考圖片路徑或 URL。
 </ParamField>
 <ParamField path="images" type="string[]">
-  多個參考圖片（支援的提供者最多 10 張）。
+  多個參考圖片（支援的提供者最多 10 個）。
 </ParamField>
 <ParamField path="durationSeconds" type="number">
-  當提供者支援時長提示時的目標時長（秒）。
+  當提供者支援持續時間提示時，以秒為單位的目標持續時間。
 </ParamField>
 <ParamField path="format" type='"mp3" | "wav"'>
   當提供者支援時的輸出格式提示。
@@ -143,36 +149,39 @@ Generate an energetic chiptune loop about launching a rocket at sunrise.
 <ParamField path="filename" type="string">
   輸出檔名提示。
 </ParamField>
-<ParamField path="timeoutMs" type="number">
-  以毫秒為單位的可選提供者請求逾時。若省略，OpenClaw 會在設定時使用 `agents.defaults.musicGenerationModel.timeoutMs`。低於 10000ms 的數值會提升至 10000ms，並在工具結果中回報。
-</ParamField>
 
-<Note>並非所有供應商都支援所有參數。OpenClaw 仍會在提交前驗證嚴格限制（例如輸入計數）。當供應商支援持續時間但使用的最大值短於請求值時，OpenClaw 會將其調整為最接近的支援持續時間。當所選供應商或模型無法滿足真正不支援的可選提示時，這些提示將被忽略並發出警告。工具結果會回報套用的設定；`details.normalization` 會捕捉任何從請求到套用的對應。</Note>
+<Note>並非所有提供者都支援所有參數。在提交之前，OpenClaw 仍會驗證輸入計數等硬性限制。當提供者支援持續時間但使用的最大值短於請求值時，OpenClaw 會將其調整為最接近的支援持續時間。當選定的提供者或模型無法滿足真正不支援的可選提示時，將忽略這些提示並發出警告。工具結果會報告已套用的設定；`details.normalization` 會捕獲任何從請求到已套用的對應關係。</Note>
+
+提供者請求逾時僅由操作員配置決定。OpenClaw 在配置時使用
+`agents.defaults.musicGenerationModel.timeoutMs`，將低於 120000ms 的值提升至 120000ms，否則預設將提供者請求設為
+300000ms。
 
 ## 非同步行為
 
-基於會話的音樂生成作為背景任務執行：
+支援會話的音樂生成作為背景任務執行：
 
-- **背景任務：** `music_generate` 會建立背景任務，立即傳回已啟動/任務回應，並在後續的代理訊息中發布完成的音軌。
-- **重複防護：** 當任務為 `queued` 或 `running` 時，同一工作階段中後續的
-  `music_generate` 呼叫會傳回任務狀態，而非啟動另一個生成作業。請使用 `action: "status"` 進行明確檢查。
+- **背景任務：** `music_generate` 建立背景任務，立即傳回
+  已啟動/任務回應，並在後續的代理程式訊息中發布完成的曲目。
+- **重複預防：** 當任務為 `queued` 或 `running` 時，稍後
+  在同一會話中的 `music_generate` 呼叫會傳回任務狀態，而不是
+  啟動另一個生成作業。請使用 `action: "status"` 明確檢查。
 - **狀態查詢：** `openclaw tasks list` 或 `openclaw tasks show <taskId>`
-  會檢查佇列中、執行中及終止狀態。
-- **完成喚醒：** OpenClaw 將內部的完成事件注入回
-  同一會話，以便模型能自行撰寫給使用者看的
-  後續回應。
-- **提示提示：** 當音樂任務已在進行中時，同一工作階段中後續的使用者/手動輪次會收到一個小型的執行階段提示，以免模型再次盲目呼叫 `music_generate`。
-- **無會話備援：** 沒有真實代理會話的直接/本機上下文會
-  同步執行，並在同一輪中回傳最終的音訊結果。
+  會檢查佇列中、執行中和終止狀態。
+- **完成喚醒：** OpenClaw 將內部完成事件重新注入
+  回同一個會話，以便模型可以自行撰寫面向使用者的後續訊息。
+- **提示提示：** 當音樂任務正在進行時，同一會話中稍後的使用者/手動輪次會收到一個小的
+  執行時提示，以免模型
+  盲目地再次呼叫 `music_generate`。
+- **無會話後備：** 沒有真實代理程式會話的直接/本機內容會以內嵌方式執行，並在同一輪次中傳回最終的音訊結果。
 
 ### 任務生命週期
 
 | 狀態        | 含義                                                              |
 | ----------- | ----------------------------------------------------------------- |
-| `queued`    | 任務已建立，等待供應商接受。                                      |
-| `running`   | 供應商正在處理（通常為 30 秒到 3 分鐘，視供應商和持續時間而定）。 |
-| `succeeded` | 音軌已就緒；代理喚醒並將其發布至對話中。                          |
-| `failed`    | 供應商錯誤或逾時；代理會喚醒並附帶錯誤詳情。                      |
+| `queued`    | 任務已建立，等待提供者接受。                                      |
+| `running`   | 提供者正在處理（通常為 30 秒到 3 分鐘，視提供者和持續時間而定）。 |
+| `succeeded` | 曲目已就緒；代理程式喚醒並將其發布到對話中。                      |
+| `failed`    | 提供者錯誤或逾時；代理程式會喚醒並附帶錯誤詳情。                  |
 
 從 CLI 檢查狀態：
 
@@ -182,7 +191,7 @@ openclaw tasks show <taskId>
 openclaw tasks cancel <taskId>
 ```
 
-## 設定
+## 組態
 
 ### 模型選擇
 
@@ -192,58 +201,56 @@ openclaw tasks cancel <taskId>
     defaults: {
       musicGenerationModel: {
         primary: "google/lyria-3-clip-preview",
-        fallbacks: ["minimax/music-2.6"],
+        fallbacks: ["fal/fal-ai/minimax-music/v2.6", "minimax/music-2.6"],
       },
     },
   },
 }
 ```
 
-### 供應商選擇順序
+### 提供者選擇順序
 
-OpenClaw 依以下順序嘗試供應商：
+OpenClaw 會依此順序嘗試提供者：
 
-1. 來自工具呼叫的 `model` 參數（如果代理指定了該參數）。
-2. 來自設定的 `musicGenerationModel.primary`。
-3. 依序使用 `musicGenerationModel.fallbacks`。
-4. 僅使用支援驗證的供應商預設值進行自動偵測：
-   - 目前的預設供應商優先；
-   - 其餘已註冊的音樂生成供應商依供應商 ID 順序。
+1. 來自工具呼叫的 `model` 參數（如果代理程式指定了一個）。
+2. 來自組態的 `musicGenerationModel.primary`。
+3. 依順序排列的 `musicGenerationModel.fallbacks`。
+4. 僅使用基於驗證的提供者預設值進行自動偵測：
+   - 首先是目前的預設提供者；
+   - 其餘已註冊的音樂生成提供者，依提供者 ID 順序排列。
 
-如果供應商失敗，會自動嘗試下一個候選者。如果全部
-失敗，錯誤訊息會包含每次嘗試的詳情。
+如果提供者失敗，會自動嘗試下一個候選者。如果全部失敗，錯誤訊息會包含每次嘗試的詳細資訊。
 
-設定 `agents.defaults.mediaGenerationAutoProviderFallback: false` 以僅使用
-明確的 `model`、`primary` 和 `fallbacks` 項目。
+設定 `agents.defaults.mediaGenerationAutoProviderFallback: false` 以僅使用明確的 `model`、`primary` 和 `fallbacks` 項目。
 
-## 供應商注意事項
+## 提供者說明
 
 <AccordionGroup>
-  <Accordion title="ComfyUI">由工作流程驅動，並取決於針對提示/輸出欄位所設定的圖形和節點對應。 內建的 `comfy` 外掛程式透過音樂生成供應商註冊表 插入共用的 `music_generate` 工具。</Accordion>
-  <Accordion title="Google (Lyria 3)">使用 Lyria 3 批次生成。目前的隨附流程支援 提示、選用歌詞文字和選用參考圖片。</Accordion>
-  <Accordion title="MiniMax">使用批量 `music_generation` 端點。支援提示、選用 歌詞、純音樂模式、持續時間控制以及透過 `minimax` API 金鑰驗證或 `minimax-portal` OAuth 輸出的 mp3 格式。</Accordion>
+  <Accordion title="ComfyUI">由工作流程驅動，並依賴已設置的圖表以及提示/輸出欄位的節點對應。隨附的 `comfy` 外掛程式透過音樂生成提供者註冊表接入共享的 `music_generate` 工具。</Accordion>
+  <Accordion title="fal">透過共享提供者驗證路徑使用 fal 模型端點。隨附的提供者預設為 `fal-ai/minimax-music/v2.6`，並且也針對提示轉音訊請求公開了 `fal-ai/ace-step/prompt-to-audio` 和 `fal-ai/stable-audio-25/text-to-audio`。</Accordion>
+  <Accordion title="Google (Lyria 3)">使用 Lyria 3 批次生成。目前的隨附流程支援提示、可選的歌詞文字以及可選的參考圖片。</Accordion>
+  <Accordion title="MiniMax">使用批次 `music_generation` 端點。支援提示、可選的歌詞、純音樂模式、持續時間調控，以及透過 `minimax` API 金鑰驗證或 `minimax-portal` OAuth 輸出 mp3。</Accordion>
+  <Accordion title="OpenRouter">使用啟用串流的 OpenRouter 聊天完成音訊輸出。捆綁的提供者預設為 `google/lyria-3-pro-preview`，並且也公開 `openrouter/google/lyria-3-clip-preview`。</Accordion>
 </AccordionGroup>
 
 ## 選擇正確的路徑
 
-- **共享供應商支援** 當您需要模型選擇、供應商
-  容錯移轉以及內建的非同步任務/狀態流程時。
-- **插件路徑 (ComfyUI)** 當您需要自訂工作流程圖譜或
-  不屬於共享隨附音樂功能的供應商時。
+- **共用提供者支援**，當您需要模型選擇、提供者故障轉移以及內建的異步任務/狀態流程時。
+- **外掛程式路徑 (ComfyUI)**，當您需要自訂工作流程圖表或不屬於共用捆綁音樂功能的提供者時。
 
-如果您正在除錯 ComfyUI 特定的行為，請參閱
-[ComfyUI](/zh-Hant/providers/comfy)。如果您正在除錯共享的供應商
-行為，請從 [Google (Gemini)](/zh-Hant/providers/google) 或
-[MiniMax](/zh-Hant/providers/minimax) 開始。
+如果您正在調試 ComfyUI 特定行為，請參閱
+[ComfyUI](/zh-Hant/providers/comfy)。如果您正在調試共用提供者
+行為，請從 [fal](/zh-Hant/providers/fal)、[Google (Gemini)](/zh-Hant/providers/google)、
+[MiniMax](/zh-Hant/providers/minimax) 或 [OpenRouter](/zh-Hant/providers/openrouter) 開始。
 
-## 供應商功能模式
+## 提供者功能模式
 
-共享音樂生成合約支援明確的模式宣告：
+共用音樂生成合約支援明確的模式宣告：
 
-- `generate` 用於僅提示詞的生成。
-- 當請求包含一或多張參考圖片時使用 `edit`。
+- `generate` 用於僅提示詞生成。
+- `edit` 當請求包含一或多張參考圖片時。
 
-新的供應商實作應優先使用明確的模式區塊：
+新的提供者實作應偏好明確的模式區塊：
 
 ```typescript
 capabilities: {
@@ -262,13 +269,13 @@ capabilities: {
 ```
 
 傳統的扁平欄位，例如 `maxInputImages`、`supportsLyrics` 和
-`supportsFormat`，**不**足以宣告編輯支援。供應商
+`supportsFormat`，**並不**足以宣告編輯支援。提供者
 應明確宣告 `generate` 和 `edit`，以便即時測試、合約
-測試和共享的 `music_generate` 工具能決定性地驗證模式支援。
+測試和共用 `music_generate` 工具能夠確定性驗證模式支援。
 
 ## 即時測試
 
-選用共享打包供應商的即時覆蓋範圍：
+選用共用捆綁提供者的即時覆蓋範圍：
 
 ```bash
 OPENCLAW_LIVE_TEST=1 pnpm test:live -- extensions/music-generation-providers.live.test.ts
@@ -280,28 +287,28 @@ Repo 包裝器：
 pnpm test:live:media music
 ```
 
-此即時檔案會從 `~/.profile` 載入缺失的供應商環境變數，預設
-優先使用即時/env API 金鑰而非已儲存的驗證設定檔，並在供應商啟用編輯
-模式時執行 `generate` 和已宣告的 `edit` 覆蓋率。目前的覆蓋率：
+此即時檔案預設會優先使用已匯出的提供者環境變數，而非儲存的驗證設定檔，並且當提供者啟用編輯模式時，會同時執行 `generate` 和已宣告的 `edit` 覆蓋範圍。目前的覆蓋範圍：
 
-- `google`：`generate` 加上 `edit`
-- `minimax`：僅 `generate`
-- `comfy`：獨立的 Comfy 即時覆蓋率，非共享供應商掃描
+- `google`： `generate` 加上 `edit`
+- `fal`： 僅限 `generate`
+- `minimax`： 僅限 `generate`
+- `openrouter`: `generate` 加上 `edit`
+- `comfy`: 獨立的 Comfy 即時涵蓋範圍，非共享供應商掃描
 
-選用打包 ComfyUI 音樂路徑的即時覆蓋範圍：
+選用隨附的 ComfyUI 音樂路徑的即時涵蓋範圍：
 
 ```bash
 OPENCLAW_LIVE_TEST=1 COMFY_LIVE_TEST=1 pnpm test:live -- extensions/comfy/comfy.live.test.ts
 ```
 
-當配置了相關章節時，Comfy 即時檔案也會涵蓋 comfy 圖片與影片工作流程。
+當配置了相關章節時，Comfy 即時檔案也涵蓋 comfy 影像與影片工作流程。
 
 ## 相關
 
-- [背景工作](/zh-Hant/automation/tasks) — 用於分離式 `music_generate` 執行的工作追蹤
+- [背景任務](/zh-Hant/automation/tasks) — 分離式 `music_generate` 執行的任務追蹤
 - [ComfyUI](/zh-Hant/providers/comfy)
-- [組態參考](/zh-Hant/gateway/config-agents#agent-defaults) — `musicGenerationModel` 組態
+- [配置參考](/zh-Hant/gateway/config-agents#agent-defaults) — `musicGenerationModel` 配置
 - [Google (Gemini)](/zh-Hant/providers/google)
 - [MiniMax](/zh-Hant/providers/minimax)
-- [模型](/zh-Hant/concepts/models) — 模型組態與故障轉移
-- [工具總覽](/zh-Hant/tools)
+- [模型](/zh-Hant/concepts/models) — 模型配置與故障轉移
+- [工具概覽](/zh-Hant/tools)

@@ -50,14 +50,14 @@ Plist 位置（每個使用者）：
 
 日誌記錄：
 
-- launchd stdout/err: `/tmp/openclaw/openclaw-gateway.log`
+- launchd stdout: `~/Library/Logs/openclaw/gateway.log`（設定檔使用 `gateway-<profile>.log`）
+- launchd stderr：已抑制
 
 ## 版本相容性
 
-macOS 應用程式會檢查 gateway 版本與其自身版本是否相符。如果不相容，
-請更新全域 CLI 以符合應用程式版本。
+macOS 應用程式會檢查 gateway 版本是否與其自身版本相符。如果不相容，請更新全域 CLI 以符合應用程式版本。
 
-## 快速檢查
+## 冒煙測試
 
 ```bash
 openclaw --version
@@ -75,5 +75,5 @@ openclaw gateway call health --url ws://127.0.0.1:18999 --timeout 3000
 
 ## 相關
 
-- [macOS app](/zh-Hant/platforms/macos)
-- [Gateway runbook](/zh-Hant/gateway)
+- [macOS 應用程式](/zh-Hant/platforms/macos)
+- [Gateway 操作手冊](/zh-Hant/gateway)

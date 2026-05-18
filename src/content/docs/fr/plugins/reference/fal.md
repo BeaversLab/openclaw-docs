@@ -16,7 +16,7 @@ Ajoute la prise en charge du fournisseur de modèles fal à OpenClaw.
 
 ## Surface
 
-providers : fal ; contracts : imageGenerationProviders, videoGenerationProviders
+providers : fal ; contracts : imageGenerationProviders, musicGenerationProviders, videoGenerationProviders
 
 ## Documentation connexe
 

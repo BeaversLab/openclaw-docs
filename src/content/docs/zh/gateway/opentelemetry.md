@@ -199,7 +199,12 @@ openclaw plugins enable diagnostics-otel
 OpenClaw 根据其仍能观察到的工作对会话进行分类：
 
 - `session.long_running`：活动的嵌入式工作、模型调用或工具调用仍在取得进展。
-- `session.stalled`：存在活动工作，但活动运行未报告近期进展。停滞的嵌入式运行最初保持仅观察状态，然后在 `diagnostics.stuckSessionAbortMs` 无进展后中止-排空，以便队列中车道后的轮次可以恢复。如果未设置，中止阈值默认为更安全的扩展窗口，即至少 10 分钟且为 `diagnostics.stuckSessionWarnMs` 的 5 倍。
+- `session.stalled`：存在活动工作，但活动运行未报告
+  最近进度。停滞的嵌入式运行最初保持仅观察状态，然后在
+  `diagnostics.stuckSessionAbortMs` 毫无进度后中止排空，以便队列中
+  滞后的轮次能够恢复。如果未设置，中止阈值默认为
+  更安全的扩展窗口，即至少 5 分钟和 3 倍
+  `diagnostics.stuckSessionWarnMs`。
 - `session.stuck`：过时的会话簿记，没有活动工作。这会立即释放受影响的会话车道。
 
 恢复会发出结构化的 `session.recovery.requested` 和 `session.recovery.completed` 事件。诊断会话状态仅在产生变更的恢复结果（`aborted` 或 `released`）之后，并且仅当相同的处理代次仍然当前时，才会被标记为空闲。

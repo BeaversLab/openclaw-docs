@@ -48,7 +48,7 @@ Configuración de ejemplo:
         directPolicy: "allow", // default: allow direct/DM targets; set "block" to suppress
         lightContext: true, // optional: only inject HEARTBEAT.md from bootstrap files
         isolatedSession: true, // optional: fresh session each run (no conversation history)
-        skipWhenBusy: true, // optional: also defer when subagent or nested lanes are busy
+        skipWhenBusy: true, // optional: also defer when this agent's subagent or nested lanes are busy
         // activeHours: { start: "08:00", end: "24:00" },
         // includeReasoning: true, // optional: send separate `Reasoning:` message too
       },
@@ -64,7 +64,7 @@ Configuración de ejemplo:
 - El mensaje de latido (heartbeat) se envía **verbatim** como mensaje de usuario. El mensaje del sistema incluye una sección "Heartbeat" solo cuando los latidos están habilitados para el agente predeterminado, y la ejecución se marca internamente.
 - Cuando los latidos se deshabilitan con `0m`, las ejecuciones normales también omiten `HEARTBEAT.md` del contexto de arranque para que el modelo no vea las instrucciones exclusivas del latido.
 - Las horas activas (`heartbeat.activeHours`) se verifican en la zona horaria configurada. Fuera de la ventana, los latidos se omiten hasta el siguiente tick dentro de la ventana.
-- Los latidos se posponen automáticamente mientras el trabajo de cron está activo o en cola. Establezca `heartbeat.skipWhenBusy: true` para posponer también en carriles额外 ocupados (trabajo de subagente o comandos anidados); esto es útil para Ollama local y otros hosts con un solo runtime limitados.
+- Los Heartbeats se aplazan automáticamente mientras el trabajo cron está activo o en cola. Configure `heartbeat.skipWhenBusy: true` para también aplazar un agente en sus propios carriles de subagente con clave de sesión o comandos anidados; los agentes hermanos ya no se pausan solo porque otro agente tiene trabajo de subagente en curso.
 
 ## Para qué sirve el mensaje de heartbeat
 
@@ -99,7 +99,7 @@ Fuera de los latidos, los `HEARTBEAT_OK` extraviados al principio/final de un me
         includeReasoning: false, // default: false (deliver separate Reasoning: message when available)
         lightContext: false, // default: false; true keeps only HEARTBEAT.md from workspace bootstrap files
         isolatedSession: false, // default: false; true runs each heartbeat in a fresh session (no conversation history)
-        skipWhenBusy: false, // default: false; true also waits for subagent/nested lanes
+        skipWhenBusy: false, // default: false; true also waits for this agent's subagent/nested lanes
         target: "last", // default: none | options: last | none | <channel id> (core or plugin, e.g. "imessage")
         to: "+15551234567", // optional channel-specific override
         accountId: "ops-bot", // optional multi-account channel id
@@ -216,10 +216,10 @@ Usa `accountId` para apuntar a una cuenta específica en canales multicuenta com
 ### Notas de campo
 
 <ParamField path="every" type="string">
-  Intervalo de Heartbeat (cadena de duración; unidad predeterminada = minutos).
+  Intervalo de heartbeat (cadena de duración; unidad predeterminada = minutos).
 </ParamField>
 <ParamField path="model" type="string">
-  Sobrescritura opcional del modelo para ejecuciones de heartbeat (`provider/model`).
+  Anulación de modelo opcional para las ejecuciones de heartbeat (`provider/model`).
 </ParamField>
 <ParamField path="includeReasoning" type="boolean" default="false">
   Cuando está habilitado, también entrega el mensaje separado `Reasoning:` cuando está disponible (misma forma que `/reasoning on`).
@@ -231,7 +231,7 @@ Usa `accountId` para apuntar a una cuenta específica en canales multicuenta com
   Cuando es verdadero, cada heartbeat se ejecuta en una sesión nueva sin historial de conversación previo. Usa el mismo patrón de aislamiento que el cron `sessionTarget: "isolated"`. Reduce drásticamente el costo de tokens por heartbeat. Combine con `lightContext: true` para obtener el máximo ahorro. El enrutamiento de entrega todavía usa el contexto de la sesión principal.
 </ParamField>
 <ParamField path="skipWhenBusy" type="boolean" default="false">
-  Cuando es verdadero, las ejecuciones de heartbeat se difieren en carriles额外的mente ocupados: trabajo de subagente o comandos anidados. Los carriles de Cron siempre difieren los heartbeats, incluso sin esta bandera, por lo que los hosts con modelos locales no ejecutan prompts de cron y heartbeat al mismo tiempo.
+  Cuando es verdadero, las ejecuciones de heartbeat se aplazan en los carriles额外 ocupados de ese agente: su propio subagente con clave de sesión o trabajo de comando anidado. Los carriles de cron siempre aplazan los heartbeats, incluso sin esta bandera, por lo que los hosts con modelos locales no ejecutan comandos cron y de heartbeat al mismo tiempo.
 </ParamField>
 <ParamField path="session" type="string">
   Clave de sesión opcional para ejecuciones de heartbeat.
@@ -286,13 +286,13 @@ Usa `accountId` para apuntar a una cuenta específica en canales multicuenta com
 
 <AccordionGroup>
   <Accordion title="Sesión y enrutamiento de destino">
-    - Los latidos se ejecutan en la sesión principal del agente de manera predeterminada (`agent:<id>:<mainKey>`), o `global` cuando `session.scope = "global"`. Establezca `session` para anular a una sesión de canal específica (Discord/WhatsApp/etc.).
+    - Los latidos (heartbeats) se ejecutan en la sesión principal del agente de forma predeterminada (`agent:<id>:<mainKey>`), o `global` cuando `session.scope = "global"`. Establezca `session` para anular a una sesión de canal específica (Discord/WhatsApp/etc.).
     - `session` solo afecta el contexto de ejecución; la entrega se controla mediante `target` y `to`.
-    - Para enviar a un canal/destinatario específico, configure `target` + `to`. Con `target: "last"`, la entrega utiliza el último canal externo para esa sesión.
-    - Las entregas de latidos permiten destinos directos/DM de manera predeterminada. Establezca `directPolicy: "block"` para suprimir los envíos de destino directo mientras aún se ejecuta el turno de latido.
-    - Si la cola principal, el carril de la sesión de destino, el carril cron o un trabajo cron activo están ocupados, el latido se omite y se reintentará más tarde.
-    - Si `skipWhenBusy: true`, los carriles de subagente y anidados también difieren las ejecuciones de latido.
-    - Si `target` se resuelve sin un destino externo, la ejecución aún ocurre pero no se envía ningún mensaje saliente.
+    - Para entregar a un canal/destinatario específico, configure `target` + `to`. Con `target: "last"`, la entrega utiliza el último canal externo para esa sesión.
+    - Las entregas de latidos permiten objetivos directos/DM de forma predeterminada. Establezca `directPolicy: "block"` para suprimir los envíos a objetivos directos mientras aún se ejecuta el turno de latido.
+    - Si la cola principal, el carril de la sesión de destino, el carril cron o un trabajo cron activo está ocupado, el latido se omite y se reintentará más tarde.
+    - Si `skipWhenBusy: true`, los subagentes y carriles anidados con clave de sesión de este agente también difieren las ejecuciones de latido. Los carriles ocupados de otros agentes no difieren este agente.
+    - Si `target` no se resuelve en ningún destino externo, la ejecución aún ocurre pero no se envía ningún mensaje saliente.
 
   </Accordion>
   <Accordion title="Visibilidad y comportamiento de omisión">

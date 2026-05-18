@@ -1,5 +1,5 @@
 ---
-summary: "匯出已編輯的軌跢套件以對 OpenClaw 代理程式工作階段進行偵錯"
+summary: "匯出經過編輯的軌跢套件，以對 OpenClaw 代理程式工作階段進行偵錯"
 read_when:
   - Debugging why an agent answered, failed, or called tools a certain way
   - Exporting a support bundle for an OpenClaw session
@@ -8,7 +8,7 @@ read_when:
 title: "軌跢套件"
 ---
 
-軌跢擷取是 OpenClaw 的每工作階段飛行記錄器。它會記錄每次代理程式執行的結構化時間軸，然後 `/export-trajectory` 將目前的工作階段封裝成已編輯的支援套件。
+軌跢擷取是 OpenClaw 針對每個工作階段的飛行紀錄器。它會記錄每個代理程式執行的結構化時間軸，然後 `/export-trajectory` 將目前的工作階段封裝成經過編輯的支援套件。
 
 當您需要回答以下問題時使用它：
 
@@ -18,8 +18,8 @@ title: "軌跢套件"
 - 啟用的是哪個模型、外掛、技能和執行時設定？
 - 提供者回傳了什麼使用量和提示快取元資料？
 
-如果您正在針對即時 Gateway 問題提交廣泛的支援報告，請從
-[`/diagnostics`](/zh-Hant/gateway/diagnostics#chat-command) 開始。診斷工具會收集已清理的 Gateway 套件，並且對於 OpenAI Codex 線束工作階段，也可以在核准後將 Codex 反饋傳送至 OpenAI 伺服器。當您特別需要詳細的每工作階段提示、工具和逐字稿時間軸時，請使用 `/export-trajectory`。
+如果您要針對即時 Gateway 問題提交廣泛的支援報告，請從
+[`/diagnostics`](/zh-Hant/gateway/diagnostics#chat-command) 開始。診斷會收集已清理的 Gateway 套件，而對於 OpenAI Codex 測試線工作階段，經批准後也可以將 Codex 回饋傳送到 OpenAI 伺服器。當您特別需要詳細的每個工作階段提示詞、工具和逐字稿時間軸時，請使用 `/export-trajectory`。
 
 ## 快速入門
 
@@ -47,7 +47,8 @@ OpenClaw 會將套件寫入工作區下：
 /export-trajectory bug-1234
 ```
 
-自訂路徑是在 `.openclaw/trajectory-exports/` 內部解析的。絕對路徑和 `~` 路徑會被拒絕。
+自訂路徑是在 `.openclaw/trajectory-exports/` 內解析。絕對路徑和
+`~` 路徑會被拒絕。
 
 軌跢套件可以包含提示、模型訊息、工具結構描述、工具結果、執行階段事件和本機路徑。因此，聊天斜線指令每次都會透過執行核准流程執行。當您打算建立套件時，請核准匯出一次；請勿使用「全部允許」。在群組聊天中，OpenClaw 會私下將核准提示和匯出結果傳送給擁有者，而不是將軌跢詳細資訊發布回共用聊天室。
 
@@ -71,7 +72,7 @@ OpenClaw 代理程式執行預設會開啟軌跢擷取。
 - `trace.metadata`
 - `context.compiled`
 - `prompt.submitted`
-- `model.fallback_step`，包括來源模型、下一個模型、失敗原因/詳細資料、鏈結位置，以及備用機制是否推進、成功或耗盡了鏈結
+- `model.fallback_step`，包括來源模型、下一個模型、失敗原因/細節、鏈結位置，以及容錯移轉是前進、成功還是耗盡了鏈結
 - `model.completed`
 - `trace.artifacts`
 - `session.ended`
@@ -110,7 +111,7 @@ OpenClaw 代理程式執行預設會開啟軌跢擷取。
 | `system-prompt.txt`   | 最新的編譯系統提示（於擷取時）                                             |
 | `tools.json`          | 傳送至模型的工具定義（於擷取時）                                           |
 
-`manifest.json` 列出該套件中存在的檔案。若會話未擷取相應的執行時間資料，則會省略部分檔案。
+`manifest.json` 列出該套件中存在的檔案。當工作階段未擷取對應的執行時間資料時，部分檔案會被省略。
 
 ## 擷取位置
 
@@ -126,7 +127,7 @@ OpenClaw 也會在會話旁邊寫入一個盡力的指標檔案：
 <session>.trajectory-path.json
 ```
 
-設定 `OPENCLAW_TRAJECTORY_DIR` 將執行時間軌跡側車檔案儲存在專用目錄中：
+設定 `OPENCLAW_TRAJECTORY_DIR` 以將執行時間軌跢側車檔案儲存在專用目錄中：
 
 ```bash
 export OPENCLAW_TRAJECTORY_DIR=/var/lib/openclaw/trajectories
@@ -144,47 +145,57 @@ export OPENCLAW_TRAJECTORY_DIR=/var/lib/openclaw/trajectories
 export OPENCLAW_TRAJECTORY=0
 ```
 
-這會停用執行時間軌跡擷取。`/export-trajectory` 仍然可以匯出逐字稿分支，但可能會缺少僅限執行時間的檔案，例如編譯內容、供應商產品和提示中繼資料。
+這會停用執行時間軌跢擷取。`/export-trajectory` 仍然可以匯出逐字稿分支，但僅限執行時間的檔案（例如已編譯的內容、提供者產出資料和提示詞中繼資料）可能會遺失。
+
+## 調整刷新逾時
+
+OpenClaw 會在代理程式清理期間重新整理執行時軌跡 sidecar。預設的清理逾時為 10,000 毫秒。如果在慢速磁碟或大型儲存上，請在啟動 OpenClaw 之前設定 `OPENCLAW_TRAJECTORY_FLUSH_TIMEOUT_MS`：
+
+```bash
+export OPENCLAW_TRAJECTORY_FLUSH_TIMEOUT_MS=30000
+```
+
+這控制 OpenClaw 何時記錄 `pi-trajectory-flush` 逾時並繼續執行。它不會改變軌跡大小上限。若要調整所有未傳遞明確逾時的代理程式清理步驟，請設定 `OPENCLAW_AGENT_CLEANUP_TIMEOUT_MS`。
 
 ## 隱私與限制
 
-軌跡套件是專為支援和除錯而設計的，並非用於公開發布。OpenClaw 在寫入匯出檔案之前會編修敏感值：
+軌跡套件是為了支援和除錯而設計，非用於公開發布。OpenClaw 會在寫入匯出檔案前編輯敏感值：
 
-- 憑證和已知的類似密碼的酬載欄位
-- 影像資料
+- 憑證和已知類似密碼的 payload 欄位
+- 圖片資料
 - 本機狀態路徑
-- 工作區路徑，已替換為 `$WORKSPACE_DIR`
-- 家目錄路徑（如偵測到）
+- 工作區路徑，替換為 `$WORKSPACE_DIR`
+- 主目錄路徑（如果偵測到的話）
 
 匯出工具也會限制輸入大小：
 
-- 執行期 sidecar 檔案：即時擷取會在 10 MiB 時停止，並在剩餘空間時記錄截斷事件；匯出接受最大 50 MiB 的現有執行期 sidecar
-- 工作階段檔案：50 MiB
-- 執行期事件：200,000
-- 匯出事件總數：250,000
-- 單一執行期事件行若超過 256 KiB 將會被截斷
+- 執行時 sidecar 檔案：即時擷取在 10 MiB 時停止，並在仍有空間時記錄截斷事件；匯出接受現有的執行時 sidecar，最大可達 50 MiB
+- 會話檔案：50 MiB
+- 執行時事件：200,000
+- 匯出的事件總數：250,000
+- 個別執行時事件行在超過 256 KiB 時會被截斷
 
-在與團隊外部分享套件前，請先進行審閱。編輯僅為盡力而為，無法得知所有應用程式特定的密碼。
+與團隊以外的人分享套件前，請先審閱。編輯是盡力而為，無法得知每個應用程式特定的密碼。
 
 ## 疑難排解
 
-如果匯出沒有執行期事件：
+如果匯出沒有執行時事件：
 
-- 確認 OpenClaw 在未使用 `OPENCLAW_TRAJECTORY=0` 的情況下啟動
+- 確認 OpenClaw 未在 `OPENCLAW_TRAJECTORY=0` 的情況下啟動
 - 檢查 `OPENCLAW_TRAJECTORY_DIR` 是否指向可寫入的目錄
-- 在工作階段中執行另一則訊息，然後再次匯出
+- 在會話中執行另一則訊息，然後再次匯出
 - 檢查 `manifest.json` 中是否有 `runtimeEventCount`
 
-如果指令拒絕了輸出路徑：
+如果指令拒絕輸出路徑：
 
 - 使用像 `bug-1234` 這樣的相對名稱
 - 不要傳遞 `/tmp/...` 或 `~/...`
-- 將匯出保持在 `.openclaw/trajectory-exports/` 之內
+- 將匯出保持在 `.openclaw/trajectory-exports/` 內
 
-如果匯出因為大小錯誤而失敗，表示工作階段或 sidecar 超出了匯出安全限制。請開啟新的工作階段或匯出較小的重現步驟。
+如果匯出因大小錯誤而失敗，表示會話或 sidecar 超出了匯出安全限制。請開始新的會話或匯出較小的重現案例。
 
 ## 相關
 
 - [差異](/zh-Hant/tools/diffs)
-- [工作階段管理](/zh-Hant/concepts/session)
+- [會話管理](/zh-Hant/concepts/session)
 - [Exec 工具](/zh-Hant/tools/exec)

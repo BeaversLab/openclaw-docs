@@ -6,11 +6,11 @@ read_when:
 title: "Autenticación"
 ---
 
-<Note>Esta página es la referencia de autenticación del **proveedor de modelos** (claves de API, OAuth, reutilización de Claude CLI y token de configuración de Anthropic). Para la autenticación de **conexión de puerta de enlace** (token, contraseña, proxy de confianza), consulte [Configuration](/es/gateway/configuration) y [Trusted Proxy Auth](/es/gateway/trusted-proxy-auth).</Note>
+<Note>Esta página es la referencia de autenticación del **proveedor de modelos** (claves API, OAuth, reutilización de Claude CLI y token de configuración de Anthropic). Para la autenticación de la **conexión de la puerta de enlace** (token, contraseña, proxy de confianza), consulte [Configuration](/es/gateway/configuration) y [Trusted Proxy Auth](/es/gateway/trusted-proxy-auth).</Note>
 
 OpenClaw admite OAuth y claves de API para proveedores de modelos. Para hosts de puerta de enlace siempre activos, las claves de API suelen ser la opción más predecible. Los flujos de Suscripción/OAuth también son compatibles cuando coinciden con el modelo de cuenta de su proveedor.
 
-Consulte [/concepts/oauth](/es/concepts/oauth) para conocer el flujo completo de OAuth y el diseño de almacenamiento.
+Consulte [/concepts/oauth](/es/concepts/oauth) para ver el flujo completo de OAuth y el diseño de almacenamiento.
 Para la autenticación basada en SecretRef (proveedores `env`/`file`/`exec`), consulte [Secrets Management](/es/gateway/secrets).
 Para las reglas de elegibilidad de credenciales/códigos de razón utilizadas por `models status --probe`, consulte
 [Auth Credential Semantics](/es/auth-credential-semantics).
@@ -128,7 +128,7 @@ Notas:
 - Los períodos de enfriamiento por límites de tasa pueden estar limitados al modelo. Un perfil en enfriamiento por un
   modelo todavía puede ser utilizable para un modelo hermano en el mismo proveedor.
 
-Los scripts de ops opcionales (systemd/Termux) están documentados aquí:
+Los scripts de operaciones opcionales (systemd/Termux) están documentados aquí:
 [Auth monitoring scripts](/es/help/scripts#auth-monitoring-scripts)
 
 ## Nota de Anthropic
@@ -167,17 +167,29 @@ requests`, `ThrottlingException`, `concurrency limit reached`, o
 - Los errores que no sean de límite de tasa no se reintentan con claves alternativas.
 - Si fallan todas las claves, se devuelve el error final del último intento.
 
+## Eliminar la autenticación del proveedor mientras la puerta de enlace está en ejecución
+
+Cuando se elimina la autenticación del proveedor a través del plano de control de Gateway, OpenClaw elimina
+los perfiles de autenticación guardados para ese proveedor y aborta los chats activos o ejecuciones de agentes
+cuyo proveedor de modelos seleccionado coincida con el proveedor eliminado. Las ejecuciones abortadas emiten
+los eventos normales de cancelación de chat y del ciclo de vida con
+`stopReason: "auth-revoked"`, por lo que los clientes conectados pueden mostrar que la ejecución se
+detuvo porque se eliminaron las credenciales.
+
+Eliminar la autenticación guardada no revoca las claves en el proveedor. Rote o revoque la
+clave en el panel del proveedor cuando necesite una invalidación del lado del proveedor.
+
 ## Controlar qué credencial se utiliza
 
 ### Por sesión (comando de chat)
 
-Use `/model <alias-or-id>@<profileId>` para anclar una credencial de proveedor específica para la sesión actual (ids de perfil de ejemplo: `anthropic:default`, `anthropic:work`).
+Use `/model <alias-or-id>@<profileId>` para fijar una credencial de proveedor específica para la sesión actual (ids de perfil de ejemplo: `anthropic:default`, `anthropic:work`).
 
-Use `/model` (o `/model list`) para un selector compacto; use `/model status` para la vista completa (candidatos + siguiente perfil de autenticación, más detalles del punto de conexión del proveedor cuando estén configurados).
+Use `/model` (o `/model list`) para un selector compacto; use `/model status` para la vista completa (candidatos + siguiente perfil de autenticación, más detalles del punto de conexión del proveedor cuando esté configurado).
 
 ### Por agente (anulación de CLI)
 
-Establezca una anulación explícita del orden del perfil de autenticación para un agente (almacenado en el `auth-state.json` de ese agente):
+Establezca una anulación explícita del orden del perfil de autenticación para un agente (almacenado en `auth-state.json` de ese agente):
 
 ```bash
 openclaw models auth order get --provider anthropic
@@ -186,27 +198,27 @@ openclaw models auth order clear --provider anthropic
 ```
 
 Use `--agent <id>` para apuntar a un agente específico; omítalo para usar el agente predeterminado configurado.
-Cuando depure problemas de orden, `openclaw models status --probe` muestra los
-perfiles almacenados omitidos como `excluded_by_auth_order` en lugar de omitirlos silenciosamente.
-Cuando depure problemas de enfriamiento (cooldown), recuerde que los enfriamientos de límites de velocidad pueden estar vinculados
-a un id de modelo en lugar de a todo el perfil del proveedor.
+Cuando depure problemas de orden, `openclaw models status --probe` muestra los perfiles
+almacenados omitidos como `excluded_by_auth_order` en lugar de omitirlos silenciosamente.
+Cuando depure problemas de tiempo de espera (cooldown), recuerde que los tiempos de espera de límites de velocidad pueden estar vinculados
+a un ID de modelo en lugar de a todo el perfil del proveedor.
 
 ## Solución de problemas
 
 ### "No se encontraron credenciales"
 
 Si falta el perfil de Anthropic, configure una clave de API de Anthropic en el
-**host de puerta de enlace** o configure la ruta del token de configuración de Anthropic, luego vuelva a verificar:
+**host de la puerta de enlace** o configure la ruta del token de configuración de Anthropic, luego vuelva a verificar:
 
 ```bash
 openclaw models status
 ```
 
-### Token expirando/caducado
+### Token caducando/caducado
 
 Ejecute `openclaw models status` para confirmar qué perfil está caducando. Si falta
-o ha caducado un perfil de token de Anthropic, actualice esa configuración a través
-del token de configuración o migre a una clave de API de Anthropic.
+o ha caducado un perfil de token de Anthropic, actualice esa configuración a través del
+token de configuración o migre a una clave de API de Anthropic.
 
 ## Relacionado
 

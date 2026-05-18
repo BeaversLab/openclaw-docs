@@ -87,8 +87,8 @@ openclaw onboard \
 
 這會寫入 `models.providers.lmstudio` 並將預設模型設定為 `lmstudio/<custom-model-id>`。當您提供 API 金鑰時，設定也會寫入 `lmstudio:default` 驗證設定檔。
 
-互動式設定可以提示輸入可選的首選載入內容長度，並將其套用至它儲存至設定中偵測到的 LM Studio 模型。
-LM Studio 外掛程式設定信任設定的 LM Studio 端點用於模型請求，包括 loopback、LAN 和 tailnet 主機。您可以透過設定 `models.providers.lmstudio.request.allowPrivateNetwork: false` 來選擇退出。
+互動式設定可以提示選擇偏好的載入上下文長度，並將其套用於儲存到配置中的已偵測 LM Studio 模型。
+LM Studio 外掛程式配置信任設定的 LM Studio 端點用於模型請求，包括 loopback、LAN 和 tailnet 主機。Metadata/link-local 來源仍然需要明確選擇加入。您可以透過設定 `models.providers.lmstudio.request.allowPrivateNetwork: false` 來選擇退出。
 
 ## 設定
 
@@ -203,7 +203,7 @@ LM Studio 支援及時 (JIT) 模型載入，其中模型會在第一次請求時
 }
 ```
 
-與通用的 OpenAI 相容供應商不同，`lmstudio` 會自動信任其設定的本機/私有端點以進行受保護的模型請求。自訂回環供應商 ID（例如 `localhost` 或 `127.0.0.1`）也會自動受信任；對於 LAN、tailnet 或私有 DNS 自訂供應商 ID，請明確設定 `models.providers.<id>.request.allowPrivateNetwork: true`。
+`lmstudio` 會自動信任其設定的本地/私有端點用於受防護的模型請求。自訂/本地 OpenAI 相容的提供者項目也會信任其確切設定的 `baseUrl` 來源，metadata/link-local 來源除外；對於不同私有連接埠或目的地的請求仍然需要 `models.providers.<id>.request.allowPrivateNetwork: true`。設定 `models.providers.<id>.request.allowPrivateNetwork: false` 以退出確切來源信任。
 
 ## 相關
 

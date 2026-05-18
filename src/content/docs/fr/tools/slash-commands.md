@@ -125,44 +125,44 @@ Source actuelle de vérité :
 <AccordionGroup>
   <Accordion title="Sessions et exécutions">
     - `/new [model]` démarre une nouvelle session ; `/reset` est l'alias de réinitialisation.
-    - L'interface de contrôle intercepte la commande `/new` saisie pour créer et basculer vers une nouvelle session de tableau de bord, sauf si `session.dmScope: "main"` est configuré et que le parent actuel est la session principale de l'agent ; dans ce cas, `/new` réinitialise la session principale sur place. La commande `/reset` saisie exécute toujours la réinitialisation sur place du Gateway.
-    - `/reset soft [message]` conserve la transcription actuelle, supprime les identifiants de session backend CLI réutilisés et relance le chargement du démarrage/system-prompt sur place.
-    - `/compact [instructions]` compacte le contexte de la session. Voir [Compaction](/fr/concepts/compaction).
+    - L'interface de contrôle intercepte la frappe de `/new` pour créer et basculer vers une nouvelle session de tableau de bord, sauf si `session.dmScope: "main"` est configuré et que le parent actuel est la session principale de l'agent ; dans ce cas, `/new` réinitialise la session principale en place. La frappe de `/reset` exécute toujours la réinitialisation en place du Gateway.
+    - `/reset soft [message]` conserve la transcription actuelle, supprime les identifiants de session backend CLI réutilisés et recharge le démarrage/system-prompt en place.
+    - `/compact [instructions]` compresse le contexte de la session. Voir [Compression](/fr/concepts/compaction).
     - `/stop` interrompt l'exécution actuelle.
-    - `/session idle <duration|off>` et `/session max-age <duration|off>` gèrent l'expiration de la liaison de fil.
+    - `/session idle <duration|off>` et `/session max-age <duration|off>` gèrent l'expiration de la liaison de fil de discussion.
     - `/export-session [path]` exporte la session actuelle au format HTML. Alias : `/export`.
-    - `/export-trajectory [path]` demande une approbation d'exécution, puis exporte un bundle de trajectoire JSONL [trajectory bundle](/fr/tools/trajectory) pour la session actuelle. Utilisez-le lorsque vous avez besoin de l'invite, de l'outil et de la chronologie de la transcription pour une session OpenClaw. Dans les conversations de groupe, l'invite d'approbation et le résultat de l'exportation sont envoyés en privé au propriétaire. Alias : `/trajectory`.
+    - `/export-trajectory [path]` demande une approbation d'exécution, puis exporte un [bundle de trajectoire](/fr/tools/trajectory) JSONL pour la session actuelle. Utilisez-le lorsque vous avez besoin de la chronologie du prompt, de l'outil et de la transcription pour une session OpenClaw. Dans les discussions de groupe, l'invite d'approbation et le résultat de l'exportation sont envoyés en privé au propriétaire. Alias : `/trajectory`.
 
   </Accordion>
-  <Accordion title="Modèle et contrôles d'exécution">
-    - `/think <level|default>` définit le niveau de réflexion ou efface la substitution de session. Les options proviennent du profil du fournisseur du modèle actif ; les niveaux courants sont `off`, `minimal`, `low`, `medium` et `high`, avec des niveaux personnalisés tels que `xhigh`, `adaptive`, `max` ou binaire `on` uniquement lorsque pris en charge. Alias : `/thinking`, `/t`.
-    - `/verbose on|off|full` active/désactive la sortie détaillée. Alias : `/v`.
+  <Accordion title="Model and run controls">
+    - `/think <level|default>` définit le niveau de réflexion ou efface la substitution de la session. Les options proviennent du profil du fournisseur du model actif ; les niveaux courants sont `off`, `minimal`, `low`, `medium` et `high`, avec des niveaux personnalisés tels que `xhigh`, `adaptive`, `max` ou binaire `on` uniquement lorsque pris en charge. Alias : `/thinking`, `/t`.
+    - `/verbose on|off|full` active/désactive la sortie verbeuse. Alias : `/v`.
     - `/trace on|off` active/désactive la sortie de trace du plugin pour la session actuelle.
     - `/fast [status|on|off|default]` affiche, définit ou efface le mode rapide.
     - `/reasoning [on|off|stream]` active/désactive la visibilité du raisonnement. Alias : `/reason`.
     - `/elevated [on|off|ask|full]` active/désactive le mode élevé. Alias : `/elev`.
     - `/exec host=<auto|sandbox|gateway|node> security=<deny|allowlist|full> ask=<off|on-miss|always> node=<id>` affiche ou définit les valeurs par défaut d'exécution.
-    - `/model [name|#|status]` affiche ou définit le modèle.
-    - `/models [provider] [page] [limit=<n>|size=<n>|all]` liste les fournisseurs configurés/disponibles via authentification ou les modèles pour un fournisseur ; ajoutez `all` pour parcourir le catalogue complet de ce fournisseur. Les entrées `provider/*` dans `agents.defaults.models` font que `/model` et `/models` n'affichent les modèles découverts que pour ces fournisseurs.
-    - `/queue <mode>` gère le comportement de la file d'attente (`steer`, `queue` hérité, `followup`, `collect`, `steer-backlog`, `interrupt`) ainsi que des options telles que `debounce:0.5s cap:25 drop:summarize` ; `/queue default` ou `/queue reset` efface la substitution de session. Voir [File d'attente de commandes](/fr/concepts/queue) et [File d'attente de pilotage](/fr/concepts/queue-steering).
-    - `/steer <message>` injecte des conseils dans l'exécution active pour la session actuelle, indépendamment du mode `/queue`. Il ne démarre pas une nouvelle exécution lorsque la session est inactive. Alias : `/tell`. Voir [Pilotage](/fr/tools/steer).
+    - `/model [name|#|status]` affiche ou définit le model.
+    - `/models [provider] [page] [limit=<n>|size=<n>|all]` liste les fournisseurs configurés/disponibles via authentification ou les models pour un fournisseur ; ajoutez `all` pour parcourir le catalogue complet de ce fournisseur. Les entrées `provider/*` dans `agents.defaults.models` font que `/model` et `/models` n'affichent les models découverts que pour ces fournisseurs.
+    - `/queue <mode>` gère le comportement de la file d'exécution active (`steer`, `followup`, `collect`, `interrupt`) ainsi que des options comme `debounce:0.5s cap:25 drop:summarize` ; `/queue default` ou `/queue reset` efface la substitution de la session. Les invites en cours d'exécution dirigent par défaut sans directive de file. Voir [Command queue](/fr/concepts/queue) et [Steering queue](/fr/concepts/queue-steering).
+    - `/steer <message>` injecte des directives dans l'exécution active pour la session actuelle, indépendamment du mode `/queue`. Si la direction n'est pas disponible ou si la session est inactive, `<message>` continue en tant qu'invite normale. Alias : `/tell`. Voir [Steer](/fr/tools/steer).
 
   </Accordion>
-  <Accordion title="Découverte et statut">
-    - `/help` affiche le résumé de l'aide.
+  <Accordion title="Discovery et statut">
+    - `/help` affiche le résumé de l'aide court.
     - `/commands` affiche le catalogue de commandes généré.
     - `/tools [compact|verbose]` affiche ce que l'agent actuel peut utiliser maintenant.
-    - `/status` affiche le statut d'exécution, le temps de disponibilité du Gateway et du système, ainsi que l'utilisation/quota du provider si disponible.
-    - `/diagnostics [note]` est le flux de rapport de support réservé au propriétaire pour les bugs du Gateway et les exécutions du harnais Codex. Il demande une approbation explicite à chaque exécution avant de lancer `openclaw gateway diagnostics export --json` ; n'approuvez pas les diagnostics avec une règle allow-all. Après approbation, il envoie un rapport collable avec le chemin du bundle local, le résumé du manifeste, les notes de confidentialité et les identifiants de session pertinents. Dans les discussions de groupe, l'invite d'approbation et le rapport sont envoyés au propriétaire en privé. Lorsque la session active utilise le harnais Codex OpenAI, la même approbation envoie également les commentaires pertinents Codex aux serveurs OpenAI et la réponse terminée répertorie les identifiants de session OpenClaw, les identifiants de fil Codex et les commandes `codex resume <thread-id>`. Voir [Export des diagnostics](/fr/gateway/diagnostics).
-    - `/crestodian <request>` lance l'assistant de configuration et de réparation Crestodian à partir d'un MP du propriétaire.
-    - `/tasks` répertorie les tâches d'arrière-plan actives/récentes pour la session actuelle.
-    - `/context [list|detail|map|json]` explique comment le contexte est assemblé. `map` envoie une image de treemap du contexte de la session actuelle.
+    - `/status` affiche le statut d'exécution, la disponibilité du Gateway et du système, ainsi que l'utilisation/quota du provider lorsque disponible.
+    - `/diagnostics [note]` est le flux de rapport de support réservé au propriétaire pour les bugs du Gateway et les exécutions du harnais Codex. Il demande une approbation explicite à chaque exécution avant de lancer `openclaw gateway diagnostics export --json` ; n'approuvez pas les diagnostics avec une règle autorisant tout. Après approbation, il envoie un rapport collable avec le chemin du bundle local, le résumé du manifeste, les notes de confidentialité et les identifiants de session pertinents. Dans les conversations de groupe, l'invite d'approbation et le rapport sont envoyés au propriétaire en privé. Lorsque la session active utilise le harnais Codex OpenAI, la même approbation envoie également les commentaires Codex pertinents aux serveurs OpenAI et la réponse terminée liste les identifiants de session OpenClaw, les identifiants de fil Codex et les commandes `codex resume <thread-id>`. Voir [Export des diagnostics](/fr/gateway/diagnostics).
+    - `/crestodian <request>` exécute l'assistant de configuration et de réparation Crestodian à partir d'un MP de propriétaire.
+    - `/tasks` liste les tâches d'arrière-plan actives/récentes pour la session actuelle.
+    - `/context [list|detail|map|json]` explique comment le contexte est assemblé. `map` envoie une image de treemap du contexte de session actuel.
     - `/whoami` affiche votre identifiant d'expéditeur. Alias : `/id`.
     - `/usage off|tokens|full|cost` contrôle le pied de page d'utilisation par réponse ou imprime un résumé des coûts locaux.
 
   </Accordion>
   <Accordion title="Skills, listes d'autorisation, approbations">
-    - `/skill <name> [input]` exécute une compétence par son nom.
+    - `/skill <name> [input]` exécute un skill par son nom.
     - `/allowlist [list|add|remove] ...` gère les entrées de la liste d'autorisation. Texte uniquement.
     - `/approve <id> <decision>` résout les invites d'approbation d'exécution.
     - `/btw <question>` pose une question annexe sans modifier le contexte de la session future. Alias : `/side`. Voir [BTW](/fr/tools/btw).
@@ -171,26 +171,26 @@ Source actuelle de vérité :
   <Accordion title="Sous-agents et ACP">
     - `/subagents list|kill|log|info|send|steer|spawn` gère les exécutions de sous-agents pour la session actuelle.
     - `/acp spawn|cancel|steer|close|sessions|status|set-mode|set|cwd|permissions|timeout|model|reset-options|doctor|install|help` gère les sessions ACP et les options d'exécution.
-    - `/focus <target>` lie le fil Discord actuel ou le sujet/conversation Telegram à une cible de session.
+    - `/focus <target>` lie le fil Discord ou le sujet/conversation Telegram actuel à une cible de session.
     - `/unfocus` supprime la liaison actuelle.
     - `/agents` liste les agents liés au fil pour la session actuelle.
-    - `/kill <id|#|all>` abandonne un ou tous les sous-agents en cours d'exécution.
-    - `/subagents steer <id|#> <message>` envoie une directive à un sous-agent en cours d'exécution. Voir [Steer](/fr/tools/steer).
+    - `/kill <id|#|all>` interrompt un ou tous les sous-agents en cours d'exécution.
+    - `/subagents steer <id|#> <message>` envoie des directives à un sous-agent en cours d'exécution. Voir [Steer](/fr/tools/steer).
 
   </Accordion>
-  <Accordion title="Owner-only writes and admin">
+  <Accordion title="Écritures réservées au propriétaire et administration">
     - `/config show|get|set|unset` lit ou écrit `openclaw.json`. Réservé au propriétaire. Nécessite `commands.config: true`.
     - `/mcp show|get|set|unset` lit ou écrit la configuration du serveur MCP gérée par OpenClaw sous `mcp.servers`. Réservé au propriétaire. Nécessite `commands.mcp: true`.
     - `/plugins list|inspect|show|get|install|enable|disable` inspecte ou modifie l'état du plugin. `/plugin` est un alias. Réservé au propriétaire pour les écritures. Nécessite `commands.plugins: true`.
-    - `/debug show|set|unset|reset` gère les remplacements de configuration d'exécution uniquement. Réservé au propriétaire. Nécessite `commands.debug: true`.
+    - `/debug show|set|unset|reset` gère les redéfinitions de configuration d'exécution uniquement. Réservé au propriétaire. Nécessite `commands.debug: true`.
     - `/restart` redémarre OpenClaw lorsqu'il est activé. Par défaut : activé ; définissez `commands.restart: false` pour le désactiver.
-    - `/send on|off|inherit` définit la stratégie d'envoi. Réservé au propriétaire.
+    - `/send on|off|inherit` définit la politique d'envoi. Réservé au propriétaire.
 
   </Accordion>
-  <Accordion title="Voice, TTS, channel control">
+  <Accordion title="Voix, TTS, contrôle de channel">
     - `/tts on|off|status|chat|latest|provider|limit|summary|audio|help` contrôle le TTS. Voir [TTS](/fr/tools/tts).
     - `/activation mention|always` définit le mode d'activation de groupe.
-    - `/bash <command>` exécute une commande shell de l'hôte. Texte uniquement. Alias : `! <command>`. Nécessite `commands.bash: true` ainsi que les listes blanches `tools.elevated`.
+    - `/bash <command>` exécute une commande shell de l'hôte. Texte uniquement. Alias : `! <command>`. Nécessite `commands.bash: true` ainsi que les listes d'autorisation `tools.elevated`.
     - `!poll [sessionId]` vérifie une tâche bash en arrière-plan.
     - `!stop [sessionId]` arrête une tâche bash en arrière-plan.
 
@@ -199,8 +199,8 @@ Source actuelle de vérité :
 
 ### Commandes de dock générées
 
-Les commandes d'amarrage redirigent la route de réponse de la session actuelle vers un autre
-channel lié. Voir [Channel docking](/fr/concepts/channel-docking) pour la configuration,
+Les commandes d'amarrage (Dock commands) redirigent le trajet de réponse de la session actuelle vers un autre channel lié.
+Voir [Channel docking](/fr/concepts/channel-docking) pour la configuration,
 les exemples et le troubleshooting.
 
 Les commandes d'amarrage sont générées à partir des plugins de channel avec prise en charge des commandes natives. Ensemble groupé actuel :
@@ -212,20 +212,20 @@ Les commandes d'amarrage sont générées à partir des plugins de channel avec 
 
 Utilisez les commandes d'amarrage depuis un chat direct pour basculer l'itinéraire de réponse de la session actuelle vers un autre canal lié. L'agent conserve le même contexte de session, mais les futures réponses pour cette session sont acheminées vers le canal sélectionné.
 
-Les commandes d'amarrage nécessitent `session.identityLinks`. L'expéditeur source et le pair cible doivent être dans le même groupe d'identité, par exemple `["telegram:123", "discord:456"]`. Si un utilisateur Telegram avec l'identifiant `123` envoie `/dock_discord`, OpenClaw stocke `lastChannel: "discord"` et `lastTo: "456"` sur la session active. Si l'expéditeur n'est pas lié à un pair Discord, la commande répond par un indice de configuration au lieu de revenir au chat normal.
+Les commandes d'amarrage nécessitent `session.identityLinks`. L'expéditeur source et le pair cible doivent appartenir au même groupe d'identité, par exemple `["telegram:123", "discord:456"]`Telegram. Si un utilisateur Telegram avec l'id `123` envoie `/dock_discord`OpenClaw, OpenClaw stocke `lastChannel: "discord"` et `lastTo: "456"`Discord sur la session active. Si l'expéditeur n'est pas lié à un pair Discord, la commande répond par une indication de configuration au lieu de poursuivre vers le chat normal.
 
-L'amarrage ne modifie que la route de la session active. Il ne crée pas de comptes de channel, n'accorde pas d'accès, ne contourne pas les listes d'autorisation de channel, ni ne déplace l'historique des transcripts vers une autre session. Utilisez `/dock-telegram`, `/dock-slack`, `/dock-mattermost`, ou une autre commande d'amarrage générée pour modifier à nouveau la route.
+L'amarrage modifie uniquement l'itinéraire de la session active. Il ne crée pas de comptes de canal, n'accorde pas d'accès, ne contourne pas les listes d'autorisation des canaux et ne déplace pas l'historique des transcriptions vers une autre session. Utilisez `/dock-telegram`, `/dock-slack`, `/dock-mattermost`, ou une autre commande d'amarrage générée pour basculer à nouveau l'itinéraire.
 
 ### Commandes de plugin groupées
 
 Les plugins groupés peuvent ajouter d'autres commandes slash. Commandes groupées actuelles dans ce dépôt :
 
-- `/dreaming [on|off|status|help]` bascule le mode rêve de la mémoire. Voir [Dreaming](/fr/concepts/dreaming).
-- `/pair [qr|status|pending|approve|cleanup|notify]` gère le flux de couplage/configuration de l'appareil. Voir [Pairing](/fr/channels/pairing).
-- `/phone status|arm <camera|screen|writes|all> [duration]|disarm` arme temporairement les commandes à haut risque du nœud téléphonique.
-- `/voice status|list [limit]|set <voiceId|name>` gère la configuration vocale Talk. Sur Discord, le nom de la commande native est `/talkvoice`.
+- `/dreaming [on|off|status|help]` active/désactive le rêve de la mémoire. Voir [Dreaming](/fr/concepts/dreaming).
+- `/pair [qr|status|pending|approve|cleanup|notify]` gère le flux de jumelage/configuration de l'appareil. Voir [Pairing](/fr/channels/pairing).
+- `/phone status|arm <camera|screen|writes|all> [duration]|disarm` arme temporairement les commandes de nœud téléphonique à haut risque.
+- `/voice status|list [limit]|set <voiceId|name>`Discord gère la configuration vocale Talk. Sur Discord, le nom de la commande native est `/talkvoice`.
 - `/card ...` envoie des présélections de cartes riches LINE. Voir [LINE](/fr/channels/line).
-- `/codex status|models|threads|resume|compact|review|diagnostics|account|mcp|skills` inspecte et contrôle le harnais app-server Codex inclus. Voir [Codex harness](/fr/plugins/codex-harness).
+- `/codex status|models|threads|resume|compact|review|diagnostics|account|mcp|skills` inspecte et contrôle le harnais app-server Codex groupé. Voir [Codex harness](/fr/plugins/codex-harness).
 - Commandes réservées à QQBot :
   - `/bot-ping`
   - `/bot-version`
@@ -238,89 +238,89 @@ Les plugins groupés peuvent ajouter d'autres commandes slash. Commandes groupé
 Les compétences invoquables par l'utilisateur sont également exposées en tant que commandes slash :
 
 - `/skill <name> [input]` fonctionne toujours comme le point d'entrée générique.
-- les compétences peuvent également apparaître comme des commandes directes comme `/prose` lorsque la compétence/le plug-in les enregistre.
-- l'enregistrement natif des commandes de compétence est contrôlé par `commands.nativeSkills` et `channels.<provider>.commands.nativeSkills`.
-- les spécifications de commande peuvent fournir `descriptionLocalizations` pour les surfaces natives qui prennent en charge les descriptions localisées, y compris Discord.
+- Les compétences peuvent également apparaître sous forme de commandes directes comme `/prose` lorsque la compétence/le plugin les enregistre.
+- L'enregistrement natif des commandes de compétences est contrôlé par `commands.nativeSkills` et `channels.<provider>.commands.nativeSkills`.
+- Les spécifications de commande peuvent fournir `descriptionLocalizations` pour les surfaces natives qui prennent en charge les descriptions localisées, y compris Discord.
 
 <AccordionGroup>
-  <Accordion title="Argument and parser notes">
+  <Accordion title="Argument et notes du parseur">
     - Les commandes acceptent un `:` optionnel entre la commande et les arguments (par ex. `/think: high`, `/send: on`, `/help:`).
-    - `/new <model>` accepte un alias de modèle, `provider/model`, ou un nom de fournisseur (correspondance approximative) ; s'il n'y a pas de correspondance, le texte est traité comme le corps du message.
-    - Pour une ventilation complète de l'utilisation du fournisseur, utilisez `openclaw status --usage`.
+    - `/new <model>` accepte un alias de model, `provider/model`, ou un nom de provider (correspondance approximative) ; sans correspondance, le texte est traité comme le corps du message.
+    - Pour une ventilation complète de l'utilisation du provider, utilisez `openclaw status --usage`.
     - `/allowlist add|remove` nécessite `commands.config=true` et respecte le `configWrites` du channel.
-    - Dans les channels multi-comptes, `/allowlist --account <id>` et `/config set channels.<provider>.accounts.<id>...` ciblant la configuration respectent également le `configWrites` du compte cible.
-    - `/usage` contrôle le pied de page d'utilisation par réponse ; `/usage cost` imprime un résumé des coûts locaux à partir des journaux de session OpenClaw.
+    - Dans les channels multi-comptes, `/allowlist --account <id>` et `/config set channels.<provider>.accounts.<id>...` ciblés sur la configuration respectent également le `configWrites` du compte cible.
+    - `/usage` contrôle le pied de page d'utilisation par réponse ; `/usage cost`OpenClaw imprime un résumé local des coûts à partir des journaux de session OpenClaw.
     - `/restart` est activé par défaut ; définissez `commands.restart: false` pour le désactiver.
-    - `/plugins install <spec>` accepte les mêmes spécifications de plugin que `openclaw plugins install` : chemin d'accès local/archive, package npm, `git:<repo>`, ou `clawhub:<pkg>`, puis demande un redémarrage de la Gateway car les modules source du plugin ont changé.
-    - `/plugins enable|disable` met à jour la configuration du plugin et déclenche le rechargement du plugin de la Gateway pour les nouveaux tours d'agent.
+    - `/plugins install <spec>` accepte les mêmes spécifications de plugin que `openclaw plugins install`npm : chemin local/archive, package npm, `git:<repo>`, ou `clawhub:<pkg>`. Les Gateways gérés redémarrent automatiquement car les modules source des plugins ont changé.
+    - `/plugins enable|disable`Gateway met à jour la configuration du plugin et déclenche le rechargement du plugin Gateway pour les nouveaux tours d'agent.
 
   </Accordion>
-  <Accordion title="Channel-specific behavior"Discord>
-    - Commande native Discord uniquement : `/vc join|leave|status` contrôle les canaux vocaux (non disponible en texte). `join` nécessite une guilde et un canal vocal/stage sélectionné. Nécessite `channels.discord.voice`Discord et les commandes natives.
-    - Commandes de liaison de thread Discord (`/focus`, `/unfocus`, `/agents`, `/session idle`, `/session max-age`) nécessitent que les liaisons de thread effectives soient activées (`session.threadBindings.enabled` et/ou `channels.discord.threadBindings.enabled`).
-    - Référence des commandes ACP et comportement à l'exécution : [ACP agents](/fr/tools/acp-agents).
+  <Accordion title="Comportement spécifique au canal"Discord>
+    - Commande native Discord uniquement : `/vc join|leave|status` contrôle les canaux vocaux (non disponible sous forme de texte). `join` nécessite une guilde et un canal vocal/scène sélectionné. Nécessite `channels.discord.voice`Discord et les commandes natives.
+    - Commandes de liaison de fil Discord (`/focus`, `/unfocus`, `/agents`, `/session idle`, `/session max-age`) nécessitent que les liaisons de fil effectives soient activées (`session.threadBindings.enabled` et/ou `channels.discord.threadBindings.enabled`).
+    - Référence de commande ACP et comportement d'exécution : [Agents ACP](/fr/tools/acp-agents).
 
   </Accordion>
   <Accordion title="Verbose / trace / fast / reasoning safety">
-    - `/verbose` est destiné au débogage et à une visibilité accrue ; gardez-le désactivé (**off**) en utilisation normale.
-    - `/trace` est plus précis que `/verbose` : il ne révèle que les lignes de trace/débogage détenues par les plugins et désactive les bavardages verbeux normaux des outils.
-    - `/fast on|off` persiste une substitution de session. Utilisez l'option `inherit` de l'interface Sessions pour l'effacer et revenir aux valeurs par défaut de la configuration.
-    - `/fast` est spécifique au fournisseur : OpenAI/OpenAI Codex le mappent à `service_tier=priority` sur les points de terminaison Responses natifs, tandis que les requêtes Anthropic publiques directes, y compris le trafic authentifié OAuth envoyé à `api.anthropic.com`, le mappent à `service_tier=auto` ou `standard_only`. Voir [OpenAI](/fr/providers/openai) et [Anthropic](/fr/providers/anthropic).
+    - `/verbose` est destiné au débogage et à une visibilité accrue ; gardez-le **désactivé** lors d'une utilisation normale.
+    - `/trace` est plus restreint que `/verbose` : il ne révèle que les lignes de trace/débogage appartenant aux plugins et désactive les bavardages verbeux habituels des outils.
+    - `/fast on|off` persiste dans une substitution de session. Utilisez l'option `inherit` de l'interface Sessions pour l'effacer et revenir aux valeurs par défaut de la configuration.
+    - `/fast` est spécifique au fournisseur : OpenAI/OpenAI Codex le mappent vers `service_tier=priority` sur les points de terminaison Responses natifs, tandis que les requêtes publiques directes vers Anthropic, y compris le trafic authentifié via OAuth envoyé à `api.anthropic.com`, le mappent vers `service_tier=auto` ou `standard_only`. Voir [OpenAI](/fr/providers/openai) et [Anthropic](/fr/providers/anthropic).
     - Les résumés d'échecs d'outils sont toujours affichés lorsque pertinents, mais le texte d'échec détaillé n'est inclus que lorsque `/verbose` est `on` ou `full`.
-    - `/reasoning`, `/verbose` et `/trace` sont risqués dans les contextes de groupe : ils peuvent révéler un raisonnement interne, une sortie d'outil ou des diagnostics de plugin que vous ne comptiez pas exposer. Il est préférable de les laisser désactivés, en particulier dans les discussions de groupe.
+    - `/reasoning`, `/verbose` et `/trace` présentent des risques dans les contextes de groupe : ils peuvent révéler un raisonnement interne, une sortie d'outil ou des diagnostics de plugin que vous ne souhaitiez pas exposer. Il est préférable de les laisser désactivés, surtout dans les discussions de groupe.
 
   </Accordion>
-  <Accordion title="Model switching">
-    - `/model` enregistre immédiatement le nouveau modèle de session.
-    - Si l'agent est inactif, la prochaine exécution l'utilise tout de suite.
-    - Si une exécution est déjà active, OpenClaw marque le basculement en direct comme en attente et ne redémarre avec le nouveau modèle qu'à un point de réessai propre.
-    - Si l'activité de l'outil ou la sortie de réponse a déjà commencé, le basculement en attente peut rester en file jusqu'à une opportunité de réessai ultérieure ou au prochain tour de l'utilisateur.
-    - Dans le TUI local, `/crestodian [request]` ramène du TUI de l'agent normal vers Crestodian. C'est distinct du mode de secours du message-channel et n'accorde pas d'autorité de configuration à distance.
+  <Accordion title="Changement de modèle">
+    - `/model` persiste le nouveau modèle de session immédiatement.
+    - Si l'agent est inactif, la prochaine exécution l'utilise immédiatement.
+    - Si une exécution est déjà active, OpenClaw marque un basculement en direct comme en attente et redémarre uniquement sur le nouveau modèle à un point de réessai propre.
+    - Si l'activité de l'outil ou la sortie de réponse a déjà commencé, le basculement en attente peut rester en file jusqu'à une prochaine opportunité de réessai ou au prochain tour de l'utilisateur.
+    - Dans le TUI local, `/crestodian [request]` renvoie de l'TUI de l'agent normal à Crestodian. Cela est distinct du mode de sauvetage du canal de message et n'accorde pas d'autorité de configuration distante.
 
   </Accordion>
-  <Accordion title="Fast path and inline shortcuts">
-    - **Fast path :** les messages de commande uniquement provenant d'expéditeurs autorisés sont traités immédiatement (contournement de la file + modèle).
-    - **Group mention gating :** les messages de commande uniquement provenant d'expéditeurs autorisés contournent les exigences de mention.
-    - **Inline shortcuts (allowlisted senders only) :** certaines commandes fonctionnent également lorsqu'elles sont intégrées dans un message normal et sont supprimées avant que le modèle ne voie le texte restant.
+  <Accordion title="Chemin rapide et raccourcis en ligne">
+    - **Chemin rapide :** les messages contenant uniquement des commandes provenant d'expéditeurs autorisés sont traités immédiatement (contournement de la file + modèle).
+    - **Filtrage par mention de groupe :** les messages contenant uniquement des commandes provenant d'expéditeurs autorisés contournent les exigences de mention.
+    - **Raccourcis en ligne (expéditeurs autorisés uniquement) :** certaines commandes fonctionnent également lorsqu'elles sont intégrées dans un message normal et sont supprimées avant que le modèle ne voit le texte restant.
       - Exemple : `hey /status` déclenche une réponse de statut, et le texte restant poursuit le flux normal.
     - Actuellement : `/help`, `/commands`, `/status`, `/whoami` (`/id`).
-    - Les messages de commande uniquement non autorisés sont silencieusement ignorés, et les jetons `/...` en ligne sont traités comme du texte brut.
+    - Les messages contenant uniquement des commandes non autorisées sont ignorés silencieusement, et les jetons `/...` en ligne sont traités comme du texte brut.
 
   </Accordion>
-  <Accordion title="Skill commands and native arguments">
-    - **Commandes de compétence :** Les compétences `user-invocable` sont exposées en tant que commandes slash. Les noms sont nettoyés en `a-z0-9_` (max 32 caractères) ; les collisions reçoivent des suffixes numériques (par ex. `_2`).
-      - `/skill <name> [input]` exécute une compétence par son nom (utile lorsque les limites de commande natives empêchent les commandes par compétence).
-      - Par défaut, les commandes de compétence sont transmises au modèle en tant que requête normale.
+  <Accordion title="Commandes de compétences et arguments natifs">
+    - **Commandes de compétences :** Les compétences `user-invocable` sont exposées en tant que commandes slash. Les noms sont nettoyés en `a-z0-9_` (max 32 caractères) ; les collisions reçoivent des suffixes numériques (par ex. `_2`).
+      - `/skill <name> [input]` exécute une compétence par son nom (utile lorsque les limites de commandes natives empêchent les commandes par compétence).
+      - Par défaut, les commandes de compétences sont transmises au modèle en tant que demande normale.
       - Les compétences peuvent éventuellement déclarer `command-dispatch: tool` pour acheminer la commande directement vers un outil (déterministe, sans modèle).
       - Exemple : `/prose` (plugin OpenProse) — voir [OpenProse](/fr/prose).
-    - **Arguments de commande natifs :** Discord utilise la saisie semi-automatique pour les options dynamiques (et les menus de boutons lorsque vous omettez les arguments requis). Telegram et Slack affichent un menu de boutons lorsqu'une commande prend en charge des choix et que vous omettez l'argument. Les choix dynamiques sont résolus par rapport au modèle de session cible, donc les options spécifiques au modèle telles que les niveaux `/think` suivent le remplacement `/model` de cette session.
+    - **Arguments de commande natifs :** Discord utilise l'autocomplétion pour les options dynamiques (et les menus de boutons lorsque vous omettez les arguments requis). Telegram et Slack affichent un menu de boutons lorsqu'une commande prend en charge des choix et que vous omettez l'argument. Les choix dynamiques sont résolus par rapport au modèle de session cible, donc les options spécifiques au modèle telles que les niveaux `/think` suivent la priorité `/model` de cette session.
 
   </Accordion>
 </AccordionGroup>
 
 ## `/tools`
 
-`/tools` répond à une question d'exécution, et non à une question de configuration : **ce que cet agent peut utiliser right now dans cette conversation**.
+`/tools` répond à une question d'exécution, et non à une question de configuration : **ce que cet agent peut utiliser dès maintenant dans cette conversation**.
 
 - Le `/tools` par défaut est compact et optimisé pour un examen rapide.
 - `/tools verbose` ajoute de courtes descriptions.
 - Les surfaces de commandes natives qui prennent en charge les arguments exposent le même sélecteur de mode que `compact|verbose`.
 - Les résultats sont limités à la session, donc le changement d'agent, de channel, de fil, d'autorisation de l'expéditeur ou de modèle peut modifier la sortie.
-- `/tools` inclut les outils réellement accessibles lors de l'exécution, notamment les outils principaux, les outils de plugin connectés et les outils appartenant au channel.
+- `/tools` inclut les outils réellement accessibles lors de l'exécution, y compris les outils de base, les outils de plugin connectés et les outils appartenant au channel.
 
-Pour la modification de profil et de remplacement, utilisez le panneau Outils de l'interface de contrôle ou les surfaces de configuration/catalogue au lieu de traiter `/tools` comme un catalogue statique.
+Pour la modification du profil et des priorités, utilisez le panneau Outils de l'interface de contrôle ou les surfaces de configuration/catalogue au lieu de traiter `/tools` comme un catalogue statique.
 
 ## Surfaces d'utilisation (ce qui s'affiche où)
 
-- **Utilisation/quota du fournisseur** (exemple : « Claude 80 % restants ») s'affiche dans `/status`OpenClaw pour le fournisseur de modèle actuel lorsque le suivi de l'utilisation est activé. OpenClaw normalise les fenêtres du fournisseur à `% left`MiniMax ; pour MiniMax, les champs de pourcentage restant uniquement sont inversés avant l'affichage, et les réponses `model_remains` préfèrent l'entrée du modèle de chat plus une étiquette de plan étiquetée par modèle.
-- **Lignes de jetons/cache** dans `/status` peuvent revenir à la dernière entrée d'utilisation de la transcription lorsque l'instantané de la session en direct est peu fourni. Les valeurs en direct non nulles existantes priment toujours, et la repli sur la transcription peut également récupérer l'étiquette du modèle d'exécution actif plus un total orienté vers l'invite plus important lorsque les totaux stockés sont manquants ou plus petits.
-- **Exécution vs exécution (runtime) :** `/status` signale `Execution` pour le chemin effectif du bac à sable et `Runtime` pour celui qui exécute réellement la session : `OpenClaw Pi Default`, `OpenAI Codex`CLI, un backend CLI, ou un backend ACP.
+- **Utilisation/quota du provider** (exemple : « Claude 80 % restants ») s'affiche dans `/status`OpenClaw pour le provider de model actuel lorsque le suivi de l'utilisation est activé. OpenClaw normalise les fenêtres des providers à `% left`MiniMax ; pour MiniMax, les champs de pourcentage restant uniquement sont inversés avant l'affichage, et les réponses `model_remains` privilégient l'entrée du model de discussion plus une étiquette de plan marquée par le model.
+- **Lignes de jetons/cache** dans `/status` peuvent revenir à la dernière entrée d'utilisation de la transcription lorsque l'instantané de la session en direct est peu dense. Les valeurs en direct non nulles existantes priment toujours, et le repli sur la transcription peut également récupérer l'étiquette du model d'exécution actif ainsi qu'un total orienté prompt plus important lorsque les totaux stockés sont manquants ou plus petits.
+- **Exécution vs runtime :** `/status` rapporte `Execution` pour le chemin effectif du bac à sable et `Runtime` pour celui qui exécute réellement la session : `OpenClaw Pi Default`, `OpenAI Codex`CLI, un backend CLI, ou un backend ACP.
 - **Jetets/coût par réponse** est contrôlé par `/usage off|tokens|full` (ajouté aux réponses normales).
-- `/model status` concerne les **modèles/authentifications/points de terminaison**, pas l'utilisation.
+- `/model status` concerne les **models/auth/endpoints**, pas l'utilisation.
 
-## Sélection du modèle (`/model`)
+## Sélection de model (`/model`)
 
-`/model` est implémenté en tant que directive.
+`/model` est implémenté comme une directive.
 
 Exemples :
 
@@ -335,14 +335,14 @@ Exemples :
 
 Notes :
 
-- `/model` et `/model list` affichent un sélecteur compact et numéroté (famille de modèles + fournisseurs disponibles).
-- Sur Discord, Discord`/model` et `/models` ouvrent un sélecteur interactif avec des menus déroulants pour le fournisseur et le modèle, plus une étape Soumettre. Le sélecteur respecte `agents.defaults.models`, y compris les entrées `provider/*`Discord, afin que la découverte délimitée au fournisseur puisse garder le sélecteur sous la limite de 25 options de composant de Discord.
-- `/model <#>` sélectionne à partir de ce sélecteur (et préfère le fournisseur actuel lorsque cela est possible).
-- `/model status` affiche la vue détaillée, y compris le point de terminaison du provider configuré (`baseUrl`) et le mode API (API `api`) lorsqu'ils sont disponibles.
+- `/model` et `/model list` affichent un sélecteur compact et numéroté (famille de models + providers disponibles).
+- Sur Discord, Discord`/model` et `/models` ouvrent un sélecteur interactif avec des listes déroulantes de provider et de model plus une étape de soumission. Le sélecteur respecte `agents.defaults.models`, y compris les entrées `provider/*`Discord, de sorte que la découverte délimitée par provider peut garder le sélecteur sous la limite de 25 options des composants de Discord.
+- `/model <#>` effectue une sélection à partir de ce sélecteur (et privilégie le provider actuel si possible).
+- `/model status` affiche la vue détaillée, y compris le point de terminaison API configuré (`baseUrl`) et le mode API (`api`) si disponible.
 
 ## Débogage des substitutions
 
-`/debug` vous permet de définir des remplacements de configuration **uniquement pour l'exécution** (en mémoire, pas sur le disque). Réservé au propriétaire. Désactivé par défaut ; activez-le avec `commands.debug: true`.
+`/debug` vous permet de définir des substitutions de configuration **uniquement à l'exécution** (en mémoire, pas sur disque). Réservé au propriétaire. Désactivé par défaut ; activez-le avec `commands.debug: true`.
 
 Exemples :
 
@@ -354,11 +354,11 @@ Exemples :
 /debug reset
 ```
 
-<Note>Les remplacements s'appliquent immédiatement aux nouvelles lectures de configuration, mais n'écrivent **pas** dans `openclaw.json`. Utilisez `/debug reset` pour effacer tous les remplacements et revenir à la configuration sur disque.</Note>
+<Note>Les substitutions s'appliquent immédiatement aux nouvelles lectures de configuration, mais n'écrivent **pas** dans `openclaw.json`. Utilisez `/debug reset` pour effacer toutes les substitutions et revenir à la configuration sur disque.</Note>
 
 ## Sortie de trace du plugin
 
-`/trace` vous permet d'activer ou désactiver les **lignes de trace/débogage de plugin limitées à la session** sans activer le mode complet.
+`/trace` vous permet d'activer ou de désactiver les **lignes de trace/débogage de plugin étendues à la session** sans activer le mode verbeux complet.
 
 Exemples :
 
@@ -370,12 +370,12 @@ Exemples :
 
 Notes :
 
-- `/trace` sans argument affiche l'état actuel du traçage de la session.
-- `/trace on` active les lignes de trace de plugin pour la session actuelle.
+- `/trace` sans argument affiche l'état de trace de la session actuelle.
+- `/trace on` active les lignes de trace du plugin pour la session actuelle.
 - `/trace off` les désactive à nouveau.
-- Les lignes de trace de plugin peuvent apparaître dans `/status` et sous forme de message de diagnostic de suite après la réponse normale de l'assistant.
-- `/trace` ne remplace pas `/debug` ; `/debug` gère toujours les remplacements de configuration uniquement pour l'exécution.
-- `/trace` ne remplace pas `/verbose` ; la sortie normale des outils/statistiques en mode verbeux appartient toujours à `/verbose`.
+- Les lignes de trace du plugin peuvent apparaître dans `/status` et sous forme de message de diagnostic suite à la réponse normale de l'assistant.
+- `/trace` ne remplace pas `/debug` ; `/debug` gère toujours les substitutions de configuration uniquement à l'exécution.
+- `/trace` ne remplace pas `/verbose` ; la sortie verbeuse normale des outils/états appartient toujours à `/verbose`.
 
 ## Mises à jour de la configuration
 
@@ -391,7 +391,7 @@ Exemples :
 /config unset messages.responsePrefix
 ```
 
-<Note>La configuration est validée avant l'écriture ; les modifications non valides sont rejetées. Les mises à jour de `/config` persistent après les redémarrages.</Note>
+<Note>La configuration est validée avant l'écriture ; les modifications invalides sont rejetées. Les mises à jour de `/config` persistent après redémarrage.</Note>
 
 ## Mises à jour MCP
 
@@ -406,11 +406,11 @@ Exemples :
 /mcp unset context7
 ```
 
-<Note>`/mcp` stocke la configuration dans la configuration OpenClaw, et non dans les paramètres de projet détenus par Pi. Les adaptateurs d'exécution décident quels transports sont réellement exécutables.</Note>
+<Note>`/mcp`OpenClaw stocke la configuration dans la configuration OpenClaw, et non dans les paramètres du projet détenus par Pi. Les adaptateurs d'exécution décident quels transports sont réellement exécutables.</Note>
 
 ## Mises à jour des plugins
 
-`/plugins` permet aux opérateurs d'inspecter les plugins découverts et d'activer ou désactiver leur activation dans la configuration. Les flux en lecture seule peuvent utiliser `/plugin` comme alias. Désactivé par défaut ; activer avec `commands.plugins: true`.
+`/plugins` permet aux opérateurs d'inspecter les plugins découverts et de basculer l'activation dans la configuration. Les flux en lecture seule peuvent utiliser `/plugin` comme alias. Désactivé par défaut ; activez-le avec `commands.plugins: true`.
 
 Exemples :
 
@@ -425,8 +425,8 @@ Exemples :
 <Note>
 - `/plugins list` et `/plugins show` utilisent la véritable découverte de plugins sur l'espace de travail actuel ainsi que la configuration sur disque.
 - `/plugins install`ClawHubnpm installe depuis ClawHub, npm, git, les répertoires locaux et les archives.
-- `/plugins enable|disable`GatewayGateway met à jour uniquement la configuration du plugin ; il n'installe ni ne désinstalle les plugins.
-- Les modifications d'activation et de désactivation rechargent à chaud les surfaces d'exécution des plugins du Gateway pour les nouveaux tours de l'agent ; l'installation demande un redémarrage du Gateway car les modules source des plugins ont changé.
+- `/plugins enable|disable`Gateway met à jour uniquement la configuration du plugin ; il n'installe ni ne désinstalle les plugins.
+- Les modifications d'activation et de désactivation effectuent un rechargement à chaud des surfaces d'exécution des plugins Gateway pour les nouveaux tours d'agent ; l'installation redémarre automatiquement les Gateways gérés car les modules source des plugins ont changé.
 
 </Note>
 
@@ -434,25 +434,25 @@ Exemples :
 
 <AccordionGroup>
   <Accordion title="Sessions par surface">
-    - Les **commandes de texte** s'exécutent dans la session de chat normale (les DMs partagent `main`Discord, les groupes ont leur propre session).
+    - Les **commandes de texte** s'exécutent dans la session de discussion normale (les DMs partagent `main`Discord, les groupes ont leur propre session).
     - Les **commandes natives** utilisent des sessions isolées :
       - Discord : `agent:<agentId>:discord:slash:<userId>`Slack
       - Slack : `agent:<agentId>:slack:slash:<userId>` (préfixe configurable via `channels.slack.slashCommand.sessionPrefix`Telegram)
-      - Telegram : `telegram:slash:<userId>` (cible la session de chat via `CommandTargetSessionKey`)
-    - **`/stop`** cible la session de chat active afin de pouvoir interrompre l'exécution en cours.
+      - Telegram : `telegram:slash:<userId>` (cible la session de discussion via `CommandTargetSessionKey`)
+    - **`/stop`** cible la session de discussion active afin qu'elle puisse annuler l'exécution actuelle.
 
   </Accordion>
-  <Accordion title="SlackSpécificités Slack">
-    `channels.slack.slashCommand` est toujours pris en charge pour une commande unique de style `/openclaw`. Si vous activez `commands.native`Slack, vous devez créer une commande barre oblique Slack pour chaque commande intégrée (mêmes noms que `/help`SlackSlack). Les menus d'arguments de commande pour Slack sont transmis sous forme de boutons éphémères du Block Kit.
+  <Accordion title="SlackSlack specifics">
+    `channels.slack.slashCommand` est toujours pris en charge pour une commande unique de style `/openclaw`. Si vous activez `commands.native`Slack, vous devez créer une commande slash Slack pour chaque commande intégrée (mêmes noms que `/help`SlackSlack). Les menus d'arguments de commande pour Slack sont livrés sous forme de boutons éphémères du Block Kit.
 
-    Exception native Slack : enregistrez `/agentstatus` (et non `/status`Slack) car Slack réserve `/status`. Le texte `/status`Slack fonctionne toujours dans les messages Slack.
+    Exception native Slack : enregistrez `/agentstatus` (pas `/status`Slack) car Slack réserve `/status`. Le texte `/status`Slack fonctionne toujours dans les messages Slack.
 
   </Accordion>
 </AccordionGroup>
 
 ## Questions BTW
 
-`/btw` est une **question latérale** rapide sur la session actuelle. `/side` est un alias.
+`/btw` est une **question BTW** rapide sur la session en cours. `/side` est un alias.
 
 Contrairement au chat normal :
 
@@ -473,10 +473,10 @@ Exemple :
 /side what changed while the main run continued?
 ```
 
-Consultez [BTW Side Questions](/fr/tools/btw) pour le comportement complet et les détails de l'expérience utilisateur client.
+Voir [Questions secondaires BTW](/fr/tools/btw) pour le comportement complet et les détails de l'expérience utilisateur client.
 
 ## Connexes
 
-- [Création de compétences](/fr/tools/creating-skills)
-- [Compétences](/fr/tools/skills)
-- [Configuration des compétences](/fr/tools/skills-config)
+- [Création de skills](/fr/tools/creating-skills)
+- [Skills](/fr/tools/skills)
+- [Configuration des skills](/fr/tools/skills-config)

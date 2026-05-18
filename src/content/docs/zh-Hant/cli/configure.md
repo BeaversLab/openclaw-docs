@@ -33,7 +33,7 @@ title: "設定"
 
 相關：
 
-- Gateway 配置參考：[Configuration](/zh-Hant/gateway/configuration)
+- Gateway 組態參考：[組態](/zh-Hant/gateway/configuration)
 - Config CLI：[Config](/zh-Hant/cli/config)
 
 ## 選項
@@ -54,12 +54,12 @@ title: "設定"
 
 備註：
 
-- 選擇 Gateway 執行位置總是會更新 `gateway.mode`。如果這就是您所需的全部，您可以不選擇其他區段直接選取「Continue」。
+- 完整精靈與 Gateway 相關章節會詢問 Gateway 的執行位置並更新 `gateway.mode`。未包含 `gateway`、`daemon` 或 `health` 的章節篩選器會直接前往要求的設定。
 - 在本機配置寫入後，如果選擇的設定路徑需要，configure 會安裝選定的可下載外掛程式。遠端 Gateway 配置不會安裝本機外掛程式套件。
 - 導向頻道的服務（Slack/Discord/Matrix/Microsoft Teams）會在設定期間提示輸入頻道/房間允許清單。您可以輸入名稱或 ID；精靈會盡可能將名稱解析為 ID。
-- 如果您執行 daemon 安裝步驟，且 token 驗證需要 token，且 `gateway.auth.token` 是由 SecretRef 管理，configure 會驗證 SecretRef，但不會將解析後的明文 token 值保存到 supervisor 服務環境中繼資料中。
+- 如果您執行 daemon 安裝步驟，token 驗證需要 token，且 `gateway.auth.token` 是由 SecretRef 管理，configure 會驗證 SecretRef，但不會將解析後的明文 token 值持久化至 supervisor 服務環境中繼資料。
 - 如果 token 驗證需要 token 且設定的 token SecretRef 未解析，configure 會阻擋 daemon 安裝，並提供可採取的修復指引。
-- 如果同時設定了 `gateway.auth.token` 和 `gateway.auth.password` 且未設定 `gateway.auth.mode`，configure 會阻擋 daemon 安裝，直到明確設定模式為止。
+- 如果同時設定了 `gateway.auth.token` 和 `gateway.auth.password` 且未設定 `gateway.auth.mode`，configure 會封鎖 daemon 安裝，直到明確設定模式為止。
 
 ## 範例
 
@@ -72,5 +72,5 @@ openclaw configure --section gateway --section daemon
 
 ## 相關
 
-- [CLI reference](/zh-Hant/cli)
-- [Configuration](/zh-Hant/gateway/configuration)
+- [CLI 參考](/zh-Hant/cli)
+- [組態](/zh-Hant/gateway/configuration)

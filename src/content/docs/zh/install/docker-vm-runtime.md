@@ -124,19 +124,20 @@ OpenClaw 在 Docker 中运行，但 Docker 并不是事实的来源。
 | -------------------- | ------------------------------------------------------ | ------------- | ------------------------------------------------------------- |
 | Gateway(网关) 配置   | `/home/node/.openclaw/`                                | 主机卷挂载    | 包括 `openclaw.json`、`.env`                                  |
 | 模型身份验证配置文件 | `/home/node/.openclaw/agents/`                         | 主机卷挂载    | `agents/<agentId>/agent/auth-profiles.json` (OAuth、API 密钥) |
-| 技能配置             | `/home/node/.openclaw/skills/`                         | 主机卷挂载    | 技能级别的状态                                                |
-| 代理工作区           | `/home/node/.openclaw/workspace/`                      | 主机卷挂载    | 代码和代理制品                                                |
-| WhatsApp 会话        | `/home/node/.openclaw/`                                | 主机卷挂载    | 保留二维码登录                                                |
+| Auth 配置文件密钥    | `/home/node/.config/openclaw/`                         | 主机卷挂载    | OAuth auth 配置文件令牌材料的本地加密密钥                     |
+| 技能配置             | `/home/node/.openclaw/skills/`                         | 主机卷挂载    | 技能级别状态                                                  |
+| Agent 工作区         | `/home/node/.openclaw/workspace/`                      | 主机卷挂载    | 代码和 Agent 制品                                             |
+| WhatsApp 会话        | `/home/node/.openclaw/`                                | 主机卷挂载    | 保留 QR 登录                                                  |
 | Gmail 密钥环         | `/home/node/.openclaw/`                                | 主机卷 + 密码 | 需要 `GOG_KEYRING_PASSWORD`                                   |
-| 插件包               | `/home/node/.openclaw/npm`、`/home/node/.openclaw/git` | 主机卷挂载    | 可下载的插件包根目录                                          |
+| 插件包               | `/home/node/.openclaw/npm`, `/home/node/.openclaw/git` | 主机卷挂载    | 可下载的插件包根目录                                          |
 | 外部二进制文件       | `/usr/local/bin/`                                      | Docker 镜像   | 必须在构建时烘焙                                              |
-| Node 运行时          | 容器文件系统                                           | Docker 镜像   | 每次镜像构建时重建                                            |
-| 操作系统包           | 容器文件系统                                           | Docker 镜像   | 不要在运行时安装                                              |
-| Docker 容器          | 临时的                                                 | 可重启的      | 可安全销毁                                                    |
+| Node 运行时          | 容器文件系统                                           | Docker 镜像   | 每次镜像构建时重新构建                                        |
+| OS 包                | 容器文件系统                                           | Docker 镜像   | 不要在运行时安装                                              |
+| Docker 容器          | 临时                                                   | 可重启        | 可安全销毁                                                    |
 
 ## 更新
 
-要在虚拟机上更新 OpenClaw：
+要在 VM 上更新 OpenClaw：
 
 ```bash
 git pull
@@ -146,6 +147,6 @@ docker compose up -d
 
 ## 相关
 
-- [Docker](/zh/install/docker)
+- [Docker](Docker/en/install/docker)
 - [Podman](/zh/install/podman)
 - [ClawDock](/zh/install/clawdock)

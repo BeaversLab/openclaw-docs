@@ -10,7 +10,7 @@ title: "安裝"
 ## 系統需求
 
 - **Node 24**（推薦）或 Node 22.16+ - 安裝程式腳本會自動處理此項
-- **macOS、Linux 或 Windows** - 同時支援原生 Windows 和 WSL2；WSL2 更穩定。請參閱 [Windows](/zh-Hant/platforms/windows)。
+- **macOS、Linux 或 Windows** - 支援原生 Windows 和 WSL2；WSL2 更穩定。請參閱 [Windows](/zh-Hant/platforms/windows)。
 - `pnpm` 僅在您從原始碼建置時才需要
 
 ## 推薦：安裝程式腳本
@@ -29,7 +29,7 @@ title: "安裝"
   <Tab title="Windows (PowerShell)">```powershell & ([scriptblock]::Create((iwr -useb https://openclaw.ai/install.ps1))) -NoOnboard ```</Tab>
 </Tabs>
 
-關於所有旗標與 CI/自動化選項，請參閱 [安裝程式內部機制](/zh-Hant/install/installer)。
+如需所有旗標和 CI/自動化選項，請參閱 [安裝程式內部機制](/zh-Hant/install/installer)。
 
 ## 其他安裝方式
 
@@ -42,9 +42,9 @@ title: "安裝"
 curl -fsSL https://openclaw.ai/install-cli.sh | bash
 ```
 
-它預設支援 npm 安裝，以及在同一個前綴流程下的 git-checkout 安裝。完整參考：[安裝程式內部機制](/zh-Hant/install/installer#install-clish)。
+它預設支援 npm 安裝，加上在同一個前置流程下的 git-checkout 安裝。完整參考：[安裝程式內部機制](/zh-Hant/install/installer#install-clish)。
 
-已經安裝了嗎？您可以使用
+已經安裝了嗎？使用
 `openclaw update --channel dev` 和 `openclaw update --channel stable` 在套件和 git 安裝之間切換。請參閱
 [更新](/zh-Hant/install/updating#switch-between-npm-and-git-installs)。
 
@@ -58,6 +58,13 @@ curl -fsSL https://openclaw.ai/install-cli.sh | bash
     npm install -g openclaw@latest
     openclaw onboard --install-daemon
     ```
+
+    <Note>
+    託管的安裝程式會清除 npm 新鮮度過濾器，例如 `min-release-age`
+    以用於 OpenClaw 套件安裝。如果您使用 npm 手動安裝，您自己的
+    npm 原則仍然適用。
+    </Note>
+
   </Tab>
   <Tab title="pnpm">
     ```bash
@@ -67,7 +74,7 @@ curl -fsSL https://openclaw.ai/install-cli.sh | bash
     ```
 
     <Note>
-    pnpm 對於包含建置腳本的套件需要明確的批准。在第一次安裝後執行 `pnpm approve-builds -g`。
+    pnpm 對於包含建置腳本的套件需要明確批准。請在第一次安裝後執行 `pnpm approve-builds -g`。
     </Note>
 
   </Tab>
@@ -85,7 +92,7 @@ curl -fsSL https://openclaw.ai/install-cli.sh | bash
 </Tabs>
 
 <Accordion title="疑難排解：sharp 建置錯誤 (npm)">
-  如果 `sharp` 因為全域安裝的 libvips 而失敗：
+  如果 `sharp` 因全域安裝的 libvips 而失敗：
 
 ```bash
 SHARP_IGNORE_GLOBAL_LIBVIPS=1 npm install -g openclaw@latest
@@ -105,7 +112,7 @@ pnpm link --global
 openclaw onboard --install-daemon
 ```
 
-或者跳過連結，直接在 repo 內部使用 `pnpm openclaw ...`。請參閱 [Setup](/zh-Hant/start/setup) 以了解完整的開發工作流程。
+或者跳過連結並直接從 repo 內部使用 `pnpm openclaw ...`。如需完整的開發工作流程，請參閱 [設定](/zh-Hant/start/setup)。
 
 ### 從 GitHub main 安裝
 
@@ -198,9 +205,9 @@ openclaw gateway status # verify the Gateway is running
   </Card>
 </CardGroup>
 
-## 故障排除：找不到 `openclaw`
+## 疑難排解：找不到 `openclaw`
 
-如果安裝成功但在終端機中找不到 `openclaw`：
+如果安裝成功但在您的終端機中找不到 `openclaw`：
 
 ```bash
 node -v           # Node installed?
@@ -208,10 +215,10 @@ npm prefix -g     # Where are global packages?
 echo "$PATH"      # Is the global bin dir in PATH?
 ```
 
-如果 `$(npm prefix -g)/bin` 不在您的 `$PATH` 中，請將其新增至您的 shell 啟動檔案（`~/.zshrc` 或 `~/.bashrc`）：
+如果 `$(npm prefix -g)/bin` 不在您的 `$PATH` 中，請將其新增到您的 shell 啟動檔案 (`~/.zshrc` 或 `~/.bashrc`)：
 
 ```bash
 export PATH="$(npm prefix -g)/bin:$PATH"
 ```
 
-然後開啟一個新的終端機。詳情請參閱 [Node 設定](/zh-Hant/install/node)。
+然後開啟一個新的終端機。欲了解更多詳情，請參閱 [Node 設定](/zh-Hant/install/node)。

@@ -410,6 +410,8 @@ Marcadores de herramientas integradas experimentales. Desactivado por defecto a 
 
 OpenClaw usa el catálogo de modelos integrado. Agregue proveedores personalizados mediante `models.providers` en la configuración o `~/.openclaw/agents/<agentId>/agent/models.json`.
 
+Configurar un proveedor personalizado/local `baseUrl` también es la decisión de confianza de red restringida para las solicitudes HTTP del modelo: OpenClaw permite el origen `scheme://host:port` exacto a través de la ruta de recuperación protegida, sin agregar una opción de configuración separada ni confiar en otros orígenes privados.
+
 ```json5
 {
   models: {
@@ -438,19 +440,19 @@ OpenClaw usa el catálogo de modelos integrado. Agregue proveedores personalizad
 ```
 
 <AccordionGroup>
-  <Accordion title="Autenticación y precedencia de fusión">
-    - Use `authHeader: true` + `headers` para necesidades personalizadas de autenticación.
+  <Accordion title="Auth y precedencia de fusión">
+    - Use `authHeader: true` + `headers` para necesidades de autenticación personalizadas.
     - Anule la raíz de configuración del agente con `OPENCLAW_AGENT_DIR` (o `PI_CODING_AGENT_DIR`, un alias de variable de entorno heredado).
-    - Precedencia de fusión para IDs de proveedor coincidentes:
-      - Los valores de `models.json` `baseUrl` del agente no vacíos tienen prioridad.
-      - Los valores de `apiKey` del agente no vacíos tienen prioridad solo cuando ese proveedor no está gestionado por SecretRef en el contexto de configuración/perfil de autenticación actual.
-      - Los valores de `apiKey` del proveedor gestionados por SecretRef se actualizan desde los marcadores de origen (`ENV_VAR_NAME` para referencias de entorno, `secretref-managed` para referencias de archivo/ejec) en lugar de persistir los secretos resueltos.
-      - Los valores de encabezado del proveedor gestionados por SecretRef se actualizan desde los marcadores de origen (`secretref-env:ENV_VAR_NAME` para referencias de entorno, `secretref-managed` para referencias de archivo/ejec).
-      - Los `apiKey`/`baseUrl` del agente vacíos o ausentes recurren a `models.providers` en la configuración.
-      - Los `contextWindow`/`maxTokens` del modelo coincidente usan el valor más alto entre la configuración explícita y los valores implícitos del catálogo.
-      - Los `contextTokens` del modelo coincidente conservan un límite de tiempo de ejecución explícito cuando está presente; úselo para limitar el contexto efectivo sin cambiar los metadatos nativos del modelo.
+    - Precedencia de fusión para ID de proveedor coincidentes:
+      - Los valores no vacíos del agente `models.json` `baseUrl` tienen prioridad.
+      - Los valores no vacíos del agente `apiKey` tienen prioridad solo cuando ese proveedor no es gestionado por SecretRef en el contexto de configuración/perfil de autenticación actual.
+      - Los valores de proveedor gestionados por SecretRef `apiKey` se actualizan desde los marcadores de origen (`ENV_VAR_NAME` para referencias de entorno, `secretref-managed` para referencias de archivo/exec) en lugar de persistir los secretos resueltos.
+      - Los valores de encabezado del proveedor gestionados por SecretRef se actualizan desde los marcadores de origen (`secretref-env:ENV_VAR_NAME` para referencias de entorno, `secretref-managed` para referencias de archivo/exec).
+      - Valores `apiKey`/`baseUrl` del agente vacíos o faltantes recurren a `models.providers` en la configuración.
+      - El modelo coincidente `contextWindow`/`maxTokens` usa el valor más alto entre la configuración explícita y los valores implícitos del catálogo.
+      - El modelo coincidente `contextTokens` conserva un límite de tiempo de ejecución explícito cuando está presente; úselo para limitar el contexto efectivo sin cambiar los metadatos nativos del modelo.
       - Use `models.mode: "replace"` cuando desee que la configuración reescriba completamente `models.json`.
-      - La persistencia de marcadores es con autoridad de origen: los marcadores se escriben desde la instantánea de configuración de origen activa (pre-resolución), no desde los valores de secretos de tiempo de ejecución resueltos.
+      - La persistencia del marcador es autoritativa en la fuente: los marcadores se escriben desde la instantánea de configuración de fuente activa (pre-resolución), no desde los valores secretos de tiempo de ejecución resueltos.
 
   </Accordion>
 </AccordionGroup>
@@ -460,18 +462,18 @@ OpenClaw usa el catálogo de modelos integrado. Agregue proveedores personalizad
 <AccordionGroup>
   <Accordion title="Catálogo de nivel superior">
     - `models.mode`: comportamiento del catálogo de proveedores (`merge` o `replace`).
-    - `models.providers`: mapa de proveedores personalizados claveados por id de proveedor.
+    - `models.providers`: mapa de proveedores personalizados claveado por id de proveedor.
       - Ediciones seguras: use `openclaw config set models.providers.<id> '<json>' --strict-json --merge` o `openclaw config set models.providers.<id>.models '<json-array>' --strict-json --merge` para actualizaciones aditivas. `config set` rechaza reemplazos destructivos a menos que pase `--replace`.
 
   </Accordion>
   <Accordion title="Conexión y autenticación del proveedor">
-    - `models.providers.*.api`: adaptador de solicitud (`openai-completions`, `openai-responses`, `anthropic-messages`, `google-generative-ai`, etc.). Para backends `/v1/chat/completions` autohospedados como MLX, vLLM, SGLang y la mayoría de los servidores locales compatibles con OpenAI, use `openai-completions`. Un proveedor personalizado con `baseUrl` pero sin `api` tiene como valor predeterminado `openai-completions`; configure `openai-responses` solo cuando el backend sea compatible con `/v1/responses`.
-    - `models.providers.*.apiKey`: credencial del proveedor (se prefiere SecretRef/sustitución de variables de entorno).
+    - `models.providers.*.api`: adaptador de solicitud (`openai-completions`, `openai-responses`, `anthropic-messages`, `google-generative-ai`, etc.). Para backends `/v1/chat/completions` autohospedados como MLX, vLLM, SGLang y la mayoría de los servidores locales compatibles con OpenAI, use `openai-completions`. Un proveedor personalizado con `baseUrl` pero sin `api` toma como valor predeterminado `openai-completions`; configure `openai-responses` solo cuando el backend sea compatible con `/v1/responses`.
+    - `models.providers.*.apiKey`: credencial del proveedor (se prefiere la sustitución de SecretRef/entorno).
     - `models.providers.*.auth`: estrategia de autenticación (`api-key`, `token`, `oauth`, `aws-sdk`).
     - `models.providers.*.contextWindow`: ventana de contexto nativa predeterminada para los modelos de este proveedor cuando la entrada del modelo no establece `contextWindow`.
-    - `models.providers.*.contextTokens`: límite de contexto efectivo en tiempo de ejecución predeterminado para los modelos de este proveedor cuando la entrada del modelo no establece `contextTokens`.
-    - `models.providers.*.maxTokens`: límite de tokens de salida predeterminado para los modelos de este proveedor cuando la entrada del modelo no establece `maxTokens`.
-    - `models.providers.*.timeoutSeconds`: tiempo de espera opcional de solicitud HTTP del modelo por proveedor en segundos, que incluye la conexión, los encabezados, el cuerpo y el manejo total de cancelación de la solicitud.
+    - `models.providers.*.contextTokens`: límite efectivo de contexto en tiempo de ejecución predeterminado para los modelos de este proveedor cuando la entrada del modelo no establece `contextTokens`.
+    - `models.providers.*.maxTokens`: límite predeterminado de tokens de salida para los modelos de este proveedor cuando la entrada del modelo no establece `maxTokens`.
+    - `models.providers.*.timeoutSeconds`: tiempo de espera opcional por proveedor para las solicitudes HTTP del modelo en segundos, incluida la gestión de conexión, encabezados, cuerpo y la cancelación total de la solicitud.
     - `models.providers.*.injectNumCtxForOpenAICompat`: para Ollama + `openai-completions`, inyecte `options.num_ctx` en las solicitudes (predeterminado: `true`).
     - `models.providers.*.authHeader`: fuerce el transporte de credenciales en el encabezado `Authorization` cuando sea necesario.
     - `models.providers.*.baseUrl`: URL base de la API ascendente.
@@ -481,43 +483,43 @@ OpenClaw usa el catálogo de modelos integrado. Agregue proveedores personalizad
   <Accordion title="Sobrescrituras del transporte de solicitudes">
     `models.providers.*.request`: sobrescrituras del transporte para las solicitudes HTTP del proveedor de modelos.
 
-    - `request.headers`: encabezados adicionales (combinados con los predeterminados del proveedor). Los valores aceptan SecretRef.
+    - `request.headers`: cabeceras adicionales (fusionadas con los valores predeterminados del proveedor). Los valores aceptan SecretRef.
     - `request.auth`: sobrescritura de la estrategia de autenticación. Modos: `"provider-default"` (usar la autenticación integrada del proveedor), `"authorization-bearer"` (con `token`), `"header"` (con `headerName`, `value`, `prefix` opcional).
     - `request.proxy`: sobrescritura del proxy HTTP. Modos: `"env-proxy"` (usar variables de entorno `HTTP_PROXY`/`HTTPS_PROXY`), `"explicit-proxy"` (con `url`). Ambos modos aceptan un subobjeto `tls` opcional.
     - `request.tls`: sobrescritura TLS para conexiones directas. Campos: `ca`, `cert`, `key`, `passphrase` (todos aceptan SecretRef), `serverName`, `insecureSkipVerify`.
-    - `request.allowPrivateNetwork`: cuando es `true`, permite HTTPS a `baseUrl` cuando el DNS se resuelve a rangos privados, CGNAT o similares, mediante el guardia de obtención (fetch) HTTP del proveedor (opt-in del operador para puntos finales autohospedados compatibles con OpenAI de confianza). Las URL de transmisión (stream) del proveedor de modelos de bucle local como `localhost`, `127.0.0.1` y `[::1]` se permiten automáticamente a menos que esto se establezca explícitamente en `false`; los hosts de DNS LAN, tailnet y privados aún requieren opt-in. WebSocket utiliza el mismo `request` para encabezados/TLS pero no esa puerta de enlace SSRF de obtención. Valor predeterminado `false`.
+    - `request.allowPrivateNetwork`: cuando es `true`, permite solicitudes HTTP del proveedor de modelos a rangos privados, CGNAT o similares a través del guarda de obtención (fetch) HTTP del proveedor. Las URL base de proveedores personalizados locales ya confían en el origen configurado exacto, excepto los orígenes de metadatos/enlace local, que permanecen bloqueados sin participación explícita. Establézcalo en `false` para optar por no confiar en el origen exacto. WebSocket utiliza el mismo `request` para cabeceras/TLS pero no esa puerta SSRF de obtención. Valor predeterminado `false`.
 
   </Accordion>
   <Accordion title="Entradas del catálogo de modelos">
     - `models.providers.*.models`: entradas explícitas del catálogo de modelos del proveedor.
-    - `models.providers.*.models.*.input`: modalidades de entrada del modelo. Use `["text"]` para modelos solo de texto y `["text", "image"]` para modelos de imagen/visión nativos. Los adjuntos de imagen solo se inyectan en los turnos del agente cuando el modelo seleccionado está marcado como capaz de manejar imágenes.
-    - `models.providers.*.models.*.contextWindow`: metadatos nativos de la ventana de contexto del modelo. Esto anula el `contextWindow` a nivel de proveedor para ese modelo.
+    - `models.providers.*.models.*.input`: modalidades de entrada del modelo. Use `["text"]` para modelos de solo texto y `["text", "image"]` para modelos de imagen/visión nativos. Los adjuntos de imagen solo se inyectan en los turnos del agente cuando el modelo seleccionado está marcado como capaz de procesar imágenes.
+    - `models.providers.*.models.*.contextWindow`: metadatos de la ventana de contexto del modelo nativo. Esto anula el `contextWindow` a nivel de proveedor para ese modelo.
     - `models.providers.*.models.*.contextTokens`: límite de contexto opcional en tiempo de ejecución. Esto anula el `contextTokens` a nivel de proveedor; úselo cuando desee un presupuesto de contexto efectivo menor que la `contextWindow` nativa del modelo; `openclaw models list` muestra ambos valores cuando difieren.
-    - `models.providers.*.models.*.compat.supportsDeveloperRole`: sugerencia de compatibilidad opcional. Para `api: "openai-completions"` con un `baseUrl` no nativo y no vacío (host no `api.openai.com`), OpenClaw fuerza esto a `false` en tiempo de ejecución. Un `baseUrl` vacío u omitido mantiene el comportamiento predeterminado de OpenAI.
-    - `models.providers.*.models.*.compat.requiresStringContent`: sugerencia de compatibilidad opcional para endpoints de chat compatibles con OpenAI que solo aceptan cadenas. Cuando `true`, OpenClaw aplana las matrices `messages[].content` de texto puro en cadenas simples antes de enviar la solicitud.
-    - `models.providers.*.models.*.compat.strictMessageKeys`: sugerencia de compatibilidad opcional para endpoints de chat estrictamente compatibles con OpenAI. Cuando `true`, OpenClaw reduce los objetos de mensaje de Chat Completions salientes a `role` y `content` antes de enviar la solicitud.
-    - `models.providers.*.models.*.compat.thinkingFormat`: sugerencia opcional de carga de pensamiento (thinking). Use `"qwen"` para `enable_thinking` de nivel superior, o `"qwen-chat-template"` para `chat_template_kwargs.enable_thinking` en servidores compatibles con OpenAI de la familia Qwen que admiten kwargs de plantilla de chat a nivel de solicitud, como vLLM.
+    - `models.providers.*.models.*.compat.supportsDeveloperRole`: sugerencia de compatibilidad opcional. Para `api: "openai-completions"` con una `baseUrl` no nativa no vacía (host que no sea `api.openai.com`), OpenClaw fuerza esto a `false` en tiempo de ejecución. Una `baseUrl` vacía u omitida mantiene el comportamiento predeterminado de OpenAI.
+    - `models.providers.*.models.*.compat.requiresStringContent`: sugerencia de compatibilidad opcional para endpoints de chat compatibles con OpenAI que solo admiten cadenas. Cuando es `true`, OpenClaw convierte las matrices `messages[].content` de texto puro en cadenas simples antes de enviar la solicitud.
+    - `models.providers.*.models.*.compat.strictMessageKeys`: sugerencia de compatibilidad opcional para endpoints de chat estrictamente compatibles con OpenAI. Cuando es `true`, OpenClaw reduce los objetos de mensaje de Chat Completions salientes a `role` y `content` antes de enviar la solicitud.
+    - `models.providers.*.models.*.compat.thinkingFormat`: sugerencia opcional de carga de pensamiento. Use `"together"` para `reasoning.enabled` estilo Together, `"qwen"` para `enable_thinking` de nivel superior, o `"qwen-chat-template"` para `chat_template_kwargs.enable_thinking` en servidores compatibles con OpenAI de la familia Qwen que admiten kwargs de plantilla de chat a nivel de solicitud, como vLLM.
 
   </Accordion>
   <Accordion title="Descubrimiento de Amazon Bedrock">
-    - `plugins.entries.amazon-bedrock.config.discovery`: raíz de configuración del autodescubrimiento de Bedrock.
+    - `plugins.entries.amazon-bedrock.config.discovery`: raíz de configuración de auto-descubrimiento de Bedrock.
     - `plugins.entries.amazon-bedrock.config.discovery.enabled`: activar/desactivar el descubrimiento implícito.
     - `plugins.entries.amazon-bedrock.config.discovery.region`: región de AWS para el descubrimiento.
-    - `plugins.entries.amazon-bedrock.config.discovery.providerFilter`: filtro opcional de provider-id para el descubrimiento dirigido.
+    - `plugins.entries.amazon-bedrock.config.discovery.providerFilter`: filtro opcional de id de proveedor para descubrimiento dirigido.
     - `plugins.entries.amazon-bedrock.config.discovery.refreshInterval`: intervalo de sondeo para la actualización del descubrimiento.
-    - `plugins.entries.amazon-bedrock.config.discovery.defaultContextWindow`: ventana de contexto de reserva para los modelos descubiertos.
-    - `plugins.entries.amazon-bedrock.config.discovery.defaultMaxTokens`: tokens máximos de salida de reserva para los modelos descubiertos.
+    - `plugins.entries.amazon-bedrock.config.discovery.defaultContextWindow`: ventana de contexto alternativa para modelos descubiertos.
+    - `plugins.entries.amazon-bedrock.config.discovery.defaultMaxTokens`: tokens máximos de salida alternativos para modelos descubiertos.
 
   </Accordion>
 </AccordionGroup>
 
-La incorporación interactiva de proveedores personalizados infiere la entrada de imagen para IDs de modelos de visión comunes como GPT-4o, Claude, Gemini, Qwen-VL, LLaVA, Pixtral, InternVL, Mllama, MiniCPM-V y GLM-4V, y omite la pregunta adicional para las familias conocidas de solo texto. Los IDs de modelos desconocidos aún preguntan por soporte de imagen. La incorporación no interactiva utiliza la misma inferencia; pase `--custom-image-input` para forzar metadatos con capacidad de imagen o `--custom-text-input` para forzar metadatos de solo texto.
+La incorporación interactiva de proveedores personalizados infiere la entrada de imagen para ID de modelos de visión comunes como GPT-4o, Claude, Gemini, Qwen-VL, LLaVA, Pixtral, InternVL, Mllama, MiniCPM-V y GLM-4V, y omite la pregunta adicional para familias de solo texto conocidas. Los ID de modelos desconocidos aún solicitan compatibilidad con imágenes. La incorporación no interactiva utiliza la misma inferencia; pase `--custom-image-input` para forzar metadatos con capacidad de imagen o `--custom-text-input` para forzar metadatos de solo texto.
 
 ### Ejemplos de proveedores
 
 <AccordionGroup>
   <Accordion title="Cerebras (GLM 4.7 / GPT OSS)">
-    El complemento del proveedor `cerebras` incluido puede configurar esto a través de `openclaw onboard --auth-choice cerebras-api-key`. Utilice la configuración explícita del proveedor solo al anular los valores predeterminados.
+    El plugin del proveedor incluido `cerebras` puede configurar esto a través de `openclaw onboard --auth-choice cerebras-api-key`. Use la configuración explícita del proveedor solo al anular los valores predeterminados.
 
     ```json5
     {
@@ -567,11 +569,11 @@ La incorporación interactiva de proveedores personalizados infiere la entrada d
     }
     ```
 
-    Proveedor integrado compatible con Anthropic. Acceso directo: `openclaw onboard --auth-choice kimi-code-api-key`.
+    Proveedor integrado compatible con Anthropic. Atajo: `openclaw onboard --auth-choice kimi-code-api-key`.
 
   </Accordion>
   <Accordion title="Modelos locales (LM Studio)">
-    Consulte [Local Models](/es/gateway/local-models). Resumen: ejecute un modelo local grande a través de LM Studio Responses API en hardware potente; mantenga los modelos alojados combinados para contingencia.
+    Consulte [Modelos locales](/es/gateway/local-models). TL;DR: ejecute un modelo local grande a través de la API de Respuestas de LM Studio en hardware potente; mantenga los modelos alojados fusionados para la alternativa.
   </Accordion>
   <Accordion title="MiniMax M2.7 (direct)">
     ```json5
@@ -608,7 +610,7 @@ La incorporación interactiva de proveedores personalizados infiere la entrada d
     }
     ```
 
-    Configure `MINIMAX_API_KEY`. Atajos: `openclaw onboard --auth-choice minimax-global-api` o `openclaw onboard --auth-choice minimax-cn-api`. El catálogo de modelos por defecto es solo M2.7. En la ruta de transmisión compatible con Anthropic, OpenClaw deshabilita el pensamiento de MiniMax por defecto a menos que configure explícitamente `thinking` usted mismo. `/fast on` o `params.fastMode: true` reescribe `MiniMax-M2.7` a `MiniMax-M2.7-highspeed`.
+    Configure `MINIMAX_API_KEY`. Atajos: `openclaw onboard --auth-choice minimax-global-api` o `openclaw onboard --auth-choice minimax-cn-api`. El catálogo de modelos por defecto es solo M2.7. En la ruta de transmisión compatible con Anthropic, OpenClaw deshabilita el pensamiento de MiniMax por defecto a menos que establezca explícitamente `thinking` usted mismo. `/fast on` o `params.fastMode: true` reescribe `MiniMax-M2.7` a `MiniMax-M2.7-highspeed`.
 
   </Accordion>
   <Accordion title="Moonshot AI (Kimi)">
@@ -647,7 +649,7 @@ La incorporación interactiva de proveedores personalizados infiere la entrada d
 
     Para el endpoint de China: `baseUrl: "https://api.moonshot.cn/v1"` o `openclaw onboard --auth-choice moonshot-api-key-cn`.
 
-    Los endpoints nativos de Moonshot anuncian compatibilidad de uso de transmisión en el transporte compartido `openai-completions`, y las claves de OpenClaw priorizan las capacidades del endpoint en lugar del id del proveedor integrado solo.
+    Los endpoints nativos de Moonshot anuncian compatibilidad de uso de transmisión en el transporte compartido `openai-completions`, y las claves de OpenClaw se basan en las capacidades del endpoint en lugar de solo el ID del proveedor integrado.
 
   </Accordion>
   <Accordion title="OpenCode">
@@ -699,7 +701,7 @@ La incorporación interactiva de proveedores personalizados infiere la entrada d
     }
     ```
 
-    La URL base debe omitir `/v1` (el cliente de Anthropic lo agrega). Atajo: `openclaw onboard --auth-choice synthetic-api-key`.
+    La URL base debe omitir `/v1` (el cliente de Anthropic lo añade). Atajo: `openclaw onboard --auth-choice synthetic-api-key`.
 
   </Accordion>
   <Accordion title="Z.AI (GLM-4.7)">
@@ -714,11 +716,11 @@ La incorporación interactiva de proveedores personalizados infiere la entrada d
     }
     ```
 
-    Configure `ZAI_API_KEY`. `z.ai/*` y `z-ai/*` son alias aceptados. Atajo: `openclaw onboard --auth-choice zai-api-key`.
+    Establezca `ZAI_API_KEY`. `z.ai/*` y `z-ai/*` son alias aceptados. Atajo: `openclaw onboard --auth-choice zai-api-key`.
 
-    - Endpoint general: `https://api.z.ai/api/paas/v4`
-    - Endpoint de codificación (predeterminado): `https://api.z.ai/api/coding/paas/v4`
-    - Para el endpoint general, defina un proveedor personalizado con la sustitución de la URL base.
+    - Punto de conexión general: `https://api.z.ai/api/paas/v4`
+    - Punto de conexión de codificación (predeterminado): `https://api.z.ai/api/coding/paas/v4`
+    - Para el punto de conexión general, defina un proveedor personalizado con la invalidación de la URL base.
 
   </Accordion>
 </AccordionGroup>
@@ -727,7 +729,7 @@ La incorporación interactiva de proveedores personalizados infiere la entrada d
 
 ## Relacionado
 
-- [Configuración: agentes](/es/gateway/config-agents)
-- [Configuración: canales](/es/gateway/config-channels)
+- [Configuración — agentes](/es/gateway/config-agents)
+- [Configuración — canales](/es/gateway/config-channels)
 - [Referencia de configuración](/es/gateway/configuration-reference) — otras claves de nivel superior
 - [Herramientas y complementos](/es/tools)

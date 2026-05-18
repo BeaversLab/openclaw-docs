@@ -81,12 +81,12 @@ Implications :
 <Warning>
 **Règles d'exécution importantes**
 
-- L'authentification par proxy de confiance rejette les requêtes sources en boucle locale (`127.0.0.1`, `::1`, CIDRs de boucle locale) par défaut.
-- Les proxies inverses en boucle locale sur le même hôte ne **satisfont pas** l'authentification par proxy de confiance, sauf si vous définissez explicitement `gateway.auth.trustedProxy.allowLoopback = true` et incluez l'adresse de boucle locale dans `gateway.trustedProxies`.
-- `allowLoopback` fait confiance aux processus locaux sur l'hôte du Gateway dans la même mesure qu'au proxy inverse. Activez-le uniquement lorsque le Gateway est toujours protégé par pare-feu contre l'accès distant direct et que le proxy local supprime ou remplace les en-têtes d'identité fournis par le client.
-- Les clients internes du Gateway qui ne passent pas par le proxy inverse doivent utiliser `gateway.auth.password` / `OPENCLAW_GATEWAY_PASSWORD`, et non les en-têtes d'identité de proxy de confiance.
-- Les déploiements de l'interface utilisateur de contrôle non en boucle locale nécessitent toujours un `gateway.controlUi.allowedOrigins` explicite.
-- **Les preuves des en-têtes Forwarded prévalent sur la localité de la boucle locale pour le repli direct local.** Si une requête arrive en boucle locale mais porte des en-têtes `X-Forwarded-For` / `X-Forwarded-Host` / `X-Forwarded-Proto` pointant vers une origine non locale, cette preuve disqualifie le repli par mot de passe direct local et le filtrage par identité de l'appareil. Avec `allowLoopback: true`, l'authentification par proxy de confiance peut toujours accepter la requête en tant que requête proxy sur le même hôte, tandis que `requiredHeaders` et `allowUsers` continuent de s'appliquer.
+- L'authentification trusted-proxy rejette par défaut les requêtes provenant de sources de bouclage (`127.0.0.1`, `::1`, CIDRs de bouclage).
+- Les proxys inverses de bouclage sur le même hôte ne satisfont **pas** l'authentification trusted-proxy, sauf si vous définissez explicitement `gateway.auth.trustedProxy.allowLoopback = true` et incluez l'adresse de bouclage dans `gateway.trustedProxies`.
+- `allowLoopback` fait confiance aux processus locaux sur l'hôte du Gateway dans la même mesure qu'au proxy inverse. Activez-le uniquement lorsque le Gateway est toujours protégé par un pare-feu contre l'accès à distance direct et que le proxy local supprime ou remplace les en-têtes d'identité fournis par le client.
+- Les clients internes du Gateway qui ne passent pas par le proxy inverse doivent utiliser `gateway.auth.password` / `OPENCLAW_GATEWAY_PASSWORD`, et non les en-têtes d'identité trusted-proxy.
+- Les déploiements de l'interface de contrôle (Control UI) non-bouclage nécessitent toujours un `gateway.controlUi.allowedOrigins` explicite.
+- **Les preuves d'en-têtes transférés (Forwarded-header) priment sur la localité de bouclage pour le repli direct local.** Si une requête arrive sur une adresse de bouclage mais transporte `Forwarded`, tout `X-Forwarded-*`, ou des preuves d'en-tête `X-Real-IP`, ces preuves disqualifient le repli par mot de passe direct local et le filtrage par identité de l'appareil. Avec `allowLoopback: true`, l'authentification trusted-proxy peut toujours accepter la requête en tant que requête proxy sur le même hôte, tandis que `requiredHeaders` et `allowUsers` continuent de s'appliquer.
 
 </Warning>
 

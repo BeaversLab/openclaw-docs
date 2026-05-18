@@ -1,5 +1,5 @@
 ---
-summary: "Referencia de la CLI para `openclaw onboard` (incorporación interactiva)"
+summary: "Referencia de CLI para `openclaw onboard` (incorporación interactiva)"
 read_when:
   - You want guided setup for gateway, workspace, auth, channels, and skills
 title: "Incorporación"
@@ -19,10 +19,10 @@ Incorporación guiada completa para la configuración local o remota de Gateway.
     Cómo se integra la incorporación de OpenClaw.
   </Card>
   <Card title="Referencia de configuración de la CLI" href="/es/start/wizard-cli-reference" icon="book">
-    Salidas, aspectos internos y comportamiento por paso.
+    Resultados, funcionamiento interno y comportamiento por paso.
   </Card>
   <Card title="Automatización de la CLI" href="/es/start/wizard-cli-automation" icon="terminal">
-    Opciones no interactivas y configuraciones con secuencias de comandos.
+    Opciones no interactivas y configuraciones con scripts.
   </Card>
   <Card title="Incorporación de la aplicación de macOS" href="/es/start/onboarding" icon="apple">
     Flujo de incorporación para la aplicación de la barra de menús de macOS.
@@ -42,15 +42,35 @@ openclaw onboard --skip-bootstrap
 openclaw onboard --mode remote --remote-url wss://gateway-host:18789
 ```
 
-`--flow import` utiliza proveedores de migración propiedad del complemento, como Hermes. Solo se ejecuta en una configuración nueva de OpenClaw; si existen configuraciones, credenciales, sesiones o archivos de memoria/identidad del espacio de trabajo, restablezca o elija una configuración nueva antes de importar.
+`--flow import` utiliza proveedores de migración propiedad de complementos como Hermes. Solo se ejecuta en una configuración nueva de OpenClaw; si existe una configuración, credenciales, sesiones o archivos de memoria/identidad del espacio de trabajo, restablezca o elija una configuración nueva antes de importar.
 
-`--modern` inicia la vista previa de incorporación conversacional de Crestodian. Sin
+`--modern` inicia la vista previa de la incorporación conversacional de Crestodian. Sin
 `--modern`, `openclaw onboard` mantiene el flujo de incorporación clásico.
 
-Para destinos `ws://` de red privada en texto plano (solo redes de confianza), configure
+Se acepta `ws://` de texto sin formato para el bucle local, literales de IP privados, `.local` y
+URL de puerta de enlace de Tailnet `*.ts.net`. Para otros nombres de DNS privados de confianza, configure
 `OPENCLAW_ALLOW_INSECURE_PRIVATE_WS=1` en el entorno del proceso de incorporación.
-No hay equivalente de `openclaw.json` para este transporte del lado del cliente
-de emergencia.
+
+## Configuración regional
+
+La incorporación interactiva utiliza la configuración regional del asistente de la CLI para el texto de configuración fijo. El orden de resolución es:
+
+1. `OPENCLAW_LOCALE`
+2. `LC_ALL`
+3. `LC_MESSAGES`
+4. `LANG`
+5. Alternativa en inglés
+
+Las configuraciones regionales del asistente compatibles son `en`, `zh-CN` y `zh-TW`. Los valores de configuración regional pueden utilizar
+formas de sufijo de guion bajo o POSIX, como `zh_CN.UTF-8`. Los nombres de productos, nombres de
+comandos, claves de configuración, URL, ID de proveedores, ID de modelos y etiquetas de complementos/canales
+permanecen literales.
+
+Ejemplo:
+
+```bash
+OPENCLAW_LOCALE=zh-CN openclaw onboard
+```
 
 Proveedor personalizado no interactivo:
 
@@ -65,8 +85,8 @@ openclaw onboard --non-interactive \
   --custom-image-input
 ```
 
-`--custom-api-key` es opcional en modo no interactivo. Si se omite, la incorporación comprueba `CUSTOM_API_KEY`.
-OpenClaw marca los ID de modelos de visión comunes como capaces de imágenes automáticamente. Pase `--custom-image-input` para ID de visión personalizados desconocidos, o `--custom-text-input` para forzar metadatos de solo texto.
+`--custom-api-key` es opcional en modo no interactivo. Si se omite, la incorporación verifica `CUSTOM_API_KEY`.
+OpenClaw marca automáticamente los ID de modelos de visión comunes como capaces de procesar imágenes. Pase `--custom-image-input` para ID de visión personalizados desconocidos, o `--custom-text-input` para forzar metadatos de solo texto.
 
 LM Studio también admite una marca de clave específica del proveedor en modo no interactivo:
 
@@ -89,9 +109,9 @@ openclaw onboard --non-interactive \
   --accept-risk
 ```
 
-`--custom-base-url` por defecto es `http://127.0.0.1:11434`. `--custom-model-id` es opcional; si se omite, la incorporación utiliza los valores predeterminados sugeridos por Ollama. Los ID de modelos en la nube como `kimi-k2.5:cloud` también funcionan aquí.
+`--custom-base-url` por defecto es `http://127.0.0.1:11434`. `--custom-model-id` es opcional; si se omite, la incorporación utiliza los valores predeterminados sugeridos por Ollama. Los ID de modelos en la nube, como `kimi-k2.5:cloud`, también funcionan aquí.
 
-Almacene las claves del proveedor como referencias en lugar de texto sin formato:
+Almacenar las claves del proveedor como referencias en lugar de texto sin formato:
 
 ```bash
 openclaw onboard --non-interactive \
@@ -100,28 +120,28 @@ openclaw onboard --non-interactive \
   --accept-risk
 ```
 
-Con `--secret-input-mode ref`, la incorporación escribe referencias respaldadas por env en lugar de valores de clave en texto plano.
-Para proveedores respaldados por perfiles de autenticación, esto escribe entradas `keyRef`; para proveedores personalizados, esto escribe `models.providers.<id>.apiKey` como una referencia de env (por ejemplo, `{ source: "env", provider: "default", id: "CUSTOM_API_KEY" }`).
+Con `--secret-input-mode ref`, la incorporación escribe referencias respaldadas por variables de entorno en lugar de valores de clave en texto sin formato.
+Para proveedores respaldados por perfiles de autenticación, esto escribe entradas `keyRef`; para proveedores personalizados, esto escribe `models.providers.<id>.apiKey` como una referencia de entorno (por ejemplo, `{ source: "env", provider: "default", id: "CUSTOM_API_KEY" }`).
 
 Contrato del modo no interactivo `ref`:
 
 - Establezca la variable de entorno del proveedor en el entorno del proceso de incorporación (por ejemplo, `OPENAI_API_KEY`).
-- No pase indicadores de clave en línea (por ejemplo, `--openai-api-key`) a menos que esa variable de entorno también esté configurada.
-- Si se pasa una marca de clave en línea sin la variable de entorno requerida, la integración falla rápidamente con orientación.
+- No pase marcas de clave en línea (por ejemplo, `--openai-api-key`) a menos que esa variable de entorno también esté configurada.
+- Si se pasa una marca de clave en línea sin la variable de entorno requerida, la incorporación falla rápidamente con orientación.
 
 Opciones de token de Gateway en modo no interactivo:
 
-- `--gateway-auth token --gateway-token <token>` almacena un token en texto plano.
-- `--gateway-auth token --gateway-token-ref-env <name>` almacena `gateway.auth.token` como un SecretRef de env.
+- `--gateway-auth token --gateway-token <token>` almacena un token en texto sin formato.
+- `--gateway-auth token --gateway-token-ref-env <name>` almacena `gateway.auth.token` como un SecretRef de entorno.
 - `--gateway-token` y `--gateway-token-ref-env` son mutuamente excluyentes.
 - `--gateway-token-ref-env` requiere una variable de entorno no vacía en el entorno del proceso de incorporación.
-- Con `--install-daemon`, cuando la autenticación de token requiere un token, los tokens de puerta de enlace administrados por SecretRef se validan pero no persisten como texto plano resuelto en los metadatos del entorno del servicio supervisor.
-- Con `--install-daemon`, si el modo de token requiere un token y el token SecretRef configurado no está resuelto, la incorporación falla de forma cerrada con orientación de remedio.
-- Con `--install-daemon`, si tanto `gateway.auth.token` como `gateway.auth.password` están configurados y `gateway.auth.mode` no está definido, la incorporación bloquea la instalación hasta que el modo se establece explícitamente.
-- La incorporación local escribe `gateway.mode="local"` en la configuración. Si un archivo de configuración posterior carece de `gateway.mode`, trátelo como un daño en la configuración o una edición manual incompleta, no como un acceso directo válido en modo local.
+- Con `--install-daemon`, cuando la autenticación de token requiere un token, los tokens de gateway administrados por SecretRef se validan pero no se conservan como texto sin formato resuelto en los metadatos del entorno del servicio supervisor.
+- Con `--install-daemon`, si el modo de token requiere un token y el SecretRef del token configurado no está resuelto, la incorporación falla de forma segura con orientación para la corrección.
+- Con `--install-daemon`, si tanto `gateway.auth.token` como `gateway.auth.password` están configurados y `gateway.auth.mode` no está establecido, la incorporación bloquea la instalación hasta que el modo se establece explícitamente.
+- La incorporación local escribe `gateway.mode="local"` en la configuración. Si un archivo de configuración posterior carece de `gateway.mode`, trátelo como un daño en la configuración o una edición manual incompleta, no como un atajo válido en modo local.
 - La incorporación local instala los complementos descargables seleccionados cuando la ruta de configuración elegida los requiere.
-- La incorporación remota solo escribe la información de conexión para la Gateway remota y no instala paquetes de complementos locales.
-- `--allow-unconfigured` es una salida de emergencia separada del tiempo de ejecución de la gateway. No significa que la incorporación pueda omitir `gateway.mode`.
+- La incorporación remota solo escribe la información de conexión para la puerta de enlace remota y no instala paquetes de complementos locales.
+- `--allow-unconfigured` es una escotilla de escape de tiempo de ejecución de puerta de enlace separada. No significa que la incorporación pueda omitir `gateway.mode`.
 
 Ejemplo:
 
@@ -135,26 +155,26 @@ openclaw onboard --non-interactive \
   --accept-risk
 ```
 
-Salud de la gateway local no interactiva:
+Salud de la puerta de enlace local no interactiva:
 
-- A menos que pase `--skip-health`, la incorporación espera a una gateway local accesible antes de salir con éxito.
-- `--install-daemon` inicia primero la ruta de instalación de la gateway gestionada. Sin él, ya debe tener una gateway local ejecutándose, por ejemplo `openclaw gateway run`.
+- A menos que pase `--skip-health`, la incorporación espera a una puerta de enlace local accesible antes de salir correctamente.
+- `--install-daemon` inicia primero la ruta de instalación de la puerta de enlace administrada. Sin ella, ya debe tener una puerta de enlace local en ejecución, por ejemplo `openclaw gateway run`.
 - Si solo desea escrituras de configuración/espacio de trabajo/inicialización en automatización, use `--skip-health`.
-- Si gestiona los archivos del espacio de trabajo usted mismo, pase `--skip-bootstrap` para establecer `agents.defaults.skipBootstrap: true` y omitir la creación de `AGENTS.md`, `SOUL.md`, `TOOLS.md`, `IDENTITY.md`, `USER.md`, `HEARTBEAT.md` y `BOOTSTRAP.md`.
-- En Windows nativo, `--install-daemon` intenta primero las Tareas Programadas y recurre a un elemento de inicio de sesión en la carpeta Inicio por usuario si se deniega la creación de la tarea.
+- Si gestionas los archivos del espacio de trabajo tú mismo, pasa `--skip-bootstrap` para establecer `agents.defaults.skipBootstrap: true` y omitir la creación de `AGENTS.md`, `SOUL.md`, `TOOLS.md`, `IDENTITY.md`, `USER.md`, `HEARTBEAT.md` y `BOOTSTRAP.md`.
+- En Windows nativo, `--install-daemon` intenta primero las Tareas Programadas y recurre a un elemento de inicio de sesión en la carpeta de Inicio por usuario si se deniega la creación de la tarea.
 
-Comportamiento de la incorporación interactiva con el modo de referencia:
+Comportamiento de incorporación interactiva con modo de referencia:
 
-- Elija **Usar referencia secreta** cuando se le solicite.
-- Luego elija cualquiera:
+- Elige **Usar referencia secreta** cuando se te solicite.
+- A continuación, elige entre:
   - Variable de entorno
   - Proveedor de secretos configurado (`file` o `exec`)
 - La incorporación realiza una validación previa rápida antes de guardar la referencia.
-  - Si la validación falla, la incorporación muestra el error y le permite reintentar.
+  - Si la validación falla, la incorporación muestra el error y te permite reintentar.
 
 ### Opciones de punto final Z.AI no interactivas
 
-<Note>`--auth-choice zai-api-key` detecta automáticamente el mejor endpoint de Z.AI para su clave (prefiere la API general con `zai/glm-5.1`). Si desea específicamente los endpoints del Plan de Codificación GLM, elija `zai-coding-global` o `zai-coding-cn`.</Note>
+<Note>`--auth-choice zai-api-key` detecta automáticamente el mejor punto final Z.AI para tu clave (prefiere la API general con `zai/glm-5.1`). Si deseas específicamente los puntos finales del Plan de Codificación GLM, elige `zai-coding-global` o `zai-coding-cn`.</Note>
 
 ```bash
 # Promptless endpoint selection
@@ -168,7 +188,7 @@ openclaw onboard --non-interactive \
 # --auth-choice zai-cn
 ```
 
-Ejemplo no interactivo de Mistral:
+Ejemplo de Mistral no interactivo:
 
 ```bash
 openclaw onboard --non-interactive \
@@ -180,29 +200,29 @@ openclaw onboard --non-interactive \
 
 <AccordionGroup>
   <Accordion title="Tipos de flujo">
-    - `quickstart`: indicaciones mínimas, genera automáticamente un token de gateway.
-    - `manual`: indicaciones completas para puerto, bind y autenticación (alias de `advanced`).
+    - `quickstart`: indicaciones mínimas, genera automáticamente un token de puerta de enlace.
+    - `manual`: indicaciones completas para puerto, vinculación y autenticación (alias de `advanced`).
     - `import`: ejecuta un proveedor de migración detectado, previsualiza el plan y luego lo aplica después de la confirmación.
 
   </Accordion>
   <Accordion title="Prefiltrado de proveedores">
-    Cuando una elección de autenticación implica un proveedor preferido, el proceso de incorporación prefiltra los selectores de modelo predeterminado y lista de permitidos para ese proveedor. Para Volcengine y BytePlus, esto también coincide con las variantes del plan de codificación (`volcengine-plan/*`, `byteplus-plan/*`).
+    Cuando una elección de autenticación implica un proveedor preferido, la incorporación prefiltra los selectores de modelo predeterminado y lista de permitidos a ese proveedor. Para Volcengine y BytePlus, esto también coincide con las variantes del plan de codificación (`volcengine-plan/*`, `byteplus-plan/*`).
 
-    Si el filtro de proveedor preferido no arroja modelos cargados aún, el proceso de incorporación vuelve al catálogo sin filtrar en lugar de dejar el selector vacío.
+    Si el filtro del proveedor preferido aún no arroja modelos cargados, la incorporación vuelve al catálogo sin filtrar en lugar de dejar el selector vacío.
 
   </Accordion>
   <Accordion title="Seguimientos de búsqueda web">
     Algunos proveedores de búsqueda web activan indicaciones de seguimiento específicas del proveedor:
 
     - **Grok** puede ofrecer una configuración opcional de `x_search` con el mismo `XAI_API_KEY` y una elección de modelo `x_search`.
-    - **Kimi** puede preguntar por la región de la API de Moonshot (`api.moonshot.ai` vs `api.moonshot.cn`) y el modelo de búsqueda web predeterminado de Kimi.
+    - **Kimi** puede solicitar la región de la API de Moonshot (`api.moonshot.ai` vs `api.moonshot.cn`) y el modelo de búsqueda web de Kimi predeterminado.
 
   </Accordion>
   <Accordion title="Otros comportamientos">
-    - Comportamiento del alcance de DM de incorporación local: [Referencia de configuración de CLI](/es/start/wizard-cli-reference#outputs-and-internals).
-    - Primer chat más rápido: `openclaw dashboard` (UI de control, sin configuración de canal).
+    - Comportamiento del alcance DM de incorporación local: [Referencia de configuración de CLI](/es/start/wizard-cli-reference#outputs-and-internals).
+    - Primer chat más rápido: `openclaw dashboard` (Interfaz de usuario de control, sin configuración de canal).
     - Proveedor personalizado: conecte cualquier punto final compatible con OpenAI o Anthropic, incluidos los proveedores alojados no listados. Use Desconocido para detectar automáticamente.
-    - Si se detecta el estado de Hermes, la incorporación ofrece un flujo de migración. Use [Migrate](/es/cli/migrate) para planes de ejecución en seco, modo de sobrescritura, informes y asignaciones exactas.
+    - Si se detecta el estado de Hermes, la incorporación ofrece un flujo de migración. Use [Migrar](/es/cli/migrate) para planes de ejecución en seco, modo de sobrescritura, informes y asignaciones exactas.
 
   </Accordion>
 </AccordionGroup>
@@ -215,6 +235,6 @@ openclaw configure
 openclaw agents add <name>
 ```
 
-Use `openclaw setup` en su lugar cuando solo necesite la configuración/espacio de trabajo base. Use `openclaw configure` más tarde para cambios específicos y `openclaw channels add` para la configuración solo de canal.
+Use `openclaw setup` en su lugar cuando solo necesite la configuración/espacio de trabajo base. Use `openclaw configure` más tarde para cambios específicos y `openclaw channels add` para la configuración solo de canales.
 
-<Note>`--json` no implica el modo no interactivo. Use `--non-interactive` para scripts.</Note>
+<Note>`--json` no implica el modo no interactivo. Use `--non-interactive` para secuencias de comandos.</Note>

@@ -8,7 +8,7 @@ read_when:
 
 Perplexity 插件通过 Perplexity Search API 或通过 OpenRouter 的 Perplexity Sonar 提供网络搜索功能。
 
-<Note>此页面是 Perplexity **提供商**的设置。关于 Perplexity **工具**（代理如何使用它），请参阅 [Perplexity 工具](/zh/tools/perplexity-search)。</Note>
+<Note>This page is the Perplexity **提供商** setup. For the Perplexity **工具** (how the agent uses it), see [Perplexity 工具](/zh/tools/perplexity-search).</Note>
 
 | 属性     | 值                                                                     |
 | -------- | ---------------------------------------------------------------------- |
@@ -69,27 +69,28 @@ Perplexity 插件通过 Perplexity Search API 或通过 OpenRouter 的 Perplexit
 ## 高级配置
 
 <AccordionGroup>
-  <Accordion title="守护进程的环境变量">
-    如果 OpenClaw Gateway 作为守护进程运行，请确保
-    `PERPLEXITY_API_KEY` 对该进程可用。
+  <Accordion title="Environment variable for daemon processes">
+    If the OpenClaw Gateway(网关) runs as a daemon (launchd/systemd), make sure
+    `PERPLEXITY_API_KEY` is available to that process.
 
     <Warning>
-    仅在 `~/.profile` 中设置的密钥对于 launchd/systemd
-    守护进程是不可见的，除非明确导入该环境。请在
-    `~/.openclaw/.env` 中或通过 `env.shellEnv` 设置密钥，以确保网关进程可以
-    读取它。
+    A key exported only in an interactive shell will not be visible to a
+    launchd/systemd daemon unless that environment is explicitly imported. Set
+    the key in `~/.openclaw/.env` or via `env.shellEnv` to ensure the gateway
+    process can read it.
     </Warning>
 
   </Accordion>
 
-  <Accordion title="OpenRouter 代理设置">
-    如果您希望通过 OpenRouter 路由 Perplexity 搜索，请设置
-    `OPENROUTER_API_KEY` (前缀 `sk-or-`) 而不是原生 Perplexity 密钥。
-    OpenClaw 将检测此前缀并自动切换到 Sonar 传输。
+  <Accordion title="OpenRouter proxy setup">
+    If you prefer to route Perplexity searches through OpenRouter, set an
+    `OPENROUTER_API_KEY` (prefix `sk-or-`) instead of a native Perplexity key.
+    OpenClaw will detect the prefix and switch to the Sonar transport
+    automatically.
 
     <Tip>
-    如果您已经拥有 OpenRouter 账户
-    并希望通过多个提供商统一计费，OpenRouter 传输会非常有用。
+    The OpenRouter transport is useful if you already have an OpenRouter account
+    and want consolidated billing across multiple providers.
     </Tip>
 
   </Accordion>

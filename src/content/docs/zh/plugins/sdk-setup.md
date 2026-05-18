@@ -10,7 +10,7 @@ read_when:
 
 关于插件打包（`package.json` 元数据）、清单（`openclaw.plugin.json`）、设置入口和配置架构的参考。
 
-<Tip>**寻找实战演练？** 操作指南涵盖了上下文中的打包内容：[渠道插件](/zh/plugins/sdk-channel-plugins#step-1-package-and-manifest) 和 [提供商插件](/zh/plugins/sdk-provider-plugins#step-1-package-and-manifest)。</Tip>
+<Tip>**寻找演练教程？** 操作指南结合上下文介绍了打包相关内容：[渠道插件](/zh/plugins/sdk-channel-plugins#step-1-package-and-manifest) 和 [提供商插件](/zh/plugins/sdk-provider-plugins#step-1-package-and-manifest)。</Tip>
 
 ## 包元数据
 
@@ -314,27 +314,29 @@ export default defineSetupPluginEntry(myChannelPlugin);
 
 对于仅用于热设置的路径，当您只需要设置界面的一部分时，最好使用精确的设置辅助接口，而不是更广泛的 `plugin-sdk/setup` 覆盖范围：
 
-| 导入路径                           | 用于                                                           | 主要导出                                                                                                                                                                                                                                                                                     |
-| ---------------------------------- | -------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `plugin-sdk/setup-runtime`         | 在 `setupEntry` / 延迟渠道启动中保持可用的设置时运行时辅助工具 | `createPatchedAccountSetupAdapter`, `createEnvPatchedAccountSetupAdapter`, `createSetupInputPresenceValidator`, `noteChannelLookupFailure`, `noteChannelLookupSummary`, `promptResolvedAllowFrom`, `splitSetupEntries`, `createAllowlistSetupWizardProxy`, `createDelegatedSetupWizardProxy` |
-| `plugin-sdk/setup-adapter-runtime` | 已弃用的兼容性别名；请使用 `plugin-sdk/setup-runtime`          | `createEnvPatchedAccountSetupAdapter`                                                                                                                                                                                                                                                        |
-| `plugin-sdk/setup-tools`           | setup/install CLI/archive/docs helpers                         | `formatCliCommand`、`detectBinary`、`extractArchive`、`resolveBrewExecutable`、`formatDocsLink`、`CONFIG_DIR`                                                                                                                                                                                |
+| 导入路径                           | 用于                                                           | 主要导出                                                                                                                                                                                                                                                                                                              |
+| ---------------------------------- | -------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `plugin-sdk/setup-runtime`         | 在 `setupEntry` / 延迟渠道启动中保持可用的设置时运行时辅助工具 | `createSetupTranslator`、`createPatchedAccountSetupAdapter`、`createEnvPatchedAccountSetupAdapter`、`createSetupInputPresenceValidator`、`noteChannelLookupFailure`、`noteChannelLookupSummary`、`promptResolvedAllowFrom`、`splitSetupEntries`、`createAllowlistSetupWizardProxy`、`createDelegatedSetupWizardProxy` |
+| `plugin-sdk/setup-adapter-runtime` | 已弃用的兼容性别名；请使用 `plugin-sdk/setup-runtime`          | `createEnvPatchedAccountSetupAdapter`                                                                                                                                                                                                                                                                                 |
+| `plugin-sdk/setup-tools`           | setup/install CLI/archive/docs helpers                         | `formatCliCommand`、`detectBinary`、`extractArchive`、`resolveBrewExecutable`、`formatDocsLink`、`CONFIG_DIR`                                                                                                                                                                                                         |
 
-当您需要完整的共享设置工具箱（包括如 `moveSingleAccountChannelSectionToDefaultAccount(...)` 之类的配置补全辅助工具）时，请使用更广泛的 `plugin-sdk/setup` 接缝。
+当您需要完整的共享设置工具箱（包括 `moveSingleAccountChannelSectionToDefaultAccount(...)` 等配置修补辅助工具）时，请使用更广泛的 `plugin-sdk/setup` 接缝。
 
-设置补全适配器在导入时保持热路径安全。其捆绑的单一账户提升合约面查找是延迟的，因此导入 `plugin-sdk/setup-runtime` 不会在适配器实际使用之前急切加载捆绑的合约面发现。
+使用 `createSetupTranslator(...)`CLI 获取固定的设置向导副本。它遵循 CLI 向导区域设置（`OPENCLAW_LOCALE`，然后是系统区域设置变量），并回退到英语。请将插件特定的设置文本保留在插件拥有的代码中，并仅对通用设置标签、状态文本和官方捆绑插件设置副本使用共享目录键。
 
-### 渠道拥有的单账户提升
+设置修补适配器在导入时保持热路径安全。其捆绑的单帐户提升合约表面查找是惰性的，因此导入 `plugin-sdk/setup-runtime` 不会在适配器实际使用之前急切加载捆绑的合约表面发现。
 
-当渠道从单一账户顶级配置升级到 `channels.<id>.accounts.*` 时，默认的共享行为是将提升的账户范围值移动到 `accounts.default` 中。
+### 渠道拥有的单帐户提升
 
-捆绑渠道可以通过其设置契约表面缩小或覆盖该提升：
+当渠道从单帐户顶级配置升级到 `channels.<id>.accounts.*` 时，默认的共享行为是将提升的帐户作用域值移动到 `accounts.default` 中。
 
-- `singleAccountKeysToMove`：应移动到提升账户中的额外顶级键
-- `namedAccountPromotionKeys`：当命名账户已存在时，只有这些键会移动到提升账户中；共享的策略/交付键保留在渠道根目录
-- `resolveSingleAccountPromotionTarget(...)`：选择哪个现有账户接收提升的值
+捆绑渠道可以通过其设置合约表面缩小或覆盖该提升行为：
 
-<Note>Matrix 是当前捆绑的示例。如果恰好存在一个命名的 Matrix 账户，或者如果 `defaultAccount` 指向现有的非规范键（如 `Ops`），提升将保留该账户，而不是创建新的 `accounts.default` 条目。</Note>
+- `singleAccountKeysToMove`：应移动到提升后的账户中的额外顶级键
+- `namedAccountPromotionKeys`：当命名账户已存在时，只有这些键会移动到提升后的账户；共享的策略/传递键保留在渠道根目录
+- `resolveSingleAccountPromotionTarget(...)`：选择哪个现有账户接收提升后的值
+
+<Note>Matrix 是当前捆绑的示例。如果恰好存在一个命名 Matrix 账户，或者如果 MatrixMatrix`defaultAccount` 指向现有的非规范键（如 `Ops`），提升过程将保留该账户而不是创建新的 `accounts.default` 条目。</Note>
 
 ## 配置架构
 
@@ -354,7 +356,7 @@ export default defineSetupPluginEntry(myChannelPlugin);
 }
 ```
 
-您的插件在注册期间会以 `api.pluginConfig` 的形式接收此配置。
+您的插件会在注册期间以 `api.pluginConfig` 的形式接收此配置。
 
 对于特定于渠道的配置，请改用渠道配置部分：
 
@@ -387,7 +389,7 @@ const accountSchema = z.object({
 const configSchema = buildChannelConfigSchema(accountSchema);
 ```
 
-如果您已经以 JSON 架构或 TypeBox 的形式编写了合约，请使用直接帮助程序，以便 OpenClaw 可以在元数据路径上跳过 Zod 到 JSON 架构的转换：
+如果您已经以 JSON Schema 或 TypeBox 的形式编写了合约，请使用直接辅助函数，以便 OpenClaw 可以在元数据路径上跳过 Zod 到 JSON Schema 的转换：
 
 ```typescript
 import { Type } from "typebox";
@@ -401,7 +403,7 @@ const configSchema = buildJsonChannelConfigSchema(
 );
 ```
 
-对于第三方插件，冷路径合约仍然是插件清单：将生成的 JSON 架构镜像到 `openclaw.plugin.json#channelConfigs` 中，以便配置架构、设置和 UI 界面可以在不加载运行时代码的情况下检查 `channels.<id>`。
+对于第三方插件，冷路径合约仍然是插件清单：将生成的 JSON Schema 镜像到 `openclaw.plugin.json#channelConfigs`，以便配置架构、设置和 UI 表面可以在不加载运行时代码的情况下检查 `channels.<id>`。
 
 ## 设置向导
 
@@ -438,17 +440,17 @@ const setupWizard: ChannelSetupWizard = {
 };
 ```
 
-`ChannelSetupWizard` 类型支持 `credentials`、`textInputs`、`dmPolicy`、`allowFrom`、`groupAccess`、`prepare`、`finalize`Discord 等。有关完整示例，请参阅捆绑的插件包（例如 Discord 插件的 `src/channel.setup.ts`）。
+`ChannelSetupWizard` 类型支持 `credentials`、`textInputs`、`dmPolicy`、`allowFrom`、`groupAccess`、`prepare`、`finalize` 等。有关完整示例，请参阅捆绑的插件包（例如 Discord 插件 `src/channel.setup.ts`）。
 
 <AccordionGroup>
   <Accordion title="Shared allowFrom prompts">
-    对于仅需要标准 `note -> prompt -> parse -> merge -> patch` 流程的私信允许列表提示，请优先使用 `openclaw/plugin-sdk/setup` 中的共享设置助手：`createPromptParsedAllowFromForAccount(...)`、`createTopLevelChannelParsedAllowFromPrompt(...)` 和 `createNestedChannelParsedAllowFromPrompt(...)`。
+    对于只需要标准 `note -> prompt -> parse -> merge -> patch` 流程的 私信 允许列表提示，建议使用 `openclaw/plugin-sdk/setup` 中的共享设置辅助程序：`createPromptParsedAllowFromForAccount(...)`、`createTopLevelChannelParsedAllowFromPrompt(...)` 和 `createNestedChannelParsedAllowFromPrompt(...)`。
   </Accordion>
   <Accordion title="Standard 渠道 setup status">
-    对于仅在标签、分数和可选额外行上有所不同的渠道设置状态块，请优先使用 `openclaw/plugin-sdk/setup` 中的 `createStandardChannelSetupStatus(...)`，而不是在每个插件中手动滚动相同的 `status` 对象。
+    对于仅在标签、评分和可选额外行上有所不同的渠道设置状态块，建议使用 `openclaw/plugin-sdk/setup` 中的 `createStandardChannelSetupStatus(...)`，而不是在每个插件中手动构建相同的 `status` 对象。
   </Accordion>
   <Accordion title="Optional 渠道 setup surface">
-    对于仅应在特定上下文中显示的可选设置界面，请使用 `openclaw/plugin-sdk/channel-setup` 中的 `createOptionalChannelSetupSurface`：
+    对于应仅出现在特定上下文中的可选设置界面，请使用 `openclaw/plugin-sdk/channel-setup` 中的 `createOptionalChannelSetupSurface`：
 
     ```typescript
     import { createOptionalChannelSetupSurface } from "openclaw/plugin-sdk/channel-setup";
@@ -462,23 +464,23 @@ const setupWizard: ChannelSetupWizard = {
     // Returns { setupAdapter, setupWizard }
     ```
 
-    当您只需要可选安装界面的一半时，`plugin-sdk/channel-setup` 还公开了较低级别的 `createOptionalChannelSetupAdapter(...)` 和 `createOptionalChannelSetupWizard(...)` 构建器。
+    当您只需要该可选安装界面的一半时，`plugin-sdk/channel-setup` 还会暴露较低级别的 `createOptionalChannelSetupAdapter(...)` 和 `createOptionalChannelSetupWizard(...)` 构建器。
 
-    生成的可选适配器/向导在真实的配置写入时默认失败（fail closed）。它们在 `validateInput`、`applyAccountConfig` 和 `finalize` 之间重用同一条“需要安装”的消息，并在设置了 `docsPath` 时附加文档链接。
+    生成的可选适配器/向导在真实配置写入时处于“失败关闭”状态。它们在 `validateInput`、`applyAccountConfig` 和 `finalize` 之间重用一条“需要安装”的消息，并在设置了 `docsPath` 时附加文档链接。
 
   </Accordion>
-  <Accordion title="Binary-backed setup helpers">
-    对于由二进制支持的设置 UI，首选共享的委托助手，而不是将相同的二进制/状态粘合代码复制到每个渠道中：
+  <Accordion title="二进制支持设置助手">
+    对于基于二进制的设置 UI，优先使用共享的委托助手，而不是将相同的二进制/状态粘合代码复制到每个渠道中：
 
-    - `createDetectedBinaryStatus(...)`：用于仅因标签、提示、分数和二进制检测而异的状态块
-    - `createCliPathTextInput(...)`：用于基于路径的文本输入
-    - `createDelegatedSetupWizardStatusResolvers(...)`、`createDelegatedPrepare(...)`、`createDelegatedFinalize(...)` 和 `createDelegatedResolveConfigured(...)`：当 `setupEntry` 需要惰性转发到更繁重的完整向导时
-    - `createDelegatedTextInputShouldPrompt(...)`：当 `setupEntry` 仅需要委托 `textInputs[*].shouldPrompt` 决策时
+    - `createDetectedBinaryStatus(...)` 用于仅标签、提示、分数和二进制检测不同的状态块
+    - `createCliPathTextInput(...)` 用于基于路径的文本输入
+    - `createDelegatedSetupWizardStatusResolvers(...)`、`createDelegatedPrepare(...)`、`createDelegatedFinalize(...)` 和 `createDelegatedResolveConfigured(...)` 当 `setupEntry` 需要懒惰地转发到更重的完整向导时
+    - `createDelegatedTextInputShouldPrompt(...)` 当 `setupEntry` 仅需要委托 `textInputs[*].shouldPrompt` 决策时
 
   </Accordion>
 </AccordionGroup>
 
-## 发布和安装
+## 发布与安装
 
 **外部插件：** 发布到 [ClawHub](/zh/clawhub)，然后安装：
 
@@ -488,16 +490,16 @@ const setupWizard: ChannelSetupWizard = {
     openclaw plugins install @myorg/openclaw-my-plugin
     ```
 
-    裸包规格在启动切换期间从 npm 安装。
+    纯包规范在启动切换期间从 npm 安装。
 
   </Tab>
-  <Tab title="ClawHub only">
+  <Tab title="ClawHub 仅">
     ```bash
     openclaw plugins install clawhub:@myorg/openclaw-my-plugin
     ```
   </Tab>
-  <Tab title="npm package spec">
-    当包尚未迁移到 npm，或者在迁移期间需要
+  <Tab title="npm 包规范">
+    当包尚未迁移至 npm，或者您在迁移期间需要
     直接的 ClawHub 安装路径时，请使用 npm：
 
     ```bash
@@ -507,7 +509,7 @@ const setupWizard: ChannelSetupWizard = {
   </Tab>
 </Tabs>
 
-**仓库内插件：** 放置在捆绑插件工作区树下，它们会在构建期间被自动发现。
+**仓库内插件：** 放置在打包插件工作区树下，它们会在构建期间被自动发现。
 
 **用户可以安装：**
 
@@ -515,14 +517,14 @@ const setupWizard: ChannelSetupWizard = {
 openclaw plugins install <package-name>
 ```
 
-<Info>对于从 npm 源的安装，`openclaw plugins install` 会在禁用生命周期脚本的情况下将软件包安装在 `~/.openclaw/npm` 下。请保持插件依赖树为纯 JS/TS，并避免需要 `postinstall` 构建的软件包。</Info>
+<Info>对于源自 npm 的安装，`openclaw plugins install` 会将软件包安装在 `~/.openclaw/npm` 下，并禁用生命周期脚本。请保持插件依赖树为纯 JS/TS，并避免需要 `postinstall` 构建的包。</Info>
 
-<Note>Gateway(网关) 启动不会安装插件依赖。npm/git/ClawHub 安装流程负责依赖收敛；本地插件必须已经安装了它们的依赖。</Note>
+<Note>Gateway(网关) 启动不会安装插件依赖。npm/git/ClawHub 安装流程负责依赖收敛；本地插件必须已安装其依赖。</Note>
 
-打包的包元数据是显式的，而不是在 Gateway(网关) 启动时从构建的 JavaScript 推断出来的。运行时依赖属于拥有它们的插件包；打包的 OpenClaw 启动永远不会修复或镜像插件依赖。
+打包的包元数据是显式的，而不是在 Gateway(网关) 启动时从构建的 JavaScript 推断的。运行时依赖属于拥有它们的插件包；打包的 OpenClaw 启动永远不会修复或镜像插件依赖。
 
 ## 相关
 
 - [构建插件](/zh/plugins/building-plugins) — 分步入门指南
-- [插件清单](/zh/plugins/manifest) — 完整的清单架构参考
+- [插件清单](/zh/plugins/manifest) — 完整的清单模式参考
 - [SDK 入口点](/zh/plugins/sdk-entrypoints) — `definePluginEntry` 和 `defineChannelPluginEntry`

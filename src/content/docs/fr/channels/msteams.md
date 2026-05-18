@@ -858,9 +858,9 @@ OpenClaw envoie les sondages Teams sous forme de Cartes adaptatives (il n'y a pa
 
 ## Cartes de présentation
 
-Envoyez des charges utiles de présentation sémantique aux utilisateurs ou conversations Teams à l'aide de l'outil `message`CLIOpenClaw ou de la CLI. OpenClaw les restitue sous forme de cartes adaptatives Teams à partir du contrat de présentation générique.
+Envoyez des charges utiles de présentation sémantique aux utilisateurs ou conversations Teams en utilisant l'outil `message`, la CLI, ou la livraison de réponse normale. OpenClaw les rend sous forme de cartes adaptatives Teams à partir du contrat de présentation générique.
 
-Le paramètre `presentation` accepte des blocs sémantiques. Lorsque `presentation` est fourni, le texte du message est facultatif.
+Le paramètre `presentation` accepte des blocs sémantiques. Lorsque `presentation` est fourni, le texte du message est optionnel. Les boutons s'affichent sous forme d'actions d'envoi ou d'URL de carte adaptative. Les menus de sélection ne sont pas encore natifs dans le moteur de rendu Teams, donc OpenClaw les rétrograde en texte lisible avant la livraison.
 
 **Outil de l'agent :**
 

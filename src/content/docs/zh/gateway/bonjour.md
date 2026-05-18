@@ -96,8 +96,8 @@ Gateway(网关) 会发布一些小的非机密提示以简化 UI 流程：
 - `canvasPort=<port>`（仅当启用 canvas 主机时；目前与 `gatewayPort` 相同）
 - `transport=gateway`
 - `tailnetDns=<magicdns>`（仅限 mDNS 完整模式，当 Tailnet 可用时的可选提示）
-- `sshPort=<port>`（仅限 mDNS 完整模式；广域 DNS-SD 可能会省略它）
-- `cliPath=<path>`（仅限 mDNS 完整模式；广域 DNS-SD 仍会将其作为远程安装提示写入）
+- `sshPort=<port>`（仅限完整模式；在最小模式和关闭模式下省略）
+- `cliPath=<path>`（仅限完整模式；在最小模式和关闭模式下省略）
 
 安全说明：
 
@@ -165,9 +165,7 @@ Linux 或其他非 Windows 主机上很有用时，请显式启用 macOS：
 openclaw plugins enable bonjour
 ```
 
-启用后，Bonjour 使用 `discovery.mdns.mode` 来决定发布多少 TXT 元数据。
-默认模式为 `minimal`；仅当本地客户端需要
-`cliPath` 或 `sshPort` 提示时才使用 `full`，并使用 `off` 在不更改插件启用状态的情况下抑制 LAN 组播。
+启用后，Bonjour 使用 `discovery.mdns.mode` 来决定要发布多少 TXT 元数据。相同的模式可控制广域 DNS-SD 记录中的可选 TXT 提示。默认模式为 `minimal`；仅当客户端需要 `cliPath` 或 `sshPort` 提示时才使用 `full`。使用 `off` 可以在不更改插件启用状态的情况下抑制 LAN 组播；当 `discovery.wideArea.enabled` 为 true 时，广域 DNS-SD 仍然可以发布最小的 Gateway(网关) 信标。
 
 ## 何时禁用 Bonjour
 
@@ -189,18 +187,16 @@ openclaw plugins disable bonjour
 
 ## Docker 注意事项
 
-当未设置 `OPENCLAW_DISABLE_BONJOUR` 时，内置的 Bonjour 插件会在检测到的容器中自动禁用 LAN 组播广告。Docker 桥接网络通常不在容器和 LAN 之间转发 mDNS 组播 (`224.0.0.251:5353`)，因此从容器发出的广告很少能实现发现功能。
+当未设置 `OPENCLAW_DISABLE_BONJOUR` 时，捆绑的 Bonjour 插件会在检测到的容器中自动禁用 LAN 组播通告。Docker 桥接网络通常不在容器和 LAN 之间转发 mDNS 组播（`224.0.0.251:5353`），因此从容器发出的通告很少能使发现生效。
 
 重要注意事项：
 
 - Bonjour 在 BonjourmacOS 主机上自动启动，在其他地方则需选择加入。保持禁用状态不会停止 Gateway(网关)；它只是跳过 LAN 组播广告。
-- 禁用 Bonjour 不会改变 `gateway.bind`；Docker 仍然默认为
-  `OPENCLAW_GATEWAY_BIND=lan`，以便发布的主机端口可以正常工作。
+- 禁用 Bonjour 不会改变 `gateway.bind`；Docker 仍然默认为 `OPENCLAW_GATEWAY_BIND=lan`，以便发布的主机端口可以正常工作。
 - 禁用 Bonjour 不会禁用广域 DNS-SD。当 Gateway(网关) 和节点不在同一局域网时，请使用广域发现
   或 Tailnet。
-- 在 Docker 外部重用相同的 `OPENCLAW_CONFIG_DIR` 不会保留
-  容器自动禁用策略。
-- 仅当使用主机网络、macvlan 或其他已知可以传递 mDNS 多播的网络时，才设置 `OPENCLAW_DISABLE_BONJOUR=0`；将其设置为 `1` 以强制禁用。
+- 在 Docker 外部重复使用相同的 `OPENCLAW_CONFIG_DIR` 不会保留容器自动禁用策略。
+- 仅为主机网络、macvlan 或已知可通过 mDNS 组播的其他网络设置 `OPENCLAW_DISABLE_BONJOUR=0`；将其设置为 `1` 可强制禁用。
 
 ## 排查已禁用的 Bonjour 问题
 
@@ -220,20 +216,17 @@ openclaw plugins disable bonjour
 
 3. 当 Bonjour 被禁用时使用直接目标：
    - 控制 UI 或本地工具：`http://127.0.0.1:18789`
-   - 局域网客户端：`http://<gateway-host>:18789`
+   - LAN 客户端：`http://<gateway-host>:18789`
    - 跨网络客户端：Tailnet MagicDNS、Tailnet IP、SSH 隧道或
      广域 DNS-SD
 
-4. 如果您在 Docker 中故意启用了 Bonjour 插件并通过 BonjourDocker`OPENCLAW_DISABLE_BONJOUR=0` 强制通告，
-   请从主机测试多播：
+4. 如果您在 Bonjour 中故意启用了 Docker 插件并使用 `OPENCLAW_DISABLE_BONJOUR=0` 强制通告，请从主机测试组播：
 
    ```bash
    dns-sd -B _openclaw-gw._tcp local.
    ```
 
-   如果浏览列表为空，或 Gateway(网关) 日志显示反复的 ciao 看门狗
-   取消操作，请还原 Gateway(网关)`OPENCLAW_DISABLE_BONJOUR=1` 并使用直连或
-   Tailnet 路由。
+   如果浏览结果为空，或者 Gateway(网关) 日志显示重复的 ciao 看门狗取消，请恢复 `OPENCLAW_DISABLE_BONJOUR=1` 并使用直接路由或 Tailnet 路由。
 
 ## 常见故障模式
 
@@ -243,32 +236,34 @@ openclaw plugins disable bonjour
   container bridges, WSL, or interface churn can leave the ciao advertiser in a
   non-announced state. OpenClaw retries a few times and then disables Bonjour
   for the current Gateway(网关) process instead of restarting the advertiser forever.
-- **Docker 网桥网络**：在检测到的容器中，Bonjour 会自动禁用。
-  仅针对 host、macvlan 或另一个支持 mDNS 的网络设置 `OPENCLAW_DISABLE_BONJOUR=0`。
+- **Docker 桥接网络**：在检测到的容器中，Bonjour 会自动禁用。
+  仅针对 host、macvlan 或其他
+  支持 mDNS 的网络设置 `OPENCLAW_DISABLE_BONJOUR=0`。
 - **休眠 / 接口变动**：macOS 可能会暂时丢失 mDNS 结果；请重试。
 - **浏览有效但解析失败**：保持计算机名称简单（避免表情符号或标点符号），然后重启 Gateway(网关)。服务实例名称源自主机名，因此过于复杂的名称可能会混淆某些解析程序。
 
-## 转义的实例名称（`\032`）
+## 转义实例名称 (`\032`)
 
-Bonjour/DNS-SD 通常会将服务实例名称中的字节转义为十进制 Bonjour`\DDD` 序列（例如空格变为 `\032`）。
+Bonjour/DNS-SD 通常会将服务实例名称中的字节转义为十进制 `\DDD`
+序列（例如，空格会变成 `\032`）。
 
 - 这在协议级别是正常的。
-- UI 应进行解码以供显示（iOS 使用 iOS`BonjourEscapes.decode`）。
+- UI 应进行解码以供显示（iOS 使用 `BonjourEscapes.decode`）。
 
 ## 启用 / 禁用 / 配置
 
 - macOS 主机默认自动启动捆绑的局域网发现插件。
-- `openclaw plugins enable bonjour` 在未默认启用该插件的主机上启用捆绑的局域网发现插件。
+- `openclaw plugins enable bonjour` 可在未默认启用该插件的主机上启用捆绑的局域网发现插件。
 - `openclaw plugins disable bonjour` 通过禁用捆绑插件来禁用局域网多播通告。
-- `OPENCLAW_DISABLE_BONJOUR=1` 禁用 LAN 组播通告而不更改插件配置；接受的真值为 `1`、`true`、`yes` 和 `on`（旧版：`OPENCLAW_DISABLE_BONJOUR`）。
-- `OPENCLAW_DISABLE_BONJOUR=0` 强制开启局域网多播广告，包括在检测到的容器内；可接受的假值为 `0`、`false`、`no` 和 `off`。
-- 当启用 Bonjour 插件且未设置 `OPENCLAW_DISABLE_BONJOUR` 时，Bonjour 会在普通主机上进行通告，并在检测到的容器内自动禁用。
-- `gateway.bind` 中的 `~/.openclaw/openclaw.json` 控制 Gateway(网关) 绑定模式。
-- 当播发 `sshPort` 时，`OPENCLAW_SSH_PORT` 会覆盖 SSH 端口（旧版：`OPENCLAW_SSH_PORT`）。
-- 当启用 mDNS 完整模式时，`OPENCLAW_TAILNET_DNS` 会在 TXT 记录中发布 MagicDNS 提示（旧版：`OPENCLAW_TAILNET_DNS`）。
-- `OPENCLAW_CLI_PATH`CLI 会覆盖播发的 CLI 路径（旧版：`OPENCLAW_CLI_PATH`）。
+- `OPENCLAW_DISABLE_BONJOUR=1` 在不更改插件配置的情况下禁用局域网多播通告；接受的真值为 `1`、`true`、`yes` 和 `on`（旧版：`OPENCLAW_DISABLE_BONJOUR`）。
+- `OPENCLAW_DISABLE_BONJOUR=0` 强制开启局域网多播通告，包括在检测到的容器内部；接受的假值为 `0`、`false`、`no` 和 `off`。
+- 当启用 Bonjour 插件且未设置 `OPENCLAW_DISABLE_BONJOUR` 时，Bonjour 会在普通主机上进行通告，并在检测到的容器内部自动禁用。
+- `~/.openclaw/openclaw.json` 中的 `gateway.bind` 控制 Gateway(网关) 绑定模式。
+- 当通告 `sshPort` 时，`OPENCLAW_SSH_PORT` 会覆盖 SSH 端口（旧版：`OPENCLAW_SSH_PORT`）。
+- 当启用 mDNS 完整模式时，`OPENCLAW_TAILNET_DNS` 会在 TXT 中发布 MagicDNS 提示（旧版：`OPENCLAW_TAILNET_DNS`）。
+- `OPENCLAW_CLI_PATH` 会覆盖通告的 CLI 路径（旧版：`OPENCLAW_CLI_PATH`）。
 
 ## 相关文档
 
 - 设备发现策略与传输选择：[设备发现](/zh/gateway/discovery)
-- 节点配对与审批：[Gateway(网关) 配对](<Gateway(网关)/en/gateway/pairing>)
+- 节点配对 + 批准：[Gateway(网关) 配对](/zh/gateway/pairing)

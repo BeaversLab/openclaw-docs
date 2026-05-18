@@ -77,10 +77,12 @@ Este es el árbol de decisión orientado al agente:
    superficie de comandos nativa `/codex` cuando el complemento incluido `codex` esté habilitado.
 2. Si el usuario solicita **Codex como el runtime integrado** o desea la experiencia normal del agente Codex respaldada por suscripción, use `openai/<model>`.
 3. Si el usuario elige explícitamente **PI para un modelo de OpenAI**, mantenga la referencia del modelo como `openai/<model>` y configure la política de runtime del proveedor/modelo en `agentRuntime.id: "pi"`. Un perfil de autenticación `openai-codex` seleccionado se enruta internamente a través del transporte de autenticación Codex heredado de PI.
-4. Si la configuración heredada todavía contiene **`openai-codex/*` refs de modelo**, repárela a
-   `openai/<model>` con `openclaw doctor --fix`; el doctor mantiene la ruta de autenticación de Codex
-   agregando `agentRuntime.id: "codex"` con ámbito de proveedor/modelo donde la
-   referencia de modelo antigua lo implicaba.
+4. Si la configuración heredada todavía contiene **`openai-codex/*` model refs**, repárela a
+   `openai/<model>` con `openclaw doctor --fix`; doctor mantiene la ruta de autenticación de Codex
+   agregando `agentRuntime.id: "codex"` con alcance de proveedor/modelo donde
+   la referencia de modelo antigua lo implicaba.
+   Las **`codex-cli/*` model refs** heredadas se reparan a la misma ruta del
+   servidor de aplicaciones Codex `openai/<model>`; OpenClaw ya no mantiene un backend CLI de Codex incluido.
 5. Si el usuario dice explícitamente **ACP**, **acpx** o **adaptador ACP de Codex**, use
    ACP con `runtime: "acp"` y `agentId: "codex"`.
 6. Si la solicitud es para **Claude Code, Gemini CLI, OpenCode, Cursor, Droid u otro arnés externo**, use ACP/acpx, no el runtime del subagente nativo.
@@ -88,13 +90,13 @@ Este es el árbol de decisión orientado al agente:
 | Quiere decir...                                                    | Usar...                                       |
 | ------------------------------------------------------------------ | --------------------------------------------- |
 | Control de chat/hilo del servidor de aplicaciones de Codex         | `/codex ...` del complemento `codex` incluido |
-| Runtime del agente integrado del servidor de aplicaciones de Codex | refs de modelo de agente `openai/*`           |
+| Runtime del agente integrado del servidor de aplicaciones de Codex | referencias de modelo de agente `openai/*`    |
 | OpenAI Codex OAuth                                                 | perfiles de autenticación `openai-codex`      |
 | Claude Code u otro arnés externo                                   | ACP/acpx                                      |
 
-Para la división del prefijo de la familia OpenAI, consulte [OpenAI](/es/providers/openai) y
-[Proveedores de modelos](/es/concepts/model-providers). Para el contrato de soporte del
-runtime de Codex, consulte [Runtime de arnés de Codex](/es/plugins/codex-harness-runtime#v1-support-contract).
+Para ver la división del prefijo de la familia OpenAI, consulte [OpenAI](/es/providers/openai) y
+[Proveedores de modelos](/es/concepts/model-providers). Para ver el contrato de soporte del tiempo de ejecución de Codex,
+consulte [Tiempo de ejecución del arnés de Codex](/es/plugins/codex-harness-runtime#v1-support-contract).
 
 ## Propiedad del runtime
 
@@ -120,26 +122,28 @@ Esta división de propiedad es la regla principal de diseño:
 
 OpenClaw elige un tiempo de ejecución integrado después de la resolución del proveedor y el modelo:
 
-1. La política de runtime con ámbito de modelo tiene prioridad. Esto puede residir en una entrada de
-   modelo de proveedor configurado o en `agents.defaults.models["provider/model"].agentRuntime` /
-   `agents.list[].models["provider/model"].agentRuntime`.
-2. La política de runtime con ámbito de proveedor sigue a continuación en
+1. La política de tiempo de ejecución con alcance de modelo tiene prioridad. Esto puede residir en una entrada de modelo de proveedor configurada
+   o en `agents.defaults.models["provider/model"].agentRuntime` /
+   `agents.list[].models["provider/model"].agentRuntime`. Un comodín de proveedor
+   tal como `agents.defaults.models["vllm/*"].agentRuntime` se aplica después de la política de
+   modelo exacta, por lo que los modelos de proveedor descubiertos dinámicamente pueden compartir un
+   tiempo de ejecución sin anular las excepciones exactas por modelo.
+2. La política de tiempo de ejecución con alcance de proveedor viene a continuación en
    `models.providers.<provider>.agentRuntime`.
-3. En el modo `auto`, los runtimes de complementos registrados pueden reclamar pares de
-   proveedor/modelo admitidos.
-4. Si ningún runtime reclama un turno en el modo `auto`, OpenClaw usa PI como el
-   runtime de compatibilidad. Use un ID de runtime explícito cuando la ejecución deba ser
+3. En el modo `auto`, los tiempos de ejecución de complementos registrados pueden reclamar pares proveedor/modelo compatibles.
+4. Si ningún tiempo de ejecución reclama un turno en el modo `auto`, OpenClaw usa PI como el
+   tiempo de ejecución de compatibilidad. Use un id de tiempo de ejecución explícito cuando la ejecución deba ser
    estricta.
 
-Se ignoran los anclajes de runtime de toda la sesión y de todo el agente. Eso incluye
-`OPENCLAW_AGENT_RUNTIME`, el estado de la sesión `agentHarnessId`/`agentRuntimeOverride`,
+Se ignoran los pines de tiempo de ejecución de toda la sesión y de todo el agente. Esto incluye
+`OPENCLAW_AGENT_RUNTIME`, el estado de sesión `agentHarnessId`/`agentRuntimeOverride`,
 `agents.defaults.agentRuntime` y `agents.list[].agentRuntime`. Ejecute
-`openclaw doctor --fix` para eliminar la configuración de runtime de todo el agente obsoleta y convertir
-las referencias de modelo de runtime heredadas donde OpenClaw pueda conservar la intención.
+`openclaw doctor --fix` para eliminar la configuración de tiempo de ejecución de todo el agente obsoleta y convertir
+referencias de modelo de tiempo de ejecución heredadas donde OpenClaw pueda preservar la intención.
 
 Los runtimes de complementos de proveedor/modelo explícitos fallan cerrados. Por ejemplo,
-`agentRuntime.id: "codex"` en un proveedor o modelo significa Codex o un error claro de
-selección/runtime; nunca se redirige silenciosamente de vuelta a PI.
+`agentRuntime.id: "codex"` en un proveedor o modelo significa Codex o un error
+claro de selección/runtime; nunca se enruta silenciosamente de vuelta a PI.
 
 Los alias de backend de CLI son diferentes de los ID de arnés integrados. La forma preferida de Claude CLI es:
 
@@ -162,39 +166,52 @@ Las referencias heredadas como `claude-cli/claude-opus-4-7` siguen siendo compat
 pero la nueva configuración debe mantener el proveedor/modelo canónico y colocar
 el backend de ejecución en la política de runtime de proveedor/modelo.
 
-El modo `auto` es intencionalmente conservador para la mayoría de proveedores. Los modelos de agente de OpenAI son la excepción: tanto el runtime no establecido como `auto` se resuelven en el harness de Codex. La configuración explícita del runtime de PI sigue siendo una ruta de compatificación opcional para los turnos de agente `openai/*`; cuando se combina con un perfil de autenticación `openai-codex` seleccionado, OpenClaw enruta PI internamente a través del transporte de autenticación Codex heredado, manteniendo la referencia pública del modelo como `openai/*`. Los pines de sesión de PI de OpenAI obsoletos son ignorados por la selección del runtime y se pueden limpiar con `openclaw doctor --fix`.
+Las referencias heredadas de `codex-cli/*` son diferentes: doctor las migra a `openai/*` para
+que se ejecuten a través del arnés del servidor de aplicaciones Codex en lugar de preservar un backend
+de Codex CLI.
 
-Si `openclaw doctor` advierte que el plugin `codex` está habilitado mientras `openai-codex/*` permanece en la configuración, trátelo como un estado de ruta heredada. Ejecute `openclaw doctor --fix` para reescribirlo a `openai/*` con el runtime de Codex.
+El modo `auto` es intencionalmente conservador para la mayoría de los proveedores. Los modelos de agente
+de OpenAI son la excepción: el runtime no establecido y `auto` ambos se resuelven al arnés
+de Codex. La configuración explícita del runtime PI sigue siendo una ruta de compatibilidad opcional para
+los turnos de agente `openai/*`; cuando se combina con un perfil de autenticación `openai-codex` seleccionado,
+OpenClaw enruta PI internamente a través del transporte de autenticación Codex heredado mientras
+mantiene la referencia del modelo público como `openai/*`. Los pines de sesión de OpenAI PI obsoletos son
+ignorados por la selección del runtime y se pueden limpiar con `openclaw doctor --fix`.
+
+Si `openclaw doctor` advierte que el complemento `codex` está habilitado mientras
+`openai-codex/*` permanece en la configuración, trátelo como un estado de ruta heredada. Ejecute
+`openclaw doctor --fix` para reescribirlo a `openai/*` con el runtime de Codex.
 
 ## Contrato de compatibilidad
 
-Cuando un runtime no es PI, debe documentar qué superficies de OpenClaw admite. Utilice este formato para la documentación de runtimes:
+Cuando un runtime no es PI, debe documentar qué superficies de OpenClaw admite.
+Use esta forma para la documentación del runtime:
 
-| Pregunta                                                  | Por qué es importante                                                                                                            |
-| --------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
-| ¿Quién es el propietario del bucle del modelo?            | Determina dónde ocurren los reintentos, la continuación de herramientas y las decisiones de respuesta final.                     |
-| ¿Quién es el propietario del historial canónico del hilo? | Determina si OpenClaw puede editar el historial o solo reflejarlo.                                                               |
-| ¿Funcionan las herramientas dinámicas de OpenClaw?        | La mensajería, las sesiones, el cron y las herramientas propiedad de OpenClaw dependen de esto.                                  |
-| ¿Funcionan los enlaces de herramientas dinámicas?         | Los complementos esperan `before_tool_call`, `after_tool_call` y middleware alrededor de las herramientas propiedad de OpenClaw. |
-| ¿Funcionan los enlaces de herramientas nativas?           | Shell, parche y herramientas propiedad del runtime necesitan soporte de enlace nativo para políticas y observación.              |
-| ¿Se ejecuta el ciclo de vida del motor de contexto?       | Los complementos de memoria y contexto dependen de los ciclos de vida de ensamblaje, ingesta, después del turno y compactación.  |
-| ¿Qué datos de compactación están expuestos?               | Algunos complementos solo necesitan notificaciones, mientras que otros necesitan metadatos mantenidos/eliminados.                |
-| ¿Qué no es compatible intencionalmente?                   | Los usuarios no deben asumir equivalencia con PI donde el runtime nativo posee más estado.                                       |
+| Pregunta                                            | Por qué es importante                                                                                                             |
+| --------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| ¿Quién posee el bucle del modelo?                   | Determina dónde ocurren los reintentos, la continuación de herramientas y las decisiones de respuesta final.                      |
+| ¿Quién posee el historial canónico de hilos?        | Determina si OpenClaw puede editar el historial o solo reflejarlo.                                                                |
+| ¿Funcionan las herramientas dinámicas de OpenClaw?  | Mensajería, sesiones, cron y herramientas propiedad de OpenClaw dependen de esto.                                                 |
+| ¿Funcionan los enlaces de herramientas dinámicas?   | Los complementos esperan `before_tool_call`, `after_tool_call` y middleware alrededor de las herramientas propiedad de OpenClaw.  |
+| ¿Funcionan los enlaces de herramientas nativas?     | Las herramientas de Shell, parche y propiedad del runtime necesitan soporte de gancho nativo para políticas y observación.        |
+| ¿Se ejecuta el ciclo de vida del motor de contexto? | Los complementos de memoria y contexto dependen de los ciclos de vida de ensamblaje, ingestión, después del turno y compactación. |
+| ¿Qué datos de compactación están expuestos?         | Algunos complementos solo necesitan notificaciones, mientras que otros necesitan metadatos mantenidos/eliminados.                 |
+| ¿Qué no es compatible intencionalmente?             | Los usuarios no deben asumir la equivalencia de PI donde el runtime nativo posee más estado.                                      |
 
 El contrato de soporte del runtime de Codex está documentado en
 [Codex harness runtime](/es/plugins/codex-harness-runtime#v1-support-contract).
 
 ## Etiquetas de estado
 
-La salida de estado puede mostrar tanto las etiquetas `Execution` como `Runtime`. Léalas como
+La salida de estado puede mostrar etiquetas `Execution` y `Runtime`. Léalas como
 diagnósticos, no como nombres de proveedores.
 
-- Una referencia de modelo como `openai/gpt-5.5` le indica el proveedor/modelo seleccionado.
-- Un id de runtime como `codex` le indica qué bucle está ejecutando el turno.
+- Una referencia de modelo como `openai/gpt-5.5` indica el proveedor/modelo seleccionado.
+- Un ID de runtime como `codex` indica qué bucle está ejecutando el turno.
 - Una etiqueta de canal como Telegram o Discord indica dónde está ocurriendo la conversación.
 
-Si una ejecución aún muestra un tiempo de ejecución inesperado, inspeccione primero la política de tiempo de ejecución del proveedor/modelo
-seleccionado. Los fijos de tiempo de ejecución de sesión heredados ya no deciden el enrutamiento.
+Si una ejecución todavía muestra un runtime inesperado, inspeccione primero la política de runtime del proveedor/modelo
+seleccionado. Los pines de runtime de sesión heredados ya no deciden el enrutamiento.
 
 ## Relacionado
 

@@ -48,7 +48,7 @@ Exemple de configuration :
         directPolicy: "allow", // default: allow direct/DM targets; set "block" to suppress
         lightContext: true, // optional: only inject HEARTBEAT.md from bootstrap files
         isolatedSession: true, // optional: fresh session each run (no conversation history)
-        skipWhenBusy: true, // optional: also defer when subagent or nested lanes are busy
+        skipWhenBusy: true, // optional: also defer when this agent's subagent or nested lanes are busy
         // activeHours: { start: "08:00", end: "24:00" },
         // includeReasoning: true, // optional: send separate `Reasoning:` message too
       },
@@ -64,7 +64,7 @@ Exemple de configuration :
 - Le prompt heartbeat est envoyé **tel quel** en tant que message utilisateur. Le prompt système inclut une section « Heartbeat » uniquement lorsque les heartbeats sont activés pour l'agent par défaut et que l'exécution est signalée en interne.
 - Lorsque les battements de cœur (heartbeats) sont désactivés avec `0m`, les exécutions normales omettent également `HEARTBEAT.md` du contexte d'amorçage (bootstrap) afin que le modèle ne voie pas les instructions réservées aux heartbeats.
 - Les heures actives (`heartbeat.activeHours`) sont vérifiées dans le fuseau horaire configuré. En dehors de cette fenêtre, les heartbeats sont ignorés jusqu'au prochain tic à l'intérieur de la fenêtre.
-- Les heartbeats sont automatiquement différés lorsque le travail cron est actif ou en file d'attente. Définissez `heartbeat.skipWhenBusy: true` pour différer également sur les voies particulièrement occupées (travail de sous-agent ou de commande imbriquée) ; cela est utile pour les Ollama locaux et autres hôtes à runtime unique contraints.
+- Les heartbeats sont automatiquement différés pendant que le travail cron est actif ou en file d'attente. Définissez `heartbeat.skipWhenBusy: true` pour également différer un agent sur ses propres sous-agents ou voies de commande imbriquées avec clé de session ; les agents frères ne se mettent plus en pause simplement parce qu'un autre agent a du travail de sous-agent en cours.
 
 ## À quoi sert le prompt de heartbeat
 
@@ -99,7 +99,7 @@ Hors des heartbeats, les `HEARTBEAT_OK` isolés au début ou à la fin d'un mess
         includeReasoning: false, // default: false (deliver separate Reasoning: message when available)
         lightContext: false, // default: false; true keeps only HEARTBEAT.md from workspace bootstrap files
         isolatedSession: false, // default: false; true runs each heartbeat in a fresh session (no conversation history)
-        skipWhenBusy: false, // default: false; true also waits for subagent/nested lanes
+        skipWhenBusy: false, // default: false; true also waits for this agent's subagent/nested lanes
         target: "last", // default: none | options: last | none | <channel id> (core or plugin, e.g. "imessage")
         to: "+15551234567", // optional channel-specific override
         accountId: "ops-bot", // optional multi-account channel id
@@ -219,7 +219,7 @@ Utilisez `accountId` pour cibler un compte spécifique sur les channels multi-co
   Intervalle de heartbeat (chaîne de durée ; unité par défaut = minutes).
 </ParamField>
 <ParamField path="model" type="string">
-  Substitution facultative de model pour les exécutions de heartbeat (`provider/model`).
+  Remplacement facultatif de model pour les exécutions de heartbeat (`provider/model`).
 </ParamField>
 <ParamField path="includeReasoning" type="boolean" default="false">
   Lorsqu'il est activé, fournit également le message séparé `Reasoning:` lorsqu'il est disponible (même forme que `/reasoning on`).
@@ -228,10 +228,10 @@ Utilisez `accountId` pour cibler un compte spécifique sur les channels multi-co
   Si vrai, les exécutions de heartbeat utilisent un contexte d'amorçage léger et ne conservent que `HEARTBEAT.md` des fichiers d'amorçage de l'espace de travail.
 </ParamField>
 <ParamField path="isolatedSession" type="boolean" default="false">
-  Si vrai, chaque heartbeat s'exécute dans une session fraîche sans historique de conversation précédent. Utilise le même modèle d'isolement que le cron `sessionTarget: "isolated"`. Réduit considérablement le coût en jetons par heartbeat. Combinez avec `lightContext: true` pour des économies maximales. Le routage de la livraison utilise toujours le contexte de la session principale.
+  Si vrai, chaque heartbeat s'exécute dans une session fraîche sans historique de conversation précédent. Utilise le même modèle d'isolement que le cron `sessionTarget: "isolated"`. Réduit considérablement le coût en jetons par heartbeat. Combinez avec `lightContext: true` pour des économies maximales. Le routage de livraison utilise toujours le contexte de la session principale.
 </ParamField>
 <ParamField path="skipWhenBusy" type="boolean" default="false">
-  Si vrai, les exécutions de heartbeat diffèrent sur les voies très occupées : travail de sous-agent ou de commande imbriquée. Les voies Cron diffèrent toujours les heartbeats, même sans cet indicateur, afin que les hôtes de modèles locaux n'exécutent pas les invites cron et heartbeat en même temps.
+  Si vrai, les exécutions de heartbeat sont différées sur les voies supplémentaires occupées de cet agent : son propre sous-agent avec clé de session ou le travail de commande imbriqué. Les voies cron diffèrent toujours les heartbeats, même sans cet indicateur, afin que les hôtes de modèles locaux n'exécutent pas les invites cron et heartbeat en même temps.
 </ParamField>
 <ParamField path="session" type="string">
   Clé de session facultative pour les exécutions de heartbeat.
@@ -285,14 +285,14 @@ Utilisez `accountId` pour cibler un compte spécifique sur les channels multi-co
 ## Comportement de livraison
 
 <AccordionGroup>
-  <Accordion title="Session et routage de la cible">
-    - Les battements de cœur (heartbeats) s'exécutent par défaut dans la session principale de l'agent (`agent:<id>:<mainKey>`), ou `global` lorsque `session.scope = "global"`. Définissez `session` pour forcer l'exécution dans une session de canal spécifique (Discord/WhatsApp/etc.).
+  <Accordion title="Session and target routing">
+    - Par défaut, les battements de cœur (heartbeats) s'exécutent dans la session principale de l'agent (`agent:<id>:<mainKey>`), ou `global` lorsque `session.scope = "global"`. Définissez `session` pour forcer une session de canal spécifique (Discord/WhatsApp/etc.).
     - `session` n'affecte que le contexte d'exécution ; la livraison est contrôlée par `target` et `to`.
     - Pour livrer à un canal/destinataire spécifique, définissez `target` + `to`. Avec `target: "last"`, la livraison utilise le dernier canal externe pour cette session.
-    - Les livraisons de battements de cœur permettent les cibles directes/DM par défaut. Définissez `directPolicy: "block"` pour supprimer les envois vers des cibles directes tout en exécutant toujours le tour de battement de cœur.
-    - Si la file d'attente principale, le volet de la session cible, le volet cron ou une tâche cron active est occupé, le battement de cœur est ignoré et réessayé plus tard.
-    - Si `skipWhenBusy: true`, les volets de sous-agent et imbriqués reportent également les exécutions de battement de cœur.
-    - Si `target` ne renvoie à aucune destination externe, l'exécution a toujours lieu mais aucun message sortant n'est envoyé.
+    - Les livraisons de battements de cœur permettent des cibles directes/DM par défaut. Définissez `directPolicy: "block"` pour supprimer les envois vers des cibles directes tout en exécutant toujours le tour de battement de cœur.
+    - Si la file d'attente principale, le volet de session cible, le volet cron ou une tâche cron active est occupé, le battement de cœur est ignoré et réessayé plus tard.
+    - Si `skipWhenBusy: true`, les sous-agents avec clé de session et les volets imbriqués de cet agent diffèrent également les exécutions de battement de cœur. Les volets occupés d'autres agents ne diffèrent pas cet agent.
+    - Si `target` ne résout aucune destination externe, l'exécution a toujours lieu mais aucun message sortant n'est envoyé.
 
   </Accordion>
   <Accordion title="Visibilité et comportement d'ignore">

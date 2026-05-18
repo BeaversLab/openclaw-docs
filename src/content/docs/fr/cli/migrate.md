@@ -8,9 +8,9 @@ title: "Migrer"
 
 # `openclaw migrate`
 
-Importez l'état depuis un autre système d'agent via un provider de migration appartenant à un plugin. Les providers intégrés couvrent l'état CLI de Codex, [Claude](CLI/en/install/migrating-claude) et [Hermes](/fr/install/migrating-hermes) ; les plugins tiers peuvent enregistrer des providers supplémentaires.
+Importer l'état depuis un autre système d'agent via un provider de migration appartenant à un plugin. Les providers fournis couvrent l'état du Codex CLI, [Claude](/fr/install/migrating-claude) et [Hermes](/fr/install/migrating-hermes) ; les plugins tiers peuvent enregistrer des providers supplémentaires.
 
-<Tip>Pour des guides pas à pas destinés aux utilisateurs, consultez [Migrating from Claude](/fr/install/migrating-claude) et [Migrating from Hermes](/fr/install/migrating-hermes). Le [hub de migration](/fr/install/migrating) répertorie tous les chemins.</Tip>
+<Tip>Pour des guides pas à pas destinés aux utilisateurs, voir [Migrer depuis Claude](/fr/install/migrating-claude) et [Migrer depuis Hermes](/fr/install/migrating-hermes). Le [hub de migration](/fr/install/migrating) liste tous les chemins.</Tip>
 
 ## Commandes
 
@@ -98,7 +98,7 @@ openclaw onboard --import-from hermes --import-source ~/.hermes
 
 Le provider Claude inclus détecte l'état de Claude Code à `~/.claude` par défaut. Utilisez `--from <path>` pour importer un dossier d'accueil ou un répertoire racine de projet Claude Code spécifique.
 
-<Tip>Pour un guide pas à pas destiné à l'utilisateur, voir [Migrating from Claude](/fr/install/migrating-claude).</Tip>
+<Tip>Pour un guide pas à pas destiné aux utilisateurs, voir [Migrer depuis Claude](/fr/install/migrating-claude).</Tip>
 
 ### Ce que Claude importe
 
@@ -118,31 +118,21 @@ Le provider Codex inclus détecte l'état du Codex CLI par défaut à `~/.codex`
 à `CODEX_HOME` lorsque cette environment variable est définie. Utilisez `--from <path>` pour
 inventorier un domicile Codex spécifique.
 
-Utilisez ce provider lors du passage au harnais Codex OpenClaw et lorsque vous souhaitez
-promouvoir délibérément des ressources personnelles utiles du Codex CLI. Les lancements locaux
-du serveur d'application Codex utilisent un `CODEX_HOME` par agent, ils ne lisent donc pas votre état personnel du
-Codex CLI par défaut, tandis que les sous-processus héritent toujours du processus normal
-`HOME` à moins que le lancement du serveur d'application ne le remplace explicitement.
+Utilisez ce provider lors de la migration vers le harnais Codex d'OpenClaw et lorsque vous souhaitez
+promouvoir délibérément des assets personnels utiles du Codex CLI. Les lancements
+locaux du serveur d'application Codex utilisent un `CODEX_HOME` par agent, ils ne lisent donc pas votre
+`~/.codex` personnel par défaut. Le processus normal `HOME` est toujours hérité, donc Codex
+peut voir les compétences partagées `$HOME/.agents/*` / entrées du marketplace de plugins et
+les sous-processus peuvent trouver la configuration et les jetons du répertoire personnel de l'utilisateur.
 
-L'exécution de `openclaw migrate codex` dans un terminal interactif prévisualise le plan
-complet, puis ouvre des sélecteurs à cocher avant la confirmation finale de l'application. Les éléments de copie de compétences sont demandés en premier. Utilisez `Toggle all on` ou `Toggle all off` pour une
-sélection en masse. Appuyez sur Espace pour basculer les lignes, ou sur Entrée pour activer la ligne
-en surbrillance et continuer. Les compétences planifiées commencent cochées, les compétences en conflit commencent décochées, et
-`Skip for now` ignore les copies de compétences pour cette exécution tout en continuant vers la sélection des plugins. Lorsque les plugins Codex organisés installés par la source sont migrables et que
-`--plugin` n'a pas été fourni, la migration demande ensuite l'activation des plugins natifs Codex
-par nom de plugin. Les éléments de plugins
-commencent cochés à moins que la configuration du plugin Codex OpenClaw cible ne possède déjà ce
-plugin. Les plugins cibles existants commencent décochés et affichent un indicateur de conflit tel que
-`conflict: plugin exists` ; choisissez `Toggle all off` pour ne migrer aucun plugin natif Codex
-lors de cette exécution, ou `Skip for now` pour arrêter avant d'appliquer. Pour les exécutions scriptées ou
-exactes, passez `--skill <name>` une fois par compétence, par exemple :
+L'exécution de `openclaw migrate codex` dans un terminal interactif prévisualise le plan complet, puis ouvre des sélecteurs de cases à cocher avant la confirmation finale de l'application. Les éléments de copie de compétences sont d'abord demandés. Utilisez `Toggle all on` ou `Toggle all off` pour une sélection en bloc. Appuyez sur Espace pour basculer les lignes, ou appuyez sur Entrée pour activer la ligne mise en surbrillance et continuer. Les compétences planifiées commencent cochées, les compétences en conflit commencent décochées, et `Skip for now` ignore les copies de compétences pour cette exécution tout en continuant vers la sélection du plugin. Lorsque les plugins Codex organisés installés à la source sont migrables et que `--plugin` n'a pas été fourni, la migration demande alors l'activation du plugin Codex natif par nom de plugin. Les éléments de plugin commencent cochés sauf si la configuration du plugin Codex OpenClaw cible possède déjà ce plugin. Les plugins cibles existants commencent décochés et affichent un indicateur de conflit tel que `conflict: plugin exists` ; choisissez `Toggle all off` pour ne migrer aucun plugin Codex natif lors de cette exécution, ou `Skip for now` pour arrêter avant d'appliquer. Pour les exécutions scriptées ou exactes, passez `--skill <name>` une fois par compétence, par exemple :
 
 ```bash
 openclaw migrate codex --dry-run --skill gog-vault77-google-workspace
 openclaw migrate apply codex --yes --skill gog-vault77-google-workspace
 ```
 
-Utilisez `--plugin <name>` pour limiter de manière non interactive la migration du plugin Codex natif à un ou plusieurs plugins gérés installés par la source :
+Utilisez `--plugin <name>` pour limiter de manière non interactive la migration des plugins Codex natifs à un ou plusieurs plugins organisés installés à la source :
 
 ```bash
 openclaw migrate codex --dry-run --plugin google-calendar
@@ -153,13 +143,11 @@ openclaw migrate apply codex --yes --plugin google-calendar
 
 - Répertoires de compétences Codex CLI sous `$CODEX_HOME/skills`, à l'exclusion du cache `.system` de Codex.
 - AgentSkills personnels sous `$HOME/.agents/skills`, copiés dans l'espace de travail de l'agent OpenClaw actuel lorsque vous souhaitez une propriété par agent.
-- Plugins Codex `openai-curated` installés par la source découverts via le `plugin/list` du serveur d'application Codex. La planification lit `plugin/read` pour chaque plugin installé et activé. Les plugins pris en charge par une application nécessitent que la réponse de compte du serveur d'application Codex source soit un compte d'abonnement ChatGPT ; les réponses de compte non ChatGPT ou manquantes sont ignorées avec `codex_subscription_required`. Par défaut, la migration n'appelle pas le `app/list` source, donc les plugins pris en charge par une application qui franchissent la porte du compte sont planifiés sans vérification de l'accessibilité de l'application source, et les échecs de transport de recherche de compte sont ignorés avec `codex_account_unavailable`. Passez `--verify-plugin-apps` lorsque vous souhaitez que la migration force une nouvelle capture instantanée du `app/list` source et exige que chaque application détenue soit présente, activée et accessible avant de planifier l'activation native. Dans ce mode, les échecs de transport de recherche de compte passent à la vérification de l'inventaire des applications source. La capture instantanée de l'inventaire des applications source est conservée en mémoire pour le processus actuel ; elle n'est pas écrite dans la sortie de migration ni la configuration cible. Les plugins désactivés, les détails de plugin illisibles, les comptes source soumis à un abonnement, et, lorsque la vérification est demandée, les applications manquantes, désactivées, inaccessibles ou les échecs d'inventaire des applications source deviennent des éléments ignorés manuellement avec des raisons typées au lieu d'entrées de configuration cible.
-  Apply appelle le `plugin/install` du serveur d'application pour chaque plugin éligible sélectionné, même si le serveur d'application cible signale déjà que ce plugin est installé et activé. Les plugins Codex migrés sont utilisables uniquement dans les sessions qui sélectionnent le harnais Codex natif ; ils ne sont pas exposés à Pi, aux exécutions normales du provider OpenAI, aux liaisons de conversation ACP ou aux autres harnais.
+- Les plugins Codex installés par la source `openai-curated` découverts via le serveur d'application Codex `plugin/list`. La planification lit `plugin/read` pour chaque plugin installé et activé. Les plugins pris en charge par l'application nécessitent que la réponse du compte du serveur d'application Codex source soit un compte d'abonnement ChatGPT ; les réponses de compte non ChatGPT ou manquantes sont ignorées avec `codex_subscription_required`. Par défaut, la migration n'appelle pas la source `app/list`, de sorte que les plugins pris en charge par l'application qui franchissent la porte du compte sont planifiés sans vérification de l'accessibilité de l'application source, et les échecs de transport de recherche de compte sont ignorés avec `codex_account_unavailable`. Passez `--verify-plugin-apps` lorsque vous voulez que la migration force un nouvel instantané de la source `app/list` et exige que chaque application détenue soit présente, activée et accessible avant de planifier l'activation native. Dans ce mode, les échecs de transport de recherche de compte sont transmis à la vérification de l'inventaire des applications sources. L'instantané de l'inventaire des applications sources est conservé en mémoire pour le processus en cours ; il n'est pas écrit dans la sortie de migration ou la configuration cible. Les plugins désactivés, les détails de plugin illisibles, les comptes sources protégés par abonnement et, lorsque la vérification est demandée, les applications manquantes, désactivées, inaccessibles ou les échecs de l'inventaire des applications sources deviennent des éléments ignorés manuellement avec des raisons typées au lieu d'entrées de configuration cible. Apply appelle le serveur d'application `plugin/install` pour chaque plugin éligible sélectionné, même si le serveur d'application cible signale déjà que ce plugin est installé et activé. Les plugins Codex migrés sont utilisables uniquement dans les sessions qui sélectionnent le harnais Codex natif ; ils ne sont pas exposés à Pi, aux exécutions normales du provider OpenAI, aux liaisons de conversation ACP ou à d'autres harnais.
 
 ### État Codex en revue manuelle
 
-Les `config.toml` Codex, les `hooks/hooks.json` natives, les places de marché non modérées, les bundles de plugins mis en cache qui ne sont pas des plugins modérés installés à partir de la source, et les plugins installés à partir de la source qui échouent à la porte d'abonnement de la source ne sont pas activés automatiquement.
-Lorsque `--verify-plugin-apps` est défini, les plugins qui échouent à la porte d'inventaire de l'application source sont également ignorés. Ils sont copiés ou signalés dans le rapport de migration pour examen manuel.
+Codex `config.toml`, `hooks/hooks.json` natif, les places de marché non supervisées, les bundles de plugins mis en cache qui ne sont pas des plugins supervisés installés par la source, et les plugins installés par la source qui échouent à la porte d'abonnement source ne sont pas activés automatiquement. Lorsque `--verify-plugin-apps` est défini, les plugins qui échouent à la porte de l'inventaire des applications sources sont également ignorés. Ils sont copiés ou signalés dans le rapport de migration pour un examen manuel.
 
 Pour les plugins modérés installés à partir de la source et migrés, apply écrit :
 
@@ -169,14 +157,15 @@ Pour les plugins modérés installés à partir de la source et migrés, apply �
 - une entrée de plugin explicite avec `marketplaceName: "openai-curated"` et
   `pluginName` pour chaque plugin sélectionné
 
-La migration n'écrit jamais `plugins["*"]` et ne stocke jamais les chemins du cache local de la place de marché. Les échecs d'abonnement côté source sont signalés sur les éléments manuels avec des raisons typées telles que `codex_subscription_required`, `codex_account_unavailable`,
-`plugin_disabled` ou `plugin_read_unavailable`. Avec `--verify-plugin-apps`,
-les échecs d'inventaire de l'application source peuvent également apparaître comme `app_inaccessible`,
-`app_disabled`, `app_missing` ou `app_inventory_unavailable`. Les plugins ignorés
+La migration n'écrit jamais `plugins["*"]` et ne stocke jamais les chemins de cache du marketplace local.
+Les échecs d'abstraction côté source sont signalés sur les éléments manuels avec des raisons typées telles que `codex_subscription_required`, `codex_account_unavailable`,
+`plugin_disabled`, ou `plugin_read_unavailable`. Avec `--verify-plugin-apps`,
+les échecs d'inventaire des applications côté source peuvent également apparaître comme `app_inaccessible`,
+`app_disabled`, `app_missing`, ou `app_inventory_unavailable`. Les plugins ignorés
 ne sont pas écrits dans la configuration cible.
 Les installations nécessitant une authentification côté cible sont signalées sur l'élément de plugin concerné avec
-`status: "skipped"`, `reason: "auth_required"` et des identifiants d'application nettoyés.
-Leurs entrées de configuration explicites sont écrites désactivées jusqu'à ce que vous les réautorisez et
+`status: "skipped"`, `reason: "auth_required"`, et des identifiants d'application nettoyés.
+Leurs entrées de configuration explicites sont écrites désactivées jusqu'à ce que vous les autorisiez à nouveau et
 les activiez. Les autres échecs d'installation sont des résultats `error` limités à l'élément.
 
 Si l'inventaire des plugins du serveur d'application Codex n'est pas disponible lors
@@ -189,15 +178,15 @@ Le provider Hermes inclus détecte l'état à `~/.hermes` par défaut. Utilisez 
 
 ### Ce que Hermes importe
 
-- Configuration du modèle par défaut à partir de `config.yaml`.
-- Providers de modèles configurés et points de terminaison personnalisés compatibles OpenAI à partir de `providers` et `custom_providers`.
-- Définitions de serveur MCP à partir de `mcp_servers` ou `mcp.servers`.
-- `SOUL.md` et `AGENTS.md`OpenClaw dans l'espace de travail de l'agent OpenClaw.
+- Configuration du model par défaut depuis `config.yaml`.
+- Providers de model configurés et points de terminaison personnalisés compatibles avec OpenAI depuis `providers` et `custom_providers`.
+- Définitions de serveur MCP depuis `mcp_servers` ou `mcp.servers`.
+- `SOUL.md` et `AGENTS.md` dans l'espace de travail de l'agent OpenClaw.
 - `memories/MEMORY.md` et `memories/USER.md` ajoutés aux fichiers de mémoire de l'espace de travail.
 - Valeurs par défaut de configuration de la mémoire pour la mémoire de fichier OpenClaw, plus les éléments d'archive ou de révision manuelle pour les fournisseurs de mémoire externes tels que Honcho.
-- Compétences incluant un fichier `SKILL.md` sous `skills/<name>/`.
-- Valeurs de configuration par compétence issues de `skills.config`.
-- Clés API prises en charge depuis API`.env`, uniquement avec `--include-secrets`.
+- Skills qui incluent un fichier `SKILL.md` sous `skills/<name>/`.
+- Valeurs de configuration par skill depuis `skills.config`.
+- Clés d'API prises en charge depuis `.env`, uniquement avec `--include-secrets`.
 
 ### Clés `.env` prises en charge
 
@@ -233,13 +222,13 @@ Les sources de migration sont des plugins. Un plugin déclare ses identifiants d
 }
 ```
 
-Au moment de l'exécution, le plugin appelle `api.registerMigrationProvider(...)`. Le fournisseur implémente `detect`, `plan` et `apply`CLI. Le composant Core gère l'orchestration CLI, la politique de sauvegarde, les invites, la sortie JSON et la pré-vérification des conflits. Le composant Core transmet le plan révisé à `apply(ctx, plan)`, et les fournisseurs peuvent reconstruire le plan uniquement lorsque cet argument est absent pour des raisons de compatibilité.
+Au moment de l'exécution, le plugin appelle `api.registerMigrationProvider(...)`. Le fournisseur implémente `detect`, `plan` et `apply`. Le cœur gère l'orchestration du CLI, la politique de sauvegarde, les invites, la sortie JSON et le contrôle de préconflit. Le cœur transmet le plan révisé à `apply(ctx, plan)`, et les fournisseurs ne peuvent reconstruire le plan que lorsque cet argument est absent pour des raisons de compatibilité.
 
-Les plugins de fournisseur peuvent utiliser `openclaw/plugin-sdk/migration` pour la construction d'éléments et les totaux récapitulatifs, ainsi que `openclaw/plugin-sdk/migration-runtime` pour les copies de fichiers tenant compte des conflits, les copies de rapports d'archive uniquement, les wrappers de configuration-exécution mis en cache et les rapports de migration.
+Les plugins de fournisseur peuvent utiliser `openclaw/plugin-sdk/migration` pour la construction d'éléments et les comptes récapitulatifs, ainsi que `openclaw/plugin-sdk/migration-runtime` pour les copies de fichiers sensibles aux conflits, les copies de rapports d'archive uniquement, les wrappers config-runtime mis en cache et les rapports de migration.
 
 ## Intégration Onboarding
 
-L'intégration (Onboarding) peut proposer une migration lorsqu'un fournisseur détecte une source connue. `openclaw onboard --flow import` et `openclaw setup --wizard --import-from hermes` utilisent le même fournisseur de migration de plugin et affichent toujours un aperçu avant l'application.
+L'intégration peut proposer une migration lorsqu'un fournisseur détecte une source connue. `openclaw onboard --flow import` et `openclaw setup --wizard --import-from hermes` utilisent tous deux le même fournisseur de migration de plugin et affichent toujours un aperçu avant l'application.
 
 <Note>Les importations Onboarding nécessitent une installation OpenClaw fraîche. Réinitialisez d'abord la configuration, les identifiants, les sessions et l'espace de travail si vous avez déjà un état local. Les importations de type sauvegarde-et-écrasement ou fusion sont verrouillées par fonctionnalité pour les installations existantes.</Note>
 
@@ -248,5 +237,5 @@ L'intégration (Onboarding) peut proposer une migration lorsqu'un fournisseur d�
 - [Migrating from Hermes](/fr/install/migrating-hermes) : guide pas à pas pour l'utilisateur.
 - [Migrating from Claude](/fr/install/migrating-claude) : guide pas à pas pour l'utilisateur.
 - [Migrating](/fr/install/migrating) : déplacer OpenClaw vers une nouvelle machine.
-- [Doctor](/fr/gateway/doctor) : vérification de l'état de santé après l'application d'une migration.
+- [Doctor](/fr/gateway/doctor) : contrôle de santé après avoir appliqué une migration.
 - [Plugins](/fr/tools/plugin) : installation et enregistrement de plugins.

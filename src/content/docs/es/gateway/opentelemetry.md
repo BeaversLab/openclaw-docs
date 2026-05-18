@@ -214,12 +214,11 @@ OpenClaw clasifica las sesiones según el trabajo que aún puede observar:
 
 - `session.long_running`: el trabajo integrado activo, las llamadas al modelo
   o las llamadas a herramientas siguen progresando.
-- `session.stalled`: existe trabajo activo, pero la ejecución activa no ha
-  informado progreso reciente. Las ejecuciones integradas detenidas permanecen
-  primero en modo de solo observación y luego abortan y drenan después de
-  `diagnostics.stuckSessionAbortMs` sin progreso para que los turnos en cola detrás
-  del carril puedan reanudarse. Si no se establece, el umbral de aborto predetermina
-  a la ventana extendida más segura de al menos 10 minutos y 5 veces
+- `session.stalled`: existe trabajo activo, pero la ejecución activa no ha informado de
+  un progreso reciente. Las ejecuciones incrustadas estancadas permanecen primero en modo de solo observación, y luego
+  interrumpen y drenan después de `diagnostics.stuckSessionAbortMs` sin progreso para que los turnos
+  en cola detrás del carril puedan reanudarse. Cuando no se establece, el umbral de interrupción se establece de forma predeterminada en
+  la ventana extendida más segura de al menos 5 minutos y 3x
   `diagnostics.stuckSessionWarnMs`.
 - `session.stuck`: mantenimiento de libro de sesiones obsoletas sin trabajo
   activo. Esto libera el carril de sesión afectado inmediatamente.

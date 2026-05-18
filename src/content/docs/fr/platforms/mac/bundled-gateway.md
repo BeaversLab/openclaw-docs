@@ -49,14 +49,14 @@ Comportement :
 
 Journalisation :
 
-- stdout/err launchd : `/tmp/openclaw/openclaw-gateway.log`
+- launchd stdout : `~/Library/Logs/openclaw/gateway.log` (les profils utilisent `gateway-<profile>.log`)
+- launchd stderr : supprimé
 
 ## Compatibilité des versions
 
-L'application macOS vérifie la version du gateway par rapport à sa propre version. Si elles sont
-incompatibles, mettez à jour la CLI globale pour qu'elle corresponde à la version de l'application.
+L'application macOS vérifie la version du gateway par rapport à sa propre version. Si elles sont incompatibles, mettez à jour le CLI global pour qu'il corresponde à la version de l'application.
 
-## Test de fumée
+## Vérification rapide
 
 ```bash
 openclaw --version
@@ -75,4 +75,4 @@ openclaw gateway call health --url ws://127.0.0.1:18999 --timeout 3000
 ## Connexes
 
 - [Application macOS](/fr/platforms/macos)
-- [Manuel de procédures Gateway](/fr/gateway)
+- [Manuel d'exécution du Gateway](/fr/gateway)

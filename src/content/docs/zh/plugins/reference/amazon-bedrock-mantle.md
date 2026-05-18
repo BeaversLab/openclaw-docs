@@ -12,7 +12,7 @@ title: "Amazon BedrockAmazon Bedrock Mantle 插件"
 ## 分发
 
 - 包：`@openclaw/amazon-bedrock-mantle-provider`
-- 安装途径：npm
+- 安装途径：npm；ClawHub
 
 ## 暴露接口
 

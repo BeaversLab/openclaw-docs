@@ -19,7 +19,7 @@ Contexte de sécurité : [Sécurité](/fr/gateway/security)
 
 Lorsqu'un channel est configuré avec la politique de DM `pairing`, les expéditeurs inconnus reçoivent un code court et leur message n'est **pas traité** tant que vous n'avez pas approuvé.
 
-Les politiques de DM par défaut sont documentées dans : [Sécurité](/fr/gateway/security)
+Les stratégies de DM par défaut sont documentées dans : [Sécurité](/fr/gateway/security)
 
 `dmPolicy: "open"` n'est public que lorsque la liste d'autorisation DM effective inclut `"*"`.
 La configuration et la validation nécessitent ce caractère générique pour les configurations publiques ouvertes. Si l'état
@@ -119,22 +119,19 @@ Le code de configuration est une charge utile JSON encodée en base64 qui contie
 
 Ce jeton d'amorçage porte le profil d'amorçage de jumelage intégré :
 
-- le jeton `node` transféré (handed-off) principal reste `scopes: []`
-- tout jeton `operator` transféré reste limité à la liste d'autorisation (allowlist) d'amorçage :
-  `operator.approvals`, `operator.read`, `operator.talk.secrets`, `operator.write`
-- les vérifications de portée (scope) d'amorçage sont préfixées par rôle, et ne constituent pas un pool de portées unique et plat :
-  les entrées de portée d'opérateur ne satisfont que les demandes d'opérateur, et les rôles non-opérateurs
-  doivent toujours demander des portées sous leur propre préfixe de rôle
-- la rotation/révocation ultérieure des jetons reste limitée à la fois par le contrat de rôle approuvé de l'appareil
-  et par les portées d'opérateur de la session de l'appelant
+- le profil de configuration intégré n'autorise que le rôle `node`
+- après approbation, le `node` transféré reste `scopes: []`
+- le flux de code de configuration intégré ne transfère pas de `operator`
+- l'accès opérateur nécessite un appairage opérateur approuvé distinct ou un flux de jeton
+- la rotation/la révocation ultérieure des jetons reste limitée à la fois par le contrat de rôle approuvé de l'appareil et les portées opérateur de la session de l'appelant
 
 Traitez le code de configuration comme un mot de passe tant qu'il est valide.
 
-Pour le jumelage mobile distant avec Tailscale, public ou autre, utilisez Tailscale Serve/Funnel
-ou une autre URL Gateway `wss://`. Les codes de configuration en clair `ws://` sont acceptés uniquement
-pour le bouclage (loopback), les adresses LAN privées, les hôtes Bonjour `.local`, et l'hôte de l'émulateur
-Android. Les adresses CGNAT de Tailnet, les noms `.ts.net` et les hôtes publics échouent toujours
-d'une manière sécurisée (fail closed) avant l'émission du QR/du code de configuration.
+Pour Tailscale, public ou autre appairage mobile distant, utilisez Tailscale Serve/Funnel
+ou une autre URL Gateway `wss://`. Les codes de configuration en texte clair `ws://` sont acceptés uniquement
+pour le bouclage, les adresses LAN privées, les hôtes Bonjour `.local` et l'hôte de l'émulateur Android.
+Les adresses CGNAT Tailnet, les noms `.ts.net` et les hôtes publics échouent toujours
+de manière sécurisée avant l'émission du QR/du code de configuration.
 
 ### Approuver un appareil nœud
 
@@ -144,15 +141,24 @@ openclaw devices approve <requestId>
 openclaw devices reject <requestId>
 ```
 
-Lorsqu'une approbation explicite est refusée parce que la session de l'appareil approuvé a été ouverte avec l'étendue "pairing-only" (appariement uniquement), la CLI réessaie la même requête avec `operator.admin`. Cela permet à un appareil apparié existant avec des capacités d'administrateur de récupérer un nouvel appariement Control UI/navigateur sans modifier `devices/paired.json` à la main. Le Gateway valide toujours la connexion retentée ; les jetons qui ne peuvent pas s'authentifier avec `operator.admin` restent bloqués.
+Lorsqu'une approbation explicite est refusée parce que la session de l'appareil approuvé approuvant
+a été ouverte avec une portée d'appairage uniquement, la CLI réessaie la même requête avec
+`operator.admin`. Cela permet à un appareil approuvé capable d'administration existant de récupérer un nouvel
+appairage Control UI/navigateur sans modifier `devices/paired.json` à la main. Le
+Gateway valide toujours la connexion retentée ; les jetons qui ne peuvent pas s'authentifier
+avec `operator.admin` restent bloqués.
 
-Si le même appareil réessaie avec des détails d'authentification différents (par exemple un rôle différent, des étendues différentes ou une clé publique différente), la demande en attente précédente est remplacée et une nouvelle `requestId` est créée.
+Si le même appareil réessaie avec des détails d'authentification différents (par exemple un rôle/portées/clé public différent),
+la demande en attente précédente est remplacée et un nouveau `requestId` est créé.
 
-<Note>Un appareil déjà apparié n'obtient pas silencieusement un accès plus large. S'il se reconnecte en demandant plus d'étendues ou un rôle plus large, OpenClaw conserve l'approbation existante telle quelle et crée une nouvelle demande de mise à niveau en attente. Utilisez `openclaw devices list` pour comparer l'accès actuellement approuvé avec le nouvel accès demandé avant d'approuver.</Note>
+<Note>
+  Un appareil déjà appairé n'obtient pas silencieusement un accès plus large. S'il se reconnecte en demandant davantage de portées ou un rôle plus large, OpenClaw conserve l'approbation existante telle quelle et crée une nouvelle demande de mise à niveau en attente. Utilisez `openclaw devices list` pour comparer l'accès actuellement approuvé avec le nouvel accès demandé avant d'approuver.
+</Note>
 
-### Auto-approbation facultative des nœuds de confiance CIDR
+### Approbation automatique optionnelle des nœuds de CIDR de confiance
 
-L'appariement des appareils reste manuel par défaut. Pour les réseaux de nœuds étroitement contrôlés, vous pouvez opter pour l'auto-approbation des nouveaux nœuds avec des CIDR explicites ou des IP exactes :
+L'appairage d'appareil reste manuel par défaut. Pour les réseaux de nœuds étroitement contrôlés,
+vous pouvez opter pour l'approbation automatique des nœuds lors de la première connexion avec des CIDRs explicites ou des IP exactes :
 
 ```json5
 {
@@ -166,28 +172,34 @@ L'appariement des appareils reste manuel par défaut. Pour les réseaux de nœud
 }
 ```
 
-Cela s'applique uniquement aux nouvelles demandes d'appariement `role: node` sans étendue demandée. Les clients Operator, navigateur, Control UI et WebChat nécessitent toujours une approbation manuelle. Les modifications de rôle, d'étendue, de métadonnées et de clé publique nécessitent toujours une approbation manuelle.
+Cela s'applique uniquement aux nouvelles demandes d'appairage `role: node` sans portée
+(« scopes ») demandée. Les clients Opérateur, navigateur, Control UI et WebChat nécessitent toujours une approbation
+manuelle. Les modifications de rôle, de portée, de métadonnées et de clé publique nécessitent toujours une approbation
+manuelle.
 
-### Stockage de l'état d'appariement des nœuds
+### Stockage de l'état d'appairage des nœuds
 
 Stocké sous `~/.openclaw/devices/` :
 
-- `pending.json` (de courte durée ; les demandes en attente expirent)
-- `paired.json` (appareils appariés + jetons)
+- `pending.json` (à courte durée de vie ; les demandes en attente expirent)
+- `paired.json` (appareils appairés + jetons)
 
 ### Notes
 
-- L'ancienne API `node.pair.*` (CLI : `openclaw nodes pending|approve|reject|remove|rename`) est un magasin d'appariement distinct appartenant à la passerelle. Les nœuds WS nécessitent toujours un appariement d'appareil.
-- L'enregistrement d'appariement est la source de vérité durable pour les rôles approuvés. Les jetons d'appareil actifs restent liés à cet ensemble de rôles approuvés ; une entrée de jeton errante en dehors des rôles approuvés ne crée pas de nouvel accès.
+- L'API héritée `node.pair.*` (CLI : `openclaw nodes pending|approve|reject|remove|rename`) est un
+  stockage d'appairage distinct appartenant à la passerelle. Les nœuds WS nécessitent toujours un appairage d'appareil.
+- L'enregistrement d'appairage est la source durable de vérité pour les rôles approuvés. Les
+  jetons d'appareil actifs restent liés à cet ensemble de rôles approuvés ; une entrée de jeton errante
+  en dehors des rôles approuvés ne crée pas de nouvel accès.
 
 ## Documentation connexe
 
 - Modèle de sécurité + injection de prompt : [Sécurité](/fr/gateway/security)
-- Mise à jour sécurisée (exécuter doctor) : [Mise à jour](/fr/install/updating)
+- Mise à jour en toute sécurité (exécuter doctor) : [Mise à jour](/fr/install/updating)
 - Configurations de canal :
-  - Telegram : [Telegram](TelegramTelegram/en/channels/telegram)
-  - WhatsApp : [WhatsApp](WhatsAppWhatsApp/en/channels/whatsapp)
-  - Signal : [Signal](SignalSignal/en/channels/signal)
-  - iMessage : [iMessage](iMessageiMessage/en/channels/imessage)
-  - Discord : [Discord](DiscordDiscord/en/channels/discord)
+  - Telegram : [Telegram](/fr/channels/telegram)
+  - WhatsApp : [WhatsApp](/fr/channels/whatsapp)
+  - Signal : [Signal](/fr/channels/signal)
+  - iMessage : [iMessage](/fr/channels/imessage)
+  - Discord : [Discord](/fr/channels/discord)
   - Slack : [Slack](SlackSlack/en/channels/slack)

@@ -8,7 +8,7 @@ read_when:
 
 Perplexity 外掛程式透過 Perplexity 搜尋 API 或透過 OpenRouter 的 Perplexity Sonar 提供網路搜尋功能。
 
-<Note>此頁面是 Perplexity **提供者** (provider) 的設定。關於 Perplexity **工具** (tool) (代理程式如何使用它)，請參閱 [Perplexity tool](/zh-Hant/tools/perplexity-search)。</Note>
+<Note>此頁面是 Perplexity **提供者** 設定。若要查看 Perplexity **工具**（代理程式如何使用它），請參閱 [Perplexity tool](/zh-Hant/tools/perplexity-search)。</Note>
 
 | 屬性     | 值                                                                    |
 | -------- | --------------------------------------------------------------------- |
@@ -69,27 +69,27 @@ Perplexity 外掛程式透過 Perplexity 搜尋 API 或透過 OpenRouter 的 Per
 ## 進階設定
 
 <AccordionGroup>
-  <Accordion title="守護程序的環境變數">
-    如果 OpenClaw Gateway 以守護程序 (launchd/systemd) 執行，請確保
-    `PERPLEXITY_API_KEY` 對該程序可用。
+  <Accordion title="Environment variable for daemon processes">
+    如果 OpenClaw Gateway 作為守護程序 (launchd/systemd) 執行，請確保
+    `PERPLEXITY_API_KEY` 可供該程序使用。
 
     <Warning>
-    僅在 `~/.profile` 中設定的金鑰將無法被 launchd/systemd
-    守護程序看見，除非該環境被明確匯入。請在
-    `~/.openclaw/.env` 中設定金鑰或透過 `env.shellEnv` 設定，以確保 gateway 程序可以
-    讀取它。
+    僅在互動式 shell 中匯出的金鑰將無法被
+    launchd/systemd 守護程序看見，除非該環境被明確匯入。請在
+    `~/.openclaw/.env` 中設定金鑰，或透過 `env.shellEnv` 設定，以確保閘道
+    程序可以讀取它。
     </Warning>
 
   </Accordion>
 
-  <Accordion title="OpenRouter 代理設定">
-    如果您希望透過 OpenRouter 路由 Perplexity 搜尋，請設定
-    `OPENROUTER_API_KEY` (前綴 `sk-or-`) 而非原生 Perplexity 金鑰。
-    OpenClaw 將自動檢測前綴並切換到 Sonar 傳輸。
+  <Accordion title="OpenRouter proxy setup">
+    如果您偏好透過 OpenRouter 路由 Perplexity 搜尋，請設定
+    `OPENROUTER_API_KEY` (前綴 `sk-or-`) 而非原生的 Perplexity 金鑰。
+    OpenClaw 將會自動偵測前綴並切換到 Sonar 傳輸。
 
     <Tip>
     如果您已經擁有 OpenRouter 帳戶
-    並希望整合多個供應商的帳單，OpenRouter 傳輸會很有用。
+    並希望整合多個提供者的帳單，OpenRouter 傳輸會很有用。
     </Tip>
 
   </Accordion>

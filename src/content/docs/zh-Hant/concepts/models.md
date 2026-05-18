@@ -53,7 +53,7 @@ OpenClaw 依照以下順序選擇模型：
 同一個 `provider/model` 根據其來源可能代表不同的意義：
 
 - 設定的預設值（`agents.defaults.model.primary` 和特定於代理的主要模型）是正常的起點，並使用 `agents.defaults.model.fallbacks`。
-- 自動備援選擇是暫時的恢復狀態。它們與 `modelOverrideSource: "auto"` 一起儲存，以便後續的回合可以繼續使用備援鏈，而不必先探測已知故障的主要模型。
+- 自動備援選取是暫時的復原狀態。它們與 `modelOverrideSource: "auto"` 一起儲存，以便後續輪次能繼續使用備援鏈，而無需每次都探測已知為故障的主要模型；OpenClaw 會定期再次探測原始主要模型，在其恢復時清除自動選取，並在每次狀態變更時公告備援/復原過渡。
 - 使用者工作階段選擇是精確的。`/model`（模型選擇器）、`session_status(model=...)` 和 `sessions.patch` 會儲存 `modelOverrideSource: "user"`；如果所選的提供者/模型無法連線，OpenClaw 會明確地顯示失敗，而不是轉向另一個已設定的模型。
 - Cron `--model` / payload `model` 是每個工作的主要設定。除非工作提供明確的 payload `fallbacks`（請使用 `fallbacks: []` 進行嚴格的 cron 執行），否則它仍會使用設定的備援。
 - CLI 預設模型和允許清單選擇器會透過列出明確的 `models.providers.*.models` 來遵守 `models.mode: "replace"`，而不是載入完整的內建目錄。

@@ -77,33 +77,33 @@ moment de l'exécution :
 
 <AccordionGroup>
   <Accordion title="Variable d'environnement pour les processus daemon">
-    Si le OpenClaw Gateway s'exécute en tant que démon (launchd/systemd), assurez-vous
+    Si le OpenClaw Gateway s'exécute en tant que daemon (launchd/systemd), assurez-vous
     que `AI_GATEWAY_API_KEY` est disponible pour ce processus.
 
     <Warning>
-    Une clé définie uniquement dans `~/.profile` ne sera pas visible pour un démon launchd/systemd
-    à moins que cet environnement ne soit explicitement importé. Définissez la clé dans
-    `~/.openclaw/.env` ou via `env.shellEnv` pour garantir que le processus de la passerelle puisse
-    la lire.
+    Une clé exportée uniquement dans un shell interactif ne sera pas visible pour un
+    daemon launchd/systemd, sauf si cet environnement est explicitement importé. Définissez
+    la clé dans `~/.openclaw/.env` ou via `env.shellEnv` pour garantir que le processus
+    de passerelle puisse la lire.
     </Warning>
 
   </Accordion>
 
   <Accordion title="Routage du fournisseur">
-    Le Vercel AI Gateway achemine les requêtes vers le fournisseur amont en fonction du préfixe
-    de référence du modèle. Par exemple, `vercel-ai-gateway/anthropic/claude-opus-4.6` route
-    via Anthropic, tandis que `vercel-ai-gateway/openai/gpt-5.5` route via
-    OpenAI et `vercel-ai-gateway/moonshotai/kimi-k2.6` route via
+    Le Vercel AI Gateway achemine les requêtes vers le fournisseur en amont en fonction du préfixe
+    de référence du modèle. Par exemple, `vercel-ai-gateway/anthropic/claude-opus-4.6` achemine
+    via Anthropic, tandis que `vercel-ai-gateway/openai/gpt-5.5` achemine via
+    OpenAI et `vercel-ai-gateway/moonshotai/kimi-k2.6` achemine via
     MoonshotAI. Votre seul `AI_GATEWAY_API_KEY` gère l'authentification pour tous
-    les fournisseurs amont.
+    les fournisseurs en amont.
   </Accordion>
-  <Accordion title="Thinking levels">
-    Les options `/think` suivent les préfixes de modèle en amont de confiance lorsque OpenClaw connaît
+  <Accordion title="Niveaux de réflexion">
+    Les options `/think` suivent les préfixes de modèles en amont approuvés lorsque OpenClaw connaît
     le contrat du fournisseur en amont. `vercel-ai-gateway/anthropic/...` utilise le
     profil de réflexion Claude, y compris les valeurs adaptatives par défaut pour les modèles Claude 4.6.
-    Les références de style `vercel-ai-gateway/openai/gpt-5.4`, `gpt-5.5` et Codex exposent
+    `vercel-ai-gateway/openai/gpt-5.4`, `gpt-5.5` et les références de style Codex exposent
     `/think xhigh` tout comme les fournisseurs directs OpenAI/OpenAI Codex. Les autres
-    références avec espace de noms conservent les niveaux de raisonnement normaux, sauf si leurs métadonnées
+    références espacées de noms conservent les niveaux de raisonnement normaux, sauf si leurs métadonnées
     de catalogue en déclarent davantage.
   </Accordion>
 </AccordionGroup>

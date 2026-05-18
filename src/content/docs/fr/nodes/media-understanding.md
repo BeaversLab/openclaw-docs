@@ -258,8 +258,8 @@ Pour les entrées CLI, **définissez `capabilities` explicitement** pour éviter
 <Note>
 **Note MiniMax**
 
-- La compréhension d'image `minimax` et `minimax-portal` provient du fournisseur de médias `MiniMax-VL-01` appartenant au plugin.
-- Le catalogue de texte MiniMax groupé commence toujours en mode texte uniquement ; les entrées `models.providers.minimax` explicites matérialisent des références de chat M2.7 capables de traiter les images.
+- La compréhension d'image `minimax`, `minimax-cn`, `minimax-portal` et `minimax-portal-cn` provient du provider multimédia `MiniMax-VL-01` détenu par le plugin.
+- Le routage automatique des images continue d'utiliser `MiniMax-VL-01`MiniMax même si les métadonnées de chat MiniMax M2.x héritées revendiquent une entrée d'image.
 
 </Note>
 
@@ -268,12 +268,12 @@ Pour les entrées CLI, **définissez `capabilities` explicitement** pour éviter
 - Privilégiez le model de dernière génération le plus performant disponible pour chaque capacité média lorsque la qualité et la sécurité sont importantes.
 - Pour les agents avec tools gérant des entrées non fiables, évitez les models média plus anciens ou moins performants.
 - Conservez au moins une solution de repli par capacité pour la disponibilité (model de qualité + model plus rapide/plus économique).
-- Les solutions de secours CLI (`whisper-cli`, `whisper`, `gemini`) sont utiles lorsque les API de fournisseurs ne sont pas disponibles.
-- `parakeet-mlx` note : avec `--output-dir`, OpenClaw lit `<output-dir>/<media-basename>.txt` lorsque le format de sortie est `txt` (ou non spécifié) ; les formats non `txt` reviennent à stdout.
+- Les solutions de repli CLI (`whisper-cli`, `whisper`, `gemini`) sont utiles lorsque les API du provider ne sont pas disponibles.
+- Note `parakeet-mlx` : avec `--output-dir`, OpenClaw lit `<output-dir>/<media-basename>.txt` lorsque le format de sortie est `txt` (ou non spécifié) ; les formats autres que `txt` reviennent à stdout.
 
 ## Politique de pièce jointe
 
-Le `attachments` par capacité contrôle les pièces jointes traitées :
+Les contrôles `attachments` par capacité déterminent les pièces jointes traitées :
 
 <ParamField path="mode" type='"first" | "all"' default="first">
   S'il faut traiter la première pièce jointe sélectionnée ou toutes.
@@ -289,11 +289,11 @@ Lorsque `mode: "all"`, les sorties sont étiquetées `[Image 1/2]`, `[Audio 2/2]
 
 <AccordionGroup>
   <Accordion title="Comportement d'extraction des fichiers joints">
-    - Le texte extrait du fichier est encapsulé en tant que **contenu externe non approuvé** avant d'être ajouté à l'invite média.
+    - Le texte extrait du fichier est enveloppé en tant que **contenu externe non approuvé** avant d'être ajouté à l'invite média.
     - Le bloc injecté utilise des marqueurs de limite explicites comme `<<<EXTERNAL_UNTRUSTED_CONTENT id="...">>>` / `<<<END_EXTERNAL_UNTRUSTED_CONTENT id="...">>>` et inclut une ligne de métadonnées `Source: External`.
-    - Ce chemin d'extraction de pièces jointes omet intentionnellement la longue bannière `SECURITY NOTICE:` pour éviter d'alourdir l'invite média ; les marqueurs de limite et les métadonnées restent.
+    - Ce chemin d'extraction de pièces jointes omet intentionnellement la longue bannière `SECURITY NOTICE:` pour éviter de surcharger l'invite média ; les marqueurs de limite et les métadonnées restent tout de même.
     - Si un fichier n'a pas de texte extractible, OpenClaw injecte `[No extractable text]`.
-    - Si un PDF revient à des images de page rendues dans ce chemin, l'invite média conserve l'espace réservé `[PDF content rendered to images; images not forwarded to model]` car cette étape d'extraction de pièces jointes transfère des blocs de texte, et non les images PDF rendues.
+    - Si un PDF revient aux images de page rendues dans ce chemin, l'invite média conserve l'espace réservé `[PDF content rendered to images; images not forwarded to model]` car cette étape d'extraction de pièces jointes transfère des blocs de texte, et non les images PDF rendues.
 
   </Accordion>
 </AccordionGroup>
@@ -447,7 +447,7 @@ Lorsque `mode: "all"`, les sorties sont étiquetées `[Image 1/2]`, `[Audio 2/2]
 
 ## Sortie de statut
 
-Lorsque la compréhension des médias s'exécute, `/status` inclut une ligne de résumé courte :
+Lorsque la compréhension média s'exécute, `/status` inclut une courte ligne résumée :
 
 ```
 📎 Media: image ok (openai/gpt-5.4) · audio skipped (maxBytes)
@@ -459,9 +459,9 @@ Cela indique les résultats par capacité et le fournisseur/modèle choisi le ca
 
 - La compréhension est **sur la base du meilleur effort**. Les erreurs ne bloquent pas les réponses.
 - Les pièces jointes sont toujours transmises aux modèles même lorsque la compréhension est désactivée.
-- Utilisez `scope` pour limiter l'exécution de la compréhension (par exemple, uniquement les DMs).
+- Utilisez `scope` pour limiter les endroits où la compréhension s'exécute (par exemple, uniquement les DMs).
 
 ## Connexes
 
 - [Configuration](/fr/gateway/configuration)
-- [Support d'image et de média](/fr/nodes/images)
+- [Prise en charge des images et des médias](/fr/nodes/images)

@@ -53,13 +53,13 @@ Las fuentes descargadas pueden usar el plugin del espacio de trabajo local `exte
 OpenClaw solo enseña a los agentes sobre la generación de ACP cuando ACP es **realmente utilizable**: ACP debe estar habilitado, el despacho no debe estar deshabilitado, la sesión actual no debe estar bloqueada por el sandbox y se debe cargar un backend de tiempo de ejecución. Si no se cumplen esas condiciones, las habilidades del complemento ACP y la orientación de `sessions_spawn` ACP permanecen ocultas para que el agente no sugiera un backend no disponible.
 
 <AccordionGroup>
-  <Accordion title="Trampas de primera ejecución">
-    - Si `plugins.allow` está configurado, es un inventario de complementos restrictivo y **debe** incluir `acpx`; de lo contrario, el backend de ACP instalado se bloquea intencionalmente y `/acp doctor` informa la entrada faltante en la lista de permitidos.
-    - El adaptador Codex ACP se ensaya con el complemento `acpx` y se inicia localmente cuando sea posible.
-    - Codex ACP se ejecuta con un `CODEX_HOME` aislado; OpenClaw copia solo las entradas de proyectos confiables de la configuración del host Codex y confía en el espacio de trabajo activo, dejando la autenticación, las notificaciones y los ganchos en la configuración del host.
-    - Otros adaptadores de arnés de destino todavía pueden obtenerse bajo demanda con `npx` la primera vez que los use.
-    - La autenticación del proveedor todavía debe existir en el host para ese arnés.
-    - Si el host no tiene acceso a npm o a la red, las obtenciones del adaptador en la primera ejecución fallarán hasta que los cachés se precarguen o el adaptador se instale de otra manera.
+  <Accordion title="Trampas de la primera ejecución">
+    - Si `plugins.allow` está establecido, es un inventario de complementos restrictivo y **debe** incluir `acpx`; de lo contrario, el backend de ACP instalado se bloquea intencionalmente y `/acp doctor` informa la entrada faltante en la lista de permitidos.
+    - El adaptador ACP de Codex se prepara con el complemento `acpx` y se inicia localmente cuando sea posible.
+    - Codex ACP se ejecuta con un `CODEX_HOME` aislado; OpenClaw copia las entradas de proyectos de confianza más la configuración de enrutamiento de modelo/proveedor seguro desde la configuración de Codex del host, mientras que la autenticación, las notificaciones y los ganchos se mantienen en la configuración del host.
+    - Otros adaptadores de harness de destino aún pueden obtenerse a pedido con `npx` la primera vez que los use.
+    - La autenticación del proveedor aún debe existir en el host para ese harness.
+    - Si el host no tiene acceso a npm o a la red, las obtenciones de adaptadores de la primera ejecución fallarán hasta que las cachés se precarguen o el adaptador se instale de otra manera.
 
   </Accordion>
   <Accordion title="Requisitos de tiempo de ejecución">

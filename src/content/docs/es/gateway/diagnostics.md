@@ -1,6 +1,6 @@
 ---
-summary: "Crear paquetes de diagnósticos del Gateway compartibles para informes de errores"
-title: "Exportación de diagnósticos"
+summary: "Crear paquetes de diagnóstico compartibles de Gateway para informes de errores"
+title: "Exportación de diagnóstico"
 read_when:
   - Preparing a bug report or support request
   - Debugging Gateway crashes, restarts, memory pressure, or oversized payloads
@@ -32,33 +32,40 @@ openclaw gateway diagnostics export --json
 ## Comando de chat
 
 Los propietarios pueden usar `/diagnostics [note]` en el chat para solicitar una exportación local de Gateway.
-Use esto cuando el error ocurrió en una conversación real y desea un informe copiable y pegable para soporte:
+Use esto cuando el error ocurrió en una conversación real y desea un informe
+copiable para el soporte:
 
-1. Envíe `/diagnostics` en la conversación donde notó el problema. Agregue una
+1. Envíe `/diagnostics` en la conversación donde notó el problema. Añada una
    breve nota si ayuda, por ejemplo `/diagnostics bad tool choice`.
-2. OpenClaw envía el preámbulo de diagnóstico y solicita una aprobación de ejecución
-   explícita. La aprobación ejecuta `openclaw gateway diagnostics export --json`.
+2. OpenClaw envía el preámbulo de diagnóstico y pide una aprobación exec explícita.
+   La aprobación ejecuta `openclaw gateway diagnostics export --json`.
    No apruebe el diagnóstico a través de una regla de permitir todo.
 3. Después de la aprobación, OpenClaw responde con un informe pegable que contiene la ruta
    del paquete local, el resumen del manifiesto, las notas de privacidad y los identificadores de sesión relevantes.
 
 En chats grupales, un propietario aún puede ejecutar `/diagnostics`, pero OpenClaw no
-publica los detalles de diagnóstico nuevamente en el chat compartido. Envía el preámbulo,
-indicaciones de aprobación, el resultado de exportación de Gateway y el desglose de sesión/hilo de Codex
-al propietario a través de la ruta de aprobación privada. El grupo solo recibe un breve aviso
+publica los detalles del diagnóstico en el chat compartido. Envía el preámbulo,
+indicaciones de aprobación, resultado de exportación de Gateway y desglose de sesión/hilo de Codex al
+propietario a través de la ruta de aprobación privada. El grupo solo recibe un aviso breve
 de que el flujo de diagnóstico se envió de forma privada. Si OpenClaw no puede encontrar una ruta
-privada de propietario, el comando falla cerrado y pide al propietario que lo ejecute desde un MD.
+de propietario privada, el comando falla cerrado y pide al propietario que lo ejecute desde un MD.
 
 Cuando la sesión activa de OpenClaw está utilizando el arnés nativo de OpenAI Codex, la misma aprobación de exec también cubre una carga de comentarios de OpenAI para los hilos de tiempo de ejecución de Codex que OpenClaw conoce. Esa carga es separada del zip local de Gateway y aparece solo para las sesiones del arnés de Codex. Antes de la aprobación, el mensaje explica que aprobar los diagnósticos también enviará comentarios de Codex, pero no enumera los ids de sesión o de hilo de Codex. Después de la aprobación, la respuesta del chat enumera los canales, los ids de sesión de OpenClaw, los ids de hilo de Codex y los comandos locales de reanudación para los hilos que se enviaron a los servidores de OpenAI. Si deniega o ignora la aprobación, OpenClaw no ejecuta la exportación, no envía comentarios de Codex y no imprime los ids de Codex.
 
-Esto hace que el bucle común de depuración de Codex sea corto: note el mal comportamiento en Telegram, Discord u otro canal, ejecute `/diagnostics`, apruebe una vez, comparta el informe con soporte y luego ejecute el comando `codex resume <thread-id>` impreso localmente si desea inspeccionar el hilo nativo de Codex usted mismo. Consulte [Codex harness](/es/plugins/codex-harness#inspect-codex-threads-locally) para ese flujo de trabajo de inspección.
+Esto hace que el bucle común de depuración de Codex sea corto: note el mal comportamiento en
+Telegram, Discord u otro canal, ejecute `/diagnostics`, apruebe una vez, comparta
+el informe con soporte y luego ejecute el comando impreso `codex resume <thread-id>`
+localmente si desea inspeccionar el hilo nativo de Codex usted mismo. Vea
+[Arnés de Codex](/es/plugins/codex-harness#inspect-codex-threads-locally) para
+ese flujo de trabajo de inspección.
 
 ## Qué contiene la exportación
 
 El zip incluye:
 
 - `summary.md`: descripción general legible por humanos para soporte.
-- `diagnostics.json`: resumen legible por máquina de configuración, registros, estado, salud y datos de estabilidad.
+- `diagnostics.json`: resumen legible por máquina de configuración, registros, estado, salud
+  y datos de estabilidad.
 - `manifest.json`: metadatos de exportación y lista de archivos.
 - Forma de configuración saneada y detalles de configuración no secretos.
 - Resúmenes de registros saneados y líneas de registro recientes redactadas.
@@ -91,21 +98,20 @@ la exportación mantiene solo que se omitió un mensaje y el recuento de bytes.
 De forma predeterminada, Gateway registra un flujo de estabilidad limitado y sin carga útil cuando
 los diagnósticos están habilitados. Es para datos operativos, no para contenido.
 
-El mismo latido de diagnóstico registra muestras de actividad cuando Gateway sigue
-funcionando pero el bucle de eventos de Node.js o la CPU parecen saturados. Estos eventos
-`diagnostic.liveness.warning` incluyen el retraso del bucle de eventos, la utilización
-del bucle de eventos, la relación de núcleos de CPU, los recuentos de sesiones activas/en espera/en cola, la fase
-de inicio/ejecución actual cuando se conoce, los intervalos de fase recientes y etiquetas de trabajo
-activas/en cola limitadas. Las muestras inactivas permanecen en telemetría en el nivel `info`. Las muestras de actividad
-solo se convierten en advertencias de Gateway cuando el trabajo está en espera o en cola, o cuando el trabajo activo
+El mismo latido de diagnóstico registra muestras de actividad cuando el Gateway sigue
+funcionando pero el bucle de eventos de Node.js o la CPU parece saturada. Estos
+eventos `diagnostic.liveness.warning` incluyen el retraso del bucle de eventos,
+el uso del bucle de eventos, la proporción de núcleos de CPU, el recuento de sesiones activas/en espera/en cola, la fase actual
+de inicio/ejecución cuando se conoce, los intervalos de fase recientes y las etiquetas de trabajo activo/en cola delimitadas. Las muestras inactivas permanecen en telemetría en el nivel `info`. Las muestras de actividad
+se convierten en advertencias del Gateway solo cuando el trabajo está en espera o en cola, o cuando el trabajo activo
 se superpone con un retraso sostenido del bucle de eventos. Los picos transitorios de retraso máximo durante
 trabajo en segundo plano por lo demás saludable permanecen en los registros de depuración. No reinician el
 Gateway por sí mismos.
 
-Las fases de inicio también emiten eventos `diagnostic.phase.completed` con temporización de reloj de pared
-y CPU. Los diagnósticos de ejecución integrada bloqueados marcan `terminalProgressStale=true`
-cuando el último progreso del puente parecía terminal, como un elemento de respuesta sin procesar
-o un evento de finalización de respuesta, pero Gateway aún considera la ejecución integrada
+Las fases de inicio también emiten eventos `diagnostic.phase.completed` con tiempos de reloj wall y
+de CPU. Los diagnósticos de ejecución integrada estancada marcan `terminalProgressStale=true`
+cuando el último progreso del puente parecía terminal, como un elemento de respuesta sin procesar o
+un evento de finalización de respuesta, pero el Gateway todavía considera la ejecución integrada
 activa.
 
 Inspeccionar el grabador en vivo:
@@ -140,12 +146,12 @@ openclaw gateway diagnostics export \
   --log-bytes 1000000
 ```
 
-- `--output <path>`: escribir en una ruta zip específica.
-- `--log-lines <count>`: máximo de líneas de registro saneadas para incluir.
-- `--log-bytes <bytes>`: máximo de bytes de registro para inspeccionar.
-- `--url <url>`: URL de WebSocket de Gateway para instantáneas de estado y salud.
-- `--token <token>`: token de Gateway para instantáneas de estado y salud.
-- `--password <password>`: contraseña de Gateway para instantáneas de estado y salud.
+- `--output <path>`: escribe en una ruta de zip específica.
+- `--log-lines <count>`: máximo de líneas de registro saneadas a incluir.
+- `--log-bytes <bytes>`: máximo de bytes de registro a inspeccionar.
+- `--url <url>`: URL de WebSocket del Gateway para instantáneas de estado y salud.
+- `--token <token>`: token del Gateway para instantáneas de estado y salud.
+- `--password <password>`: contraseña del Gateway para instantáneas de estado y salud.
 - `--timeout <ms>`: tiempo de espera de la instantánea de estado y salud.
 - `--no-stability-bundle`: omitir la búsqueda del paquete de estabilidad persistido.
 - `--json`: imprimir metadatos de exportación legibles por máquina.
@@ -164,10 +170,25 @@ Los diagnósticos están habilitados de forma predeterminada. Para deshabilitar 
 
 Deshabilitar los diagnósticos reduce el detalle del informe de errores. No afecta el registro normal del Gateway.
 
+Las instantáneas de presión de memoria crítica están desactivadas de forma predeterminada. Para mantener los eventos
+de diagnóstico y también capturar la instantánea de estabilidad anterior al OOM:
+
+```json5
+{
+  diagnostics: {
+    memoryPressureSnapshot: true,
+  },
+}
+```
+
+Use esto solo en hosts que puedan tolerar el escaneo adicional del sistema de archivos y la escritura de la
+instantánea durante una presión de memoria crítica. Los eventos normales de presión de memoria todavía
+registran datos de RSS, montículo, umbral y crecimiento cuando la instantánea está desactivada.
+
 ## Relacionado
 
 - [Verificaciones de salud](/es/gateway/health)
 - [CLI de Gateway](/es/cli/gateway#gateway-diagnostics-export)
 - [Protocolo de Gateway](/es/gateway/protocol#system-and-identity)
-- [Registro](/es/logging)
-- [Exportación de OpenTelemetry](/es/gateway/opentelemetry) — flujo separado para transmitir diagnósticos a un recopilador
+- [Registro (Logging)](/es/logging)
+- [Exportación de OpenTelemetry](/es/gateway/opentelemetry) — flujo independiente para transmitir diagnósticos a un recolector

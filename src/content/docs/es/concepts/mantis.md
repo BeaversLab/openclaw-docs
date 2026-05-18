@@ -262,11 +262,7 @@ Este esquema es el enlace entre el código del escenario y los comentarios de Gi
 }
 ```
 
-Los valores de `path` del artefacto son relativos al directorio del manifiesto. Los valores
-de `targetPath` son rutas relativas bajo el directorio de publicación de la rama
-`qa-artifacts`.
-El publicador rechaza el cruce de rutas y omite las entradas marcadas
-como `"required": false` cuando las vistas previas o videos opcionales no están disponibles.
+Los valores de `path` son relativos al directorio del manifiesto. Los valores de `targetPath` son rutas relativas bajo el prefijo de artefactos Mantis R2/S3 configurado. El publicador rechaza el recorrido de rutas y omite las entradas marcadas como `"required": false` cuando las vistas previas opcionales o los videos no están disponibles.
 
 Tipos de artefactos compatibles:
 
@@ -275,33 +271,31 @@ Tipos de artefactos compatibles:
 - `motionPreview`: GIF animado en línea generado desde la grabación del escritorio.
 - `motionClip`: MP4 recortado por movimiento que elimina la introducción y el final estáticos.
 - `fullVideo`: grabación completa en MP4 para una inspección profunda.
-- `metadata`: acompañante de registro/JSON.
-- `report`: informe Markdown.
+- `metadata`: archivo adjunto de registros/JSON.
+- `report`: informe en Markdown.
 
-El publicador reutilizable es `scripts/mantis/publish-pr-evidence.mjs`. Los flujos de trabajo
-lo llaman con el manifiesto, PR objetivo, raíz objetivo `qa-artifacts`, marcador de comentario,
-URL del artefacto de Actions, URL de ejecución y origen de la solicitud. Copia los artefactos declarados
-a la rama `qa-artifacts`, crea un comentario de PR con un resumen primero que incluye imágenes/vistas previas
-en línea y videos vinculados, y luego actualiza el comentario del marcador existente o
-crea uno.
+El editor reutilizable es `scripts/mantis/publish-pr-evidence.mjs`. Los flujos de trabajo lo llaman con el manifiesto, PR de destino, raíz de destino del artefacto, marcador de comentario, URL del artefacto de Actions, URL de ejecución y fuente de solicitud. Carga los artefactos declarados en el depósito Mantis R2/S3 configurado, crea un comentario de PR con resumen primero que incluye imágenes/vistas previas en línea y videos vinculados, y luego actualiza el comentario marcador existente o crea uno. Los flujos de trabajo publican en `openclaw-crabbox-artifacts` con URL públicas bajo `https://artifacts.openclaw.ai`. Proporcionan los valores del depósito, región y URL pública directamente. El editor reutilizable requiere:
 
-También puede activar la ejecución de reacciones de estado directamente desde un comentario de PR:
+- `MANTIS_ARTIFACT_R2_ACCESS_KEY_ID`
+- `MANTIS_ARTIFACT_R2_SECRET_ACCESS_KEY`
+- `MANTIS_ARTIFACT_R2_BUCKET`
+- `MANTIS_ARTIFACT_R2_ENDPOINT`
+- `MANTIS_ARTIFACT_R2_REGION`
+- `MANTIS_ARTIFACT_R2_PUBLIC_BASE_URL`
+
+También puedes activar la ejecución de reacciones de estado directamente desde un comentario de PR:
 
 ```text
 @Mantis discord status reactions
 ```
 
-El activador de comentarios es intencionalmente limitado. Solo se ejecuta en comentarios
-de solicitudes de extracción de usuarios con acceso de escritura, mantenimiento o administración, y solo reconoce
-solicitudes de reacciones de estado de Discord. De manera predeterminada, utiliza la referencia de línea base incorrecta conocida
-y el SHA de encabezado del PR actual como candidato. Los mantenedores pueden anular cualquier
-referencia:
+El disparador de comentarios es intencionalmente estrecho. Solo se ejecuta en comentarios de solicitudes de extracción (pull requests) de usuarios con acceso de escritura, mantenimiento o administración, y solo reconoce solicitudes de reacción de estado de Discord. De manera predeterminada, utiliza la referencia de línea base incorrecta conocida y el SHA actual del encabezado de la PR como candidato. Los mantenedores pueden anular cualquier referencia:
 
 ```text
 @Mantis discord status reactions baseline=origin/main candidate=HEAD
 ```
 
-El QA en vivo de Telegram también se puede activar desde un comentario de PR:
+El QA en vivo de Telegram también se puede activar desde un comentario de una PR:
 
 ```text
 @Mantis telegram
@@ -309,7 +303,7 @@ El QA en vivo de Telegram también se puede activar desde un comentario de PR:
 @Mantis telegram scenarios=telegram-status-command,telegram-mentioned-message-reply
 ```
 
-De manera predeterminada, utiliza el SHA de encabezado del PR actual como candidato y ejecuta
+De forma predeterminada, usa el SHA actual del head del PR como candidato y ejecuta
 `telegram-status-command`. Los mantenedores pueden anular `candidate=...`,
 `provider=aws|hetzner` y `lease=<cbx_...>` cuando necesitan una referencia específica o un
 escritorio Crabbox precalentado.
@@ -321,33 +315,33 @@ Ejemplos de comandos de ClawSweeper:
 @clawsweeper verify e2e discord
 ```
 
-El primer comando es explícito y se centra en el escenario. El segundo más tarde puede asignar una PR
+El primer comando es explícito y se centra en el escenario. El segundo puede luego mapear un PR
 o issue a escenarios Mantis recomendados a partir de etiquetas, archivos modificados y
 hallazgos de revisión de ClawSweeper.
 
 ## Ciclo de vida de ejecución
 
-1. Obtener las credenciales.
+1. Obtener credenciales.
 2. Asignar o reutilizar una VM.
 3. Preparar el perfil de escritorio/navegador cuando el escenario necesite evidencia de UI.
-4. Preparar una checkout limpia para la referencia de línea base.
+4. Preparar una copia de trabajo limpia para la referencia de línea base.
 5. Instalar dependencias y compilar solo lo que el escenario necesita.
 6. Iniciar un OpenClaw Gateway secundario con un directorio de estado aislado.
 7. Configurar el transporte en vivo, proveedor, modelo y perfil del navegador.
-8. Ejecutar el escenario y capturar la evidencia de línea base.
+8. Ejecutar el escenario y capturar evidencia de línea base.
 9. Detener el gateway y preservar los registros.
 10. Preparar la referencia candidata en la misma VM.
-11. Ejecutar el mismo escenario y capturar la evidencia candidata.
+11. Ejecutar el mismo escenario y capturar evidencia candidata.
 12. Comparar los resultados del oráculo y la evidencia visual.
-13. Escribir artefactos de Markdown, JSON, registros, capturas de pantalla y rastros opcionales.
+13. Escribir Markdown, JSON, registros, capturas de pantalla y artefactos de traza opcionales.
 14. Subir artefactos de GitHub Actions.
-15. Publicar un mensaje de estado conciso en PR o Discord.
+15. Publicar un mensaje de estado conciso en el PR o en Discord.
 
 El escenario debería poder fallar de dos maneras diferentes:
 
 - **Bug reproducido**: la línea base falló de la manera esperada.
-- **Fallo del arnés**: configuración del entorno, credenciales, API de Discord, navegador o
-  proveedor fallaron antes de que el oráculo de bugs fuera significativo.
+- **Fallo del arnés**: la configuración del entorno, las credenciales, la API de Discord, el navegador o
+  el proveedor fallaron antes de que el oráculo de errores fuera significativo.
 
 El informe final debe separar estos casos para que los mantenedores no confundan un entorno
 inestable con el comportamiento del producto.
@@ -357,12 +351,12 @@ inestable con el comportamiento del producto.
 El primer escenario debe apuntar a las reacciones de estado de Discord en los canales del gremio donde
 el modo de entrega de respuesta de origen es `message_tool_only`.
 
-Por qué es una buena semilla para Mantis:
+Por qué es una buena semilla de Mantis:
 
 - Es visible en Discord como reacciones en el mensaje desencadenante.
 - Tiene un oráculo REST sólido a través del estado de reacción del mensaje de Discord.
-- Ejercita un OpenClaw Gateway real, autenticación de bot de Discord, envío de mensajes,
-  modo de entrega de respuesta de origen, estado de reacción de estado y ciclo de vida del turno del modelo.
+- Ejercita un OpenClaw Gateway real, autenticación de bot de Discord, despacho de mensajes,
+  modo de entrega de respuesta de origen, estado de reacción de estado y el ciclo de vida del turno del modelo.
 - Es lo suficientemente estrecho como para mantener honesta la primera implementación.
 
 Forma esperada del escenario:
@@ -396,10 +390,10 @@ evidence:
     screenshotMessageRow: true
 ```
 
-La evidencia de línea base debería mostrar la reacción de reconocimiento en cola pero sin
-transición de ciclo de vida en el modo solo de herramienta. La evidencia candidata debería mostrar reacciones
-de estado de ciclo de vida ejecutándose cuando `messages.statusReactions.enabled` es explícitamente
-verdadero.
+La evidencia de referencia debe mostrar la reacción de reconocimiento en cola pero sin
+transición del ciclo de vida en modo de solo herramienta. La evidencia del candidato debe mostrar las
+reacciones de estado del ciclo de vida ejecutándose cuando `messages.statusReactions.enabled` es explícitamente
+true.
 
 El primer segmento ejecutable es el escenario de QA en vivo de Discord opcional:
 
@@ -413,30 +407,29 @@ pnpm openclaw qa discord \
   --output-dir .artifacts/qa-e2e/mantis/discord-status-reactions-candidate
 ```
 
-Configura el SUT con manejo de gremios siempre activo, `visibleReplies:
+Configura el SUT con manejo de servidor siempre activo, `visibleReplies:
 "message_tool"`, `ackReaction: "👀"`, y reacciones de estado explícitas. El oráculo
-sondea el mensaje real desencadenante de Discord y espera la secuencia observada
+sondea el mensaje desencadenante real de Discord y espera la secuencia observada
 `👀 -> 🤔 -> 👍`. Los artefactos incluyen `discord-qa-reaction-timelines.json`,
-`discord-status-reactions-tool-only-timeline.html` y
+`discord-status-reactions-tool-only-timeline.html`, y
 `discord-status-reactions-tool-only-timeline.png`.
 
 ## Piezas de QA existentes
 
-Mantis debe construirse sobre la pila de QA privada existente en lugar de empezar
-desde cero:
+Mantis debe basarse en la pila de QA privada existente en lugar de partir de
+cero:
 
-- `pnpm openclaw qa discord` ya ejecuta un canal de Discord en vivo con bots de
-  controlador y SUT.
+- `pnpm openclaw qa discord` ya ejecuta un carril en vivo de Discord con los bots de control y
+  SUT.
 - El ejecutor de transporte en vivo ya escribe informes y artefactos de mensajes
   observados bajo `.artifacts/qa-e2e/`.
 - Los arrendamientos de credenciales de Convex ya proporcionan acceso exclusivo a las credenciales
   de transporte en vivo compartidas.
 - El servicio de control del navegador ya admite capturas de pantalla, instantáneas,
   perfiles administrados sin cabeza y perfiles CDP remotos.
-- QA Lab ya tiene una interfaz de usuario de depuración y un bus para pruebas
-  con forma de transporte.
+- QA Lab ya tiene una interfaz de usuario de depuración y un bus para pruebas con forma de transporte.
 
-La primera implementación de Mantis puede ser un ejecutor antes/delgado ligero sobre estas
+La primera implementación de Mantis puede ser un ejecutor antes/después ligero sobre estas
 piezas, más una capa de evidencia visual.
 
 ## Modelo de evidencia
@@ -466,34 +459,30 @@ informe Markdown es para comentarios de PR y revisión humana.
 
 El resumen debe incluir:
 
-- refs y SHA probados
-- transporte e identificación de escenario
-- proveedor de máquina e identificación de máquina o identificación de arrendamiento
+- referencias y SHA probados
+- transporte e id. del escenario
+- proveedor de máquina e id. de máquina o id. de arrendamiento
 - fuente de credenciales sin valores secretos
 - resultado de referencia
 - resultado del candidato
 - si el error se reprodujo en la referencia
-- si el candidato lo corrigió
+- si el candidato lo solucionó
 - rutas de artefactos
-- problemas de configuración o limpieza saneados
+- problemas de configuración o limpieza sanitizados
 
-Las capturas de pantalla son evidencia, no secretos. Aún así necesitan disciplina de redacción:
-pueden aparecer nombres de canales privados, nombres de usuario o contenido de mensajes. Para PRs públicos,
-se prefieren los enlaces de artefactos de GitHub Actions sobre las imágenes en línea hasta que la historia de redacción
-sea más sólida.
+Las capturas de pantalla son evidencia, no secretos. Aún necesitan disciplina de redacción:
+pueden aparecer nombres de canales privados, nombres de usuario o contenido de mensajes. Para PRs públicas,
+se prefieren los enlaces de artefactos de GitHub Actions sobre las imágenes en línea hasta que la historia de
+redacción sea más sólida.
 
 ## Navegador y VNC
 
-El canal del navegador tiene dos modos:
+El carril del navegador tiene dos modos:
 
-- **Automatización sin cabeza**: predeterminado para CI. Chrome se ejecuta con CDP habilitado y
-  el control del navegador Playwright u OpenClaw captura pantallas.
-- **Rescate VNC**: habilitado en la misma VM cuando el inicio de sesión, MFA, anti-automatización de Discord,
-  o la depuración visual necesitan un humano.
+- **Automatización sin cabeza**: predeterminada para CI. Chrome se ejecuta con CDP habilitado y el control del navegador Playwright u OpenClaw captura capturas de pantalla.
+- **Rescate VNC**: habilitado en la misma máquina virtual cuando el inicio de sesión, MFA, anti-automatización de Discord o la depuración visual requieren intervención humana.
 
-El perfil del navegador del observador de Discord debe ser lo suficientemente persistente para evitar
-iniciar sesión en cada ejecución, pero aislado del estado del navegador personal. Un perfil
-pertenece al grupo de máquinas de Mantis, no a la computadora portátil de un desarrollador.
+El perfil del navegador del observador de Discord debe ser lo suficientemente persistente para evitar iniciar sesión en cada ejecución, pero aislado del estado del navegador personal. Un perfil pertenece al grupo de máquinas de Mantis, no a la computadora portátil de un desarrollador.
 
 Cuando Mantis se atasca, publica un mensaje de estado de Discord con:
 
@@ -502,17 +491,18 @@ Cuando Mantis se atasca, publica un mensaje de estado de Discord con:
 - proveedor de máquinas
 - directorio de artefactos
 - instrucciones de conexión VNC o noVNC si están disponibles
-- texto breve del bloqueador
+- texto breve de bloqueo
 
-La primera implementación privada puede publicar estos mensajes en el canal del operador existente
-y pasar más tarde a un canal dedicado de Mantis.
+La primera implementación privada puede publicar estos mensajes en el canal de
+operador existente y pasar más tarde a un canal dedicado de Mantis.
 
 ## Máquinas
 
-Mantis debe preferir AWS a través de Crabbox para la primera implementación remota.
-Crabbox nos proporciona máquinas precargadas, seguimiento de arrendamientos, hidratación, registros, resultados y
-limpieza. Si la capacidad de AWS es demasiado lenta o no está disponible, agregue un proveedor Hetzner
-detrás de la misma interfaz de máquina.
+Mantis debería preferir AWS a través de Crabbox para la primera implementación
+remota. Crabbox nos proporciona máquinas preparadas, seguimiento de arrendamiento,
+hidratación, registros, resultados y limpieza. Si la capacidad de AWS es demasiado
+lenta o no está disponible, añada un proveedor Hetzner detrás de la misma
+interfaz de máquina.
 
 Requisitos mínimos de la VM:
 
@@ -521,17 +511,15 @@ Requisitos mínimos de la VM:
 - VNC o noVNC para el rescate
 - Node 22 y pnpm
 - Checkout de OpenClaw y caché de dependencias
-- Caché del navegador Chromium de Playwright cuando se usa Playwright
-- suficiente CPU y memoria para una pasarela OpenClaw, un navegador y una ejecución de modelo
-- acceso de salida a Discord, GitHub, proveedores de modelos y el intermediario de credenciales
+- Caché del navegador Chromium de Playwright cuando se use Playwright
+- suficiente CPU y memoria para una puerta de enlace (Gateway) de OpenClaw, un navegador y una ejecución de modelo
+- acceso de salida a Discord, GitHub, proveedores de modelos y el corredor de credenciales
 
-La VM no debe mantener secretos sin procesar de larga duración fuera de los almacenes de credenciales o
-perfiles de navegador esperados.
+La VM no debe mantener secretos sin procesar de larga duración fuera de los almacenes de credenciales o perfiles de navegador esperados.
 
 ## Secretos
 
-Los secretos residen en los secretos de la organización o repositorio de GitHub para ejecuciones remotas, y en
-un archivo secreto local controlado por el operador para ejecuciones locales.
+Los secretos residen en los secretos de la organización o repositorio de GitHub para ejecuciones remotas, y en un archivo de secretos controlado localmente por el operador para ejecuciones locales.
 
 Nombres de secretos recomendados:
 
@@ -547,28 +535,28 @@ Nombres de secretos recomendados:
 - `OPENCLAW_QA_MANTIS_CRABBOX_COORDINATOR`
 - `OPENCLAW_QA_MANTIS_CRABBOX_COORDINATOR_TOKEN`
 
-A largo plazo, el grupo de credenciales de Convex debe seguir siendo la fuente normal para las credenciales de transporte en vivo. Los secretos de GitHub inician el intermediario y los carriles de reserva. El flujo de trabajo de reacciones de estado de Discord asigna los secretos de Mantis Crabbox de vuelta a las variables de entorno `CRABBOX_COORDINATOR` y `CRABBOX_COORDINATOR_TOKEN` que el CLI de Crabbox espera. Los nombres de secretos de GitHub simples `CRABBOX_*` siguen siendo aceptados como reserva de compatibilidad.
+A largo plazo, el grupo de credenciales de Convex debe seguir siendo la fuente normal de credenciales de transporte en vivo. Los secretos de GitHub inician el intermediario y los carriles de reserva. El flujo de trabajo de reacciones de estado de Discord asigna los secretos de Mantis Crabbox de nuevo a las variables de entorno `CRABBOX_COORDINATOR` y `CRABBOX_COORDINATOR_TOKEN` que espera la CLI de Crabbox. Los nombres de secretos `CRABBOX_*` de GitHub simples siguen siendo aceptados como reserva de compatibilidad.
 
 El ejecutor de Mantis nunca debe imprimir:
 
 - Tokens de bot de Discord
-- Claves API del proveedor
+- Claves de API del proveedor
 - cookies del navegador
 - contenidos del perfil de autenticación
-- Contraseñas VNC
+- contraseñas VNC
 - cargas útiles de credenciales sin procesar
 
-Las cargas públicas de artefactos también deben redactar los metadatos de destino de Discord, como el bot, el gremio, el canal y los ids de mensaje. El flujo de trabajo de humo de GitHub habilita `OPENCLAW_QA_REDACT_PUBLIC_METADATA=1` por esta razón.
+Las cargas de artefactos públicos también deben redactar los metadatos de destino de Discord, como el bot, el gremio, el canal y los identificadores de mensajes. El flujo de trabajo de humo de GitHub habilita `OPENCLAW_QA_REDACT_PUBLIC_METADATA=1` por esta razón.
 
-Si un token se pega accidentalmente en un problema, PR, chat o registro, rótelo después de que se haya almacenado el nuevo secreto.
+Si un token se pega accidentalmente en un issue, PR, chat o registro, rótelo después de que se haya almacenado el nuevo secreto.
 
 ## Artefactos de GitHub y comentarios de PR
 
-Los flujos de trabajo de Mantis deben cargar el paquete completo de evidencia como un artefacto de Actions de corta duración. Cuando el flujo de trabajo se ejecuta para un informe de error o un PR de corrección, también debe publicar las capturas de pantalla PNG redactadas en la rama `qa-artifacts` e insertar un comentario en ese error o PR de corrección con capturas de pantalla en línea antes/después. No publique la prueba principal solo en un PR de automatización de QA genérico. Los registros sin procesar, los mensajes observados y otras evidencias voluminosas permanecen en el artefacto de Actions.
+Los flujos de trabajo de Mantis deben cargar el paquete de evidencia completo como un artefacto de Actions de corta duración. Cuando el flujo de trabajo se ejecuta para un informe de error o una PR de corrección, también debe publicar medios en línea redactados en el depósito Mantis R2/S3 configurado e insertar un comentario en ese error o PR de corrección con capturas de pantalla en línea antes/después. No publique la prueba principal solo en una PR de automatización de QA genérica. Los registros sin procesar, los mensajes observados y otras evidencias voluminosas permanecen en el artefacto de Actions.
 
-Los flujos de trabajo de producción deben publicar esos comentarios con la App de GitHub de Mantis, no con `github-actions[bot]`. Almacene el id de la aplicación y la clave privada como `MANTIS_GITHUB_APP_ID` y `MANTIS_GITHUB_APP_PRIVATE_KEY` secretos de GitHub Actions. El flujo de trabajo usa un marcador oculto como clave de upsert, actualiza ese comentario cuando el token puede editarlo y crea un nuevo comentario propiedad de Mantis cuando un marcador propiedad de un bot más antiguo no se puede editar.
+Los flujos de trabajo de producción deben publicar esos comentarios con la aplicación Mantis GitHub, no con `github-actions[bot]`. Almacene el id de la aplicación y la clave privada como secretos `MANTIS_GITHUB_APP_ID` y `MANTIS_GITHUB_APP_PRIVATE_KEY` de GitHub Actions. El flujo de trabajo usa un marcador oculto como clave de upsert, actualiza ese comentario cuando el token puede editarlo y crea un nuevo comentario propiedad de Mantis cuando no se puede editar un marcador propiedad de un bot más antiguo.
 
-El comentario del PR debe ser corto y visual:
+El comentario de PR debe ser corto y visual:
 
 ```md
 Mantis Discord Status Reactions QA
@@ -588,34 +576,29 @@ candidate showed the expected queued -> thinking -> done sequence.
 | <inline screenshot> | <inline screenshot> |
 ```
 
-Cuando la ejecución falla porque el arnés falló, el comentario debe decirlo en lugar de implicar que el candidato falló.
+Cuando la ejecución falla porque falló el arnés, el comentario debe decirlo en lugar de implicar que falló el candidato.
 
-## Notas de despliegue privado
+## Notas de implementación privada
 
-Un despliegue privado ya puede tener una aplicación Mantis Discord. Reutilice esa aplicación en lugar de crear otra cuando tenga los permisos correctos del bot y pueda rotarse de forma segura.
+Una implementación privada ya puede tener una aplicación Mantis Discord. Reutilice esa aplicación en lugar de crear otra cuando tenga los permisos correctos del bot y pueda rotarse de manera segura.
 
-Configure el canal de notificación inicial del operador a través de secretos o
-configuración de despliegue. Puede apuntar primero a un canal de mantenimiento
-u operaciones existente, y luego trasladarse a un canal dedicado de Mantis una
-vez que exista uno.
+Configure el canal de notificación inicial del operador a través de secretos o la configuración de implementación. Puede apuntar primero a un canal de mantenimiento u operaciones existente, y luego moverse a un canal dedicado de Mantis una vez que exista uno.
 
-No ponga ids de gremio, ids de canal, tokens de bot, cookies de navegador o
-contraseñas de VNC en este documento. Guárdelos en secretos de GitHub, el
-bróker de credenciales o el almacén de secretos local del operador.
+No coloque IDs de gremio, IDs de canal, tokens de bot, cookies del navegador o contraseñas de VNC en este documento. Almacénelos en secretos de GitHub, el intermediario de credenciales o el almacén de secretos local del operador.
 
-## Añadir un escenario
+## Agregar un escenario
 
 Un escenario de Mantis debe declarar:
 
 - id y título
 - transporte
 - credenciales requeridas
-- política de referencia base
+- política de referencia de línea base
 - política de referencia candidata
 - parche de configuración de OpenClaw
 - pasos de configuración
 - estímulo
-- oráculo base esperado
+- oráculo de línea base esperado
 - oráculo candidato esperado
 - objetivos de captura visual
 - presupuesto de tiempo de espera
@@ -623,41 +606,30 @@ Un escenario de Mantis debe declarar:
 
 Los escenarios deben preferir oráculos pequeños y tipados:
 
-- estado de reacción de Discord para errores de reacción
-- referencias de mensajes de Discord para errores de hilos
-- ts de hilo de Slack y estado de API de reacción para errores de Slack
-- ids de mensaje y cabeceras de correo electrónico para errores de email
-- capturas de pantalla del navegador cuando la UI es el único observable fiable
+- Estado de reacción de Discord para errores de reacción
+- Referencias de mensajes de Discord para errores de hilos
+- Slack thread ts y estado de la API de reacción para errores de Slack
+- IDs de mensajes de correo electrónico y encabezados para errores de correo electrónico
+- capturas de pantalla del navegador cuando la interfaz de usuario es el único observable confiable
 
-Las comprobaciones de visión deben ser aditivas. Si una API de plataforma puede
-demostrar el error, use la API como oráculo de aprobado/rechazado y mantenga
-las capturas de pantalla para la confianza humana.
+Las verificaciones de visión deben ser aditivas. Si una API de plataforma puede probar el error, use la API como oráculo de aprobado/reprobado y mantenga las capturas de pantalla para la confianza humana.
 
-## Expansión de proveedores
+## Expansión del proveedor
 
-Después de Discord, el mismo ejecutor puede añadir:
+Después de Discord, el mismo ejecutor puede agregar:
 
-- Slack: reacciones, hilos, menciones de aplicaciones, modales, subidas de archivos.
-- Email: autenticación de Gmail e hilado de mensajes usando `gog` donde los conectores no son
-  suficientes.
-- WhatsApp: inicio de sesión con QR, reidentificación, entrega de mensajes,
-  multimedia, reacciones.
-- Telegram: filtrado de menciones de grupo, comandos, reacciones donde estén
-  disponibles.
-- Matrix: salas cifradas, relaciones de hilo o respuesta, reanudación de reinicio.
+- Slack: reacciones, hilos, menciones de aplicaciones, modales, cargas de archivos.
+- Correo electrónico: autenticación de Gmail e hilos de mensajes usando `gog` cuando los conectores no son suficientes.
+- WhatsApp: inicio de sesión QR, reidentificación, entrega de mensajes, multimedia, reacciones.
+- Telegram: filtrado de menciones de grupo, comandos, reacciones cuando estén disponibles.
+- Matrix: salas encriptadas, relaciones de hilo o respuesta, reanudación de reinicio.
 
-Cada transporte debe tener un escenario de humo barato y uno o más escenarios de
-clase de error. Los escenarios visuales costosos deben permanecer opcionales.
+Cada transporte debe tener un escenario de humo barato y uno o más escenarios de clase de error. Los escenarios visuales costosos deben permanecer opcionales.
 
 ## Preguntas abiertas
 
-- ¿Qué bot de Discord debe ser el controlador y cuál debe ser el SUT, cuando se
-  reutiliza el bot Mantis existente?
-- ¿El inicio de sesión del navegador observador debe usar una cuenta de Discord
-  humana, una cuenta de prueba, o solo evidencia REST legible por bots para la
-  primera fase?
-- ¿Cuánto tiempo debe GitHub retener los artefactos de Mantis para los PRs?
-- ¿Cuándo debería ClawSweeper recomendar Mantis automáticamente en lugar de esperar
-  un comando de mantenimiento?
-- ¿Deberían redactarse o recortarse las capturas de pantalla antes de la subida
-  para PRs públicos?
+- ¿Qué bot de Discord debe ser el controlador y cuál debe ser el SUT cuando se reutiliza el bot Mantis existente?
+- ¿El inicio de sesión del navegador del observador debe usar una cuenta de Discord humana, una cuenta de prueba, o solo evidencia REST legible por el bot para la primera fase?
+- ¿Cuánto tiempo debería GitHub retener los artefactos de Mantis para las PRs?
+- ¿Cuándo debería ClawSweeper recomendar automáticamente Mantis en lugar de esperar un comando del mantenedor?
+- ¿Deberían redactarse o recortarse las capturas de pantalla antes de subirlas para PRs públicas?

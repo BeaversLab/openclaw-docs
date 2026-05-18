@@ -46,7 +46,7 @@ est connectée de bout en bout.
 
 - Les exécutions sont sérialisées par clé de session (voie de session) et éventuellement via une voie globale.
 - Cela évite les conflits d'outils/session et maintient l'historique de la session cohérent.
-- Les canaux de messagerie peuvent choisir des modes de file d'attente (collect/steer/followup) qui alimentent ce système de voies.
+- Les canaux de messagerie peuvent choisir des modes de file d'attente (steer/followup/collect/interrupt) qui alimentent ce système de voies.
   Voir [Command Queue](/fr/concepts/queue).
 - Les écritures de transcription sont également protégées par un verrou d'écriture de session sur le fichier de session. Le verrou est
   conscient du processus et basé sur les fichiers, il attrape donc les writers qui contournent la file d'attente intra-processus ou qui proviennent
@@ -69,7 +69,7 @@ est connectée de bout en bout.
 
 - Le prompt système est construit à partir du prompt de base d'OpenClaw, du prompt de compétences, du contexte d'amorçage et des substitutions par exécution.
 - Les limites spécifiques au modèle et les jetons de réserve de compactage sont appliqués.
-- Voir [System prompt](/fr/concepts/system-prompt) pour ce que le modèle voit.
+- Voir [System prompt](/fr/concepts/system-prompt) pour voir ce que le modèle perçoit.
 
 ## Points d'ancrage (hooks) (où vous pouvez intercepter)
 
@@ -112,7 +112,7 @@ Règles de décision de hook pour les gardes de sorties/outils :
 - `message_sending` : `{ cancel: true }` est terminal et arrête les gestionnaires de moindre priorité.
 - `message_sending` : `{ cancel: false }` est une opération vide et n'efface pas une annulation antérieure.
 
-Voir [Plugin hooks](/fr/plugins/hooks) pour l'API des hooks et les détails d'enregistrement.
+Voir [Plugin hooks](/fr/plugins/hooks) pour les détails sur l'API des hooks et l'enregistrement.
 
 Les harnais peuvent adapter ces hooks différemment. Le harnais du serveur d'application Codex conserve les hooks de plugin OpenClaw comme contrat de compatibilité pour les surfaces miroir documentées, tandis que les hooks natifs Codex restent un mécanisme Codex de bas niveau distinct.
 
@@ -121,7 +121,7 @@ Les harnais peuvent adapter ces hooks différemment. Le harnais du serveur d'app
 - Les deltas de l'assistant sont diffusés en continu depuis pi-agent-core et émis sous forme d'événements `assistant`.
 - La diffusion en bloc peut émettre des réponses partielles soit sur `text_end` soit sur `message_end`.
 - La diffusion du raisonnement peut être émise comme un flux séparé ou comme des réponses bloc.
-- Voir [Streaming](/fr/concepts/streaming) pour le comportement de découpage et de réponse bloc.
+- Voir [Streaming](/fr/concepts/streaming) pour le comportement de découpage et de réponse de bloc.
 
 ## Exécution d'outils + outils de messagerie
 
@@ -163,9 +163,9 @@ Les harnais peuvent adapter ces hooks différemment. Le harnais du serveur d'app
 - `agent.wait` par défaut : 30 s (juste l'attente). Le paramètre `timeoutMs` prévaut.
 - Durée d'exécution de l'agent : `agents.defaults.timeoutSeconds` par défaut 172800 s (48 heures) ; appliquée dans la minuterie d'abandon `runEmbeddedPiAgent`.
 - Durée d'exécution Cron : le tour d'agent isolé `timeoutSeconds` appartient à cron. Le planificateur démarre cette minuterie lorsque l'exécution commence, abandonne l'exécution sous-jacente à l'échéance configurée, puis exécute un nettoyage limité avant d'enregistrer l'expiration afin qu'une session enfant obsolète ne puisse pas bloquer la voie.
-- Diagnostics de vivacité de session : avec les diagnostics activés, `diagnostics.stuckSessionWarnMs` classifie les sessions `processing` longues qui n'ont aucune progression observée en termes de réponse, d'outil, de statut, de bloc ou de progression ACP. Les exécutions intégrées actives, les appels au modèle et les appels à l'outil sont signalés comme `session.long_running` ; le travail actif sans progression récente comme `session.stalled` ; `session.stuck` est réservé à la gestion des sessions obsolètes sans travail actif. La gestion des sessions obsolètes libère immédiatement la voie de session affectée ; les exécutions intégrées bloquées sont drainées par abandon uniquement après `diagnostics.stuckSessionAbortMs` (par défaut : au moins 10 minutes et 5 fois le seuil d'avertissement) afin que le travail en file d'attente puisse reprendre sans interrompre les exécutions simplement lentes. La récupération émet des résultats structurés demandés/terminés, et l'état de diagnostic est marqué inactif uniquement si la même génération de traitement est toujours actuelle. Les diagnostics `session.stuck` répétés se espaçent tant que la session reste inchangée.
-- Délai d'inactivité du modèle : OpenClaw abandonne une requête de modèle lorsque aucun fragment de réponse n'arrive avant la fenêtre d'inactivité. OpenClaw`models.providers.<id>.timeoutSeconds`OpenClaw étend ce chien de garde d'inactivité pour les fournisseurs locaux/auto-hébergés lents ; sinon OpenClaw utilise `agents.defaults.timeoutSeconds` lorsque configuré, plafonné à 120 s par défaut. Les exécutions déclenchées par Cron sans explicitation de délai d'expiration du modèle ou de l'agent désactivent le chien de garde d'inactivité et s'appuient sur le délai d'expiration externe du cron.
-- Délai d'expiration de la requête HTTP du fournisseur : `models.providers.<id>.timeoutSeconds`Ollama s'applique aux récupérations HTTP du modèle de ce fournisseur, y compris la connexion, les en-têtes, le corps, le délai d'expiration de la requête du SDK, la gestion globale de l'abandon de la récupération gardée et le chien de garde d'inactivité du flux du modèle. Utilisez ceci pour les fournisseurs locaux/auto-hébergés lents tels que Ollama avant d'augmenter le délai d'exécution global de l'agent.
+- Diagnostics de vivacité de session : avec les diagnostics activés, `diagnostics.stuckSessionWarnMs` classifie les sessions `processing` longues qui n'ont aucune réponse, outil, statut, bloc ou progression ACP observée. Les exécutions intégrées actives, les appels de modèle et les appels d'outils sont signalés comme `session.long_running` ; le travail actif sans progression récente comme `session.stalled` ; `session.stuck` est réservé à la gestion administrative des sessions obsolètes sans travail actif. La gestion administrative des sessions obsolètes libère immédiatement la voie de session concernée ; les exécutions intégrées bloquées sont drainées par abandon uniquement après `diagnostics.stuckSessionAbortMs` (par défaut : au moins 5 minutes et 3x le seuil d'avertissement) afin que le travail en file d'attente puisse reprendre sans interrompre les exécutions simplement lentes. La récupération émet des résultats structurés demandés/terminés, et l'état de diagnostic est marqué inactif uniquement si la même génération de traitement est toujours actuelle. Les diagnostics `session.stuck` répétés s'espacent tant que la session reste inchangée.
+- Délai d'inactivité du modèle : OpenClaw abandonne une requête de modèle lorsque aucun bloc de réponse n'arrive avant la fenêtre d'inactivité. `models.providers.<id>.timeoutSeconds` étend ce chien de garde d'inactivité pour les fournisseurs locaux/auto-hébergés lents, mais il est toujours limité par tout `agents.defaults.timeoutSeconds` inférieur ou délai d'exécution spécifique, car ceux-ci contrôlent l'exécution entière de l'agent. Sinon, OpenClaw utilise `agents.defaults.timeoutSeconds` lorsque configuré, plafonné à 120s par défaut. Les exécutions déclenchées par Cron sans délai d'expiration explicite de modèle ou d'agent désactivent le chien de garde d'inactivité et s'appuient sur le délai d'expiration externe de Cron.
+- Délai d'expiration de la requête HTTP du fournisseur : `models.providers.<id>.timeoutSeconds` s'applique aux récupérations HTTP du model de ce fournisseur, y compris la connexion, les en-têtes, le corps, le délai d'expiration de la requête du SDK, la gestion globale de l'abandon de la récupération sécurisée et le chien de garde d'inactivité du flux du model. Utilisez ceci pour les fournisseurs locaux/auto-hébergés lents tels que Ollama avant d'augmenter le délai d'exécution global de l'agent, et gardez le délai d'expiration de l'agent/du runtime au moins aussi élevé lorsque la requête du model doit s'exécuter plus longtemps.
 
 ## Où les choses peuvent se terminer tôt
 
@@ -177,7 +177,7 @@ Les harnais peuvent adapter ces hooks différemment. Le harnais du serveur d'app
 ## Connexes
 
 - [Outils](/fr/tools) — outils de l'agent disponibles
-- [Crochets](/fr/automation/hooks) — scripts pilotés par les événements déclenchés par les événements du cycle de vie de l'agent
-- [Compaction](/fr/concepts/compaction) — résumé des longues conversations
+- [Crochets/Hooks](/fr/automation/hooks) — scripts pilotés par les événements déclenchés par les événements du cycle de vie de l'agent
+- [Compactage](/fr/concepts/compaction) — comment les longues conversations sont résumées
 - [Approbations Exec](/fr/tools/exec-approvals) — portes d'approbation pour les commandes shell
 - [Réflexion](/fr/tools/thinking) — configuration du niveau de réflexion/raisonnement

@@ -857,9 +857,9 @@ OpenClaw envía encuestas de Teams como Adaptive Cards (no hay una API de encues
 
 ## Tarjetas de presentación
 
-Envíe cargas útiles de presentación semántica a usuarios o conversaciones de Teams utilizando la herramienta `message` o la CLI. OpenClaw los procesa como tarjetas adaptables de Teams a partir del contrato de presentación genérico.
+Envíe cargas útiles de presentación semántica a usuarios o conversaciones de Teams mediante la herramienta `message`, la CLI o la entrega normal de respuestas. OpenClaw las representa como tarjetas adaptables de Teams desde el contrato de presentación genérico.
 
-El parámetro `presentation` acepta bloques semánticos. Cuando se proporciona `presentation`, el texto del mensaje es opcional.
+El parámetro `presentation` acepta bloques semánticos. Cuando se proporciona `presentation`, el texto del mensaje es opcional. Los botones se representan como acciones de envío o URL de tarjeta adaptable. Los menús de selección aún no son nativos en el representador de Teams, por lo que OpenClaw los degrada a texto legible antes de la entrega.
 
 **Herramienta de agente:**
 

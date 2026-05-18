@@ -1,9 +1,9 @@
 ---
-summary: "runtime.channel.turn -- le noyau de tour entrant partagé que les plugins de canal fournis et tiers utilisent pour enregistrer, dispatcher et finaliser les tours de l'agent"
-title: "Noyau de tour de canal"
-sidebarTitle: "Tour de canal"
+summary: "runtime.channel.turn -- le noyau d'événement entrant partagé que les plugins de canal intégrés et tiers utilisent pour enregistrer, distribuer et finaliser les tours d'agent"
+title: "Channel turn kernel"
+sidebarTitle: "Channel turn"
 read_when:
-  - You are building a channel plugin and want the shared inbound turn lifecycle
+  - You are building a channel plugin and want the shared inbound event lifecycle
   - You are migrating a channel monitor off hand-rolled record/dispatch glue
   - You need to understand admission, ingest, classify, preflight, resolve, record, dispatch, and finalize stages
 ---
@@ -12,7 +12,7 @@ Le noyau de tour de canal est la machine à état entrante partagée qui transfo
 
 Utilisez ceci lorsque votre plugin est sur le chemin rapide des messages entrants. Pour les événements non-message (commandes slash, modales, interactions avec les boutons, événements de cycle de vie, réactions, état vocal), gardez-les locaux au plugin. Le noyau ne possède que les événements qui peuvent devenir un tour de texte de l'agent.
 
-<Info>Le noyau est accessible via le runtime de plugin injecté en tant que `runtime.channel.turn.*`. Le type de runtime de plugin est exporté depuis `openclaw/plugin-sdk/core`, donc les plugins natifs tiers peuvent utiliser ces points d'entrée de la même manière que les plugins de canal fournis.</Info>
+<Info>Le noyau est accessible via le runtime de plugin injecté en tant que `runtime.channel.turn.*`. Le type du runtime de plugin est exporté depuis `openclaw/plugin-sdk/core`, les plugins natifs tiers peuvent donc utiliser ces points d'entrée de la même manière que les plugins de canal intégrés.</Info>
 
 ## Pourquoi un noyau partagé
 
@@ -20,10 +20,10 @@ Les plugins de canal répètent le même flux entrant : normaliser, router, filt
 
 Le noyau garde volontairement séparés quatre concepts :
 
-- `ConversationFacts` : d'où vient le message
-- `RouteFacts` : quel agent et quelle session doivent le traiter
-- `ReplyPlanFacts` : où les réponses visibles doivent aller
-- `MessageFacts` : quel corps et contexte supplémentaire l'agent doit voir
+- `ConversationFacts` : origine du message
+- `RouteFacts` : l'agent et la session qui doivent le traiter
+- `ReplyPlanFacts` : destination des réponses visibles
+- `MessageFacts` : le corps et le contexte supplémentaire que l'agent doit voir
 
 Les DMs Slack, les sujets Telegram, les fils Matrix et les sessions de sujet Feishu distinguent tous ces éléments en pratique. Les traiter comme un seul identifiant entraîne une dérive au fil du temps.
 
@@ -33,13 +33,13 @@ Le noyau exécute le même pipeline fixe quel que soit le canal :
 
 1. `ingest` -- l'adaptateur convertit un événement brut de la plateforme en `NormalizedTurnInput`
 2. `classify` -- l'adaptateur déclare si cet événement peut démarrer un tour d'agent
-3. `preflight` -- l'adaptateur effectue la déduplication, l'écho personnel, l'hydratation, le anti-rebond, le déchiffrement, le pré-remplissage partiel des faits
-4. `resolve` -- l'adaptateur renvoie un tour entièrement assemblé (route, plan de réponse, message, livraison)
-5. `authorize` -- les stratégies DM, groupe, mention et commande sont appliquées aux faits assemblés
+3. `preflight` -- l'adaptateur effectue la déduplication, l'auto-écho, l'hydratation, le anti-rebond, le déchiffrement, le préremplissage partiel des faits
+4. `resolve` -- l'adaptateur renvoie un tour entièrement assemblé (itinéraire, plan de réponse, message, livraison)
+5. `authorize` -- les stratégies de DM, de groupe, de mention et de commande appliquées aux faits assemblés
 6. `assemble` -- `FinalizedMsgContext` construit à partir des faits via `buildContext`
-7. `record` -- les métadonnées de session entrante et la dernière route sont persistés
-8. `dispatch` -- le tour de l'agent est exécuté via le répartiteur de blocs tamponné
-9. `finalize` -- le `onFinalize` de l'adaptateur s'exécute même en cas d'erreur de répartition
+7. `record` -- métadonnées de session entrante et dernier itinéraire persistants
+8. `dispatch` -- tour d'agent exécuté via le répartiteur de blocs tamponné
+9. `finalize` -- le `onFinalize` de l'adaptateur s'exécute même en cas d'erreur de distribution
 
 Chaque étape émet un événement de journal structuré lorsqu'un rappel `log` est fourni. Voir [Observabilité](#observability).
 
@@ -52,9 +52,9 @@ Le noyau ne lève pas d'exception lorsqu'un tour est bloqué. Il renvoie un `Cha
 | `dispatch`    | Le tour est admis. Le tour de l'agent s'exécute et le chemin de réponse visible est activé.                                                                                       |
 | `observeOnly` | Le tour s'exécute de bout en bout mais l'adaptateur de livraison n'envoie rien de visible. Utilisé pour les agents observateurs de diffusion et autres flux multi-agents passifs. |
 | `handled`     | Un événement de plateforme a été consommé localement (cycle de vie, réaction, bouton, modal). Le noyau ignore la répartition.                                                     |
-| `drop`        | Chemin de saut. Optionnellement, `recordHistory: true` conserve le message dans l'historique du groupe en attente pour qu'une mention future ait un contexte.                     |
+| `drop`        | Skip path. En option, `recordHistory: true` conserve le message dans l'historique du groupe en attente afin qu'une mention future dispose d'un contexte.                          |
 
-L'admission peut provenir de `classify` (la classe d'événement a indiqué qu'elle ne peut pas démarrer un tour), de `preflight` (déduplication, écho personnel, mention manquante avec enregistrement d'historique), ou du `resolveTurn` lui-même.
+L'admission peut provenir de `classify` (la classe d'événement a indiqué qu'elle ne pouvait pas démarrer un tour), de `preflight` (déduplication, écho de soi, mention manquante avec enregistrement d'historique), ou de `resolveTurn` lui-même.
 
 ## Points d'entrée
 
@@ -76,7 +76,7 @@ runtime.channel.turn.dispatchAssembled(...) // deprecated compatibility alias; p
 
 ### run
 
-Utilisez lorsque votre channel peut exprimer son flux entrant sous la forme d'un `ChannelTurnAdapter<TRaw>`. L'adaptateur dispose de rappels pour `ingest`, `classify` en option, `preflight` en option, `resolveTurn` obligatoire, et `onFinalize` en option.
+À utiliser lorsque votre channel peut exprimer son flux entrant sous la forme d'un `ChannelTurnAdapter<TRaw>`. L'adaptateur possède des rappels pour `ingest`, `classify` en option, `preflight` en option, `resolveTurn` obligatoire, et `onFinalize` en option.
 
 ```typescript
 await runtime.channel.turn.run({
@@ -111,15 +111,15 @@ await runtime.channel.turn.run({
 });
 ```
 
-`run` est la forme appropriée lorsque la logique de l'adaptateur du channel est réduite et qu'il bénéficie de la possession du cycle de vie via des hooks.
+`run` est la forme appropriée lorsque le channel possède une logique d'adaptateur réduite et bénéficie de la propriété du cycle de vie via des crochets (hooks).
 
 ### runAssembled
 
-Utilisez lorsque le channel a déjà résolu le routage, construit un `FinalizedMsgContext`,
-et a uniquement besoin de l'ordre partagé pour l'enregistrement, le pipeline de réponse, la distribution et la finalisation.
-C'est la forme préférée pour les chemins entrants groupés simples qui
-répéteraient autrewise les `createChannelMessageReplyPipeline(...)` et
-les `runPrepared(...)` standard.
+À utiliser lorsque le channel a déjà résolu le routage, construit un `FinalizedMsgContext`,
+et a seulement besoin de l'ordonnancement partagé pour l'enregistrement, le pipeline de réponse, l'expédition et la finalisation.
+C'est la forme préférée pour les chemins d'entrée groupés simples qui
+répéteraient autrefois le code répétitif (boilerplate) de `createChannelMessageReplyPipeline(...)` et
+`runPrepared(...)`.
 
 ```typescript
 await runtime.channel.turn.runAssembled({
@@ -143,13 +143,13 @@ await runtime.channel.turn.runAssembled({
 });
 ```
 
-Choisissez `runAssembled` plutôt que `runPrepared` lorsque le seul comportement de distribution
-propriétaire du channel est la livraison finale de la charge utile plus des
-options facultatives de saisie, de réponse, de livraison durable ou de journalisation des erreurs.
+Choisissez `runAssembled` plutôt que `runPrepared` lorsque le seul comportement d'expédition
+propriétaire du canal est la livraison finale de la charge utile plus, en option, la saisie, les options de réponse, la livraison
+durable ou la journalisation des erreurs.
 
 ### runPrepared
 
-Utilisez lorsque le channel dispose d'un distributeur local complexe avec des aperçus, des nouvelles tentatives, des modifications ou un amorçage de fil de discussion qui doit rester la propriété du channel. Le noyau enregistre toujours la session entrante avant la distribution et présente un `DispatchedChannelTurnResult` uniforme.
+À utiliser lorsque le channel dispose d'un répartiteur local complexe avec des aperçus, des tentatives, des modifications ou un amorçage de fil de discussion qui doit rester la propriété du channel. Le noyau enregistre toujours la session entrante avant l'expédition et présente un `DispatchedChannelTurnResult` uniforme.
 
 ```typescript
 const { dispatchResult } = await runtime.channel.turn.runPrepared({
@@ -172,11 +172,11 @@ const { dispatchResult } = await runtime.channel.turn.runPrepared({
 });
 ```
 
-Les channels riches (Matrix, Mattermost, Microsoft Teams, Feishu, QQ Bot) utilisent `runPrepared` car leur distributeur orchestre des comportements spécifiques à la plate-forme que le noyau ne doit pas connaître.
+Les canaux riches (Matrix, Mattermost, Microsoft Teams, Feishu, QQ Bot) utilisent `runPrepared` car leur répartiteur orchestre des comportements spécifiques à la plateforme dont le noyau ne doit pas avoir connaissance.
 
 ### buildContext
 
-Une fonction pure qui mappe les lots de faits en `FinalizedMsgContext`. Utilisez-la lorsque votre channel crée manuellement une partie du pipeline mais souhaite une forme de contexte cohérente.
+Une fonction pure qui mappe les faisceaux de faits en `FinalizedMsgContext`. À utiliser lorsque votre channel réalise manuellement une partie du pipeline mais souhaite conserver une forme de contexte cohérente.
 
 ```typescript
 const ctxPayload = runtime.channel.turn.buildContext({
@@ -198,7 +198,7 @@ const ctxPayload = runtime.channel.turn.buildContext({
 
 `buildContext` est également utile à l'intérieur des rappels `resolveTurn` lors de l'assemblage d'un tour pour `run`.
 
-<Note>Les helpers SDK obsolètes tels que `dispatchInboundReplyWithBase` passent toujours par un helper de tour assemblé. Le nouveau code de plugin devrait utiliser `run` ou `runPrepared`.</Note>
+<Note>Les helpers SDK dépréciés tels que `dispatchInboundReplyWithBase` passent toujours par un helper de tour assemblé. Le nouveau code de plugin doit utiliser `run` ou `runPrepared`.</Note>
 
 ## Types de faits
 
@@ -220,7 +220,7 @@ Les faits que le noyau consomme depuis votre adaptateur sont indépendants de la
 | Champ                  | Objectif                                                                         |
 | ---------------------- | -------------------------------------------------------------------------------- |
 | `kind`                 | `message`, `command`, `interaction`, `reaction`, `lifecycle`, `unknown`          |
-| `canStartAgentTurn`    | Si faux, le noyau retourne `{ kind: "handled" }`                                 |
+| `canStartAgentTurn`    | Si faux, le noyau renvoie `{ kind: "handled" }`                                  |
 | `requiresImmediateAck` | Indication pour les adaptateurs qui doivent accuser réception avant l'expédition |
 
 ### SenderFacts
@@ -229,7 +229,7 @@ Les faits que le noyau consomme depuis votre adaptateur sont indépendants de la
 | -------------- | --------------------------------------------------------------------------------------------- |
 | `id`           | ID d'expéditeur stable de la plateforme                                                       |
 | `name`         | Nom d'affichage                                                                               |
-| `username`     | Identifiant si différent de `name`                                                            |
+| `username`     | Gérer si distinct de `name`                                                                   |
 | `tag`          | Discriminateur de style Discord ou balise de plateforme                                       |
 | `roles`        | IDs de rôle, utilisés pour la correspondance de la liste d'autorisation des rôles des membres |
 | `isBot`        | Vrai lorsque l'expéditeur est un bot connu (le noyau l'utilise pour le rejet)                 |
@@ -268,9 +268,9 @@ Les faits que le noyau consomme depuis votre adaptateur sont indépendants de la
 | Champ                     | Objectif                                                           |
 | ------------------------- | ------------------------------------------------------------------ |
 | `to`                      | Cible de réponse logique écrite dans le contexte `To`              |
-| `originatingTo`           | Cible de contexte d'origine (`OriginatingTo`)                      |
+| `originatingTo`           | Cible du contexte d'origine (`OriginatingTo`)                      |
 | `nativeChannelId`         | Identifiant de canal natif à la plateforme pour la livraison       |
-| `replyTarget`             | Destination de réponse visible finale si elle diffère de `to`      |
+| `replyTarget`             | Destination finale de la réponse visible si elle diffère de `to`   |
 | `deliveryTarget`          | Remplacement de livraison de niveau inférieur                      |
 | `replyToId`               | Identifiant de message cité/ancré                                  |
 | `replyToIdFull`           | Identifiant cité complet lorsque la plateforme en possède les deux |
@@ -280,11 +280,11 @@ Les faits que le noyau consomme depuis votre adaptateur sont indépendants de la
 
 ### AccessFacts
 
-`AccessFacts` porte les booléens dont l'étape d'autorisation a besoin. La correspondance d'identité reste dans le canal : le noyau ne consomme que le résultat.
+`AccessFacts` porte les booléens nécessaires à l'étape d'autorisation. La correspondance d'identité reste dans le canal : le noyau consomme uniquement le résultat.
 
 | Champ      | Objet                                                                                                        |
 | ---------- | ------------------------------------------------------------------------------------------------------------ |
-| `dm`       | Décision d'autorisation/association/refus DM et liste `allowFrom`                                            |
+| `dm`       | Décision d'autorisation/appariement/refus de DM et liste `allowFrom`                                         |
 | `group`    | Stratégie de groupe, autorisation de route, autorisation de l'expéditeur, liste blanche, exigence de mention |
 | `commands` | Autorisation de commande sur les autorisateurs configurés                                                    |
 | `mentions` | Si la détection de mention est possible et si l'agent a été mentionné                                        |
@@ -304,15 +304,145 @@ Les faits que le noyau consomme depuis votre adaptateur sont indépendants de la
 
 ### SupplementalContextFacts
 
-Le contexte supplémentaire couvre le contexte de citation, de transfert et d'amorçage de fil de discussion. Le noyau applique la stratégie configurée `contextVisibility`. L'adaptateur de canal fournit uniquement des faits et des indicateurs `senderAllowed` afin que la stratégie inter-canaux reste cohérente.
+Le contexte supplémentaire couvre la citation, le transfert et le contexte d'amorçage de fil. Le noyau applique la stratégie `contextVisibility` configurée. L'adaptateur de canal fournit uniquement les faits et les indicateurs `senderAllowed` afin que la stratégie inter-canaux reste cohérente.
 
 ### InboundMediaFacts
 
 Les médias sont structurés en faits. Le téléchargement, l'authentification, la stratégie SSRF, les règles CDN et le déchiffrement de la plateforme restent locaux au canal. Le noyau mappe les faits vers `MediaPath`, `MediaUrl`, `MediaType`, `MediaPaths`, `MediaUrls`, `MediaTypes` et `MediaTranscribedIndexes`.
 
-## Contrat d'adaptateur
+Utilisez `toInboundMediaFacts(...)` de `openclaw/plugin-sdk/channel-inbound` lorsque
+votre canal dispose d'une liste de médias résolus et doit uniquement attacher des faits génériques :
 
-Pour `run` complet, la forme de l'adaptateur est :
+```typescript
+media: toInboundMediaFacts(resolvedMedia, {
+  kind: "image",
+  messageId: input.id,
+});
+```
+
+Si un média mélange des fichiers locaux et des entrées URL uniquement, gardez la liste sous forme de faits de média.
+Core préserve les index des tableaux lors de l'écriture des champs de contexte hérités afin que la compréhension des médias en aval, les marqueurs de transcription et les notes de prompt continuent de faire référence à la même pièce jointe.
+
+Pour les messages de groupe ignorés qui doivent être disponibles lors d'une mention ultérieure, passez les faits de média via le champ `preflight.media` du tour. Le noyau convertit ces faits en entrées de média d'historique borné avant l'enregistrement :
+
+```typescript
+preflight(input) {
+  return {
+    admission: { kind: "drop", reason: "missing_mention", recordHistory: true },
+    media: () => toInboundMediaFacts(resolveLocalImages(input), {
+      kind: "image",
+      messageId: input.id,
+    }),
+    history: {
+      key: historyKey,
+      limit: historyLimit,
+      mediaLimit: 4,
+      shouldRecord: () => stillCurrent(input),
+    },
+  };
+}
+```
+
+Les médias de l'historique sont intentionnellement conservateurs : images uniquement pour l'instant, chemins locaux lisibles uniquement, bornés par la limite de média configurée, et toujours liés à la clé d'historique du channel. Les URLs de provider authentifiées doivent être téléchargées par le plugin avant de devenir des médias visibles par le model.
+
+## Fenêtres d'historique
+
+Le code de tour de message doit utiliser `createChannelHistoryWindow(...)` au lieu d'appeler directement les helpers de map de bas niveau `reply-history`. Les anciens helpers de map restent importables en tant qu'exports de compatibilité obsolètes, mais le nouveau code d'exécution du plugin ne doit pas les appeler. La façade de fenêtre maintient le contexte textuel, `InboundHistory` structuré, la normalisation des médias d'historique et le nettoyage derrière une seule API détenue par Core, tout en laissant toujours le channel choisir le rendu d'une ligne d'historique.
+
+```typescript
+const history = createChannelHistoryWindow({ historyMap: groupHistories });
+
+await history.recordWithMedia({
+  historyKey,
+  limit: historyLimit,
+  entry,
+  media: () =>
+    toInboundMediaFacts(resolvedImages, {
+      kind: "image",
+      messageId: entry.messageId,
+    }),
+});
+
+const combinedBody = history.buildPendingContext({
+  historyKey,
+  limit: historyLimit,
+  currentMessage,
+  formatEntry: (entry) => `${entry.sender}: ${entry.body}`,
+});
+```
+
+Les anciens exports `buildPendingHistoryContextFromMap`,
+`buildInboundHistoryFromMap`, `recordPendingHistoryEntry*` et
+`clearHistoryEntries*` restent disponibles pour compatibilité obsolète pour les plugins
+qui n'ont pas encore migré. Les nouveaux travaux de channel doivent utiliser la fenêtre ou les options d'enregistrement/finalisation du noyau de tour.
+
+## Modèles de message courants
+
+Groupe texte uniquement avec mention requise :
+
+```typescript
+preflight(input) {
+  const decision = resolveInboundMentionDecision({ facts, policy });
+  if (decision.shouldSkip) {
+    return {
+      admission: { kind: "drop", reason: "missing_mention", recordHistory: true },
+      history: { key: historyKey, limit: historyLimit },
+    };
+  }
+  return { access: { mentions: decision } };
+}
+```
+
+Message image uniquement suivi d'une mention ultérieure :
+
+```typescript
+preflight(input) {
+  if (!wasMentioned && resolvedImages.length > 0) {
+    return {
+      admission: { kind: "drop", reason: "missing_mention", recordHistory: true },
+      media: () => toInboundMediaFacts(resolvedImages, {
+        kind: "image",
+        messageId: input.id,
+      }),
+      history: { key: historyKey, limit: historyLimit, mediaLimit: 4 },
+    };
+  }
+  return {};
+}
+```
+
+Réponse explicite à une image :
+
+```typescript
+resolveTurn(input, _eventClass, preflight) {
+  return {
+    ...assembled,
+    media: toInboundMediaFacts([...currentMedia, ...referencedReplyMedia]),
+    supplemental: {
+      quote: preflight.supplemental?.quote,
+    },
+  };
+}
+```
+
+Message direct avec historique :
+
+```typescript
+resolveTurn(input) {
+  return {
+    ...assembled,
+    history: undefined,
+    message: {
+      rawBody: input.rawText,
+      bodyForAgent: input.textForAgent,
+    },
+  };
+}
+```
+
+## Contrat de l'adaptateur
+
+Pour la `run` complète, la forme de l'adaptateur est :
 
 ```typescript
 type ChannelTurnAdapter<TRaw> = {
@@ -324,16 +454,16 @@ type ChannelTurnAdapter<TRaw> = {
 };
 ```
 
-`resolveTurn` renvoie un `ChannelTurnResolved`, qui est un `AssembledChannelTurn` avec un type d'admission facultatif. Le renvoi de `{ admission: { kind: "observeOnly" } }` exécute le tour sans produire de sortie visible. L'adapteur conserve toujours la responsabilité du rappel de livraison ; il devient simplement une opération vide pour ce tour.
+`resolveTurn` renvoie un `ChannelTurnResolved`, qui est un `AssembledChannelTurn` avec un type d'admission facultatif. Renvoyer `{ admission: { kind: "observeOnly" } }` exécute le tour sans produire de sortie visible. L'adaptateur possède toujours le callback de livraison ; il devient simplement une opération vide pour ce tour.
 
-`onFinalize` s'exécute sur chaque résultat, y compris les erreurs de répartition. Utilisez-le pour effacer l'historique des groupes en attente, supprimer les réactions d'accusé de réception, arrêter les indicateurs d'état et vider l'état local.
+`onFinalize` s'exécute pour chaque résultat, y compris les erreurs de dispatch. Utilisez-le pour effacer l'historique des groupes en attente, supprimer les réactions d'accusé de réception, arrêter les indicateurs d'état et vider l'état local.
 
 ## Adaptateur de livraison
 
-Le noyau n'appelle pas la plateforme directement. Le canal fournit au noyau un `ChannelTurnDeliveryAdapter` :
+Le noyau n'appelle pas directement la plateforme. Le canal fournit au noyau un `ChannelEventDeliveryAdapter` :
 
 ```typescript
-type ChannelTurnDeliveryAdapter = {
+type ChannelEventDeliveryAdapter = {
   deliver(payload: ReplyPayload, info: ChannelDeliveryInfo): Promise<ChannelDeliveryResult | void>;
   onError?(err: unknown, info: { kind: string }): void;
   durable?: false | DurableInboundReplyDeliveryOptions;
@@ -348,15 +478,15 @@ type ChannelDeliveryResult = {
 };
 ```
 
-`deliver` est appelé une fois par bloc de réponse mis en tampon. Lors de la migration du cycle de vie des messages, la livraison assemblée des tours de canal est gérée par le canal par défaut : l'omission du champ `durable` signifie que le noyau doit appeler `deliver` directement et ne doit pas passer par la livraison sortante générique. Ne définissez `durable` qu'une fois que le canal a été audité pour prouver que le chemin d'envoi générique préserve l'ancien comportement de livraison, y compris les cibles de réponse/discussion, la gestion des médias, les caches de messages envoyés/auto-écho, le nettoyage de l'état et les identifiants de message renvoyés. `durable: false` reste une orthographe de compatibilité pour « utiliser le rappel détenu par le canal », mais les canaux non migrés ne devraient pas avoir besoin de l'ajouter. Renvoyez les identifiants de message de la plateforme lorsque le canal les possède afin que le répartisseur puisse préserver les ancres de discussion et modifier les blocs ultérieurs ; les nouveaux chemins de livraison devraient également renvoyer `receipt` afin que la récupération, la finalisation de l'aperçu et la suppression des duplicatas puissent abandonner `messageIds`. Pour les tours d'observation uniquement, renvoyez `{ visibleReplySent: false }` ou utilisez `createNoopChannelTurnDeliveryAdapter()`.
+`deliver` est appelé une fois par bloc de réponse mis en mémoire tampon. Lors de la migration du cycle de vie des messages, la livraison des événements de canal assemblés appartient par défaut au canal : un champ `durable` omis signifie que le noyau doit appeler `deliver` directement et ne doit pas passer par la livraison sortante générique. Ne définissez `durable` qu'après avoir vérifié que le canal prouve que le chemin d'envoi générique préserve l'ancien comportement de livraison, y compris les cibles de réponse/discussion, la gestion des médias, les caches de messages envoyés/auto-écho, le nettoyage du statut et les identifiants de message renvoyés. `durable: false` reste une orthographe de compatibilité pour « utiliser la méthode de rappel propriétaire du canal », mais les canaux non migrés ne devraient pas avoir besoin de l'ajouter. Renvoyez les identifiants de message de la plateforme lorsque le canal les possède afin que le répartiteur puisse conserver les ancres de discussion et modifier les blocs ultérieurs ; les nouveaux chemins de livraison doivent également renvoyer `receipt` afin que la récupération, la finalisation de l'aperçu et la suppression des doublons puissent cesser d'utiliser `messageIds`. Pour les tours d'observation uniquement, renvoyez `{ visibleReplySent: false }` ou utilisez `createNoopChannelEventDeliveryAdapter()`.
 
-Les canaux utilisant `runPrepared` avec un répartisseur entièrement détenu par le canal n'ont pas de `ChannelTurnDeliveryAdapter`. Ces répartiteurs ne sont pas durables par défaut. Ils doivent conserver leur chemin de livraison direct jusqu'à ce qu'ils choisissent explicitement le nouveau contexte d'envoi avec une cible complète, un adaptateur sécurisé pour la relecture, un contrat de reçu et des hooks d'effets secondaires du canal.
+Les canaux utilisant `runPrepared` avec un répartiteur entièrement propriétaire du canal n'ont pas de `ChannelEventDeliveryAdapter`. Ces répartiteurs ne sont pas durables par défaut. Ils doivent conserver leur chemin de livraison direct jusqu'à ce qu'ils choisissent explicitement le nouveau contexte d'envoi avec une cible complète, un adaptateur sécurisé pour la relecture, un contrat de reçu et des hooks d'effets secondaires du canal.
 
-Les assistants de compatibilité publique tels que `recordInboundSessionAndDispatchReply`, `dispatchInboundReplyWithBase`, et les assistants DM directs doivent rester préservant le comportement lors de la migration. Ils ne doivent pas appeler la livraison générique durable avant les rappels `deliver` ou `reply` appartenant à l'appelant.
+Les assistants de compatibilité publique tels que `recordInboundSessionAndDispatchReply`, `dispatchInboundReplyWithBase` et les assistants DM directs doivent rester préservateurs du comportement pendant la migration. Ils ne doivent pas appeler la livraison durable générique avant les rappels `deliver` ou `reply` détenus par l'appelant.
 
 ## Options d'enregistrement
 
-L'étape d'enregistrement enveloppe `recordInboundSession`. La plupart des channels peuvent utiliser les valeurs par défaut. Remplacer via `record` :
+L'étape d'enregistrement (record) encapsule `recordInboundSession`. La plupart des channels peuvent utiliser les valeurs par défaut. Remplacez-les via `record` :
 
 ```typescript
 record: {
@@ -368,7 +498,7 @@ record: {
 }
 ```
 
-Le répartiteur attend l'étape d'enregistrement. Si l'enregistrement lance une exception, le noyau exécute `onPreDispatchFailure` (lorsqu'il est fourni à `runPrepared`) et relance l'exception.
+Le répartiteur (dispatcher) attend l'étape d'enregistrement. Si l'enregistrement génère une erreur, le noyau exécute `onPreDispatchFailure` (lorsqu'il est fourni à `runPrepared`) et relance l'erreur.
 
 ## Observabilité
 
@@ -393,32 +523,32 @@ await runtime.channel.turn.run({
 });
 ```
 
-Étapes enregistrées : `ingest`, `classify`, `preflight`, `resolve`, `authorize`, `assemble`, `record`, `dispatch`, `finalize`. Évitez d'enregistrer les corps bruts ; utilisez `MessageFacts.preview` pour de courts aperçus expurgés.
+Étapes enregistrées : `ingest`, `classify`, `preflight`, `resolve`, `authorize`, `assemble`, `record`, `dispatch`, `finalize`. Évitez d'enregistrer les corps bruts ; utilisez `MessageFacts.preview` pour de courtes aperçus expurgés.
 
 ## Ce qui reste local au channel
 
-Le noyau possède l'orchestration. Le channel possède toujours :
+Le noyau est propriétaire de l'orchestration. Le channel est toujours propriétaire de :
 
-- Transports de plateforme (passerelle, REST, websocket, sondage, webhooks)
+- Transports de plateforme (passerelle, REST, websocket, interrogation, webhooks)
 - Résolution d'identité et correspondance de nom d'affichage
 - Commandes natives, commandes slash, autocomplétion, modales, boutons, état vocal
-- Rendu des cartes, des modales et des cartes adaptatives
+- Rendu des cartes (cards), modales et cartes adaptatives
 - Authentification des médias, règles CDN, médias chiffrés, transcription
-- API de modification, de réaction, de rédaction et de présence
-- Remplissage et récupération de l'historique côté plateforme
-- Flux d'appariement qui nécessitent une vérification spécifique à la plateforme
+- API de modification, de réaction, de suppression et de présence
+- Rétrochargement (backfill) et récupération de l'historique côté plateforme
+- Flux d'appariement nécessitant une vérification spécifique à la plateforme
 
 Si deux channels commencent à avoir besoin du même assistant pour l'un de ces éléments, extrayez un assistant SDK partagé au lieu de le pousser dans le noyau.
 
 ## Stabilité
 
-`runtime.channel.turn.*` fait partie de la surface publique du runtime du plugin. Les types de faits (`SenderFacts`, `ConversationFacts`, `RouteFacts`, `ReplyPlanFacts`, `AccessFacts`, `MessageFacts`, `SupplementalContextFacts`, `InboundMediaFacts`) et les formes d'admission (`ChannelTurnAdmission`, `ChannelEventClass`) sont accessibles via `PluginRuntime` à partir de `openclaw/plugin-sdk/core`.
+`runtime.channel.turn.*` fait partie de la surface publique du runtime des plugins. Les types de faits (`SenderFacts`, `ConversationFacts`, `RouteFacts`, `ReplyPlanFacts`, `AccessFacts`, `MessageFacts`, `SupplementalContextFacts`, `InboundMediaFacts`) et les formes d'admission (`ChannelTurnAdmission`, `ChannelEventClass`) sont accessibles via `PluginRuntime` à partir de `openclaw/plugin-sdk/core`.
 
-Les règles de compatibilité ascendante s'appliquent : les nouveaux champs de fait sont additifs, les types d'admission ne sont pas renommés et les noms des points d'entrée restent stables. Les nouveaux besoins de canal qui nécessitent un changement non additif doivent passer par le processus de migration du SDK de plugin.
+Les règles de compatibilité ascendante s'appliquent : les nouveaux champs de fait sont additifs, les types d'admission ne sont pas renommés et les noms des points d'entrée restent stables. Les nouveaux besoins de canal qui nécessitent un changement non additif doivent passer par le processus de migration du SDK de plug-in.
 
 ## Connexes
 
-- [Refonte du cycle de vie des messages](/fr/concepts/message-lifecycle-refactor) pour le cycle de vie planifié send/receive/live qui enveloppera ce noyau
-- [Création de plugins de canal](/fr/plugins/sdk-channel-plugins) pour le contrat plus large du plugin de canal
-- [Aides au runtime du plugin](/fr/plugins/sdk-runtime) pour d'autres surfaces `runtime.*`
-- [Internes du plugin](/fr/plugins/architecture-internals) pour les mécanismes de pipeline de chargement et de registre
+- [Refactorisation du cycle de vie des messages](/fr/concepts/message-lifecycle-refactor) pour le cycle de vie planifié envoyer/recevoir/en direct qui enveloppera ce noyau
+- [Création de plug-ins de canal](/fr/plugins/sdk-channel-plugins) pour le contrat de plug-in de canal plus large
+- [Aides d'exécution de plug-in](/fr/plugins/sdk-runtime) pour d'autres surfaces `runtime.*`
+- [Fonctionnalités internes des plug-ins](/fr/plugins/architecture-internals) pour le pipeline de chargement et les mécanismes de registre

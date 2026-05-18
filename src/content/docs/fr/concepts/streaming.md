@@ -192,11 +192,11 @@ Matrix :
 
 ### Mises à jour de prévisualisation de la progression des outils
 
-La diffusion en aperçu peut également inclure des mises à jour de **tool-progress** - de courtes lignes de statut comme "recherche sur le web", "lecture du fichier", ou "appel de tool" - qui apparaissent dans le même message d'aperçu pendant que les outils sont en cours d'exécution, avant la réponse finale. Cela maintient les tours d'outil à plusieurs étapes visuellement actifs plutôt que silencieux entre le premier aperçu de réflexion et la réponse finale.
+La diffusion en aperçu peut également inclure des mises à jour de **progression de l'outil** (tool-progress) - de courtes lignes de statut telles que « recherche sur le web », « lecture de fichier » ou « appel de l'outil » - qui apparaissent dans le même message d'aperçu pendant que les outils sont en cours d'exécution, avant la réponse finale. En mode serveur d'application Codex, les messages de préambule/commentaire Codex utilisent ce même chemin d'aperçu, de sorte que de courtes notes de progression telles que « Je vérifie... » peuvent être diffusées dans le brouillon modifiable sans faire partie de la réponse finale. Cela permet de maintenir visuellement les tours d'outils à plusieurs étapes actifs plutôt que silencieux entre le premier aperçu de réflexion et la réponse finale.
 
 Surfaces prises en charge :
 
-- **Discord**, **Slack**, **Telegram** et **Matrix** diffusent le tool-progress dans la modification de l'aperçu en direct par défaut lorsque la diffusion en aperçu est active. Microsoft Teams utilise son flux de progression natif dans les chats personnels.
+- **Discord**, **Slack**, **Telegram** et **Matrix** diffusent par défaut les mises à jour de la progression de l'outil et du préambule Codex dans la modification de l'aperçu en direct lorsque la diffusion en aperçu est active. Microsoft Teams utilise son flux de progression natif dans les discussions personnelles.
 - Telegram est livré avec les mises à jour de l'aperçu de tool-progress activées depuis `v2026.4.22` ; les maintenir activées préserve ce comportement publié.
 - **Mattermost** intègre déjà l'activité des outils dans son unique message de brouillon d'aperçu (voir ci-dessus).
 - Les modifications de tool-progress suivent le mode de diffusion en aperçu actif ; elles sont ignorées lorsque la diffusion en aperçu est `off` ou lorsque la diffusion de blocs a pris le relais du message. Sur Telegram, `streaming.mode: "off"` est final-only : les bavardages de progression génériques sont également supprimés au lieu d'être livrés sous forme de messages de statut autonomes, tandis que les invites d'approbation, les charges utiles multimédias et les erreurs sont toujours acheminés normalement.

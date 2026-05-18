@@ -21,10 +21,10 @@ OpenClaw 在以下领域端到端地管理会话：
 
 - [会话管理](/zh/concepts/session)
 - [压缩](/zh/concepts/compaction)
-- [内存概述](/zh/concepts/memory)
+- [内存概览](/zh/concepts/memory)
 - [内存搜索](/zh/concepts/memory-search)
 - [会话修剪](/zh/concepts/session-pruning)
-- [对话记录清理](/zh/reference/transcript-hygiene)
+- [记录清理](/zh/reference/transcript-hygiene)
 
 ---
 
@@ -86,13 +86,13 @@ OpenClaw 通过 OpenClaw`src/config/sessions.ts` 解析这些路径。
 
 OpenClaw 不再在 Gateway(网关) 写入期间创建自动 OpenClaw`sessions.json.bak.*`Gateway(网关) 轮换备份。传统的 `session.maintenance.rotateBytes` 键将被忽略，并且 `openclaw doctor --fix` 会将其从旧版配置中移除。
 
-Transcript 变更在 transcript 文件上使用会话写入锁。获取锁最多等待 `session.writeLock.acquireTimeoutMs` ，然后才会提示 busy-会话 错误；默认为 `60000` 毫秒。仅当合法的准备、清理、压缩或 transcript 镜像工作在慢速机器上耗时更长时，才应增加此值。过期锁检测和最大持有警告仍然是独立的策略。
+记录变更会在记录文件上使用会话写入锁。获取锁最多等待 `session.writeLock.acquireTimeoutMs`，然后才会提示忙碌会话错误；默认值为 `60000` 毫秒。仅当在慢速机器上合法的准备工作、清理、压缩或记录镜像工作争用时间更长时，才调高此值。`session.writeLock.staleMs` 控制何时可以将现有锁视为过期并重新声明；默认值为 `1800000` 毫秒。`session.writeLock.maxHoldMs` 控制进程内看门狗释放阈值；默认值为 `300000` 毫秒。紧急环境覆盖变量为 `OPENCLAW_SESSION_WRITE_LOCK_ACQUIRE_TIMEOUT_MS`、`OPENCLAW_SESSION_WRITE_LOCK_STALE_MS` 和 `OPENCLAW_SESSION_WRITE_LOCK_MAX_HOLD_MS`。
 
 磁盘预算清理的执行顺序 (`mode: "enforce"`)：
 
 1. 首先移除最旧的已存档、孤立的 transcript 或孤立的轨迹工件。
 2. 如果仍高于目标，则驱逐最旧的会话条目及其 transcript/trajectory 文件。
-3. 继续直到使用量达到或低于 `highWaterBytes`。
+3. 继续直到使用量处于或低于 `highWaterBytes`。
 
 在 `mode: "warn"`OpenClaw 中，OpenClaw 会报告潜在的驱逐操作，但不会更改存储/文件。
 
@@ -109,96 +109,96 @@ openclaw sessions cleanup --enforce
 
 独立的 cron 运行也会创建会话条目/transcripts，并且它们具有专门的保留控制：
 
-- `cron.sessionRetention` (默认为 `24h`) 会从会话存储中修剪旧的独立 cron 运行会话 (`false` 表示禁用)。
-- `cron.runLog.maxBytes` + `cron.runLog.keepLines` 会修剪 `~/.openclaw/cron/runs/<jobId>.jsonl` 文件 (默认值：`2_000_000` 字节和 `2000` 行)。
+- `cron.sessionRetention`（默认 `24h`）从会话存储中修剪旧的独立 cron 运行会话（`false` 禁用）。
+- `cron.runLog.maxBytes` + `cron.runLog.keepLines` 修剪 `~/.openclaw/cron/runs/<jobId>.jsonl` 文件（默认值：`2_000_000` 字节和 `2000` 行）。
 
-当 cron 强制创建一个新的独立运行会话时，它会在写入新行之前清理之前的 `cron:<jobId>` 会话条目。它会保留安全的偏好设置，例如思考/快速/详细设置、标签以及显式用户选择的模型/身份验证覆盖。它会丢弃环境对话上下文，例如渠道/组路由、发送或队列策略、提升、来源和 ACP 运行时绑定，以便新的独立运行无法从旧运行中继承过期的传递或运行时权限。
+当 cron 强制创建一个新的独立运行会话时，它会在写入新行之前清理之前的 `cron:<jobId>` 会话条目。它会保留安全的偏好设置，例如 thinking/fast/verbose 设置、标签以及用户明确选择的模型/身份验证覆盖。它会丢弃环境对话上下文，例如渠道/组路由、发送或队列策略、提升、来源以及 ACP 运行时绑定，这样新的独立运行就无法从较旧的运行中继承过时的传递或运行时权限。
 
 ---
 
 ## 会话密钥 (`sessionKey`)
 
-`sessionKey` 标识您所在的 _会话存储桶_（路由 + 隔离）。
+`sessionKey` 标识您处于*哪个对话存储桶*（路由 + 隔离）。
 
 常见模式：
 
-- 主要/直接聊天（每个代理）：`agent:<agentId>:<mainKey>` (默认 `main`)
-- 群组：`agent:<agentId>:<channel>:group:<id>`
-- 房间/渠道 (Discord/Slack)：DiscordSlack`agent:<agentId>:<channel>:channel:<id>` 或 `...:room:<id>`
+- 主/直接聊天（每个代理）：`agent:<agentId>:<mainKey>`（默认 `main`）
+- 组：`agent:<agentId>:<channel>:group:<id>`
+- 房间/渠道（Discord/Slack）：`agent:<agentId>:<channel>:channel:<id>` 或 `...:room:<id>`
 - Cron：`cron:<job.id>`
 - Webhook：`hook:<uuid>`（除非被覆盖）
 
-标准规则记录于 [/concepts/会话](/zh/concepts/session)。
+标准规则记录在 [/concepts/会话](/zh/concepts/session) 中。
 
 ---
 
-## Session ids (`sessionId`)
+## 会话 ID (`sessionId`)
 
-每个 `sessionKey` 指向一个当前的 `sessionId`（即继续对话的脚本文件）。
+每个 `sessionKey` 指向一个当前的 `sessionId`（继续对话的记录文件）。
 
 经验法则：
 
-- **Reset** (`/new`, `/reset`) 会为该 `sessionKey` 创建一个新的 `sessionId`。
+- **重置** (`/new`, `/reset`) 会为该 `sessionKey` 创建一个新的 `sessionId`。
 - **每日重置**（默认为网关主机当地时间凌晨 4:00）会在重置边界后的下一条消息上创建一个新的 `sessionId`。
-- **空闲过期**（`session.reset.idleMinutes` 或旧版 `session.idleMinutes`）会在空闲窗口后有消息到达时创建一个新的 `sessionId`。当同时配置了每日重置和空闲过期时，以先到期的为准。
+- **空闲过期** (`session.reset.idleMinutes` 或旧版 `session.idleMinutes`) 会在消息在空闲窗口后到达时创建一个新的 `sessionId`。当同时配置了每日和空闲时，以先过期的为准。
 - **系统事件**（心跳、cron 唤醒、exec 通知、网关维护）可能会修改会话行，但不会延长每日/空闲重置的新鲜度。重置轮转会在构建新的提示之前，丢弃上一个会话排队的系统事件通知。
-- **父分支策略**在创建线程或子代理分支时会使用 PI 的活动分支。如果该分支太大，OpenClaw 将使用隔离的上下文启动子进程，而不是失败或继承不可用的历史记录。大小策略是自动的；旧版 OpenClaw`session.parentForkMaxTokens` 配置已被 `openclaw doctor --fix` 移除。
+- **父级分支策略** 在创建线程或子代理分支时使用 PI 的活动分支。如果该分支过大，OpenClaw 将使用隔离上下文启动子进程，而不是失败或继承无法使用的历史记录。大小策略是自动的；旧的 OpenClaw`session.parentForkMaxTokens` 配置已被 `openclaw doctor --fix` 移除。
 
-实现细节：该决定发生在 `src/auto-reply/reply/session.ts` 中的 `initSessionState()` 里。
+实现细节：该决策发生在 `src/auto-reply/reply/session.ts` 的 `initSessionState()` 中。
 
 ---
 
-## Session store schema (`sessions.json`)
+## 会话存储架构 (`sessions.json`)
 
 存储的值类型是 `src/config/sessions.ts` 中的 `SessionEntry`。
 
 关键字段（非详尽列表）：
 
-- `sessionId`：当前脚本 id（文件名由此派生，除非设置了 `sessionFile`）
+- `sessionId`：当前记录 ID（除非设置了 `sessionFile`，否则文件名由此派生）
 - `sessionStartedAt`：当前 `sessionId` 的开始时间戳；每日重置
-  新鲜度计算使用此值。旧版行可能从 JSONL 会话头中获取该值。
-- `lastInteractionAt`：最后一次真实的用户/渠道交互时间戳；空闲重置
-  新鲜度计算使用此值，因此心跳、cron 和 exec 事件不会保持会话
-  活跃。缺少此字段的旧版行将回退到恢复的会话开始时间
-  用于空闲新鲜度计算。
+  新鲜度使用此值。旧行可能从 JSONL 会话头部派生它。
+- `lastInteractionAt`：最后一次真实用户/渠道交互时间戳；空闲重置
+  新鲜度使用此值，因此心跳、cron 和 exec 事件不会保持会话
+  存活。没有此字段的旧行将回退到恢复的会话开始
+  时间以进行空闲新鲜度检查。
 - `updatedAt`：最后一次存储行变更时间戳，用于列出、修剪和
-  簿记。它不是每日/空闲重置新鲜度的权威依据。
-- `sessionFile`：可选的显式转录路径覆盖
+  记账。它不是每日/空闲重置新鲜度的权威依据。
+- `sessionFile`：可选的显式记录路径覆盖
 - `chatType`：`direct | group | room`（有助于 UI 和发送策略）
-- `provider`、`subject`、`room`、`space`、`displayName`：用于组/渠道标签的元数据
+- `provider`、`subject`、`room`、`space`、`displayName`：用于群组/渠道标签的元数据
 - 切换开关：
   - `thinkingLevel`、`verboseLevel`、`reasoningLevel`、`elevatedLevel`
-  - `sendPolicy`（每会话覆盖）
+  - `sendPolicy`（每个会话的覆盖）
 - 模型选择：
   - `providerOverride`、`modelOverride`、`authProfileOverride`
 - 令牌计数器（尽力而为 / 取决于提供商）：
   - `inputTokens`、`outputTokens`、`totalTokens`、`contextTokens`
-- `compactionCount`：针对此会话键完成自动压缩的频率
-- `memoryFlushAt`：最后一次预压缩内存刷新的时间戳
-- `memoryFlushCompactionCount`：最后一次刷新运行时的压缩计数
+- `compactionCount`：该会话键完成自动压缩的频率
+- `memoryFlushAt`：上次预压缩内存刷新的时间戳
+- `memoryFlushCompactionCount`：上次刷新运行时的压缩计数
 
 该存储区可以安全编辑，但 Gateway(网关) 是权威来源：当会话运行时，它可能会重写或重新填充条目。
 
 ---
 
-## 转录结构（`*.jsonl`）
+## Transcript 结构 (`*.jsonl`)
 
-Transcripts 由 `@earendil-works/pi-coding-agent` 的 `SessionManager` 管理。
+Transcript 由 `@earendil-works/pi-coding-agent` 的 `SessionManager` 管理。
 
 该文件是 JSONL：
 
 - 第一行：会话标头 (`type: "session"`，包括 `id`、`cwd`、`timestamp`、可选的 `parentSession`)
-- 然后：包含 `id` + `parentId`（树）的会话条目
+- 然后：带有 `id` + `parentId`（树）的会话条目
 
 值得注意的条目类型：
 
-- `message`：用户/助手/工具结果消息
-- `custom_message`：确实进入模型上下文的扩展注入消息（可以从 UI 中隐藏）
-- `custom`：不进入模型上下文的扩展状态
-- `compaction`：包含 `firstKeptEntryId` 和 `tokensBefore` 的持久化压缩摘要
+- `message`：用户/助手/工具结果 消息
+- `custom_message`：扩展注入的、*会*进入模型上下文的消息（可对 UI 隐藏）
+- `custom`：*不*进入模型上下文的扩展状态
+- `compaction`：持久化的压缩摘要，包含 `firstKeptEntryId` 和 `tokensBefore`
 - `branch_summary`：导航树分支时的持久化摘要
 
-OpenClaw 故意**不**“修复”脚本；Gateway 使用 OpenClawGateway(网关)`SessionManager` 来读/写它们。
+OpenClaw 故意*不*“修正”transcript；Gateway 使用 OpenClawGateway(网关)`SessionManager` 来读取/写入它们。
 
 ---
 
@@ -214,25 +214,25 @@ OpenClaw 故意**不**“修复”脚本；Gateway 使用 OpenClawGateway(网关
 - 上下文窗口来自模型目录（并且可以通过配置覆盖）。
 - 存储中的 `contextTokens` 是一个运行时估算/报告值；不要将其视为严格的保证。
 
-更多信息，请参阅 [/token-use](/zh/reference/token-use)。
+欲了解更多，请参阅 [/token-use](/zh/reference/token-use)。
 
 ---
 
 ## 压缩：它是什么
 
-压缩将较旧的对话总结为脚本中持久化的 `compaction` 条目，并保留最近的消息完整无损。
+压缩将较旧的对话摘要为 transcript 中持久化的 `compaction` 条目，并保持最近的消息完整。
 
 压缩后，未来的轮次将看到：
 
 - 压缩摘要
 - `firstKeptEntryId` 之后的消息
 
-压缩是**持久性**的（与 会话 修剪不同）。请参阅 [/concepts/会话-pruning](/zh/concepts/session-pruning)。
+压缩是**持久化的**（与会话修剪不同）。请参阅 [/concepts/会话-pruning](/zh/concepts/session-pruning)。
 
 ## 压缩块边界和工具配对
 
-当 OpenClaw 将长脚本分割为压缩块时，它会保持
-助手的工具调用与其匹配的 OpenClaw`toolResult` 条目配对。
+当 OpenClaw 将长 transcript 拆分为压缩块时，它会确保
+助手工具调用与其匹配的 OpenClaw`toolResult` 条目保持配对。
 
 - 如果令牌共享分割点位于工具调用及其结果之间，OpenClaw 会将边界移动到助手工具调用消息，而不是将这对消息分开。
 - 如果尾部的工具结果块会导致分块超过目标大小，OpenClaw 会保留该挂起的工具块，并保持未摘要的尾部完整。
@@ -244,10 +244,11 @@ OpenClaw 故意**不**“修复”脚本；Gateway 使用 OpenClawGateway(网关
 
 在嵌入式 Pi 代理中，自动压缩在以下两种情况下触发：
 
-1. **溢出恢复**：模型返回上下文溢出错误 (`request_too_large`、`context length exceeded`、`input exceeds the maximum
+1. **溢出恢复**：模型返回上下文溢出错误
+   (`request_too_large`, `context length exceeded`, `input exceeds the maximum
 number of tokens`, `input token count exceeds the maximum number of input
 tokens`, `input is too long for the 模型`, `ollama error: context length
-exceeded` 以及类似的提供商特定变体) → 压缩 → 重试。
+exceeded`, 以及类似的提供商特定变体) → 压缩 → 重试。
 2. **阈值维护**：在一次成功的轮次之后，当满足以下条件时：
 
 `contextTokens > contextWindow - reserveTokens`
@@ -255,29 +256,20 @@ exceeded` 以及类似的提供商特定变体) → 压缩 → 重试。
 其中：
 
 - `contextWindow` 是模型的上下文窗口
-- `reserveTokens` 是为提示词和下一次模型输出保留的预留空间
+- `reserveTokens` 是为提示词和下一次模型输出保留的余量
 
 这些是 Pi 运行时语义（OpenClaw 消费事件，但 Pi 决定何时进行压缩）。
 
-当设置了 `agents.defaults.compaction.maxActiveTranscriptBytes` 且活动的转录文件达到该大小时，OpenClaw 也可以在开启下一次运行之前触发预检本地压缩。这是针对本地重新打开成本的文件大小保护，而非原始归档：OpenClaw 仍然运行正常的语义压缩，并且它需要 `truncateAfterCompaction`，以便压缩后的摘要可以成为新的后续转录。
+当设置了 OpenClaw`agents.defaults.compaction.maxActiveTranscriptBytes`OpenClaw 且活动记录文件达到该大小时，OpenClaw 也可以在开始下一次运行之前触发预检本地压缩。这是针对本地重新打开成本的文件大小保护，而非原始归档：OpenClaw 仍然会运行常规的语义压缩，并且它需要 `truncateAfterCompaction`，以便压缩后的摘要可以成为新的后续记录。
 
 对于嵌入式 Pi 运行，`agents.defaults.compaction.midTurnPrecheck.enabled: true`OpenClaw
-增加了一个可选择的工具循环守卫。在追加工具结果之后且在下一次
-模型调用之前，OpenClaw 使用在轮次开始时使用的相同预检
-预算逻辑来估算提示压力。如果上下文不再适用，该守卫
-不会在 Pi 的 `transformContext` 挂钩内进行压缩。它会引发一个结构化的
-中途轮次预检信号，停止当前的提示提交，并允许
-外部运行循环使用现有的恢复路径：在足够时截断过大的工具结果，
-或者触发配置的压缩模式并重试。
-该选项默认禁用，并且与 `default` 和 `safeguard`
-压缩模式一起工作，包括提供商支持的保护压缩。
-这独立于 `maxActiveTranscriptBytes`：字节大小守卫在
-轮次开始之前运行，而中途预检在嵌入式 Pi 工具
-循环中较晚的时间运行，即在追加新的工具结果之后。
+增加了一个可选的工具循环保护。在追加工具结果之后和下一次模型调用之前，OpenClaw 使用在回合开始时使用的相同预检预算逻辑来估算提示词压力。如果上下文不再适合，该保护不会在 Pi 的 `transformContext` 钩子内部进行压缩。它会引发一个结构化的回合中预检信号，停止当前的提示词提交，并让外层运行循环使用现有的恢复路径：如果足够则截断过大的工具结果，或者触发配置的压缩模式并重试。该选项默认禁用，并且适用于 `default` 和 `safeguard`
+压缩模式，包括提供商支持的安全保护压缩。
+这与 `maxActiveTranscriptBytes` 无关：字节大小保护在回合打开之前运行，而回合中预检在追加新的工具结果后，于嵌入式 Pi 工具循环的稍后阶段运行。
 
 ---
 
-## 压缩设置（`reserveTokens`，`keepRecentTokens`）
+## 压缩设置 (`reserveTokens`, `keepRecentTokens`)
 
 Pi 的压缩设置位于 Pi 设置中：
 
@@ -293,47 +285,46 @@ Pi 的压缩设置位于 Pi 设置中：
 
 OpenClaw 还为嵌入式运行强制执行一个安全下限：
 
-- 如果 `compaction.reserveTokens < reserveTokensFloor`OpenClaw，OpenClaw 会将其提高。
-- 默认下限是 `20000` 个令牌。
-- 设置 `agents.defaults.compaction.reserveTokensFloor: 0` 以禁用下限。
+- 如果 `compaction.reserveTokens < reserveTokensFloor`OpenClaw，OpenClaw 会将其提升。
+- 默认下限为 `20000` 个 token。
+- 设置 `agents.defaults.compaction.reserveTokensFloor: 0` 可禁用下限。
 - 如果它已经更高，OpenClaw 将保持原样。
-- 手动 `/compact` 遵守明确的 `agents.defaults.compaction.keepRecentTokens`
-  并保留 Pi 的近期尾部切断点。如果没有明确的保留预算，
+- 手动 `/compact` 会遵守明确的 `agents.defaults.compaction.keepRecentTokens`
+  并保留 Pi 的最近尾部切断点。如果没有明确的保留预算，
   手动压缩仍然是一个硬检查点，重建的上下文从
-  新的摘要开始。
-- 设置 `agents.defaults.compaction.midTurnPrecheck.enabled: true` 以在新的工具结果之后且在下一次模型
-  调用之前运行
-  可选的工具循环预检。这只是一个触发器；摘要生成仍然使用配置的
-  压缩路径。它独立于 `maxActiveTranscriptBytes`，后者是一个
-  轮次开始时的活动转录字节大小守卫。
-- 将 `agents.defaults.compaction.maxActiveTranscriptBytes` 设置为字节值或
-  字符串（如 `"20mb"`），以便在当前活动
-  转录变大时，在轮次之前运行本地压缩。此保护措施仅在
-  `truncateAfterCompaction` 也已启用时才生效。保留未设置或将其设置为 `0` 以
+  新摘要开始。
+- 设置 `agents.defaults.compaction.midTurnPrecheck.enabled: true` 可在新的工具结果之后、下一次模型调用之前运行
+  可选的工具循环预检查。这只是一个触发器；摘要生成仍使用配置的
+  压缩路径。它与 `maxActiveTranscriptBytes` 无关，后者是一个
+  回合开始时的活动记录字节数守卫。
+- 将 `agents.defaults.compaction.maxActiveTranscriptBytes` 设置为一个字节值或
+  字符串（例如 `"20mb"`），以便在活动记录变大时，
+  在回合之前运行本地压缩。此守卫仅在同时启用了
+  `truncateAfterCompaction` 时才会激活。将其保留未设置或设置 `0` 可
   禁用。
-- 启用 `agents.defaults.compaction.truncateAfterCompaction`OpenClaw 后，
-  OpenClaw 会在压缩后将活动转录轮换为压缩后的后续 JSONL。旧的完整转录将保持存档状态，并从
-  压缩检查点进行链接，而不是就地重写。
+- 当启用 `agents.defaults.compaction.truncateAfterCompaction`OpenClaw 时，
+  OpenClaw 会在压缩后将活动记录轮换为压缩后的继任者 JSONL。
+  旧的完整记录将被归档，并从压缩检查点进行链接，而不是就地重写。
 
 原因：在压缩变得不可避免之前，为多轮次“内部维护”（如内存写入）留出足够的余量。
 
-实现：`ensurePiCompactionReserveTokens()` 位于 `src/agents/pi-settings.ts` 中
-（由 `src/agents/pi-embedded-runner.ts` 调用）。
+实现：`ensurePiCompactionReserveTokens()` 在 `src/agents/pi-settings.ts` 中
+（从 `src/agents/pi-embedded-runner.ts` 调用）。
 
 ---
 
 ## 可插拔压缩提供商
 
-插件可以通过插件 API 上的 `registerCompactionProvider()`API 注册压缩提供商。当 `agents.defaults.compaction.provider` 设置为已注册的提供商 ID 时，保护扩展会将摘要委托给该提供商，而不是内置的 `summarizeInStages` 管道。
+插件可以通过插件 API 上的 `registerCompactionProvider()`API 注册压缩提供商。当 `agents.defaults.compaction.provider` 设置为注册的提供商 ID 时，安全防护扩展会将摘要生成委托给该提供商，而不是内置的 `summarizeInStages` 管道。
 
-- `provider`LLM：已注册的压缩提供商插件的 ID。保留未设置以使用默认的 LLM 摘要。
-- 设置 `provider` 会强制启用 `mode: "safeguard"`。
+- `provider`LLM：注册的压缩提供商插件的 ID。保留未设置以使用默认的 LLM 摘要生成。
+- 设置 `provider` 会强制执行 `mode: "safeguard"`。
 - 提供商接收与内置路径相同的压缩指令和标识符保留策略。
 - 保护措施仍会在提供商输出后保留最近轮次和拆分轮次的后缀上下文。
 - 内置保护摘要会使用新消息重新提炼先前的摘要，
   而不是逐字保留完整的先前摘要。
-- 保护模式默认启用摘要质量审核；设置
-  `qualityGuard.enabled: false` 可跳过“输出格式错误时重试”的行为。
+- 安全防护模式默认启用摘要质量审计；设置
+  `qualityGuard.enabled: false` 可跳过输出格式错误时的重试行为。
 - 如果提供商失败或返回空结果，OpenClaw 将自动回退到内置的 LLM 摘要。
 - 中止/超时信号将被重新抛出（而不是被吞没），以尊重调用者的取消请求。
 
@@ -348,31 +339,31 @@ OpenClaw 还为嵌入式运行强制执行一个安全下限：
 - `/status`（在任何聊天会话中）
 - `openclaw status`CLI (CLI)
 - `openclaw sessions` / `sessions --json`
-- Gateway(网关) 日志 (Gateway(网关)`pnpm gateway:watch` 或 `openclaw logs --follow`)：`embedded run auto-compaction start` + `complete`
+- Gateway(网关) 日志（Gateway(网关)`pnpm gateway:watch` 或 `openclaw logs --follow`）：`embedded run auto-compaction start` + `complete`
 - 详细模式：`🧹 Auto-compaction complete` + 压缩计数
 
 ---
 
-## 静默维护 (`NO_REPLY`)
+## 静默维护（`NO_REPLY`）
 
 OpenClaw 支持用于后台任务的“静默”轮次，其中用户不应看到中间输出。
 
 约定：
 
-- 助手以其输出以精确的静默令牌 `NO_REPLY` /
-  `no_reply` 开头，以表示“不向用户传递回复”。
+- 助手以其输出以确切的静默令牌 `NO_REPLY` /
+  `no_reply` 开头，以表示“不向用户传送回复”。
 - OpenClaw 会在交付层中剥离/抑制它。
-- 精确的静默令牌抑制不区分大小写，因此 `NO_REPLY` 和
-  `no_reply` 在整个载荷仅为静默令牌时均有效。
+- 确切的静默令牌抑制不区分大小写，因此当整个负载仅为静默令牌时，`NO_REPLY` 和
+  `no_reply` 均有效。
 - 这仅适用于真正的后台/无交付轮次；它不是普通可操作用户请求的捷径。
 
-截至 `2026.1.10`OpenClaw，当部分块以 `NO_REPLY` 开头时，OpenClaw 还会抑制 **草稿/输入流式传输**，因此静默操作不会在轮次中途泄漏部分输出。
+自 `2026.1.10`OpenClaw 起，当部分块以 `NO_REPLY` 开头时，OpenClaw 还会抑制 **草稿/输入流**，这样静默操作就不会在轮次中途泄漏部分输出。
 
 ---
 
 ## 预压缩“内存刷新”（已实现）
 
-目标：在自动压缩发生之前，运行一个静默的代理轮次，将持久化状态写入磁盘（例如代理工作区中的 `memory/YYYY-MM-DD.md`），以便压缩无法擦除关键上下文。
+目标：在自动压缩发生之前，运行一个静默代理轮次，将持久状态写入磁盘（例如，代理工作区中的 `memory/YYYY-MM-DD.md`），以便压缩无法擦除关键上下文。
 
 OpenClaw 使用 **预阈值刷新** 方法：
 
@@ -381,40 +372,40 @@ OpenClaw 使用 **预阈值刷新** 方法：
 3. 使用确切的静默令牌 `NO_REPLY` / `no_reply`，以便用户
    什么都看不到。
 
-配置 (`agents.defaults.compaction.memoryFlush`)：
+配置（`agents.defaults.compaction.memoryFlush`）：
 
-- `enabled` (默认值：`true`)
-- `model` (可选的确切提供商/模型覆盖，用于刷新轮次，例如 `ollama/qwen3:8b`)
-- `softThresholdTokens` (默认值：`4000`)
-- `prompt` (刷新轮次的用户消息)
-- `systemPrompt` (为刷新轮次追加的额外系统提示)
+- `enabled`（默认值：`true`）
+- `model`（用于刷新轮次的可选精确提供商/模型覆盖，例如 `ollama/qwen3:8b`）
+- `softThresholdTokens`（默认值：`4000`）
+- `prompt`（刷新轮次的用户消息）
+- `systemPrompt`（为刷新轮次附加的额外系统提示）
 
 注意：
 
 - 默认提示/系统提示包含一个 `NO_REPLY` 提示以抑制
-  投递。
-- 当设置了 `model` 时，清理回合将使用该模型，而不继承当前会话的回退链，因此仅限本地的维护工作不会静默回退到付费的对话模型。
-- 每个压缩周期运行一次清理（记录在 `sessions.json` 中）。
+  传送。
+- 当设置了 `model` 时，刷新轮次将使用该模型，而不继承活动会话的回退链，因此仅限本地的维护不会静默回退到付费的对话模型。
+- 刷新在每个压缩周期运行一次（在 `sessions.json` 中跟踪）。
 - 清理仅针对嵌入式 Pi 会话运行（CLI 后端会跳过它）。
-- 当会话工作区为只读（`workspaceAccess: "ro"` 或 `"none"`）时，将跳过刷新。
-- 有关工作区文件布局和写入模式，请参阅 [内存](/zh/concepts/memory)。
+- 当会话工作区为只读时（`workspaceAccess: "ro"` 或 `"none"`），将跳过刷新。
+- 有关工作区文件布局和写入模式，请参阅 [Memory](/zh/concepts/memory)。
 
-Pi 还在扩展 API 中公开了一个 `session_before_compact` 钩子，但 OpenClaw 的刷新逻辑目前位于 Gateway(网关) 端。
+Pi 还在扩展 API 中暴露了 `session_before_compact`APIOpenClawGateway(网关) 钩子，但目前 OpenClaw 的刷新逻辑位于 Gateway 端。
 
 ---
 
 ## 故障排查清单
 
-- 会话密钥错误？请先阅读 [/concepts/会话](/zh/concepts/session) 并确认 `sessionKey` 中的 `/status`。
-- 存储与记录不匹配？请从 Gateway(网关)`openclaw status` 中确认 Gateway(网关) 主机和存储路径。
+- 会话密钥错误？首先查看 [/concepts/会话](/zh/concepts/session) 并确认 `/status` 中的 `sessionKey`。
+- 存储与脚本不匹配？从 Gateway(网关)`openclaw status` 确认 Gateway 主机和存储路径。
 - 压缩垃圾信息？请检查：
   - 模型上下文窗口（太小）
-  - 压缩设置（`reserveTokens` 对模型窗口来说过高可能导致更早压缩）
+  - 压缩设置（对于模型窗口而言 `reserveTokens` 太高可能会导致更早的压缩）
   - 工具结果膨胀：启用/调优会话修剪
-- 静默轮次泄漏？确认回复以 `NO_REPLY` 开头（不区分大小写的精确标记），并且您使用的是包含流式抑制修复的版本。
+- 静默轮次泄露？确认回复以 `NO_REPLY` 开头（不区分大小写的精确令牌），并且您使用的是包含流抑制修复的构建版本。
 
 ## 相关
 
-- [会话管理](/zh/concepts/session)
-- [会话修剪](/zh/concepts/session-pruning)
-- [上下文引擎](/zh/concepts/context-engine)
+- [Session management](/zh/concepts/session)
+- [Session pruning](/zh/concepts/session-pruning)
+- [Context engine](/zh/concepts/context-engine)

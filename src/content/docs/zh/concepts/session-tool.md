@@ -113,28 +113,31 @@ token 计数和时间戳。按 kind (`main`, `group`, `cron`, `hook`,
 
 ## 生成子代理
 
-`sessions_spawn` 默认为后台任务创建一个隔离会话。它始终是非阻塞的——它立即返回 `runId` 和 `childSessionKey`。
+`sessions_spawn` 默认为后台任务创建一个隔离会话。
+它始终是非阻塞的——它立即返回一个 `runId` 和
+`childSessionKey`。原生子代理运行在子会话的第一个可见 `[Subagent Task]` 消息中接收委派的任务，而系统提示仅包含子代理运行时规则和路由上下文。
 
 关键选项：
 
-- `runtime: "subagent"`（默认）或 `"acp"` 用于外部 harness 代理。
-- 子会话的 `model` 和 `thinking` 覆盖设置。
-- `thread: true` 用于将生成的子代理绑定到聊天线程（Discord、Slack 等）。
-- `sandbox: "require"` 用于对子代理强制执行沙箱隔离。
-- 当子代理需要当前的请求者记录时，原生子代理使用 `context: "fork"`；省略它或使用 `context: "isolated"` 以获得干净的子代理。
-  线程绑定的原生子代理默认为 `context: "fork"`，除非 `threadBindings.defaultSpawnContext` 指定了其他情况。
+- `runtime: "subagent"`（默认）或 `"acp"` 用于外部代理工具。
+- 子会话的 `model` 和 `thinking` 覆盖。
+- `thread: true` 将生成绑定到聊天线程（Discord、Slack 等）。
+- `sandbox: "require"` 对子会话强制执行沙箱隔离。
+- 当子会话需要当前请求者记录时，原生子代理使用 `context: "fork"`；省略它或使用 `context: "isolated"` 以获得一个干净的子会话。
+  线程绑定的原生子代理默认为 `context: "fork"`，除非
+  `threadBindings.defaultSpawnContext` 另有说明。
 
-默认的叶子子代理不会获得会话工具。当
-`maxSpawnDepth >= 2` 时，深度为 1 的编排器子代理还会额外收到
+默认的叶子子代理不会获取会话工具。当
+`maxSpawnDepth >= 2` 时，深度为 1 的编排器子代理还会接收
 `sessions_spawn`、`subagents`、`sessions_list` 和 `sessions_history`，以便它们
-能够管理自己的子级。叶子运行仍然不会获得递归
+可以管理自己的子级。叶子运行仍然不会获取递归
 编排工具。
 
-完成后，一个公告步骤会将结果发布到请求者的渠道。
-完成传递在可用时会保留绑定的线程/主题路由，并且如果
-完成源仅标识了一个渠道 OpenClaw 仍然可以重用
-请求者会话存储的路由（`lastChannel` / `lastTo`）进行直接
-传递。
+完成后，一个通知步骤会将结果发布到请求者的渠道。
+完成交付在可用时保留绑定的线程/主题路由，如果
+完成源仅标识一个渠道，OpenClaw 仍可重用
+请求者会话的存储路由（`lastChannel` / `lastTo`）进行直接
+交付。
 
 有关 ACP 特定的行为，请参阅 [ACP 代理](/zh/tools/acp-agents)。
 
@@ -149,16 +152,16 @@ token 计数和时间戳。按 kind (`main`, `group`, `cron`, `hook`,
 | `agent` | 此代理的所有会话                 |
 | `all`   | 所有会话（如果已配置，则跨代理） |
 
-默认值为 `tree`。无论配置如何，沙箱隔离会话都被限制为 `tree`。
+默认值为 `tree`。沙箱隔离的会话无论如何配置都将被限制为 `tree`。
 
 ## 延伸阅读
 
-- [会话管理](/zh/concepts/session) -- 路由、生命周期、维护
-- [ACP 代理](/zh/tools/acp-agents) -- 外部适配器生成
-- [多代理](/zh/concepts/multi-agent) -- 多代理架构
-- [Gateway(网关)配置](<Gateway(网关)/en/gateway/configuration>) -- 会话工具配置项
+- [会话管理](/zh/concepts/session) —— 路由、生命周期、维护
+- [ACP Agents](/zh/tools/acp-agents) —— 外部适配器生成
+- [Multi-agent](/zh/concepts/multi-agent) —— 多智能体架构
+- [Gateway Configuration](<Gateway(网关)/en/gateway/configuration>) —— 会话工具配置选项
 
 ## 相关
 
-- [会话管理](/zh/concepts/session)
-- [会话清理](/zh/concepts/session-pruning)
+- [Session management](/zh/concepts/session)
+- [Session pruning](/zh/concepts/session-pruning)

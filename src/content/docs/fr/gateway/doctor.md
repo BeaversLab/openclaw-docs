@@ -183,10 +183,10 @@ Cela met en place des candidats durables ancrés dans le stockage de rêve à co
     Doctor va :
 
     - Expliquer quelles clés héritées ont été trouvées.
-    - Afficher la migration qu'il a appliquée.
+    - Montrer la migration qu'il a appliquée.
     - Réécrire `~/.openclaw/openclaw.json` avec le schéma mis à jour.
 
-    Le démarrage de Gateway refuse les formats de configuration hérités et vous demande d'exécuter `openclaw doctor --fix` ; il ne réécrit pas `openclaw.json` au démarrage. Les migrations du magasin de tâches Cron sont également gérées par `openclaw doctor --fix`.
+    Le démarrage du Gateway refuse les formats de configuration hérités et vous demande d'exécuter `openclaw doctor --fix` ; il ne réécrit pas `openclaw.json` au démarrage. Les migrations du magasin de tâches Cron sont également gérées par `openclaw doctor --fix`.
 
     Migrations actuelles :
 
@@ -195,12 +195,12 @@ Cela met en place des candidats durables ancrés dans le stockage de rêve à co
     - `routing.groupChat.historyLimit` → `messages.groupChat.historyLimit`
     - `routing.groupChat.mentionPatterns` → `messages.groupChat.mentionPatterns`
     - `channels.telegram.requireMention` → `channels.telegram.groups."*".requireMention`
-    - configurations de channel configurées sans politique de réponse visible → `messages.groupChat.visibleReplies: "message_tool"`
+    - configurations de canal configurées sans stratégie de réponse visible → `messages.groupChat.visibleReplies: "message_tool"`
     - `routing.queue` → `messages.queue`
-    - `routing.bindings` → `bindings` de premier niveau
+    - `routing.bindings` → `bindings` de niveau supérieur
     - `routing.agents`/`routing.defaultAgentId` → `agents.list` + `agents.list[].default`
-    - `talk.voiceId`/`talk.voiceAliases`/`talk.modelId`/`talk.outputFormat`/`talk.apiKey` hérités → `talk.provider` + `talk.providers.<provider>`
-    - sélecteurs Talk en temps réel de premier niveau hérités (`talk.mode`/`talk.transport`/`talk.brain`/`talk.model`/`talk.voice`) + `talk.provider`/`talk.providers` → `talk.realtime`
+    - hérité `talk.voiceId`/`talk.voiceAliases`/`talk.modelId`/`talk.outputFormat`/`talk.apiKey` → `talk.provider` + `talk.providers.<provider>`
+    - sélecteurs Talk temps réel de niveau supérieur hérités (`talk.mode`/`talk.transport`/`talk.brain`/`talk.model`/`talk.voice`) + `talk.provider`/`talk.providers` → `talk.realtime`
     - `routing.agentToAgent` → `tools.agentToAgent`
     - `routing.transcribeAudio` → `tools.media.audio.models`
     - `messages.tts.<provider>` (`openai`/`elevenlabs`/`microsoft`/`edge`) → `messages.tts.providers.<provider>`
@@ -214,18 +214,18 @@ Cela met en place des candidats durables ancrés dans le stockage de rêve à co
     - `plugins.entries.voice-call.config.streaming.sttProvider` → `plugins.entries.voice-call.config.streaming.provider`
     - `plugins.entries.voice-call.config.streaming.openaiApiKey|sttModel|silenceDurationMs|vadThreshold` → `plugins.entries.voice-call.config.streaming.providers.openai.*`
     - `bindings[].match.accountID` → `bindings[].match.accountId`
-    - Pour les channels avec `accounts` nommé mais des valeurs de channel de premier niveau à compte unique persistantes, déplacez ces valeurs limitées au compte vers le compte promu choisi pour ce channel (`accounts.default` pour la plupart des channels ; Matrix peut préserver une cible nommée/défaut correspondante existante)
+    - Pour les canaux avec `accounts` nommé mais des valeurs de canal de niveau supérieur mono-compte persistantes, déplacer ces valeurs portées sur le compte vers le compte promu choisi pour ce canal (`accounts.default` pour la plupart des canaux ; Matrix peut préserver une cible nommée/défaut existante correspondante)
     - `identity` → `agents.list[].identity`
     - `agent.*` → `agents.defaults` + `tools.*` (tools/elevated/exec/sandbox/subagents)
     - `agent.model`/`allowedModels`/`modelAliases`/`modelFallbacks`/`imageModelFallbacks` → `agents.defaults.models` + `agents.defaults.model.primary/fallbacks` + `agents.defaults.imageModel.primary/fallbacks`
-    - supprimer `agents.defaults.llm` ; utiliser `models.providers.<id>.timeoutSeconds` pour les délais d'attente lents de provider/model
+    - supprimer `agents.defaults.llm` ; utiliser `models.providers.<id>.timeoutSeconds` pour les délais d'attente lents du fournisseur/modèle, et maintenir le délai d'attente de l'agent/exécution au-dessus de cette valeur lorsque l'exécution entière doit durer plus longtemps
     - `browser.ssrfPolicy.allowPrivateNetwork` → `browser.ssrfPolicy.dangerouslyAllowPrivateNetwork`
     - `browser.profiles.*.driver: "extension"` → `"existing-session"`
     - supprimer `browser.relayBindHost` (paramètre de relais d'extension hérité)
-    - `models.providers.*.api: "openai"` hérité → `"openai-completions"` (le démarrage de la passerelle ignore également les providers dont `api` est défini sur une valeur d'énumération future ou inconnue plutôt que d'échouer fermement)
-    - supprimer `plugins.entries.codex.config.codexDynamicToolsProfile` ; Codex app-server garde toujours les outils de l'espace de travail natifs Codex natifs
+    - hérité `models.providers.*.api: "openai"` → `"openai-completions"` (le démarrage de la passerelle ignore également les fournisseurs dont `api` est défini sur une valeur d'énumération future ou inconnue au lieu d'échouer en mode fermé)
+    - supprimer `plugins.entries.codex.config.codexDynamicToolsProfile` ; Codex app-server conserve toujours les outils d'espace de travail natifs Codex comme natifs
 
-    Les avertissements de Doctor incluent également des conseils sur le compte par défaut pour les channels multi-comptes :
+    Les avertissements de Doctor incluent également des conseils par défaut de compte pour les canaux multi-comptes :
 
     - Si deux entrées `channels.<channel>.accounts` ou plus sont configurées sans `channels.<channel>.defaultAccount` ni `accounts.default`, doctor avertit que le routage de secours peut choisir un compte inattendu.
     - Si `channels.<channel>.defaultAccount` est défini sur un ID de compte inconnu, doctor avertit et liste les ID de compte configurés.

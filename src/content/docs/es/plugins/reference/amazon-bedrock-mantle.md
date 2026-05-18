@@ -12,7 +12,7 @@ Añade compatibilidad con el proveedor de modelos Amazon Bedrock Mantle a OpenCl
 ## Distribución
 
 - Paquete: `@openclaw/amazon-bedrock-mantle-provider`
-- Ruta de instalación: npm
+- Ruta de instalación: npm; ClawHub
 
 ## Superficie
 

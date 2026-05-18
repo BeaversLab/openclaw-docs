@@ -147,7 +147,7 @@ macOS 應用程式可以在下列情況下嘗試 **靜默批准**：
 
 ## 本地性和轉發標頭
 
-只有當原始 socket 和任何上游代理證據一致時，Gateway 配對才會將連線視為回送。如果請求到達回送但攜帶指向非本地來源的 `X-Forwarded-For` / `X-Forwarded-Host` / `X-Forwarded-Proto` 標頭，則該轉發標頭證據將使回送本地性聲明無效。然後，配對路徑需要明確核准，而不是將請求靜默視為相同主機連線。有關操作員認證的等效規則，請參閱 [Trusted Proxy Auth](/zh-Hant/gateway/trusted-proxy-auth)。
+Gateway 配對僅在原始 socket 與任何上游代理證據均一致時，才會將連接視為 loopback。如果請求來自 loopback 但帶有 `Forwarded`、任何 `X-Forwarded-*` 或 `X-Real-IP` 標頭證據，該轉發標頭證據將使 loopback 本地主張失效。配對路徑隨後需要明確批准，而不是靜默地將請求視為同主機連接。關於操作員認證的等效規則，請參閱 [Trusted Proxy Auth](/zh-Hant/gateway/trusted-proxy-auth)。
 
 ## 儲存（本地，私有）
 

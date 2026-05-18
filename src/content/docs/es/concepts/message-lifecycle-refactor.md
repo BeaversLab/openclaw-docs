@@ -841,11 +841,11 @@ Pruebas unitarias:
 Pruebas de integración:
 
 - `channel.turn.run` adaptador simple todavía registra y envía.
-- La entrega de turnos ensamblados heredados no se vuelve duradera a menos que el canal opte explícitamente por ello.
+- La entrega de eventos ensamblados heredados no es duradera a menos que el canal lo active explícitamente.
 - `channel.turn.runPrepared` puente todavía registra y finaliza.
 - Los asistentes de compatibilidad pública llaman a las devoluciones de llamada de entrega propiedad del llamador por defecto y no realizan un envío genérico antes de esas devoluciones de llamada.
 - La entrega alternativa duradera reproduce toda la matriz de cargas útiles proyectadas después del reinicio y no puede dejar las cargas útiles posteriores sin registrar después de un bloqueo temprano.
-- La entrega de turnos ensamblados duraderos devuelve los ids de mensajes de plataforma al despachador almacenado en búfer.
+- La entrega duradera de eventos ensamblados devuelve los IDs de los mensajes de la plataforma al despachador almacenado en búfer.
 - Los ganchos de entrega personalizados todavía devuelven los ids de mensajes de plataforma cuando la entrega duradera está deshabilitada o no está disponible.
 - La respuesta final sobrevive al reinicio entre la finalización del asistente y el envío a la plataforma.
 - El borrador de vista previa se finaliza en su lugar cuando se permite.

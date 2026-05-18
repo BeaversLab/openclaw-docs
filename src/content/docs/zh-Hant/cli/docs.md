@@ -8,7 +8,7 @@ title: "文件"
 
 # `openclaw docs`
 
-從終端機搜尋即時 OpenClaw 文件索引。此指令會呼叫託管在 Mintlify 的公開文件 MCP 搜尋端點 `https://docs.openclaw.ai/mcp.SearchOpenClaw`，並在您的終端機中呈現結果。
+從終端機搜尋即時的 OpenClaw 文件索引。此指令會調用託管在 Mintlify 的公開文件 MCP 搜尋端點 `https://docs.openclaw.ai/mcp.search_open_claw`，並在您的終端機中呈現結果。
 
 ## 使用方式
 

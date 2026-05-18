@@ -65,7 +65,7 @@ pnpm test:docker:update-migration
 
 重要軌道：
 
-- `test:docker:plugins` 驗證外掛安裝冒煙測試、本機資料夾安裝、本機資料夾更新跳過行為、具有預安裝相依性的本機資料夾、`file:` 套件安裝、透過 CLI 執行的 git 安裝、git 移動參考更新、具有提升傳遞相依性的 npm registry 安裝、npm update 無操作、本機 ClawHub fixture 安裝和更新無操作、marketplace 更新行為，以及 Claude-bundle 啟用/檢查。設定 `OPENCLAW_PLUGINS_E2E_CLAWHUB=0` 以保持 ClawHub 區塊為隔離/離線狀態。
+- `test:docker:plugins` 驗證外掛安裝冒煙測試、本地資料夾安裝、本地資料夾更新略過行為、具有預先安裝相依性的本地資料夾、`file:` 套件安裝、具有 CLI 執行的 git 安裝、git 移動引用更新、具有提升傳遞性相依性的 npm 登錄安裝、npm 更新無操作 (no-ops)、格式錯誤的 npm 套件元資料拒絕、本地 ClawHub 安裝工具 (fixture) 安裝與更新無操作、市集更新行為，以及 Claude-bundle 啟用/檢查。設定 `OPENCLAW_PLUGINS_E2E_CLAWHUB=0` 以保持 ClawHub 區塊獨立/離線。
 - `test:docker:plugin-lifecycle-matrix` 在裸機容器中安裝候選套件，透過安裝、檢查、停用、啟用、明確升級、明確降級以及在刪除外掛程式碼後執行卸載來運行 npm 外掛。它會記錄每個階段的 RSS 和 CPU 指標。
 - `test:docker:plugin-update` 驗證未變更的已安裝外掛在 `openclaw plugins update` 期間不會重新安裝或遺失安裝中繼資料。
 - `test:docker:upgrade-survivor` 在髒舊使用者 fixture 上安裝候選 tarball，執行套件更新加上非互動式 doctor，然後啟動回環 Gateway 並檢查狀態保留。

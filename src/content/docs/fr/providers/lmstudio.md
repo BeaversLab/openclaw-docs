@@ -89,7 +89,7 @@ Pour les serveurs LM Studio non authentifiés, omettez la clé ; OpenClaw stocke
 Cela écrit `models.providers.lmstudio` et définit le modèle par défaut sur `lmstudio/<custom-model-id>`API. Lorsque vous fournissez une clé API, la configuration écrit également le profil d'authentification `lmstudio:default`.
 
 La configuration interactive peut demander une longueur de contexte de chargement préférée facultative et l'applique à tous les modèles LM Studio découverts qu'elle enregistre dans la configuration.
-La configuration du plugin LM Studio fait confiance au point de terminaison LM Studio configuré pour les demandes de modèles, y compris les hôtes de bouclage, LAN et tailnet. Vous pouvez désactiver cette option en définissant `models.providers.lmstudio.request.allowPrivateNetwork: false`.
+La configuration du plugin LM Studio fait confiance au point de terminaison LM Studio configuré pour les demandes de modèle, y compris les hôtes de bouclage, de réseau local et de tailnet. Les origines de métadonnées/link-local nécessitent toujours un consentement explicite. Vous pouvez refuser en définissant `models.providers.lmstudio.request.allowPrivateNetwork: false`.
 
 ## Configuration
 
@@ -202,7 +202,7 @@ Utilisez l'adresse accessible de l'hôte LM Studio, gardez `/v1`, et assurez-vou
 }
 ```
 
-Contrairement aux fournisseurs compatibles avec OpenAI génériques, `lmstudio` fait confiance automatiquement à son point de terminaison local/privé configuré pour les requêtes de modèle gardées. Les ID de fournisseur de bouclage personnalisés tels que `localhost` ou `127.0.0.1` sont également fiables automatiquement ; pour les ID de fournisseur personnalisés LAN, tailnet ou DNS privé, définissez `models.providers.<id>.request.allowPrivateNetwork: true` explicitement.
+`lmstudio` fait confiance automatiquement à son point de terminaison local/privé configuré pour les demandes de modèle sécurisées. Les entrées de fournisseur personnalisé/local compatibles OpenAI font également confiance à leur origine `baseUrl` configurée exacte, à l'exception des origines de métadonnées/link-local ; les demandes vers différents ports ou destinations privés nécessitent toujours `models.providers.<id>.request.allowPrivateNetwork: true`. Définissez `models.providers.<id>.request.allowPrivateNetwork: false` pour refuser la confiance de l'origine exacte.
 
 ## Connexes
 

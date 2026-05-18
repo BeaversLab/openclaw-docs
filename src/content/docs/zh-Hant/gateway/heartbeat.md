@@ -48,7 +48,7 @@ Heartbeat 是一個預定的主會話回合 — 它**不會**建立 [background 
         directPolicy: "allow", // default: allow direct/DM targets; set "block" to suppress
         lightContext: true, // optional: only inject HEARTBEAT.md from bootstrap files
         isolatedSession: true, // optional: fresh session each run (no conversation history)
-        skipWhenBusy: true, // optional: also defer when subagent or nested lanes are busy
+        skipWhenBusy: true, // optional: also defer when this agent's subagent or nested lanes are busy
         // activeHours: { start: "08:00", end: "24:00" },
         // includeReasoning: true, // optional: send separate `Reasoning:` message too
       },
@@ -64,7 +64,7 @@ Heartbeat 是一個預定的主會話回合 — 它**不會**建立 [background 
 - 心跳提示詞會作為用戶訊息**逐字**發送。系統提示詞僅在為預設代理啟用心跳時才包含「Heartbeat」部分，且該運行會在內部被標記。
 - 當使用 `0m` 停用 heartbeat 時，正常執行也會從啟動上下文中省略 `HEARTBEAT.md`，這樣模型就不會看到僅限 heartbeat 的指示。
 - 活動時間 (`heartbeat.activeHours`) 會根據設定的時區進行檢查。在時間視窗之外，心跳會被跳過，直到視窗內的下一次刻度。
-- 當 cron 工作處於活動或佇列狀態時，心跳會自動延後。設定 `heartbeat.skipWhenBusy: true` 可讓心跳在額外忙碌的通道（子代理或巢狀指令工作）中也延後執行；這對於本機 Ollama 和其他受限的單一執行環境主機非常有用。
+- 當 cron 工作正在運作或排入佇列時，Heartbeats 會自動延遲。設定 `heartbeat.skipWhenBusy: true` 也可讓代理程式在其自己的 session-keyed 子代理程式或巢狀指令通道上延遲；同層級的代理程式不會僅因為另一個代理程式有正在進行的子代理程式工作而暫停。
 
 ## 心跳提示的用途
 
@@ -99,7 +99,7 @@ Heartbeat 是一個預定的主會話回合 — 它**不會**建立 [background 
         includeReasoning: false, // default: false (deliver separate Reasoning: message when available)
         lightContext: false, // default: false; true keeps only HEARTBEAT.md from workspace bootstrap files
         isolatedSession: false, // default: false; true runs each heartbeat in a fresh session (no conversation history)
-        skipWhenBusy: false, // default: false; true also waits for subagent/nested lanes
+        skipWhenBusy: false, // default: false; true also waits for this agent's subagent/nested lanes
         target: "last", // default: none | options: last | none | <channel id> (core or plugin, e.g. "imessage")
         to: "+15551234567", // optional channel-specific override
         accountId: "ops-bot", // optional multi-account channel id
@@ -216,25 +216,25 @@ Heartbeat 是一個預定的主會話回合 — 它**不會**建立 [background 
 ### Field notes
 
 <ParamField path="every" type="string">
-  心跳間隔（持續時間字串；預設單位 = 分鐘）。
+  Heartbeat 間隔（持續時間字串；預設單位 = 分鐘）。
 </ParamField>
 <ParamField path="model" type="string">
-  心跳執行的可選模型覆寫 (`provider/model`)。
+  Heartbeat 執行的可選模型覆寫 (`provider/model`)。
 </ParamField>
 <ParamField path="includeReasoning" type="boolean" default="false">
-  啟用時，也可在可用時傳送獨立的 `Reasoning:` 訊息（形狀與 `/reasoning on` 相同）。
+  啟用時，當有可用的獨立 `Reasoning:` 訊息時一併傳送（形狀與 `/reasoning on` 相同）。
 </ParamField>
 <ParamField path="lightContext" type="boolean" default="false">
-  當為 true 時，心跳執行使用輕量級啟動上下文，並僅保留工作區啟動檔案中的 `HEARTBEAT.md`。
+  為 true 時，heartbeat 執行會使用輕量級啟動上下文，並僅保留來自工作區啟動檔案的 `HEARTBEAT.md`。
 </ParamField>
 <ParamField path="isolatedSession" type="boolean" default="false">
-  當為 true 時，每次心跳都在一個沒有先前對話歷史的新會話中執行。使用與 cron `sessionTarget: "isolated"` 相同的隔離模式。大幅減少每次心跳的 token 成本。結合 `lightContext: true` 以獲得最大節省。傳送路由仍使用主會話上下文。
+  為 true 時，每次 heartbeat 都在沒有先前對話歷史的新工作階段中執行。使用與 cron `sessionTarget: "isolated"` 相同的隔離模式。大幅降低每次 heartbeat 的 token 成本。與 `lightContext: true` 結合以達到最大節省效果。傳送路由仍使用主工作階段上下文。
 </ParamField>
 <ParamField path="skipWhenBusy" type="boolean" default="false">
-  當為 true 時，心跳執行會在額外忙碌的通道上延遲：子代理或巢狀指令工作。Cron 通道總是會延遲心跳，即使沒有此標誌也是如此，因此本地模型主機不會同時執行 cron 和 heartbeat 提示。
+  為 true 時，heartbeat 執行會在該代理程式的額外忙碌通道上延遲：其自己的 session-keyed 子代理程式或巢狀指令工作。Cron 通道總是會延遲 heartbeat，即使沒有此旗標也一樣，因此本機模型主機不會同時執行 cron 和 heartbeat 提示。
 </ParamField>
 <ParamField path="session" type="string">
-  心跳執行的可選會話金鑰。
+  Heartbeat 執行的可選工作階段金鑰。
 
 - `main` (預設)：代理主會話。
 - 明確的會話金鑰（從 `openclaw sessions --json` 複製或透過 [sessions CLI](/zh-Hant/cli/sessions) 複製）。
@@ -286,13 +286,13 @@ Heartbeat 是一個預定的主會話回合 — 它**不會**建立 [background 
 
 <AccordionGroup>
   <Accordion title="Session and target routing">
-    - Heartbeats run in the agent's main session by default (`agent:<id>:<mainKey>`), or `global` when `session.scope = "global"`. Set `session` to override to a specific channel session (Discord/WhatsApp/etc.).
-    - `session` only affects the run context; delivery is controlled by `target` and `to`.
-    - To deliver to a specific channel/recipient, set `target` + `to`. With `target: "last"`, delivery uses the last external channel for that session.
-    - Heartbeat deliveries allow direct/DM targets by default. Set `directPolicy: "block"` to suppress direct-target sends while still running the heartbeat turn.
-    - If the main queue, target session lane, cron lane, or an active cron job is busy, the heartbeat is skipped and retried later.
-    - If `skipWhenBusy: true`, subagent and nested lanes also defer heartbeat runs.
-    - If `target` resolves to no external destination, the run still happens but no outbound message is sent.
+    - 預設情況下，Heartbeat 會在代理的主工作階段中執行 (`agent:<id>:<mainKey>`)，或在當 `session.scope = "global"` 時設為 `global`。設定 `session` 可覆蓋為特定的頻道工作階段 (Discord/WhatsApp 等)。
+    - `session` 僅影響執行語境；遞送由 `target` 和 `to` 控制。
+    - 若要遞送至特定頻道/收件者，請設定 `target` + `to`。若使用 `target: "last"`，遞送會使用該工作階段的最後一個外部頻道。
+    - Heartbeat 遞送預設允許直接/DM 目標。設定 `directPolicy: "block"` 可在仍執行 heartbeat 回合的同時，停止直接目標的遞送。
+    - 如果主佇列、目標工作階段通道、cron 通道或正在執行的 cron 工作忙碌，則會跳過 heartbeat 並稍後重試。
+    - 如果 `skipWhenBusy: true`，此代理的以工作階段為鍵值的子代理和巢狀通道也會延遲 heartbeat 執行。其他代理的忙碌通道不會延遲此代理。
+    - 如果 `target` 解析後沒有外部目的地，執行仍會進行，但不會傳送任何外寄訊息。
 
   </Accordion>
   <Accordion title="Visibility and skip behavior">

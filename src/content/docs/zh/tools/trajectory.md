@@ -1,5 +1,5 @@
 ---
-summary: "OpenClaw导出已编辑的轨迹包以调试 OpenClaw 代理会话"
+summary: "OpenClaw导出经过编辑的轨迹包以调试 OpenClaw 代理会话"
 read_when:
   - Debugging why an agent answered, failed, or called tools a certain way
   - Exporting a support bundle for an OpenClaw session
@@ -8,7 +8,7 @@ read_when:
 title: "轨迹包"
 ---
 
-轨迹捕获是 OpenClaw 的按会话飞行记录器。它记录每次代理运行的结构化时间线，然后 OpenClaw`/export-trajectory` 将当前会话打包成已编辑的支持包。
+轨迹捕获是 OpenClaw 的每个会话的飞行记录仪。它记录了每次代理运行的结构化时间线，然后 OpenClaw`/export-trajectory` 将当前会话打包成一个经过编辑的支持包。
 
 当您需要回答类似以下问题时，请使用它：
 
@@ -18,8 +18,8 @@ title: "轨迹包"
 - 哪些模型、插件、技能和运行时设置处于活动状态？
 - 提供商返回了哪些使用情况和提示词缓存元数据？
 
-如果您要针对 Gateway 的在线问题提交广泛的支持报告，请从
-[Gateway(网关)`/diagnostics`](</en/gateway/diagnostics#chat-commandGateway(网关)OpenAIOpenAI>) 开始。诊断程序会收集已清理的 Gateway 包，对于 OpenAI Codex harness 会话，还可以在批准后向 OpenAI 服务器发送 Codex 反馈。当您特别需要详细的按会话提示、工具和记录时间线时，请使用 `/export-trajectory`。
+如果您要针对实时 Gateway 问题提交广泛的支持报告，请从
+[Gateway(网关)`/diagnostics`](</en/gateway/diagnostics#chat-commandGateway(网关)OpenAIOpenAI>) 开始。诊断程序会收集已清理的 Gateway 包，并且对于 OpenAI Codex 驱动会话，也可以在批准后将 Codex 反馈发送到 OpenAI 服务器。当您特别需要详细的每个会话提示、工具和记录时间线时，请使用 `/export-trajectory`。
 
 ## 快速开始
 
@@ -78,7 +78,7 @@ openclaw sessions export-trajectory --session-key "agent:main:telegram:direct:12
 - `trace.metadata`
 - `context.compiled`
 - `prompt.submitted`
-- `model.fallback_step`，包括源模型、下一个模型、失败原因/详情、链位置，以及回退是否推进、成功或耗尽了链
+- `model.fallback_step`，包括源模型、下一个模型、失败原因/详情、链位置，以及回退是前进了、成功了还是耗尽了链
 - `model.completed`
 - `trace.artifacts`
 - `session.ended`
@@ -117,7 +117,7 @@ openclaw sessions export-trajectory --session-key "agent:main:telegram:direct:12
 | `system-prompt.txt`   | 最新编译的系统提示（如果已捕获）                                   |
 | `tools.json`          | 发送给模型的工具定义（如果已捕获）                                 |
 
-`manifest.json` 列出了该 Bundle 中存在的文件。当会话未捕获相应的运行时数据时，某些文件会被省略。
+`manifest.json` 列出了该包中存在的文件。当会话未捕获相应的运行时数据时，某些文件将被省略。
 
 ## 捕获位置
 
@@ -133,7 +133,8 @@ OpenClaw 也会在会话旁边写入一个尽力而为的指针文件：
 <session>.trajectory-path.json
 ```
 
-设置 `OPENCLAW_TRAJECTORY_DIR` 以将运行时轨迹附属文件存储在专用目录中：
+设置 `OPENCLAW_TRAJECTORY_DIR` 以将运行时轨迹侧车存储在
+专用目录中：
 
 ```bash
 export OPENCLAW_TRAJECTORY_DIR=/var/lib/openclaw/trajectories
@@ -151,37 +152,51 @@ export OPENCLAW_TRAJECTORY_DIR=/var/lib/openclaw/trajectories
 export OPENCLAW_TRAJECTORY=0
 ```
 
-这会禁用运行时轨迹捕获。`/export-trajectory` 仍然可以导出
-transcript 分支，但仅运行时的文件（如编译后的上下文、
-提供商 构件和提示元数据）可能会丢失。
+这将禁用运行时轨迹捕获。`/export-trajectory` 仍然可以导出
+transcript 分支，但仅运行时的文件（如编译上下文、
+提供商工件和 prompt 元数据）可能会缺失。
+
+## 调整刷新超时
+
+OpenClaw 会在代理清理期间刷新运行时轨迹 sidecar。默认
+清理超时为 10,000 毫秒。在磁盘较慢或存储较大的情况下，请
+在启动 OpenClaw 之前设置 OpenClaw`OPENCLAW_TRAJECTORY_FLUSH_TIMEOUT_MS`OpenClaw：
+
+```bash
+export OPENCLAW_TRAJECTORY_FLUSH_TIMEOUT_MS=30000
+```
+
+这控制了 OpenClaw 何时记录 OpenClaw`pi-trajectory-flush` 超时并继续。
+它不会更改轨迹大小上限。要调整所有未传递显式超时的
+代理清理步骤，请设置 `OPENCLAW_AGENT_CLEANUP_TIMEOUT_MS`。
 
 ## 隐私和限制
 
-轨迹捆绑包旨在用于支持和调试，而非公开发布。
-OpenClaw 会在写入导出文件之前编辑敏感值：
+轨迹捆绑包专为支持和调试而设计，不用于公开发布。
+OpenClaw 在写入导出文件之前会编辑敏感值：
 
-- 凭据和已知的类密钥 payload 字段
+- 凭据和已知的类似机密的 payload 字段
 - 图像数据
 - 本地状态路径
 - 工作区路径，替换为 `$WORKSPACE_DIR`
-- 主目录路径，如果检测到
+- 主目录路径（如果检测到）
 
-导出器还会限制输入大小：
+导出器也会限制输入大小：
 
-- 运行时 sidecar 文件：实时捕获在 10 MiB 时停止，并在有剩余空间时记录截断事件；导出接受现有的最大 50 MiB 的运行时 sidecar
+- 运行时 sidecar 文件：实时捕获在 10 MiB 处停止，并在有剩余空间时记录截断事件；导出接受高达 50 MiB 的现有运行时 sidecar
 - 会话文件：50 MiB
 - 运行时事件：200,000
-- 导出事件总数：250,000
-- 单独的运行时事件行在超过 256 KiB 时会被截断
+- 导出的事件总数：250,000
+- 超过 256 KiB 的单个运行时事件行将被截断
 
-在团队外共享之前，请检查捆绑包。编辑工作是尽力而为的，
-无法知道每个特定于应用程序的密钥。
+在团队外共享捆绑包之前，请先审查它们。编辑是尽力而为的，
+无法知道每个特定于应用程序的机密。
 
 ## 故障排除
 
 如果导出没有运行时事件：
 
-- 确认 OpenClaw 是在没有 OpenClaw`OPENCLAW_TRAJECTORY=0` 的情况下启动的
+- 确认 OpenClaw 启动时未使用 OpenClaw`OPENCLAW_TRAJECTORY=0`
 - 检查 `OPENCLAW_TRAJECTORY_DIR` 是否指向可写目录
 - 在会话中运行另一条消息，然后再次导出
 - 检查 `manifest.json` 中是否有 `runtimeEventCount`
@@ -192,8 +207,7 @@ OpenClaw 会在写入导出文件之前编辑敏感值：
 - 不要传递 `/tmp/...` 或 `~/...`
 - 将导出保留在 `.openclaw/trajectory-exports/` 内部
 
-如果导出因大小错误而失败，则说明会话或 sidecar 超过了
-导出安全限制。开始一个新的会话或导出一个较小的复现。
+如果导出因大小错误而失败，则会话或 sidecar 超出了导出安全限制。请启动新的会话或导出较小的复现方案。
 
 ## 相关
 

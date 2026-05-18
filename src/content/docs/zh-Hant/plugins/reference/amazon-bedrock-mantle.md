@@ -12,7 +12,7 @@ title: "Amazon Bedrock Mantle 外掛程式"
 ## 發布
 
 - 套件：`@openclaw/amazon-bedrock-mantle-provider`
-- 安裝路徑：npm
+- 安裝途徑：npm；ClawHub
 
 ## 表面
 

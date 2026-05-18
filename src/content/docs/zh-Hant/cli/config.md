@@ -323,16 +323,16 @@ openclaw config set channels.discord.token \
     - `--allow-exec` 僅適用於試執行，若未搭配 `--dry-run` 使用則會報錯。
 
   </Accordion>
-  <Accordion title="--dry-run -- 欄位">
+  <Accordion title="--dry-run -- fields">
     `--dry-run --json` 會列印機器可讀的報告：
 
-    - `ok`：試執行是否通過
-    - `operations`：已評估的指派數量
-    - `checks`：是否執行了結構描述/解析性檢查
-    - `checks.resolvabilityComplete`：解析性檢查是否執行至完成（當跳過 exec refs 時為 false）
-    - `refsChecked`：試執行期間實際解析的 refs 數量
+    - `ok`：乾式執行是否通過
+    - `operations`：已評估的賦值數量
+    - `checks`：是否執行了架構/可解析性檢查
+    - `checks.resolvabilityComplete`：可解析性檢查是否執行至完成（當跳過 exec refs 時為 false）
+    - `refsChecked`：在乾式執行期間實際解析的 refs 數量
     - `skippedExecRefs`：因未設定 `--allow-exec` 而跳過的 exec refs 數量
-    - `errors`：當 `ok=false` 時的結構化結構描述/解析性失敗訊息
+    - `errors`：當 `ok=false` 時的結構化遺漏路徑、架構或可解析性失敗資訊
 
   </Accordion>
 </AccordionGroup>
@@ -344,7 +344,7 @@ openclaw config set channels.discord.token \
   ok: boolean,
   operations: number,
   configPath: string,
-  inputModes: ["value" | "json" | "builder", ...],
+  inputModes: ["value" | "json" | "builder" | "unset", ...],
   checks: {
     schema: boolean,
     resolvability: boolean,
@@ -354,7 +354,7 @@ openclaw config set channels.discord.token \
   skippedExecRefs: number,
   errors?: [
     {
-      kind: "schema" | "resolvability",
+      kind: "missing-path" | "schema" | "resolvability",
       message: string,
       ref?: string, // present for resolvability errors
     },

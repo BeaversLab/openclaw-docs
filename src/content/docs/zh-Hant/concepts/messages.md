@@ -108,14 +108,11 @@ OpenClaw 將 **提示主體** 與 **指令主體** 分開：
 
 ## 佇列與後續處理
 
-如果執行已經啟動，傳入的訊息可以加入佇列、導向當前的
-執行，或是收集起來以進行後續的輪次處理。
+如果運作已經處於活動狀態，傳入訊息預設會被導向目前的運作。`messages.queue` 選擇了活動運作訊息的導向方式：排入稍後佇列、收集為稍後的一個輪次，或中斷目前的運作。
 
-- 透過 `messages.queue` (和 `messages.queue.byChannel`) 進行配置。
-- 預設模式為 `steer`，當導向回退至
-  佇列後續傳遞時，具有 500 毫秒的後續處理防抖。
-- 模式包括：`steer`、`followup`、`collect`、`steer-backlog`、`interrupt`，以及
-  舊版的一次一個 `queue` 模式。
+- 透過 `messages.queue` (以及 `messages.queue.byChannel`) 進行設定。
+- 預設模式是 `steer`，針對 Codex 導向批次以及後續/收集佇列有 500 毫秒的防動。
+- 模式：`steer`、`followup`、`collect` 和 `interrupt`。
 
 詳細資訊：[指令佇列](/zh-Hant/concepts/queue) 和 [導向佇列](/zh-Hant/concepts/queue-steering)。
 
@@ -137,7 +134,7 @@ OpenClaw 將 **提示主體** 與 **指令主體** 分開：
 - `agents.defaults.blockStreamingBreak` (`text_end|message_end`)
 - `agents.defaults.blockStreamingChunk` (`minChars|maxChars|breakPreference`)
 - `agents.defaults.blockStreamingCoalesce` (基於閒置的批次處理)
-- `agents.defaults.humanDelay` (區塊回覆之間的類人暫停)
+- `agents.defaults.humanDelay` (區塊回覆之間類似人類的暫停)
 - 頻道覆寫：`*.blockStreaming` 和 `*.blockStreamingCoalesce` (非 Telegram 頻道需要明確指定 `*.blockStreaming: true`)
 
 詳情：[串流 + 分塊](/zh-Hant/concepts/streaming)。
@@ -146,38 +143,44 @@ OpenClaw 將 **提示主體** 與 **指令主體** 分開：
 
 OpenClaw 可以顯示或隱藏模型推理：
 
-- `/reasoning on|off|stream` 控制可見性。
+- `/reasoning on|off|stream` 控制可見度。
 - 當推理內容由模型生成時，仍會計入 Token 使用量。
-- Telegram 支援將推理串流傳送到最終傳遞後即刪除的暫時性草稿氣泡；請使用 `/reasoning on` 以取得持續存在的推理輸出。
+- Telegram 支援將推理串流到暫時的草稿氣泡中，該氣泡會在最終傳送後刪除；請使用 `/reasoning on` 進行持續性的推理輸出。
 
 詳情：[思考 + 推理指令](/zh-Hant/tools/thinking) 和 [Token 使用](/zh-Hant/reference/token-use)。
 
 ## 前綴、串接和回覆
 
-外發訊息格式化集中於 `messages`：
+傳出訊息格式化集中在 `messages` 中：
 
-- `messages.responsePrefix`、`channels.<channel>.responsePrefix` 和 `channels.<channel>.accounts.<id>.responsePrefix` (外發前綴串聯)，以及 `channels.whatsapp.messagePrefix` (WhatsApp 內發前綴)
-- 透過 `replyToMode` 和各頻道預設值進行的回覆串接
+- `messages.responsePrefix`、`channels.<channel>.responsePrefix` 和 `channels.<channel>.accounts.<id>.responsePrefix` (傳出前綴級聯)，加上 `channels.whatsapp.messagePrefix` (WhatsApp 傳入前綴)
+- 透過 `replyToMode` 和各頻道預設值進行回覆串接
 
 詳情：[組態](/zh-Hant/gateway/config-agents#messages) 和頻道文件。
 
 ## 靜默回覆
 
-確切的靜默 Token `NO_REPLY` / `no_reply` 意味著「不傳遞使用者可見的回覆」。
-當一輪對話也有待處理的工具媒體 (例如產生的 TTS 音訊) 時，OpenClaw
-會移除靜默文字，但仍會傳遞媒體附件。
+確切的靜默權杖 `NO_REPLY` / `no_reply` 意指「不傳送使用者可見的回覆」。
+當某個輪次也有待處理的工具媒體（例如生成的 TTS 音訊）時，OpenClaw
+會移除靜默文字，但仍會傳送媒體附件。
 OpenClaw 會根據對話類型解析該行為：
 
-- 直接對話預設不允許靜默，並會將純靜默回覆
-  重寫為簡短的可見回退訊息。
-- 群組/頻道預設允許靜默。
+- 直接對話從不接收 `NO_REPLY` 提示指導。如果直接
+  運作意外返回單純的靜默權杖，OpenClaw 會將其抑制，
+  而非重寫或傳送它。
+- 群組/頻道僅針對自動群組回覆預設允許靜默。
+  在 `message_tool` visible-reply 模式下，靜默意味著模型不會呼叫
+  `message(action=send)`。
 - 內部協調預設允許靜默。
 
-在非直接聊天中，如果 OpenClaw 在任何助理回覆之前發生內部執行器失敗，也會使用靜默回覆，因此群組/頻道不會看到閘道錯誤的標準文字。直接聊天預設會顯示簡潔的失敗說明；只有在 `/verbose` 為 `on` 或 `full` 時，才會顯示原始執行器詳細資訊。
+在非直接聊天中，若在任何助理回覆之前發生內部執行器失敗，OpenClaw 也會使用靜默回覆，因此群組/頻道不會看到閘道錯誤範本。直接聊天預設會顯示簡潔的失敗訊息；
+只有當 `/verbose` 為 `on` 或 `full` 時，才會顯示原始執行器詳細資訊。
 
-預設值位於 `agents.defaults.silentReply` 和 `agents.defaults.silentReplyRewrite` 之下；`surfaces.<id>.silentReply` 和 `surfaces.<id>.silentReplyRewrite` 可以針對每個介面進行覆寫。
+預設值位於 `agents.defaults.silentReply` 之下； `surfaces.<id>.silentReply`
+可以針對每個介面覆寫群組/內部原則。
 
-當父階段有一個或多個擱置中產生的子代理程式執行時，純靜默回復將在所有介面上被捨棄而不是被重寫，因此父階段會保持靜默，直到子完成事件傳送真正的回覆。
+純靜默回覆會在所有介面上被捨棄，因此父階段會保持安靜，
+而不會將標記文字重寫為備用閒聊。
 
 ## 相關
 

@@ -54,6 +54,7 @@ title: "SecretRef 憑證範圍"
 - `plugins.entries.voice-call.config.streaming.providers.*.apiKey`
 - `plugins.entries.voice-call.config.tts.providers.*.apiKey`
 - `plugins.entries.voice-call.config.twilio.authToken`
+- `tools.web.search.*.apiKey`
 - `tools.web.search.apiKey`
 - `gateway.auth.password`
 - `gateway.auth.token`
@@ -117,22 +118,22 @@ title: "SecretRef 憑證範圍"
 
 備註：
 
-- Auth-profile plan 目標需要 `agentId`。
-- Plan 項目目標為 `profiles.*.key` / `profiles.*.token` 並寫入同層級參照 (`keyRef` / `tokenRef`)。
-- Auth-profile 參照包含在執行時期解析和稽核覆蓋範圍內。
+- Auth-profile 計劃目標需要 `agentId`。
+- 計劃條目目標 `profiles.*.key` / `profiles.*.token` 並寫入同級 refs (`keyRef` / `tokenRef`)。
+- Auth-profile refs 包含在執行時期解析和稽核覆蓋範圍內。
 - 在 `openclaw.json` 中，SecretRefs 必須使用結構化物件，例如 `{"source":"env","provider":"default","id":"DISCORD_BOT_TOKEN"}`。舊版 `secretref-env:<ENV_VAR>` 標記字串會在 SecretRef 憑證路徑上被拒絕；請執行 `openclaw doctor --fix` 以遷移有效的標記。
-- OAuth 政策防護：`auth.profiles.<id>.mode = "oauth"` 不能與該設定檔的 SecretRef 輸入結合。當此政策違反時，啟動/重新載入和 auth-profile 解析會快速失敗。
-- 對於 SecretRef 管理的模型提供者，產生的 `agents/*/agent/models.json` 項目會為 `apiKey`/header 層級保存非秘密標記（非解析的秘密值）。
-- 標記持久性是以來源為依據的：OpenClaw 寫入的標記來自使用中的來源設定快照（解析前），而非來自解析後的執行時期秘密值。
+- OAuth 策略防護：`auth.profiles.<id>.mode = "oauth"` 無法與該設定檔的 SecretRef 輸入結合。當違反此策略時，啟動/重新載入和 auth-profile 解析會快速失敗。
+- 對於由 SecretRef 管理的模型提供者，產生的 `agents/*/agent/models.json` 條目會為 `apiKey`/header 介面保存非機密標記（非已解析的機密值）。
+- 標記持久化是以來源為權威：OpenClaw 從作用中的來源設定快照（解析前）寫入標記，而不是從已解析的執行時期機密值寫入。
 - 對於網路搜尋：
-  - 在明確提供者模式（已設定 `tools.web.search.provider`）中，只有選取的提供者金鑰是啟用的。
-  - 在自動模式（未設定 `tools.web.search.provider`）中，只有第一個依優先順序解析的提供者金鑰是啟用的。
-  - 在自動模式下，未選取的提供者參照在選取之前會被視為非啟用狀態。
-  - 舊版 `tools.web.search.*` 提供者路徑在相容視窗期間仍會解析，但標準的 SecretRef 層級是 `plugins.entries.<plugin>.config.webSearch.*`。
+  - 在明確提供者模式（已設定 `tools.web.search.provider`）中，只有選定的提供者金鑰是作用中的。
+  - 在自動模式（未設定 `tools.web.search.provider`）中，只有第一個依優先順序解析的提供者金鑰是作用中的。
+  - 在自動模式下，非選定的提供者 refs 在被選定之前會被視為非作用中。
+  - 舊版 `tools.web.search.*` 提供者路徑在相容視窗期間仍可解析，但標準的 SecretRef 介面是 `plugins.entries.<plugin>.config.webSearch.*`。
 
 ## 不支援的憑證
 
-超出範圍的憑證包括：
+範圍外的憑證包括：
 
 [//]: # "secretref-unsupported-list-start"
 
@@ -148,9 +149,9 @@ title: "SecretRef 憑證範圍"
 
 [//]: # "secretref-unsupported-list-end"
 
-理由：
+基本原理：
 
-- 這些憑證是由系統建立、輪換、承載會話的，或是 OAuth 持久性類別，不適合唯讀的外部 SecretRef 解析。
+- 這些憑證屬於由系統產生、輪換、攜帶工作階段，或具有 OAuth 持久性的類別，不適合唯讀的外部 SecretRef 解析。
 
 ## 相關
 

@@ -68,9 +68,13 @@ openclaw node run --host <gateway-host> --port 18789
 - 在 `gateway.mode=remote` 中，遠端用戶端欄位 (`gateway.remote.token` / `gateway.remote.password`) 也有資格依據遠端優先順序規則使用。
 - Node 主機身分驗證解析僅採用 `OPENCLAW_GATEWAY_*` 環境變數。
 
-對於連接到受信任私人網路上非 loopback `ws://` Gateway 的節點，請設定 `OPENCLAW_ALLOW_INSECURE_PRIVATE_WS=1`。若未設定，節點啟動將會封閉式失敗並要求您使用 `wss://`、SSH 隧道或 Tailscale。
-這是一個程序環境選項，而非 `openclaw.json` 設定鍵。
-當安裝指令環境中存在 `OPENCLAW_ALLOW_INSECURE_PRIVATE_WS=1` 時，`openclaw node install` 會將其持久化到受監管的節點服務中。
+對於連接到明文 `ws://` Gateway 的節點，接受回環、私有 IP
+字面量、`.local` 和 Tailnet `*.ts.net` 主機。對於其他
+受信任的私有 DNS 名稱，請設定 `OPENCLAW_ALLOW_INSECURE_PRIVATE_WS=1`；若無
+此設定，節點啟動將失敗封閉，並要求您使用 `wss://`、SSH 隧道
+或 Tailscale。這是一個程序環境選項，而非 `openclaw.json` 設定
+鍵。
+`openclaw node install` 會在安裝指令環境中存在時將其持久化到受監控的節點服務中。
 
 ## 服務 (背景)
 
@@ -84,12 +88,12 @@ openclaw node install --host <gateway-host> --port 18789
 
 - `--host <host>`：Gateway WebSocket 主機 (預設：`127.0.0.1`)
 - `--port <port>`：Gateway WebSocket 連接埠 (預設：`18789`)
-- `--tls`：對 Gateway 連線使用 TLS
+- `--tls`：對 gateway 連接使用 TLS
 - `--tls-fingerprint <sha256>`：預期的 TLS 憑證指紋 (sha256)
 - `--node-id <id>`：覆寫節點 ID (清除配對 token)
 - `--display-name <name>`：覆寫節點顯示名稱
-- `--runtime <runtime>`：服務執行時期 (`node` 或 `bun`)
-- `--force`：如果已安裝則重新安裝/覆寫
+- `--runtime <runtime>`：服務執行環境 (`node` 或 `bun`)
+- `--force`：若已安裝則重新安裝/覆寫
 
 管理服務：
 
@@ -101,15 +105,15 @@ openclaw node restart
 openclaw node uninstall
 ```
 
-使用 `openclaw node run` 作為前景節點主機 (無服務)。
+請使用 `openclaw node run` 作為前景節點主機 (無服務)。
 
-服務指令接受 `--json` 以輸出機器可讀格式。
+服務指令接受 `--json` 以取得機器可讀輸出。
 
 節點主機會在程序內重試 Gateway 重新啟動和網路關閉。如果 Gateway 回報終結性的 token/密碼/啟動程式 驗證暫停，節點主機會記錄關閉詳情並以非零值退出，以便 launchd/systemd 能使用新的設定和憑證重新啟動它。需要配對的暫停會保留在前景流程中，以便待處理的要求可以被批准。
 
 ## 配對
 
-第一次連線會在 Gateway 上建立待處理的裝置配對要求 (`role: node`)。
+首次連線會在 Gateway 上建立待處理的裝置配對請求 (`role: node`)。
 透過以下方式批准：
 
 ```bash
@@ -131,24 +135,29 @@ openclaw devices approve <requestId>
 }
 ```
 
-預設情況下此功能已停用。它僅適用於沒有請求範圍的新 `role: node` 配對。操作員/瀏覽器客戶端、Control UI、WebChat 以及角色、範圍、元資料或公鑰升級仍需手動批准。
+此功能預設為停用。它僅適用於沒有請求範圍 的全新 `role: node` 配對。
+操作員/瀏覽器客戶端、Control UI、WebChat，以及角色、
+範圍、中繼資料或公開金鑰升級仍需手動批准。
 
-如果節點以變更的驗證詳細資訊（角色/範圍/公鑰）重試配對，之前的待處理請求將被取代，並建立一個新的 `requestId`。請在批准前再次執行 `openclaw devices list`。
+如果節點使用已變更的驗證詳細資料 (角色/範圍/公開金鑰) 重試配對，
+先前的待處理請求將被取代，並建立一個新的 `requestId`。
+請在批准前再次執行 `openclaw devices list`。
 
-節點主機將其節點 ID、令牌、顯示名稱和閘道連線資訊儲存在
+節點主機會將其節點 ID、token、顯示名稱和 gateway 連線資訊儲存在
 `~/.openclaw/node.json` 中。
 
 ## 執行核准
 
-`system.run` 受本地執行核准限制：
+`system.run` 受本地執行批准限制：
 
 - `~/.openclaw/exec-approvals.json`
-- [執行核准](/zh-Hant/tools/exec-approvals)
-- `openclaw approvals --node <id|name|ip>`（從閘道編輯）
+- [執行批准](/zh-Hant/tools/exec-approvals)
+- `openclaw approvals --node <id|name|ip>` （從 Gateway 編輯）
 
-對於已核准的非同步節點執行，OpenClaw 會在提示之前準備一個規範的 `systemRunPlan`。稍後核准的 `system.run` 轉發會重用該儲存的計劃，因此在建立核准請求後對 command/cwd/session 欄位的編輯將被拒絕，而不是更改節點執行的內容。
+對於已批准的非同步節點執行，OpenClaw 會在提示前準備一個標準的 `systemRunPlan`。
+稍後批准的 `system.run` 轉發會重用該儲存的計畫，因此，在建立批准請求後，對 command/cwd/session 欄位的編輯將被拒絕，而不會改變節點執行的內容。
 
 ## 相關
 
-- [CLI 參考](/zh-Hant/cli)
+- [CLI 參考資料](/zh-Hant/cli)
 - [節點](/zh-Hant/nodes)

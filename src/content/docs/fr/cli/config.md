@@ -323,16 +323,16 @@ openclaw config set channels.discord.token \
     - `--allow-exec` est réservé au dry-run et génère une erreur s'il est utilisé sans `--dry-run`.
 
   </Accordion>
-  <Accordion title="--dry-run -- champs">
+  <Accordion title="--dry-run -- fields">
     `--dry-run --json` imprime un rapport lisible par la machine :
 
     - `ok` : indique si le dry-run a réussi
     - `operations` : nombre d'assignations évaluées
-    - `checks` : indique si les vérifications de schéma/résolvabilité ont été exécutées
-    - `checks.resolvabilityComplete` : indique si les vérifications de résolvabilité ont été exécutées jusqu'au bout (false lorsque les exec refs sont ignorées)
-    - `refsChecked` : nombre de refs réellement résolues pendant le dry-run
+    - `checks` : indique si les vérifications de schéma/de résolvabilité ont été exécutées
+    - `checks.resolvabilityComplete` : indique si les vérifications de résolvabilité ont été exécutées jusqu'au bout (false lorsque les exec refs sont ignorés)
+    - `refsChecked` : nombre de refs effectivement résolues pendant le dry-run
     - `skippedExecRefs` : nombre d'exec refs ignorées car `--allow-exec` n'était pas défini
-    - `errors` : échecs structurés de schéma/résolvabilité lorsque `ok=false`
+    - `errors` : échecs structurés de chemin manquant, de schéma ou de résolvabilité lorsque `ok=false`
 
   </Accordion>
 </AccordionGroup>
@@ -344,7 +344,7 @@ openclaw config set channels.discord.token \
   ok: boolean,
   operations: number,
   configPath: string,
-  inputModes: ["value" | "json" | "builder", ...],
+  inputModes: ["value" | "json" | "builder" | "unset", ...],
   checks: {
     schema: boolean,
     resolvability: boolean,
@@ -354,7 +354,7 @@ openclaw config set channels.discord.token \
   skippedExecRefs: number,
   errors?: [
     {
-      kind: "schema" | "resolvability",
+      kind: "missing-path" | "schema" | "resolvability",
       message: string,
       ref?: string, // present for resolvability errors
     },

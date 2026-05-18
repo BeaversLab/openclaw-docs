@@ -24,7 +24,7 @@ openclaw plugins install ./path/to/local/googlechat-plugin
 ## Configuración rápida (principiante)
 
 1. Cree un proyecto de Google Cloud y habilite la **Google Chat API**.
-   - Vaya a: [Google Chat API Credentials](https://console.cloud.google.com/apis/api/chat.googleapis.com/credentials)
+   - Ir a: [Credenciales de la API de Google Chat](https://console.cloud.google.com/apis/api/chat.googleapis.com/credentials)
    - Habilite la API si aún no está habilitada.
 2. Cree una **Service Account** (Cuenta de servicio):
    - Presione **Create Credentials** > **Service Account**.
@@ -37,7 +37,7 @@ openclaw plugins install ./path/to/local/googlechat-plugin
    - Haga clic en **Add Key** > **Create new key**.
    - Seleccione **JSON** y presione **Create**.
 4. Almacene el archivo JSON descargado en su host de puerta de enlace (por ejemplo, `~/.openclaw/googlechat-service-account.json`).
-5. Cree una aplicación de Google Chat en la [Google Cloud Console Chat Configuration](https://console.cloud.google.com/apis/api/chat.googleapis.com/hangouts-chat):
+5. Cree una aplicación de Google Chat en la [Configuración de Chat de Google Cloud Console](https://console.cloud.google.com/apis/api/chat.googleapis.com/hangouts-chat):
    - Rellene la **Application info** (Información de la aplicación):
      - **App name**: (por ejemplo, `OpenClaw`)
      - **Avatar URL**: (por ejemplo, `https://openclaw.ai/logo.png`)
@@ -65,7 +65,7 @@ openclaw plugins install ./path/to/local/googlechat-plugin
 
 Una vez que la puerta de enlace se esté ejecutando y tu correo electrónico se haya agregado a la lista de visibilidad:
 
-1. Ve a [Google Chat](https://chat.google.com/).
+1. Ir a [Google Chat](https://chat.google.com/).
 2. Haz clic en el icono **+** (más) junto a **Direct Messages**.
 3. En la barra de búsqueda (donde normalmente agregas personas), escribe el **App name** que configuraste en Google Cloud Console.
    - **Nota**: El bot _not_ aparecerá en la lista de navegación de "Marketplace" porque es una aplicación privada. Debes buscarlo por nombre.
@@ -185,6 +185,7 @@ Utilice estos identificadores para la entrega y las listas de permitidos:
       audience: "https://gateway.example.com/googlechat",
       webhookPath: "/googlechat",
       botUser: "users/1234567890", // optional; helps mention detection
+      allowBots: false,
       dm: {
         policy: "pairing",
         allowFrom: ["users/1234567890"],
@@ -216,12 +217,13 @@ Notas:
 - Las acciones de mensaje exponen `send` para texto y `upload-file` para envíos de adjuntos explícitos. `upload-file` acepta `media` / `filePath` / `path` más `message` opcional, `filename`, y orientación de hilos.
 - `typingIndicator` admite `none`, `message` (predeterminado) y `reaction` (la reacción requiere OAuth de usuario).
 - Los adjuntos se descargan a través de la API de Chat y se almacenan en la canalización de medios (el tamaño está limitado por `mediaMaxMb`).
+- Los mensajes de Google Chat creados por bots se ignoran de forma predeterminada. Si configura intencionalmente `allowBots: true`, los mensajes aceptados creados por bots usan [protección compartida contra bucles de bots](/es/channels/bot-loop-protection). Configure `channels.defaults.botLoopProtection` y luego anule con `channels.googlechat.botLoopProtection` o `channels.googlechat.groups.<space>.botLoopProtection` cuando un espacio necesite un presupuesto diferente.
 
-Detalles de referencia de secretos: [Secrets Management](/es/gateway/secrets).
+Detalles de referencia de secretos: [Gestión de secretos](/es/gateway/secrets).
 
 ## Solución de problemas
 
-### 405 Method Not Allowed
+### 405 Método no permitido
 
 Si el Explorador de registros de Google Cloud muestra errores como:
 
@@ -229,7 +231,7 @@ Si el Explorador de registros de Google Cloud muestra errores como:
 status code: 405, reason phrase: HTTP error response: HTTP/1.1 405 Method Not Allowed
 ```
 
-Esto significa que el controlador del webhook no está registrado. Causas comunes:
+Esto significa que el controlador de webhook no está registrado. Causas comunes:
 
 1. **Canal no configurado**: Falta la sección `channels.googlechat` en su configuración. Verifique con:
 
@@ -237,7 +239,7 @@ Esto significa que el controlador del webhook no está registrado. Causas comune
    openclaw config get channels.googlechat
    ```
 
-   Si devuelve "Config path not found", agregue la configuración (consulte [Config highlights](#config-highlights)).
+   Si devuelve "Config path not found", agregue la configuración (consulte [Aspectos destacados de la configuración](#config-highlights)).
 
 2. **Complemento no habilitado**: Verifique el estado del complemento:
 
@@ -247,7 +249,7 @@ Esto significa que el controlador del webhook no está registrado. Causas comune
 
    Si muestra "disabled", agregue `plugins.entries.googlechat.enabled: true` a su configuración.
 
-3. **Puerta de enlace no reiniciada**: Después de agregar la configuración, reinicie la puerta de enlace:
+3. **Gateway no reiniciado**: Después de agregar la configuración, reinicie el gateway:
 
    ```bash
    openclaw gateway restart
@@ -262,21 +264,21 @@ openclaw channels status
 
 ### Otros problemas
 
-- Verifique `openclaw channels status --probe` para ver si hay errores de autenticación o configuración de audiencia faltante.
-- Si no llegan mensajes, confirme la URL del webhook de la aplicación de Chat + las suscripciones de eventos.
+- Verifique `openclaw channels status --probe` para ver si hay errores de autenticación o falta de configuración de audiencia.
+- Si no llegan mensajes, confirme la URL del webhook de la aplicación de Chat y las suscripciones de eventos.
 - Si el bloqueo de menciones impide las respuestas, establezca `botUser` en el nombre del recurso de usuario de la aplicación y verifique `requireMention`.
-- Use `openclaw logs --follow` mientras envía un mensaje de prueba para ver si las solicitudes llegan a la puerta de enlace.
+- Use `openclaw logs --follow` mientras envía un mensaje de prueba para ver si las solicitudes llegan al gateway.
 
 Documentos relacionados:
 
-- [Configuración de puerta de enlace](/es/gateway/configuration)
+- [Configuración del gateway](/es/gateway/configuration)
 - [Seguridad](/es/gateway/security)
 - [Reacciones](/es/tools/reactions)
 
 ## Relacionado
 
-- [Descripción general de canales](/es/channels) — todos los canales compatibles
+- [Resumen de canales](/es/channels) — todos los canales compatibles
 - [Emparejamiento](/es/channels/pairing) — flujo de autenticación y emparejamiento de MD
-- [Grupos](/es/channels/groups) — comportamiento del chat grupal y control de menciones
+- [Grupos](/es/channels/groups) — comportamiento del chat en grupo y bloqueo de menciones
 - [Enrutamiento de canales](/es/channels/channel-routing) — enrutamiento de sesiones para mensajes
 - [Seguridad](/es/gateway/security) — modelo de acceso y endurecimiento

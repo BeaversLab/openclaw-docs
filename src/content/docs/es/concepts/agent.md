@@ -13,9 +13,9 @@ OpenClaw utiliza un único directorio de espacio de trabajo del agente (`agents.
 
 Recomendado: use `openclaw setup` para crear `~/.openclaw/openclaw.json` si falta e inicializar los archivos del espacio de trabajo.
 
-Diseño completo del workspace + guía de copia de seguridad: [Agent workspace](/es/concepts/agent-workspace)
+Diseño completo del espacio de trabajo + guía de copia de seguridad: [Espacio de trabajo del agente](/es/concepts/agent-workspace)
 
-Si `agents.defaults.sandbox` está habilitado, las sesiones que no son principales pueden anular esto con espacios de trabajo por sesión bajo `agents.defaults.sandbox.workspaceRoot` (consulte [Gateway configuration](/es/gateway/configuration)).
+Si `agents.defaults.sandbox` está habilitado, las sesiones que no son principales pueden anular esto con espacios de trabajo por sesión bajo `agents.defaults.sandbox.workspaceRoot` (consulte [Configuración de la puerta de enlace](/es/gateway/configuration)).
 
 ## Archivos de arranque (inyectados)
 
@@ -57,7 +57,7 @@ OpenClaw carga habilidades desde estas ubicaciones (de mayor a menor precedencia
 - Incluido (enviado con la instalación)
 - Carpetas de habilidades adicionales: `skills.load.extraDirs`
 
-Las habilidades pueden estar restringidas por config/env (consulte `skills` en [Configuración de Gateway](/es/gateway/configuration)).
+Las habilidades pueden estar restringidas por configuración/entorno (consulte `skills` en [Configuración de la puerta de enlace](/es/gateway/configuration)).
 
 ## Límites de tiempo de ejecución
 
@@ -74,36 +74,29 @@ No se leen las carpetas de sesiones heredadas de otras herramientas.
 
 ## Dirección durante el streaming
 
-Cuando el modo de cola es `steer`, los mensajes entrantes se inyectan en la ejecución actual.
-La dirección en cola se entrega **después de que el turno del asistente actual termine
-de ejecutar sus llamadas a herramientas**, antes de la siguiente llamada al LLM. Pi drena todos los
-mensajes de dirección pendientes juntos para `steer`; el modo heredado `queue` drena un mensaje por
-cada límite del modelo. La dirección ya no omite las llamadas a herramientas restantes del mensaje
-del asistente actual.
+Los mensajes entrantes que llegan a mitad de la ejecución se dirigen a la ejecución actual de forma predeterminada.
+La dirección se entrega **después de que el turno del asistente actual termine de ejecutar sus
+llamadas a herramientas**, antes de la siguiente llamada al LLM, y ya no omite las llamadas a herramientas restantes
+del mensaje del asistente actual.
 
-Cuando el modo de cola es `followup` o `collect`, los mensajes entrantes se retienen hasta que
-termina el turno actual, luego comienza un nuevo turno de agente con las cargas útiles en cola. Consulte
-[Queue](/es/concepts/queue) y [Cola de dirección](/es/concepts/queue-steering) para el comportamiento
-del modo y del límite.
+`/queue steer` es el comportamiento predeterminado de ejecución activa. `/queue followup` y
+`/queue collect` hacen que los mensajes esperen a un turno posterior en lugar de dirigir.
+`/queue interrupt` aborta la ejecución activa en su lugar. Consulte [Queue](/es/concepts/queue)
+y [Steering queue](/es/concepts/queue-steering) para conocer el comportamiento de la cola y los límites.
 
-La transmisión en bloque envía bloques completados del asistente tan pronto como terminan; está
-**desactivada por defecto** (`agents.defaults.blockStreamingDefault: "off"`).
-Ajuste el límite mediante `agents.defaults.blockStreamingBreak` (`text_end` vs `message_end`; por defecto es text_end).
-Controle la fragmentación de bloques suaves con `agents.defaults.blockStreamingChunk` (por defecto
-800-1200 caracteres; prefiere saltos de párrafo, luego nuevas líneas; las oraciones al final).
-Fusione los fragmentos transmitidos con `agents.defaults.blockStreamingCoalesce` para reducir
-el spam de una sola línea (fusión basada inactiva antes del envío). Los canales que no sean Telegram requieren
-un `*.blockStreaming: true` explícito para habilitar las respuestas en bloque.
-Los resúmenes detallados de herramientas se emiten al inicio de la herramienta (sin rebote); la interfaz de usuario de Control
-transmite la salida de las herramientas a través de eventos de agente cuando están disponibles.
-Más detalles: [Transmisión + fragmentación](/es/concepts/streaming).
+La transmisión en bloques envía bloques completos del asistente tan pronto como terminan; está **desactivada por defecto** (`agents.defaults.blockStreamingDefault: "off"`).
+Ajuste el límite a través de `agents.defaults.blockStreamingBreak` (`text_end` vs `message_end`; por defecto es text_end).
+Controle la fragmentación de bloques suaves con `agents.defaults.blockStreamingChunk` (por defecto 800-1200 caracteres; prefiere saltos de párrafo, luego saltos de línea; oraciones al final).
+Fusione los fragmentos transmitidos con `agents.defaults.blockStreamingCoalesce` para reducir spam de una sola línea (fusión basada inactividad antes de enviar). Los canales que no sean Telegram requieren `*.blockStreaming: true` explícito para habilitar respuestas en bloque.
+Los resúmenes detallados de herramientas se emiten al inicio de la herramienta (sin rebote); La interfaz de Control transmite la salida de la herramienta a través de eventos del agente cuando está disponible.
+Más detalles: [Streaming + chunking](/es/concepts/streaming).
 
 ## Model refs
 
-Las referencias de modelo en la configuración (por ejemplo `agents.defaults.model` y `agents.defaults.models`) se analizan dividiendo por el **primer** `/`.
+Las referencias de modelos en la configuración (por ejemplo, `agents.defaults.model` y `agents.defaults.models`) se analizan dividiendo en el **primer** `/`.
 
 - Use `provider/model` al configurar modelos.
-- Si el ID del modelo en sí contiene `/` (estilo OpenRouter), incluya el prefijo del proveedor (ejemplo: `openrouter/moonshotai/kimi-k2`).
+- Si el ID del modelo mismo contiene `/` (estilo OpenRouter), incluya el prefijo del proveedor (ejemplo: `openrouter/moonshotai/kimi-k2`).
 - Si omite el proveedor, OpenClaw intenta primero un alias, luego una coincidencia única de proveedor configurado para ese ID de modelo exacto, y solo luego recurre
   al proveedor predeterminado configurado. Si ese proveedor ya no expone el
   modelo predeterminado configurado, OpenClaw recurre al primer proveedor/modelo

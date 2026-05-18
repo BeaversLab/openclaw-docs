@@ -16,7 +16,7 @@ Añade soporte para el proveedor de modelos OpenRouter a OpenClaw.
 
 ## Superficie
 
-proveedores: openrouter; contratos: imageGenerationProviders, mediaUnderstandingProviders, speechProviders, videoGenerationProviders
+providers: openrouter; contracts: imageGenerationProviders, mediaUnderstandingProviders, musicGenerationProviders, speechProviders, videoGenerationProviders
 
 ## Documentos relacionados
 

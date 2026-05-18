@@ -68,9 +68,13 @@ openclaw node run --host <gateway-host> --port 18789
 - 在 `gateway.mode=remote` 中，根据远程优先级规则，远程客户端字段（`gateway.remote.token` / `gateway.remote.password`）也是符合条件的。
 - 节点主机身份验证解析仅遵循 `OPENCLAW_GATEWAY_*` 环境变量。
 
-对于连接到受信任专用网络上的非环回 `ws://` Gateway(网关) 的节点，请设置 `OPENCLAW_ALLOW_INSECURE_PRIVATE_WS=1`。如果没有它，节点启动将失败并关闭，并要求您使用 `wss://`、SSH 隧道或 Tailscale。
-这是一个进程环境选择加入选项，而不是 `openclaw.json` 配置键。
-当 `openclaw node install` 存在于安装命令环境中时，它会将其持久化到受监督的节点服务中。
+对于连接到明文 `ws://` Gateway(网关) 的节点，接受环回、私有 IP
+字面量、`.local` 和 Tailnet `*.ts.net` 主机。对于其他
+受信任的私有 DNS 名称，请设置 `OPENCLAW_ALLOW_INSECURE_PRIVATE_WS=1`；如果没有
+设置，节点启动将失败关闭，并要求您使用 `wss://`、SSH 隧道或
+Tailscale。这是一个进程环境的选择加入，而不是 `openclaw.json` 配置
+键。
+当 `openclaw node install` 出现在安装命令环境中时，它会将其持久化到受监督的节点服务中。
 
 ## 服务（后台）
 
@@ -82,14 +86,14 @@ openclaw node install --host <gateway-host> --port 18789
 
 选项：
 
-- `--host <host>`：Gateway(网关) WebSocket 主机（默认：`127.0.0.1`）
-- `--port <port>`：Gateway(网关) WebSocket 端口（默认：`18789`）
-- `--tls`：对网关连接使用 TLS
-- `--tls-fingerprint <sha256>`：预期的 TLS 证书指纹 (sha256)
-- `--node-id <id>`：覆盖节点 ID（清除配对令牌）
-- `--display-name <name>`：覆盖节点显示名称
-- `--runtime <runtime>`：服务运行时（`node` 或 `bun`）
-- `--force`：如果已安装则重新安装/覆盖
+- `--host <host>`: Gateway(网关) WebSocket 主机（默认：`127.0.0.1`）
+- `--port <port>`: Gateway(网关) WebSocket 端口（默认：`18789`）
+- `--tls`: 对网关连接使用 TLS
+- `--tls-fingerprint <sha256>`: 预期的 TLS 证书指纹 (sha256)
+- `--node-id <id>`: 覆盖节点 ID（清除配对令牌）
+- `--display-name <name>`: 覆盖节点显示名称
+- `--runtime <runtime>`: 服务运行时（`node` 或 `bun`）
+- `--force`: 如果已安装则重新安装/覆盖
 
 管理服务：
 
@@ -101,7 +105,7 @@ openclaw node restart
 openclaw node uninstall
 ```
 
-对于前台节点主机（无服务），请使用 `openclaw node run`。
+对前台节点主机（无服务）使用 `openclaw node run`。
 
 服务命令接受 `--json` 以获取机器可读的输出。
 
@@ -109,7 +113,7 @@ openclaw node uninstall
 
 ## 配对
 
-第一次连接会在 Gateway(网关) 上创建待处理的设备配对请求 (`role: node`)。
+首次连接会在 Gateway(网关) 上创建一个待处理的设备配对请求（`role: node`）。
 通过以下方式批准：
 
 ```bash
@@ -131,21 +135,28 @@ openclaw devices approve <requestId>
 }
 ```
 
-默认情况下禁用此项。它仅适用于没有请求作用域的新 `role: node` 配对。操作员/浏览器客户端、Control UI、WebChat 以及角色、作用域、元数据或公钥升级仍需手动批准。
+默认情况下禁用此功能。它仅适用于没有请求范围的全新 `role: node` 配对。
+操作员/浏览器客户端、Control UI、WebChat 以及角色、
+范围、元数据或公钥升级仍需手动批准。
 
-如果节点使用更改的身份验证详细信息（角色/作用域/公钥）重试配对，之前的待处理请求将被取代，并创建一个新的 `requestId`。在批准之前再次运行 `openclaw devices list`。
+如果节点使用更改的身份验证详细信息（角色/范围/公钥）重试配对，
+先前的待处理请求将被取代，并创建一个新的 `requestId`。
+在批准之前再次运行 `openclaw devices list`。
 
-节点主机将其节点 ID、令牌、显示名称和网关连接信息存储在 `~/.openclaw/node.json` 中。
+节点主机将其节点 ID、令牌、显示名称和 Gateway(网关) 连接信息存储在
+`~/.openclaw/node.json` 中。
 
 ## Exec 批准
 
-`system.run` 受本地 exec 批准的限制：
+`system.run` 受本地执行批准限制：
 
 - `~/.openclaw/exec-approvals.json`
-- [Exec 批准](/zh/tools/exec-approvals)
+- [执行批准](/zh/tools/exec-approvals)
 - `openclaw approvals --node <id|name|ip>`（从 Gateway(网关) 编辑）
 
-对于已批准的异步节点 exec，OpenClaw 会在提示之前准备一个规范的 `systemRunPlan`。随后批准的 `system.run` 转发将重用该存储的计划，因此在创建批准请求后对 command/cwd/会话 字段的编辑将被拒绝，而不是更改节点执行的内容。
+对于已批准的异步节点执行，OpenClaw 会在提示之前准备一个规范的 `systemRunPlan`。
+稍后批准的 `system.run` 转发将重用该存储的计划，因此在创建批准请求后，
+对 command/cwd/会话 字段的编辑将被拒绝，而不是更改节点执行的内容。
 
 ## 相关
 

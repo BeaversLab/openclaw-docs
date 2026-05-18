@@ -73,7 +73,8 @@ Options :
 - Dans `gateway.mode=remote`, les champs de client distant (`gateway.remote.token` / `gateway.remote.password`) sont également éligibles selon les règles de priorité distantes.
 - La résolution de l'authentification de l'hôte de nœud prend uniquement en compte les variables d'environnement `OPENCLAW_GATEWAY_*`.
 
-Pour un nœud se connectant à une passerelle Gateway `ws://` qui n'est pas en boucle locale sur un réseau privé de confiance, définissez `OPENCLAW_ALLOW_INSECURE_PRIVATE_WS=1`. Sans cela, le démarrage du nœud échoue de manière fermée et vous demande d'utiliser `wss://`, un tunnel SSH, ou Tailscale. Il s'agit d'une option d'acceptation au niveau de l'environnement du processus, et non d'une clé de configuration `openclaw.json`. `openclaw node install` la rend persistante dans le service de nœud supervisé lorsqu'elle est présente dans l'environnement de la commande d'installation.
+Pour un nœud se connectant à une passerelle `ws://`Gateway en texte clair, les boucles locales, les adresses IP privées en littéral, `.local` et les hôtes `*.ts.net` de Tailnet sont acceptés. Pour d'autres noms DNS privés de confiance, définissez `OPENCLAW_ALLOW_INSECURE_PRIVATE_WS=1` ; sans cela, le démarrage du nœud échoue de manière fermée et vous demande d'utiliser `wss://`Tailscale, un tunnel SSH ou Tailscale. Il s'agit d'une option d'adhésion via l'environnement du processus, et non d'une clé de configuration `openclaw.json`.
+`openclaw node install` la rend persistante dans le service de nœud supervisé lorsqu'elle est présente dans l'environnement de la commande d'installation.
 
 ## Service (arrière-plan)
 
@@ -85,11 +86,11 @@ openclaw node install --host <gateway-host> --port 18789
 
 Options :
 
-- `--host <host>` : Hôte WebSocket Gateway (par défaut : `127.0.0.1`)
-- `--port <port>` : Port WebSocket Gateway (par défaut : `18789`)
+- `--host <host>`Gateway : Hôte WebSocket de la passerelle (par défaut : `127.0.0.1`)
+- `--port <port>`Gateway : Port WebSocket de la passerelle (par défaut : `18789`)
 - `--tls` : Utiliser TLS pour la connexion à la passerelle
 - `--tls-fingerprint <sha256>` : Empreinte du certificat TLS attendue (sha256)
-- `--node-id <id>` : Remplacer l'identifiant du nœud (efface le jeton d'appairage)
+- `--node-id <id>` : Remplacer l'identifiant du nœud (efface le jeton d'appariement)
 - `--display-name <name>` : Remplacer le nom d'affichage du nœud
 - `--runtime <runtime>` : Runtime du service (`node` ou `bun`)
 - `--force` : Réinstaller/écraser si déjà installé
@@ -112,7 +113,7 @@ L'hôte de nœud réessaie le redémarrage Gateway et les fermetures réseau en 
 
 ## Appairage
 
-La première connexion crée une demande d'appairage d'appareil en attente (`role: node`) sur le Gateway.
+La première connexion crée une demande d'appareil d'appariement en attente (`role: node`Gateway) sur la passerelle.
 Approuvez-la via :
 
 ```bash
@@ -134,29 +135,23 @@ Sur les réseaux de nœuds étroitement contrôlés, l'opérateur Gateway peut e
 }
 ```
 
-Ceci est désactivé par défaut. Cela s'applique uniquement à un nouvel appariement `role: node` sans
-portée demandée. Les clients opérateur/navigateur, l'interface de contrôle, WebChat et les mises à niveau de rôle,
-de portée, de métadonnées ou de clé publique nécessitent toujours une approbation manuelle.
+Ceci est désactivé par défaut. Cela s'applique uniquement aux nouveaux appariements `role: node`WebChat sans portées demandées. Les clients opérateur/navigateur, l'interface de contrôle, WebChat, ainsi que les mises à niveau de rôle, de portée, de métadonnées ou de clé publique nécessitent toujours une approbation manuelle.
 
 Si le nœud réessaie l'appariement avec des détails d'authentification modifiés (rôle/portées/clé publique),
-la demande en attente précédente est remplacée et une nouvelle `requestId` est créée.
+la demande en attente précédente est remplacée et un nouveau `requestId` est créé.
 Exécutez `openclaw devices list` à nouveau avant l'approbation.
 
-L'hôte de nœud stocke son identifiant de nœud, son jeton, son nom d'affichage et les informations de connexion à la passerelle dans
-`~/.openclaw/node.json`.
+L'hôte de nœud stocke son identifiant de nœud, son jeton, son nom d'affichage et les informations de connexion à la passerelle dans `~/.openclaw/node.json`.
 
 ## Approbations d'exécution
 
-`system.run` est soumis à des approbations d'exécution locales :
+`system.run` est protégé par des approbations d'exécution locales :
 
 - `~/.openclaw/exec-approvals.json`
 - [Approbations d'exécution](/fr/tools/exec-approvals)
-- `openclaw approvals --node <id|name|ip>` (modifier depuis le Gateway)
+- `openclaw approvals --node <id|name|ip>` (modifier à partir du Gateway)
 
-Pour l'exécution asynchrone de nœud approuvée, OpenClaw prépare un `systemRunPlan` canonique
-avant de demander. Le transfert `system.run` approuvé ultérieurement réutilise ce plan
-stocké, les modifications des champs commande/répertoire de travail/session après la création de la demande d'approbation
-sont donc rejetées au lieu de modifier ce que le nœud exécute.
+Pour l'exécution asynchrone approuvée du nœud, OpenClaw prépare un `systemRunPlan` canonique avant de demander une confirmation. Le transfert `system.run` approuvé ultérieurement réutilise ce plan stocké ; par conséquent, les modifications des champs commande/répertoire de travail/session après la création de la demande d'approbation sont rejetées au lieu de modifier ce que le nœud exécute.
 
 ## Connexes
 

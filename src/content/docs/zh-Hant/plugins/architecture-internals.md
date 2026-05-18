@@ -7,7 +7,7 @@ read_when:
 title: "外掛架構內部機制"
 ---
 
-關於公開功能模型、插件形狀以及所有權/執行契約，請參閱 [插件架構](/zh-Hant/plugins/architecture)。本頁面是內部機制的參考文件：載入管線、註冊表、執行時掛鉤、Gateway HTTP 路由、匯入路徑和架構表。
+關於公開的能力模型、插件形狀以及所有權/執行合約，請參閱 [插件架構](/zh-Hant/plugins/architecture)。本頁面是內部機制的參考：載入管道、註冊表、執行時鉤子、Gateway HTTP 路由、匯入路徑和結構描述表格。
 
 ## 載入管線
 
@@ -170,9 +170,7 @@ export default {
   `providerAuthAliases`、`providerAuthChoices` 和 `channelEnvVars`。
 - **Config-time hooks**：`catalog`（舊版 `discovery`）加上
   `applyConfigDefaults`。
-- **Runtime hooks**：40 多個可選的 hooks，涵蓋身份驗證、模型解析、
-  串流包裝、思考級別、重播策略和使用端點。請參閱
-  [Hook order and usage](#hook-order-and-usage) 下的完整列表。
+- **執行時鉤子**：涵蓋 40 多個選用鉤子，包括認證、模型解析、串流包裝、思考層級、重播策略和使用量端點。請參閱 [鉤子順序與用法](#hook-order-and-usage) 下的完整列表。
 
 OpenClaw 仍然擁有通用代理循環、故障轉移、轉錄處理和
 工具策略。這些 hooks 是供應商特定
@@ -567,11 +565,7 @@ api.registerHttpRoute({
 | `openclaw/plugin-sdk/core`          | 通用共享輔助程式與傘式合約                     |
 | `openclaw/plugin-sdk/config-schema` | 根 `openclaw.json` Zod 綱要 (`OpenClawSchema`) |
 
-通道插件從一組狹窄的縫隙中選擇 —— `channel-setup`、
-`setup-runtime`、`setup-tools`、`channel-pairing`、
-`channel-contract`、`channel-feedback`、`channel-inbound`、`channel-lifecycle`、
-`channel-reply-pipeline`、`command-auth`、`secret-input`、`webhook-ingress`、
-`channel-targets` 和 `channel-actions`。核准行為應整合於單一 `approvalCapability` 合約，而非混雜於不相關的插件欄位之間。請參閱 [通道插件](/zh-Hant/plugins/sdk-channel-plugins)。
+頻道插件可以從一系列狹窄的縫隙中進行選擇 —— `channel-setup`、`setup-runtime`、`setup-tools`、`channel-pairing`、`channel-contract`、`channel-feedback`、`channel-inbound`、`channel-lifecycle`、`channel-reply-pipeline`、`command-auth`、`secret-input`、`webhook-ingress`、`channel-targets` 和 `channel-actions`。審核行為應整合到一個 `approvalCapability` 合約中，而不是混用於不相關的插件欄位。請參閱 [頻道插件](/zh-Hant/plugins/sdk-channel-plugins)。
 
 Runtime and config helpers live under matching focused `*-runtime` subpaths
 (`approval-runtime`, `agent-runtime`, `lazy-runtime`, `directory-runtime`,
@@ -601,7 +595,7 @@ reference page when relying on them.
 
 ## Message tool schemas
 
-外掛程式應擁有針對非訊息基本類型（例如反應、已讀和投票）的特定頻道 `describeMessageTool(...)` 結構描述貢獻。共享傳送展示應使用通用的 `MessagePresentation` 合約，而不是提供者原生的按鈕、元件、區塊或卡片欄位。請參閱 [訊息展示](/zh-Hant/plugins/message-presentation) 以了解合約、後援規則、提供者對應以及外掛程式作者檢查清單。
+插件應擁有特定頻道的 `describeMessageTool(...)` 結構描述貢獻，用於反應、已讀和投票等非訊息原語。共用的傳送呈現應使用通用 `MessagePresentation` 合約，而不是提供者原生的按鈕、元件、區塊或卡片欄位。請參閱 [訊息呈現](/zh-Hant/plugins/message-presentation) 以了解合約、後援規則、提供者對應以及插件作者檢查清單。
 
 具備傳送功能的外掛程式透過訊息能力宣告它們可以呈現的內容：
 
@@ -859,7 +853,9 @@ export default function (api) {
 
 工廠 `ctx` 公開了可選的 `config`、`agentDir` 和 `workspaceDir` 值，用於建構時初始化。
 
-如果您的引擎**不**擁有壓縮演算法，請保持 `compact()` 的實作並明確地委派它：
+當 active harness 具有持久後端執行緒時，`assemble()` 可能會回傳 `contextProjection`。若為舊版 per-turn projection，請將其省略。當組裝好的內容應該一次注入後端執行緒並重複使用直到 epoch 變更時，請回傳 `{ mode: "thread_bootstrap", epoch }`。在引擎的語意內容變更之後變更 epoch，例如在引擎擁有的壓縮 (compaction) 通過之後。主機可以在 thread-bootstrap projection 中保留工具呼叫元資料、輸入形狀以及編輯過的工具結果，以便新的後端執行緒能夠保持工具連續性，而不必複製包含原始機密的負載。
+
+如果您的引擎並**不**擁有壓縮演算法，請保持實作 `compact()` 並明確地委派它：
 
 ```ts
 import { buildMemorySystemPromptAddition, delegateCompactionToRuntime } from "openclaw/plugin-sdk/core";
@@ -893,41 +889,41 @@ export default function (api) {
 
 ## 新增新功能
 
-當 plugin 需要不符合目前 API 的行為時，不要使用私有的 reach-in 繞過 plugin 系統。請新增缺失的功能。
+當外掛程式需要不符合目前 API 的行為時，請不要透過私有的 reach-in 繞過外掛系統。請新增缺失的功能。
 
 建議順序：
 
-1. 定義核心契約
-   決定 core 應該擁有哪些共享行為：原則、後援、設定合併、生命週期、面向通道的語意，以及 runtime helper 形狀。
-2. 新增型別化的 plugin 註冊 / runtime 介面
+1. 定義核心合約
+   決定核心應該擁有哪些共享行為：原則、後援、設定合併、生命週期、面向通道的語意，以及執行時期輔助程式形狀。
+2. 新增型別化的外掛註冊/執行時期介面
    使用最小且有用的型別化功能介面來擴充 `OpenClawPluginApi` 和/或 `api.runtime`。
-3. 連接 core + 通道/功能消費者
-   通道和功能 plugin 應該透過 core 來使用新功能，而不是直接匯入供應商的實作。
-4. 註冊供應商實作
-   然後，供應商 plugin 會針對該功能註冊其後端。
-5. 新增契約覆蓋範圍
-   新增測試，以便擁有權和註冊形狀隨著時間保持明確。
+3. 連接核心 + 通道/功能消費者
+   通道和功能外掛程式應該透過核心來使用新功能，而不是直接匯入廠商實作。
+4. 註冊廠商實作
+   廠商外掛程式隨後會針對該功能註冊它們的後端。
+5. 新增合約覆蓋範圍
+   新增測試，讓擁有權和註冊形狀隨著時間保持明確。
 
-這就是 OpenClaw 如何在不變成硬編碼至單一供應商世界觀的情況下保持主見的方法。請參閱 [Capability Cookbook](/zh-Hant/tools/capability-cookbook) 以取得具體的檔案檢查清單和實作範例。
+這就是 OpenClaw 如何在保持堅定觀點的同時，又不會被硬編碼為某個供應商的世界觀。請參閱 [Capability Cookbook](/zh-Hant/tools/capability-cookbook) 以取得具體的檔案檢查清單和實作範例。
 
 ### 功能檢查清單
 
-當您新增新功能時，實作通常應該同時接觸這些介面：
+當您新增新功能時，實作通常應該同時觸及這些介面：
 
-- `src/<capability>/types.ts` 中的核心契約型別
-- `src/<capability>/runtime.ts` 中的核心執行器/runtime helper
-- `src/plugins/types.ts` 中的 plugin API 註冊介面
-- `src/plugins/registry.ts` 中的 plugin registry 連接
-- 當功能/通道插件需要使用時，在 `src/plugins/runtime/*` 中暴露插件執行時
-- `src/test-utils/plugin-registration.ts` 中的捕獲/測試輔助程式
-- `src/plugins/contracts/registry.ts` 中的擁有權/契約斷言
-- `docs/` 中的操作員/插件文件
+- `src/<capability>/types.ts` 中的核心合約型別
+- `src/<capability>/runtime.ts` 中的核心執行器/執行時期輔助程式
+- `src/plugins/types.ts` 中的外掛 API 註冊介面
+- `src/plugins/registry.ts` 中的外掛註冊表連接
+- 當功能/通道外掛需要使用時，plugin runtime exposure in `src/plugins/runtime/*`
+- `src/test-utils/plugin-registration.ts` 中的 capture/test helpers
+- `src/plugins/contracts/registry.ts` 中的 ownership/contract assertions
+- `docs/` 中的 operator/plugin docs
 
-如果缺少其中任何一個介面，這通常表示該功能尚未完全整合。
+如果缺少其中任何一個介面，通常表示該功能尚未完全整合。
 
-### 功能範本
+### Capability template
 
-最小模式：
+Minimal pattern:
 
 ```ts
 // core contract
@@ -953,22 +949,22 @@ const clip = await api.runtime.videoGeneration.generate({
 });
 ```
 
-契約測試模式：
+Contract test pattern:
 
 ```ts
 expect(findVideoGenerationProviderIdsForPlugin("openai")).toEqual(["openai"]);
 ```
 
-這樣可以保持規則簡單：
+That keeps the rule simple:
 
-- 核心擁有功能契約和編排
-- 供應商插件擁有供應商實作
-- 功能/通道插件使用執行時輔助程式
-- 契約測試使擁有權明確化
+- core owns the capability contract + orchestration
+- vendor plugins own vendor implementations
+- feature/channel plugins consume runtime helpers
+- contract tests keep ownership explicit
 
-## 相關
+## Related
 
-- [Plugin architecture](/zh-Hant/plugins/architecture) — 公開功能模型和形狀
+- [Plugin architecture](/zh-Hant/plugins/architecture) — public capability model and shapes
 - [Plugin SDK subpaths](/zh-Hant/plugins/sdk-subpaths)
 - [Plugin SDK setup](/zh-Hant/plugins/sdk-setup)
 - [Building plugins](/zh-Hant/plugins/building-plugins)

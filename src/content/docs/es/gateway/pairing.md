@@ -154,7 +154,7 @@ Eliminar un dispositivo también barrerá las solicitudes de emparejamiento pend
 
 ## Localidad y encabezados reenviados
 
-El emparejamiento de Gateway trata una conexión como bucle local solo cuando el socket sin procesar y cualquier evidencia de proxy ascendente coinciden. Si una solicitud llega en bucle local pero lleva encabezados `X-Forwarded-For` / `X-Forwarded-Host` / `X-Forwarded-Proto` que apuntan a un origen no local, esa evidencia de encabezado reenviado descalifica la reclamación de localidad de bucle local. La ruta de emparejamiento luego requiere aprobación explícita en lugar de tratar silenciosamente la solicitud como una conexión del mismo host. Consulte [Trusted Proxy Auth](/es/gateway/trusted-proxy-auth) para la regla equivalente en la autenticación de operadores.
+El emparejamiento de Gateway trata una conexión como de bucle local (loopback) solo cuando tanto el socket sin procesar como cualquier evidencia de proxy ascendente coinciden. Si una solicitud llega en bucle local pero lleva `Forwarded`, cualquier `X-Forwarded-*`, o evidencia de encabezado `X-Real-IP`, esa evidencia de encabezado reenviado descalifica la reclamación de localidad de bucle local. La ruta de emparejamiento entonces requiere aprobación explícita en lugar de tratar silenciosamente la solicitud como una conexión del mismo host. Consulte [Trusted Proxy Auth](/es/gateway/trusted-proxy-auth) para la regla equivalente sobre la autenticación del operador.
 
 ## Almacenamiento (local, privado)
 

@@ -1,51 +1,69 @@
 ---
-summary: "Ejemplos rápidos para instalar, listar, desinstalar, actualizar y publicar plugins de OpenClaw"
+summary: "Ejemplos rápidos para listar, instalar, actualizar, inspeccionar y desinstalar complementos de OpenClaw"
 read_when:
-  - You want quick plugin install, list, update, or uninstall examples
-  - You want to choose between ClawHub and npm plugin distribution
-  - You are publishing a plugin package
-title: "Gestionar plugins"
-sidebarTitle: "Gestionar plugins"
+  - You want quick plugin list, install, update, inspect, or uninstall examples
+  - You want to choose a plugin install source
+  - You want the right reference for publishing plugin packages
+title: "Administrar complementos"
+sidebarTitle: "Administrar complementos"
+doc-schema-version: 1
 ---
 
-La mayoría de los flujos de trabajo de plugins son unos pocos comandos: buscar, instalar, reiniciar el Gateway, verificar y desinstalar cuando ya no necesites el plugin.
+Use esta página para comandos comunes de administración de complementos. Para el contrato de comandos exhaustivo,
+indicadores, reglas de selección de origen y casos extremos, consulte
+[`openclaw plugins`](/es/cli/plugins).
 
-## Listar plugins
+La mayoría de los flujos de trabajo de instalación son:
+
+1. encontrar un paquete
+2. instalarlo desde ClawHub, npm, git o una ruta local
+3. permitir que el Gateway administrado se reinicie automáticamente, o reiniciarlo manualmente cuando no esté administrado
+4. verificar los registros de tiempo de ejecución del complemento
+
+## Listar y buscar complementos
 
 ```bash
 openclaw plugins list
 openclaw plugins list --enabled
 openclaw plugins list --verbose
 openclaw plugins list --json
+openclaw plugins search "calendar"
 ```
 
-Use `--json` para scripts. Incluye diagnósticos del registro y el `dependencyStatus` estático de cada plugin cuando el paquete del plugin declara `dependencies` o `optionalDependencies`.
+Use `--json` para scripts:
 
 ```bash
 openclaw plugins list --json \
   | jq '.plugins[] | {id, enabled, format, source, dependencyStatus}'
 ```
 
-`plugins list` es una verificación de inventario en frío. Muestra lo que OpenClaw puede descubrir desde la configuración, los manifiestos y el registro de plugins; no prueba que un proceso del Gateway que ya se está ejecutando haya importado el tiempo de ejecución del plugin.
+`plugins list` es una verificación de inventario en frío. Muestra lo que OpenClaw puede descubrir
+a partir de la configuración, los manifiestos y el registro de complementos; no prueba que un
+Gateway que ya se está ejecutando haya importado el tiempo de ejecución del complemento. La salida JSON incluye
+diagnósticos del registro y el `dependencyStatus` estático de cada complemento cuando el
+paquete de complementos declara `dependencies` o `optionalDependencies`.
 
-## Instalar plugins
+`plugins search` consulta a ClawHub paquetes de complementos instalables e imprime
+sugerencias de instalación como `openclaw plugins install clawhub:<package>`.
+
+## Instalar complementos
 
 ```bash
 # Search ClawHub for plugin packages.
 openclaw plugins search "calendar"
 
-# Bare package specs try ClawHub first, then npm fallback.
-openclaw plugins install <package>
-
-# Force one source.
+# Install from ClawHub.
 openclaw plugins install clawhub:<package>
-openclaw plugins install npm:<package>
-
-# Install a specific version or dist-tag.
 openclaw plugins install clawhub:<package>@1.2.3
 openclaw plugins install clawhub:<package>@beta
+
+# Install from npm.
+openclaw plugins install npm:<package>
 openclaw plugins install npm:@scope/openclaw-plugin@1.2.3
 openclaw plugins install npm:@openclaw/codex
+
+# Install from a local npm pack artifact.
+openclaw plugins install npm-pack:<path.tgz>
 
 # Install from git or a local development checkout.
 openclaw plugins install git:github.com/acme/openclaw-plugin@v1.0.0
@@ -53,54 +71,77 @@ openclaw plugins install ./my-plugin
 openclaw plugins install --link ./my-plugin
 ```
 
-Después de instalar el código del plugin, reinicie el Gateway que atiende sus canales:
+Las especificaciones de paquetes simples se instalan desde npm durante el cambio de lanzamiento. Use `clawhub:`,
+`npm:`, `git:` o `npm-pack:` cuando necesite una selección determinista del origen.
+Si el nombre simple coincide con un id de complemento oficial, OpenClaw puede instalar la
+entrada del catálogo directamente.
+
+Use `--force` solo cuando intencionalmente desee sobrescribir un destino de instalación
+existente. Para actualizaciones de rutina de instalaciones rastreadas de npm, ClawHub o hook-pack, use
+`openclaw plugins update`.
+
+## Reiniciar e inspeccionar
+
+Después de instalar, actualizar o desinstalar el código del complemento, un Gateway administrado en ejecución
+con la recarga de configuración habilitada se reinicia automáticamente. Si el Gateway no está
+administrado o la recarga está deshabilitada, reinícielo usted mismo antes de verificar las superficies
+de tiempo de ejecución en vivo:
 
 ```bash
 openclaw gateway restart
 openclaw plugins inspect <plugin-id> --runtime --json
 ```
 
-Use `inspect --runtime` cuando necesite una prueba de que el plugin registró superficies de tiempo de ejecución como herramientas, ganchos (hooks), servicios, métodos del Gateway o comandos de CLI propiedad del plugin.
+Use `inspect --runtime` cuando necesites pruebas de que el complemento registró superficies de tiempo de ejecución como herramientas, ganchos, servicios, métodos de Gateway, rutas HTTP o comandos CLI propiedad del complemento. `inspect` y `list` simples son comprobaciones en frío de manifiesto, configuración y registro.
 
-## Actualizar plugins
+## Actualizar complementos
 
 ```bash
 openclaw plugins update <plugin-id>
 openclaw plugins update <npm-package-or-spec>
 openclaw plugins update --all
+openclaw plugins update <plugin-id> --dry-run
 ```
 
-Si un plugin se instaló desde una etiqueta de distribución de npm como `@beta`, las llamadas posteriores a `update <plugin-id>` reutilizan esa etiqueta registrada. Pasar una especificación npm explícita cambia la instalación rastreada a esa especificación para futuras actualizaciones.
+Cuando pasas un ID de complemento, OpenClaw reutiliza la especificación de instalación rastreada. Las dist-tags almacenadas como `@beta` y las versiones fijas exactas continúan usándose en ejecuciones posteriores de `update <plugin-id>`.
+
+Para instalaciones de npm, puedes pasar una especificación de paquete explícita para cambiar el registro rastreado:
 
 ```bash
 openclaw plugins update @scope/openclaw-plugin@beta
 openclaw plugins update @scope/openclaw-plugin
 ```
 
-El segundo comando devuelve un plugin a la línea de lanzamiento predeterminada del registro cuando anteriormente estaba fijado a una versión o etiqueta exacta.
+El segundo comando devuelve un complemento a la línea de lanzamiento predeterminada del registro cuando anteriormente estaba fijado a una versión exacta o etiqueta.
 
-Cuando `openclaw update` se ejecuta en el canal beta, los registros de plugins de npm y ClawHub de línea predeterminada intentan primero la versión del plugin coincidente `@beta`. Si esa versión beta no existe, OpenClaw recurre a la especificación predeterminada/más reciente registrada. Para los plugins de npm, OpenClaw también recurre cuando el paquete beta existe pero falla la validación de instalación. Las versiones exactas y las etiquetas explícitas como `@rc` o `@beta` se conservan.
+Cuando `openclaw update` se ejecuta en el canal beta, los registros de complementos pueden preferir lanzamientos `@beta` coincidentes. Para las reglas exactas de reserva y anclaje, consulta [`openclaw plugins`](/es/cli/plugins#update).
 
-## Desinstalar plugins
+## Desinstalar complementos
 
 ```bash
 openclaw plugins uninstall <plugin-id> --dry-run
 openclaw plugins uninstall <plugin-id>
 openclaw plugins uninstall <plugin-id> --keep-files
-openclaw gateway restart
 ```
 
-La desinstalación elimina la entrada de configuración del complemento, el registro del índice del complemento, las entradas de la lista de permitidos/denegados y las rutas de carga vinculadas, si corresponde. Los directorios de instalación administrados se eliminan a menos que pase `--keep-files`.
+La desinstalación elimina la entrada de configuración del complemento, el registro del índice del complemento persistido, las entradas de lista de permitir/denegar y las rutas de carga vinculadas, si corresponde. Los directorios de instalación administrados se eliminan a menos que pases `--keep-files`. Un Gateway administrado en ejecución se reinicia automáticamente cuando la desinstalación cambia la fuente del complemento.
 
-En el modo Nix (`OPENCLAW_NIX_MODE=1`), los comandos de instalación, actualización, desinstalación, habilitación y deshabilitación de complementos están deshabilitados. En su lugar, gestione esas opciones en el origen Nix para la instalación; para nix-openclaw, use la [Guía de inicio rápido](https://github.com/openclaw/nix-openclaw#quick-start) con prioridad de agente.
+En modo Nix (`OPENCLAW_NIX_MODE=1`), los comandos de instalación, actualización, desinstalación, habilitación y deshabilitación de complementos están deshabilitados. Gestiona esas opciones en la fuente de Nix para la instalación en su lugar.
+
+## Elegir una fuente
+
+| Fuente     | Usar cuando                                                                                       | Ejemplo                                                        |
+| ---------- | ------------------------------------------------------------------------------------------------- | -------------------------------------------------------------- |
+| ClawHub    | Deseas descubrimiento nativo de OpenClaw, resúmenes de escaneo, versiones e indicaciones          | `openclaw plugins install clawhub:<package>`                   |
+| npmjs.com  | Ya distribuyes paquetes JavaScript o necesitas dist-tags/registros privados de npm                | `openclaw plugins install npm:@acme/openclaw-plugin`           |
+| git        | Deseas una rama, etiqueta o confirmación de un repositorio                                        | `openclaw plugins install git:github.com/<owner>/<repo>@<ref>` |
+| ruta local | Estás desarrollando o probando un complemento en la misma máquina                                 | `openclaw plugins install --link ./my-plugin`                  |
+| npm pack   | Estás proporcionando un artefacto de paquete local a través de la semántica de instalación de npm | `openclaw plugins install npm-pack:<path.tgz>`                 |
+| mercado    | Estás instalando un complemento de mercado compatible con Claude                                  | `openclaw plugins install <plugin> --marketplace <source>`     |
 
 ## Publicar complementos
 
-Puede publicar complementos externos en [ClawHub](https://clawhub.ai), npmjs.com o ambos.
-
-### Publicar en ClawHub
-
-ClawHub es la superficie de descubrimiento público principal para los complementos de OpenClaw. Proporciona a los usuarios metadatos buscables, historial de versiones y resultados de escaneo del registro antes de la instalación.
+ClawHub es la superficie principal de descubrimiento público para los complementos de OpenClaw. Publique allí cuando desee que los usuarios encuentren los metadatos del complemento, el historial de versiones, los resultados del análisis del registro y las sugerencias de instalación antes de instalar.
 
 ```bash
 npm i -g clawhub
@@ -110,18 +151,7 @@ clawhub package publish your-org/your-plugin
 clawhub package publish your-org/your-plugin@v1.0.0
 ```
 
-Los usuarios instalan desde ClawHub con:
-
-```bash
-openclaw plugins install clawhub:<package>
-openclaw plugins install <package>
-```
-
-La forma básica todavía verifica ClawHub primero.
-
-### Publicar en npmjs.com
-
-Los complementos nativos de npm deben incluir un manifiesto de complemento y metadatos del punto de entrada de OpenClaw `package.json`.
+Los complementos nativos de npm deben incluir un manifiesto de complemento y metadatos del paquete antes de publicar:
 
 ```json package.json
 {
@@ -136,29 +166,24 @@ Los complementos nativos de npm deben incluir un manifiesto de complemento y met
 
 ```bash
 npm publish --access public
-```
-
-Los usuarios instalan solo npm con:
-
-```bash
 openclaw plugins install npm:@acme/openclaw-plugin
 openclaw plugins install npm:@acme/openclaw-plugin@beta
 openclaw plugins install npm:@acme/openclaw-plugin@1.0.0
 ```
 
-Si el mismo paquete también está disponible en ClawHub, `npm:` omite la búsqueda en ClawHub y fuerza la resolución de npm.
+Use estas páginas para el contrato completo de publicación en lugar de tratar esta página como la referencia de publicación:
 
-## Elección de origen
+- [Publicación en ClawHub](/es/clawhub/publishing) explica los propietarios, ámbitos, lanzamientos, revisiones, validación de paquetes y transferencia de paquetes.
+- [Compilación de complementos](/es/plugins/building-plugins) muestra la estructura del paquete del complemento y el flujo de trabajo de primera publicación.
+- [Manifiesto de complemento](/es/plugins/manifest) define los campos del manifiesto del complemento nativo.
 
-- **ClawHub**: úselo cuando desee descubrimiento nativo de OpenClaw, resúmenes de escaneo, versiones e indicaciones de instalación.
-- **npmjs.com**: úselo cuando ya distribuya paquetes de JavaScript o necesite flujos de trabajo de dist-tags/registros privados de npm.
-- **Git**: úselo cuando desee instalar directamente desde una rama, etiqueta o confirmación.
-- **Ruta local**: úselo cuando esté desarrollando o probando un complemento en la misma máquina.
+Si el mismo paquete está disponible tanto en ClawHub como en npm, use el prefijo explícito `clawhub:` o `npm:` cuando necesite forzar una fuente.
 
 ## Relacionado
 
-- [Complementos](/es/tools/plugin) - descripción general y solución de problemas
+- [Complementos](/es/tools/plugin) - instalar, configurar, reiniciar y solucionar problemas
 - [`openclaw plugins`](/es/cli/plugins) - referencia completa de la CLI
-- [ClawHub](/es/clawhub/cli) - operaciones de publicación y registro
-- [Construcción de complementos](/es/plugins/building-plugins) - crear un paquete de complemento
-- [Manifiesto del complemento](/es/plugins/manifest) - manifiesto y metadatos del paquete
+- [Complementos comunitarios](/es/plugins/community) - descubrimiento público y publicación en ClawHub
+- [ClawHub](/es/clawhub/cli) - operaciones de CLI del registro
+- [Compilación de complementos](/es/plugins/building-plugins) - crear un paquete de complemento
+- [Manifiesto de complemento](/es/plugins/manifest) - manifiesto y metadatos del paquete

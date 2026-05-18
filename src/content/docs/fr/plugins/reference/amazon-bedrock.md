@@ -12,7 +12,7 @@ Ajoute la prise en charge du fournisseur de modèle Amazon Bedrock à OpenClaw.
 ## Distribution
 
 - Paquet : `@openclaw/amazon-bedrock-provider`
-- Voie d'installation : npm
+- Route d'installation : npm ; ClawHub
 
 ## Surface
 

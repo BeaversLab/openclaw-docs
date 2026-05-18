@@ -18,8 +18,8 @@ read_when:
 - Discord、Slack、Telegram、Mattermost、MS Teams 和 Feishu 渲染器使用通用合约。
 - Discord 渠道控制平面代码不再导入基于 Carbon 的 UI 容器。
 
-规范文档现位于 [Message Presentation](/zh/plugins/message-presentation)。
-将此计划保留为历史实现上下文；更新规范指南以反映合约、渲染器或回退行为的变更。
+权威文档现位于 [Message Presentation](/zh/plugins/message-presentation)。
+请将此计划保留为历史实现上下文；如需更改契约、渲染器或回退行为，请更新权威指南。
 
 ## 问题
 
@@ -83,11 +83,14 @@ type MessagePresentationOption = {
 - `interactive` 按钮块映射到 `presentation.blocks[].type = "buttons"`。
 - `interactive` 选择块映射到 `presentation.blocks[].type = "select"`。
 
-外部代理和 CLI 模式现在使用 `presentation`；`interactive` 仍然是现有回复生成器的内部传统解析/呈现助手。
+外部代理和 CLI 模式现在使用 `presentation`；`interactive` 仍然是现有回复生成器的内部旧版解析/渲染辅助工具。
+面向生成器的公共 API 将 `interactive` 视为已弃用。运行时
+支持仍然保留，以便现有的审批辅助工具和旧版插件继续
+工作，同时新代码发出 `presentation`。
 
 ## 传递元数据
 
-添加一个核心拥有的 `delivery` 字段，用于非 UI 的发送行为。
+为核心拥有的 `delivery` 字段添加非 UI 的发送行为。
 
 ```ts
 type ReplyPayloadDelivery = {
@@ -103,12 +106,12 @@ type ReplyPayloadDelivery = {
 
 语义：
 
-- `delivery.pin = true` 意味着置入第一个成功传递的消息。
+- `delivery.pin = true` 意味着固定第一条成功传递的消息。
 - `notify` 默认为 `false`。
-- `required` 默认为 `false`；不支持的渠道或置入失败会通过继续传递自动降级。
-- 手动 `pin`、`unpin` 和 `list-pins` 消息操作仍然适用于现有消息。
+- `required` 默认为 `false`；不支持的渠道或固定失败会通过继续传递自动降级。
+- 针对现有消息保留手动 `pin`、`unpin` 和 `list-pins` 消息操作。
 
-当前的 Telegram ACP 主题绑定应该从 `channelData.telegram.pin = true` 移至 `delivery.pin = true`。
+当前的 Telegram ACP 主题绑定应从 `channelData.telegram.pin = true` 移至 `delivery.pin = true`。
 
 ## 运行时能力契约
 
@@ -122,6 +125,29 @@ type ChannelPresentationCapabilities = {
   context?: boolean;
   divider?: boolean;
   tones?: MessagePresentationTone[];
+  limits?: {
+    actions?: {
+      maxActions?: number;
+      maxActionsPerRow?: number;
+      maxRows?: number;
+      maxLabelLength?: number;
+      maxValueBytes?: number;
+      supportsStyles?: boolean;
+      supportsDisabled?: boolean;
+      supportsLayoutHints?: boolean;
+    };
+    selects?: {
+      maxOptions?: number;
+      maxLabelLength?: number;
+      maxValueBytes?: number;
+    };
+    text?: {
+      maxLength?: number;
+      encoding?: "characters" | "utf8-bytes" | "utf16-units";
+      markdownDialect?: "plain" | "markdown" | "html" | "slack-mrkdwn" | "discord-markdown";
+      supportsEdit?: boolean;
+    };
+  };
 };
 
 type ChannelDeliveryCapabilities = {
@@ -143,7 +169,8 @@ type ChannelOutboundAdapter = {
 
 - 解析目标渠道和运行时适配器。
 - 请求呈现能力。
-- 在渲染之前降级不支持的块。
+- 在
+  渲染之前降级不支持的块并应用通用功能限制。
 - 调用 `renderPresentation`。
 - 如果不存在渲染器，则将呈现转换为文本后备。
 - 成功发送后，当请求并支持 `delivery.pin` 时，调用 `pinDeliveredMessage`。
@@ -152,14 +179,14 @@ type ChannelOutboundAdapter = {
 
 Discord：
 
-- 在仅运行时模块中将 `presentation` 渲染为组件 v2 和 Carbon 容器。
+- 在仅运行时模块中将 `presentation` 渲染为 components v2 和 Carbon 容器。
 - 将强调色辅助工具保留在轻量级模块中。
 - 从渠道插件控制平面代码中移除 `DiscordUiContainer` 导入。
 
 Slack：
 
 - 将 `presentation` 渲染为 Block Kit。
-- 移除 agent 和 CLI `blocks` 输入。
+- 移除代理和 CLI `blocks` 输入。
 
 Telegram：
 
@@ -175,7 +202,7 @@ Mattermost：
 
 MS Teams：
 
-- 将 `presentation` 渲染为自适应卡片。
+- 将 `presentation` 渲染为 Adaptive Cards。
 - 保留手动固定/取消固定/列出固定操作。
 - 如果 Graph 支持对目标对话可靠，则可选择实现 `pinDeliveredMessage`。
 
@@ -183,7 +210,7 @@ Feishu：
 
 - 将 `presentation` 渲染为交互式卡片。
 - 保留手动固定/取消固定/列出固定操作。
-- 如果 API 行为可靠，则可选择实现 `pinDeliveredMessage` 以进行已发送消息的固定。
+- 如果 API 行为可靠，可选择实现 `pinDeliveredMessage` 以进行发送消息的固定。
 
 LINE：
 
@@ -197,23 +224,23 @@ LINE：
 
 ## 重构步骤
 
-1. 重新应用 Discord 版本修复，该修复将 `ui-colors.ts` 与 Carbon 支持的 UI 分离，并从 `extensions/discord/src/channel.ts` 中移除 `DiscordUiContainer`。
-2. 将 `presentation` 和 `delivery` 添加到 `ReplyPayload`、出站负载规范化、传递摘要和钩子负载中。
-3. 在狭窄的 SDK/运行时子路径中添加 `MessagePresentation` 架构和解析器辅助函数。
-4. 将消息能力 `buttons`、`cards`、`components` 和 `blocks` 替换为语义呈现能力。
+1. 重新应用 Discord 发布修复程序，将 `ui-colors.ts` 与基于 Carbon 的 UI 分离，并从 `extensions/discord/src/channel.ts` 中移除 `DiscordUiContainer`。
+2. 将 `presentation` 和 `delivery` 添加到 `ReplyPayload`、出站负载规范化、传递摘要和 hook 负载中。
+3. 在狭窄的 SDK/运行时子路径中添加 `MessagePresentation` schema 和解析器辅助程序。
+4. 用语义展示能力替换消息能力 `buttons`、`cards`、`components` 和 `blocks`。
 5. 添加用于呈现渲染和传递固定的运行时出站适配器钩子。
 6. 用 `buildCrossContextPresentation` 替换跨上下文组件构造。
 7. 删除 `src/infra/outbound/channel-adapters.ts` 并从渠道插件类型中移除 `buildCrossContextComponents`。
 8. 更改 `maybeApplyCrossContextMarker` 以附加 `presentation` 而不是原生参数。
 9. 更新插件分派发送路径，使其仅消耗语义呈现和传递元数据。
-10. 移除代理和 CLI 原生负载参数：`components`、`blocks`、`buttons` 和 `card`。
+10. 移除 agent 和 CLI 原生负载参数：`components`、`blocks`、`buttons` 和 `card`。
 11. 移除创建原生消息工具架构的 SDK 辅助函数，用呈现架构辅助函数替换它们。
 12. 从 `channelData` 中移除 UI/原生信封；在审查每个剩余字段之前，仅保留传输元数据。
 13. 迁移 Discord、Slack、Telegram、Mattermost、MS Teams、飞书和 LINE 渲染器。
 14. 更新消息 CLI、渠道页面、插件 SDK 和能力手册的文档。
 15. 针对 Discord 和受影响的渠道入口点运行导入扩展分析。
 
-步骤 1-11 和 13-14 已在此重构中针对共享代理、CLI、插件能力和出站适配器契约实现。步骤 12 仍然是针对提供商私有的 `channelData` 传输信封的更深层次内部清理过程。如果我们想要类型/测试关卡之外的量化导入扩展数据，步骤 15 仍然是后续验证。
+步骤 1-11 和 13-14 已在此重构中为共享 agent、CLI、插件能力和出站适配器合同实现。步骤 12 仍然是对提供商私有 `channelData` 传输信封的更深层内部清理传递。步骤 15 仍然是后续验证，如果我们想要超出类型/测试范围的量化导入扇出数字。
 
 ## 测试
 
@@ -230,11 +257,11 @@ LINE：
 
 ## 开放问题
 
-- `delivery.pin` 应该在第一阶段为 Discord、Slack、MS Teams 和 Feishu 实现，还是先仅为 Telegram 实现？
-- `delivery` 是否最终应该吸收现有字段，如 `replyToId`、`replyToCurrent`、`silent` 和 `audioAsVoice`，还是应该专注于发送后的行为？
+- 在第一阶段，是否应该为 Discord、Slack、MS Teams 和飞书实现 `delivery.pin`，还是仅先为 Telegram 实现？
+- `delivery` 最终是否应包含 `replyToId`、`replyToCurrent`、`silent` 和 `audioAsVoice` 等现有字段，还是应专注于发送后的行为？
 - 演示是否应该直接支持图片或文件引用，或者媒体目前是否应与 UI 布局保持分离？
 
 ## 相关
 
-- [Channels overview](/zh/channels)
-- [Message presentation](/zh/plugins/message-presentation)
+- [频道概述](/zh/channels)
+- [消息呈现](/zh/plugins/message-presentation)

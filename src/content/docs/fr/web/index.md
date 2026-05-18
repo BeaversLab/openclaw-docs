@@ -16,13 +16,19 @@ Les fonctionnalités se trouvent dans [Control UI](/fr/web/control-ui). Le reste
 
 ## Webhooks
 
-Lorsque `hooks.enabled=true`, le Gateway expose également un petit point de terminaison de webhook sur le même serveur HTTP.
-Voir [configuration du Gateway](/fr/gateway/configuration) → `hooks` pour l'authentification et les charges utiles.
+Lorsque `hooks.enabled=true`, le Gateway expose également un petit point de terminaison webhook sur le même serveur HTTP.
+Voir [Gateway configuration](/fr/gateway/configuration) → `hooks` pour l'authentification et les charges utiles.
+
+## Admin HTTP RPC
+
+L'Admin HTTP RPC expose certaines méthodes du plan de contrôle du Gateway à `POST /api/v1/admin/rpc`.
+Il est désactivé par défaut et n'est enregistré que lorsque le plugin `admin-http-rpc` est activé.
+Voir [Admin HTTP RPC](/fr/plugins/admin-http-rpc) pour le modèle d'authentification, les méthodes autorisées et la comparaison avec WebSocket.
 
 ## Config (activé par défaut)
 
-L'interface de contrôle est **activée par défaut** lorsque les ressources sont présentes (`dist/control-ui`).
-Vous pouvez la contrôler via la configuration :
+Le Control UI est **activé par défaut** lorsque les ressources sont présentes (`dist/control-ui`).
+Vous pouvez le contrôler via la configuration :
 
 ```json5
 {
@@ -36,7 +42,7 @@ Vous pouvez la contrôler via la configuration :
 
 ### Serve intégré (recommandé)
 
-Gardez le Gateway en boucle locale (loopback) et laissez Tailscale Serve le proxy :
+Gardez le Gateway en boucle locale et laissez Tailscale Serve le proxyer :
 
 ```json5
 {
@@ -47,7 +53,7 @@ Gardez le Gateway en boucle locale (loopback) et laissez Tailscale Serve le prox
 }
 ```
 
-Puis démarrez la passerelle :
+Démarrez ensuite la passerelle :
 
 ```bash
 openclaw gateway
@@ -69,7 +75,7 @@ Ouvrez :
 }
 ```
 
-Démarrez ensuite la passerelle (cet exemple non-boucle utilise l'authentification par jeton de secret partagé) :
+Démarrez ensuite la passerelle (cet exemple hors boucle locale utilise l'authentification par jeton de secret partagé) :
 
 ```bash
 openclaw gateway
@@ -93,31 +99,32 @@ Ouvrez :
 
 ## Notes de sécurité
 
-- L'authentification du Gateway est requise par défaut (jeton, mot de passe, proxy de confiance ou en-têtes d'identité Tailscale Serve lorsqu'ils sont activés).
-- Les liaisons non-boucle (non-loopback) **requièrent** toujours une authentification de passerelle. En pratique, cela signifie une authentification par jeton/mot de passe ou un proxy inverse conscient de l'identité avec `gateway.auth.mode: "trusted-proxy"`.
-- L'assistant crée une authentification par secret partagé par défaut et génère généralement un jeton de passerelle (même en boucle).
-- En mode secret partagé, l'interface envoie `connect.params.auth.token` ou
+- L'authentification Gateway est requise par défaut (jeton, mot de passe, proxy de confiance, ou en-têtes d'identité Tailscale Serve lorsque activés).
+- Les liaisons hors boucle locale nécessitent toujours l'authentification de la passerelle. En pratique, cela signifie une authentification par jeton/mot de passe ou un proxy inverse conscient de l'identité avec `gateway.auth.mode: "trusted-proxy"`.
+- L'assistant crée une authentification par secret partagé par défaut et génère généralement un jeton de passerelle (même en boucle locale).
+- En mode secret partagé, l'interface utilisateur envoie `connect.params.auth.token` ou
   `connect.params.auth.password`.
-- Lorsque `gateway.tls.enabled: true`, les assistants de tableau de bord local et d'état affichent
-  les URL du tableau de bord `https://` et les URL WebSocket `wss://`.
-- Dans les modes porteurs d'identité tels que Tailscale Serve ou `trusted-proxy`, la
-  vérification d'authentification WebSocket est satisfaite à partir des en-têtes de requête à la place.
-- Pour les déploiements de l'interface de contrôle non-boucle, définissez `gateway.controlUi.allowedOrigins`
-  explicitement (origines complètes). Sans cela, le démarrage de la passerelle est refusé par défaut.
+- Quand `gateway.tls.enabled: true`, les assistants locaux de tableau de bord et d'état affichent
+  des URL de tableau de bord `https://` et des URL WebSocket `wss://`.
+- Dans les modes avec identité comme Tailscale Serve ou `trusted-proxy`, la
+  vérification d'authentification WebSocket est satisfaite par les en-têtes de requête à la place.
+- Pour les déploiements publics d'interface de contrôle non-bouclage, définissez `gateway.controlUi.allowedOrigins`
+  explicitement (origines complètes). Les chargements privés de même origine LAN/Tailnet sont acceptés pour le bouclage,
+  RFC1918/link-local, `.local`, `.ts.net`, et les hôtes Tailscale CGNAT.
 - `gateway.controlUi.dangerouslyAllowHostHeaderOriginFallback=true` active
-  le mode de repli d'origine d'en-tête Host, mais constitue une rétrogradation de sécurité dangereuse.
+  le mode de repli d'origine basé sur l'en-tête Host, mais constitue une rétrogradation de sécurité dangereuse.
 - Avec Serve, les en-têtes d'identité Tailscale peuvent satisfaire l'authentification de l'interface de contrôle/WebSocket
   lorsque `gateway.auth.allowTailscale` est `true` (aucun jeton/mot de passe requis).
-  Les points de terminaison de l'API HTTP n'utilisent pas ces en-têtes d'identité Tailscale ; ils suivent
+  Les points de terminaison HTTP API n'utilisent pas ces en-têtes d'identité Tailscale ; ils suivent
   plutôt le mode d'authentification HTTP normal de la passerelle. Définissez
   `gateway.auth.allowTailscale: false` pour exiger des informations d'identification explicites. Voir
-  [Tailscale](/fr/gateway/tailscale) et [Sécurité](/fr/gateway/security). Ce
+  [Tailscale](/fr/gateway/tailscale) et [Security](/fr/gateway/security). Ce
   flux sans jeton suppose que l'hôte de la passerelle est de confiance.
 - `gateway.tailscale.mode: "funnel"` nécessite `gateway.auth.mode: "password"` (mot de passe partagé).
 
-## Construction de l'interface utilisateur
+## Création de l'interface utilisateur
 
-La Gateway sert des fichiers statiques depuis `dist/control-ui`. Construisez-les avec :
+Le Gateway sert des fichiers statiques depuis `dist/control-ui`. Construisez-les avec :
 
 ```bash
 pnpm ui:build

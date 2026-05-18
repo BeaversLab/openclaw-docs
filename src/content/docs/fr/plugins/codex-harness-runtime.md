@@ -13,7 +13,7 @@ Cette page documente le contrat d'exécution pour les tours de harnais Codex. Po
 
 Le mode Codex n'est pas PI avec un appel de modèle différent en dessous. Codex possède une plus grande partie de la boucle de modèle native, et OpenClaw adapte ses surfaces de plugin, d'outil, de session et de diagnostic autour de cette limite.
 
-OpenClaw possède toujours le routage de channel, les fichiers de session, la livraison des messages visibles, les outils dynamiques OpenClaw, les approbations, la livraison des médias et un miroir de transcription. Codex possède le thread natif canonique, la boucle de modèle native, la continuation d'outil native et la compactage native.
+OpenClaw possède toujours le routage de channel, les fichiers de session, la livraison des messages visibles, les outils dynamiques OpenClaw, les approbations, la livraison des médias et un miroir de transcript. Codex possède le thread natif canonique, la boucle de modèle native, la continuation d'outil native et la compactage native, sauf si le moteur de contexte OpenClaw actif déclare qu'il possède la compactage.
 
 ## Liaisons de thread et changements de modèle
 
@@ -100,9 +100,9 @@ Les sollicitations d'approbation d'outil MCP Codex sont acheminées via le flux 
 
 ## Orientation de la file d'attente
 
-L'orientation de la file d'attente lors d'une exécution active correspond au `turn/steer` du serveur d'application Codex. Avec le `messages.queue.mode: "steer"`OpenClaw par défaut, OpenClaw regroupe les messages de chat mis en file d'attente pour la fenêtre de calme configurée et les envoie comme une seule requête `turn/steer` dans l'ordre d'arrivée. Le mode `queue` hérité envoie des requêtes `turn/steer` séparées.
+La direction de la file d'attente d'exécution active correspond au `turn/steer` du serveur d'application Codex. Avec le `messages.queue.mode: "steer"` par défaut, OpenClaw regroupe les messages de chat en mode de direction pour la fenêtre de silence configurée et les envoie comme une seule requête `turn/steer` dans l'ordre d'arrivée.
 
-Les tours de révision Codex et de compactage manuel peuvent rejeter l'orientation au sein du même tour. Dans ce cas, OpenClaw utilise la file d'attente de suivi lorsque le mode sélectionné autorise le repli. Voir [File d'attente d'orientation](OpenClaw/en/concepts/queue-steering).
+Les tours de révision Codex et de compactage manuel peuvent rejeter la direction du même tour. Dans ce cas, OpenClaw attend la fin de l'exécution active avant de démarrer le prompt. Utilisez `/queue followup` ou `/queue collect` lorsque les messages doivent être mis en file d'attente par défaut au lieu d'être dirigés. Voir [Steering queue](/fr/concepts/queue-steering).
 
 ## Téléchargement des commentaires Codex
 
@@ -110,30 +110,32 @@ Lorsque `/diagnostics [note]`OpenClaw est approuvé pour une session utilisant l
 
 Le téléchargement passe par le chemin normal de rétroaction de Codex vers les serveurs OpenAI. Si la rétroaction Codex est désactivée sur ce serveur d'application, la commande renvoie l'erreur du serveur d'application. La réponse de diagnostics terminée répertorie les canaux, les identifiants de session OpenClaw, les identifiants de fil Codex et les commandes locales OpenAIOpenClaw`codex resume <thread-id>` pour les fils qui ont été envoyés.
 
-Si vous refusez ou ignorez l'approbation, OpenClaw n'affiche pas ces identifiants Codex et n'envoie pas les commentaires Codex. Le téléchargement ne remplace pas l'export de diagnostics local de Gateway. Voir [Export de diagnostics](OpenClawGateway/en/gateway/diagnostics) pour le comportement concernant l'approbation, la confidentialité, le bundle local et les discussions de groupe.
+Si vous refusez ou ignorez l'approbation, OpenClaw n'imprime pas ces identifiants Codex et n'envoie pas de commentaires Codex. Le téléchargement ne remplace pas l'exportation des diagnostics locaux Gateway. Voir [Diagnostics export](/fr/gateway/diagnostics) pour l'approbation, la confidentialité, le bundle local et le comportement de conversation de groupe.
 
 Utilisez `/codex diagnostics [note]` uniquement lorsque vous souhaitez spécifiquement l'envoi des commentaires Codex pour le thread actuellement attaché sans le bundle complet de diagnostics du Gateway.
 
 ## Compactage et miroir de transcription
 
-Lorsque le modèle sélectionné utilise le harnais Codex, le compactage natif des threads est délégué au serveur d'application Codex. OpenClaw conserve un miroir de transcription pour l'historique du channel, la recherche, `/new`, `/reset`, et les futurs changements de modèle ou de harnais.
+Lorsque le modèle sélectionné utilise le harnais Codex, la compactage du thread natif est déléguée au serveur d'application Codex, sauf si un moteur de contexte actif déclare `ownsCompaction: true`. Les moteurs de contexte propriétaires compactent d'abord et obligent OpenClaw à abandonner l'ancien thread backend Codex afin que le tour suivant puisse réhydrater un thread frais à partir du contexte géré par le moteur. OpenClaw conserve un miroir de transcript pour l'historique du channel, la recherche, `/new`, `/reset` et les futurs changements de modèle ou de harnais.
 
-Le miroir inclut la invite de l'utilisateur, le texte final de l'assistant, et les enregistrements légers de raisonnement ou de plan Codex lorsque le serveur d'application les émet. Actuellement, OpenClaw n'enregistre que les signaux de début et de fin de compactage natif. Il n'expose pas encore un résumé de compactage lisible par l'homme ou une liste auditable des entrées que Codex a conservées après compactage.
+Lorsqu'un moteur de contexte demande une projection de démarrage de fil Codex, OpenClaw projette les noms et identifiants des appels d'outils, les formes d'entrée et le contenu expurgé des résultats d'outils dans le nouveau fil Codex. Il ne copie pas les valeurs brutes des arguments des appels d'outils dans cette projection.
 
-Parce que Codex possède le thread natif canonique, `tool_result_persist` ne réécrit actuellement pas les enregistrements de résultats d'outil natifs de Codex. Cela ne s'applique que lorsque OpenClawOpenClaw écrit un résultat d'outil de transcription de session dont il est propriétaire (%PH:GLOSSARY:146:b38e0912%%-owned).
+Le miroir inclut l'invite de l'utilisateur, le texte final de l'assistant et les enregistrements de raisonnement ou de plan légers de Codex lorsque le serveur d'application les émet. Aujourd'hui, OpenClaw n'enregistre que les signaux de début et de fin de compactage natif. Il n'expose pas encore un résumé de compactage lisible par l'homme ou une liste auditable des entrées que Codex a conservées après le compactage.
+
+Comme Codex possède le fil natif canonique, `tool_result_persist` ne réécrit pas actuellement les enregistrements de résultats d'outils natifs de Codex. Cela ne s'applique que lorsque OpenClaw écrit un résultat d'outil de transcription de session appartenant à OpenClaw.
 
 ## Médias et diffusion
 
-OpenClaw continue de gérer la diffusion des médias et la sélection du fournisseur de médias. Les paramètres de fournisseur/modèle correspondants sont utilisés pour l'image, la vidéo, la musique, le PDF, le TTS et la compréhension des médias, tels que `agents.defaults.imageGenerationModel`, `videoGenerationModel`, `pdfModel`, et `messages.tts`.
+OpenClaw continue de gérer la diffusion des médias et la sélection du fournisseur de médias. L'image, la vidéo, la musique, le PDF, le TTS et la compréhension des médias utilisent les paramètres correspondants de fournisseur/modèle tels que `agents.defaults.imageGenerationModel`, `videoGenerationModel`, `pdfModel` et `messages.tts`.
 
-Le texte, les images, la vidéo, la musique, le TTS, les approbations et la sortie des outils de messagerie continuent de passer par le chemin de diffusion normal de OpenClaw. La génération de médias ne nécessite pas PI. Lorsque Codex émet un élément de génération d'image natif avec un `savedPath`, OpenClaw transfère ce fichier exact via le chemin normal de réponse média même si le tour Codex n'a pas de texte d'assistant.
+Le texte, les images, la vidéo, la musique, le TTS, les approbations et la sortie de l'outil de messagerie continuent de passer par le chemin de diffusion normal de OpenClaw. La génération de médias ne nécessite pas PI. Lorsque Codex émet un élément de génération d'image natif avec un `savedPath`, OpenClaw transmet ce fichier exact via le chemin normal de réponse média, même si le tour Codex n'a pas de texte d'assistant.
 
 ## Connexes
 
-- [Harnais Codex](/fr/plugins/codex-harness)
-- [Référence du harnais Codex](/fr/plugins/codex-harness-reference)
-- [Plugins natifs Codex](/fr/plugins/codex-native-plugins)
-- [Crochets de plugin (Plugin hooks)](/fr/plugins/hooks)
-- [Plugins de harnais d'agent](/fr/plugins/sdk-agent-harness)
-- [Export des diagnostics](/fr/gateway/diagnostics)
-- [Export de trajectoire](/fr/tools/trajectory)
+- [Codex harness](/fr/plugins/codex-harness)
+- [Codex harness reference](/fr/plugins/codex-harness-reference)
+- [Native Codex plugins](/fr/plugins/codex-native-plugins)
+- [Plugin hooks](/fr/plugins/hooks)
+- [Agent harness plugins](/fr/plugins/sdk-agent-harness)
+- [Diagnostics export](/fr/gateway/diagnostics)
+- [Trajectory export](/fr/tools/trajectory)

@@ -7,7 +7,7 @@ read_when:
 title: "Internes de l'architecture des plugins"
 ---
 
-Pour le modèle de capacité publique, les formes de plugins et les contrats de propriété/exécution, voir [Architecture des plugins](/fr/plugins/architectureGateway). Cette page est la référence pour la mécanique interne : pipeline de chargement, registre, crochets d'exécution, routes HTTP du Gateway, chemins d'importation et tables de schéma.
+Pour le modèle de capacité publique, les formes de plugins et les contrats de propriété/exécution, consultez [Architecture des plugins](/fr/plugins/architecture). Cette page constitue la référence pour la mécanique interne : pipeline de chargement, registre, hooks d'exécution, routes HTTP Gateway, chemins d'importation et tables de schéma.
 
 ## Pipeline de chargement
 
@@ -170,9 +170,7 @@ Les plugins de provider comportent trois couches :
   `providerAuthAliases`, `providerAuthChoices` et `channelEnvVars`.
 - **Hooks de configuration** : `catalog` (`discovery` hérité) plus
   `applyConfigDefaults`.
-- **Hooks d'exécution** : plus de 40 hooks optionnels couvrant l'authentification, la résolution de modèle,
-  l'encapsulation de flux, les niveaux de réflexion, la stratégie de relecture et les points de terminaison d'utilisation. Voir
-  la liste complète sous [Hook order and usage](#hook-order-and-usage).
+- **Hooks d'exécution** : plus de 40 hooks facultatifs couvrant l'authentification, la résolution de modèle, l'encapsulation de flux, les niveaux de réflexion, la stratégie de relecture et les points de terminaison d'utilisation. Consultez la liste complète sous [Ordre et utilisation des hooks](#hook-order-and-usage).
 
 OpenClaw conserve toujours la boucle d'agent générique, le basculement (failover), la gestion des transcriptions et la
 stratégie d'outil. Ces hooks constituent la surface d'extension pour les comportements
@@ -583,7 +581,7 @@ Utilisez des sous-chemins SDK étroits au lieu du module racine monolithique `op
 | `openclaw/plugin-sdk/core`          | Assistants partagés génériques et contrat parapluie  |
 | `openclaw/plugin-sdk/config-schema` | Schéma Zod racine `openclaw.json` (`OpenClawSchema`) |
 
-Les plugins de canal choisissent parmi une famille de coutures étroites — `channel-setup`, `setup-runtime`, `setup-tools`, `channel-pairing`, `channel-contract`, `channel-feedback`, `channel-inbound`, `channel-lifecycle`, `channel-reply-pipeline`, `command-auth`, `secret-input`, `webhook-ingress`, `channel-targets` et `channel-actions`. Le comportement d'approbation doit être consolidé sur un contrat `approvalCapability` plutôt que mélangé entre des champs de plugin non liés. Voir [Plugins de canal](/fr/plugins/sdk-channel-plugins).
+Les plugins de channel choisissent parmi une famille de coutures étroites — `channel-setup`, `setup-runtime`, `setup-tools`, `channel-pairing`, `channel-contract`, `channel-feedback`, `channel-inbound`, `channel-lifecycle`, `channel-reply-pipeline`, `command-auth`, `secret-input`, `webhook-ingress`, `channel-targets` et `channel-actions`. Le comportement d'approbation doit se consolider sur un seul contrat `approvalCapability` plutôt que de mélanger des champs de plugins sans rapport. Consultez [Plugins de channel](/fr/plugins/sdk-channel-plugins).
 
 Les helpers d'exécution et de configuration résident sous des sous-chemins focalisés `*-runtime` correspondants
 (`approval-runtime`, `agent-runtime`, `lazy-runtime`, `directory-runtime`,
@@ -613,7 +611,7 @@ pertinente lorsque vous vous y fiez.
 
 ## Schémas des outils de message
 
-Les plugins doivent posséder les contributions de schéma `describeMessageTool(...)` spécifiques au canal pour les primitives non-message telles que les réactions, les lectures et les sondages. La présentation d'envoi partagée doit utiliser le contrat générique `MessagePresentation` au lieu des champs bouton, composant, bloc ou carte natifs du provider. Consultez [Message Presentation](/fr/plugins/message-presentation) pour le contrat, les règles de repli, le mappage de provider et la liste de contrôle pour les auteurs de plugins.
+Les plugins doivent posséder les contributions de schéma `describeMessageTool(...)` spécifiques au channel pour les primitives non-message telles que les réactions, les lectures et les sondages. La présentation d'envoi partagée doit utiliser le contrat générique `MessagePresentation` au lieu des champs de bouton, de composant, de bloc ou de carte natifs du provider. Consultez [Présentation des messages](/fr/plugins/message-presentation) pour le contrat, les règles de repli, le mappage de provider et la liste de contrôle pour les auteurs de plugins.
 
 Les plugins capables d'envoyer déclarent ce qu'ils peuvent restituer via les capacités de message :
 
@@ -884,7 +882,17 @@ export default function (api) {
 
 La fabrique `ctx` expose des valeurs `config`, `agentDir` et `workspaceDir` facultatives pour l'initialisation au moment de la construction.
 
-Si votre moteur ne possède **pas** l'algorithme de compactage, gardez `compact()` implémenté et déléguez-le explicitement :
+`assemble()` peut renvoyer `contextProjection` lorsque le harnais actif dispose d'un
+thread backend persistant. Omettez-le pour une projection par tour héritée. Renvoyez
+`{ mode: "thread_bootstrap", epoch }` lorsque le contexte assemblé doit être
+injecté une fois dans un thread backend et réutilisé jusqu'à ce que l'époque change. Modifiez
+l'époque après que le contexte sémantique du moteur a changé, par exemple après une
+passe de compactage appartenant au moteur. Les hôtes peuvent conserver les métadonnées d'appel d'outil, la forme
+des entrées, et les résultats d'outil expurgés dans une projection d'amorçage de thread afin que les
+nouveaux threads backend conservent la continuité de l'outil sans copier des charges utiles brutes contenant des secrets.
+
+Si votre moteur ne possède **pas** l'algorithme de compactage, gardez `compact()`
+implémenté et déléguez-le explicitement :
 
 ```ts
 import { buildMemorySystemPromptAddition, delegateCompactionToRuntime } from "openclaw/plugin-sdk/core";
@@ -918,38 +926,42 @@ export default function (api) {
 
 ## Ajouter une nouvelle capacité
 
-Lorsqu'un plugin a besoin d'un comportement qui ne correspond pas à l'API actuelle, ne contournez pas le système de plugins par un accès privé. Ajoutez la capacité manquante.
+Lorsqu'un plugin a besoin d'un comportement qui ne correspond pas à l'API actuel, ne contournez pas
+le système de plugin avec un accès privé. Ajoutez la capacité manquante.
 
 Séquence recommandée :
 
 1. définir le contrat principal
    Décidez du comportement partagé que le cœur doit posséder : stratégie, repli, fusion de configuration,
-   cycle de vie, sémantique orientée channel, et forme des helpers d'exécution.
-2. ajouter des surfaces d'enregistrement/d'exécution de plugin typées
+   cycle de vie, sémantique orientée canal, et forme de l'assistant d'exécution.
+2. ajouter des surfaces d'inscription/d'exécution de plugin typées
    Étendez `OpenClawPluginApi` et/ou `api.runtime` avec la plus petite surface
    de capacité typée utile.
-3. connecter le cœur + les consommateurs channel/fonctionnalité
-   Les channels et les plugins de fonctionnalité doivent consommer la nouvelle capacité via le cœur,
-   et non en important directement une implémentation fournisseur.
-4. enregistrer les implémentations fournisseurs
-   Les plugins fournisseurs enregistrent ensuite leurs backends par rapport à la capacité.
+3. connecter le cœur + les consommateurs de canal/fonctionnalité
+   Les canaux et les plugins de fonctionnalité devraient consommer la nouvelle capacité via le cœur,
+   et non en important une implémentation fournisseur directement.
+4. inscrire les implémentations fournisseurs
+   Les plugins fournisseurs inscrivent ensuite leurs backends auprès de la capacité.
 5. ajouter une couverture de contrat
-   Ajoutez des tests pour que la propriété et la forme de l'enregistrement restent explicites dans le temps.
+   Ajoutez des tests pour que la propriété et la forme de l'inscription restent explicites dans le temps.
 
-C'est ainsi que OpenClaw reste opinionné sans devenir codé en dur selon la vision du monde d'un fournisseur. Consultez le [Capability Cookbook](/fr/tools/capability-cookbook) pour une liste de fichiers concrète et un exemple travaillé.
+C'est ainsi que OpenClaw reste opinionné sans devenir codé en dur pour la vision du monde
+d'un seul provider. Consultez le [Capability Cookbook](/fr/tools/capability-cookbook)
+pour une liste de fichiers concrète et un exemple travaillé.
 
-### Liste de vérification des capacités
+### Liste de contrôle des capacités
 
-Lorsque vous ajoutez une nouvelle capacité, l'implémentation doit généralement toucher ces surfaces ensemble :
+Lorsque vous ajoutez une nouvelle capacité, l'implémentation doit généralement toucher ces
+surfaces ensemble :
 
 - types de contrat principal dans `src/<capability>/types.ts`
-- helper runner/runtime principal dans `src/<capability>/runtime.ts`
-- surface d'enregistrement de l'API du plugin dans `src/plugins/types.ts`
+- assistant d'exécution/runner principal dans `src/<capability>/runtime.ts`
+- surface d'inscription de API de plugin dans `src/plugins/types.ts`
 - câblage du registre de plugins dans `src/plugins/registry.ts`
-- exposition du runtime du plugin dans `src/plugins/runtime/*` lorsque les plugins de fonctionnalités/canaux ont besoin de l'utiliser
-- assistants de capture/test dans `src/test-utils/plugin-registration.ts`
+- exposition du runtime du plugin dans `src/plugins/runtime/*` lorsque les plugins de fonctionnalité/channel doivent le consommer
+- helpers de capture/test dans `src/test-utils/plugin-registration.ts`
 - assertions de propriété/contrat dans `src/plugins/contracts/registry.ts`
-- documentation pour l'opérateur/les plugins dans `docs/`
+- docs opérateur/plugin dans `docs/`
 
 Si l'une de ces surfaces est manquante, cela indique généralement que la capacité n'est pas encore entièrement intégrée.
 
@@ -990,13 +1002,13 @@ expect(findVideoGenerationProviderIdsForPlugin("openai")).toEqual(["openai"]);
 Cela permet de garder la règle simple :
 
 - le cœur possède le contrat de capacité + l'orchestration
-- les plugins vendor possèdent les implémentations vendor
-- les plugins de fonctionnalités/canaux consomment les assistants d'exécution
-- les tests de contrat rendent la propriété explicite
+- les plugins fournisseurs possèdent les implémentations fournisseurs
+- les plugins de fonctionnalité/channel consomment les helpers d'exécution
+- les tests de contrat gardent la propriété explicite
 
 ## Connexes
 
-- [Architecture des plugins](/fr/plugins/architecture) — modèle de capacité publique et formes
+- [Architecture des plugins](/fr/plugins/architecture) — modèle et formes publics des capacités
 - [Sous-chemins du SDK de plugin](/fr/plugins/sdk-subpaths)
 - [Configuration du SDK de plugin](/fr/plugins/sdk-setup)
 - [Création de plugins](/fr/plugins/building-plugins)

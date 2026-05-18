@@ -51,7 +51,7 @@ OpenClaw 将视频生成视为三种运行时模式：
 1. OpenClaw 将请求提交给提供商并立即返回任务 ID。
 2. 提供商在后台处理作业（通常为 30 秒到几分钟，具体取决于提供商和分辨率；慢速队列支持的提供商可能会运行到配置的超时时间）。
 3. 当视频准备好后，OpenClaw 会通过内部完成事件唤醒同一会话。
-4. 代理会告知用户并附上生成的视频。在使用仅消息工具可见传递的群组/渠道聊天中，代理会通过消息工具中转结果，而不是由 OpenClaw 直接发布。
+4. 代理会通知用户并通过消息工具附加生成的视频。如果完成代理仅撰写私密最终回复，OpenClaw 不会作为回退自动发布视频。
 
 当任务正在进行时，同一 CLI 中的重复 `video_generate` 调用将返回当前任务状态，而不是启动新的生成。使用 `openclaw tasks list` 或 `openclaw tasks show <taskId>` 从 CLI 检查进度。
 
@@ -101,7 +101,7 @@ openclaw tasks cancel <taskId>
 | Vydra                 | `veo3`                          |  ✓   | 1 张图片（`kling`）                             | -                                         | `VYDRA_API_KEY`                          |
 | xAI                   | `grok-imagine-video`            |  ✓   | 1 张首帧图片或最多 7 个 `reference_image`s      | 1 个视频                                  | `XAI_API_KEY`                            |
 
-某些提供商接受其他或备用的 API 密钥环境变量。有关详细信息，请参阅单独的 [提供商页面](#related)。
+某些提供商接受额外或备用的 API 密钥环境变量。详情请参阅各自的[提供商页面](#related)。
 
 运行 `video_generate action=list` 以在运行时检查可用的提供商、模型和运行模式。
 
@@ -290,31 +290,31 @@ OpenClaw 按以下顺序解析模型：
     插件。提供商 ID：`byteplus-seedance15`。模型：
     `seedance-1-5-pro-251215`。
 
-    使用统一的 `content[]`API API。最多支持 2 张输入图片
+    使用统一的 `content[]`API API。最多支持 2 张输入图像
     (`first_frame` + `last_frame`)。所有输入必须是远程 `https://`
-    URL。在每张图片上设置 `role: "first_frame"` / `"last_frame"`，或
-    按位置传递图片。
+    URL。在每张图像上设置 `role: "first_frame"` / `"last_frame"`，或
+    按位置传递图像。
 
-    `aspectRatio: "adaptive"` 会根据输入图片自动检测宽高比。
+    `aspectRatio: "adaptive"` 会自动检测输入图像的比例。
     `audio: true` 映射到 `generate_audio`。`providerOptions.seed`
-    (数字) 会被转发。
+    (数字) 被转发。
 
   </Accordion>
   <Accordion title="BytePlus Seedance 2.0">
     需要 [`@openclaw/byteplus-modelark`](https://www.npmjs.com/package/@openclaw/byteplus-modelark)
     插件。提供商 ID：`byteplus-seedance2`。模型：
-    `dreamina-seedance-2-0-260128`、
+    `dreamina-seedance-2-0-260128`,
     `dreamina-seedance-2-0-fast-260128`。
 
-    使用统一的 `content[]` API。支持最多 9 张参考图片、
+    使用统一的 `content[]`API API。最多支持 9 张参考图像、
     3 个参考视频和 3 个参考音频。所有输入必须是远程
     `https://` URL。在每个资源上设置 `role` - 支持的值：
     `"first_frame"`、`"last_frame"`、`"reference_image"`、
     `"reference_video"`、`"reference_audio"`。
 
-    `aspectRatio: "adaptive"` 会从输入图片自动检测宽高比。
+    `aspectRatio: "adaptive"` 会自动检测输入图像的比例。
     `audio: true` 映射到 `generate_audio`。`providerOptions.seed`
-    （数字）会被转发。
+    (数字) 被转发。
 
   </Accordion>
   <Accordion title="ComfyUI">
@@ -412,12 +412,12 @@ Repo 包装器：
 pnpm test:live:media video
 ```
 
-此实时文件从 `~/.profile` 加载缺失的提供商环境变量，默认优先使用 live/env API 密钥而非存储的身份验证配置文件，并且默认运行发布安全的冒烟测试：
+此实时文件默认优先使用已导出的提供商环境变量而非存储的身份验证配置文件，并且默认运行发布安全的冒烟测试：
 
-- 对扫描中的每个非 FAL 提供商执行 `generate`。
+- 针对扫描中每个非 FAL 提供商的 `generate`。
 - 一秒龙虾提示词。
-- 每个提供商的操作上限来自
-  `OPENCLAW_LIVE_VIDEO_GENERATION_TIMEOUT_MS`（默认为 `180000`）。
+- 来自
+  `OPENCLAW_LIVE_VIDEO_GENERATION_TIMEOUT_MS` 的每个提供商操作上限（默认为 `180000`）。
 
 FAL 是可选的，因为提供商端的队列延迟可能会主导发布
 时间：
@@ -426,12 +426,15 @@ FAL 是可选的，因为提供商端的队列延迟可能会主导发布
 pnpm test:live:media video --video-providers fal
 ```
 
-设置 `OPENCLAW_LIVE_VIDEO_GENERATION_FULL_MODES=1` 以同时运行已声明的转换模式，即共享扫描可以安全地使用本地媒体执行的模式：
+设置 `OPENCLAW_LIVE_VIDEO_GENERATION_FULL_MODES=1` 以同时运行声明的
+转换模式，共享扫描可以使用本地媒体安全地执行这些模式：
 
-- 当 `capabilities.imageToVideo.enabled` 时，执行 `imageToVideo`。
-- `videoToVideo` 当 `capabilities.videoToVideo.enabled` 且提供商/模型在共享扫描中接受缓冲区支持的本地视频输入时。
+- 当 `capabilities.imageToVideo.enabled` 时 `imageToVideo`。
+- `videoToVideo` 当 `capabilities.videoToVideo.enabled` 且
+  提供商/模型在共享扫描中接受基于缓冲区的本地视频输入时。
 
-目前，共享的 `videoToVideo` 实时通道仅在选择 `runway/gen4_aleph` 时覆盖 `runway`。
+目前，共享的 `videoToVideo` 实时通道仅在选择 `runway/gen4_aleph` 时
+涵盖 `runway`。
 
 ## 配置
 
@@ -458,19 +461,19 @@ openclaw config set agents.defaults.videoGenerationModel.primary "qwen/wan2.6-t2
 
 ## 相关
 
-- [阿里云模型工作室](/zh/providers/alibaba)
-- [后台任务](/zh/automation/tasks) - 异步视频生成的任务跟踪
+- [Alibaba Model Studio](/zh/providers/alibaba)
+- [Background tasks](/zh/automation/tasks) - 异步视频生成的任务跟踪
 - [BytePlus](/zh/concepts/model-providers#byteplus-international)
 - [ComfyUI](/zh/providers/comfy)
-- [配置参考](/zh/gateway/config-agents#agent-defaults)
+- [Configuration reference](/zh/gateway/config-agents#agent-defaults)
 - [fal](/zh/providers/fal)
 - [Google (Gemini)](/zh/providers/google)
-- [MiniMax](MiniMax/en/providers/minimax)
-- [模型](/zh/concepts/models)
+- [MiniMax](/zh/providers/minimax)
+- [Models](/zh/concepts/models)
 - [OpenAI](/zh/providers/openai)
 - [Qwen](/zh/providers/qwen)
 - [Runway](/zh/providers/runway)
 - [Together AI](/zh/providers/together)
-- [工具概览](/zh/tools)
+- [Tools overview](/zh/tools)
 - [Vydra](/zh/providers/vydra)
 - [xAI](/zh/providers/xai)

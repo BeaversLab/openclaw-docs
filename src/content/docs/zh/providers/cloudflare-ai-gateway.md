@@ -92,11 +92,11 @@ openclaw onboard --non-interactive \
 
   </Accordion>
 
-  <Accordion title="环境说明">
+  <Accordion title="环境说明"Gateway(网关)>
     如果 Gateway(网关) 作为守护进程（launchd/systemd）运行，请确保 `CLOUDFLARE_AI_GATEWAY_API_KEY` 对该进程可用。
 
     <Warning>
-    仅存在于 `~/.profile` 中的密钥对 launchd/systemd 守护进程没有帮助，除非该环境也被导入到其中。请在 `~/.openclaw/.env` 中或通过 `env.shellEnv` 设置密钥，以确保网关进程可以读取它。
+    仅在交互式 shell 中导出的密钥对 launchd/systemd 守护进程无效，除非该环境也被导入其中。请在 `~/.openclaw/.env` 中设置密钥，或通过 `env.shellEnv` 设置，以确保网关进程能够读取它。
     </Warning>
 
   </Accordion>

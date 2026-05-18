@@ -123,6 +123,9 @@ OpenClaw 的機器上 `which inferrs` 的結果。
 
 ## ds4 範例
 
+有關完整設定、上下文長度指引以及驗證指令，請參閱
+[ds4](/zh-Hant/providers/ds4)。
+
 ```json5
 {
   models: {
@@ -133,9 +136,9 @@ OpenClaw 的機器上 `which inferrs` 的結果。
         api: "openai-completions",
         timeoutSeconds: 300,
         localService: {
-          command: "/Users/you/Projects/oss/ds4/ds4-server",
-          args: ["--model", "/Users/you/Projects/oss/ds4/ds4flash.gguf", "--host", "127.0.0.1", "--port", "18000", "--ctx", "393216"],
-          cwd: "/Users/you/Projects/oss/ds4",
+          command: "<DS4_DIR>/ds4-server",
+          args: ["--model", "<DS4_DIR>/ds4flash.gguf", "--host", "127.0.0.1", "--port", "18000", "--ctx", "32768", "--tokens", "128"],
+          cwd: "<DS4_DIR>",
           healthUrl: "http://127.0.0.1:18000/v1/models",
           readyTimeoutMs: 300000,
           idleStopMs: 0,
@@ -147,24 +150,19 @@ OpenClaw 的機器上 `which inferrs` 的結果。
 }
 ```
 
-## 操作說明
+## 操作注意事項
 
-- 一個 OpenClaw 程序管理其啟動的子程序。另一個 OpenClaw 程序
-  如果發現相同的健康 URL 已經在運行，將會重複使用它而不接管它。
-- 啟動是針對每個提供者指令和參數集進行序列化的，因此併發
-  請求不會針對相同設定產生重複的伺服器。
-- 主動的串流回應會持有租約；閒置關閉會等到回應
-  本文處理完成。
-- 在緩慢的本地提供者上使用 `timeoutSeconds`，這樣冷啟動和長時間生成
-  就不會達到預設的模型請求逾時。
-- 如果您的伺服器在 `/v1/models` 以外的其他位置公開就緒狀態，
-  請使用明確的 `healthUrl`。
+- 一個 OpenClaw 程序會管理其啟動的子程序。另一個偵測到相同健康 URL 已上線的 OpenClaw 程序將會重複使用它，而不會接管它。
+- 啟動程序會針對每個提供者指令和參數集進行序列化，因此並發請求不會針對相同設定產生重複的伺服器。
+- 主動的串流回應會持有租約；閒置關閉會等到回應主體處理完成後才執行。
+- 在緩慢的本地提供者上使用 `timeoutSeconds`，以避免冷啟動和長時間生成遇到預設的模型請求逾時。
+- 如果您的伺服器在 `/v1/models` 以外的地方公開就緒狀態，請使用明確的 `healthUrl`。
 
-## 相關
+## 相關內容
 
 <CardGroup cols={2}>
   <Card title="Local models" href="/zh-Hant/gateway/local-models" icon="server">
-    本地模型設定、提供者選擇和安全指引。
+    本地模型設定、提供者選擇以及安全指引。
   </Card>
   <Card title="Inferrs" href="/zh-Hant/providers/inferrs" icon="cpu">
     透過 inferrs OpenAI 相容本地伺服器執行 OpenClaw。

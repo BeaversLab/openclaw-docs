@@ -127,9 +127,7 @@ OpenClaw`promptMode` pour chaque exécution (pas une configuration visible par l
 Lorsque `promptMode=minimal`, les invites supplémentaires injectées sont étiquetées **Subagent
 Context** au lieu de **Group Chat Context**.
 
-Pour les exécutions de réponse automatique sur le canal, OpenClaw peut omettre la section générique **Silent Replies**
-lorsque le contexte de chat direct/de groupe inclut déjà le comportement OpenClaw`NO_REPLY` résolu spécifique à la conversation. Cela évite de répéter la mécanique des jetons
-dans l'invite système globale et le contexte du canal.
+Pour les exécutions de réponse automatique de channel, OpenClaw omet la section générique **Silent Replies** lorsque le contexte direct, de groupe ou exclusif à l'outil de message possède le contrat de réponse visible. Seul l'ancien mode automatique de groupe/channel doit afficher `NO_REPLY` ; les discussions directes et les réponses exclusives à l'outil de message ne reçoivent pas de guidance sur les jetons silencieux.
 
 ## Instantanés d'invites
 
@@ -184,14 +182,7 @@ Lorsqu'une session s'exécute sur le harnais natif Codex, Codex charge `AGENTS.m
   mémoire quotidienne récente sous forme de bloc de contexte de démarrage ponctuel pour ce premier tour.
 </Note>
 
-Les fichiers volumineux sont tronqués avec un marqueur. La taille maximale par fichier est contrôlée par
-`agents.defaults.bootstrapMaxChars` (par défaut : 12000). Le contenu total de bootstrap injecté
-d'entre les fichiers est plafonné par `agents.defaults.bootstrapTotalMaxChars`
-(par défaut : 60000). Les fichiers manquants injectent un marqueur court de fichier manquant. Lorsqu'une troncation
-se produit, OpenClaw peut injecter un avertissement concis dans le système de prompt ; contrôlez cela avec
-`agents.defaults.bootstrapPromptTruncationWarning` (`off`, `once`, `always` ;
-par défaut : `once`). Des comptes bruts/injectés détaillés restent dans les diagnostics tels que
-`/context`, `/status`, doctor et les logs.
+Les fichiers volumineux sont tronqués avec un marqueur. La taille maximale par fichier est contrôlée par `agents.defaults.bootstrapMaxChars` (par défaut : 12000). Le contenu total injecté du bootstrap sur tous les fichiers est plafonné par `agents.defaults.bootstrapTotalMaxChars` (par défaut : 60000). Les fichiers manquants injectent un marqueur court de fichier manquant. Lorsqu'une troncation se produit, OpenClaw peut injecter un avis d'avertissement concis dans le système de prompt ; contrôlez ceci avec `agents.defaults.bootstrapPromptTruncationWarning` (`off`, `once`, `always` ; par défaut : `always`). Les comptes bruts/injectés détaillés restent dans les diagnostics tels que `/context`, `/status`, doctor et les journaux.
 
 Pour les fichiers de mémoire, la troncation n'est pas une perte de données : le fichier reste intact sur le disque,
 mais le modèle ne voit que la copie injectée raccourcie jusqu'à ce qu'il lise ou recherche

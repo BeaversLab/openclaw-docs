@@ -258,8 +258,8 @@ Para las entradas de CLI, **establezca `capabilities` explícitamente** para evi
 <Note>
 **Nota de MiniMax**
 
-- La comprensión de imágenes de `minimax` y `minimax-portal` proviene del proveedor de medios `MiniMax-VL-01` propiedad del complemento.
-- El catálogo de texto de MiniMax incluido todavía comienza solo con texto; las entradas explícitas `models.providers.minimax` materializan referencias de chat M2.7 con capacidad de imagen.
+- La comprensión de imágenes de `minimax`, `minimax-cn`, `minimax-portal` y `minimax-portal-cn` proviene del proveedor de medios `MiniMax-VL-01` propiedad del complemento.
+- El enrutamiento automático de imágenes sigue usando `MiniMax-VL-01` incluso si los metadatos de chat heredados de MiniMax M2.x indican entrada de imagen.
 
 </Note>
 
@@ -268,12 +268,12 @@ Para las entradas de CLI, **establezca `capabilities` explícitamente** para evi
 - Prefiere el modelo de última generación más fuerte disponible para cada capacidad multimedia cuando la calidad y la seguridad son importantes.
 - Para agentes con herramientas habilitadas que manejen entradas que no son de confianza, evita modelos multimedia más antiguos o más débiles.
 - Mantén al menos un respaldo por capacidad para disponibilidad (modelo de calidad + modelo más rápido/económico).
-- Las alternativas de CLI (`whisper-cli`, `whisper`, `gemini`) son útiles cuando las API del proveedor no están disponibles.
-- `parakeet-mlx` nota: con `--output-dir`, OpenClaw lee `<output-dir>/<media-basename>.txt` cuando el formato de salida es `txt` (o no está especificado); los formatos que no son `txt` vuelven a stdout.
+- Las alternativas de CLI (`whisper-cli`, `whisper`, `gemini`) son útiles cuando las API de los proveedores no están disponibles.
+- Nota de `parakeet-mlx`: con `--output-dir`, OpenClaw lee `<output-dir>/<media-basename>.txt` cuando el formato de salida es `txt` (o sin especificar); los formatos que no son `txt` vuelven a stdout.
 
 ## Política de archivos adjuntos
 
-El `attachments` por capacidad controla qué archivos adjuntos se procesan:
+Los controles `attachments` por capacidad determinan qué archivos adjuntos se procesan:
 
 <ParamField path="mode" type='"first" | "all"' default="first">
   Si se debe procesar el primer archivo adjunto seleccionado o todos ellos.
@@ -289,11 +289,11 @@ Cuando `mode: "all"`, las salidas se etiquetan como `[Image 1/2]`, `[Audio 2/2]`
 
 <AccordionGroup>
   <Accordion title="Comportamiento de extracción de archivos adjuntos">
-    - El texto del archivo extraído se envuelve como **contenido externo que no es de confianza** antes de anexarse al aviso de medios.
-    - El bloque inyectado utiliza marcadores de límite explícitos como `<<<EXTERNAL_UNTRUSTED_CONTENT id="...">>>` / `<<<END_EXTERNAL_UNTRUSTED_CONTENT id="...">>>` e incluye una línea de metadatos `Source: External`.
-    - Esta ruta de extracción de adjuntos omite intencionalmente el largo banner `SECURITY NOTICE:` para evitar inflar el aviso de medios; los marcadores de límite y los metadatos aún permanecen.
+    - El texto extraído del archivo se envuelve como **contenido externo que no es de confianza** antes de añadirse al mensaje de medios.
+    - El bloque inyectado usa marcadores de límite explícitos como `<<<EXTERNAL_UNTRUSTED_CONTENT id="...">>>` / `<<<END_EXTERNAL_UNTRUSTED_CONTENT id="...">>>` e incluye una línea de metadatos `Source: External`.
+    - Esta ruta de extracción de archivos adjuntos omite intencionalmente el largo banner `SECURITY NOTICE:` para evitar inflar el mensaje de medios; los marcadores de límite y los metadatos aún se mantienen.
     - Si un archivo no tiene texto extraíble, OpenClaw inyecta `[No extractable text]`.
-    - Si un PDF recurre a imágenes de página renderizadas en esta ruta, el aviso de medios conserva el marcador de posición `[PDF content rendered to images; images not forwarded to model]` porque este paso de extracción de adjuntos reenvía bloques de texto, no las imágenes PDF renderizadas.
+    - Si un PDF recurre a imágenes de página renderizadas en esta ruta, el mensaje de medios mantiene el marcador de posición `[PDF content rendered to images; images not forwarded to model]` porque este paso de extracción de archivos adjuntos reenvía bloques de texto, no las imágenes renderizadas del PDF.
 
   </Accordion>
 </AccordionGroup>
@@ -447,7 +447,7 @@ Cuando `mode: "all"`, las salidas se etiquetan como `[Image 1/2]`, `[Audio 2/2]`
 
 ## Salida de estado
 
-Cuando se ejecuta la comprensión de medios, `/status` incluye una línea breve de resumen:
+Cuando se ejecuta la comprensión de medios, `/status` incluye una breve línea de resumen:
 
 ```
 📎 Media: image ok (openai/gpt-5.4) · audio skipped (maxBytes)
@@ -459,9 +459,9 @@ Esto muestra los resultados por capacidad y el proveedor/modelo elegido cuando s
 
 - La comprensión es **mejor esfuerzo posible**. Los errores no bloquean las respuestas.
 - Los archivos adjuntos aún se pasan a los modelos incluso cuando la comprensión está deshabilitada.
-- Use `scope` para limitar dónde se ejecuta la comprensión (por ejemplo, solo MDs).
+- Use `scope` para limitar dónde se ejecuta la comprensión (por ejemplo, solo en mensajes directos).
 
 ## Relacionado
 
 - [Configuración](/es/gateway/configuration)
-- [Soporte de imágenes y medios](/es/nodes/images)
+- [Compatibilidad con imágenes y medios](/es/nodes/images)

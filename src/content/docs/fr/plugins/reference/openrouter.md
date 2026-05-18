@@ -16,7 +16,7 @@ Ajoute la prise en charge du fournisseur de modèle OpenRouter à OpenClaw.
 
 ## Surface
 
-providers : openrouter ; contracts : imageGenerationProviders, mediaUnderstandingProviders, speechProviders, videoGenerationProviders
+providers: openrouter; contracts: imageGenerationProviders, mediaUnderstandingProviders, musicGenerationProviders, speechProviders, videoGenerationProviders
 
 ## Documentation connexe
 

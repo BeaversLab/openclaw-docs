@@ -32,8 +32,8 @@ title: "配置"
 
 相关内容：
 
-- Gateway(网关) 配置参考：[Configuration](<Gateway(网关)/en/gateway/configuration>)
-- 配置 CLI：[Config](CLI/en/cli/config)
+- Gateway(网关) 配置参考：[配置](<Gateway(网关)/en/gateway/configuration>)
+- Config CLI：[Config](CLI/en/cli/config)
 
 ## 选项
 
@@ -53,12 +53,12 @@ title: "配置"
 
 注意：
 
-- 选择 Gateway(网关) 的运行位置总是会更新 Gateway(网关)`gateway.mode`。如果这仅是您所需的全部内容，您可以在不选择其他部分的情况下选择“Continue”。
+- 完整的向导和与 Gateway(网关) 相关的部分会询问 Gateway 运行的位置并更新 Gateway(网关)`gateway.mode`。不包含 `gateway`、`daemon` 或 `health` 的部分筛选器会直接进入请求的设置。
 - 在写入本地配置后，当所选的设置路径需要时，configure 会安装所选的可下载插件。远程 Gateway(网关) 配置不会安装本地插件包。
 - 面向渠道的服务（Slack/Discord/Matrix/Microsoft Teams）会在设置期间提示输入渠道/房间允许列表。您可以输入名称或 ID；向导会在可能的情况下将名称解析为 ID。
-- 如果您运行守护进程安装步骤，令牌认证需要一个令牌，并且 `gateway.auth.token` 由 SecretRef 管理，configure 会验证 SecretRef 但不会将解析后的明文令牌值持久化到监管服务环境元数据中。
+- 如果您运行守护进程安装步骤，令牌认证需要一个令牌，并且 `gateway.auth.token` 由 SecretRef 管理，configure 会验证 SecretRef 但不会将解析后的明文令牌值持久化到主管服务环境元数据中。
 - 如果令牌认证需要一个令牌，且配置的令牌 SecretRef 未解析，configure 会阻止守护进程安装，并提供可操作的修复指导。
-- 如果同时配置了 `gateway.auth.token` 和 `gateway.auth.password`，并且 `gateway.auth.mode` 未设置，configure 将阻止守护进程安装，直到明确设置模式。
+- 如果配置了 `gateway.auth.token` 和 `gateway.auth.password` 并且未设置 `gateway.auth.mode`，configure 将阻止守护进程安装，直到显式设置模式。
 
 ## 示例
 
@@ -71,5 +71,5 @@ openclaw configure --section gateway --section daemon
 
 ## 相关
 
-- [CLI reference](CLI/en/cli)
-- [Configuration](/zh/gateway/configuration)
+- [CLI 参考](CLI/en/cli)
+- [配置](/zh/gateway/configuration)

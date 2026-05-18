@@ -175,15 +175,15 @@ openclaw memory rem-backfill --path ./memory --stage-short-term
   <Accordion title="2. 遗留配置键迁移">
     当配置包含已弃用的键时，其他命令将拒绝运行并要求您运行 `openclaw doctor`。
 
-    Doctor 将会：
+    Doctor 将执行以下操作：
 
     - 解释找到了哪些遗留键。
     - 显示它应用的迁移。
-    - 使用更新后的架构重写 `~/.openclaw/openclaw.json`。
+    - 使用更新后的模式重写 `~/.openclaw/openclaw.json`。
 
-    Gateway(网关) 启动时会拒绝遗留的配置格式并要求您运行 `openclaw doctor --fix`；它不会在启动时重写 `openclaw.json`。Cron 作业存储迁移也由 `openclaw doctor --fix` 处理。
+    Gateway(网关) 启动时会拒绝遗留的配置格式，并要求您运行 `openclaw doctor --fix`；它不会在启动时重写 `openclaw.json`。Cron 作业存储迁移也由 `openclaw doctor --fix` 处理。
 
-    当前的迁移：
+    当前迁移：
 
     - `routing.allowFrom` → `channels.whatsapp.allowFrom`
     - `routing.groupChat.requireMention` → `channels.whatsapp/telegram/imessage.groups."*".requireMention`
@@ -192,10 +192,10 @@ openclaw memory rem-backfill --path ./memory --stage-short-term
     - `channels.telegram.requireMention` → `channels.telegram.groups."*".requireMention`
     - 缺少可见回复策略的已配置渠道配置 → `messages.groupChat.visibleReplies: "message_tool"`
     - `routing.queue` → `messages.queue`
-    - `routing.bindings` → 顶层 `bindings`
+    - `routing.bindings` → 顶级 `bindings`
     - `routing.agents`/`routing.defaultAgentId` → `agents.list` + `agents.list[].default`
     - 遗留 `talk.voiceId`/`talk.voiceAliases`/`talk.modelId`/`talk.outputFormat`/`talk.apiKey` → `talk.provider` + `talk.providers.<provider>`
-    - 遗留的顶层实时 Talk 选择器 (`talk.mode`/`talk.transport`/`talk.brain`/`talk.model`/`talk.voice`) + `talk.provider`/`talk.providers` → `talk.realtime`
+    - 遗留顶级实时 Talk 选择器 (`talk.mode`/`talk.transport`/`talk.brain`/`talk.model`/`talk.voice`) + `talk.provider`/`talk.providers` → `talk.realtime`
     - `routing.agentToAgent` → `tools.agentToAgent`
     - `routing.transcribeAudio` → `tools.media.audio.models`
     - `messages.tts.<provider>` (`openai`/`elevenlabs`/`microsoft`/`edge`) → `messages.tts.providers.<provider>`
@@ -209,21 +209,21 @@ openclaw memory rem-backfill --path ./memory --stage-short-term
     - `plugins.entries.voice-call.config.streaming.sttProvider` → `plugins.entries.voice-call.config.streaming.provider`
     - `plugins.entries.voice-call.config.streaming.openaiApiKey|sttModel|silenceDurationMs|vadThreshold` → `plugins.entries.voice-call.config.streaming.providers.openai.*`
     - `bindings[].match.accountID` → `bindings[].match.accountId`
-    - 对于具有命名 `accounts` 但残留单账户顶层渠道值的渠道，将这些账户范围值移动到为该渠道选择的提升账户中（大多数渠道为 `accounts.default`；Matrix 可以保留现有的匹配命名/默认目标）
+    - 对于具有命名 `accounts` 但仍存在单帐户顶级渠道值的渠道，将这些帐户范围的值移动到为该渠道选择的提升帐户中（对于大多数渠道为 `accounts.default`；Matrix 可以保留现有的匹配命名/默认目标）
     - `identity` → `agents.list[].identity`
     - `agent.*` → `agents.defaults` + `tools.*` (tools/elevated/exec/sandbox/subagents)
     - `agent.model`/`allowedModels`/`modelAliases`/`modelFallbacks`/`imageModelFallbacks` → `agents.defaults.models` + `agents.defaults.model.primary/fallbacks` + `agents.defaults.imageModel.primary/fallbacks`
-    - 移除 `agents.defaults.llm`；对于慢速提供商/模型超时，请使用 `models.providers.<id>.timeoutSeconds`
+    - 移除 `agents.defaults.llm`；对慢速提供商/模型超时使用 `models.providers.<id>.timeoutSeconds`，并在整个运行必须持续更长时间时将代理/运行超时保持在该值之上
     - `browser.ssrfPolicy.allowPrivateNetwork` → `browser.ssrfPolicy.dangerouslyAllowPrivateNetwork`
     - `browser.profiles.*.driver: "extension"` → `"existing-session"`
     - 移除 `browser.relayBindHost` (遗留扩展中继设置)
-    - 遗留 `models.providers.*.api: "openai"` → `"openai-completions"` (网关启动时也会跳过 `api` 设置为未来或未知枚举值的提供商，而不是直接失败)
-    - 移除 `plugins.entries.codex.config.codexDynamicToolsProfile`；Codex 应用服务器始终将 Codex 原生工作区工具保持为原生
+    - 遗留 `models.providers.*.api: "openai"` → `"openai-completions"` (网关启动时也会跳过其 `api` 设置为未来或未知枚举值的提供商，而不是失败关闭)
+    - 移除 `plugins.entries.codex.config.codexDynamicToolsProfile`；Codex 应用服务器始终保持 Codex 原生工作区工具为原生
 
-    Doctor 警告还包括针对多账户渠道的账户默认指导：
+    Doctor 警告还包括针对多帐户渠道的帐户默认指南：
 
-    - 如果配置了两个或更多 `channels.<channel>.accounts` 条目但没有 `channels.<channel>.defaultAccount` 或 `accounts.default`，doctor 会警告回退路由可能会选择意外的账户。
-    - 如果 `channels.<channel>.defaultAccount` 设置为未知的账户 ID，doctor 会发出警告并列出已配置的账户 ID。
+    - 如果配置了两个或更多 `channels.<channel>.accounts` 条目而没有 `channels.<channel>.defaultAccount` 或 `accounts.default`，doctor 会警告回退路由可能会选择意外的帐户。
+    - 如果 `channels.<channel>.defaultAccount` 设置为未知的帐户 ID，doctor 会警告并列出已配置的帐户 ID。
 
   </Accordion>
   <Accordion title="2b. OpenCode 提供商覆盖">

@@ -100,11 +100,11 @@ Las tarifas son por millón de tokens en USD según lo anunciado por Tencent. An
 
   </Accordion>
 
-  <Accordion title="Disponibilidad del entorno para el demonio">
-    Si el Gateway se ejecuta como servicio administrado (launchd, systemd, Docker), `TOKENHUB_API_KEY` debe ser visible para ese proceso. Establézcalo en `~/.openclaw/.env` o a través de `env.shellEnv` para que launchd, systemd o los entornos de ejecución de Docker puedan leerlo.
+  <Accordion title="Disponibilidad de entorno para el demonio">
+    Si el Gateway se ejecuta como un servicio administrado (launchd, systemd, Docker), `TOKENHUB_API_KEY` debe ser visible para ese proceso. Establézcalo en `~/.openclaw/.env` o a través de `env.shellEnv` para que los entornos de ejecución de launchd, systemd o Docker puedan leerlo.
 
     <Warning>
-      Las claves establecidas solo en `~/.profile` no son visibles para los procesos de gateway administrados. Use el archivo de entorno o el seam de configuración para disponibilidad persistente.
+      Las claves exportadas solo en un shell interactivo no son visibles para los procesos de gateway administrados. Utilice el archivo env o el config seam para disponibilidad persistente.
     </Warning>
 
   </Accordion>

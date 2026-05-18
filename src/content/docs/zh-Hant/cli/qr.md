@@ -35,23 +35,22 @@ openclaw qr --url wss://gateway.example/ws
 
 - `--token` 和 `--password` 互斥。
 - 設定碼本身現在攜帶的是不透明的短期 `bootstrapToken`，而非共用的 Gateway 權杖/密碼。
-- 在內建的 node/operator 啟動流程中，主要節點權杖仍然會存放在 `scopes: []` 中。
-- 如果啟動交接也發出操作員權杖，它將保持受限於啟動允許清單：`operator.approvals`、`operator.read`、`operator.talk.secrets`、`operator.write`。
-- 啟動範圍檢查會加上角色前綴。該操作員允許清單僅滿足操作員請求；非操作員角色仍需要在其自身角色前綴下的範圍。
-- 針對 Tailscale/公開 `ws://` 閘道 URL，行動裝置配對會以封閉式失敗（fails closed）。私人 LAN 位址和 `.local` Bonjour 主機仍透過 `ws://` 支援，但 Tailscale/公開行動路由應使用 Tailscale Serve/Funnel 或 `wss://` 閘道 URL。
-- 使用 `--remote` 時，OpenClaw 需要提供 `gateway.remote.url` 或
+- 內建 setup-code 引導程序僅適用於節點。批准後，主要節點令牌會放置於 `scopes: []`。
+- 內建的 setup-code 流程不會返回移交的操作員令牌；操作員存取需要單獨的已批准操作員配對或令牌流程。
+- 對於 Tailscale/公開 `ws://` 閘道 URL，行動裝置配對會因安全限制而失敗。透過 `ws://` 仍支援私人 LAN 位址和 `.local` Bonjour 主機，但 Tailscale/公開行動路由應使用 Tailscale Serve/Funnel 或 `wss://` 閘道 URL。
+- 使用 `--remote` 時，OpenClaw 需要 `gateway.remote.url` 或
   `gateway.tailscale.mode=serve|funnel`。
-- 使用 `--remote` 時，如果有效啟用的遠端憑證設定為 SecretRefs 且您未傳遞 `--token` 或 `--password`，該指令會從啟用的閘道快照中解析它們。如果閘道無法使用，該指令會快速失敗。
-- 若未使用 `--remote`，當未傳遞 CLI 認證覆寫時，會解析本機閘道認證 SecretRefs：
-  - 當權杖認證可以勝出時（顯式 `gateway.auth.mode="token"` 或沒有密碼來源勝出的推斷模式），`gateway.auth.token` 會被解析。
-  - 當密碼認證可以勝出時（顯式 `gateway.auth.mode="password"` 或來自 auth/env 沒有勝出權杖的推斷模式），`gateway.auth.password` 會被解析。
-- 如果同時設定了 `gateway.auth.token` 和 `gateway.auth.password`（包括 SecretRefs）且未設定 `gateway.auth.mode`，則設定碼解析將會失敗，直到明確設定模式為止。
-- 閘道版本差異說明：此指令路徑需要支援 `secrets.resolve` 的閘道；舊版閘道會傳回未知方法錯誤。
+- 使用 `--remote` 時，如果有效啟用的遠端憑證被設定為 SecretRefs 且您未傳遞 `--token` 或 `--password`，該指令會從啟用的閘道快照中解析它們。如果閘道無法使用，該指令會快速失敗。
+- 若未使用 `--remote`，當未傳遞 CLI 驗證覆寫時，會解析本地閘道驗證 SecretRefs：
+  - 當令牌驗證可以勝出時（明確的 `gateway.auth.mode="token"` 或推斷模式，即沒有密碼來源勝出），會解析 `gateway.auth.token`。
+  - 當密碼驗證可以勝出時（明確的 `gateway.auth.mode="password"` 或推斷模式，且來自 auth/env 的令牌未勝出），會解析 `gateway.auth.password`。
+- 如果同時設定了 `gateway.auth.token` 和 `gateway.auth.password`（包括 SecretRefs）且未設定 `gateway.auth.mode`，則 setup-code 解析將會失敗，直到明確設定模式為止。
+- 閘道版本差異說明：此指令路徑需要支援 `secrets.resolve` 的閘道；較舊的閘道會返回 unknown-method 錯誤。
 - 掃描後，使用以下方式批准裝置配對：
   - `openclaw devices list`
   - `openclaw devices approve <requestId>`
 
 ## 相關
 
-- [CLI 參考資料](/zh-Hant/cli)
+- [CLI 參考](/zh-Hant/cli)
 - [配對](/zh-Hant/cli/pairing)

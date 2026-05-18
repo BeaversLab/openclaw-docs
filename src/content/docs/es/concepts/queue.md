@@ -30,31 +30,20 @@ Cuando no están configurados, todas las superficies de canales entrantes usan:
 - `cap: 20`
 - `drop: "summarize"`
 
-`steer` es el valor predeterminado porque mantiene el turno activo del modelo receptivo sin
-iniciar una segunda ejecución de sesión. Drena todos los mensajes de dirección que llegaron
-antes del siguiente límite del modelo. Si la ejecución actual no puede aceptar dirección,
-OpenClaw recurre a una entrada de cola de seguimiento.
+La dirección en el mismo turno (Same-turn steering) es el valor predeterminado. Un mensaje que llega a mitad de la ejecución se inyecta en el entorno de ejecución activo cuando la ejecución puede aceptar dirección, por lo que no se inicia una segunda ejecución de sesión. Si la ejecución activa no puede aceptar dirección, OpenClaw espera a que termine la ejecución activa antes de iniciar el mensaje.
 
 ## Modos de cola
 
-Los mensajes entrantes pueden dirigir la ejecución actual, esperar un turno de seguimiento o hacer ambas cosas:
+`/queue` controla lo que hacen los mensajes entrantes normales mientras una sesión ya tiene una ejecución activa:
 
-- `steer`: pone en cola los mensajes de dirección en el tiempo de ejecución activo. Pi entrega todos los mensajes de dirección pendientes **después de que el turno actual del asistente termine de ejecutar sus llamadas a herramientas**, antes de la siguiente llamada al LLM; el servidor de aplicaciones de Codex recibe un `turn/steer` por lotes. Si la ejecución no está transmitiendo activamente o la dirección no está disponible, OpenClaw recurre a una entrada de cola de seguimiento.
-- `queue` (legado): dirección antigua de uno a la vez. Pi entrega un mensaje de dirección en cola en cada límite del modelo; el servidor de aplicaciones de Codex recibe solicitudes `turn/steer` separadas. Se prefiere `steer` a menos que necesites el comportamiento serializado anterior.
-- `followup`: pone en cola cada mensaje para un turno de agente posterior después de que termina la ejecución actual.
-- `collect`: fusiona los mensajes en cola en un **único** turno de seguimiento después de la ventana de silencio. Si los mensajes tienen como objetivo diferentes canales/hilos, se drenan individualmente para preservar el enrutamiento.
-- `steer-backlog` (también conocido como `steer+backlog`): dirige ahora **y** preserva el mismo mensaje para un turno de seguimiento.
-- `interrupt` (legado): aborta la ejecución activa para esa sesión y luego ejecuta el mensaje más nuevo.
+- `steer`: inyecta mensajes en el entorno de ejecución activo. Pi entrega todos los mensajes de dirección pendientes **después de que el turno del asistente actual termine de ejecutar sus llamadas a herramientas**, antes de la siguiente llamada al LLM; el servidor de aplicaciones Codex recibe un `turn/steer` por lotes. Si la ejecución no está transmitiendo activamente o la dirección no está disponible, OpenClaw espera hasta que termine la ejecución activa antes de iniciar el mensaje.
+- `followup`: no dirigir. Poner en cola cada mensaje para un turno de agente posterior después de que finalice la ejecución actual.
+- `collect`: no dirigir. Combinar los mensajes en cola en un **único** turno de seguimiento después de la ventana de silencio. Si los mensajes tienen como objetivo diferentes canales/hilos, se drenan individualmente para preservar el enrutamiento.
+- `interrupt`: abortar la ejecución activa para esa sesión y luego ejecutar el mensaje más reciente.
 
-Steer-backlog significa que puedes obtener una respuesta de seguimiento después de la ejecución dirigida, por lo que
-las superficies de transmisión pueden parecer duplicados. Se prefiere `collect`/`steer` si deseas
-una respuesta por mensaje entrante.
+Para conocer el tiempo y el comportamiento de las dependencias específicos del tiempo de ejecución, consulte [Cola de dirección](/es/concepts/queue-steering). Para el comando `/steer <message>` explícito, consulte [Dirigir (Steer)](/es/tools/steer).
 
-Para conocer el comportamiento de tiempo y dependencia específico del tiempo de ejecución, consulte
-[Steering queue](/es/concepts/queue-steering). Para el comando `/steer <message>`
-explícito, consulte [Steer](/es/tools/steer).
-
-Configure globalmente o por canal mediante `messages.queue`:
+Configure globalmente o por canal a través de `messages.queue`:
 
 ```json5
 {
@@ -72,11 +61,11 @@ Configure globalmente o por canal mediante `messages.queue`:
 
 ## Opciones de cola
 
-Las opciones se aplican a `followup`, `collect` y `steer-backlog` (y a `steer` o al `queue` heredado cuando la dirección (steering) vuelve al seguimiento (followup)):
+Las opciones se aplican a la entrega en cola. `debounceMs` también establece la ventana de silencio de dirección de Codex en el modo `steer`:
 
-- `debounceMs`: ventana silenciosa antes de vaciar los seguimientos (followups) en cola. Los números simples son milisegundos; las unidades `ms`, `s`, `m`, `h` y `d` son aceptadas por las opciones `/queue`.
-- `cap`: máximo de mensajes en cola por sesión. Se ignoran los valores inferiores a `1`.
-- `drop: "summarize"`: predeterminado. Descarta las entradas en cola más antiguas según sea necesario, mantiene resúmenes compactos y los inyecta como un aviso de seguimiento (followup) sintético.
+- `debounceMs`: ventana de silencio antes de drenar los seguimientos en cola o recopilar lotes; en el modo `steer` de Codex, ventana de silencio antes de enviar el `turn/steer` por lotes. Los números simples son milisegundos; las unidades `ms`, `s`, `m`, `h` y `d` son aceptadas por las opciones `/queue`.
+- `cap`: máx. mensajes en cola por sesión. Se ignoran los valores inferiores a `1`.
+- `drop: "summarize"`: predeterminado. Descarta las entradas en cola más antiguas según sea necesario, mantiene resúmenes compactos y los inyecta como un mensaje de seguimiento sintético.
 - `drop: "old"`: descarta las entradas en cola más antiguas según sea necesario, sin conservar los resúmenes.
 - `drop: "new"`: rechaza el mensaje más reciente cuando la cola ya está llena.
 
@@ -91,31 +80,28 @@ Para la selección del modo, OpenClaw resuelve:
 3. `messages.queue.mode`.
 4. `steer` predeterminado.
 
-Para las opciones, las opciones `/queue` en línea o almacenadas tienen prioridad sobre la configuración. Luego
-se aplican el tiempo de rebote (debounce) específico del canal (`messages.queue.debounceMsByChannel`), los valores predeterminados
-de rebote del complemento (plugin), las opciones `messages.queue` globales y los valores predeterminados integrados.
-`cap` y `drop` son opciones globales/sesión, no claves de configuración por canal.
+Para las opciones, las opciones `/queue` en línea o almacenadas tienen prioridad sobre la configuración. Luego se aplican el antirrebote específico del canal (`messages.queue.debounceMsByChannel`), los valores predeterminados de antirrebote del complemento, las opciones globales `messages.queue` y los valores predeterminados integrados. `cap` y `drop` son opciones globales/de sesión, no claves de configuración por canal.
 
 ## Invalidaciones por sesión
 
-- Envíe `/queue <mode>` como un comando independiente para guardar el modo de la sesión actual.
+- Envíe `/queue <steer|followup|collect|interrupt>` como comando independiente para almacenar el modo de cola para la sesión actual.
 - Las opciones se pueden combinar: `/queue collect debounce:0.5s cap:25 drop:summarize`
-- `/queue default` o `/queue reset` borran la anulación de la sesión.
+- `/queue default` o `/queue reset` borra la invalidación de la sesión.
 
 ## Alcance y garantías
 
-- Se aplica a las ejecuciones del agente de autorespuesta en todos los canales entrantes que utilizan la canalización de respuesta de la puerta de enlace (WhatsApp web, Telegram, Slack, Discord, Signal, iMessage, webchat, etc.).
-- El carril predeterminado (`main`) es para todo el proceso para latidos entrantes + principales; establezca `agents.defaults.maxConcurrent` para permitir múltiples sesiones en paralelo.
-- Pueden existir carriles adicionales (por ejemplo, `cron`, `cron-nested`, `nested`, `subagent`) para que los trabajos en segundo plano se ejecuten en paralelo sin bloquear las respuestas entrantes. Los turnos de agente cron aislados mantienen un espacio `cron` mientras que su ejecución interna del agente usa `cron-nested`; ambos usan `cron.maxConcurrentRuns`. Los flujos `nested` no cron compartidos mantienen su propio comportamiento de carril. Estas ejecuciones separadas se rastrean como [tareas en segundo plano](/es/automation/tasks).
-- Los carriles por sesión garantizan que solo una ejecución del agente toque una sesión determinada a la vez.
+- Se aplica a las ejecuciones del agente de respuesta automática en todos los canales entrantes que utilizan la canalización de respuesta de la puerta de enlace (WhatsApp web, Telegram, Slack, Discord, Signal, iMessage, webchat, etc.).
+- El carril predeterminado (`main`) es a nivel de proceso para latidos entrantes + principales; establezca `agents.defaults.maxConcurrent` para permitir múltiples sesiones en paralelo.
+- Pueden existir carriles adicionales (p. ej. `cron`, `cron-nested`, `nested`, `subagent`) para que los trabajos en segundo plano se ejecuten en paralelo sin bloquear las respuestas entrantes. Los turnos de agentes cron aislados mantienen un espacio `cron` mientras que su ejecución interna del agente usa `cron-nested`; ambos usan `cron.maxConcurrentRuns`. Los flujos `nested` compartidos no cron mantienen su propio comportamiento de carril. Estas ejecuciones separadas se rastrean como [tareas en segundo plano](/es/automation/tasks).
+- Los carriles por sesión garantizan que solo una ejecución de agente toque una sesión dada a la vez.
 - Sin dependencias externas ni subprocesos de trabajo en segundo plano; TypeScript puro + promesas.
 
 ## Solución de problemas
 
-- Si los comandos parecen estar atascados, habilite los registros detallados y busque las líneas "queued for ...ms" para confirmar que la cola se está drenando.
-- Si necesita la profundidad de la cola, habilite los registros detallados y observe las líneas de tiempo de la cola.
-- Las ejecuciones del servidor de aplicaciones de Codex que aceptan un turno y luego dejan de emitir progreso son interrumpidas por el adaptador de Codex para que el carril de sesión activo pueda liberarse en lugar de esperar el tiempo de espera de la ejecución externa.
-- Cuando los diagnósticos están habilitados, las sesiones que permanecen en `processing` más allá de `diagnostics.stuckSessionWarnMs` sin una respuesta, herramienta, estado, bloque o progreso de ACP observado se clasifican por actividad actual. El trabajo activo se registra como `session.long_running`; el trabajo activo sin progreso reciente se registra como `session.stalled`; `session.stuck` está reservado para la contabilidad de sesiones obsoletas sin trabajo activo, y solo esa ruta puede liberar el carril de sesión afectado para que se drene el trabajo en cola. Los diagnósticos repetidos de `session.stuck` se espacian mientras la sesión permanece sin cambios.
+- Si los comandos parecen atascados, habilite los registros detallados y busque líneas "queued for ...ms" para confirmar que la cola se está drenando.
+- Si necesita la profundidad de la cola, habilite los registros detallados y observe las líneas de temporización de la cola.
+- Las ejecuciones del servidor de aplicaciones de Codex que aceptan un turno y luego dejan de emitir progreso son interrumpidas por el adaptador Codex para que el carril de sesión activo pueda liberarse en lugar de esperar el tiempo de espera de la ejecución externa.
+- Cuando los diagnósticos están habilitados, las sesiones que permanecen en `processing` más allá de `diagnostics.stuckSessionWarnMs` sin respuesta, herramienta, estado, bloqueo o progreso de ACP observado se clasifican por actividad actual. El trabajo activo se registra como `session.long_running`; el trabajo activo sin progreso reciente se registra como `session.stalled`; `session.stuck` está reservado para el mantenimiento de sesiones obsoletas sin trabajo activo, y solo esa ruta puede liberar el carril de sesión afectado para que se drene el trabajo en cola. Los diagnósticos repetidos `session.stuck` se reducen mientras la sesión permanece sin cambios.
 
 ## Relacionado
 

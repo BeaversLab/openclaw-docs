@@ -88,8 +88,8 @@ Para servidores LM Studio no autenticados, omita la clave; OpenClaw almacena un 
 
 Esto escribe `models.providers.lmstudio` y establece el modelo predeterminado en `lmstudio/<custom-model-id>`. Cuando proporciona una clave de API, la configuración también escribe el perfil de autenticación `lmstudio:default`.
 
-La configuración interactiva puede solicitar una longitud de contexto de carga preferida opcional y la aplica en todos los modelos de LM Studio descubiertos que guarda en la configuración.
-La configuración del complemento LM Studio confía en el punto final de LM Studio configurado para las solicitudes de modelos, incluyendo hosts de loopback, LAN y tailnet. Puede optar por excluirse estableciendo `models.providers.lmstudio.request.allowPrivateNetwork: false`.
+La configuración interactiva puede solicitar una longitud de contexto de carga preferida opcional y la aplica en los modelos de LM Studio descubiertos que guarda en la configuración.
+La configuración del complemento LM Studio confía en el punto de conexión de LM Studio configurado para las solicitudes de modelo, incluidos los hosts de loopback, LAN y tailnet. Los orígenes de metadatos/enlace local todavía requieren consentimiento explícito. Puede optar por no participar estableciendo `models.providers.lmstudio.request.allowPrivateNetwork: false`.
 
 ## Configuración
 
@@ -210,7 +210,7 @@ Use la dirección accesible del host de LM Studio, mantenga `/v1` y asegúrese d
 }
 ```
 
-A diferencia de los proveedores genéricos compatibles con OpenAI, `lmstudio` confía automáticamente en su punto final local/privado configurado para las solicitudes de modelos protegidas. Los ID de proveedores de bucle de retorno personalizados, como `localhost` o `127.0.0.1`, también son de confianza automática; para ID de proveedores personalizados de LAN, tailnet o DNS privados, establezca `models.providers.<id>.request.allowPrivateNetwork: true` explícitamente.
+`lmstudio` confía automáticamente en su punto de conexión local/privado configurado para las solicitudes de modelo protegidas. Las entradas de proveedores personalizadas/local compatibles con OpenAI también confían en su origen `baseUrl` configurado exacto, excepto los orígenes de metadatos/enlace local; las solicitudes a diferentes puertos privados o destinos todavía requieren `models.providers.<id>.request.allowPrivateNetwork: true`. Establezca `models.providers.<id>.request.allowPrivateNetwork: false` para no participar en la confianza de origen exacto.
 
 ## Relacionado
 

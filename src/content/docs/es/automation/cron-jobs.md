@@ -76,7 +76,7 @@ Las expresiones recurrentes de hora en punto se escalonan automáticamente hasta
 
 ### Día del mes y día de la semana usan lógica OR
 
-Las expresiones de cron son analizadas por [croner](https://github.com/Hexagon/croner). Cuando tanto los campos de día del mes como los de día de la semana no son comodines, croner coincide cuando **alguna** de las dos campos coincide, no ambas. Este es el comportamiento estándar de Vixie cron.
+Las expresiones cron se analizan mediante [croner](https://github.com/Hexagon/croner). Cuando tanto el campo día-del-mes como el campo día-de-la-semana no son comodines, croner coincide cuando **alguna** de las dos coincide, no ambas. Este es el comportamiento estándar de Vixie cron.
 
 ```
 # Intended: "9 AM on the 15th, only if it's a Monday"
@@ -337,11 +337,17 @@ openclaw cron edit <jobId> --message "Updated prompt" --model "opus"
 # Force run a job now
 openclaw cron run <jobId>
 
+# Force run a job now and wait for its terminal status
+openclaw cron run <jobId> --wait --wait-timeout 10m --poll-interval 2s
+
 # Run only if due
 openclaw cron run <jobId> --due
 
 # View run history
 openclaw cron runs --id <jobId> --limit 50
+
+# View one exact run
+openclaw cron runs --id <jobId> --run-id <runId>
 
 # Delete a job
 openclaw cron remove <jobId>
@@ -351,15 +357,17 @@ openclaw cron add --name "Ops sweep" --cron "0 6 * * *" --session isolated --mes
 openclaw cron edit <jobId> --clear-agent
 ```
 
+`openclaw cron run <jobId>` regresa después de poner en cola la ejecución manual. Use `--wait` para enlaces de apagado, scripts de mantenimiento u otra automatización que debe bloquearse hasta que finalice la ejecución en cola. El modo de espera sondeará el `runId` devuelto exacto; sale con `0` para el estado `ok` y distinto de cero para `error`, `skipped` o un tiempo de espera de espera.
+
 <Note>
 Nota sobre la anulación del modelo:
 
 - `openclaw cron add|edit --model ...` cambia el modelo seleccionado del trabajo.
 - Si el modelo está permitido, ese proveedor/modelo exacto llega a la ejecución del agente aislado.
 - Si no está permitido o no se puede resolver, cron falla la ejecución con un error de validación explícito.
-- Las cadenas de retroceso (fallback) configuradas aún se aplican porque cron `--model` es un primario del trabajo, no una anulación de sesión `/model`.
-- El Payload `fallbacks` reemplaza los retrocesos configurados para ese trabajo; `fallbacks: []` deshabilita el retroceso y hace que la ejecución sea estricta.
-- Un `--model` simple sin una lista de retroceso explícita o configurada no pasa al primario del agente como un objetivo de reintento adicional silencioso.
+- Las cadenas de respaldo configuradas todavía se aplican porque el `--model` de cron es un primario del trabajo, no una anulación `/model` de sesión.
+- El `fallbacks` del payload reemplaza los respaldos configurados para ese trabajo; `fallbacks: []` deshabilita el respaldo y hace que la ejecución sea estricta.
+- Un `--model` simple sin una lista de respaldo explícita o configurada no pasa al primario del agente como un objetivo de reintento adicional silencioso.
 
 </Note>
 
@@ -383,23 +391,23 @@ Nota sobre la anulación del modelo:
 }
 ```
 
-`maxConcurrentRuns` limita tanto el despacho programado de cron como la ejecución del turno del agente aislado. Los turnos del agente aislado de cron usan internamente el carril de ejecución dedicado `cron-nested` de la cola, por lo que aumentar este valor permite que las ejecuciones independientes de LLM de cron avancen en paralelo en lugar de solo iniciar sus envoltorios externos de cron. El carril compartido no cron `nested` no se amplía con esta configuración.
+`maxConcurrentRuns` limita tanto el envío programado de cron como la ejecución de turnos de agente aislados. Los turnos de agente aislados de cron usan internamente el carril de ejecución `cron-nested` dedicado de la cola, por lo que aumentar este valor permite que las ejecuciones independientes de LLM de cron avancen en paralelo en lugar de solo iniciar sus envoltorios externos de cron. El carril compartido `nested` que no es de cron no se amplía con esta configuración.
 
-El sidecar de estado de tiempo de ejecución se deriva de `cron.store`: un almacén `.json` tal como `~/clawd/cron/jobs.json` usa `~/clawd/cron/jobs-state.json`, mientras que una ruta de almacén sin un sufijo `.json` añade `-state.json`.
+El sidecar del estado de ejecución se deriva de `cron.store`: un almacén `.json` como `~/clawd/cron/jobs.json` usa `~/clawd/cron/jobs-state.json`, mientras que una ruta de almacén sin un sufijo `.json` añade `-state.json`.
 
-Si editas `jobs.json` manualmente, mantén `jobs-state.json` fuera del control de código fuente. OpenClaw usa ese archivo adjunto para espacios pendientes, marcadores activos, metadatos de última ejecución y la identidad de programación que indica al planificador cuándo un trabajo editado externamente necesita un `nextRunAtMs` nuevo.
+Si edita `jobs.json` a mano, deje `jobs-state.json` fuera del control de código fuente. OpenClaw utiliza ese sidecar para las ranuras pendientes, los marcadores activos, los metadatos de la última ejecución y la identidad de la programación que indica al programador cuándo un trabajo editado externamente necesita un `nextRunAtMs` nuevo.
 
 Desactivar cron: `cron.enabled: false` o `OPENCLAW_SKIP_CRON=1`.
 
 <AccordionGroup>
   <Accordion title="Comportamiento de reintento">
-    **Reintento de un solo disparo**: los errores transitorios (límite de tasa, sobrecarga, red, error del servidor) se reintentan hasta 3 veces con retroceso exponencial. Los errores permanentes se desactivan inmediatamente.
+    **Reintento de una sola vez**: los errores transitorios (límite de velocidad, sobrecarga, red, error del servidor) se reintentan hasta 3 veces con retroceso exponencial. Los errores permanentes se desactivan inmediatamente.
 
     **Reintento recurrente**: retroceso exponencial (30s a 60m) entre reintentos. El retroceso se restablece después de la siguiente ejecución exitosa.
 
   </Accordion>
   <Accordion title="Mantenimiento">
-    `cron.sessionRetention` (por defecto `24h`) poda las entradas de sesión de ejecución aisladas. `cron.runLog.maxBytes` / `cron.runLog.keepLines` autopodan los archivos de registro de ejecución.
+    `cron.sessionRetention` (por defecto `24h`) poda las entradas de sesión de ejecución aisladas. `cron.runLog.maxBytes` / `cron.runLog.keepLines` podan automáticamente los archivos de registro de ejecución.
   </Accordion>
 </AccordionGroup>
 
@@ -420,31 +428,31 @@ openclaw doctor
 
 <AccordionGroup>
   <Accordion title="Cron no se ejecuta">
-    - Verifica la variable de entorno `cron.enabled` y `OPENCLAW_SKIP_CRON`.
-    - Confirma que la Gateway se está ejecutando continuamente.
-    - Para programaciones `cron`, verifica la zona horaria (`--tz`) frente a la zona horaria del host.
-    - `reason: not-due` en la salida de ejecución significa que se verificó la ejecución manual con `openclaw cron run <jobId> --due` y el trabajo aún no debía ejecutarse.
+    - Compruebe la variable de entorno `cron.enabled` y `OPENCLAW_SKIP_CRON`.
+    - Confirme que el Gateway se está ejecutando continuamente.
+    - Para las programaciones `cron`, verifique la zona horaria (`--tz`) frente a la zona horaria del host.
+    - `reason: not-due` en la salida de ejecución significa que se verificó la ejecución manual con `openclaw cron run <jobId> --due` y el trabajo aún no vencía.
 
   </Accordion>
   <Accordion title="Cron se disparó pero no hubo entrega">
-    - El modo de entrega `none` significa que no se espera un envío de respaldo del runner. El agente aún puede enviar directamente con la herramienta `message` cuando hay una ruta de chat disponible.
+    - El modo de entrega `none` significa que no se espera un envío de respaldo del ejecutor. El agente aún puede enviar directamente con la herramienta `message` cuando hay una ruta de chat disponible.
     - El destino de entrega faltante/no válido (`channel`/`to`) significa que se omitió el envío saliente.
-    - Para Matrix, los trabajos copiados o heredados con IDs de sala `delivery.to` en minúsculas pueden fallar porque los IDs de sala de Matrix distinguen mayúsculas de minúsculas. Edite el trabajo con el valor exacto `!room:server` o `room:!room:server` de Matrix.
+    - Para Matrix, los trabajos copiados o heredados con IDs de sala `delivery.to` en minúsculas pueden fallar porque los IDs de sala de Matrix distinguen entre mayúsculas y minúsculas. Edite el trabajo con el valor exacto de `!room:server` o `room:!room:server` de Matrix.
     - Los errores de autenticación del canal (`unauthorized`, `Forbidden`) significan que la entrega fue bloqueada por las credenciales.
-    - Si la ejecución aislada devuelve solo el token silencioso (`NO_REPLY` / `no_reply`), OpenClaw suprime la entrega saliente directa y también suprime la ruta de resumen en cola de respaldo, por lo que no se publica nada de nuevo en el chat.
-    - Si el agente debe enviarle un mensaje al usuario, verifique que el trabajo tenga una ruta utilizable (`channel: "last"` con un chat anterior, o un canal/destino explícito).
+    - Si la ejecución aislada devuelve solo el token silencioso (`NO_REPLY` / `no_reply`), OpenClaw suprime la entrega saliente directa y también suprime la ruta de resumen en cola de respaldo, por lo que no se publica nada de vuelta en el chat.
+    - Si el agente debe enviar un mensaje al usuario por sí mismo, verifique que el trabajo tenga una ruta utilizable (`channel: "last"` con un chat anterior, o un canal/destino explícito).
 
   </Accordion>
-  <Accordion title="Cron o heartbeat parece evitar la transición de estilo /new">
-    - La frescura del reinicio diario e inactivo no se basa en `updatedAt`; consulte [Gestión de sesiones](/es/concepts/session#session-lifecycle).
-    - Las activaciones de Cron, ejecuciones de heartbeat, notificaciones de ejecución y mantenimiento de la puerta de enlace pueden actualizar la fila de sesión para el enrutamiento/estado, pero no extienden `sessionStartedAt` o `lastInteractionAt`.
-    - Para las filas heredadas creadas antes de que existieran esos campos, OpenClaw puede recuperar `sessionStartedAt` del encabezado de sesión JSONL de la transcripción cuando el archivo aún está disponible. Las filas inactivas heredadas sin `lastInteractionAt` usan esa hora de inicio recuperada como su línea base inactiva.
+  <Accordion title="Cron o heartbeat parecen evitar la transición /new-style">
+    - La frescura del restablecimiento diario e inactivo no se basa en `updatedAt`; consulte [Gestión de sesiones](/es/concepts/session#session-lifecycle).
+    - Las activaciones de Cron, ejecuciones de heartbeat, notificaciones de ejecución y mantenimiento del gateway pueden actualizar la fila de sesión para el enrutamiento/estado, pero no extienden `sessionStartedAt` o `lastInteractionAt`.
+    - Para filas heredadas creadas antes de que existieran esos campos, OpenClaw puede recuperar `sessionStartedAt` del encabezado de sesión JSONL de la transcripción cuando el archivo aún está disponible. Las filas inactivas heredadas sin `lastInteractionAt` utilizan esa hora de inicio recuperada como su línea base inactiva.
 
   </Accordion>
-  <Accordion title="Trampas de zona horaria">
+  <Accordion title="Advertencias de zona horaria">
     - Cron sin `--tz` usa la zona horaria del host de la puerta de enlace.
-    - Las programaciones `at` sin zona horaria se tratan como UTC.
-    - `activeHours` de Heartbeat usa la resolución de zona horaria configurada.
+    - `at` las programaciones sin zona horaria se tratan como UTC.
+    - Heartbeat `activeHours` usa la resolución de zona horaria configurada.
 
   </Accordion>
 </AccordionGroup>
@@ -452,6 +460,6 @@ openclaw doctor
 ## Relacionado
 
 - [Automatización](/es/automation) — todos los mecanismos de automatización de un vistazo
-- [Tareas en segundo plano](/es/automation/tasks) — registro de tareas para ejecuciones de cron
+- [Tareas en segundo plano](/es/automation/tasks) — libro mayor de tareas para ejecuciones de cron
 - [Heartbeat](/es/gateway/heartbeat) — turnos periódicos de la sesión principal
 - [Zona horaria](/es/concepts/timezone) — configuración de zona horaria

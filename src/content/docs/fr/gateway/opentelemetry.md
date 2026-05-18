@@ -204,12 +204,7 @@ OpenClaw classe les sessions en fonction du travail qu'il peut encore observer :
 
 - `session.long_running` : le travail intégré actif, les appels de model ou les appels d'outil
   progressent toujours.
-- `session.stalled` : un travail actif existe, mais l'exécution active n'a pas signalé
-  de progression récente. Les exécutions intégrées bloquées restent d'abord en observation seule, puis
-  passent en abandon-vidange après `diagnostics.stuckSessionAbortMs` sans progression afin que les tours
-  en file d'attente derrière la voie puissent reprendre. Si non défini, le seuil d'abandon par défaut est
-  la fenêtre étendue plus sûre d'au moins 10 minutes et 5x
-  `diagnostics.stuckSessionWarnMs`.
+- `session.stalled` : un travail actif existe, mais l'exécution active n'a pas signalé de progrès récent. Les exécutions intégrées bloquées restent d'abord en observation uniquement, puis abandonnent le drainage (abort-drain) après `diagnostics.stuckSessionAbortMs` sans progrès, afin que les tours en file d'attente derrière la voie (lane) puissent reprendre. Si non défini, le seuil d'abandon correspond par défaut à la fenêtre étendue plus sécurisée d'au moins 5 minutes et 3x `diagnostics.stuckSessionWarnMs`.
 - `session.stuck` : gestion administrative de session obsolète sans travail actif. Cela libère
   la voie de session affectée immédiatement.
 

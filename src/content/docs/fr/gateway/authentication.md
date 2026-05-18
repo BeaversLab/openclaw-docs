@@ -7,7 +7,7 @@ title: "Authentification"
 ---
 
 <Note>
-  Cette page est la référence d'authentification du **fournisseur de modèle** (clés API, OAuth, réutilisation de la CLI Claude et jeton de configuration Anthropic). Pour l'authentification de **connexion Gateway** (jeton, mot de passe, proxy de confiance), voir [Configuration](APIOAuthCLIAnthropic/en/gateway/configuration) et [Authentification de proxy de
+  Cette page est la référence d'authentification du **fournisseur de modèles** (clés API, OAuth, réutilisation du Claude CLI et jeton de configuration Anthropic). Pour l'authentification de **connexion passerelle** (jeton, mot de passe, proxy de confiance), consultez [Configuration](APIOAuthCLIAnthropic/en/gateway/configuration) et [Authentification de proxy de
   confiance](/fr/gateway/trusted-proxy-auth).
 </Note>
 
@@ -16,8 +16,8 @@ les clés d'API sont généralement l'option la plus prévisible. Les flux d'abo
 sont également pris en charge lorsqu'ils correspondent au modèle de compte de votre fournisseur.
 
 Consultez [/concepts/oauth](/fr/concepts/oauthOAuth) pour le flux OAuth complet et la disposition du stockage.
-Pour l'authentification basée sur SecretRef (fournisseurs `env`/`file`/`exec`), voir [Gestion des secrets](/fr/gateway/secrets).
-Pour les règles d'éligibilité des identifiants et de codes de raison utilisées par `models status --probe`, voir
+Pour l'authentification basée sur SecretRef (fournisseurs `env`/`file`/`exec`), consultez [Gestion des secrets](/fr/gateway/secrets).
+Pour les règles d'éligibilité des identifiants et des codes de raison utilisées par `models status --probe`, consultez
 [Sémantique des identifiants d'authentification](/fr/auth-credential-semantics).
 
 ## Configuration recommandée (clé d'API, n'importe quel fournisseur)
@@ -52,7 +52,7 @@ openclaw doctor
 Si vous préférez ne pas gérer les variables d'environnement vous-même, l'intégration peut stocker
 les clés API pour une utilisation par le démon : API`openclaw onboard`.
 
-Voir [Aide](/fr/help) pour plus de détails sur l'héritage des variables d'environnement (`env.shellEnv`,
+Consultez [Aide](/fr/help) pour plus de détails sur l'héritage des variables d'environnement (`env.shellEnv`,
 `~/.openclaw/.env`, systemd/launchd).
 
 ## Anthropic : Claude CLI et compatibilité des jetons
@@ -130,7 +130,7 @@ Notes :
 - Les temps de recharge limites de débit peuvent être limités au modèle. Un profil en cours de recharge pour un
   modèle peut toujours être utilisable pour un modèle frère sur le même fournisseur.
 
-Les scripts d'exploitation optionnels (systemd/Termux) sont documentés ici :
+Les scripts d'exploitation facultatifs (systemd/Termux) sont documentés ici :
 [Scripts de surveillance d'authentification](/fr/help/scripts#auth-monitoring-scripts)
 
 ## Note Anthropic
@@ -165,17 +165,29 @@ requests`, `ThrottlingException`, `concurrency limit reached`, ou `workers_ai ..
 - Les erreurs non liées aux limites de débit ne font pas l'objet d'une nouvelle tentative avec des clés alternatives.
 - Si toutes les clés échouent, l'erreur finale de la dernière tentative est renvoyée.
 
-## Contrôle des informations d'identification utilisées
+## Suppression de l'authentification du fournisseur pendant que la passerelle est en cours d'exécution
 
-### Par session (commande de chat)
+Lorsque l'authentification du fournisseur est supprimée via le plan de contrôle de la passerelle, OpenClaw supprime
+les profils d'authentification enregistrés pour ce fournisseur et annule les discussions actives ou les exécutions d'agents
+dont le fournisseur de modèles sélectionné correspond au fournisseur supprimé. Les exécutions annulées émettent
+les événements normaux d'annulation de discussion et de cycle de vie avec
+GatewayOpenClaw`stopReason: "auth-revoked"`, afin que les clients connectés puissent indiquer que l'exécution a été
+arrêtée car les identifiants ont été supprimés.
 
-Utilisez `/model <alias-or-id>@<profileId>` pour épingler une information d'identification de fournisseur spécifique pour la session actuelle (exemples d'identifiants de profil : `anthropic:default`, `anthropic:work`).
+La suppression de l'authentification enregistrée ne révoque pas les clés chez le fournisseur. Faites pivoter ou révoquez la
+clé dans le tableau de bord du fournisseur lorsque vous avez besoin d'une invalidation côté fournisseur.
 
-Utilisez `/model` (ou `/model list`) pour un sélecteur compact ; utilisez `/model status` pour la vue complète (candidats + prochain profil d'authentification, plus détails du point de terminaison du fournisseur lorsque configuré).
+## Contrôle de l'identifiant utilisé
+
+### Par session (commande de discussion)
+
+Utilisez `/model <alias-or-id>@<profileId>` pour épingler un identifiant de fournisseur spécifique pour la session en cours (exemples d'ID de profil : `anthropic:default`, `anthropic:work`).
+
+Utilisez `/model` (ou `/model list`) pour un sélecteur compact ; utilisez `/model status` pour la vue complète (candidats + prochain profil d'auth, plus détails du point de terminaison du provider lorsque configuré).
 
 ### Par agent (remplacement CLI)
 
-Définissez un remplacement explicite de l'ordre des profils d'authentification pour un agent (stocké dans `auth-state.json` de cet agent) :
+Définissez un ordre explicite de remplacement des profils d'authentification pour un agent (stocké dans le `auth-state.json` de cet agent) :
 
 ```bash
 openclaw models auth order get --provider anthropic
@@ -186,15 +198,15 @@ openclaw models auth order clear --provider anthropic
 Utilisez `--agent <id>` pour cibler un agent spécifique ; omettez-le pour utiliser l'agent par défaut configuré.
 Lorsque vous déboguez des problèmes d'ordre, `openclaw models status --probe` affiche les profils
 stockés omis sous la forme `excluded_by_auth_order` au lieu de les ignorer silencieusement.
-Lorsque vous déboguez des problèmes de temps de recharge, rappelez-vous que les temps de recharge de limite de débit peuvent être liés
-à un ID de model plutôt qu'au profil provider entier.
+Lorsque vous déboguez des problèmes de refroidissement (cooldown), rappelez-vous que les temps d'attente de limite de débit peuvent être liés
+à un ID de modèle plutôt qu'au profil complet du provider.
 
 ## Dépannage
 
-### "Aucune information d'identification trouvée"
+### "Aucune informations d'identification trouvée"
 
 Si le profil Anthropic est manquant, configurez une clé Anthropic API sur l'
-**hôte de passerelle** ou configurez le chemin du setup-token Anthropic, puis revérifiez :
+**hôte de la passerelle** ou configurez le chemin du setup-token Anthropic, puis vérifiez à nouveau :
 
 ```bash
 openclaw models status
@@ -210,4 +222,4 @@ setup-token ou migrez vers une clé Anthropic API.
 
 - [Gestion des secrets](/fr/gateway/secrets)
 - [Accès à distance](/fr/gateway/remote)
-- [Stockage d'auth](/fr/concepts/oauth)
+- [Stockage de l'authentification](/fr/concepts/oauth)

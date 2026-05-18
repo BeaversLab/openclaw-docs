@@ -6,14 +6,15 @@ read_when:
 title: "认证"
 ---
 
-<Note>此页面是**模型提供商**认证参考（API 密钥、OAuth、Claude CLI 复用和 Anthropic setup-token）。有关**Gateway 连接**认证（令牌、密码、trusted-proxy），请参阅 [Configuration](APIOAuthCLIAnthropic/en/gateway/configuration) 和 [Trusted Proxy Auth](/zh/gateway/trusted-proxy-auth)。</Note>
+<Note>This page is the **模型 提供商** authentication reference (API keys, OAuth, Claude CLI reuse, and Anthropic setup-token). For **gateway connection** authentication (token, password, trusted-proxy), see [Configuration](/zh/gateway/configuration) and [Trusted Proxy Auth](/zh/gateway/trusted-proxy-auth).</Note>
 
 OpenClaw 支持模型提供商的 OAuth 和 API 密钥。对于常驻 Gateway 主机，API 密钥通常是最可预测的选项。当订阅/OAuth 流程与您的提供商账户模型匹配时，也支持这些流程。
 
-有关完整的 OAuth 流程和存储布局，请参阅 [/concepts/oauth](/zh/concepts/oauthOAuth)。
-对于基于 SecretRef 的认证（`env`/`file`/`exec` 提供商），请参阅 [Secrets Management](/zh/gateway/secrets)。
-有关 `models status --probe` 使用的凭据资格/原因代码规则，请参阅
-[Auth Credential Semantics](/zh/auth-credential-semantics)。
+See [/concepts/oauth](/zh/concepts/oauth) for the full OAuth flow and storage
+layout.
+For SecretRef-based auth (`env`/`file`/`exec` providers), see [Secrets Management](/zh/gateway/secrets).
+For credential eligibility/reason-code rules used by `models status --probe`, see
+[Auth Credential Semantics](/zh/auth-credential-semantics).
 
 ## 推荐的设置方式（API 密钥，任意提供商）
 
@@ -49,8 +50,8 @@ openclaw doctor
 如果您不想自己管理环境变量，新手引导 可以存储
 API 密钥供守护进程使用：API`openclaw onboard`。
 
-有关环境变量继承的详细信息（`env.shellEnv`，
-`~/.openclaw/.env`，systemd/launchd），请参阅 [Help](/zh/help)。
+See [Help](/zh/help) for details on env inheritance (`env.shellEnv`,
+`~/.openclaw/.env`, systemd/launchd).
 
 ## Anthropic：Claude CLI 和 token 兼容性
 
@@ -124,8 +125,8 @@ openclaw models status --probe
 - 如果身份验证存在，但 OpenClaw 无法为该提供商解析可探测的模型候选项，探测将报告 OpenClaw`status: no_model`。
 - 速率限制冷却可以是模型范围的。在一个模型上冷却的配置文件对于同一提供商上的同级模型仍然可用。
 
-可选的运维脚本（systemd/Termux）记录在此处：
-[身份验证监控脚本](/zh/help/scripts#auth-monitoring-scripts)
+Optional ops scripts (systemd/Termux) are documented here:
+[Auth monitoring scripts](/zh/help/scripts#auth-monitoring-scripts)
 
 ## Anthropic 说明
 
@@ -158,17 +159,29 @@ requests`, `ThrottlingException`, `concurrency limit reached` 或 `workers_ai ..
 - 非速率限制错误不会使用备用密钥重试。
 - 如果所有密钥都失败，则返回最后一次尝试的最终错误。
 
-## 控制使用哪个凭据
+## Removing 提供商 auth while the gateway is running
 
-### 每次会话（聊天命令）
+When 提供商 auth is removed through the Gateway(网关) control plane, OpenClaw deletes
+the saved auth profiles for that 提供商 and aborts active chat or agent runs
+whose selected 模型 提供商 matches the removed 提供商. The aborted runs emit
+the normal chat cancellation and lifecycle events with
+`stopReason: "auth-revoked"`, so connected clients can show that the run was
+stopped because credentials were removed.
 
-使用 `/model <alias-or-id>@<profileId>` 为当前会话指定特定的提供商凭据（示例配置文件 ID：`anthropic:default`、`anthropic:work`）。
+Removing saved auth does not revoke keys at the 提供商. Rotate or revoke the
+key in the 提供商 dashboard when you need 提供商-side invalidation.
 
-使用 `/model`（或 `/model list`） 打开紧凑的选择器；使用 `/model status` 查看完整视图（候选项 + 下一个认证配置文件，以及配置时的提供商端点详情）。
+## Controlling which credential is used
+
+### Per-会话 (chat command)
+
+Use `/model <alias-or-id>@<profileId>` to pin a specific 提供商 credential for the current 会话 (example profile ids: `anthropic:default`, `anthropic:work`).
+
+使用 `/model` （或 `/model list` ）获取紧凑选择器；使用 `/model status` 获取完整视图（候选项 + 下一个身份验证配置文件，以及在配置时包含提供商端点详情）。
 
 ### 每个代理（CLI 覆盖）
 
-为代理设置显式的认证配置文件顺序覆盖（存储在该代理的 `auth-state.json` 中）：
+为代理设置显式的身份验证配置文件顺序覆盖（存储在该代理的 `auth-state.json` 中）：
 
 ```bash
 openclaw models auth order get --provider anthropic
@@ -176,29 +189,28 @@ openclaw models auth order set --provider anthropic anthropic:default
 openclaw models auth order clear --provider anthropic
 ```
 
-使用 `--agent <id>` 来指定特定的代理；省略它以使用配置的默认代理。
-当您调试排序问题时，`openclaw models status --probe` 会将省略的
+使用 `--agent <id>` 来定位特定的代理；省略它以使用配置的默认代理。
+当您调试顺序问题时，`openclaw models status --probe` 会将省略的
 存储配置文件显示为 `excluded_by_auth_order`，而不是静默跳过它们。
-当您调试冷却问题时，请记住速率限制冷却可能绑定到
-一个模型 ID，而不是整个提供商配置文件。
+当您调试冷却问题时，请记住速率限制冷却可以绑定到一个
+模型 ID，而不是整个提供商配置文件。
 
 ## 故障排除
 
 ### "未找到凭据"
 
-如果缺少 Anthropic 配置文件，请在 **gateway host** 上配置 Anthropic API 密钥或设置 Anthropic setup-token 路径，然后重新检查：
+如果 Anthropic 配置文件丢失，请在 **网关主机** 上配置 Anthropic API 密钥或设置 Anthropic 安装令牌路径，然后重新检查：
 
 ```bash
 openclaw models status
 ```
 
-### 令牌即将过期/已过期
+### 令牌正在过期/已过期
 
-运行 `openclaw models status` 以确认哪个配置文件即将过期。如果
-Anthropic 令牌配置文件缺失或已过期，请通过 setup-token 刷新该设置，或迁移到 Anthropic API 密钥。
+运行 `openclaw models status` 以确认哪个配置文件正在过期。如果 Anthropic 令牌配置文件丢失或已过期，请通过安装令牌刷新该设置或迁移到 Anthropic API 密钥。
 
 ## 相关
 
-- [Secrets management](/zh/gateway/secrets)
-- [Remote access](/zh/gateway/remote)
-- [Auth storage](/zh/concepts/oauth)
+- [机密管理](/zh/gateway/secrets)
+- [远程访问](/zh/gateway/remote)
+- [身份验证存储](/zh/concepts/oauth)

@@ -7,7 +7,7 @@ read_when:
   - You are configuring Whisper audio transcription on Groq
 ---
 
-[Groq](https://groq.com) fournit une inférence ultra-rapide sur des modèles à poids ouverts (Llama, Gemma, Kimi, Qwen, GPT OSS, etc.) grâce à un matériel LPU personnalisé. OpenClaw inclut un plugin Groq intégré qui enregistre à la fois un fournisseur de chat compatible OpenAI et un fournisseur de compréhension de médias audio.
+[Groq](https://groq.com) fournit une inférence ultra-rapide sur des modèles à poids ouverts (Llama, Gemma, Kimi, Qwen, GPT OSS, et bien d'autres) grâce à un matériel LPU personnalisé. OpenClaw inclut un plugin Groq intégré qui enregistre à la fois un fournisseur de chat compatible OpenAI et un fournisseur de compréhension de médias audio.
 
 | Propriété                                   | Valeur                                   |
 | ------------------------------------------- | ---------------------------------------- |
@@ -73,7 +73,7 @@ export GROQ_API_KEY=gsk_...
 
 ## Catalogue intégré
 
-OpenClaw est fourni avec un catalogue Groq basé sur un manifeste, contenant des entrées avec et sans raisonnement. Exécutez `openclaw models list --provider groq` pour voir les lignes incluses dans votre version installée, ou consultez [console.groq.com/docs/models](https://console.groq.com/docs/models) pour la liste officielle de Groq.
+OpenClaw fournit un catalogue Groq basé sur un manifeste, contenant des entrées avec et sans raisonnement. Exécutez `openclaw models list --provider groq` pour voir les lignes incluses dans votre version installée, ou consultez [console.groq.com/docs/models](https://console.groq.com/docs/models) pour la liste officielle de Groq.
 
 | Réf modèle                                           | Nom                           | Raisonnement | Entrée        | Contexte |
 | ---------------------------------------------------- | ----------------------------- | ------------ | ------------- | -------- |
@@ -96,7 +96,7 @@ OpenClaw est fourni avec un catalogue Groq basé sur un manifeste, contenant des
 | `groq/groq/compound`                                 | Compound                      | oui          | texte         | 131 072  |
 | `groq/groq/compound-mini`                            | Compound Mini                 | oui          | texte         | 131 072  |
 
-<Tip>Le catalogue évolue avec chaque version d'OpenClaw. `openclaw models list --provider groq` affiche les lignes connues de votre version installée ; vérifiez auprès de [console.groq.com/docs/models](https://console.groq.com/docs/models) pour les modèles nouvellement ajoutés ou obsolètes.</Tip>
+<Tip>Le catalogue évolue avec chaque version de OpenClaw. `openclaw models list --provider groq` affiche les lignes connues de votre version installée ; vérifiez auprès de [console.groq.com/docs/models](https://console.groq.com/docs/models) pour les modèles nouvellement ajoutés ou obsolètes.</Tip>
 
 ## Modèles de raisonnement
 
@@ -106,7 +106,7 @@ OpenClaw mappe ses niveaux partagés `/think` aux valeurs `reasoning_effort` sp�
 - Pour les modèles de raisonnement Groq GPT OSS (`openai/gpt-oss-*`), OpenClaw envoie `low`, `medium` ou `high` en fonction du niveau `/think`. La réflexion désactivée omet `reasoning_effort` car ces modèles ne prennent pas en charge une valeur désactivée.
 - DeepSeek R1 Distill, Qwen QwQ et Compound utilisent la surface de raisonnement native de Groq ; `/think` contrôle la visibilité mais le modèle raisonne toujours.
 
-Voir [Modes de réflexion](/fr/tools/thinking) pour les niveaux partagés `/think` et comment OpenClaw les traduit pour chaque provider.
+Voir [Modes de pensée](/fr/tools/thinking) pour les niveaux partagés de `/think` et comment OpenClaw les traduit pour chaque fournisseur.
 
 ## Transcription audio
 
@@ -139,13 +139,13 @@ Pour faire de Groq le backend audio par défaut :
     Si le Gateway s'exécute en tant que service géré (launchd, systemd, Docker), `GROQ_API_KEY` doit être visible pour ce processus — et pas seulement pour votre shell interactif.
 
     <Warning>
-      Une clé résidant uniquement dans `~/.profile` n'aidera pas un démon launchd ou systemd à moins que cet environnement ne soit également importé là-bas. Définissez la clé dans `~/.openclaw/.env` ou via `env.shellEnv` pour la rendre lisible depuis le processus de passerelle.
+      Une clé exportée uniquement dans un shell interactif n'aidera pas un démon launchd ou systemd, sauf si cet environnement est également importé là-bas. Définissez la clé dans `~/.openclaw/.env` ou via `env.shellEnv` pour la rendre lisible depuis le processus de la passerelle.
     </Warning>
 
   </Accordion>
 
-  <Accordion title="Identifiants de modèle Groq personnalisés">
-    OpenClaw accepte n'importe quel identifiant de modèle Groq lors de l'exécution. Utilisez l'identifiant exact affiché par Groq et préfixez-le avec `groq/`. Le catalogue inclus couvre les cas courants ; les identifiants non répertoriés retombent sur le modèle compatible OpenAI par défaut.
+  <Accordion title="Custom Groq model ids"OpenClaw>
+    OpenClaw accepte n'importe quel identifiant de modèle Groq lors de l'exécution. Utilisez l'identifiant exact affiché par Groq et préfixez-le avec `groq/`. Le catalogue inclus couvre les cas courants ; les identifiants non catalogués passent par le modèle compatible OpenAI par défaut.
 
     ```json5
     {

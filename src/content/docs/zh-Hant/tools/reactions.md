@@ -48,8 +48,9 @@ Agent 可以使用 `message`
   </Accordion>
 
   <Accordion title="WhatsApp">
-    - 空的 `emoji` 會移除機器人的反應。
-    - `remove: true` 在內部會對應到空表情符號（在工具呼叫中仍需要 `emoji`）。
+    - 空的 `emoji` 會移除機器人回應。
+    - `remove: true` 在內部會映射為空的 emoji（在工具呼叫中仍然需要 `emoji`）。
+    - WhatsApp 每則訊息只有一個機器人回應位置；狀態回應更新會替換該位置，而不是堆疊多個 emoji。
 
   </Accordion>
 

@@ -97,8 +97,8 @@ El Gateway anuncia pequeñas sugerencias no secretas para facilitar los flujos d
 - `canvasPort=<port>` (solo cuando el host del lienzo está habilitado; actualmente es el mismo que `gatewayPort`)
 - `transport=gateway`
 - `tailnetDns=<magicdns>` (solo modo mDNS completo, sugerencia opcional cuando Tailnet está disponible)
-- `sshPort=<port>` (solo modo mDNS completo; DNS-SD de área amplia puede omitirlo)
-- `cliPath=<path>` (solo modo mDNS completo; DNS-SD de área amplia aún lo escribe como una sugerencia de instalación remota)
+- `sshPort=<port>` (solo modo completo; omitido en modos mínimo y desactivado)
+- `cliPath=<path>` (solo modo completo; omitido en modos mínimo y desactivado)
 
 Notas de seguridad:
 
@@ -163,7 +163,12 @@ Habilite Bonjour explícitamente cuando el autodescubrimiento en la misma LAN se
 openclaw plugins enable bonjour
 ```
 
-Cuando está habilitado, Bonjour usa `discovery.mdns.mode` para decidir cuántos metadatos TXT publicar. El modo predeterminado es `minimal`; use `full` solo cuando los clientes locales necesiten sugerencias `cliPath` o `sshPort`, y use `off` para suprimir el multicast de LAN sin cambiar la habilitación del complemento.
+Cuando está activado, Bonjour usa `discovery.mdns.mode` para decidir cuántos metadatos TXT
+publicar. El mismo modo controla las pistas TXT opcionales en los registros DNS-SD de área amplia.
+El modo predeterminado es `minimal`; use `full` solo cuando los clientes necesiten pistas `cliPath` o
+`sshPort`. Use `off` para suprimir el multicast de LAN sin cambiar la activación
+complementaria; el DNS-SD de área amplia aún puede publicar la baliza mínima de Gateway cuando
+`discovery.wideArea.enabled` es verdadero.
 
 ## Cuándo deshabilitar Bonjour
 
@@ -188,23 +193,23 @@ openclaw plugins disable bonjour
 
 ## Problemas de Docker
 
-El complemento Bonjour incluido deshabilita automáticamente la publicidad multidifusión de LAN en los contenedores detectados
-cuando `OPENCLAW_DISABLE_BONJOUR` no está configurado. Las redes de puente de Docker
-generalmente no reenvían la multidifusión mDNS (`224.0.0.251:5353`) entre el contenedor
+El complemento Bonjour incluido desactiva automáticamente la publicidad por multicast de LAN en los contenedores detectados
+cuando `OPENCLAW_DISABLE_BONJOUR` no está establecido. Las redes puente de Docker
+generalmente no reenvían el multicast mDNS (`224.0.0.251:5353`) entre el contenedor
 y la LAN, por lo que la publicidad desde el contenedor rara vez hace que el descubrimiento funcione.
 
 Problemas importantes:
 
 - Bonjour se inicia automáticamente en los hosts de macOS y es opcional en otros lugares. Dejarlo
   deshabilitado no detiene el Gateway; solo omite la publicidad multidifusión de LAN.
-- Deshabilitar Bonjour no cambia `gateway.bind`; Docker todavía tiene por defecto
-  `OPENCLAW_GATEWAY_BIND=lan` para que el puerto del host publicado pueda funcionar.
+- Desactivar Bonjour no cambia `gateway.bind`; Docker aún usa por defecto
+  `OPENCLAW_GATEWAY_BIND=lan` para que el puerto host publicado pueda funcionar.
 - Deshabilitar Bonjour no deshabilita DNS-SD de área amplia. Use el descubrimiento de área amplia
   o Tailnet cuando el Gateway y el nodo no estén en la misma LAN.
 - Reutilizar el mismo `OPENCLAW_CONFIG_DIR` fuera de Docker no persiste la
-  política de deshabilitación automática del contenedor.
-- Configure `OPENCLAW_DISABLE_BONJOUR=0` solo para redes de host, macvlan u otra
-  red donde se sepa que pasa la multidifusión mDNS; configúrelo en `1` para forzar la desactivación.
+  política de desactivación automática del contenedor.
+- Establezca `OPENCLAW_DISABLE_BONJOUR=0` solo para redes de host, macvlan u otra
+  red donde se sepa que pasa el multicast mDNS; establézcalo en `1` para forzar la desactivación.
 
 ## Solución de problemas de Bonjour deshabilitado
 
@@ -228,16 +233,15 @@ Si un nodo ya no descubre automáticamente el Gateway después de la configuraci
    - Clientes entre redes: MagicDNS de Tailnet, IP de Tailnet, túnel SSH o
      DNS-SD de área amplia
 
-4. Si habilitó deliberadamente el complemento Bonjour en Docker y forzó la publicidad
-   con `OPENCLAW_DISABLE_BONJOUR=0`, pruebe la multidifusión desde el host:
+4. Si activó deliberadamente el complemento Bonjour en Docker y forzó la publicidad
+   con `OPENCLAW_DISABLE_BONJOUR=0`, pruebe el multicast desde el host:
 
    ```bash
    dns-sd -B _openclaw-gw._tcp local.
    ```
 
-   Si la exploración está vacía o los registros del Gateway muestran cancelaciones repetidas del perro guardián
-   ciao, restaure `OPENCLAW_DISABLE_BONJOUR=1` y use una ruta directa o
-   de Tailnet.
+   Si la exploración está vacía o los registros de Gateway muestran cancelaciones repetidas del perro guardián
+   ciao, restaure `OPENCLAW_DISABLE_BONJOUR=1` y use una ruta directa o de Tailnet.
 
 ## Modos de falla comunes
 
@@ -247,36 +251,35 @@ Si un nodo ya no descubre automáticamente el Gateway después de la configuraci
   puentes de contenedores, WSL, o cambios en la interfaz pueden dejar al anunciador ciao en un
   estado de no anuncio. OpenClaw reintent unas pocas veces y luego deshabilita Bonjour
   para el proceso Gateway actual en lugar de reiniciar el anunciador para siempre.
-- **Red de puente Docker**: Bonjour se deshabilita automticamente en contenedores detectados.
-  Establece `OPENCLAW_DISABLE_BONJOUR=0` solo para host, macvlan, u otra
+- **Redes puente de Docker**: Bonjour se desactiva automáticamente en los contenedores detectados.
+  Establezca `OPENCLAW_DISABLE_BONJOUR=0` solo para host, macvlan u otra
   red compatible con mDNS.
 - **Suspensi / cambios de interfaz**: macOS puede descartar temporalmente resultados mDNS; reintentar.
 - **La exploracin funciona pero la resolucin falla**: mantn los nombres de mquina simples (evita emojis o
   puntuacin), luego reinicia el Gateway. El nombre de la instancia del servicio deriva del
   nombre del host, por lo que nombres demasiado complejos pueden confundir a algunos resolvedores.
 
-## Nombres de instancia escapados (`\032`)
+## Nombres de instancia con escape (`\032`)
 
-Bonjour/DNS-SD a menudo escapa bytes en los nombres de instancia de servicio como decimales `\DDD`
-secuencias (e.g. los espacios se convierten en `\032`).
+Bonjour/DNS-SD a menudo escapa bytes en los nombres de las instancias de servicio como secuencias decimales `\DDD` (por ejemplo, los espacios se convierten en `\032`).
 
 - Esto es normal a nivel de protocolo.
-- Las interfaces de usuario deberan decodificar para mostrar (iOS usa `BonjourEscapes.decode`).
+- Las interfaces de usuario deben decodificar para su visualización (iOS usa `BonjourEscapes.decode`).
 
 ## Habilitar / deshabilitar / configuracin
 
 - Los hosts macOS inician automticamente el complemento de descubrimiento LAN incluido por defecto.
-- `openclaw plugins enable bonjour` habilita el complemento de descubrimiento LAN incluido en hosts donde no est habilitado por defecto.
-- `openclaw plugins disable bonjour` deshabilita la publicidad de multicast LAN deshabilitando el complemento incluido.
-- `OPENCLAW_DISABLE_BONJOUR=1` deshabilita la publicidad de multicast LAN sin cambiar la configuracin del complemento; los valores verdaderos aceptados son `1`, `true`, `yes` y `on` (legado: `OPENCLAW_DISABLE_BONJOUR`).
-- `OPENCLAW_DISABLE_BONJOUR=0` fuerza la activacin de la publicidad de multicast LAN, incluso dentro de contenedores detectados; los valores falsos aceptados son `0`, `false`, `no` y `off`.
-- Cuando el complemento Bonjour está habilitado y `OPENCLAW_DISABLE_BONJOUR` no está establecido, Bonjour anuncia en hosts normales y se deshabilita automáticamente dentro de contenedores detectados.
+- `openclaw plugins enable bonjour` habilita el complemento de descubrimiento de LAN incluido en los hosts donde no está habilitado de forma predeterminada.
+- `openclaw plugins disable bonjour` deshabilita la publicidad multidifusión de LAN al deshabilitar el complemento incluido.
+- `OPENCLAW_DISABLE_BONJOUR=1` deshabilita la publicidad multidifusión de LAN sin cambiar la configuración del complemento; los valores verdaderos aceptados son `1`, `true`, `yes` y `on` (legado: `OPENCLAW_DISABLE_BONJOUR`).
+- `OPENCLAW_DISABLE_BONJOUR=0` fuerza la activación de la publicidad multidifusión de LAN, incluso dentro de contenedores detectados; los valores falsos aceptados son `0`, `false`, `no` y `off`.
+- Cuando el complemento Bonjour está habilitado y `OPENCLAW_DISABLE_BONJOUR` no está configurado, Bonjour anuncia en hosts normales y se deshabilita automáticamente dentro de contenedores detectados.
 - `gateway.bind` en `~/.openclaw/openclaw.json` controla el modo de enlace del Gateway.
-- `OPENCLAW_SSH_PORT` anula el puerto SSH cuando se anuncia `sshPort` (heredado: `OPENCLAW_SSH_PORT`).
-- `OPENCLAW_TAILNET_DNS` publica un consejo de MagicDNS en TXT cuando el modo completo mDNS está habilitado (heredado: `OPENCLAW_TAILNET_DNS`).
-- `OPENCLAW_CLI_PATH` anula la ruta del CLI anunciada (heredado: `OPENCLAW_CLI_PATH`).
+- `OPENCLAW_SSH_PORT` anula el puerto SSH cuando se anuncia `sshPort` (legado: `OPENCLAW_SSH_PORT`).
+- `OPENCLAW_TAILNET_DNS` publica una pista de MagicDNS en TXT cuando el modo completo mDNS está habilitado (legado: `OPENCLAW_TAILNET_DNS`).
+- `OPENCLAW_CLI_PATH` anula la ruta CLI anunciada (legado: `OPENCLAW_CLI_PATH`).
 
 ## Documentos relacionados
 
-- Política de descubrimiento y selección de transporte: [Discovery](/es/gateway/discovery)
-- Emparejamiento de nodos + aprobaciones: [Gateway pairing](/es/gateway/pairing)
+- Política de descubrimiento y selección de transporte: [Descubrimiento](/es/gateway/discovery)
+- Emparejamiento de nodos + aprobaciones: [Emparejamiento de Gateway](/es/gateway/pairing)

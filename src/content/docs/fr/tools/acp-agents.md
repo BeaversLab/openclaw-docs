@@ -59,11 +59,11 @@ un backend indisponible.
 <AccordionGroup>
   <Accordion title="Pièges de la première exécution">
     - Si `plugins.allow` est défini, il s'agit d'un inventaire de plugins restrictif et **doit** inclure `acpx` ; sinon, le backend ACP installé est intentionnellement bloqué et `/acp doctor` signale l'entrée manquante dans la liste d'autorisation.
-    - L'adaptateur ACP Codex est mis en place avec le plugin `acpx` et lancé localement si possible.
-    - L'ACP Codex s'exécute avec un `CODEX_HOME` isolé ; OpenClaw ne copie que les entrées de projet approuvées depuis la configuration Codex hôte et approuve l'espace de travail actif, en laissant l'authentification, les notifications et les crochets (hooks) sur la configuration hôte.
+    - L'adaptateur Codex ACP est mis en place avec le plugin `acpx` et lancé localement lorsque cela est possible.
+    - Codex ACP s'exécute avec un `CODEX_HOME` isolé ; OpenClaw copie les entrées de projet approuvées ainsi que la configuration de routage model/provider sécurisée à partir de la configuration Codex de l'hôte, tandis que l'authentification, les notifications et les hooks restent sur la configuration de l'hôte.
     - D'autres adaptateurs de harnais cibles peuvent toujours être récupérés à la demande avec `npx` la première fois que vous les utilisez.
     - L'authentification du fournisseur doit toujours exister sur l'hôte pour ce harnais.
-    - Si l'hôte n'a pas accès à npm ou au réseau, les récupérations de l'adaptateur lors de la première exécution échouent jusqu'à ce que les caches soient préchauffés ou que l'adaptateur soit installé d'une autre manière.
+    - Si l'hôte n'a pas d'accès npm ou réseau, les récupérations de l'adaptateur lors de la première exécution échouent jusqu'à ce que les caches soient préchauffés ou que l'adaptateur soit installé d'une autre manière.
 
   </Accordion>
   <Accordion title="Prérequis d'exécution">

@@ -79,32 +79,39 @@ title: "Skills 配置"
 - 内置技能根目录始终包括 `~/.openclaw/skills`、`~/.agents/skills`、`<workspace>/.agents/skills` 和 `<workspace>/skills`。
 - `allowBundled`：仅适用于 **bundled**（内置）skills 的可选允许列表。设置后，只有列表中的内置 skills 符合条件（托管、agent 和工作区 skills 不受影响）。
 - `load.extraDirs`：要扫描的其他技能目录（优先级最低）。
-- `load.allowSymlinkTargets`：受信任的真实目标目录，即使符号链接位于该目标根目录之外，符号链接的技能文件夹也可以解析到这些目录。将此用于有意的同级存储库布局，例如 `~/.agents/skills/manager -> ~/Projects/manager/skills`。
-- `load.watch`：监控技能文件夹并刷新技能快照（默认值：true）。
-- `load.watchDebounceMs`：技能监控器事件的防抖时间，以毫秒为单位（默认值：250）。
-- `install.preferBrew`：在可用时优先使用 brew 安装程序（默认值：true）。
-- `install.nodeManager`：node 安装程序偏好（`npm` | `pnpm` | `yarn` | `bun`，默认值：npm）。
-  这仅影响**技能安装**；Gateway(网关) 运行时仍应为 Node
+- `load.allowSymlinkTargets`：受信任的真实目标目录，符号链接的
+  workspace、project-agent 或 extra-dir 技能文件夹可能会解析到这些目录，
+  即使符号链接位于该目标根目录之外。将其用于有意的
+  同级仓库布局，例如
+  `<workspace>/skills/manager -> ~/Projects/manager/skills`。托管的
+  `~/.openclaw/skills` 和个人 `~/.agents/skills` 根目录默认情况下
+  可以遵循来自本地技能管理器的技能目录符号链接，但每个
+  `SKILL.md` 仍必须在其自己的技能目录内解析。
+- `load.watch`：监视技能文件夹并刷新技能快照（默认值：true）。
+- `load.watchDebounceMs`：技能监视器事件的防抖时间，以毫秒为单位（默认值：250）。
+- `install.preferBrew`：在可用时首选 brew 安装程序（默认值：true）。
+- `install.nodeManager`：节点安装程序首选项（`npm` | `pnpm` | `yarn` | `bun`，默认值：npm）。
+  这仅影响 **技能安装**；Gateway(网关) 运行时仍应为 Node
   （对于 Bun/WhatsApp，不建议使用 Telegram）。
   - `openclaw setup --node-manager` 范围更窄，目前接受 `npm`、
     `pnpm` 或 `bun`。如果您
     想要由 Yarn 支持的技能安装，请手动设置 `skills.install.nodeManager: "yarn"`。
 - `install.allowUploadedArchives`：允许受信任的 `operator.admin` Gateway(网关)
-  客户端安装通过 `skills.upload.*` 暂存的私有 zip 归档
-  （默认值：false）。这仅启用上传归档路径；普通的 ClawHub
+  客户端安装通过 `skills.upload.*` 暂存的私有 zip 档案
+  （默认值：false）。这仅启用上传的档案路径；普通的 ClawHub
   安装不需要它。
-- `entries.<skillKey>`：针对每个技能的覆盖设置。
+- `entries.<skillKey>`：按技能覆盖设置。
 - `agents.defaults.skills`：可选的默认技能允许列表，由省略
   `agents.list[].skills` 的代理继承。
-- `agents.list[].skills`：可选的针对每个代理的最终技能允许列表；显式
+- `agents.list[].skills`：可选的按代理最终技能允许列表；显式
   列表将替换继承的默认值，而不是合并。
 
 ## 符号链接的兄弟仓库
 
-默认情况下，每个技能根目录都是一个包含边界。如果 `~/.agents/skills`
-下的技能文件夹是指向 `~/.agents/skills` 外部的符号链接，
-OpenClaw 将跳过它并记录 `Skipping escaped skill path outside its configured
-root`。
+默认情况下，workspace、project-agent、extra-dir 和 bundled skill 根目录是
+包含边界。如果 `<workspace>/skills` 下的技能文件夹是
+解析到 `<workspace>/skills` 之外的符号链接，OpenClaw 将跳过它并记录
+`Skipping escaped skill path outside its configured root`。
 
 保留符号链接布局并仅允许受信任的目标根目录：
 
@@ -119,32 +126,45 @@ root`。
 }
 ```
 
-使用此配置，在解析 realpath 后，诸如 `~/.agents/skills/manager -> ~/Projects/manager/skills` 之类的符号链接会被接受。`extraDirs` 也会直接扫描同级代码库，而 `allowSymlinkTargets` 则为现有的 agent-skill 布局保留符号链接路径。保持目标条目范围狭窄；除非该根目录下的每个技能树都受信任，否则不要指向 `~` 或 `~/Projects` 等宽泛的根目录。
+使用此配置后，诸如
+`<workspace>/skills/manager -> ~/Projects/manager/skills` 之类的符号链接将在
+realpath 解析后被接受。`extraDirs` 也会直接扫描同级仓库，而
+`allowSymlinkTargets` 会为现有 workspace-skill 布局保留符号链接路径。托管 `~/.openclaw/skills` 和个人 `~/.agents/skills`
+目录已接受技能目录符号链接，因为这些根目录是
+用户拥有的本地 skill-manager 界面；每个技能的 `SKILL.md` 包含仍然
+适用。请保持目标条目狭窄；不要指向 `~` 或
+`~/Projects` 等广泛根目录，除非该根目录下的每个技能树都是受信任的。
 
 逐个技能字段：
 
-- `enabled`：设置 `false` 以禁用某个技能，即使它已被打包/安装。
+- `enabled`：设置 `false` 以禁用技能，即使它已被打包/安装。
 - `env`：为代理运行注入的环境变量（仅当尚未设置时）。
-- `apiKey`：针对声明了主要环境变量的技能的可选便捷设置。支持纯文本字符串或 SecretRef 对象（`{ source, provider, id }`）。
+- `apiKey`：对于声明主环境变量的技能的可选便捷方式。
+  支持纯文本字符串或 SecretRef 对象 (`{ source, provider, id }`)。
 
 ## 注意事项
 
-- `entries` 下的键默认映射到技能名称。如果技能定义了 `metadata.openclaw.skillKey`，请改用该键。
-- 加载优先级为 `<workspace>/skills` → `<workspace>/.agents/skills` → `~/.agents/skills` → `~/.openclaw/skills` → 打包的技能（bundled skills）→ `skills.load.extraDirs`。
+- 默认情况下，`entries` 下的键映射到技能名称。如果技能定义了
+  `metadata.openclaw.skillKey`，请改用该键。
+- 加载优先级为 `<workspace>/skills` → `<workspace>/.agents/skills` →
+  `~/.agents/skills` → `~/.openclaw/skills` → bundled skills →
+  `skills.load.extraDirs`。
 - 当启用监视器时，对技能的更改将在下一次代理轮次中被获取。
 
 ### 沙箱隔离技能和环境变量
 
-当会话处于**沙箱隔离**状态时，技能进程在配置的沙箱后端内运行。沙箱**不**继承主机 `process.env`。
+当会话处于 **沙箱隔离** 状态时，技能进程在配置的沙箱后端内运行。沙箱 **不会** 继承主机 `process.env`。
 
 <Warning>
-  全局 `env` 和 `skills.entries.<skill>.env`/`apiKey` 仅适用于**主机**运行。在沙箱内部它们无效，因此依赖 `GEMINI_API_KEY` 的技能将失败并提示 `apiKey not configured`，除非单独向沙箱提供该变量。
+  全局 `env` 和 `skills.entries.<skill>.env`/`apiKey` 仅适用于 **host** 运行。在沙盒中它们无效，因此依赖 `GEMINI_API_KEY` 的技能将因 `apiKey not configured` 而失败，除非单独为沙盒提供该变量。
 </Warning>
 
 使用以下方法之一：
 
-- 对于 Docker 后端使用 `agents.defaults.sandbox.docker.env`（或针对每个代理使用 `agents.list[].sandbox.docker.env`）。
+- `agents.defaults.sandbox.docker.env` 用于 Docker 后端（或每个 `agents.list[].sandbox.docker.env`）。
 - 将环境变量嵌入到您的自定义沙箱镜像或远程沙箱环境中。
+
+对于 Docker 沙盒，配置的 `sandbox.docker.env` 值将成为显式的容器环境变量。拥有 Docker 守护进程访问权限的用户可以通过 Docker 元数据检查它们，因此当这种暴露不可接受时，请使用挂载的机密文件、自定义镜像或其他传递路径。
 
 ## 相关
 
@@ -152,13 +172,13 @@ root`。
   <Card title="Skills" href="/zh/tools/skills" icon="puzzle-piece">
     什么是 Skills 以及它们如何加载。
   </Card>
-  <Card title="创建 Skills" href="/zh/tools/creating-skills" icon="hammer">
+  <Card title="Creating skills" href="/zh/tools/creating-skills" icon="hammer">
     编写自定义技能包。
   </Card>
-  <Card title="斜杠命令" href="/zh/tools/slash-commands" icon="terminal">
+  <Card title="Slash commands" href="/zh/tools/slash-commands" icon="terminal">
     原生命令目录和聊天指令。
   </Card>
-  <Card title="配置参考" href="/zh/gateway/configuration-reference" icon="gear">
-    完整的 `skills` 和 `agents.skills` 架构。
+  <Card title="Configuration reference" href="/zh/gateway/configuration-reference" icon="gear">
+    完整的 `skills` 和 `agents.skills` 模式。
   </Card>
 </CardGroup>

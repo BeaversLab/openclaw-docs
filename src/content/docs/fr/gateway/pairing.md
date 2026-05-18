@@ -152,7 +152,7 @@ La suppression d'un appareil nettoie également toutes les demandes d'appariemen
 
 ## Localité et en-têtes transférés
 
-L'appariement Gateway traite une connexion comme une boucle locale (loopback) uniquement lorsque la socket brute et toutes les preuves de proxy en amont sont d'accord. Si une demande arrive sur une boucle locale mais transporte des en-têtes `X-Forwarded-For` / `X-Forwarded-Host` / `X-Forwarded-Proto` qui pointent vers une origine non locale, cette preuve d'en-tête transféré disqualifie la revendication de localité de boucle locale. Le chemin d'appariement nécessite alors une approbation explicite au lieu de traiter silencieusement la demande comme une connexion sur le même hôte. Voir [Trusted Proxy Auth](/fr/gateway/trusted-proxy-auth) pour la règle équivalente sur l'authentification de l'opérateur.
+L'appairage Gateway considère une connexion comme boucle locale (loopback) uniquement lorsque le socket brut et toute preuve de proxy en amont sont d'accord. Si une demande arrive en boucle locale mais transporte `Forwarded`, tout `X-Forwarded-*`, ou une preuve d'en-tête `X-Real-IP`, cette preuve d'en-tête transféré (forwarded-header) invalide la revendication de localité de boucle locale. Le chemin d'appariement nécessite alors une approbation explicite au lieu de traiter silencieusement la demande comme une connexion sur le même hôte. Voir [Trusted Proxy Auth](/fr/gateway/trusted-proxy-auth) pour la règle équivalente sur l'authentification de l'opérateur.
 
 ## Stockage (local, privé)
 

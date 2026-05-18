@@ -857,9 +857,9 @@ OpenClaw 會將 Teams 投票以 Adaptive Cards 形式發送（沒有原生的 Te
 
 ## 簡報卡片
 
-使用 `message` 工具或 CLI 傳送語意展示負載給 Teams 使用者或對話。OpenClaw 會根據通用展示合約將其呈現為 Teams Adaptive Cards。
+使用 `message` 工具、CLI 或正常回覆傳遞，將語意呈現載荷傳送給 Teams 使用者或對話。OpenClaw 會根據通用呈現合約將其轉譯為 Teams Adaptive Cards。
 
-`presentation` 參數接受語意區塊。當提供 `presentation` 時，訊息文字是選用的。
+`presentation` 參數接受語意區塊。當提供 `presentation` 時，訊息文字是可選的。按鈕會轉譯為 Adaptive Card 提交或 URL 動作。選單在 Teams 轉譯器中尚不支援，因此 OpenClaw 會在傳遞前將其降級為可讀文字。
 
 **Agent 工具：**
 

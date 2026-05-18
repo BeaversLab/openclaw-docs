@@ -1,162 +1,64 @@
 ---
-summary: "社群維護的 OpenClaw 外掛程式：瀏覽、安裝並提交您自己的"
+summary: "尋找並發布社群維護的 OpenClaw 外掛"
 read_when:
   - You want to find third-party OpenClaw plugins
-  - You want to publish or list your own plugin
-title: "社群外掛程式"
+  - You want to publish or list your own plugin on ClawHub
+title: "社群外掛"
+doc-schema-version: 1
 ---
 
-社群外掛是第三方套件，透過新頻道、工具、提供者或其他功能來擴展 OpenClaw。它們由社群建構與維護，通常發布在 [ClawHub](/zh-Hant/clawhub) 上，並可透過單一指令安裝。npm 仍是純套件規格的預設啟動來源，同時 ClawHub pack 安裝也正在推廣中。
+社群外掛是透過通道、工具、提供者、掛鉤或其他功能來擴充 OpenClaw 的第三方套件。請使用 [ClawHub](/zh-Hant/clawhub) 作為公開社群外掛的主要探索平台。
 
-ClawHub 是社群外掛程式的官方探索平台。請勿僅為了在此處加入您的插件以提升可見性而開啟純文件的 PR；請改為將其發佈至 ClawHub。
+## 尋找外掛
+
+從 CLI 搜尋 ClawHub：
+
+```bash
+openclaw plugins search "calendar"
+```
+
+安裝具有明確來源前綴的 ClawHub 外掛：
 
 ```bash
 openclaw plugins install clawhub:<package-name>
 ```
 
-對於 託管在 npm 的套件，請使用 `openclaw plugins install <package-name>`。
-
-## 列出的外掛程式
-
-### Apify
-
-使用超過 20,000 個現成的擷取器，從任何網站擷取資料。讓您的代理程式僅透過指令，即可從 Instagram、Facebook、TikTok、YouTube、Google Maps、Google 搜尋、電商網站等提取資料。
-
-- **npm:** `@apify/apify-openclaw-plugin`
-- **repo:** [github.com/apify/apify-openclaw-plugin](https://github.com/apify/apify-openclaw-plugin)
+在啟動切換期間，npm 仍是支援的直接安裝路徑：
 
 ```bash
-openclaw plugins install @apify/apify-openclaw-plugin
+openclaw plugins install npm:<package-name>
 ```
 
-### Codex App Server Bridge
+使用 [管理外掛](/zh-Hant/plugins/manage-plugins) 查看常見的安裝、更新、檢查和解除安裝範例。使用 [`openclaw plugins`](/zh-Hant/cli/plugins) 取得完整的命令參考和來源選擇規則。
 
-用於 Codex App Server 對話的獨立 OpenClaw 橋接器。將聊天綁定到 Codex 主題串，使用純文字與其交談，並透過聊天原生指令控制它以進行恢復、規劃、審查、模型選擇、壓縮等操作。
+## 發布外掛
 
-- **npm:** `openclaw-codex-app-server`
-- **repo:** [github.com/pwrdrvr/openclaw-codex-app-server](https://github.com/pwrdrvr/openclaw-codex-app-server)
+當您希望 OpenClaw 使用者探索並安裝外掛時，請在 ClawHub 上發布公開的社群外掛。ClawHub 掌管即時套件列表、發布歷史、掃描狀態和安裝提示；文件並不維護靜態的第三方外掛目錄。
 
 ```bash
-openclaw plugins install openclaw-codex-app-server
+clawhub package publish your-org/your-plugin --dry-run
+clawhub package publish your-org/your-plugin
 ```
 
-### DingTalk
+發布前，請確保外掛具有套件中繼資料、外掛資訊清單、設定文件，以及明確的維護負責人。ClawHub 會在建立發布版本前驗證擁有者範圍、套件名稱、版本、檔案限制和來源中繼資料，然後在審查和驗證完成之前，將新發布版本對一般的安裝和下載介面保持隱藏。
 
-使用串流模式的企業機器人整合。透過任何 DingTalk 用戶端支援文字、圖片和檔案訊息。
+發布前請使用此檢查清單：
 
-- **npm:** `@largezhou/ddingtalk`
-- **repo:** [github.com/largezhou/openclaw-dingtalk](https://github.com/largezhou/openclaw-dingtalk)
+| 需求               | 原因                                               |
+| ------------------ | -------------------------------------------------- |
+| 發布於 ClawHub     | 使用者需要 `openclaw plugins install` 提示才能運作 |
+| 公開 GitHub 儲存庫 | 來源審查、問題追蹤、透明度                         |
+| 設定與使用文件     | 使用者需要知道如何進行設定                         |
+| 積極維護           | 最近的更新或妥善處理問題                           |
 
-```bash
-openclaw plugins install @largezhou/ddingtalk
-```
+使用這些頁面以了解完整的發布合約：
 
-### Lossless Claw (LCM)
-
-OpenClaw 的無損語境管理外掛程式。基於 DAG 的對話摘要與增量壓縮 — 在減少 Token 使用量的同時，保持完整的語境保真度。
-
-- **npm:** `@martian-engineering/lossless-claw`
-- **repo:** [github.com/Martian-Engineering/lossless-claw](https://github.com/Martian-Engineering/lossless-claw)
-
-```bash
-openclaw plugins install @martian-engineering/lossless-claw
-```
-
-### Opik
-
-將代理程式追蹤匯出至 Opik 的官方外掛程式。監控代理程式的行為、成本、Token、錯誤等。
-
-- **npm:** `@opik/opik-openclaw`
-- **repo:** [github.com/comet-ml/opik-openclaw](https://github.com/comet-ml/opik-openclaw)
-
-```bash
-openclaw plugins install @opik/opik-openclaw
-```
-
-### Prometheus Avatar
-
-為您的 OpenClaw 代理賦予即時口型同步、表情表達和文字轉語音功能的 Live2D 虛擬形象。包含用於生成 AI 資產的創作者工具以及一鍵部署到 Prometheus Marketplace 的功能。目前處於 Alpha 階段。
-
-- **npm:** `@prometheusavatar/openclaw-plugin`
-- **repo:** [github.com/myths-labs/prometheus-avatar](https://github.com/myths-labs/prometheus-avatar)
-
-```bash
-openclaw plugins install @prometheusavatar/openclaw-plugin
-```
-
-### QQbot
-
-透過 QQ Bot API 將 OpenClaw 連接到 QQ。支援私聊、群組提及、頻道訊息，以及包含語音、圖片、影片和檔案在內的富媒體。
-
-目前的 OpenClaw 發行版本已內建 QQ Bot。一般安裝請使用 [QQ Bot](/zh-Hant/channels/qqbot) 中的內建設定；僅當您刻意需要騰訊維護的獨立套件時，才安裝此外部外掛。
-
-- **npm:** `@tencent-connect/openclaw-qqbot`
-- **repo:** [github.com/tencent-connect/openclaw-qqbot](https://github.com/tencent-connect/openclaw-qqbot)
-
-```bash
-openclaw plugins install @tencent-connect/openclaw-qqbot
-```
-
-### wecom
-
-由騰訊企微團隊為 OpenClaw 開發的企微頻道外掛。透過企微機器人 WebSocket 持續連線驅動，它支援直接訊息與群組聊天、串流回覆、主動訊息推送、圖片/檔案處理、Markdown 格式、內建存取控制，以及文件/會議/訊息技能。
-
-- **npm:** `@wecom/wecom-openclaw-plugin`
-- **repo:** [github.com/WecomTeam/wecom-openclaw-plugin](https://github.com/WecomTeam/wecom-openclaw-plugin)
-
-```bash
-openclaw plugins install @wecom/wecom-openclaw-plugin
-```
-
-### Yuanbao
-
-由騰訊 Yuanbao 團隊為 OpenClaw 開發的 Yuanbao 頻道外掛。基於 WebSocket 持續連線，支援私訊與群聊、串流回覆、主動訊息、圖片/檔案/音訊/影片處理、Markdown 格式、內建存取控制和斜線指令選單。
-
-- **npm:** `openclaw-plugin-yuanbao`
-- **repo:** [github.com/YuanbaoTeam/yuanbao-openclaw-plugin](https://github.com/YuanbaoTeam/yuanbao-openclaw-plugin)
-
-```bash
-openclaw plugins install openclaw-plugin-yuanbao
-```
-
-## 提交您的外掛
-
-我們歡迎實用、有文件記錄且操作安全的社群外掛。
-
-<Steps>
-  <Step title="發布到 ClawHub 或 npm">
-    您的外掛必須能透過 `openclaw plugins install \<package-name\>` 安裝。
-    除非您特別需要僅透過 npm 發布，否則請發布到 [ClawHub](/zh-Hant/clawhub)。
-    請參閱 [建置外掛](/zh-Hant/plugins/building-plugins) 以取得完整指南。
-
-  </Step>
-
-  <Step title="託管在 GitHub 上">
-    原始碼必須位於具有設定文件和問題追蹤器的公開儲存庫中。
-
-  </Step>
-
-  <Step title="Use docs PRs only for source-doc changes">
-    您不需要為了讓外掛被發現而提交 docs PR。請改為在 ClawHub 上發布它。
-
-    僅當 OpenClaw 的原始文檔需要實際內容變更時，才開啟 docs PR，例如更正安裝指南或新增屬於主文檔集的跨儲存庫文檔。
-
-  </Step>
-</Steps>
-
-## 品質門檻
-
-| 需求                    | 原因                                           |
-| ----------------------- | ---------------------------------------------- |
-| 已發布於 ClawHub 或 npm | 使用者需要 `openclaw plugins install` 才能運作 |
-| 公開的 GitHub 儲存庫    | 原始碼審查、問題追蹤、透明度                   |
-| 設定與使用說明文件      | 使用者需要知道如何進行設定                     |
-| 積極維護                | 最近的更新或迅速的問題處理                     |
-
-低品質的包裝、所有權不明或未維護的套件可能會被拒絕。
+- [ClawHub 發布](/zh-Hant/clawhub/publishing) 說明擁有者、範圍、發布版本、審查、套件驗證和套件移轉。
+- [建置外掛](/zh-Hant/plugins/building-plugins) 展示外掛套件結構和首次發布工作流程。
+- [外掛資訊清單](/zh-Hant/plugins/manifest) 定義原生外掛資訊清單欄位。
 
 ## 相關
 
-- [安裝和配置外掛](/zh-Hant/tools/plugin) — 如何安裝任何外掛
-- [建構外掛](/zh-Hant/plugins/building-plugins) — 建立屬於你自己的外掛
-- [外掛清單](/zh-Hant/plugins/manifest) — 清單架構
+- [外掛程式](/zh-Hant/tools/plugin) - 安裝、設定、重新啟動及疑難排解
+- [管理外掛程式](/zh-Hant/plugins/manage-plugins) - 指令範例
+- [ClawHub 發佈](/zh-Hant/clawhub/publishing) - 發佈與發行規則

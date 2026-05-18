@@ -18,7 +18,7 @@ La captura de trayectoria es la grabadora de vuelo por sesión de OpenClaw. Grab
 - ¿Qué modelo, complementos, habilidades y configuraciones de tiempo de ejecución estaban activos?
 - ¿Qué metadatos de uso y caché de prompts devolvió el proveedor?
 
-Si está presentando un informe de soporte general para un problema en vivo de Gateway, comience con [`/diagnostics`](/es/gateway/diagnostics#chat-command). Diagnostics recopila el paquete saneado de Gateway y, para las sesiones del arnés de OpenAI Codex, también puede enviar comentarios de Codex a los servidores de OpenAI después de la aprobación. Use `/export-trajectory` cuando necesite específicamente la línea de tiempo detallada por sesión de avisos, herramientas y transcripciones.
+Si estás enviando un informe de soporte general para un problema en vivo de Gateway, comienza con [`/diagnostics`](/es/gateway/diagnostics#chat-command). Diagnostics recopila el paquete de Gateway saneado y, para las sesiones del arnés de OpenAI Codex, también puede enviar comentarios de Codex a los servidores de OpenAI después de la aprobación. Usa `/export-trajectory` cuando necesites específicamente la línea de tiempo detallada por sesión del prompt, las herramientas y la transcripción.
 
 ## Inicio rápido
 
@@ -70,7 +70,7 @@ Los eventos de tiempo de ejecución incluyen:
 - `trace.metadata`
 - `context.compiled`
 - `prompt.submitted`
-- `model.fallback_step`, incluyendo el modelo de origen, el siguiente modelo, razón/detalle del fallo, posición en la cadena y si la alternativa avanzó, tuvo éxito o agotó la cadena
+- `model.fallback_step`, incluyendo el modelo de origen, el siguiente modelo, motivo/detalle del fallo, posición en la cadena y si el respaldo avanzó, tuvo éxito o agotó la cadena
 - `model.completed`
 - `trace.artifacts`
 - `session.ended`
@@ -109,8 +109,7 @@ Un paquete exportado puede contener:
 | `system-prompt.txt`   | Último prompt del sistema compilado, cuando se captura                                                                                             |
 | `tools.json`          | Definiciones de herramientas enviadas al modelo, cuando se capturan                                                                                |
 
-`manifest.json` lista los archivos presentes en ese paquete. Algunos archivos se omiten
-cuando la sesión no capturó los datos de tiempo de ejecución correspondientes.
+`manifest.json` enumera los archivos presentes en ese paquete. Algunos archivos se omiten cuando la sesión no capturó los datos de tiempo de ejecución correspondientes.
 
 ## Ubicación de captura
 
@@ -126,8 +125,7 @@ OpenClaw también escribe un archivo de puntero de mejor esfuerzo junto a la ses
 <session>.trajectory-path.json
 ```
 
-Establezca `OPENCLAW_TRAJECTORY_DIR` para almacenar sidecars de trayectoria en tiempo de ejecución en un
-directorio dedicado:
+Establezca `OPENCLAW_TRAJECTORY_DIR` para almacenar los sidecars de trayectoria de tiempo de ejecución en un directorio dedicado:
 
 ```bash
 export OPENCLAW_TRAJECTORY_DIR=/var/lib/openclaw/trajectories
@@ -148,49 +146,54 @@ Establezca `OPENCLAW_TRAJECTORY=0` antes de iniciar OpenClaw:
 export OPENCLAW_TRAJECTORY=0
 ```
 
-Esto deshabilita la captura de trayectoria en tiempo de ejecución. `/export-trajectory` aún puede exportar
-la rama de transcripción, pero es posible que falten archivos solo de tiempo de ejecución, como contexto compilado,
-artefactos del proveedor y metadatos del prompt.
+Esto deshabilita la captura de trayectoria de tiempo de ejecución. `/export-trajectory` aún puede exportar la rama de la transcripción, pero pueden faltar archivos solo de tiempo de ejecución, como el contexto compilado, los artefactos del proveedor y los metadatos del prompt.
+
+## Ajustar el tiempo de espera de vaciado
+
+OpenClaw vacía los sidecars de trayectoria en tiempo de ejecución durante la limpieza del agente. El tiempo de espera de limpieza predeterminado es de 10.000 ms. En discos lentos o almacenes grandes, configure `OPENCLAW_TRAJECTORY_FLUSH_TIMEOUT_MS` antes de iniciar OpenClaw:
+
+```bash
+export OPENCLAW_TRAJECTORY_FLUSH_TIMEOUT_MS=30000
+```
+
+Esto controla cuándo OpenClaw registra un tiempo de espera de `pi-trajectory-flush` y continúa. No cambia los límites de tamaño de la trayectoria. Para ajustar todos los pasos de limpieza del agente que no pasan un tiempo de espera explícito, configure `OPENCLAW_AGENT_CLEANUP_TIMEOUT_MS`.
 
 ## Privacidad y límites
 
-Los paquetes de trayectoria están diseñados para soporte y depuración, no para publicación pública.
-OpenClaw redacta valores sensibles antes de escribir archivos de exportación:
+Los paquetes de trayectoria están diseñados para soporte y depuración, no para publicación pública. OpenClaw redacta valores confidenciales antes de escribir los archivos de exportación:
 
-- credenciales y campos de carga útil conocidos tipo secreto
+- credenciales y campos de carga conocidos como secretos
 - datos de imagen
 - rutas de estado local
-- rutas del espacio de trabajo, reemplazadas con `$WORKSPACE_DIR`
-- rutas del directorio de inicio, donde se detectan
+- rutas del espacio de trabajo, reemplazadas por `$WORKSPACE_DIR`
+- rutas del directorio de inicio, cuando se detectan
 
 El exportador también limita el tamaño de entrada:
 
-- archivos sidecar en tiempo de ejecución: la captura en vivo se detiene a los 10 MiB y registra un evento de truncamiento cuando queda espacio; la exportación acepta sidecars en tiempo de ejecución existentes de hasta 50 MiB
+- archivos sidecar de tiempo de ejecución: la captura en vivo se detiene a los 10 MiB y registra un evento de truncamiento cuando queda espacio; la exportación acepta sidecars de tiempo de ejecución existentes de hasta 50 MiB
 - archivos de sesión: 50 MiB
-- eventos en tiempo de ejecución: 200.000
+- eventos de tiempo de ejecución: 200.000
 - total de eventos exportados: 250.000
-- las líneas de eventos individuales en tiempo de ejecución se truncan por encima de 256 KiB
+- las líneas individuales de eventos de tiempo de ejecución se truncan por encima de 256 KiB
 
-Revise los paquetes antes de compartirlos fuera de su equipo. La redacción se realiza con el mejor esfuerzo
-y no puede conocer todos los secretos específicos de la aplicación.
+Revise los paquetes antes de compartirlos fuera de su equipo. La redacción se hace con el mejor esfuerzo posible y no puede conocer todos los secretos específicos de la aplicación.
 
 ## Solución de problemas
 
-Si la exportación no tiene eventos en tiempo de ejecución:
+Si la exportación no tiene eventos de tiempo de ejecución:
 
 - confirme que OpenClaw se inició sin `OPENCLAW_TRAJECTORY=0`
 - verifique si `OPENCLAW_TRAJECTORY_DIR` apunta a un directorio escribible
 - ejecute otro mensaje en la sesión y luego exporte de nuevo
-- inspecione `manifest.json` para buscar `runtimeEventCount`
+- inspeccione `manifest.json` para buscar `runtimeEventCount`
 
 Si el comando rechaza la ruta de salida:
 
 - use un nombre relativo como `bug-1234`
-- no pase `/tmp/...` ni `~/...`
+- no pase `/tmp/...` o `~/...`
 - mantenga la exportación dentro de `.openclaw/trajectory-exports/`
 
-Si la exportación falla con un error de tamaño, la sesión o el sidecar excedieron los
-límites de seguridad de exportación. Inicie una nueva sesión o exporte una reproducción más pequeña.
+Si la exportación falla con un error de tamaño, la sesión o el sidecar superaron los límites de seguridad de exportación. Inicie una nueva sesión o exporte una reproducción más pequeña.
 
 ## Relacionado
 

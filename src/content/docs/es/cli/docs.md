@@ -8,7 +8,7 @@ title: "Docs"
 
 # `openclaw docs`
 
-Busque en el índice de documentos en vivo de OpenClaw desde la terminal. El comando ejecuta el endpoint de búsqueda MCP de documentos alojados públicamente en Mintlify en `https://docs.openclaw.ai/mcp.SearchOpenClaw` y representa los resultados en su terminal.
+Busca en el índice en vivo de la documentación de OpenClaw desde la terminal. El comando ejecuta el punto final de búsqueda MCP de la documentación alojada en Mintlify en `https://docs.openclaw.ai/mcp.search_open_claw` y muestra los resultados en tu terminal.
 
 ## Uso
 

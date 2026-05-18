@@ -24,7 +24,7 @@ openclaw plugins install ./path/to/local/googlechat-plugin
 ## 快速设置（初学者）
 
 1. 创建一个 Google Cloud 项目并启用 **Google Chat API**。
-   - 前往：[Google Chat API 凭据](Google ChatAPIhttps://console.cloud.google.com/apis/api/chat.googleapis.com/credentials)
+   - 前往：[Google Chat API 凭据](https://console.cloud.google.com/apis/api/chat.googleapis.com/credentials)
    - 如果尚未启用，请启用该 API。
 2. 创建一个**服务账号**：
    - 点击 **Create Credentials** > **Service Account**。
@@ -37,7 +37,7 @@ openclaw plugins install ./path/to/local/googlechat-plugin
    - 点击 **Add Key** > **Create new key**。
    - 选择 **JSON** 并点击 **Create**。
 4. 将下载的 JSON 文件存储在您的网关主机上（例如，`~/.openclaw/googlechat-service-account.json`）。
-5. 在 [Google Cloud Console Chat Configuration](Google Chathttps://console.cloud.google.com/apis/api/chat.googleapis.com/hangouts-chat) 中创建一个 Google Chat 应用：
+5. 在 [Google Cloud Console Chat Configuration](https://console.cloud.google.com/apis/api/chat.googleapis.com/hangouts-chat) 中创建 Google Chat 应用：
    - 填写 **Application info**：
      - **App name**：（例如 `OpenClaw`）
      - **Avatar URL**：（例如 `https://openclaw.ai/logo.png`）
@@ -185,6 +185,7 @@ your-domain.com {
       audience: "https://gateway.example.com/googlechat",
       webhookPath: "/googlechat",
       botUser: "users/1234567890", // optional; helps mention detection
+      allowBots: false,
       dm: {
         policy: "pairing",
         allowFrom: ["users/1234567890"],
@@ -216,8 +217,9 @@ your-domain.com {
 - 消息操作为文本提供 `send`，为显式附件发送提供 `upload-file`。`upload-file` 接受 `media` / `filePath` / `path` 以及可选的 `message`、`filename` 和会话定位。
 - `typingIndicator` 支持 `none`、`message`（默认）和 `reaction`OAuth（反应需要用户 OAuth）。
 - 附件通过 Chat API 下载并存储在媒体管道中（大小受 API`mediaMaxMb` 限制）。
+- 默认情况下，忽略机器人发送的 Google Chat 消息。如果您有意设置了 `allowBots: true`，被接受的机器人发送的消息将使用共享的 [bot loop protection](/zh/channels/bot-loop-protection)。配置 `channels.defaults.botLoopProtection`，然后当某个空间需要不同的预算时，使用 `channels.googlechat.botLoopProtection` 或 `channels.googlechat.groups.<space>.botLoopProtection` 覆盖。
 
-Secrets 参考详情：[Secrets Management](/zh/gateway/secrets)。
+Secrets 参考详细信息：[Secrets Management](/zh/gateway/secrets)。
 
 ## 故障排除
 
@@ -229,15 +231,15 @@ Secrets 参考详情：[Secrets Management](/zh/gateway/secrets)。
 status code: 405, reason phrase: HTTP error response: HTTP/1.1 405 Method Not Allowed
 ```
 
-这意味着未注册 webhook 处理程序。常见原因：
+这意味着 webhook 处理程序未注册。常见原因：
 
-1. **未配置频道**：您的配置中缺少 `channels.googlechat` 部分。请使用以下命令验证：
+1. **渠道未配置**：您的配置中缺少 `channels.googlechat` 部分。请通过以下方式验证：
 
    ```bash
    openclaw config get channels.googlechat
    ```
 
-   如果返回“Config path not found”，请添加配置（参见 [Config highlights](#config-highlights)）。
+   如果返回“Config path not found”，请添加配置（请参阅 [Config highlights](#config-highlights)）。
 
 2. **插件未启用**：检查插件状态：
 
@@ -245,9 +247,9 @@ status code: 405, reason phrase: HTTP error response: HTTP/1.1 405 Method Not Al
    openclaw plugins list | grep googlechat
    ```
 
-   如果显示“disabled”（禁用），请将 `plugins.entries.googlechat.enabled: true` 添加到您的配置中。
+   如果显示“disabled”，请将 `plugins.entries.googlechat.enabled: true` 添加到您的配置中。
 
-3. **Gateway(网关) 未重启**：添加配置后，重启网关：
+3. **Gateway(网关) 未重启**：添加配置后，重启 gateway：
 
    ```bash
    openclaw gateway restart
@@ -262,14 +264,14 @@ openclaw channels status
 
 ### 其他问题
 
-- 检查 `openclaw channels status --probe` 中是否存在身份验证错误或缺少受众群体配置。
-- 如果没有收到消息，请确认 Chat 应用的 webhook URL 和事件订阅。
+- 检查 `openclaw channels status --probe` 中是否存在身份验证错误或缺少受众配置。
+- 如果没有收到消息，请确认 Chat 应用的 webhook URL + 事件订阅。
 - 如果提及拦截阻止了回复，请将 `botUser` 设置为应用的用户资源名称，并验证 `requireMention`。
-- 在发送测试消息时使用 `openclaw logs --follow`，以查看请求是否到达网关。
+- 发送测试消息时使用 `openclaw logs --follow` 以查看请求是否到达 gateway。
 
 相关文档：
 
-- [Gateway(网关) 配置](<Gateway(网关)/en/gateway/configuration>)
+- [Gateway(网关) 配置](/zh/gateway/configuration)
 - [安全性](/zh/gateway/security)
 - [回应](/zh/tools/reactions)
 
@@ -277,6 +279,6 @@ openclaw channels status
 
 - [渠道概览](/zh/channels) — 所有支持的渠道
 - [配对](/zh/channels/pairing) — 私信身份验证和配对流程
-- [群组](/zh/channels/groups) — 群聊行为和提及拦截
-- [渠道路由](/zh/channels/channel-routing) — 消息的会话路由
-- [安全性](/zh/gateway/security) — 访问模型和加固
+- [Groups](/zh/channels/groups) — 群聊行为和提及门控
+- [Channel Routing](/zh/channels/channel-routing) — 消息的会话路由
+- [Security](/zh/gateway/security) — 访问模型和加固

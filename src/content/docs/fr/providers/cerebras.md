@@ -6,7 +6,7 @@ read_when:
   - You need the Cerebras API key env var or CLI auth choice
 ---
 
-[Cerebras](https://www.cerebras.ai) fournit une inférence haute vitesse compatible OpenAI sur du matériel d'inférence personnalisé. OpenClaw inclut un plugin de provider Cerebras intégré avec un catalogue statique de quatre models.
+[Cerebras](https://www.cerebras.ai) fournit une inférence compatible OpenAI à grande vitesse sur du matériel d'inférence personnalisé. OpenClaw inclut un plugin de fournisseur Cerebras intégré avec un catalogue statique de quatre modèles.
 
 | Propriété                | Valeur                                   |
 | ------------------------ | ---------------------------------------- |
@@ -106,7 +106,7 @@ Le plugin intégré signifie généralement que vous n'avez besoin que de la cl�
 }
 ```
 
-<Note>Si le Gateway s'exécute en tant que démon (launchd, systemd, Docker), assurez-vous que `CEREBRAS_API_KEY` est disponible pour ce processus — par exemple dans `~/.openclaw/.env` ou via `env.shellEnv`. Une clé présente uniquement dans `~/.profile` n'aidera pas un service géré, sauf si l'environnement est importé séparément.</Note>
+<Note>Si le Gateway s'exécute en tant que démon (launchd, systemd, Docker), assurez-vous que `CEREBRAS_API_KEY` est disponible pour ce processus — par exemple dans `~/.openclaw/.env` ou via `env.shellEnv`. Une clé exportée uniquement dans un shell interactif n'aidera pas un service géré à moins que l'environnement ne soit importé séparément.</Note>
 
 ## Connexes
 

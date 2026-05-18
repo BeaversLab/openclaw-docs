@@ -90,7 +90,6 @@ Use la configuración explícita cuando:
         baseUrl: "http://127.0.0.1:8000/v1",
         apiKey: "${VLLM_API_KEY}",
         api: "openai-completions",
-        request: { allowPrivateNetwork: true },
         timeoutSeconds: 300, // Optional: extend connect/header/body/request timeout for slow local models
         models: [
           {
@@ -257,7 +256,7 @@ comodín de proveedor al catálogo de modelos visible:
   </Accordion>
 
   <Accordion title="URL base personalizada">
-    Si su servidor vLLM se ejecuta en un host o puerto no predeterminado, establezca `baseUrl` en la configuración explícita del proveedor:
+    Si su servidor vLLM se ejecuta en un host o puerto no predeterminado, configure `baseUrl` en la configuración explícita del proveedor:
 
     ```json5
     {
@@ -267,7 +266,6 @@ comodín de proveedor al catálogo de modelos visible:
             baseUrl: "http://192.168.1.50:9000/v1",
             apiKey: "${VLLM_API_KEY}",
             api: "openai-completions",
-            request: { allowPrivateNetwork: true },
             timeoutSeconds: 300,
             models: [
               {
@@ -291,8 +289,8 @@ comodín de proveedor al catálogo de modelos visible:
 ## Solución de problemas
 
 <AccordionGroup>
-  <Accordion title="Respuesta lenta la primera vez o tiempo de espera del servidor remoto">
-    Para modelos locales grandes, hosts de LAN remotos o enlaces de red de cola (tailnet), establezca un
+  <Accordion title="Primera respuesta lenta o tiempo de espera del servidor remoto">
+    Para modelos locales grandes, hosts de LAN remotos o enlaces de tailnet, establezca un
     tiempo de espera de solicitud con ámbito de proveedor:
 
     ```json5
@@ -303,7 +301,6 @@ comodín de proveedor al catálogo de modelos visible:
             baseUrl: "http://192.168.1.50:8000/v1",
             apiKey: "${VLLM_API_KEY}",
             api: "openai-completions",
-            request: { allowPrivateNetwork: true },
             timeoutSeconds: 300,
             models: [{ id: "your-model-id", name: "Local vLLM Model" }],
           },
@@ -313,46 +310,48 @@ comodín de proveedor al catálogo de modelos visible:
     ```
 
     `timeoutSeconds` se aplica solo a las solicitudes HTTP del modelo vLLM, incluyendo
-    la configuración de conexión, los encabezados de respuesta, la transmisión del cuerpo y la
-    interrupción total de la recuperación protegida. Prefiera esto antes de aumentar
+    la configuración de conexión, los encabezados de respuesta, la transmisión del cuerpo y la interrupción
+    total de guarded-fetch. Prefiera esto antes de aumentar
     `agents.defaults.timeoutSeconds`, que controla toda la ejecución del agente.
 
   </Accordion>
 
-  <Accordion title="Servidor no alcanzable">
-    Verifique que el servidor vLLM se esté ejecutando y sea accesible:
+  <Accordion title="Servidor no accesible">
+    Compruebe que el servidor vLLM se esté ejecutando y sea accesible:
 
     ```bash
     curl http://127.0.0.1:8000/v1/models
     ```
 
     Si ve un error de conexión, verifique el host, el puerto y que vLLM se haya iniciado con el modo de servidor compatible con OpenAI.
-    Para puntos de conexión de bucle de retorno explícito, LAN o Tailscale, también establezca
-    `models.providers.vllm.request.allowPrivateNetwork: true`; las solicitudes del
-    proveedor bloquean las URL de red privada de forma predeterminada a menos que el proveedor sea
-    confiable explícitamente.
+    Para endpoints de loopback explícitos, LAN o Tailscale, OpenClaw confía en el
+    origen `models.providers.vllm.baseUrl` configurado exacto para las solicitudes de modelos
+    protegidas. Los orígenes de metadatos/enlace local permanecen bloqueados sin una
+    autorización explícita. Establezca `models.providers.vllm.request.allowPrivateNetwork: true` solo
+    cuando las solicitudes de vLLM deban alcanzar otro origen privado, y establézcalo en `false`
+    para no participar en la confianza de origen exacto.
 
   </Accordion>
 
   <Accordion title="Errores de autenticación en las solicitudes">
-    Si las solicitudes fallan con errores de autenticación, establezca un `VLLM_API_KEY` real que coincida con la configuración de su servidor, o configure el proveedor explícitamente bajo `models.providers.vllm`.
+    Si las solicitudes fallan con errores de autenticación, configure un `VLLM_API_KEY` real que coincida con la configuración de su servidor, o configure el proveedor explícitamente bajo `models.providers.vllm`.
 
     <Tip>
-    Si su servidor vLLM no exige autenticación, cualquier valor no vacío para `VLLM_API_KEY` funciona como una señal de participación para OpenClaw.
+    Si su servidor vLLM no aplica autenticación, cualquier valor no vacío para `VLLM_API_KEY` funciona como una señal de participación para OpenClaw.
     </Tip>
 
   </Accordion>
 
 <Accordion title="No se descubrieron modelos">El descubrimiento automático requiere que se establezca `VLLM_API_KEY`. Si ha definido `models.providers.vllm`, OpenClaw usa solo sus modelos declarados a menos que `agents.defaults.models` incluya `"vllm/*": {}`.</Accordion>
 
-  <Accordion title="Las herramientas se representan como texto sin formato">
-    Si un modelo Qwen imprime la sintaxis de la herramienta JSON/XML en lugar de ejecutar una habilidad,
-    consulte la guía de Qwen en Configuración avanzada anterior. La solución habitual es:
+  <Accordion title="Las herramientas se muestran como texto sin formato">
+    Si un modelo Qwen imprime la sintaxis de herramientas JSON/XML en lugar de ejecutar una habilidad,
+    consulte la guía de Qwen en Configuración avanzada anteriormente. La solución habitual es:
 
     - iniciar vLLM con el analizador/plantilla correcto para ese modelo
     - confirmar el ID exacto del modelo con `openclaw models list --provider vllm`
-    - añadir una anulación `params.extra_body.tool_choice: "required"` dedicada por modelo
-      solo si `tool_choice: "auto"` aún devuelve llamadas a herramientas vacías o solo de texto
+    - añadir una anulación dedicada por modelo de `params.extra_body.tool_choice: "required"`
+      solo si `tool_choice: "auto"` todavía devuelve llamadas a herramientas vacías o solo de texto
 
   </Accordion>
 </AccordionGroup>

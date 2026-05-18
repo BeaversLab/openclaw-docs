@@ -16,7 +16,7 @@ title: "fal 外掛程式"
 
 ## 介面
 
-提供者：fal；合約：imageGenerationProviders, videoGenerationProviders
+提供商: fal; 合約: imageGenerationProviders, musicGenerationProviders, videoGenerationProviders
 
 ## 相關文件
 

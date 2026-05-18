@@ -8,7 +8,7 @@ title: "文档"
 
 # `openclaw docs`
 
-从终端搜索实时 OpenClaw 文档索引。该命令调用 Mintlify 托管的公共文档 MCP 搜索端点 OpenClaw`https://docs.openclaw.ai/mcp.SearchOpenClaw`，并在您的终端中呈现结果。
+从终端搜索实时的 OpenClaw 文档索引。该命令会调用位于 OpenClaw`https://docs.openclaw.ai/mcp.search_open_claw` 的公共 Mintlify 托管文档 MCP 搜索端点，并在您的终端中呈现结果。
 
 ## 用法
 

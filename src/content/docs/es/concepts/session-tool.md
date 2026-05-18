@@ -110,31 +110,36 @@ Después de que el objetivo responda, OpenClaw puede ejecutar un **bucle de resp
 
 ## Generación de sub-agentes
 
-`sessions_spawn` crea una sesión aislada para una tarea en segundo plano de manera predeterminada. Siempre es no bloqueante: devuelve inmediatamente un `runId` y `childSessionKey`.
+`sessions_spawn` crea una sesión aislada para una tarea en segundo plano de forma predeterminada.
+Siempre es no bloqueante: retorna inmediatamente con un `runId` y
+`childSessionKey`. Las ejecuciones de sub-agentes nativos reciben la tarea delegada en el
+primer mensaje visible `[Subagent Task]` de la sesión secundaria, mientras que el
+prompt del sistema transporta solo las reglas de tiempo de ejecución del sub-agente y el contexto de enrutamiento.
 
 Opciones clave:
 
 - `runtime: "subagent"` (predeterminado) o `"acp"` para agentes de arnés externos.
 - `model` y `thinking` anulaciones para la sesión secundaria.
-- `thread: true` para vincular la generación a un hilo de chat (Discord, Slack, etc.).
-- `sandbox: "require"` para forzar el sandboxing en el hijo.
-- `context: "fork"` para sub-agentes nativos cuando el hijo necesita la transcripción del solicitante actual; omítalo o use `context: "isolated"` para un hijo limpio.
-  Los sub-agentes nativos vinculados al hilo por defecto son `context: "fork"` a menos que
+- `thread: true` para vincular el spawned a un hilo de chat (Discord, Slack, etc.).
+- `sandbox: "require"` para forzar el sandbox en el hijo.
+- `context: "fork"` para sub-agentes nativos cuando el hijo necesita la transcripción
+  del solicitante actual; omítalo o usa `context: "isolated"` para un hijo limpio.
+  Los sub-agentes nativos vinculados al hilo tienen `context: "fork"` de forma predeterminada a menos que
   `threadBindings.defaultSpawnContext` indique lo contrario.
 
-Los sub-agentes hoja predeterminados no obtienen herramientas de sesión. Cuando
-`maxSpawnDepth >= 2`, los sub-agentes orquestadores de profundidad 1 adicionalmente reciben
-`sessions_spawn`, `subagents`, `sessions_list`, y `sessions_history` para que puedan
-administrar a sus propios hijos. Las ejecuciones hoja todavía no obtienen herramientas de orquestación
-recursivas.
+Los sub-agentes hoja predeterminados no reciben herramientas de sesión. Cuando
+`maxSpawnDepth >= 2`, los sub-agentes orquestadores de profundidad 1 reciben adicionalmente
+`sessions_spawn`, `subagents`, `sessions_list` y `sessions_history` para que
+can gestionar a sus propios hijos. Las ejecuciones hoja aún no reciben herramientas
+de orquestación recursiva.
 
-Después de la finalización, un paso de anuncio publica el resultado en el canal del solicitante.
-La entrega de finalización preserva el enrutamiento de hilo/tema vinculado cuando está disponible, y si
-el origen de finalización solo identifica un canal, OpenClaw aún puede reutilizar la ruta
-almacenada de la sesión del solicitante (`lastChannel` / `lastTo`) para entrega
+Tras la finalización, un paso de anuncio publica el resultado en el canal del solicitante.
+La entrega de la finalización preserva el enrutamiento al hilo/tema vinculado cuando está disponible, y si
+el origen de finalización solo identifica un canal, OpenClaw aún puede reutilizar la
+ruta almacenada de la sesión del solicitante (`lastChannel` / `lastTo`) para entrega
 directa.
 
-Para un comportamiento específico de ACP, consulte [Agentes ACP](/es/tools/acp-agents).
+Para un comportamiento específico de ACP, consulte [ACP Agents](/es/tools/acp-agents).
 
 ## Visibilidad
 
@@ -147,14 +152,15 @@ Las herramientas de sesión tienen un ámbito para limitar lo que el agente pued
 | `agent` | Todas las sesiones para este agente                    |
 | `all`   | Todas las sesiones (entre agentes si está configurado) |
 
-El valor predeterminado es `tree`. Las sesiones en espacio aislado (sandboxed) se limitan a `tree` independientemente de la configuración.
+El valor predeterminado es `tree`. Las sesiones en sandbox se limitan a `tree` independientemente de
+la configuración.
 
 ## Lectura adicional
 
 - [Gestión de sesiones](/es/concepts/session) -- enrutamiento, ciclo de vida, mantenimiento
 - [Agentes ACP](/es/tools/acp-agents) -- generación de arneses externos
-- [Multi-agente](/es/concepts/multi-agent) -- arquitectura multi-agente
-- [Configuración de la puerta de enlace](/es/gateway/configuration) -- controles de configuración de herramientas de sesión
+- [Multiagente](/es/concepts/multi-agent) -- arquitectura multiagente
+- [Configuración de la puerta de enlace](/es/gateway/configuration) -- perillas de configuración de herramientas de sesión
 
 ## Relacionado
 

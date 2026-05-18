@@ -7,7 +7,7 @@ read_when:
 title: "Aspectos internos de la arquitectura de plugins"
 ---
 
-Para el modelo de capacidad pública, formas de complementos y contratos de propiedad/ejecución, consulte [Plugin architecture](/es/plugins/architecture). Esta página es la referencia de la mecánica interna: canalización de carga (load pipeline), registro, ganchos de tiempo de ejecución (runtime hooks), rutas HTTP de Gateway, rutas de importación y tablas de esquema.
+Para el modelo de capacidades público, las formas de los complementos y los contratos de propiedad/ejecución, consulte [Arquitectura de complementos](/es/plugins/architecture). Esta página es la referencia de la mecánica interna: canalización de carga (load pipeline), registro, enlaces de tiempo de ejecución (runtime hooks), rutas HTTP de Gateway, rutas de importación y tablas de esquemas.
 
 ## Canalización de carga
 
@@ -181,9 +181,7 @@ Los complementos de proveedor tienen tres capas:
   `providerAuthAliases`, `providerAuthChoices` y `channelEnvVars`.
 - **Hooks de tiempo de configuración**: `catalog` (`discovery` heredado) más
   `applyConfigDefaults`.
-- **Hooks de tiempo de ejecución**: más de 40 hooks opcionales que cubren autenticación, resolución de modelos,
-  ajuste de flujos (stream wrapping), niveles de pensamiento, política de reproducción y puntos de conexión de uso. Consulte
-  la lista completa en [Hook order and usage](#hook-order-and-usage).
+- **Runtime hooks** (enlaces de tiempo de ejecución): más de 40 enlaces opcionales que cubren autenticación, resolución de modelos, ajuste de flujos (stream wrapping), niveles de pensamiento, política de reproducción y puntos de conexión de uso. Consulte la lista completa en [Orden y uso de los enlaces](#hook-order-and-usage).
 
 OpenClaw sigue siendo propietario del bucle genérico del agente, la conmutación por error, el manejo de transcripciones y la
 política de herramientas. Estos hooks son la superficie de extensión para comportamientos específicos del proveedor
@@ -595,12 +593,7 @@ raíz al crear nuevos complementos. Subrutas principales:
 | `openclaw/plugin-sdk/core`          | Ayudantes compartidos genéricos y contrato paraguas |
 | `openclaw/plugin-sdk/config-schema` | Esquema Zod raíz `openclaw.json` (`OpenClawSchema`) |
 
-Los complementos de canal eligen de una familia de costuras estrechas — `channel-setup`,
-`setup-runtime`, `setup-tools`, `channel-pairing`,
-`channel-contract`, `channel-feedback`, `channel-inbound`, `channel-lifecycle`,
-`channel-reply-pipeline`, `command-auth`, `secret-input`, `webhook-ingress`,
-`channel-targets` y `channel-actions`. El comportamiento de aprobación debería consolidarse
-en un contrato `approvalCapability` en lugar de mezclarlo en campos de complementos no relacionados. Consulte [Complementos de canal](/es/plugins/sdk-channel-plugins).
+Los complementos de canal eligen de una familia de costuras estrechas (narrow seams) — `channel-setup`, `setup-runtime`, `setup-tools`, `channel-pairing`, `channel-contract`, `channel-feedback`, `channel-inbound`, `channel-lifecycle`, `channel-reply-pipeline`, `command-auth`, `secret-input`, `webhook-ingress`, `channel-targets` y `channel-actions`. El comportamiento de aprobación debe consolidarse en un contrato `approvalCapability` en lugar de mezclarse en campos de complementos no relacionados. Consulte [Complementos de canal](/es/plugins/sdk-channel-plugins).
 
 Las funciones auxiliares de tiempo de ejecución y de configuración residen bajo subrutas `*-runtime` enfocadas y coincidentes
 (`approval-runtime`, `agent-runtime`, `lazy-runtime`, `directory-runtime`,
@@ -630,7 +623,7 @@ pertinente al confiar en ellas.
 
 ## Esquemas de herramientas de mensajes
 
-Los complementos deben ser propietarios de las contribuciones del esquema `describeMessageTool(...)` específicas del canal para primitivas que no sean mensajes, como reacciones, lecturas y encuestas. La presentación de envío compartida debe usar el contrato genérico `MessagePresentation` en lugar de campos de botón, componente, bloque o tarjeta nativos del proveedor. Consulte [Message Presentation](/es/plugins/message-presentation) para obtener el contrato, las reglas de reserva, la asignación de proveedores y la lista de verificación para autores de complementos.
+Los complementos deben ser propietarios de las contribuciones al esquema `describeMessageTool(...)` específicas del canal para primitivas que no son mensajes, como reacciones, lecturas y encuestas. La presentación de envío compartido debe usar el contrato genérico `MessagePresentation` en lugar de campos de botones, componentes, bloques o tarjetas nativos del proveedor. Consulte [Presentación de mensajes](/es/plugins/message-presentation) para obtener el contrato, las reglas de reserva (fallback), la asignación del proveedor y la lista de verificación para autores de complementos.
 
 Los complementos con capacidad de envío declaran lo que pueden representar a través de capacidades de mensaje:
 
@@ -905,7 +898,18 @@ export default function (api) {
 
 La fábrica `ctx` expone valores opcionales `config`, `agentDir` y `workspaceDir` para la inicialización en el momento de la construcción.
 
-Si su motor **no** posee el algoritmo de compactación, mantenga `compact()` implementado y delegúelo explícitamente:
+`assemble()` puede devolver `contextProjection` cuando el arnés activo tiene un
+hilo de servidor persistente. Omítalo para la proyección heredada por turno. Devuelva
+`{ mode: "thread_bootstrap", epoch }` cuando el contexto ensamblado deba ser
+inyectado una vez en un hilo de servidor y reutilizado hasta que cambie la época. Cambie
+la época después de que cambie el contexto semántico del motor, como después de un
+paso de compactación propiedad del motor. Los hosts pueden conservar los metadatos de la llamada a la herramienta, la
+forma de entrada y los resultados de la herramienta redactados en una proyección de arranque de hilo para que los
+hilos de servidor frescos conserven la continuidad de la herramienta sin copiar las cargas útiles
+sin procesar que portan secretos.
+
+Si su motor **no** posee el algoritmo de compactación, mantenga `compact()`
+implementado y delegúelo explícitamente:
 
 ```ts
 import { buildMemorySystemPromptAddition, delegateCompactionToRuntime } from "openclaw/plugin-sdk/core";
@@ -939,41 +943,44 @@ export default function (api) {
 
 ## Agregar una nueva capacidad
 
-Cuando un complemento necesita un comportamiento que no se ajusta a la API actual, no omita el sistema de complementos con un acceso privado. Agregue la capacidad faltante.
+Cuando un complemento necesita un comportamiento que no se ajusta a la API actual, no omita
+el sistema de complementos con un acceso privado. Agregue la capacidad faltante.
 
 Secuencia recomendada:
 
 1. definir el contrato principal
-   Decida qué comportamiento compartido debe poseer el núcleo (core): políticas, alternativas (fallback), fusión de configuraciones,
-   ciclo de vida, semántica orientada al canal y la forma de los asistentes de tiempo de ejecución.
+   Decida qué comportamiento compartido debe poseer el núcleo: política, respaldo, fusión de configuración,
+   ciclo de vida, semántica orientada al canal y la forma del asistente de tiempo de ejecución.
 2. agregar superficies de registro/tiempo de ejecución de complementos tipados
-   Extienda `OpenClawPluginApi` y/o `api.runtime` con la superficie de capacidad tipada más pequeña y útil.
-3. conectar el núcleo + consumidores de canal/características
+   Extienda `OpenClawPluginApi` y/o `api.runtime` con la superficie de
+   capacidad tipada más pequeña útil.
+3. conectar núcleo + consumidores de canal/características
    Los canales y los complementos de características deben consumir la nueva capacidad a través del núcleo,
    no importando directamente una implementación de proveedor.
 4. registrar implementaciones de proveedores
-   Luego, los complementos de proveedores registran sus backends frente a la capacidad.
+   Luego, los complementos de proveedores registran sus servidores con la capacidad.
 5. agregar cobertura de contrato
-   Agregue pruebas para que la propiedad y la forma de registro permanezcan explícitas con el tiempo.
+   Agregue pruebas para que la propiedad y la forma de registro se mantengan explícitas con el tiempo.
 
-Así es como OpenClaw mantiene su criterio sin volverse rígido a la visión del mundo de un solo proveedor. Consulte el [Libro de recetas de capacidades (Capability Cookbook)](/es/tools/capability-cookbook) para obtener una lista de verificación de archivos concreta y un ejemplo práctico.
+Así es como OpenClaw se mantiene opinante sin volverse rígido a la visión del mundo de un
+proveedor. Vea el [Cookbook de capacidades](/es/tools/capability-cookbook)
+para una lista de verificación de archivos concreta y un ejemplo práctico.
 
-### Lista de verificación de capacidades
+### Lista de verificación de capacidad
 
-Cuando agrega una nueva capacidad, la implementación generalmente debe tocar estas superficies juntas:
+Cuando agrega una nueva capacidad, la implementación generalmente debe tocar estas
+superfices juntas:
 
 - tipos de contrato principal en `src/<capability>/types.ts`
-- asistente de ejecución/tiempo de ejecución principal en `src/<capability>/runtime.ts`
+- ejecutor principal/asistente de tiempo de ejecución en `src/<capability>/runtime.ts`
 - superficie de registro de API de complementos en `src/plugins/types.ts`
 - cableado del registro de complementos en `src/plugins/registry.ts`
-- exposición del runtime del plugin en `src/plugins/runtime/*` cuando los plugins de características/canales
-  necesitan consumirlo
+- exposición del runtime del complemento en `src/plugins/runtime/*` cuando los complementos de características/canales necesitan consumirlo
 - asistentes de captura/prueba en `src/test-utils/plugin-registration.ts`
 - afirmaciones de propiedad/contrato en `src/plugins/contracts/registry.ts`
-- documentación del operador/plugin en `docs/`
+- documentación del operador/complemento en `docs/`
 
-Si falta una de esas superficies, generalmente es una señal de que la capacidad
-aún no está totalmente integrada.
+Si falta una de esas superficies, generalmente es una señal de que la capacidad aún no está completamente integrada.
 
 ### Plantilla de capacidad
 
@@ -1011,14 +1018,14 @@ expect(findVideoGenerationProviderIdsForPlugin("openai")).toEqual(["openai"]);
 
 Eso mantiene la regla simple:
 
-- el núcleo es propietario del contrato de capacidad + orquestación
-- los plugins de proveedores son propietarios de las implementaciones del proveedor
-- los plugins de características/canales consumen los asistentes de runtime
+- el núcleo posee el contrato de capacidad + la orquestación
+- los complementos de proveedores poseen las implementaciones de proveedores
+- los complementos de características/canales consumen asistentes de runtime
 - las pruebas de contrato mantienen la propiedad explícita
 
 ## Relacionado
 
-- [Arquitectura de plugins](/es/plugins/architecture) — modelo y formas públicas de capacidades
-- [Subrutas del SDK de plugins](/es/plugins/sdk-subpaths)
-- [Configuración del SDK de plugins](/es/plugins/sdk-setup)
-- [Creación de plugins](/es/plugins/building-plugins)
+- [Arquitectura de complementos](/es/plugins/architecture) — modelo y formas de capacidad pública
+- [Subrutas del SDK de complementos](/es/plugins/sdk-subpaths)
+- [Configuración del SDK de complementos](/es/plugins/sdk-setup)
+- [Compilación de complementos](/es/plugins/building-plugins)

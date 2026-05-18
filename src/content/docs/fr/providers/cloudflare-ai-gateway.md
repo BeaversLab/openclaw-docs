@@ -93,11 +93,11 @@ openclaw onboard --non-interactive \
 
   </Accordion>
 
-  <Accordion title="Note sur l'environnement">
+  <Accordion title="Note sur l'environnement"Gateway>
     Si le Gateway s'exécute en tant que démon (launchd/systemd), assurez-vous que `CLOUDFLARE_AI_GATEWAY_API_KEY` est disponible pour ce processus.
 
     <Warning>
-    Une clé présente uniquement dans `~/.profile` ne sera pas utile à un démon launchd/systemd, sauf si cet environnement est également importé. Définissez la clé dans `~/.openclaw/.env` ou via `env.shellEnv` pour vous assurer que le processus de passerelle peut la lire.
+    Une clé exportée uniquement dans un shell interactif n'aidera pas un démon launchd/systemd, sauf si cet environnement est également importé à cet endroit. Définissez la clé dans `~/.openclaw/.env` ou via `env.shellEnv` pour vous assurer que le processus du Gateway peut la lire.
     </Warning>
 
   </Accordion>

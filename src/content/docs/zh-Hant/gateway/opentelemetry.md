@@ -206,7 +206,7 @@ Talk 指標僅匯出有界的事件元數據，例如 mode、transport、provide
 OpenClaw 根據其仍能觀察到的工作將會話分類：
 
 - `session.long_running`：主動的嵌入式工作、模型呼叫或工具呼叫仍在持續進行。
-- `session.stalled`：存在主動工作，但主動執行尚未回報最近的進行。停滯的嵌入式執行最初會保持僅觀察狀態，然後在 `diagnostics.stuckSessionAbortMs` 無進行後終止排空，以便通道後排隊的回合能夠恢復。若未設定，終止閾值預設為較安全的擴展視窗，即至少 10 分鐘和 5 倍的 `diagnostics.stuckSessionWarnMs`。
+- `session.stalled`：存在活躍的工作，但活躍的執行尚未報告最近的進度。停滯的內嵌執行起初保持僅觀察狀態，然後在 `diagnostics.stuckSessionAbortMs` 毫無進展後中止排空，以便隊列中該通道後續的輪次可以恢復。當未設定時，中止中止閾值預設為較安全的延長視窗，即至少 5 分鐘和 3 倍的 `diagnostics.stuckSessionWarnMs`。
 - `session.stuck`：無主動工作的過時會話記錄。這會立即釋放受影響的會話通道。
 
 恢復會發出結構化的 `session.recovery.requested` 和 `session.recovery.completed` 事件。診斷會話狀態僅在變更的恢復結果（`aborted` 或 `released`）之後，且僅當相同的處理世代仍處於當前狀態時，才會被標記為閒置。

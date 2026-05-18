@@ -79,14 +79,14 @@ read_when:
 ```
 
 <Warning>
-**重要运行时规则**
+**重要的运行时规则**
 
-- 受信任代理身份验证默认拒绝回环源请求（`127.0.0.1`、`::1`、回环 CIDR）。
-- 同主机回环反向代理**不**满足受信任代理身份验证，除非您显式设置 `gateway.auth.trustedProxy.allowLoopback = true` 并在 `gateway.trustedProxies` 中包含回环地址。
-- `allowLoopback`Gateway(网关)Gateway(网关)Gateway(网关) 对 Gateway(网关) 主机上的本地进程的信任程度与反向代理相同。仅当 Gateway(网关) 仍通过防火墙与直接远程访问隔离，并且本地代理剥离或覆盖客户端提供的身份标头时，才启用它。
+- 受信任代理认证默认拒绝环回源请求（`127.0.0.1`、`::1`、环回 CIDR）。
+- 同主机环回反向代理**不**满足受信任代理认证，除非您显式设置 `gateway.auth.trustedProxy.allowLoopback = true` 并将环回地址包含在 `gateway.trustedProxies` 中。
+- `allowLoopback` 以与反向代理相同的程度信任 Gateway(网关) 主机上的本地进程。仅当 Gateway(网关) 仍被防火墙隔离以防止直接远程访问且本地代理剥离或覆盖客户端提供的身份标头时，才启用它。
 - 不经过反向代理的内部 Gateway(网关) 客户端应使用 `gateway.auth.password` / `OPENCLAW_GATEWAY_PASSWORD`，而不是受信任代理身份标头。
-- 非回环控制 UI 部署仍然需要显式的 `gateway.controlUi.allowedOrigins`。
-- **转接头标证据会覆盖本地直接回退的回环局部性。** 如果请求到达回环接口但携带指向非本地源的 `X-Forwarded-For` / `X-Forwarded-Host` / `X-Forwarded-Proto` 标头，则该证据将取消本地直接密码回退和设备身份门控的资格。使用 `allowLoopback: true` 时，受信任代理身份验证仍可将请求作为同主机代理请求接受，同时 `requiredHeaders` 和 `allowUsers` 继续适用。
+- 非环回控制 UI 部署仍然需要显式设置 `gateway.controlUi.allowedOrigins`。
+- **Forwarded-header 标头证据会覆盖本地直接回退的环回本地性。** 如果请求到达环回地址但带有 `Forwarded`、任何 `X-Forwarded-*` 或 `X-Real-IP` 标头证据，则该证据将取消本地直接密码回退和设备身份门控。使用 `allowLoopback: true` 时，受信任代理认证仍可将请求接受为同主机代理请求，而 `requiredHeaders` 和 `allowUsers` 继续适用。
 
 </Warning>
 

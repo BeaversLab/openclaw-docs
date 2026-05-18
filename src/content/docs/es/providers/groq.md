@@ -7,7 +7,7 @@ read_when:
   - You are configuring Whisper audio transcription on Groq
 ---
 
-[Groq](https://groq.com) proporciona inferencia ultra rápida en modelos de pesos abiertos (Llama, Gemma, Kimi, Qwen, GPT OSS y más) utilizando hardware LPU personalizado. OpenClaw incluye un complemento Groq integrado que registra tanto un proveedor de chat compatible con OpenAI como un proveedor de comprensión de medios de audio.
+[Groq](https://groq.com) proporciona una inferencia ultrarrápida en modelos de pesos abiertos (Llama, Gemma, Kimi, Qwen, GPT OSS y más) utilizando hardware LPU personalizado. OpenClaw incluye un complemento Groq integrado que registra tanto un proveedor de chat compatible con OpenAI como un proveedor de comprensión de medios de audio.
 
 | Propiedad                            | Valor                                        |
 | ------------------------------------ | -------------------------------------------- |
@@ -73,7 +73,7 @@ export GROQ_API_KEY=gsk_...
 
 ## Catálogo integrado
 
-OpenClaw incluye un catálogo de Groq respaldado por manifiesto con entradas de razonamiento y no razonamiento. Ejecuta `openclaw models list --provider groq` para ver las filas incluidas en tu versión instalada, o consulta [console.groq.com/docs/models](https://console.groq.com/docs/models) para la lista oficial de Groq.
+OpenClaw incluye un catálogo Groq respaldado por manifiesto con entradas de razonamiento y no razonamiento. Ejecute `openclaw models list --provider groq` para ver las filas incluidas en su versión instalada, o consulte [console.groq.com/docs/models](https://console.groq.com/docs/models) para ver la lista autoritativa de Groq.
 
 | Ref. del modelo                                      | Nombre                        | Razonamiento | Entrada        | Contexto |
 | ---------------------------------------------------- | ----------------------------- | ------------ | -------------- | -------- |
@@ -96,7 +96,7 @@ OpenClaw incluye un catálogo de Groq respaldado por manifiesto con entradas de 
 | `groq/groq/compound`                                 | Compound                      | sí           | texto          | 131,072  |
 | `groq/groq/compound-mini`                            | Compound Mini                 | sí           | texto          | 131,072  |
 
-<Tip>El catálogo evoluciona con cada versión de OpenClaw. `openclaw models list --provider groq` muestra las filas conocidas por su versión instalada; verifíquelo con [console.groq.com/docs/models](https://console.groq.com/docs/models) para ver modelos agregados recientemente o obsoletos.</Tip>
+<Tip>El catálogo evoluciona con cada lanzamiento de OpenClaw. `openclaw models list --provider groq` muestra las filas conocidas por su versión instalada; verifique en [console.groq.com/docs/models](https://console.groq.com/docs/models) los modelos recién agregados o obsoletos.</Tip>
 
 ## Modelos de razonamiento
 
@@ -106,7 +106,7 @@ OpenClaw asigna sus niveles `/think` compartidos a los valores `reasoning_effort
 - Para los modelos de razonamiento Groq GPT OSS (`openai/gpt-oss-*`), OpenClaw envía `low`, `medium` o `high` según el nivel `/think`. El pensamiento deshabilitado omite `reasoning_effort` porque esos modelos no admiten un valor deshabilitado.
 - DeepSeek R1 Distill, Qwen QwQ y Compound utilizan la superficie de razonamiento nativa de Groq; `/think` controla la visibilidad, pero el modelo siempre razona.
 
-Consulte [Thinking modes](/es/tools/thinking) para conocer los niveles `/think` compartidos y cómo OpenClaw los traduce para cada proveedor.
+Consulte [Modos de pensamiento](/es/tools/thinking) para conocer los niveles `/think` compartidos y cómo OpenClaw los traduce para cada proveedor.
 
 ## Transcripción de audio
 
@@ -135,17 +135,17 @@ Para convertir a Groq en el backend de audio predeterminado:
 ```
 
 <AccordionGroup>
-  <Accordion title="Disponibilidad de entorno para el demonio">
-    Si el Gateway se ejecuta como un servicio administrado (launchd, systemd, Docker), `GROQ_API_KEY` debe ser visible para ese proceso, no solo para su shell interactivo.
+  <Accordion title="Disponibilidad del entorno para el demonio">
+    Si el Gateway se ejecuta como un servicio gestionado (launchd, systemd, Docker), `GROQ_API_KEY` debe ser visible para ese proceso, no solo para su shell interactivo.
 
     <Warning>
-      Una clave que solo esté en `~/.profile` no servirá de ayuda a un demonio launchd o systemd a menos que ese entorno también se importe allí. Establezca la clave en `~/.openclaw/.env` o mediante `env.shellEnv` para que sea legible desde el proceso de la puerta de enlace.
+      Una clave exportada solo en un shell interactivo no ayudará a un demonio launchd o systemd a menos que ese entorno también se importe allí. Establezca la clave en `~/.openclaw/.env` o a través de `env.shellEnv` para que sea legible desde el proceso del gateway.
     </Warning>
 
   </Accordion>
 
-  <Accordion title="IDs de modelo Groq personalizados">
-    OpenClaw acepta cualquier ID de modelo de Groq en tiempo de ejecución. Use el ID exacto que muestra Groq y prefíjelo con `groq/`. El catálogo incluido cubre los casos comunes; los IDs no catalogados pasan a la plantilla predeterminada compatible con OpenAI.
+  <Accordion title="Custom Groq model ids">
+    OpenClaw acepta cualquier id de modelo de Groq en tiempo de ejecución. Use el id exacto mostrado por Groq y prefíjelo con `groq/`. El catálogo incluido cubre los casos comunes; los ids no catalogados pasan a la plantilla compatible con OpenAI predeterminada.
 
     ```json5
     {

@@ -38,7 +38,7 @@ openclaw plugins install ./path/to/local/line-plugin
 https://gateway-host/line/webhook
 ```
 
-网关响应 LINE 的 webhook 验证 (GET) 和传入事件 (POST)。
+网关会响应 LINE 的 webhook 验证 (GET)，并在验证签名和载荷后立即确认已签名的入站事件 (POST)；代理处理将异步继续。
 如果您需要自定义路径，请设置 `channels.line.webhookPath` 或
 `channels.line.accounts.<id>.webhookPath` 并相应地更新 URL。
 

@@ -120,23 +120,24 @@ Salida esperada:
 OpenClaw se ejecuta en Docker, pero Docker no es la fuente de verdad.
 Todo el estado de larga duración debe sobrevivir a reinicios, reconstrucciones y rearranques.
 
-| Componente                           | Ubicación                                              | Mecanismo de persistencia     | Notas                                                           |
-| ------------------------------------ | ------------------------------------------------------ | ----------------------------- | --------------------------------------------------------------- |
-| Configuración de Gateway             | `/home/node/.openclaw/`                                | Montaje de volumen del host   | Incluye `openclaw.json`, `.env`                                 |
-| Perfiles de autenticación de modelos | `/home/node/.openclaw/agents/`                         | Montaje de volumen del host   | `agents/<agentId>/agent/auth-profiles.json` (OAuth, claves API) |
-| Configuraciones de habilidades       | `/home/node/.openclaw/skills/`                         | Montaje de volumen del host   | Estado a nivel de habilidad                                     |
-| Espacio de trabajo del agente        | `/home/node/.openclaw/workspace/`                      | Montaje de volumen del host   | Código y artefactos del agente                                  |
-| Sesión de WhatsApp                   | `/home/node/.openclaw/`                                | Montaje de volumen del host   | Conserva el inicio de sesión QR                                 |
-| Llavero de Gmail                     | `/home/node/.openclaw/`                                | Volumen del host + contraseña | Requiere `GOG_KEYRING_PASSWORD`                                 |
-| Paquetes de complementos             | `/home/node/.openclaw/npm`, `/home/node/.openclaw/git` | Montaje de volumen del host   | Raíces de paquetes de complementos descargables                 |
-| Binarios externos                    | `/usr/local/bin/`                                      | Imagen Docker                 | Debe incorporarse en tiempo de compilación                      |
-| Tiempo de ejecución de Node          | Sistema de archivos del contenedor                     | Imagen Docker                 | Reconstruido en cada compilación de imagen                      |
-| Paquetes del sistema operativo       | Sistema de archivos del contenedor                     | Imagen de Docker              | No instalar en tiempo de ejecución                              |
-| Contenedor de Docker                 | Efímero                                                | Reiniciable                   | Seguro de destruir                                              |
+| Componente                           | Ubicación                                              | Mecanismo de persistencia     | Notas                                                                                    |
+| ------------------------------------ | ------------------------------------------------------ | ----------------------------- | ---------------------------------------------------------------------------------------- |
+| Configuración de Gateway             | `/home/node/.openclaw/`                                | Montaje de volumen del host   | Incluye `openclaw.json`, `.env`                                                          |
+| Perfiles de autenticación de modelos | `/home/node/.openclaw/agents/`                         | Montaje de volumen del host   | `agents/<agentId>/agent/auth-profiles.json` (OAuth, claves API)                          |
+| Clave de perfil de autenticación     | `/home/node/.config/openclaw/`                         | Montaje de volumen del host   | Clave de encriptación local para el material del token del perfil de autenticación OAuth |
+| Configuraciones de habilidades       | `/home/node/.openclaw/skills/`                         | Montaje de volumen del host   | Estado a nivel de habilidad                                                              |
+| Espacio de trabajo del agente        | `/home/node/.openclaw/workspace/`                      | Montaje de volumen del host   | Código y artefactos del agente                                                           |
+| Sesión de WhatsApp                   | `/home/node/.openclaw/`                                | Montaje de volumen del host   | Conserva el inicio de sesión con QR                                                      |
+| Llavero de Gmail                     | `/home/node/.openclaw/`                                | Volumen del host + contraseña | Requiere `GOG_KEYRING_PASSWORD`                                                          |
+| Paquetes de complementos             | `/home/node/.openclaw/npm`, `/home/node/.openclaw/git` | Montaje de volumen del host   | Raíces de paquetes de complementos descargables                                          |
+| Binarios externos                    | `/usr/local/bin/`                                      | Imagen Docker                 | Debe estar integrado en el momento de la compilación                                     |
+| Entorno de ejecución de Node         | Sistema de archivos del contenedor                     | Imagen de Docker              | Reconstruido en cada compilación de imagen                                               |
+| Paquetes del sistema operativo       | Sistema de archivos del contenedor                     | Imagen de Docker              | No instalar en tiempo de ejecución                                                       |
+| Contenedor de Docker                 | Efímero                                                | Reiniciable                   | Seguro de destruir                                                                       |
 
 ## Actualizaciones
 
-Para actualizar OpenClaw en la máquina virtual:
+Para actualizar OpenClaw en la VM:
 
 ```bash
 git pull

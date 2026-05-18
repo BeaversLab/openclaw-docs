@@ -38,9 +38,8 @@ openclaw plugins install ./path/to/local/line-plugin
 https://gateway-host/line/webhook
 ```
 
-La passerelle répond à la vérification du webhook de LINE (GET) et aux événements entrants (POST).
-Si vous avez besoin d'un chemin personnalisé, définissez `channels.line.webhookPath` ou
-`channels.line.accounts.<id>.webhookPath` et mettez à jour l'URL en conséquence.
+La passerelle répond à la vérification du webhook LINE (GET) et accuse réception des événements entrants signés (POST) immédiatement après la validation de la signature et de la charge utile ; le traitement de l'agent se poursuit de manière asynchrone.
+Si vous avez besoin d'un chemin personnalisé, définissez `channels.line.webhookPath` ou `channels.line.accounts.<id>.webhookPath` et mettez à jour l'URL en conséquence.
 
 Note de sécurité :
 

@@ -35,6 +35,7 @@ OpenClaw puede usar muchos proveedores de LLM. Elija un proveedor, autentíquese
 - [Cloudflare AI Gateway](/es/providers/cloudflare-ai-gateway)
 - [ComfyUI](/es/providers/comfy)
 - [DeepSeek](/es/providers/deepseek)
+- [ds4 (DeepSeek V4 local)](/es/providers/ds4)
 - [ElevenLabs](/es/providers/elevenlabs)
 - [fal](/es/providers/fal)
 - [Fireworks](/es/providers/fireworks)
@@ -67,20 +68,20 @@ OpenClaw puede usar muchos proveedores de LLM. Elija un proveedor, autentíquese
 - [Synthetic](/es/providers/synthetic)
 - [Tencent Cloud (TokenHub)](/es/providers/tencent)
 - [Together AI](/es/providers/together)
-- [Venice (Venice AI, centrado en la privacidad)](/es/providers/venice)
+- [Venice (Venice AI, privacy-focused)](/es/providers/venice)
 - [Vercel AI Gateway](/es/providers/vercel-ai-gateway)
-- [vLLM (modelos locales)](/es/providers/vllm)
+- [vLLM (local models)](/es/providers/vllm)
 - [Volcengine (Doubao)](/es/providers/volcengine)
 - [Vydra](/es/providers/vydra)
 - [xAI](/es/providers/xai)
 - [Xiaomi](/es/providers/xiaomi)
 - [Z.AI](/es/providers/zai)
 
-## Páginas de resumen compartidas
+## Páginas de descripción general compartidas
 
 - [Variantes adicionales incluidas](/es/providers/models#additional-bundled-provider-variants) - Anthropic Vertex, Copilot Proxy y Gemini CLI OAuth
-- [Generación de imágenes](/es/tools/image-generation) - Herramienta `image_generate` compartida, selección de proveedor y conmutación por error
-- [Generación de música](/es/tools/music-generation) - Herramienta `music_generate` compartida, selección de proveedor y conmutación por error
+- [Generación de imágenes](/es/tools/image-generation) - Herramienta compartida `image_generate`, selección de proveedor y conmutación por error
+- [Generación de música](/es/tools/music-generation) - Herramienta compartida `music_generate`, selección de proveedor y conmutación por error
 - [Generación de video](/es/tools/video-generation) - Herramienta `video_generate` compartida, selección de proveedor y conmutación por error
 
 ## Proveedores de transcripción
@@ -94,7 +95,7 @@ OpenClaw puede usar muchos proveedores de LLM. Elija un proveedor, autentíquese
 
 ## Herramientas comunitarias
 
-- [Claude Max API Proxy](/es/providers/claude-max-api-proxy) - Proxy comunitario para credenciales de suscripción de Claude (verifique la política/términos de Anthropic antes de usar)
+- [Claude Max API Proxy](/es/providers/claude-max-api-proxy) - Proxy comunitario para las credenciales de suscripción de Claude (verifique la política/términos de Anthropic antes de usar)
 
 Para el catálogo completo de proveedores (xAI, Groq, Mistral, etc.) y la configuración avanzada,
 consulte [Proveedores de modelos](/es/concepts/model-providers).

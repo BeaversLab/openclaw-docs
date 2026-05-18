@@ -125,6 +125,9 @@ Inferrs 是一个自定义的兼容 OpenAI 的 `/v1` 后端，因此相同的本
 
 ## ds4 示例
 
+有关完整的设置、上下文大小指导原则和验证命令，请参阅
+[ds4](/zh/providers/ds4)。
+
 ```json5
 {
   models: {
@@ -135,9 +138,9 @@ Inferrs 是一个自定义的兼容 OpenAI 的 `/v1` 后端，因此相同的本
         api: "openai-completions",
         timeoutSeconds: 300,
         localService: {
-          command: "/Users/you/Projects/oss/ds4/ds4-server",
-          args: ["--model", "/Users/you/Projects/oss/ds4/ds4flash.gguf", "--host", "127.0.0.1", "--port", "18000", "--ctx", "393216"],
-          cwd: "/Users/you/Projects/oss/ds4",
+          command: "<DS4_DIR>/ds4-server",
+          args: ["--model", "<DS4_DIR>/ds4flash.gguf", "--host", "127.0.0.1", "--port", "18000", "--ctx", "32768", "--tokens", "128"],
+          cwd: "<DS4_DIR>",
           healthUrl: "http://127.0.0.1:18000/v1/models",
           readyTimeoutMs: 300000,
           idleStopMs: 0,
@@ -151,17 +154,20 @@ Inferrs 是一个自定义的兼容 OpenAI 的 `/v1` 后端，因此相同的本
 
 ## 操作说明
 
-- 一个 OpenClaw 进程管理其启动的子进程。另一个 OpenClaw 进程如果发现相同的健康 URL 已处于活动状态，将重用该进程而不会接管它。
-- 启动过程是按提供商命令和参数集序列化的，因此并发请求不会针对相同配置生成重复的服务器。
-- 活动的流式响应持有租约；空闲关闭会等到响应体处理完成后才执行。
-- 在慢速本地提供商上使用 `timeoutSeconds`，这样冷启动和长时间的生成
-  不会达到默认模型请求超时。
+- 一个 OpenClaw 进程管理其启动的子进程。另一个 OpenClaw 进程
+  如果发现相同的运行状况 URL 已处于活动状态，将直接重用它，而不会接管它。
+- 启动过程是按提供商命令和参数集串行化的，因此并发
+  请求不会针对相同的配置生成重复的服务器。
+- 活动的流式响应持有租约；空闲关闭会等待直到响应
+  正文处理完成。
+- 在速度较慢的本地提供商上使用 `timeoutSeconds`，以免冷启动和长时间生成
+  受到默认模型请求超时的影响。
 - 如果您的服务器在 `/v1/models` 以外的位置暴露就绪状态，请使用显式的 `healthUrl`。
 
 ## 相关
 
 <CardGroup cols={2}>
-  <Card title="Local models" href="/zh/gateway/local-models" icon="server">
+  <Card title="本地模型" href="/zh/gateway/local-models" icon="server">
     本地模型设置、提供商选择和安全指南。
   </Card>
   <Card title="Inferrs" href="/zh/providers/inferrs" icon="cpu">

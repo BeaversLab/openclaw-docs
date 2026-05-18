@@ -79,14 +79,14 @@ Implicaciones:
 ```
 
 <Warning>
-**Reglas de ejecución importantes**
+**Reglas importantes de tiempo de ejecución**
 
-- La autenticación de proxy confiable rechaza las solicitudes de origen de bucle local (`127.0.0.1`, `::1`, CIDRs de bucle local) de forma predeterminada.
-- Los proxies inversos de bucle local del mismo host **no** satisfacen la autenticación de proxy confiable a menos que establezca explícitamente `gateway.auth.trustedProxy.allowLoopback = true` e incluya la dirección de bucle local en `gateway.trustedProxies`.
-- `allowLoopback` confía en los procesos locales en el host Gateway en el mismo grado que en el proxy inverso. Actívelo solo cuando el Gateway aún esté protegido por un firewall contra el acceso remoto directo y el proxy local elimine o sobrescriba los encabezados de identidad proporcionados por el cliente.
-- Los clientes internos de Gateway que no pasan a través del proxy inverso deben usar `gateway.auth.password` / `OPENCLAW_GATEWAY_PASSWORD`, no los encabezados de identidad de proxy confiable.
-- Las implementaciones de la Interfaz de usuario de control (Control UI) que no son de bucle local todavía necesitan `gateway.controlUi.allowedOrigins` explícito.
-- **La evidencia del encabezado reenviado anula la localidad de bucle local para la reserva local directa.** Si una solicitud llega en bucle local pero lleva encabezados `X-Forwarded-For` / `X-Forwarded-Host` / `X-Forwarded-Proto` que apuntan a un origen no local, esa evidencia descalifica la reserva de contraseña local directa y el filtrado de identidad del dispositivo. Con `allowLoopback: true`, la autenticación de proxy confiable aún puede aceptar la solicitud como una solicitud de proxy del mismo host, mientras que `requiredHeaders` y `allowUsers` siguen aplicándose.
+- La autenticación de proxy de confianza rechaza las solicitudes de origen de bucle invertido (`127.0.0.1`, `::1`, CIDRs de bucle invertido) de forma predeterminada.
+- Los proxies inversos de bucle invertido del mismo host **no** cumplen con la autenticación de proxy de confianza a menos que configure explícitamente `gateway.auth.trustedProxy.allowLoopback = true` e incluya la dirección de bucle invertido en `gateway.trustedProxies`.
+- `allowLoopback` confía en los procesos locales del host Gateway en el mismo grado que en el proxy inverso. Actívelo solo cuando el Gateway aún esté protegido por un firewall contra el acceso remoto directo y el proxy local elimine o sobrescriba los encabezados de identidad proporcionados por el cliente.
+- Los clientes internos de Gateway que no pasan a través del proxy inverso deben usar `gateway.auth.password` / `OPENCLAW_GATEWAY_PASSWORD`, no los encabezados de identidad de proxy de confianza.
+- Las implementaciones de la interfaz de usuario de control que no son de bucle invertido aún necesitan `gateway.controlUi.allowedOrigins` explícito.
+- **La evidencia del encabezado reenviado anula la localidad de bucle invertido para la alternativa directa local.** Si una solicitud llega en bucle invertido pero lleva `Forwarded`, cualquier `X-Forwarded-*` o evidencia de encabezado `X-Real-IP`, esa evidencia descalifica la alternativa de contraseña directa local y el filtrado de identidad del dispositivo. Con `allowLoopback: true`, la autenticación de proxy de confianza aún puede aceptar la solicitud como una solicitud de proxy del mismo host, mientras que `requiredHeaders` y `allowUsers` continúan aplicándose.
 
 </Warning>
 

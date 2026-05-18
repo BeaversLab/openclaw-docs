@@ -124,7 +124,7 @@ De manera predeterminada, OpenClaw inyecta un conjunto fijo de archivos del espa
 
 Los archivos grandes se truncan por archivo usando `agents.defaults.bootstrapMaxChars` (por defecto `12000` caracteres). OpenClaw también impone un límite máximo de inyección de arranque total entre archivos con `agents.defaults.bootstrapTotalMaxChars` (por defecto `60000` caracteres). `/context` muestra los tamaños **brutos frente a los inyectados** y si se produjo un truncamiento.
 
-Cuando se produce el truncamiento, el tiempo de ejecución puede inyectar un bloque de advertencia en el aviso bajo el Contexto del proyecto. Configure esto con `agents.defaults.bootstrapPromptTruncationWarning` (`off`, `once`, `always`; por defecto `once`).
+Cuando se produce una truncación, el tiempo de ejecución puede inyectar un bloque de advertencia en el prompt bajo el Contexto del Proyecto. Configure esto con `agents.defaults.bootstrapPromptTruncationWarning` (`off`, `once`, `always`; por defecto `always`).
 
 ## Habilidades: inyectadas vs cargadas bajo demanda
 

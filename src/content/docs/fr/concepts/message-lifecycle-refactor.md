@@ -837,11 +837,11 @@ Tests unitaires :
 Tests d'intégration :
 
 - L'adaptateur simple `channel.turn.run` enregistre et envoie toujours.
-- La livraison d'un tour assemblé hérité ne devient pas durable, sauf si le channel y opte explicitement.
+- La livraison d'événements assemblés hérités ne devient pas durable sauf si le channel y opte explicitement.
 - Le pont `channel.turn.runPrepared` enregistre et finalise toujours.
 - Les assistants de compatibilité publique appellent par défaut les rappels de livraison détenus par l'appelant et n'effectuent pas d'envoi générique avant ces rappels.
 - La livraison de repli durable rejoue l'ensemble du tableau de charges utiles projetées après redémarrage et ne peut pas laisser les charges utiles ultérieures non enregistrées après un plantage précoce.
-- La livraison d'un tour assemblé durable renvoie les identifiants de messages de la plateforme au répartisseur tamponné.
+- La livraison durable d'événements assemblés renvoie les identifiants de message de plateforme au répartiteur tamponné.
 - Les crochets de livraison personnalisés renvoient toujours les identifiants de messages de la plateforme lorsque la livraison durable est désactivée ou indisponible.
 - La réponse finale survit au redémarrage entre l'achèvement de l'assistant et l'envoi sur la plateforme.
 - Le brouillon d'aperçu est finalisé sur place lorsque cela est autorisé.

@@ -51,7 +51,9 @@ La génération vidéo est asynchrone. Lorsque l'agent appelle `video_generate` 
 1. OpenClaw soumet la demande au fournisseur et renvoie immédiatement un identifiant de tâche.
 2. Le fournisseur traite la tâche en arrière-plan (généralement de 30 secondes à plusieurs minutes selon le fournisseur et la résolution ; les fournisseurs lents avec une file d'attente peuvent aller jusqu'au délai d'attente configuré).
 3. Lorsque la vidéo est prête, OpenClaw réveille la même session avec un événement interne de finition.
-4. L'agent informe l'utilisateur et joint la vidéo terminée. Dans les discussions de groupe/channel qui utilisent la livraison visible uniquement par message-tool, l'agent relaie le résultat via l'outil de message au lieu que OpenClaw ne le publie directement.
+4. L'agent informe l'utilisateur et joint la vidéo terminée via l'outil
+   de message. OpenClaw ne publie pas automatiquement la vidéo en repli si
+   l'agent de complétion écrit uniquement une réponse finale privée.
 
 Pendant qu'une tâche est en cours, les appels en double à `video_generate` dans la même session renvoient l'état actuel de la tâche au lieu de lancer une autre génération. Utilisez `openclaw tasks list` ou `openclaw tasks show <taskId>` pour vérifier la progression depuis le CLI.
 
@@ -99,7 +101,8 @@ Si une tâche vidéo est déjà `queued` ou `running` pour la session actuelle, 
 | Vydra                 | `veo3`                          |   ✓   | 1 image (`kling`)                                                     | -                                                 | `VYDRA_API_KEY`                          |
 | xAI                   | `grok-imagine-video`            |   ✓   | 1 image de première image ou jusqu'à 7 `reference_image`s             | 1 video                                           | `XAI_API_KEY`                            |
 
-Certains fournisseurs acceptent des variables d'environnement de clé API supplémentaires ou alternatives. Consultez les [pages des fournisseurs](#related) pour plus de détails.
+Certains providers acceptent des env vars de clé API supplémentaires ou alternatifs. Consultez
+les [pages provider](#related) individuelles pour plus de détails.
 
 Exécutez `video_generate action=list` pour inspecter les providers, modèles et
 modes d'exécution disponibles lors de l'exécution.
@@ -310,12 +313,12 @@ uniquement les entrées explicites `model`, `primary` et `fallbacks`.
     ID du fournisseur : `byteplus-seedance15`. Modèle :
     `seedance-1-5-pro-251215`.
 
-    Utilise l'`content[]`API unifiée. Prend en charge au maximum 2 images en entrée
-    (`first_frame` + `last_frame`). Toutes les entrées doivent être des URL `https://`
-    distantes. Définissez `role: "first_frame"` / `"last_frame"` sur chaque image, ou
-    passez les images positionnellement.
+    Utilise l'API unifiée `content[]`. Prend en charge au maximum 2 images d'entrée
+    (`first_frame` + `last_frame`). Toutes les entrées doivent être des `https://`
+    URL distantes. Définissez `role: "first_frame"` / `"last_frame"` sur chaque image, ou
+    transmettez les images positionnellement.
 
-    `aspectRatio: "adaptive"` détecte automatiquement le ratio à partir de l'image d'entrée.
+    `aspectRatio: "adaptive"` détecte automatiquement le ratio depuis l'image d'entrée.
     `audio: true` correspond à `generate_audio`. `providerOptions.seed`
     (nombre) est transmis.
 
@@ -328,11 +331,11 @@ uniquement les entrées explicites `model`, `primary` et `fallbacks`.
 
     Utilise l'API unifiée `content[]`. Prend en charge jusqu'à 9 images de référence,
     3 vidéos de référence et 3 audios de référence. Toutes les entrées doivent être des
-    URL `https://` distantes. Définissez `role` sur chaque élément - valeurs prises en charge :
+    `https://` URL distantes. Définissez `role` sur chaque élément - valeurs prises en charge :
     `"first_frame"`, `"last_frame"`, `"reference_image"`,
     `"reference_video"`, `"reference_audio"`.
 
-    `aspectRatio: "adaptive"` détecte automatiquement le ratio à partir de l'image d'entrée.
+    `aspectRatio: "adaptive"` détecte automatiquement le ratio depuis l'image d'entrée.
     `audio: true` correspond à `generate_audio`. `providerOptions.seed`
     (nombre) est transmis.
 
@@ -448,13 +451,12 @@ Wrapper du dépôt :
 pnpm test:live:media video
 ```
 
-Ce fichier actif charge les env vars de fournisseur manquants depuis `~/.profile`, préfère
-les clés d'API live/env aux profils d'authentification stockés par défaut, et exécute un
-test de fumée sûr pour la release par défaut :
+Ce fichier en direct utilise par défaut les env vars du fournisseur déjà exportées avant les profils d'authentification stockés,
+et exécute par défaut un smoke test sans risque pour la version :
 
-- `generate` pour chaque fournisseur non-FAL dans le sweep.
+- `generate` pour chaque provider non-FAL dans le balayage.
 - Prompt homard d'une seconde.
-- Limite d'opérations par fournisseur à partir de
+- Plafond d'opérations par provider provenant de
   `OPENCLAW_LIVE_VIDEO_GENERATION_TIMEOUT_MS` (`180000` par défaut).
 
 FAL est en option car la latence de la file d'attente côté provider peut dominer le temps de release :
@@ -463,13 +465,13 @@ FAL est en option car la latence de la file d'attente côté provider peut domin
 pnpm test:live:media video --video-providers fal
 ```
 
-Définissez `OPENCLAW_LIVE_VIDEO_GENERATION_FULL_MODES=1` pour également exécuter les modes de
-déclaration de transformation que le sweep partagé peut exercer en toute sécurité avec des médias locaux :
+Définissez `OPENCLAW_LIVE_VIDEO_GENERATION_FULL_MODES=1` pour exécuter également les modes de
+transformation déclarés que le balayage partagé peut tester en toute sécurité avec des médias locaux :
 
 - `imageToVideo` lorsque `capabilities.imageToVideo.enabled`.
 - `videoToVideo` lorsque `capabilities.videoToVideo.enabled` et que le
-  fournisseur/modèle accepte l'entrée vidéo locale basée sur des tampons dans le sweep
-  partagé.
+  fournisseur/modèle accepte les entrées vidéo locales soutenues par un tampon dans le
+  balayage partagé.
 
 Aujourd'hui, la voie active partagée `videoToVideo` couvre `runway` uniquement lorsque vous
 sélectionnez `runway/gen4_aleph`.
@@ -500,18 +502,18 @@ openclaw config set agents.defaults.videoGenerationModel.primary "qwen/wan2.6-t2
 ## Connexes
 
 - [Alibaba Model Studio](/fr/providers/alibaba)
-- [Background tasks](/fr/automation/tasks) - suivi des tâches pour la génération vidéo asynchrone
+- [Tâches d'arrière-plan](/fr/automation/tasks) - suivi des tâches pour la génération vidéo asynchrone
 - [BytePlus](/fr/concepts/model-providers#byteplus-international)
 - [ComfyUI](/fr/providers/comfy)
-- [Configuration reference](/fr/gateway/config-agents#agent-defaults)
+- [Référence de configuration](/fr/gateway/config-agents#agent-defaults)
 - [fal](/fr/providers/fal)
 - [Google (Gemini)](/fr/providers/google)
 - [MiniMax](/fr/providers/minimax)
-- [Models](/fr/concepts/models)
+- [Modèles](/fr/concepts/models)
 - [OpenAI](/fr/providers/openai)
-- [Qwen](Qwen/en/providers/qwen)
+- [Qwen](/fr/providers/qwen)
 - [Runway](/fr/providers/runway)
 - [Together AI](/fr/providers/together)
-- [Vue d'ensemble des outils](/fr/tools)
+- [Aperçu des outils](/fr/tools)
 - [Vydra](/fr/providers/vydra)
 - [xAI](/fr/providers/xai)

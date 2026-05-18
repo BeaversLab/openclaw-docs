@@ -88,7 +88,6 @@ Utilisez une configuration explicite lorsque :
         baseUrl: "http://127.0.0.1:8000/v1",
         apiKey: "${VLLM_API_KEY}",
         api: "openai-completions",
-        request: { allowPrivateNetwork: true },
         timeoutSeconds: 300, // Optional: extend connect/header/body/request timeout for slow local models
         models: [
           {
@@ -253,7 +252,7 @@ Pour garder ce provider dynamique sans lister manuellement chaque modèle, ajout
   </Accordion>
 
   <Accordion title="URL de base personnalisée">
-    Si votre serveur vLLM s'exécute sur un hôte ou un port non défini par défaut, définissez `baseUrl` dans la configuration explicite du fournisseur :
+    Si votre serveur vLLM s'exécute sur un hôte ou un port non défini par défaut, définissez `baseUrl` dans la configuration explicite du provider :
 
     ```json5
     {
@@ -263,7 +262,6 @@ Pour garder ce provider dynamique sans lister manuellement chaque modèle, ajout
             baseUrl: "http://192.168.1.50:9000/v1",
             apiKey: "${VLLM_API_KEY}",
             api: "openai-completions",
-            request: { allowPrivateNetwork: true },
             timeoutSeconds: 300,
             models: [
               {
@@ -287,9 +285,9 @@ Pour garder ce provider dynamique sans lister manuellement chaque modèle, ajout
 ## Dépannage
 
 <AccordionGroup>
-  <Accordion title="Première réponse lente ou timeout du serveur distant">
+  <Accordion title="Lenteur de la première réponse ou expiration du délai du serveur distant">
     Pour les modèles locaux volumineux, les hôtes LAN distants ou les liens tailnet, définissez un
-délai d'expiration de demande ciblé au fournisseur :
+délai d'expiration de demande au niveau du provider :
 
     ```json5
     {
@@ -299,7 +297,6 @@ délai d'expiration de demande ciblé au fournisseur :
             baseUrl: "http://192.168.1.50:8000/v1",
             apiKey: "${VLLM_API_KEY}",
             api: "openai-completions",
-            request: { allowPrivateNetwork: true },
             timeoutSeconds: 300,
             models: [{ id: "your-model-id", name: "Local vLLM Model" }],
           },
@@ -308,32 +305,33 @@ délai d'expiration de demande ciblé au fournisseur :
     }
     ```
 
-    `timeoutSeconds` s'applique uniquement aux requêtes HTTP du modèle vLLM, y compris
+    `timeoutSeconds` s'applique uniquement aux demandes HTTP de modèle vLLM, y compris
 
-la configuration de la connexion, les en-têtes de réponse, le streaming du corps et l'annulation
-gardée totale du fetch. Privilégiez ceci avant d'augmenter
+la configuration de la connexion, les en-têtes de réponse, la diffusion du corps et l'annulation
+totale du guarded-fetch. Privilégiez cela avant d'augmenter
 `agents.defaults.timeoutSeconds`, qui contrôle l'exécution entière de l'agent.
 
   </Accordion>
 
-  <Accordion title="Serveur inaccessible">
+  <Accordion title="Serveur injoignable">
     Vérifiez que le serveur vLLM est en cours d'exécution et accessible :
 
     ```bash
     curl http://127.0.0.1:8000/v1/models
     ```
 
-    Si vous voyez une erreur de connexion, vérifiez l'hôte, le port et que vLLM a démarré avec le mode serveur compatible OpenAI.
-    Pour les points de terminaison de bouclage explicite, LAN ou Tailscale, définissez également
-
-`models.providers.vllm.request.allowPrivateNetwork: true` ; les demandes du fournisseur
-bloquent les URL de réseau privé par défaut, sauf si le fournisseur est
-explicitement approuvé.
+    Si vous voyez une erreur de connexion, vérifiez l'hôte, le port et que vLLM a démarré avec le mode de serveur compatible OpenAI.
+    Pour les points de terminaison bouclage explicite, LAN ou Tailscale, OpenClaw fait confiance à l'origine
+    `models.providers.vllm.baseUrl` exactement configurée pour les demandes de modèle
+    gardées. Les origines de métadonnées/link-local restent bloquées sans
+    approbation explicite. Définissez `models.providers.vllm.request.allowPrivateNetwork: true` uniquement
+    lorsque les demandes vLLM doivent atteindre une autre origine privée, et définissez-la sur `false`
+    pour refuser la confiance basée sur l'origine exacte.
 
   </Accordion>
 
   <Accordion title="Erreurs d'authentification sur les demandes">
-    Si les demandes échouent avec des erreurs d'authentification, définissez une vraie `VLLM_API_KEY` qui correspond à votre configuration de serveur, ou configurez le fournisseur explicitement sous `models.providers.vllm`.
+    Si les demandes échouent avec des erreurs d'authentification, définissez un `VLLM_API_KEY` réel qui correspond à la configuration de votre serveur, ou configurez le provider explicitement sous `models.providers.vllm`.
 
     <Tip>
     Si votre serveur vLLM n'applique pas l'authentification, toute valeur non vide pour `VLLM_API_KEY` fonctionne comme un signal d'acceptation pour OpenClaw.
@@ -341,16 +339,16 @@ explicitement approuvé.
 
   </Accordion>
 
-<Accordion title="Aucun modèle découvert">La découverte automatique exige que `VLLM_API_KEY` soit défini. Si vous avez défini `models.providers.vllm`, OpenClaw utilise uniquement vos modèles déclarés, sauf si `agents.defaults.models` inclut `"vllm/*": {}`.</Accordion>
+<Accordion title="Aucun modèle découvert">La découverte automatique nécessite que `VLLM_API_KEY` soit défini. Si vous avez défini `models.providers.vllm`, OpenClaw n'utilisera que vos modèles déclarés, sauf si `agents.defaults.models` inclut `"vllm/*": {}`.</Accordion>
 
-  <Accordion title="Tools render as raw text"QwenQwen>
-    Si un model Qwen imprime la syntaxe d'outil JSON/XML au lieu d'exécuter une compétence,
-    consultez les instructions Qwen dans la configuration avancée ci-dessus. La solution habituelle est :
+  <Accordion title="Les outils s'affichent sous forme de texte brut">
+    Si un modèle Qwen imprime la syntaxe de l'outil JSON/XML au lieu d'exécuter une compétence,
+    consultez les instructions Qwen dans la configuration avancée ci-dessus. La solution habituelle consiste à :
 
-    - démarrer vLLM avec l'analyseur/modèle correct pour ce model
-    - confirmer l'identifiant exact du model avec `openclaw models list --provider vllm`
-    - ajouter un `params.extra_body.tool_choice: "required"` dédié par model
-      uniquement si `tool_choice: "auto"` renvoie toujours des appels d'outil vides ou en texte brut
+    - démarrer vLLM avec l'analyseur/modèle correct pour ce modèle
+    - confirmer l'identifiant exact du modèle avec `openclaw models list --provider vllm`
+    - ajouter un `params.extra_body.tool_choice: "required"` dédié par modèle
+      uniquement si `tool_choice: "auto"` renvoie toujours des appels d'outil vides ou texte uniquement
 
   </Accordion>
 </AccordionGroup>

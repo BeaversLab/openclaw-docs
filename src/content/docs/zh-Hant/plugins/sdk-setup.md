@@ -10,7 +10,7 @@ read_when:
 
 關於外掛打包（`package.json` 元數據）、清單（`openclaw.plugin.json`）、設定條目和配置架構的參考資料。
 
-<Tip>**正在尋找逐步指南？** 操作指南涵蓋了情境中的打包內容：[頻道外掛](/zh-Hant/plugins/sdk-channel-plugins#step-1-package-and-manifest) 和 [提供者外掛](/zh-Hant/plugins/sdk-provider-plugins#step-1-package-and-manifest)。</Tip>
+<Tip>**尋找逐步教學？** 操作指南涵蓋了相關情境下的打包工作：[頻道外掛程式](/zh-Hant/plugins/sdk-channel-plugins#step-1-package-and-manifest) 和 [提供者外掛程式](/zh-Hant/plugins/sdk-provider-plugins#step-1-package-and-manifest)。</Tip>
 
 ## 套件中繼資料
 
@@ -257,7 +257,7 @@ read_when:
 }
 ```
 
-完整的架構參考請參閱 [外掛清單](/zh-Hant/plugins/manifest)。
+完整的結構描述參考請參閱 [外掛程式清單](/zh-Hant/plugins/manifest)。
 
 ## ClawHub 發佈
 
@@ -314,31 +314,33 @@ export default defineSetupPluginEntry(myChannelPlugin);
 
 對於僅用於快速設定的路徑，當您只需要設定介面的一部分時，優先使用較狹隘的設定輔助縫合 而非更廣泛的 `plugin-sdk/setup` 涵蓋範圍：
 
-| 匯入路徑                           | 使用於                                                           | 主要匯出                                                                                                                                                                                                                                                                                     |
-| ---------------------------------- | ---------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `plugin-sdk/setup-runtime`         | 在 `setupEntry` / 延遲頻道啟動中持續可用的設定時執行階段輔助程式 | `createPatchedAccountSetupAdapter`, `createEnvPatchedAccountSetupAdapter`, `createSetupInputPresenceValidator`, `noteChannelLookupFailure`, `noteChannelLookupSummary`, `promptResolvedAllowFrom`, `splitSetupEntries`, `createAllowlistSetupWizardProxy`, `createDelegatedSetupWizardProxy` |
-| `plugin-sdk/setup-adapter-runtime` | 已棄用的相容性別名；請使用 `plugin-sdk/setup-runtime`            | `createEnvPatchedAccountSetupAdapter`                                                                                                                                                                                                                                                        |
-| `plugin-sdk/setup-tools`           | 設定/安裝 CLI/封存/文件輔助程式                                  | `formatCliCommand`, `detectBinary`, `extractArchive`, `resolveBrewExecutable`, `formatDocsLink`, `CONFIG_DIR`                                                                                                                                                                                |
+| 匯入路徑                           | 使用於                                                           | 主要匯出                                                                                                                                                                                                                                                                                                              |
+| ---------------------------------- | ---------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `plugin-sdk/setup-runtime`         | 在 `setupEntry` / 延遲頻道啟動中持續可用的設定時執行階段輔助程式 | `createSetupTranslator`, `createPatchedAccountSetupAdapter`, `createEnvPatchedAccountSetupAdapter`, `createSetupInputPresenceValidator`, `noteChannelLookupFailure`, `noteChannelLookupSummary`, `promptResolvedAllowFrom`, `splitSetupEntries`, `createAllowlistSetupWizardProxy`, `createDelegatedSetupWizardProxy` |
+| `plugin-sdk/setup-adapter-runtime` | 已棄用的相容性別名；請使用 `plugin-sdk/setup-runtime`            | `createEnvPatchedAccountSetupAdapter`                                                                                                                                                                                                                                                                                 |
+| `plugin-sdk/setup-tools`           | 設定/安裝 CLI/封存/文件輔助程式                                  | `formatCliCommand`, `detectBinary`, `extractArchive`, `resolveBrewExecutable`, `formatDocsLink`, `CONFIG_DIR`                                                                                                                                                                                                         |
 
-當您需要完整的共享設定工具箱（包括諸如 `moveSingleAccountChannelSectionToDefaultAccount(...)` 之類的設定修補輔助函式）時，請使用更廣泛的 `plugin-sdk/setup` 縫合 (seam)。
+當您需要完整的共享設定工具箱（包括諸如 `moveSingleAccountChannelSectionToDefaultAccount(...)` 等設定修補輔助工具）時，請使用更廣泛的 `plugin-sdk/setup` 縫合點。
 
-設定修補配接器在匯入時保持熱路徑安全。其打包的單一帳戶提升合約介面查詢是延遲的，因此在實際使用配接器之前，匯入 `plugin-sdk/setup-runtime` 不會急切地載入打包的合約介面探索功能。
+請使用 `createSetupTranslator(...)` 來處理固定的設定精靈複本。它遵循 CLI 精靈地區設定（`OPENCLAW_LOCALE`，然後是系統地區設定變數），並在找不到時回退為英文。請將外掛程式專屬的設定文字保留在外掛程式擁有的程式碼中，並僅將共享目錄鍵用於通用設定標籤、狀態文字和官方隨附外掛程式的設定複本。
+
+設定修補介面卡在匯入時保持熱路徑安全。其隨附的單一帳戶提升合約介面查詢是延遲的，因此匯入 `plugin-sdk/setup-runtime` 不會在實際使用介面卡之前急切地載入隨附的合約介面探索功能。
 
 ### 頻道擁有的單一帳戶提升
 
-當頻道從單一帳戶頂層設定升級到 `channels.<id>.accounts.*` 時，預設的共享行為是將提升的帳戶範圍值移動到 `accounts.default` 中。
+當頻道從單一帳戶頂層設定升級至 `channels.<id>.accounts.*` 時，預設的共享行為是將提升的帳戶範圍值移入 `accounts.default`。
 
-捆綁頻道可以透過其設定合約介面縮小或覆寫該提升：
+隨附頻道可以透過其設定合約介面縮小或覆寫該提升行為：
 
-- `singleAccountKeysToMove`: 應移動到提升帳戶的額外頂層金鑰
-- `namedAccountPromotionKeys`: 當命名帳戶已經存在時，只有這些金鑰會移動到提升的帳戶中；共享的原則/傳遞金鑰保留在頻道根目錄
-- `resolveSingleAccountPromotionTarget(...)`: 選擇哪個現有帳戶接收提升的值
+- `singleAccountKeysToMove`：應移入被提升帳戶的額外頂層鍵
+- `namedAccountPromotionKeys`：當已存在命名帳戶時，只有這些鍵會移入被提升的帳戶；共享的 policy/delivery 鍵保留在 channel 根層級
+- `resolveSingleAccountPromotionTarget(...)`：選擇哪個現有帳戶接收被提升的值
 
-<Note>Matrix 是目前打包的範例。如果剛好存在一個命名為 Matrix 的帳戶，或者如果 `defaultAccount` 指向一個現有的非正式金鑰 (例如 `Ops`)，提升將保留該帳戶，而不是建立新的 `accounts.default` 項目。</Note>
+<Note>Matrix 是當前內建的範例。如果已經存在一個命名的 Matrix 帳戶，或者如果 `defaultAccount` 指向一個現有的非正規鍵（例如 `Ops`），升級過程將保留該帳戶，而不是建立一個新的 `accounts.default` 項目。</Note>
 
-## 設定結構描述
+## Config 結構描述
 
-外掛程式設定會根據您資訊清單中的 JSON Schema 進行驗證。使用者透過以下方式設定外掛程式：
+Plugin 配置會根據你 manifest 中的 JSON Schema 進行驗證。使用者透過以下方式配置插件：
 
 ```json5
 {
@@ -354,9 +356,9 @@ export default defineSetupPluginEntry(myChannelPlugin);
 }
 ```
 
-您的外掛在註冊期間會以 `api.pluginConfig` 的形式接收此設定。
+你的插件會在註冊期間以 `api.pluginConfig` 的形式接收此配置。
 
-對於特定頻道的設定，請改用頻道設定區段：
+對於 channel 特定的配置，請改用 channel config 區段：
 
 ```json5
 {
@@ -369,9 +371,9 @@ export default defineSetupPluginEntry(myChannelPlugin);
 }
 ```
 
-### 建置頻道設定結構描述
+### 建構 channel config 結構描述
 
-使用 `buildChannelConfigSchema` 將 Zod 架構轉換為外掛擁有的設定產物所使用的 `ChannelConfigSchema` 包裝器：
+使用 `buildChannelConfigSchema` 將 Zod schema 轉換為 plugin 擁有之配置工件所使用的 `ChannelConfigSchema` 包裝器：
 
 ```typescript
 import { z } from "zod";
@@ -387,7 +389,7 @@ const accountSchema = z.object({
 const configSchema = buildChannelConfigSchema(accountSchema);
 ```
 
-如果您已經將合約撰寫為 JSON Schema 或 TypeBox，請使用直接輔助工具，讓 OpenClaw 可以在元資料路徑上跳過 Zod 到 JSON Schema 的轉換：
+如果你已經將合約撰寫為 JSON Schema 或 TypeBox，請使用直接輔助函式，以便 OpenClaw 可以在元數據路徑上跳過 Zod 到 JSON Schema 的轉換：
 
 ```typescript
 import { Type } from "typebox";
@@ -401,11 +403,11 @@ const configSchema = buildJsonChannelConfigSchema(
 );
 ```
 
-對於第三方外掛，冷路徑契約仍然是外掛清單：將生成的 JSON Schema 映射到 `openclaw.plugin.json#channelConfigs`，以便配置 schema、設定和 UI 介面可以在不加載運行時代碼的情況下檢查 `channels.<id>`。
+對於第三方插件，冷路徑合約仍然是 plugin manifest：將生成的 JSON Schema 鏡像到 `openclaw.plugin.json#channelConfigs`，以便配置 schema、設定和 UI 介面可以在不載入執行時代碼的情況下檢查 `channels.<id>`。
 
 ## 設定精靈
 
-通道外掛可以為 `openclaw onboard` 提供互動式設定精靈。該精靈是 `ChannelPlugin` 上的一個 `ChannelSetupWizard` 物件：
+Channel 插件可以為 `openclaw onboard` 提供互動式設定精靈。精靈是 `ChannelPlugin` 上的一個 `ChannelSetupWizard` 物件：
 
 ```typescript
 import type { ChannelSetupWizard } from "openclaw/plugin-sdk/channel-setup";
@@ -438,17 +440,17 @@ const setupWizard: ChannelSetupWizard = {
 };
 ```
 
-`ChannelSetupWizard` 類型支援 `credentials`、`textInputs`、`dmPolicy`、`allowFrom`、`groupAccess`、`prepare`、`finalize` 等。有關完整範例，請參閱隨附的外掛套件（例如 Discord 外掛的 `src/channel.setup.ts`）。
+`ChannelSetupWizard` 類型支援 `credentials`、`textInputs`、`dmPolicy`、`allowFrom`、`groupAccess`、`prepare`、`finalize` 等。請參閱內建的插件套件（例如 Discord 插件的 `src/channel.setup.ts`）以獲得完整範例。
 
 <AccordionGroup>
   <Accordion title="Shared allowFrom prompts">
-    對於只需要標準 `note -> prompt -> parse -> merge -> patch` 流程的 DM 允許清單提示，請優先使用來自 `openclaw/plugin-sdk/setup` 的共享設定輔助程式：`createPromptParsedAllowFromForAccount(...)`、`createTopLevelChannelParsedAllowFromPrompt(...)` 和 `createNestedChannelParsedAllowFromPrompt(...)`。
+    對於只需要標準 `note -> prompt -> parse -> merge -> patch` 流程的 DM 許可清單提示，建議優先使用 `openclaw/plugin-sdk/setup` 中的共用設定輔助函式：`createPromptParsedAllowFromForAccount(...)`、`createTopLevelChannelParsedAllowFromPrompt(...)` 和 `createNestedChannelParsedAllowFromPrompt(...)`。
   </Accordion>
   <Accordion title="Standard channel setup status">
-    對於僅在標籤、分數和可選額外行有所不同的通道設定狀態區塊，請優先使用來自 `openclaw/plugin-sdk/setup` 的 `createStandardChannelSetupStatus(...)`，而不是在每個外掛中手動編寫相同的 `status` 物件。
+    對於僅在標籤、評分和可選額外行數上有所不同的頻道設定狀態區塊，建議優先使用 `openclaw/plugin-sdk/setup` 中的 `createStandardChannelSetupStatus(...)`，而不是在每個外掛程式中手動編寫相同的 `status` 物件。
   </Accordion>
   <Accordion title="Optional channel setup surface">
-    對於僅應出現在某些語境中的可選設定介面，請使用來自 `openclaw/plugin-sdk/channel-setup` 的 `createOptionalChannelSetupSurface`：
+    對於應僅出現在某些特定語境中的可選設定介面，請使用 `openclaw/plugin-sdk/channel-setup` 中的 `createOptionalChannelSetupSurface`：
 
     ```typescript
     import { createOptionalChannelSetupSurface } from "openclaw/plugin-sdk/channel-setup";
@@ -462,25 +464,25 @@ const setupWizard: ChannelSetupWizard = {
     // Returns { setupAdapter, setupWizard }
     ```
 
-    當您只需要該可選安裝介面的一半時，`plugin-sdk/channel-setup` 也會公開底層的 `createOptionalChannelSetupAdapter(...)` 和 `createOptionalChannelSetupWizard(...)` 建構器。
+    當您只需要該可選安裝介面的一半時，`plugin-sdk/channel-setup` 也會公開較低層級的 `createOptionalChannelSetupAdapter(...)` 和 `createOptionalChannelSetupWizard(...)` 建構器。
 
-    生成的可選介面卡/精靈在實際設定寫入時會安全失敗（fail closed）。它們在 `validateInput`、`applyAccountConfig` 和 `finalize` 之間重複使用一條需要安裝的訊息，並在設定 `docsPath` 時附加文件連結。
+    產生的可選介面卡/精靈在實際設定寫入時會預設封閉（失敗）。它們會在 `validateInput`、`applyAccountConfig` 和 `finalize` 之間重複使用同一個需要安裝的訊息，並在設定 `docsPath` 時附加文件連結。
 
   </Accordion>
   <Accordion title="Binary-backed setup helpers">
-    對於二進位支援的設定 UI，請優先使用共用的委派輔助函式，而不是將相同的二進位/狀態膠水程式碼複製到每個頻道：
+    對於二進制支援的設定 UI，優先使用共用的委派助手，而不是將相同的二進制/狀態膠水代碼複製到每個頻道：
 
-    - `createDetectedBinaryStatus(...)`：用於僅在標籤、提示、分數和二進位檢測上有所不同的狀態區塊
-    - `createCliPathTextInput(...)`：用於路徑支援的文字輸入
-    - `createDelegatedSetupWizardStatusResolvers(...)`、`createDelegatedPrepare(...)`、`createDelegatedFinalize(...)` 和 `createDelegatedResolveConfigured(...)`：當 `setupEntry` 需要延遲轉發到更繁重的完整精靈時
-    - `createDelegatedTextInputShouldPrompt(...)`：當 `setupEntry` 只需要委派 `textInputs[*].shouldPrompt` 決策時
+    - `createDetectedBinaryStatus(...)` 用於僅標籤、提示、評分和二進制檢測不同的狀態區塊
+    - `createCliPathTextInput(...)` 用於基於路徑的文字輸入
+    - 當 `setupEntry` 需要延遲轉發到較重的完整精靈時，使用 `createDelegatedSetupWizardStatusResolvers(...)`、`createDelegatedPrepare(...)`、`createDelegatedFinalize(...)` 和 `createDelegatedResolveConfigured(...)`
+    - 當 `setupEntry` 只需要委派 `textInputs[*].shouldPrompt` 決策時，使用 `createDelegatedTextInputShouldPrompt(...)`
 
   </Accordion>
 </AccordionGroup>
 
-## 發佈與安裝
+## 發布與安裝
 
-**外部外掛：** 發佈至 [ClawHub](/zh-Hant/clawhub)，然後安裝：
+**外掛插件：** 發布到 [ClawHub](/zh-Hant/clawhub)，然後安裝：
 
 <Tabs>
   <Tab title="npm">
@@ -488,7 +490,7 @@ const setupWizard: ChannelSetupWizard = {
     openclaw plugins install @myorg/openclaw-my-plugin
     ```
 
-    純套件規格會在啟動切換期間從 npm 安裝。
+    純套件規範會在啟動切換期間從 npm 安裝。
 
   </Tab>
   <Tab title="ClawHub only">
@@ -497,8 +499,8 @@ const setupWizard: ChannelSetupWizard = {
     ```
   </Tab>
   <Tab title="npm package spec">
-    當套件尚未移至 ClawHub，或是您在遷移期間需要直接的
-    npm 安裝路徑時，請使用 npm：
+    當套件尚未移至 ClawHub，或您在遷移期間需要
+    直接的 npm 安裝路徑時，請使用 npm：
 
     ```bash
     openclaw plugins install npm:@myorg/openclaw-my-plugin
@@ -507,7 +509,7 @@ const setupWizard: ChannelSetupWizard = {
   </Tab>
 </Tabs>
 
-**In-repo plugins：** 放置在 bundled plugin workspace tree 下，它們會在建置期間自動被發現。
+**倉庫內插件：** 將其放置在捆綁的插件工作區樹下，它們會在建置期間自動被發現。
 
 **使用者可以安裝：**
 
@@ -515,14 +517,14 @@ const setupWizard: ChannelSetupWizard = {
 openclaw plugins install <package-name>
 ```
 
-<Info>對於來源為 npm 的安裝，`openclaw plugins install` 會在停用生命週期腳本的情況下將套件安裝在 `~/.openclaw/npm` 下。請保持外掛依賴樹為純 JS/TS，並避免需要 `postinstall` 建置的套件。</Info>
+<Info>對於來自 npm 的安裝，`openclaw plugins install` 會將套件安裝在 `~/.openclaw/npm` 下，並停用生命週期腳本。請保持插件依賴樹為純 JS/TS，並避免需要 `postinstall` 建置的套件。</Info>
 
-<Note>Gateway 啟動不會安裝 plugin 相依性。npm/git/ClawHub 安裝流程擁有相依性收斂；本地 plugin 必須已安裝其相依性。</Note>
+<Note>Gateway 啟動不會安裝插件依賴。npm/git/ClawHub 安裝流程負責依賴收斂；本地插件必須已安裝其依賴。</Note>
 
-Bundled package metadata 是明確的，不會在 Gateway 啟動時從建置好的 JavaScript 推斷。Runtime 相依性屬於擁有它們的 plugin 套件；打包的 OpenClaw 啟動永遠不會修復或鏡像 plugin 相依性。
+打包的套件中繼資料是明確的，而非在閘道啟動時根據建置的 JavaScript 推斷。執行階段相依性屬於擁有它們的外掛程式套件；打包的 OpenClaw 啟動程序從不修復或鏡像外掛程式相依性。
 
 ## 相關
 
-- [Building plugins](/zh-Hant/plugins/building-plugins) — 逐步入門指南
-- [Plugin manifest](/zh-Hant/plugins/manifest) — 完整的 manifest schema 參考
+- [建置外掛程式](/zh-Hant/plugins/building-plugins) — 逐步入門指南
+- [外掛程式清單](/zh-Hant/plugins/manifest) — 完整的清單架構參考
 - [SDK 進入點](/zh-Hant/plugins/sdk-entrypoints) — `definePluginEntry` 和 `defineChannelPluginEntry`

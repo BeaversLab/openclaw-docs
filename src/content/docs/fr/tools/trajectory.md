@@ -1,14 +1,14 @@
 ---
-summary: "OpenClawExporter des bundles de trajectoire révisés pour le débogage d'une session agent OpenClaw"
+summary: "Exportez des lots de trajectoires révisées pour le débogage d'une session d'agent OpenClaw"
 read_when:
   - Debugging why an agent answered, failed, or called tools a certain way
   - Exporting a support bundle for an OpenClaw session
   - Investigating prompt context, tool calls, runtime errors, or usage metadata
   - Disabling or relocating trajectory capture
-title: "Bundles de trajectoire"
+title: "Lots de trajectoires"
 ---
 
-La capture de trajectoire est l'enregistreur de vol par session d'OpenClaw. Elle enregistre une chronologie structurée pour chaque exécution d'agent, puis OpenClaw`/export-trajectory` empaquette la session actuelle dans un bundle de support révisé.
+La capture de trajectoire est l'enregistreur de vol par session de OpenClaw. Il enregistre une chronologie structurée pour chaque exécution d'agent, puis `/export-trajectory` empaquette la session actuelle dans un lot de support révisé.
 
 Utilisez-le lorsque vous devez répondre à des questions telles que :
 
@@ -18,7 +18,7 @@ Utilisez-le lorsque vous devez répondre à des questions telles que :
 - Quel modèle, quels plugins, compétences et paramètres d'exécution étaient actifs ?
 - Quelles métadonnées d'utilisation et de cache de prompt le fournisseur a-t-il renvoyées ?
 
-Si vous soumettez un rapport de support général pour un problème en direct sur Gateway, commencez par [Gateway`/diagnostics`](/fr/gateway/diagnostics#chat-commandGatewayOpenAIOpenAI). Le module de diagnostic collecte le bundle Gateway assaini et, pour les sessions du harnais OpenAI Codex, peut également envoyer des commentaires Codex aux serveurs OpenAI après approbation. Utilisez `/export-trajectory` lorsque vous avez spécifiquement besoin de la chronologique détaillée par session des prompts, des outils et des transcriptions.
+Si vous soumettez un rapport de support général pour un problème en direct sur la Gateway, commencez par [`/diagnostics`](/fr/gateway/diagnostics#chat-command). Diagnostics collecte le lot nettoyé de la Gateway et, pour les sessions du harnais OpenAI Codex, peut également envoyer des commentaires Codex aux serveurs OpenAI après approbation. Utilisez `/export-trajectory` lorsque vous avez spécifiquement besoin de la chronologique détaillée par session des invites, des outils et des transcriptions.
 
 ## Quick start
 
@@ -70,7 +70,7 @@ Les événements d'exécution incluent :
 - `trace.metadata`
 - `context.compiled`
 - `prompt.submitted`
-- `model.fallback_step`, y compris le modèle source, le modèle suivant, la raison/détail de l'échec, la position dans la chaîne et si le repli a avancé, réussi ou épuisé la chaîne
+- `model.fallback_step`, y compris le modèle source, le modèle suivant, la raison/détail de l'échec, la position dans la chaîne, et si le basculement a avancé, réussi ou épuisé la chaîne
 - `model.completed`
 - `trace.artifacts`
 - `session.ended`
@@ -109,8 +109,7 @@ Un bundle exporté peut contenir :
 | `system-prompt.txt`   | Dernier prompt système compilé, lors de la capture                                                                                      |
 | `tools.json`          | Définitions des tools envoyées au model, lors de la capture                                                                             |
 
-`manifest.json` liste les fichiers présents dans ce bundle. Certains fichiers sont omis
-lorsque la session n'a pas capturé les données d'exécution correspondantes.
+`manifest.json` répertorie les fichiers présents dans ce lot. Certains fichiers sont omis lorsque la session n'a pas capturé les données d'exécution correspondantes.
 
 ## Emplacement de capture
 
@@ -126,8 +125,7 @@ OpenClaw écrit également un fichier pointeur de meilleur effort à côté de l
 <session>.trajectory-path.json
 ```
 
-Définissez `OPENCLAW_TRAJECTORY_DIR` pour stocker les sidecars de trajectoire d'exécution dans un
-répertoire dédié :
+Définissez `OPENCLAW_TRAJECTORY_DIR` pour stocker les fichiers annexes de trajectoire d'exécution dans un répertoire dédié :
 
 ```bash
 export OPENCLAW_TRAJECTORY_DIR=/var/lib/openclaw/trajectories
@@ -143,41 +141,55 @@ qu'elle appartient à cette session.
 
 ## Désactiver la capture
 
-Définissez `OPENCLAW_TRAJECTORY=0`OpenClaw avant de démarrer OpenClaw :
+Définissez `OPENCLAW_TRAJECTORY=0` avant de démarrer OpenClaw :
 
 ```bash
 export OPENCLAW_TRAJECTORY=0
 ```
 
-Cela désactive la capture de trajectoire à l'exécution. `/export-trajectory` peut toujours exporter
-la branche de transcription, mais les fichiers exclusifs à l'exécution tels que le contexte compilé,
-les artefacts du provider et les métadonnées de prompt peuvent manquer.
+Cela désactive la capture de trajectoire lors de l'exécution. `/export-trajectory` peut toujours exporter
+la branche de transcription, mais les fichiers d'exécution uniquement, tels que le contexte compilé,
+les artefacts du provider et les métadonnées de prompt, peuvent manquer.
+
+## Ajuster le délai de vidage (flush timeout)
+
+OpenClaw vide les sidecars de trajectoire d'exécution lors du nettoyage de l'agent. Le délai d'attente
+dep nettoyage par défaut est de 10 000 ms. Sur des disques lents ou des magasins volumineux, définissez
+`OPENCLAW_TRAJECTORY_FLUSH_TIMEOUT_MS` avant de démarrer OpenClaw :
+
+```bash
+export OPENCLAW_TRAJECTORY_FLUSH_TIMEOUT_MS=30000
+```
+
+Cela contrôle le moment où OpenClaw consigne un délai d'attente `pi-trajectory-flush` et continue.
+Cela ne modifie pas les limites de taille de la trajectoire. Pour ajuster toutes les étapes de nettoyage de l'agent
+qui ne transmettent pas de délai d'attente explicite, définissez `OPENCLAW_AGENT_CLEANUP_TIMEOUT_MS`.
 
 ## Confidentialité et limites
 
-Les bundles de trajectoires sont conçus pour le support et le débogage, pas pour la publication publique.
-OpenClaw masque les valeurs sensibles avant d'écrire les fichiers d'export :
+Les bundles de trajectoires sont conçus pour le support et le débogage, et non pour la publication publique.
+OpenClaw rédige les valeurs sensibles avant d'écrire les fichiers d'exportation :
 
 - les identifiants et les champs de payload connus comme étant des secrets
 - les données d'image
-- les chemins d'état local
+- les chemins d'état locaux
 - les chemins de l'espace de travail, remplacés par `$WORKSPACE_DIR`
 - les chemins du répertoire personnel, lorsqu'ils sont détectés
 
 L'exportateur limite également la taille de l'entrée :
 
-- fichiers sidecar d'exécution : la capture en direct s'arrête à 10 Mo et enregistre un événement de troncation lorsque de l'espace reste ; l'export accepte les sidecars d'exécution existants jusqu'à 50 Mo
-- fichiers de session : 50 Mo
+- fichiers sidecar d'exécution : la capture en direct s'arrête à 10 MiB et enregistre un événement de troncature lorsque de l'espace reste ; l'exportation accepte les sidecars d'exécution existants jusqu'à 50 MiB
+- fichiers de session : 50 MiB
 - événements d'exécution : 200 000
 - total des événements exportés : 250 000
-- les lignes d'événements d'exécution individuelles sont tronquées au-delà de 256 Ko
+- les lignes d'événements d'exécution individuelles sont tronquées au-delà de 256 KiB
 
-Révisez les bundles avant de les partager en dehors de votre équipe. Le masquage est fait au mieux
-et ne peut pas connaître tous les secrets spécifiques à l'application.
+Révisez les bundles avant de les partager en dehors de votre équipe. La rédaction est un meilleur effort
+et ne peut pas connaître chaque secret spécifique à l'application.
 
 ## Dépannage
 
-Si l'export n'a pas d'événements d'exécution :
+Si l'exportation ne contient aucun événement d'exécution :
 
 - confirmez que OpenClaw a été démarré sans `OPENCLAW_TRAJECTORY=0`
 - vérifiez si `OPENCLAW_TRAJECTORY_DIR` pointe vers un répertoire accessible en écriture
@@ -187,14 +199,15 @@ Si l'export n'a pas d'événements d'exécution :
 Si la commande rejette le chemin de sortie :
 
 - utilisez un nom relatif comme `bug-1234`
-- ne passez pas `/tmp/...` ou `~/...`
-- gardez l'export à l'intérieur de `.openclaw/trajectory-exports/`
+- ne transmettez pas `/tmp/...` ou `~/...`
+- gardez l'exportation à l'intérieur de `.openclaw/trajectory-exports/`
 
 Si l'export échoue avec une erreur de taille, la session ou le sidecar a dépassé les
-limites de sécurité d'export. Commencez une nouvelle session ou exportez une reproduction plus petite.
+limites de sécurité d'exportation. Commencez une nouvelle session ou exportez une
+reproduction plus petite.
 
 ## Connexes
 
 - [Diffs](/fr/tools/diffs)
 - [Gestion de session](/fr/concepts/session)
-- [Tool Exec](/fr/tools/exec)
+- [Outil Exec](/fr/tools/exec)

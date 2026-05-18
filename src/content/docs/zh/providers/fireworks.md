@@ -7,7 +7,7 @@ read_when:
   - You are debugging Kimi thinking-off behavior on Fireworks
 ---
 
-[Fireworks](https://fireworks.ai) 通过兼容 OpenAI 的 API 提供开源权重和路由模型。OpenClaw 包含一个捆绑的 Fireworks 提供商插件，该插件附带两个预先编录的 Kimi 模型，并在运行时接受任何 Fireworks 模型或路由器 ID。
+[Fireworks](https://fireworks.ai) 通过兼容 OpenAI 的 API 提供开源权重和路由模型。OpenClaw 包含一个捆绑的 Fireworks 提供商插件，该插件附带两个预先编目的 Kimi 模型，并在运行时接受任何 Fireworks 模型或路由器 ID。
 
 | 属性             | 值                                                     |
 | ---------------- | ------------------------------------------------------ |
@@ -76,7 +76,7 @@ openclaw onboard --non-interactive \
 | `fireworks/accounts/fireworks/models/kimi-k2p6`        | Kimi K2.6                   | 文本 + 图像 | 262,144 | 262,144  | 强制关闭         |
 | `fireworks/accounts/fireworks/routers/kimi-k2p5-turbo` | Kimi K2.5 Turbo (Fire Pass) | 文本 + 图像 | 256,000 | 256,000  | 强制关闭（默认） |
 
-<Note>OpenClaw 将所有 Fireworks Kimi 模型固定为 `thinking: off`，因为 Fireworks 在生产环境中拒绝 Kimi 思考参数。通过 [Moonshot](/zh/providers/moonshot) 直接路由同一模型可以保留 Kimi 的推理输出。请参阅 [thinking modes](/zh/tools/thinking) 以在提供程序之间切换。</Note>
+<Note>由于 Fireworks 在生产环境中拒绝 Kimi 思考参数，OpenClaw 将所有 Fireworks Kimi 模型固定为 `thinking: off`。直接通过 [Moonshot](/zh/providers/moonshot) 路由同一模型可以保留 Kimi 推理输出。请参阅 [thinking modes](/zh/tools/thinking) 以在提供商之间切换。</Note>
 
 ## 自定义 Fireworks 模型 ID
 
@@ -106,17 +106,17 @@ OpenClaw 在运行时接受任何 Fireworks 模型或路由器 ID。使用 Firew
   </Accordion>
 
   <Accordion title="Why thinking is forced off for Kimi">
-    Fireworks K2.6 会在请求携带 `reasoning_*` 参数时返回 400 错误，尽管 Kimi 通过 Moonshot 自己的 API 支持思考。捆绑的策略 (`extensions/fireworks/thinking-policy.ts`) 仅针对 Kimi 模型 ID 公布 `off` 思考级别，因此手动 `/think` 开关和提供商策略界面与运行时契约保持一致。
+    即使 Kimi 通过 Moonshot 自有的 API 支持思考，但如果请求携带 `reasoning_*` 参数，Fireworks K2.6 仍会返回 400 错误。捆绑策略 (`extensions/fireworks/thinking-policy.ts`) 仅针对 Kimi 模型 ID 宣传 `off` 思考级别，因此手动 `/think` 开关和提供商策略界面与运行时合约保持一致。
 
-    要端到端使用 Kimi 推理，请配置 [Moonshot 提供商](/zh/providers/moonshot) 并通过它路由同一模型。
+    要端到端使用 Kimi 推理，请配置 [Moonshot 提供商](/zh/providers/moonshot) 并通过其路由同一模型。
 
   </Accordion>
 
   <Accordion title="守护进程的环境可用性"Gateway(网关)Docker>
-    如果 Gateway(网关) 作为托管服务（launchd、systemd、Docker）运行，Fireworks 密钥必须对该进程可见——而不仅仅是对您的交互式 Shell。
+    如果 Gateway(网关) 作为托管服务（launchd、systemd、Docker）运行，Fireworks 密钥必须对该进程可见——而不仅仅是对您的交互式 shell 可见。
 
     <Warning>
-      仅存在于 `~/.profile` 中的密钥将无法帮助 launchd 或 systemd 守护进程，除非该环境也被导入其中。请在 `~/.openclaw/.env` 中或通过 `env.shellEnv`macOS 设置密钥，以使其可被网关进程读取。
+      仅在交互式 shell 中导出的密钥对 launchd 或 systemd 守护进程没有帮助，除非该环境也被导入其中。在 `~/.openclaw/.env` 中或通过 `env.shellEnv`macOS 设置密钥，以使其可被 Gateway(网关) 进程读取。
     </Warning>
 
     在 macOS 上，`openclaw gateway install` 已经将 `~/.openclaw/.env` 连接到 LaunchAgent 环境文件中。轮换密钥后，请重新运行安装（或 `openclaw doctor --fix`）。
@@ -130,7 +130,7 @@ OpenClaw 在运行时接受任何 Fireworks 模型或路由器 ID。使用 Firew
   <Card title="模型提供商" href="/zh/concepts/model-providers" icon="layers">
     选择提供商、模型引用和故障转移行为。
   </Card>
-  <Card title="思考模式" href="/zh/tools/thinking" icon="brain">
+  <Card title="Thinking modes" href="/zh/tools/thinking" icon="brain">
     `/think` 级别、提供商策略以及路由具备推理能力的模型。
   </Card>
   <Card title="Moonshot" href="/zh/providers/moonshot" icon="moon">

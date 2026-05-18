@@ -20,13 +20,13 @@ El habla en vivo utiliza el contrato de sesión Talk en lugar de la ruta de la h
 
 <CardGroup cols={2}>
   <Card title="Generación de imágenes" href="/es/tools/image-generation" icon="image">
-    Cree y edite imágenes a partir de mensajes de texto o imágenes de referencia a través de `image_generate`. Sincrónico: se completa en línea con la respuesta.
+    Cree y edite imágenes a partir de mensajes de texto o imágenes de referencia mediante `image_generate`. Asíncrono en sesiones de chat: se ejecuta en segundo plano y publica el resultado cuando está listo.
   </Card>
   <Card title="Generación de video" href="/es/tools/video-generation" icon="video">
     Texto a video, imagen a video y video a video a través de `video_generate`. Asíncrono: se ejecuta en segundo plano y publica el resultado cuando está listo.
   </Card>
   <Card title="Generación de música" href="/es/tools/music-generation" icon="music">
-    Genere música o pistas de audio a través de `music_generate`. Asíncrono en proveedores compartidos; la ruta del flujo de trabajo de ComfyUI se ejecuta de forma sincrónica.
+    Genere música o pistas de audio mediante `music_generate`. Asíncrono en sesiones de chat en el ciclo de vida compartido de generación de medios.
   </Card>
   <Card title="Texto a voz" href="/es/tools/tts" icon="microphone">
     Convierta las respuestas salientes a audio hablado a través de la herramienta `tts` más la configuración `messages.tts`. Sincrónico.
@@ -49,7 +49,7 @@ El habla en vivo utiliza el contrato de sesión Talk en lugar de la ruta de la h
 | DeepInfra   |   ✓    |   ✓   |        |  ✓  |  ✓  |                    |           ✓           |
 | Deepgram    |        |       |        |     |  ✓  |         ✓          |                       |
 | ElevenLabs  |        |       |        |  ✓  |  ✓  |                    |                       |
-| fal         |   ✓    |   ✓   |        |     |     |                    |                       |
+| fal         |   ✓    |   ✓   |   ✓    |     |     |                    |                       |
 | Google      |   ✓    |   ✓   |   ✓    |  ✓  |     |         ✓          |           ✓           |
 | Gradium     |        |       |        |  ✓  |     |                    |                       |
 | CLI local   |        |       |        |  ✓  |     |                    |                       |
@@ -57,7 +57,7 @@ El habla en vivo utiliza el contrato de sesión Talk en lugar de la ruta de la h
 | MiniMax     |   ✓    |   ✓   |   ✓    |  ✓  |     |                    |                       |
 | Mistral     |        |       |        |     |  ✓  |                    |                       |
 | OpenAI      |   ✓    |   ✓   |        |  ✓  |  ✓  |         ✓          |           ✓           |
-| OpenRouter  |   ✓    |   ✓   |        |  ✓  |  ✓  |                    |           ✓           |
+| OpenRouter  |   ✓    |   ✓   |   ✓    |  ✓  |  ✓  |                    |           ✓           |
 | Qwen        |        |   ✓   |        |     |     |                    |                       |
 | Runway      |        |   ✓   |        |     |     |                    |                       |
 | SenseAudio  |        |       |        |     |  ✓  |                    |                       |
@@ -73,53 +73,52 @@ El habla en vivo utiliza el contrato de sesión Talk en lugar de la ruta de la h
 
 ## Asíncrono vs. síncrono
 
-| Capacidad                 | Modo      | Por qué                                                                                                                             |
-| ------------------------- | --------- | ----------------------------------------------------------------------------------------------------------------------------------- |
-| Imagen                    | Síncrono  | Las respuestas del proveedor regresan en segundos; se completan en línea con la respuesta.                                          |
-| Conversión de texto a voz | Síncrono  | Las respuestas del proveedor regresan en segundos; adjuntas al audio de respuesta.                                                  |
-| Vídeo                     | Asíncrono | El procesamiento del proveedor tarda de 30 s a varios minutos; las colas lentas pueden durar hasta el tiempo de espera configurado. |
-| Música (compartida)       | Asíncrono | La misma característica de procesamiento del proveedor que el vídeo.                                                                |
-| Música (ComfyUI)          | Síncrono  | El flujo de trabajo local se ejecuta en línea contra el servidor ComfyUI configurado.                                               |
+| Capacidad                 | Modo      | Por qué                                                                                                                                        |
+| ------------------------- | --------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| Imagen                    | Asíncrono | El procesamiento del proveedor puede durar más que un turno de chat; los datos adjuntos generados utilizan la ruta de finalización compartida. |
+| Conversión de texto a voz | Síncrono  | Las respuestas del proveedor regresan en segundos; adjuntas al audio de respuesta.                                                             |
+| Vídeo                     | Asíncrono | El procesamiento del proveedor tarda de 30 s a varios minutos; las colas lentas pueden durar hasta el tiempo de espera configurado.            |
+| Música                    | Asíncrono | La misma característica de procesamiento del proveedor que el vídeo.                                                                           |
 
-Para herramientas asíncronas, OpenClaw envía la solicitud al proveedor, devuelve un
-identificador de tarea inmediatamente y rastrea el trabajo en el registro de tareas. El agente continúa
+Para herramientas asíncronas, OpenClaw envía la solicitud al proveedor, devuelve un ID de
+tarea inmediatamente y rastrea el trabajo en el registro de tareas. El agente continúa
 respondiendo a otros mensajes mientras se ejecuta el trabajo. Cuando el proveedor termina,
 OpenClaw despierta al agente con las rutas de los medios generados para que pueda informar al
-usuario y, cuando lo exige la política de entrega de origen, retransmitir el resultado a través
-de la herramienta de mensaje. Para rutas de grupo/canal solo con herramienta de mensaje, OpenClaw trata
-la evidencia de entrega faltante de la herramienta de mensaje como un intento de finalización fallido y envía
-la alternativa de medios generados directamente al canal original.
+usuario y retransmitir el resultado a través de la herramienta de mensaje. OpenClaw trata la falta de
+evidencia de entrega de la herramienta de mensaje como un intento de finalización fallido y no
+publica automáticamente los medios generados como alternativa.
 
 ## Conversión de voz a texto y llamada de voz
 
 Deepgram, DeepInfra, ElevenLabs, Mistral, OpenAI, OpenRouter, SenseAudio y xAI pueden todos transcribir
 audio entrante a través de la ruta por lotes `tools.media.audio` cuando están configurados.
-Los complementos de canal que realizan un verificación previa de una nota de voz para el bloqueo de menciones o el análisis de comandos
-marcan el archivo adjunto transcrito en el contexto entrante, por lo que el pase compartido de comprensión de medios reutiliza esa transcripción en lugar de hacer una segunda
+Los complementos de canal que realizan un reconocimiento previo de una nota de voz para la filtración de menciones o el análisis
+de comandos marcan los datos adjuntos transcritos en el contexto entrante, por lo que el pase
+compartido de comprensión de medios reutiliza esa transcripción en lugar de realizar una segunda
 llamada STT para el mismo audio.
 
-Deepgram, ElevenLabs, Mistral, OpenAI y xAI también registran proveedores
-STT de transmisión para llamada de voz, por lo que el audio telefónico en vivo puede reenviarse al proveedor
+Deepgram, ElevenLabs, Mistral, OpenAI y xAI también registran proveedores de STT en
+streaming para Voice Call, por lo que el audio telefónico en vivo se puede reenviar al proveedor
 seleccionado sin esperar a que se complete la grabación.
 
-Para conversaciones de usuario en vivo, prefiera el [modo Talk](/es/nodes/talk). Los archivos adjuntos de audio
-por lotes se mantienen en la ruta de medios; el tiempo real del navegador, la pulsación para hablar nativa,
-la telefonía y el audio de reuniones deben usar los eventos Talk y los catálogos con alcance de sesión
+Para conversaciones de usuario en vivo, prefiera el [modo Talk](/es/nodes/talk). Los datos adjuntos
+de audio por lotes permanecen en la ruta de medios; el tiempo real del navegador, el pulsar para hablar nativo,
+la telefonía y el audio de reuniones deben usar los eventos de Talk y los catálogos con ámbito de sesión
 devueltos por el Gateway.
 
-## Asignaciones de proveedores (cómo se dividen los proveedores entre superficies)
+## Asignaciones de proveedores (cómo se dividen los proveedores en las distintas superficies)
 
 <AccordionGroup>
-  <Accordion title="Google">Imagen, video, música, TTS por lotes, voz en tiempo real del backend y superficies de comprensión de medios.</Accordion>
-  <Accordion title="OpenAI">Imagen, video, TTS por lotes, STT por lotes, STT de transmisión de llamada de voz, voz en tiempo real del backend y superficies de incrustación de memoria.</Accordion>
-  <Accordion title="DeepInfra">Enrutamiento de chat/modelo, generación/edición de imágenes, texto a video, TTS por lotes, STT por lotes, comprensión de medios de imagen y superficies de incrustación de memoria. Los modelos de reranking/clasificación/detección de objetos nativos de DeepInfra no se registran hasta que OpenClaw tenga contratos de proveedor dedicados para esas categorías.</Accordion>
-  <Accordion title="xAI">Imagen, video, búsqueda, ejecución de código, TTS por lotes, STT por lotes y STT de streaming en Voice Call. La voz en tiempo real de xAI es una capacidad ascendente, pero no se registra en OpenClaw hasta que el contrato de voz en tiempo real compartido pueda representarla.</Accordion>
+  <Accordion title="Google">Superficies de imagen, video, música, TTS por lotes, voz en tiempo real del backend y comprensión de medios.</Accordion>
+  <Accordion title="OpenAI">Superficies de imagen, video, TTS por lotes, STT por lotes, STT por streaming en Voice Call, voz en tiempo real del backend e incrustación de memoria.</Accordion>
+  <Accordion title="DeepInfra">Enrutamiento de chat/modelo, generación/edición de imágenes, texto a video, TTS por lotes, STT por lotes, comprensión de medios de imagen e incrustación de memoria. Los modelos de reordenamiento/clasificación/detección de objetos nativos de DeepInfra no se registran hasta que OpenClaw tenga contratos de proveedor dedicados para esas categorías.</Accordion>
+  <Accordion title="xAI">Imagen, video, búsqueda, ejecución de código, TTS por lotes, STT por lotes y STT por streaming en Voice Call. La voz en tiempo real de xAI es una capacidad superior, pero no se registra en OpenClaw hasta que el contrato compartido de voz en tiempo real pueda representarla.</Accordion>
 </AccordionGroup>
 
 ## Relacionado
 
 - [Generación de imágenes](/es/tools/image-generation)
-- [Generación de video](/es/tools/video-generation)
+- [Generación de videos](/es/tools/video-generation)
 - [Generación de música](/es/tools/music-generation)
 - [Conversión de texto a voz](/es/tools/tts)
 - [Comprensión de medios](/es/nodes/media-understanding)

@@ -7,16 +7,13 @@ read_when:
   - You are changing plugin behavior across PI and Codex harness turns
 ---
 
-Esta página documenta el contrato de tiempo de ejecución para los turnos del arnés de Codex. Para la configuración y el enrutamiento, comience con [Codex harness](/es/plugins/codex-harness). Para ver los campos de configuración, consulte [Codex harness reference](/es/plugins/codex-harness-reference).
+Esta página documenta el contrato de tiempo de ejecución para los turnos de Codex harness. Para la configuración y el enrutamiento, comience con [Codex harness](/es/plugins/codex-harness). Para los campos de configuración, consulte [Codex harness reference](/es/plugins/codex-harness-reference).
 
 ## Descripción general
 
 El modo Codex no es PI con una llamada de modelo diferente debajo. Codex posee más del bucle del modelo nativo y OpenClaw adapta sus superficies de complemento, herramienta, sesión y diagnóstico alrededor de ese límite.
 
-OpenClaw aún posee el enrutamiento de canales, archivos de sesión, entrega de mensajes visibles,
-herramientas dinámicas de OpenClaw, aprobaciones, entrega de medios y un espejo de transcripción.
-Codex posee el hilo nativo canónico, el bucle de modelo nativo, la continuación de
-herramienta nativa y la compactación nativa.
+OpenClaw aún posee el enrutamiento de canales, los archivos de sesión, la entrega de mensajes visibles, las herramientas dinámicas de OpenClaw, las aprobaciones, la entrega de medios y un espejo de transcripciones. Codex posee el subproceso nativo canónico, el bucle de modelo nativo, la continuación de herramientas nativas y la compactación nativa, a menos que el motor de contexto de OpenClaw activo declare que posee la compactación.
 
 ## Enlaces de hilo y cambios de modelo
 
@@ -125,14 +122,9 @@ elicitación MCP fallan cerradas.
 
 ## Dirección de la cola
 
-La dirección de la cola de ejecución activa se asigna al `turn/steer` del servidor de aplicaciones de Codex. Con el
-`messages.queue.mode: "steer"` predeterminado, OpenClaw agrupa los mensajes de chat en cola
-para la ventana de silencio configurada y los envía como una solicitud `turn/steer` en
-orden de llegada. El modo heredado `queue` envía solicitudes `turn/steer` separadas.
+La dirección de la cola de ejecución activa se asigna a `turn/steer` del servidor de aplicaciones Codex. Con el `messages.queue.mode: "steer"` predeterminado, OpenClaw agrupa los mensajes de chat en modo de dirección para la ventana de silencio configurada y los envía como una única solicitud `turn/steer` en orden de llegada.
 
-Los turnos de revisión y compactación manual de Codex pueden rechazar la dirección en el mismo turno. En ese
-caso, OpenClaw usa la cola de seguimiento cuando el modo seleccionado permite la alternativa.
-Vea [Cola de dirección](/es/concepts/queue-steering).
+Los turnos de revisión de Codex y compactación manual pueden rechazar la dirección del mismo turno. En ese caso, OpenClaw espera a que finalice la ejecución activa antes de iniciar el mensaje. Use `/queue followup` o `/queue collect` cuando los mensajes deben ponerse en cola de forma predeterminada en lugar de ser dirigidos. Consulte [Steering queue](/es/concepts/queue-steering).
 
 ## Carga de comentarios de Codex
 
@@ -140,23 +132,25 @@ Cuando se aprueba `/diagnostics [note]` para una sesión mediante el arnés nati
 
 La carga se realiza a través de la ruta de comentarios normal de Codex hacia los servidores de OpenAI. Si los comentarios de Codex están deshabilitados en ese servidor de aplicaciones, el comando devuelve el error del servidor de aplicaciones. La respuesta de diagnósticos completada enumera los canales, los ids de sesión de OpenClaw, los ids de subproceso de Codex y los comandos locales `codex resume <thread-id>` para los subprocesos que se enviaron.
 
-Si deniega o ignora la aprobación, OpenClaw no imprime esos ids de Codex y no envía comentarios de Codex. La carga no reemplaza la exportación de diagnósticos local de Gateway. Consulte [Exportación de diagnósticos](/es/gateway/diagnostics) para conocer el comportamiento de aprobación, privacidad, paquete local y chat en grupo.
+Si deniega o ignora la aprobación, OpenClaw no imprime esos identificadores de Codex y no envía comentarios de Codex. La carga no reemplaza la exportación de diagnóstico local de Gateway. Consulte [Diagnostics export](/es/gateway/diagnostics) para conocer el comportamiento de aprobación, privacidad, paquete local y chat grupal.
 
 Use `/codex diagnostics [note]` solo cuando específicamente desee la carga de comentarios de Codex para el subproceso adjunto actualmente sin el paquete completo de diagnósticos de Gateway.
 
 ## Compactación y espejo de transcripción
 
-Cuando el modelo seleccionado utiliza el arnés de Codex, la compactación de subprocesos nativos se delega al servidor de aplicaciones de Codex. OpenClaw mantiene un espejo de transcripción para el historial del canal, búsqueda, `/new`, `/reset` y el cambio futuro de modelo o arnés.
+Cuando el modelo seleccionado utiliza Codex harness, la compactación de subprocesos nativos se delega al servidor de aplicaciones Codex, a menos que un motor de contexto activo declare `ownsCompaction: true`. Los motores de contexto propietarios compactan primero y hacen que OpenClaw abandone el subproceso de backend antiguo de Codex para que el siguiente turno pueda rehidratar un subproceso nuevo desde el contexto administrado por el motor. OpenClaw mantiene un espejo de transcripciones para el historial del canal, la búsqueda, `/new`, `/reset` y el cambio futuro de modelo o harness.
 
-El espejo incluye el mensaje del usuario, el texto final del asistente y registros ligeros de razonamiento o planificación de Codex cuando el servidor de aplicaciones los emite. Hoy, OpenClaw solo registra señales de inicio y finalización de compactación nativa. Aún no expone un resumen de compactación legible por humanos ni una lista auditable de las entradas que Codex conservó después de la compactación.
+Cuando un motor de contexto solicita la proyección de arranque de subprocesos de Codex, OpenClaw proyecta los nombres e identificadores de llamadas a herramientas, las formas de entrada y el contenido de resultados de herramientas redactados en el subproceso nuevo de Codex. No copia los valores de argumentos de llamada a herramientas sin procesar en esa proyección.
 
-Debido a que Codex posee el subproceso nativo canónico, `tool_result_persist` actualmente no reescribe los registros de resultados de herramientas nativas de Codex. Solo se aplica cuando OpenClaw está escribiendo un resultado de herramienta de transcripción de sesión propiedad de OpenClaw.
+El espejo incluye el mensaje del usuario, el texto final del asistente y registros de razonamiento o planificación ligeros de Codex cuando el servidor de aplicaciones los emite. Hoy en día, OpenClaw solo registra señales nativas de inicio y finalización de compactación. Todavía no expone un resumen de compactación legible por humanos ni una lista auditable de las entradas que Codex mantuvo después de la compactación.
+
+Debido a que Codex posee el hilo nativo canónico, `tool_result_persist` actualmente no reescribe los registros de resultados de herramientas nativas de Codex. Solo se aplica cuando OpenClaw está escribiendo un resultado de herramienta de transcripción de sesión propiedad de OpenClaw.
 
 ## Medios y entrega
 
-OpenClaw sigue siendo responsable de la entrega de medios y la selección del proveedor de medios. Imagen, video, música, PDF, TTS y la comprensión de medios utilizan configuraciones de proveedor/modelo coincidentes como `agents.defaults.imageGenerationModel`, `videoGenerationModel`, `pdfModel` y `messages.tts`.
+OpenClaw continúa siendo el propietario de la entrega de medios y la selección del proveedor de medios. Las imágenes, videos, música, PDF, TTS y la comprensión de medios utilizan configuraciones de proveedor/modelo coincidentes como `agents.defaults.imageGenerationModel`, `videoGenerationModel`, `pdfModel` y `messages.tts`.
 
-El texto, las imágenes, el video, la música, el TTS, las aprobaciones y el resultado de la herramienta de mensajería continúan a través de la ruta de entrega normal de OpenClaw. La generación de medios no requiere PI. Cuando Codex emite un elemento nativo de generación de imágenes con un `savedPath`, OpenClaw reenvía ese archivo exacto a través de la ruta normal de medios de respuesta, incluso si el turno de Codex no tiene texto de asistente.
+El texto, las imágenes, el video, la música, el TTS, las aprobaciones y la salida de la herramienta de mensajería continúan a través de la ruta de entrega normal de OpenClaw. La generación de medios no requiere PI. Cuando Codex emite un elemento nativo de generación de imágenes con un `savedPath`, OpenClaw reenvía ese archivo exacto a través de la ruta normal de medios de respuesta, incluso si el turno de Codex no tiene texto del asistente.
 
 ## Relacionado
 

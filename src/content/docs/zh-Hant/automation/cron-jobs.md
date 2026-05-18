@@ -45,7 +45,7 @@ Cron 是 Gateway 的內建排程器。它會持久化工作，在正確的時間
 - 執行時期的執行狀態會儲存在旁邊的 `~/.openclaw/cron/jobs-state.json`。如果您在 git 中追蹤 cron 定義，請追蹤 `jobs.json` 並將 `jobs-state.json` 加入 gitignore。
 - 分割後，較舊的 OpenClaw 版本可以讀取 `jobs.json`，但可能會將工作視為全新的，因為執行時期欄位現在位於 `jobs-state.json` 中。
 - 當 Gateway 正在執行或已停止時編輯 `jobs.json`，OpenClaw 會將變更的排程欄位與擱置中的執行時期插槽元數據進行比較，並清除過時的 `nextRunAtMs` 值。純格式化或僅變更金鑰順序的重新撰寫會保留擱置中的插槽。
-- 所有 cron 執行都會建立 [背景任務](/zh-Hant/automation/tasks) 記錄。
+- 所有 cron 執行都會建立 [background task](/zh-Hant/automation/tasks) 記錄。
 - Gateway 啟動時，過期的隔離 agent-turn 任務會被重新排程到通道連線視窗之外，而不是立即重播，因此 Discord/Telegram 啟動和原生指令設定在重新啟動後能保持響應。
 - 單次任務 (`--at`) 預設會在成功後自動刪除。
 - 隔離 cron 執行會在完成時盡力關閉其 `cron:<jobId>` 會話的已追蹤瀏覽器分頁/程序，因此分離的瀏覽器自動化不會留下遺留的程序。
@@ -76,7 +76,7 @@ cron 的任務對帳優先由 runtime 擁有，其次由持久化歷史記錄支
 
 ### 月份中的日期與星期中的日期使用 OR 邏輯
 
-Cron 表達式由 [croner](https://github.com/Hexagon/croner) 解析。當「月份中的日期」與「星期中的日期」欄位皆非萬用字元時，croner 會在**任一**欄位符合時即匹配——而非兩者皆須符合。這是標準的 Vixie cron 行為。
+Cron 表達式由 [croner](https://github.com/Hexagon/croner) 解析。當 day-of-month 和 day-of-week 欄位皆非萬用字元時，croner 會在 **任一** 欄位符合時即匹配——而非兩者皆符合。這是標準的 Vixie cron 行為。
 
 ```
 # Intended: "9 AM on the 15th, only if it's a Monday"
@@ -337,11 +337,17 @@ openclaw cron edit <jobId> --message "Updated prompt" --model "opus"
 # Force run a job now
 openclaw cron run <jobId>
 
+# Force run a job now and wait for its terminal status
+openclaw cron run <jobId> --wait --wait-timeout 10m --poll-interval 2s
+
 # Run only if due
 openclaw cron run <jobId> --due
 
 # View run history
 openclaw cron runs --id <jobId> --limit 50
+
+# View one exact run
+openclaw cron runs --id <jobId> --run-id <runId>
 
 # Delete a job
 openclaw cron remove <jobId>
@@ -351,19 +357,21 @@ openclaw cron add --name "Ops sweep" --cron "0 6 * * *" --session isolated --mes
 openclaw cron edit <jobId> --clear-agent
 ```
 
+`openclaw cron run <jobId>` 會在將手動執行加入佇列後立即返回。請將 `--wait` 用於關閉掛鉤、維護腳本，或其他必須阻擋直到佇列中的執行完成的自動化操作。等待模式會輪詢確切返回的 `runId`；若狀態為 `ok` 則以 `0` 結束；若為 `error`、`skipped` 或等待逾時，則以非零值結束。
+
 <Note>
 模型覆寫說明：
 
-- `openclaw cron add|edit --model ...` 會變更工作所選取的模型。
-- 如果模型被允許，該特定的提供者/模型會到達獨立的代理程式執行。
-- 如果模型不被允許或無法解析，cron 會以明確的驗證錯誤使執行失敗。
-- 設定的後援鏈仍然會套用，因為 cron `--model` 是工作主要設定，而非工作階段 `/model` 覆寫。
-- Payload `fallbacks` 會取代該工作的設定後援；`fallbacks: []` 會停用後援並使執行變為嚴格模式。
-- 若沒有明確或設定後援清單的單純 `--model`，不會退回到代理程式主要設定作為靜默的額外重試目標。
+- `openclaw cron add|edit --model ...` 會變更工作所選的模型。
+- 若該模型被允許，則該確切的供應商/模型會用於獨立的代理執行。
+- 若不被允許或無法解析，cron 會使執行失敗並回傳明確的驗證錯誤。
+- 設定的備援鏈仍然適用，因為 cron `--model` 是工作主要設定，而非工作階段 `/model` 覆寫。
+- Payload `fallbacks` 會取代該工作設定的備援；`fallbacks: []` 則會停用備援並使執行變為嚴格模式。
+- 若使用不帶明確或設定備援清單的純 `--model`，則不會以無額外重試目標的方式，退回到代理主要設定作為無聲的額外嘗試。
 
 </Note>
 
-## 設定
+## 組態
 
 ```json5
 {
@@ -383,29 +391,29 @@ openclaw cron edit <jobId> --clear-agent
 }
 ```
 
-`maxConcurrentRuns` 同時限制已排程的 cron 分派與獨立的代理程式輪次執行。獨立的 cron 代理程式輪次會在內部使用佇列專用的 `cron-nested` 執行通道，因此提高此數值可讓獨立的 cron LLM 執行並行處理，而不僅是啟動其外部的 cron 包裝程式。共用的非 cron `nested` 通道不會因此設定而變寬。
+`maxConcurrentRuns` 同時限制了已排程的 cron 分派與獨立的代理輪次執行。獨立的 cron 代理輪次內部會使用佇列專用的 `cron-nested` 執行通道，因此提高此數值可讓獨立的 cron LLM 執行並行進展，而不僅是啟動其外部的 cron 包裝器。共享的非 cron `nested` 通道則不會因此設定而變寬。
 
-執行階段狀態 sidecar 是由 `cron.store` 推導而來：像是 `~/clawd/cron/jobs.json` 的 `.json` 存儲會使用 `~/clawd/cron/jobs-state.json`，而沒有 `.json` 後綴的存儲路徑則會附加 `-state.json`。
+運行時狀態 sidecar 派生自 `cron.store`：帶有 `.json` 後綴的 store（例如 `~/clawd/cron/jobs.json`）會使用 `~/clawd/cron/jobs-state.json`，而沒有 `.json` 後綴的 store 路徑則會附加 `-state.json`。
 
-如果您手動編輯 `jobs.json`，請將 `jobs-state.json` 排除在原始碼控制之外。OpenClaw 使用該 sidecar 檔案來儲存暫時性位置、啟用標記、上次執行的元數據，以及排程身分，後者會告訴排程器何時需要為外部編輯的產生一個新的 `nextRunAtMs`。
+如果您手動編輯 `jobs.json`，請將 `jobs-state.json` 排除在原始碼控制之外。OpenClaw 使用該 sidecar 來管理待定位置、活動標記、上次執行元數據，以及排程識別碼，該識別碼會告訴排程器何時需要為外部編輯的作業產生新的 `nextRunAtMs`。
 
 停用 cron：`cron.enabled: false` 或 `OPENCLAW_SKIP_CRON=1`。
 
 <AccordionGroup>
   <Accordion title="重試行為">
-    **單次重試**：暫時性錯誤（速率限制、過載、網路、伺服器錯誤）會以指數退避重試最多 3 次。永久性錯誤會立即停用。
+    **單次重試**：暫時性錯誤（速率限制、過載、網路、伺服器錯誤）最多會重試 3 次，並採用指數退避。永久錯誤會立即停用。
 
-    **週期性重試**：重試之間使用指數退避（30 秒到 60 分鐘）。退避機制會在下一次成功執行後重置。
+    **循環重試**：重試之間採用指數退避（30 秒到 60 分鐘）。在下次成功執行後，退避會重置。
 
   </Accordion>
   <Accordion title="維護">
-    `cron.sessionRetention`（預設為 `24h`）會清理隔離式執行階段的項目。`cron.runLog.maxBytes` / `cron.runLog.keepLines` 會自動清理執行紀錄檔。
+    `cron.sessionRetention`（預設 `24h`）會清理獨立執行階段的項目。`cron.runLog.maxBytes` / `cron.runLog.keepLines` 會自動清理執行日誌檔案。
   </Accordion>
 </AccordionGroup>
 
-## 疑難排解
+## 故障排除
 
-### 命令階層
+### 指令階梯
 
 ```bash
 openclaw status
@@ -421,37 +429,37 @@ openclaw doctor
 <AccordionGroup>
   <Accordion title="Cron 未觸發">
     - 檢查 `cron.enabled` 和 `OPENCLAW_SKIP_CRON` 環境變數。
-    - 確認 Gateway 持續運行中。
-    - 對於 `cron` 排程，請驗證時區（`--tz`）與主機時區是否一致。
-    - 執行輸出中的 `reason: not-due` 表示已使用 `openclaw cron run <jobId> --due` 檢查手動執行，且該尚未到執行時間。
+    - 確認 Gateway 持續運作中。
+    - 對於 `cron` 排程，請驗證時區（`--tz`）與主機時區。
+    - 執行輸出中的 `reason: not-due` 表示已使用 `openclaw cron run <jobId> --due` 檢查了手動執行，但該作業尚未到期。
 
   </Accordion>
-  <Accordion title="Cron 觸發但未傳送">
-    - 傳送模式 `none` 表示不預期有執行器 (runner) 備援傳送。當聊天路由可用時，代理程式仍可使用 `message` 工具直接傳送。
-    - 傳送目標遺失/無效 (`channel`/`to`) 表示已跳過傳出動作。
-    - 對於 Matrix，若複製或舊版工作的 `delivery.to` 房間 ID 為小寫，可能會失敗，因為 Matrix 房間 ID 區分大小寫。請將工作編輯為 Matrix 中確切的 `!room:server` 或 `room:!room:server` 值。
-    - 頻道驗證錯誤 (`unauthorized`, `Forbidden`) 表示傳送動作被憑證阻擋。
-    - 如果隔離執行僅傳回靜默權杖 (`NO_REPLY` / `no_reply`)，OpenClaw 會抑制直接傳出傳送，也會抑制備援佇列摘要路徑，因此不會將任何內容發布回聊天。
+  <Accordion title="Cron 已觸發但無傳送">
+    - 傳送模式 `none` 表示不預期有執行器後援傳送。當聊天路由可用時，代理程式仍可使用 `message` 工具直接傳送。
+    - 傳送目標遺失/無效 (`channel`/`to`) 表示已跳過傳出。
+    - 對於 Matrix，複製或舊版工作若使用小寫的 `delivery.to` 房間 ID 可能會失敗，因為 Matrix 房間 ID 有區分大小寫。請將工作編輯為來自 Matrix 的確切 `!room:server` 或 `room:!room:server` 值。
+    - 頻道驗證錯誤 (`unauthorized`, `Forbidden`) 表示傳送被憑證阻擋。
+    - 如果隔離執行僅返回靜默權杖 (`NO_REPLY` / `no_reply`)，OpenClaw 將抑制直接傳出傳送，並抑制後援排程摘要路徑，因此不會有任何內容張貼回聊天。
     - 如果代理程式應該自行傳送訊息給使用者，請檢查工作是否有可用的路由 (`channel: "last"` 搭配先前的聊天，或明確的頻道/目標)。
 
   </Accordion>
   <Accordion title="Cron 或心跳似乎阻止了 /new-style 滾動更新">
     - 每日與閒置重置的新鮮度並非基於 `updatedAt`；請參閱 [Session management](/zh-Hant/concepts/session#session-lifecycle)。
-    - Cron 喚醒、心跳執行、執行通知和 Gateway 維護可能會更新會話列以用於路由/狀態，但它們不會延長 `sessionStartedAt` 或 `lastInteractionAt`。
-    - 對於在這些欄位存在之前建立的舊版列，當檔案仍可用時，OpenClaw 可以從逐字稿 JSONL 會話標頭中還原 `sessionStartedAt`。沒有 `lastInteractionAt` 的舊版閒置列會使用該還原的開始時間作為其閒置基準。
+    - Cron 喚醒、心跳執行、執行通知和 Gateway 簿記可能會更新會話列以進行路由/狀態管理，但不會延長 `sessionStartedAt` 或 `lastInteractionAt`。
+    - 對於在這些欄位存在之前建立的舊版列，當檔案仍可用時，OpenClaw 可以從文字記錄 JSONL 會話標頭還原 `sessionStartedAt`。沒有 `lastInteractionAt` 的舊版閒置列會使用該還原的開始時間作為其閒置基準。
 
   </Accordion>
-  <Accordion title="Timezone gotchas">
-    - 未指定 `--tz` 的 Cron 使用 Gateway 主機的時區。
+  <Accordion title="時區陷阱">
+    - 未指定 `--tz` 的 Cron 使用閘道主機的時區。
     - 未指定時區的 `at` 排程會被視為 UTC。
-    - Heartbeat `activeHours` 使用設定的時區解析方式。
+    - Heartbeat `activeHours` 使用已配置的時區解析方式。
 
   </Accordion>
 </AccordionGroup>
 
 ## 相關
 
-- [Automation](/zh-Hant/automation) — 所有自動化機制一覽
-- [Background Tasks](/zh-Hant/automation/tasks) — Cron 執行的任務分類帳
-- [Heartbeat](/zh-Hant/gateway/heartbeat) — 週期性主會話輪次
-- [Timezone](/zh-Hant/concepts/timezone) — 時區設定
+- [自動化](/zh-Hant/automation) — 一目瞭然的所有自動化機制
+- [背景任務](/zh-Hant/automation/tasks) — cron 執行的任務帳本
+- [Heartbeat](/zh-Hant/gateway/heartbeat) — 週期性主工作階段輪次
+- [時區](/zh-Hant/concepts/timezone) — 時區配置

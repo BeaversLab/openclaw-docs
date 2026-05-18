@@ -153,15 +153,16 @@ candidato contiene marcadores de posición de secretos redactados como `***`.
 
   </Accordion>
 
-  <Accordion title="Configurar el control de menciones en chat grupal">
-    Los mensajes grupales por defecto **requieren mención**. Configure patrones de activación por agente y mantenga las respuestas visibles de la sala en la ruta predeterminada de la herramienta de mensajes (message-tool) a menos que intencionalmente desee las respuestas finales automáticas heredadas:
+  <Accordion title="Configurar el control de menciones en chats de grupo">
+    Los mensajes de grupo tienen como valor predeterminado **requerir mención**. Configure los patrones de activación por agente y mantenga las respuestas visibles de la sala en la ruta predeterminada de la herramienta de mensajes (message-tool), a menos que desee intencionalmente que cada respuesta normal de grupo use la ruta heredada de respuesta final automática:
 
     ```json5
     {
       messages: {
         visibleReplies: "automatic", // set "message_tool" to require message-tool sends everywhere
         groupChat: {
-          visibleReplies: "message_tool", // default; use "automatic" for legacy room replies
+          visibleReplies: "message_tool", // default; visible output requires message(action=send)
+          unmentionedInbound: "room_event", // unmentioned always-on group chatter is quiet context
         },
       },
       agents: {
@@ -182,10 +183,10 @@ candidato contiene marcadores de posición de secretos redactados como `***`.
     }
     ```
 
-    - **Menciones de metadatos**: menciones nativas de @ (mención al tocar en WhatsApp, @bot en Telegram, etc.)
-    - **Patrones de texto**: patrones de expresiones regulares (regex) seguros en `mentionPatterns`
-    - **Respuestas visibles**: `messages.visibleReplies` puede requerir envíos de herramienta de mensajes globalmente; `messages.groupChat.visibleReplies` anula eso para grupos/canales.
-    - Consulte la [referencia completa](/es/gateway/config-channels#group-chat-mention-gating) para los modos de respuesta visible, anulaciones por canal y el modo de chat propio.
+    - **Menciones de metadatos**: menciones nativas con @ (menciones al tocar en WhatsApp, @bot en Telegram, etc.)
+    - **Patrones de texto**: patrones de regex seguros en `mentionPatterns`
+    - **Respuestas visibles**: `messages.visibleReplies` puede requerir envíos a través de la herramienta de mensajes (message-tool) globalmente; `messages.groupChat.visibleReplies` anula esto para grupos/canales.
+    - Consulte la [referencia completa](/es/gateway/config-channels#group-chat-mention-gating) para ver los modos de respuesta visible, las anulaciones por canal y el modo de chat propio.
 
   </Accordion>
 

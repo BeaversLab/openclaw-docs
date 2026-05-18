@@ -117,9 +117,7 @@ OpenClaw puede representar mensajes del sistema más pequeños para subagentes. 
 Cuando `promptMode=minimal`, los mensajes inyectados adicionales se etiquetan como **Subagent
 Context** (Contexto de subagente) en lugar de **Group Chat Context** (Contexto de chat grupal).
 
-Para las ejecuciones de respuesta automática del canal, OpenClaw puede omitir la sección genérica **Silent Replies**
-(Respuestas silenciosas) cuando el contexto de chat directo/grupal ya incluye el comportamiento `NO_REPLY` específico de la conversación resuelto. Esto evita repetir la mecánica de tokens
-tanto en el mensaje del sistema global como en el contexto del canal.
+Para ejecuciones de auto-respuesta de canal, OpenClaw omite la sección genérica de **Respuestas silenciosas** cuando el contexto directo, de grupo o solo de herramienta de mensajes posee el contrato de respuesta visible. Solo el modo automático antiguo de grupo/canal debería mostrar `NO_REPLY`; los chats directos y las respuestas de solo herramienta de mensajes no reciben orientación de token silencioso.
 
 ## Instantáneas del mensaje del sistema
 
@@ -174,14 +172,7 @@ Cuando una sesión se ejecuta en el arnés (harness) nativo de Codex, Codex carg
   ejecución puede anteponer la memoria diaria reciente como un bloque de contexto de inicio único para ese primer turno.
 </Note>
 
-Los archivos grandes se truncan con un marcador. El tamaño máximo por archivo se controla mediante
-`agents.defaults.bootstrapMaxChars` (predeterminado: 12000). El contenido total de inicialización inyectado
-entre archivos está limitado por `agents.defaults.bootstrapTotalMaxChars`
-(predeterminado: 60000). Los archivos que faltan inyectan un marcador breve de archivo faltante. Cuando se produce el truncamiento,
-OpenClaw puede inyectar un aviso conciso de advertencia en el sistema; controle esto con
-`agents.defaults.bootstrapPromptTruncationWarning` (`off`, `once`, `always`;
-predeterminado: `once`). Los recuentos detallados originales/inyectados permanecen en diagnósticos como
-`/context`, `/status`, doctor y registros.
+Los archivos grandes se truncan con un marcador. El tamaño máximo por archivo se controla mediante `agents.defaults.bootstrapMaxChars` (predeterminado: 12000). El contenido total de inicio inyectado entre archivos se limita mediante `agents.defaults.bootstrapTotalMaxChars` (predeterminado: 60000). Los archivos faltantes inyectan un marcador corto de archivo faltante. Cuando se produce el truncamiento, OpenClaw puede inyectar un aviso conciso de advertencia en el prompt del sistema; controle esto con `agents.defaults.bootstrapPromptTruncationWarning` (`off`, `once`, `always`; predeterminado: `always`). Los recuentos detallados de originales/inyectados permanecen en diagnósticos como `/context`, `/status`, doctor y registros.
 
 Para los archivos de memoria, el truncamiento no es una pérdida de datos: el archivo permanece intacto en el disco,
 pero el modelo solo ve la copia inyectada abreviada hasta que lee o busca

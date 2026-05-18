@@ -124,7 +124,7 @@ Top tools (schema size):
 
 大型檔案會使用 `agents.defaults.bootstrapMaxChars` 逐檔截斷（預設 `12000` 個字元）。OpenClaw 也會使用 `agents.defaults.bootstrapTotalMaxChars` 對所有檔案的總啟動注入設定上限（預設 `60000` 個字元）。`/context` 會顯示**原始與注入**的大小以及是否發生截斷。
 
-發生截斷時，執行環境可以在專案上下文下插入提示內警告區塊。使用 `agents.defaults.bootstrapPromptTruncationWarning` 進行設定（`off`、`once`、`always`；預設 `once`）。
+當發生截斷時，執行時可以在專案上下文下插入一個提示內警告區塊。透過 `agents.defaults.bootstrapPromptTruncationWarning` 進行設定（`off`、`once`、`always`；預設 `always`）。
 
 ## 技能：注入與按需載入
 

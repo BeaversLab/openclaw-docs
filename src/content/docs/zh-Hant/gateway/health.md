@@ -30,39 +30,39 @@ title: "Health checks"
 - 磁碟上的認證資訊：`ls -l ~/.openclaw/credentials/whatsapp/<accountId>/creds.json` (mtime 應為最近的)。
 - 會話儲存：`ls -l ~/.openclaw/agents/<agentId>/sessions/sessions.json` (路徑可在設定中覆寫)。計數和最近的收件者會透過 `status` 顯示。
 - 重新連結流程：當記錄檔中出現狀態碼 409–515 或 `loggedOut` 時，請執行 `openclaw channels logout && openclaw channels login --verbose`。（註：配對後，若狀態為 515，QR 登入流程會自動重新啟動一次。）
-- 診斷功能預設為啟用。除非設定了 `diagnostics.enabled: false`，否則 Gateway 會記錄運作事實。記憶體事件會記錄 RSS/heap 位元組計數、臨界值壓力和成長壓力。當程序正在執行但已飽和時，存活警告會記錄事件迴圈延遲、事件迴圈使用率、CPU 核心比例以及作用中/等待/排隊的會話計數。過大承載事件會記錄被拒絕、截斷或分割的內容，以及可取得的尺寸和限制。它們不會記錄訊息文字、附件內容、 webhook 主體、原始請求或回應主體、權杖、Cookie 或秘密值。相同的心跳會啟動有界穩定性記錄器，可透過 `openclaw gateway stability` 或 `diagnostics.stability` Gateway RPC 取得。當事件存在時，嚴重的 Gateway 退出、關機逾時和重新啟動啟動失敗會將最新的記錄器快照持久化儲存在 `~/.openclaw/logs/stability/` 下；請使用 `openclaw gateway stability --bundle latest` 檢查最新儲存的套件。
-- 對於錯誤報告，請執行 `openclaw gateway diagnostics export` 並附加生成的 zip 檔案。匯出內容包含 Markdown 摘要、最新的穩定性套件、經過清理的日誌元資料、經過清理的 Gateway 狀態/健康檢查快照，以及配置形狀。該匯出內容設計為可共享：聊天文字、 webhook 主體、工具輸出、憑證、 cookies、帳戶/訊息識別碼和機密值均已被省略或塗銷。請參閱[診斷匯出](/zh-Hant/gateway/diagnostics)。
+- 預設會啟用診斷功能。除非設定了 `diagnostics.enabled: false`，否則閘道會記錄運作事實。記憶體事件會記錄 RSS/堆疊 位元組計數、閾值壓力與成長壓力。嚴重的記憶體壓力會透過閘道記錄器 記錄日誌。當設定 `diagnostics.memoryPressureSnapshot: true` 時，嚴重的記憶體壓力也會寫入 OOM 前的穩定性套件，包含 V8 堆疊統計資料（如有）、Linux cgroup 計數器（如有）、作用中的資源計數，以及依過濾後相對路徑排序的最大工作階段/逐字稿 檔案。活躍度警示 會在程序運作但飽和時，記錄事件迴圈延遲、事件迴圈使用率、CPU 核心比例，以及作用中/等待/佇列中的工作階段計數。超大型承載事件 會記錄被拒絕、截斷或分塊的內容，以及可取得的尺寸與限制。它們不會記錄訊息文字、附件內容、Webhook 內文、原始要求或回應內文、權杖、Cookie 或機密值。相同的心跳會啟動有界的穩定性記錄器，可透過 `openclaw gateway stability` 或 `diagnostics.stability` Gateway RPC 存取。當事件存在時，嚴重的閘道終止、關機逾時與重新啟動啟動失敗會將最新的記錄器快照 持久化在 `~/.openclaw/logs/stability/`；只有當設定 `diagnostics.memoryPressureSnapshot: true` 時，嚴重的記憶體壓力才會如此。請使用 `openclaw gateway stability --bundle latest` 檢查最新儲存的套件。
+- 若要回報錯誤，請執行 `openclaw gateway diagnostics export` 並附加產生的 zip 檔。此匯出項目會結合 Markdown 摘要、最新的穩定性套件、已清理的日誌詮釋資料、已清理的閘道狀態/健康快照，以及組態形狀。此項目適合分享：聊天文字、webhook 內文、工具輸出、憑證、Cookie、帳戶/訊息識別碼，以及機密值皆會被省略或過濾。請參閱[診斷匯出](/zh-Hant/gateway/diagnostics)。
 
 ## 健康監控器配置
 
-- `gateway.channelHealthCheckMinutes`：Gateway 檢查通道健康狀態的頻率。預設值：`5`。設定 `0` 以全域停用健康監視器重新啟動功能。
-- `gateway.channelStaleEventThresholdMinutes`：已連接的通道在健康監視器將其視為過時並重新啟動之前，可以保持閒置的時間長度。預設值：`30`。請將此值保持大於或等於 `gateway.channelHealthCheckMinutes`。
+- `gateway.channelHealthCheckMinutes`：閘道檢查通道健康的頻率。預設值：`5`。設定 `0` 以全域停用 health-monitor 重新啟動。
+- `gateway.channelStaleEventThresholdMinutes`：已連線通道在健康監視器將其視為過時並重新啟動之前，可以保持閒置的時間長度。預設值：`30`。請將此值設定為大於或等於 `gateway.channelHealthCheckMinutes`。
 - `gateway.channelMaxRestartsPerHour`：每個通道/帳戶的健康監視器重新啟動次數的滾動一小時上限。預設值：`10`。
-- `channels.<provider>.healthMonitor.enabled`：針對特定通道停用健康監視器重新啟動功能，同時保持全域監視啟用。
-- `channels.<provider>.accounts.<accountId>.healthMonitor.enabled`：多帳戶覆寫設定，其優先順序高於通道層級設定。
+- `channels.<provider>.healthMonitor.enabled`：針對特定通道停用健康監視器重新啟動，同時保持全域監視啟用。
+- `channels.<provider>.accounts.<accountId>.healthMonitor.enabled`：多帳戶覆寫設定，其優先級高於通道層級的設定。
 - 這些針對特定通道的覆寫適用於目前支援的內建通道監控器：Discord、Google Chat、iMessage、Microsoft Teams、Signal、Slack、Telegram 和 WhatsApp。
 
 ## 當發生失敗時
 
-- `logged out` 或狀態碼 409–515 → 使用 `openclaw channels logout` 重新連結，然後執行 `openclaw channels login`。
-- Gateway 無法連線 → 啟動它：`openclaw gateway --port 18789`（如果連接埠忙碌，請使用 `--force`）。
-- 未收到傳入訊息 → 確認連結的手機在線上，且允許發送者發送 (`channels.whatsapp.allowFrom`)；對於群組聊天，請確保允許清單 + 提及規則相符 (`channels.whatsapp.groups`, `agents.list[].groupChat.mentionPatterns`)。
+- `logged out` 或狀態碼 409–515 → 先使用 `openclaw channels logout` 重新連結，然後執行 `openclaw channels login`。
+- 無法連線到閘道 → 啟動它：`openclaw gateway --port 18789`（如果連接埠忙碌，請使用 `--force`）。
+- 沒有收到傳入訊息 → 確認連結的手機在線上且發送者已獲授權（`channels.whatsapp.allowFrom`）；對於群組聊天，請確保允許清單 + 提及規則相符（`channels.whatsapp.groups`，`agents.list[].groupChat.mentionPatterns`）。
 
 ## 專用的「health」指令
 
-`openclaw health` 會向運行中的 Gateway 詢問其健康狀態快照（CLI 不會直接建立通道 socket）。預設情況下，它可以返回一個新的快取 Gateway 快照；隨後 Gateway 會在背景更新該快取。`openclaw health --verbose` 則強制改為即時探測。該指令會在可用時回報連結的憑證/驗證時間、各通道探測摘要、Session-store 摘要以及探測持續時間。如果 Gateway 無法連線或探測失敗/逾時，它會以非零代碼結束。
+`openclaw health` 會向執行中的閘道詢問其健康狀態快照（CLI 沒有直接的通道 socket）。預設情況下，它可以返回新的快取閘道快照；然後閘道會在背景中重新整理該快取。`openclaw health --verbose` 則會強制進行即時探測。該指令會在可用時回報連結的憑證/授權存留時間、每通道探測摘要、會話儲存摘要以及探測持續時間。如果閘道無法連線或探測失敗/逾時，它會以非零狀態碼結束。
 
 選項：
 
 - `--json`：機器可讀的 JSON 輸出
-- `--timeout <ms>`：覆寫預設的 10 秒探測逾時
-- `--verbose`：強制進行即時探測並列印 Gateway 連線詳細資訊
+- `--timeout <ms>`：覆寫預設的 10 秒探測逾時時間
+- `--verbose`：強制進行即時探測並列印閘道連線詳細資訊
 - `--debug`：`--verbose` 的別名
 
-健康狀態快照包括：`ok`（布林值）、`ts`（時間戳記）、`durationMs`（探測時間）、各通道狀態、Agent 可用性以及 Session-store 摘要。
+健康狀態快照包括：`ok`（布林值）、`ts`（時間戳）、`durationMs`（探測時間）、每通道狀態、代理可用性以及會話儲存摘要。
 
 ## 相關
 
-- [Gateway 操作手冊](/zh-Hant/gateway)
-- [診斷匯出](/zh-Hant/gateway/diagnostics)
-- [Gateway 疑難排解](/zh-Hant/gateway/troubleshooting)
+- [Gateway runbook](/zh-Hant/gateway)
+- [診斷資料匯出](/zh-Hant/gateway/diagnostics)
+- [閘道器疑難排解](/zh-Hant/gateway/troubleshooting)

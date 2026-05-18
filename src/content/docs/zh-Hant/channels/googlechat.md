@@ -24,7 +24,7 @@ openclaw plugins install ./path/to/local/googlechat-plugin
 ## 快速設定（初學者）
 
 1. 建立一個 Google Cloud 專案並啟用 **Google Chat API**。
-   - 前往：[Google Chat API Credentials](https://console.cloud.google.com/apis/api/chat.googleapis.com/credentials)
+   - 前往：[Google Chat API 憑證](https://console.cloud.google.com/apis/api/chat.googleapis.com/credentials)
    - 如果尚未啟用，請啟用該 API。
 2. 建立 **Service Account**：
    - 按一下 **Create Credentials** > **Service Account**。
@@ -37,7 +37,7 @@ openclaw plugins install ./path/to/local/googlechat-plugin
    - 按一下 **Add Key** > **Create new key**。
    - 選取 **JSON** 並按一下 **Create**。
 4. 將下載的 JSON 檔案儲存在您的閘道主機上（例如 `~/.openclaw/googlechat-service-account.json`）。
-5. 在 [Google Cloud Console Chat Configuration](https://console.cloud.google.com/apis/api/chat.googleapis.com/hangouts-chat) 中建立 Google Chat 應用程式：
+5. 在 [Google Cloud Console Chat Configuration](https://console.cloud.google.com/apis/api/chat.googleapis.com/hangouts-chat) 中建立一個 Google Chat 應用程式：
    - 填寫 **Application info**：
      - **App name**：（例如 `OpenClaw`）
      - **Avatar URL**：（例如 `https://openclaw.ai/logo.png`）
@@ -185,6 +185,7 @@ your-domain.com {
       audience: "https://gateway.example.com/googlechat",
       webhookPath: "/googlechat",
       botUser: "users/1234567890", // optional; helps mention detection
+      allowBots: false,
       dm: {
         policy: "pairing",
         allowFrom: ["users/1234567890"],
@@ -216,8 +217,9 @@ your-domain.com {
 - 訊息動作會針對文字公開 `send`，並針對明確的附件傳送公開 `upload-file`。`upload-file` 接受 `media` / `filePath` / `path`，以及選用的 `message`、`filename` 和執行緒目標。
 - `typingIndicator` 支援 `none`、`message`（預設值）和 `reaction`（回應功能需要使用者 OAuth）。
 - 附件會透過 Chat API 下載並儲存在媒體管線中（大小由 `mediaMaxMb` 限制）。
+- Bot 傳送的 Google Chat 訊息預設會被忽略。如果您刻意設定了 `allowBots: true`，接受的 bot 傳送訊息將會使用共用的 [bot 迴圈防護](/zh-Hant/channels/bot-loop-protection)。請設定 `channels.defaults.botLoopProtection`，並在當某個聊天室需要不同的配額時使用 `channels.googlechat.botLoopProtection` 或 `channels.googlechat.groups.<space>.botLoopProtection` 來覆寫。
 
-祕密參考詳情：[祕密管理](/zh-Hant/gateway/secrets)。
+Secrets 參考資料詳情：[Secrets Management](/zh-Hant/gateway/secrets)。
 
 ## 疑難排解
 
@@ -229,25 +231,25 @@ your-domain.com {
 status code: 405, reason phrase: HTTP error response: HTTP/1.1 405 Method Not Allowed
 ```
 
-這表示尚未註冊 webhook 處理程式。常見原因包括：
+這表示 webhook 處理程式尚未註冊。常見原因：
 
-1. **未設定頻道**：您的設定中缺少 `channels.googlechat` 區段。請使用以下方式驗證：
+1. **頻道未設定**：您的設定中缺少 `channels.googlechat` 區段。請使用以下方式驗證：
 
    ```bash
    openclaw config get channels.googlechat
    ```
 
-   如果它傳回「Config path not found」，請新增設定（請參閱[設定重點](#config-highlights)）。
+   如果回傳「Config path not found」，請新增設定（請參閱 [Config highlights](#config-highlights)）。
 
-2. **未啟用外掛程式**：檢查外掛程式狀態：
+2. **外掛程式未啟用**：請檢查外掛程式狀態：
 
    ```bash
    openclaw plugins list | grep googlechat
    ```
 
-   如果它顯示「disabled」，請將 `plugins.entries.googlechat.enabled: true` 新增至您的設定。
+   如果顯示「disabled」，請將 `plugins.entries.googlechat.enabled: true` 加入您的設定。
 
-3. **尚未重新啟動閘道**：新增設定後，請重新啟動閘道：
+3. **閘道未重新啟動**：新增設定後，請重新啟動閘道：
 
    ```bash
    openclaw gateway restart
@@ -262,21 +264,21 @@ openclaw channels status
 
 ### 其他問題
 
-- 檢查 `openclaw channels status --probe` 是否有驗證錯誤或缺少受眾設定。
-- 如果未收到任何訊息，請確認 Chat 應用程式的 webhook URL + 事件訂閱。
-- 如果提及封鎖阻擋了回覆，請將 `botUser` 設定為應用程式的使用者資源名稱，並驗證 `requireMention`。
-- 傳送測試訊息時使用 `openclaw logs --follow`，以查看要求是否到達閘道。
+- 檢查 `openclaw channels status --probe` 是否有驗證錯誤或缺少 audience 設定。
+- 如果沒有收到任何訊息，請確認 Chat 應用程式的 webhook URL + 事件訂閱。
+- 如果提及閘門阻擋了回覆，請將 `botUser` 設為應用程式的使用者資源名稱，並驗證 `requireMention`。
+- 在傳送測試訊息時使用 `openclaw logs --follow`，以查看請求是否到達閘道。
 
 相關文件：
 
-- [閘道組態](/zh-Hant/gateway/configuration)
-- [安全性](/zh-Hant/gateway/security)
-- [反應](/zh-Hant/tools/reactions)
+- [Gateway configuration](/zh-Hant/gateway/configuration)
+- [Security](/zh-Hant/gateway/security)
+- [Reactions](/zh-Hant/tools/reactions)
 
 ## 相關
 
-- [頻道概覽](/zh-Hant/channels) — 所有支援的頻道
-- [配對](/zh-Hant/channels/pairing) — 私訊驗證與配對流程
-- [群組](/zh-Hant/channels/groups) — 群組聊天行為與提及控管
-- [頻道路由](/zh-Hant/channels/channel-routing) — 訊息的會話路由
-- [安全性](/zh-Hant/gateway/security) — 存取模型與強化防護
+- [Channels Overview](/zh-Hant/channels) — 所有支援的頻道
+- [Pairing](/zh-Hant/channels/pairing) — DM 驗證和配對流程
+- [Groups](/zh-Hant/channels/groups) — 群組聊天行為和提及閘門
+- [Channel Routing](/zh-Hant/channels/channel-routing) — 訊息的會話路由
+- [安全性](/zh-Hant/gateway/security) — 存取模型與加固

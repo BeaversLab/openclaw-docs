@@ -53,7 +53,7 @@ OpenClaw 按以下顺序选择模型：
 同一个 `provider/model` 根据其来源可能具有不同的含义：
 
 - 配置的默认值（`agents.defaults.model.primary` 和特定于代理的主要模型）是正常的起点，并使用 `agents.defaults.model.fallbacks`。
-- 自动回退选择是临时的恢复状态。它们通过 `modelOverrideSource: "auto"` 存储，以便后续轮次可以继续使用回退链，而无需先探测已知的主要故障模型。
+- 自动回退选择是临时的恢复状态。它们随 `modelOverrideSource: "auto"` 一起存储，以便后续轮次可以继续使用回退链，而无需每次都探测已知故障的主模型；OpenClaw 会定期再次探测原始主模型，在其恢复时清除自动选择，并在每次状态变化时通告回退/恢复转换。
 - 用户会话选择是精确的。`/model`、模型选择器 `session_status(model=...)` 和 `sessions.patch` 存储 `modelOverrideSource: "user"`OpenClaw；如果所选的提供商/模型不可达，OpenClaw 将明显失败，而不是回退到另一个配置的模型。
 - Cron `--model` / payload `model` 是每个作业的主要模型。除非作业提供显式的 payload `fallbacks`（对于严格的 Cron 运行，请使用 `fallbacks: []`），否则它仍然使用配置的回退。
 - CLI default-模型 和 allowlist 选择器通过列出显式的 `models.providers.*.models` 而不是加载完整的内置目录来遵守 CLI`models.mode: "replace"`。

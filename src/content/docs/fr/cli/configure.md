@@ -52,10 +52,10 @@ Sections disponibles :
 
 Notes :
 
-- Le choix de l'emplacement d'exécution du Gateway met toujours à jour Gateway`gateway.mode`. Vous pouvez sélectionner « Continuer » sans les autres sections si c'est tout ce dont vous avez besoin.
+- L'assistant complet et les sections relatives au Gateway demandent où le Gateway s'exécute et mettent à jour Gateway`gateway.mode`. Les filtres de section qui n'incluent pas `gateway`, `daemon` ou `health` accèdent directement à la configuration demandée.
 - Après l'écriture de la configuration locale, configure installe les plugins téléchargeables sélectionnés lorsque le chemin d'installation choisi l'exige. La configuration du Gateway distant n'installe pas les packages de plugins locaux.
 - Les services orientés channel (Slack/Discord/Matrix/Microsoft Teams) demandent les listes d'autorisation de channel/salle lors de la configuration. Vous pouvez entrer des noms ou des ID ; l'assistant résout les noms en ID lorsque cela est possible.
-- Si vous exécutez l'étape d'installation du démon, l'authentification par token nécessite un token, et si `gateway.auth.token` est géré par SecretRef, configure valide le SecretRef mais ne persiste pas les valeurs de token en texte brut résolues dans les métadonnées d'environnement du service superviseur.
+- Si vous exécutez l'étape d'installation du démon, l'authentification par jeton nécessite un jeton, et si `gateway.auth.token` est géré par SecretRef, configure valide le SecretRef mais ne persiste pas les valeurs de jeton en texte brut résolues dans les métadonnées de l'environnement du service superviseur.
 - Si l'authentification par token nécessite un token et que le SecretRef du token configuré est non résolu, configure bloque l'installation du démon avec des conseils de correction actionnables.
 - Si `gateway.auth.token` et `gateway.auth.password` sont tous deux configurés et que `gateway.auth.mode` n'est pas défini, configure bloque l'installation du démon jusqu'à ce que le mode soit défini explicitement.
 

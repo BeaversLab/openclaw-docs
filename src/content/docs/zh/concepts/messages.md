@@ -108,14 +108,11 @@ OpenClaw 将 **提示词主体（prompt body）** 与 **命令主体（command b
 
 ## 队列与后续处理
 
-如果运行已处于活动状态，则传入消息可以排队、引导至当前
-运行，或收集以进行后续回合。
+如果一个运行已处于活动状态，默认情况下，传入的消息将被引导到当前运行中。`messages.queue` 选择活动运行消息是被引导、排队等待稍后处理、收集到稍后的一轮中，还是中断当前活动运行。
 
-- 通过 `messages.queue`（和 `messages.queue.byChannel`）进行配置。
-- 默认模式为 `steer`，当引导回退到
-  排队的后续传递时，具有 500ms 的后续防抖。
-- 模式包括：`steer`、`followup`、`collect`、`steer-backlog`、`interrupt`，以及
-  传统的逐个 `queue` 模式。
+- 通过 `messages.queue`（以及 `messages.queue.byChannel`）进行配置。
+- 默认模式为 `steer`，对于 Codex 引导批处理以及后续/收集队列，具有 500 毫秒的去抖动。
+- 模式包括：`steer`、`followup`、`collect` 和 `interrupt`。
 
 详情：[命令队列](/zh/concepts/queue) 和 [引导队列](/zh/concepts/queue-steering)。
 
@@ -133,12 +130,12 @@ OpenClaw 将 **提示词主体（prompt body）** 与 **命令主体（command b
 
 关键设置：
 
-- `agents.defaults.blockStreamingDefault` (`on|off`，默认关闭)
-- `agents.defaults.blockStreamingBreak` (`text_end|message_end`)
-- `agents.defaults.blockStreamingChunk` (`minChars|maxChars|breakPreference`)
-- `agents.defaults.blockStreamingCoalesce` (基于空闲的批处理)
-- `agents.defaults.humanDelay` (块回复之间类似人类的停顿)
-- 渠道覆盖：`*.blockStreaming` 和 `*.blockStreamingCoalesce` (非 Telegram 渠道需要显式的 `*.blockStreaming: true`)
+- `agents.defaults.blockStreamingDefault`（`on|off`，默认关闭）
+- `agents.defaults.blockStreamingBreak`（`text_end|message_end`）
+- `agents.defaults.blockStreamingChunk`（`minChars|maxChars|breakPreference`）
+- `agents.defaults.blockStreamingCoalesce`（基于空闲的批处理）
+- `agents.defaults.humanDelay`（块回复之间类似人类的暂停）
+- 渠道覆盖：`*.blockStreaming` 和 `*.blockStreamingCoalesce`（非 Telegram 渠道需要显式的 `*.blockStreaming: true`）
 
 详情：[流式传输 + 分块](/zh/concepts/streaming)。
 
@@ -148,7 +145,7 @@ OpenClaw 可以公开或隐藏模型推理：
 
 - `/reasoning on|off|stream` 控制可见性。
 - 推理内容在由模型生成时仍计入令牌使用量。
-- Telegram 支持将推理流式传输到一个临时的草稿气泡中，该气泡在最终交付后会被删除；使用 `/reasoning on` 进行持久的推理输出。
+- Telegram 支持将推理流传输到一个临时的草稿气泡中，该气泡在最终交付后会被删除；使用 `/reasoning on` 获取持久的推理输出。
 
 详情：[思考 + 推理指令](/zh/tools/thinking) 和 [令牌使用](/zh/reference/token-use)。
 
@@ -156,8 +153,8 @@ OpenClaw 可以公开或隐藏模型推理：
 
 出站消息格式化集中在 `messages` 中：
 
-- `messages.responsePrefix`、`channels.<channel>.responsePrefix` 和 `channels.<channel>.accounts.<id>.responsePrefix` (出站前缀级联)，加上 `channels.whatsapp.messagePrefix` (WhatsApp 入站前缀)
-- 通过 `replyToMode` 和每个渠道的默认值进行回复会话线程化
+- `messages.responsePrefix`、`channels.<channel>.responsePrefix` 和 `channels.<channel>.accounts.<id>.responsePrefix`（出站前缀级联），以及 `channels.whatsapp.messagePrefix`（WhatsApp 入站前缀）
+- 通过 `replyToMode` 和各渠道默认值进行回复串接
 
 详情：[配置](/zh/gateway/config-agents#messages) 和渠道文档。
 
@@ -165,19 +162,18 @@ OpenClaw 可以公开或隐藏模型推理：
 
 确切的静默令牌 `NO_REPLY` / `no_reply` 意味着“不发送用户可见的回复”。
 当一轮对话也有待处理的工具媒体（例如生成的 TTS 音频）时，OpenClaw
-会去除静默文本，但仍发送媒体附件。
+会去除静默文本，但仍会发送媒体附件。
 OpenClaw 根据对话类型解析该行为：
 
-- 直接对话默认不允许静默，并将纯粹的静默回复
-  重写为简短的可视回退。
-- 群组/渠道默认允许静默。
+- 直接对话永远不会收到 `NO_REPLY` 提示指导。如果直接运行意外返回一个简单的静默令牌，OpenClaw 会抑制它，而不是重写或发送它。
+- 群组/频道仅在自动群组回复时默认允许静默。在 `message_tool` 可见回复模式下，静默意味着模型不会调用 `message(action=send)`。
 - 内部编排默认允许静默。
 
-OpenClaw 还会在非直接聊天中，在生成任何助手回复之前发生的内部运行器失败时使用静默回复，以便群组/频道不会看到网关错误样板文本。直接聊天默认显示紧凑的失败文本；仅当 OpenClaw`/verbose` 为 `on` 或 `full` 时才显示原始运行器详细信息。
+OpenClaw 也会在非直接聊天中任何助手回复之前发生的内部运行器故障时使用静默回复，因此群组/频道不会看到网关错误样板文本。直接聊天默认显示紧凑的故障副本；仅当 `/verbose` 为 `on` 或 `full` 时才显示原始运行器详细信息。
 
-默认值位于 `agents.defaults.silentReply` 和 `agents.defaults.silentReplyRewrite` 之下；`surfaces.<id>.silentReply` 和 `surfaces.<id>.silentReplyRewrite` 可以针对每个表面覆盖它们。
+默认值位于 `agents.defaults.silentReply` 下；`surfaces.<id>.silentReply` 可以针对每个界面覆盖群组/内部策略。
 
-当父会话有一个或多个待处理的生成的子代理运行时，纯静默回复将在所有表面上被丢弃，而不是被重写，因此父会话将保持安静，直到子完成事件传递实际回复。
+简单的静默回复在所有界面上都会被丢弃，因此父会话保持安静，而不是将哨兵文本重写为后备聊天内容。
 
 ## 相关
 

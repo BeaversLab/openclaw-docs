@@ -7,7 +7,7 @@ read_when:
 title: "Transcript hygiene"
 ---
 
-OpenClaw 在运行（构建模型上下文）之前对记录应用**提供商特定的修复**。其中大多数是**内存中**的调整，用于满足严格的提供商要求。单独的会话文件修复过程也可能在加载会话之前重写存储的 JSONL，但仅针对格式错误的行或作为无效持久记录的持久化轮次。已传递的助手回复会保留在磁盘上；提供商特定的助手预填充剥离仅发生在构建出站负载时。当发生修复时，原始文件会与会话文件一起备份。
+OpenClaw 在运行之前（构建模型上下文时）对脚本应用**提供商特定的修复**。其中大多数是用于满足严格提供商要求的**内存中**调整。在加载会话之前，单独的会话文件修复传递也可能重写存储的 JSONL，但仅针对格式错误的行或作为无效持久记录的已持久化轮次。传递的助手回复保留在磁盘上；提供商特定的助手预填充剥离仅在构建出站有效负载时发生。当发生修复时，原始文件会在原子替换之前写入到临时的 OpenClaw`*.bak-<pid>-<ts>` 同级文件中，并在替换成功后删除；只有在清理本身失败时才会保留备份（在这种情况下会报告回路径）。
 
 范围包括：
 
@@ -25,7 +25,7 @@ OpenClaw 在运行（构建模型上下文）之前对记录应用**提供商特
 
 如果您需要记录存储的详细信息，请参阅：
 
-- [会话管理深入剖析](/zh/reference/session-management-compaction)
+- [会话管理深入探讨](/zh/reference/session-management-compaction)
 
 ---
 
@@ -48,13 +48,13 @@ OpenClaw 在运行（构建模型上下文）之前对记录应用**提供商特
 所有记录清理都集中在嵌入式运行器中：
 
 - 策略选择：`src/agents/transcript-policy.ts`
-- 清理/修复应用：`sanitizeSessionHistory` 中的 `src/agents/pi-embedded-runner/replay-history.ts`
+- 清理/修复应用：`sanitizeSessionHistory` 在 `src/agents/pi-embedded-runner/replay-history.ts` 中
 
 该策略使用 `provider`、`modelApi` 和 `modelId` 来决定应用什么。
 
 与记录清理分开，会话文件在加载之前（如果需要）会被修复：
 
-- `repairSessionFileIfNeeded` 中的 `src/agents/session-file-repair.ts`
+- `repairSessionFileIfNeeded` 在 `src/agents/session-file-repair.ts` 中
 - 从 `run/attempt.ts` 和 `compact.ts`（嵌入式运行器）调用
 
 ---
@@ -67,31 +67,31 @@ OpenClaw 在运行（构建模型上下文）之前对记录应用**提供商特
 
 实现：
 
-- `sanitizeSessionMessagesImages` 中的 `src/agents/pi-embedded-helpers/images.ts`
-- `sanitizeContentBlocksImages` 中的 `src/agents/tool-images.ts`
-- 最大图像边长可通过 `agents.defaults.imageMaxDimensionPx` 配置（默认：`1200`）。
+- `sanitizeSessionMessagesImages` 在 `src/agents/pi-embedded-helpers/images.ts` 中
+- `sanitizeContentBlocksImages` 在 `src/agents/tool-images.ts` 中
+- 最大图像边长可通过 `agents.defaults.imageMaxDimensionPx` 配置（默认值：`1200`）。
 - 在此遍历重放内容时，空白文本块将被移除。变为空的助手轮次将从重放副本中删除；变为空的用户和工具结果轮次将收到一个非空的省略内容占位符。
 
 ---
 
 ## 全局规则：格式错误的工具调用
 
-缺少 `input` 和 `arguments` 的助手工具调用块将在构建模型上下文之前被删除。这可以防止因部分持久化的工具调用（例如，在速率限制失败后）导致的提供商拒绝。
+缺少 `input` 和 `arguments` 的助手工具调用块将在构建模型上下文之前被删除。这可以防止因部分持久化的工具调用（例如，在速率限制失败后）而导致的提供商拒绝。
 
 实现：
 
-- `sanitizeToolCallInputs` 中的 `src/agents/session-transcript-repair.ts`
+- `sanitizeToolCallInputs` 在 `src/agents/session-transcript-repair.ts` 中
 - 应用于 `sanitizeSessionHistory` 中的 `src/agents/pi-embedded-runner/replay-history.ts`
 
 ---
 
 ## 全局规则：会话间输入来源
 
-当代理通过 `sessions_send`OpenClaw 将提示发送到另一个会话（包括代理到代理的回复/公告步骤）时，OpenClaw 会使用以下内容持久化创建的用户轮次：
+当代理通过 `sessions_send`OpenClaw 将提示发送到另一个会话时（包括代理到代理的回复/宣告步骤），OpenClaw 会持久化创建的用户轮次，并附带：
 
 - `message.provenance.kind = "inter_session"`
 
-OpenClaw 还会在路由提示文本之前添加一个同轮次 OpenClaw`[Inter-session message ... isUser=false]` 标记，以便活动的模型调用可以区分外部会话输出与外部最终用户指令。该标记在可用时包括源会话、渠道和工具。为了提供商兼容性，记录仍使用 `role: "user"`，但可见文本和来源元数据都将该轮次标记为会话间数据。
+OpenClaw 还会在路由提示文本之前添加一个同轮 OpenClaw`[Inter-session message ... isUser=false]` 标记，以便当前模型调用可以区分外部会话输出与外部最终用户指令。该标记在可用时包含源会话、渠道和工具。为了与提供商兼容，会话记录仍使用 `role: "user"`，但可见文本和来源元数据都将该轮次标记为会话间数据。
 
 在重建上下文期间，OpenClaw 会将相同的标记应用于仅具有来源元数据的旧持久化会话间用户轮次。
 
@@ -103,18 +103,17 @@ OpenClaw 还会在路由提示文本之前添加一个同轮次 OpenClaw`[Inter-
 
 - 仅进行图片清理。
 - 对于 OpenAI Responses/Codex 记录，丢弃孤立的推理签名（没有后续内容块的独立推理项）；在模型路由切换后，丢弃可重放的 OpenAI 推理。
-- 保留可重放的 OpenAI Responses 推理项载荷，包括加密的空摘要项，以便手动/WebSocket 重放能够保持必需的 OpenAI`rs_*` 状态与助手输出项配对。
-- 原生 ChatGPT Codex Responses 遵循 Codex 线路对等性，通过在没有先前项 ID 的情况下重放先前的 Responses 推理/消息/函数载荷，同时保留会话 `prompt_cache_key`。
+- 保留可重放的 OpenAI Responses 推理项载荷，包括加密的空摘要项，以便手动/WebSocket 重放时将所需的 OpenAI`rs_*` 状态与助手输出项保持配对。
+- 原生 ChatGPT Codex Responses 遵循 Codex 线路奇偶校验，通过重放先前的 Responses 推理/消息/功能载荷且不使用先前的项 ID，同时保留会话 `prompt_cache_key`。
 - 不进行工具调用 ID 清理。
-- 工具结果配对修复可能会移动真实的匹配输出，并为缺失的工具调用合成 Codex 风格的 `aborted` 输出。
+- 工具结果配对修复可能会移动实际匹配的输出，并为缺失的工具调用合成 Codex 风格的 `aborted` 输出。
 - 不进行回合验证或重新排序。
-- 缺失的 OpenAI Responses 系列工具输出会被合成为 OpenAI`aborted`，以匹配 Codex 重放规范化。
+- 缺失的 OpenAI Responses 系列工具输出会被合成为 OpenAI`aborted`，以匹配 Codex 重放标准化。
 - 不剥离思维签名。
 
 **OpenAI 兼容的聊天补全**
 
-- 历史助手思考/推理块会在重放之前被剥离，以便
-  本地和代理风格的 OpenAI 兼容服务器不会收到先前的推理字段，例如 OpenAI`reasoning` 或 `reasoning_content`。
+- 历史助手思考/推理块会在重放前被剥离，因此本地和代理风格的 OpenAI 兼容服务器不会收到先前的推理字段，例如 OpenAI`reasoning` 或 `reasoning_content`。
 - 当前同回合工具调用延续会将助手推理块
   附加到工具调用上，直到工具结果被重放为止。
 - 提供商拥有的例外可以在其线路协议需要重放推理元数据时选择退出。
@@ -141,10 +140,7 @@ OpenClaw 还会在路由提示文本之前添加一个同轮次 OpenClaw`[Inter-
 
 **Amazon Bedrock (Converse API)**
 
-- 空的助手流错误轮次会在重放之前被修复为非空的回退文本块。
-  Bedrock Converse 会拒绝带有 `content: []` 的助手消息，因此
-  带有 `stopReason: "error"` 和空内容的持久化助手轮次也会
-  在加载之前在磁盘上被修复。
+- 空的助手流错误轮次会在重放前被修复为非空的回退文本块。Bedrock Converse 会拒绝带有 `content: []` 的助手消息，因此在加载之前，磁盘上带有 `stopReason: "error"` 且内容为空的持久化助手轮次也会被修复。
 - 仅包含空白文本块的助手流错误轮次将从内存中的重放副本中删除，
   而不是重放无效的空白块。
 - 缺少、为空或空白重放签名的 Claude 思考块会在 Converse 重放之前被剥离。如果这导致助手轮次变空，OpenClaw 会保留非空的 omitted-reasoning 文本以维持轮次形状。
@@ -158,7 +154,7 @@ OpenClaw 还会在路由提示文本之前添加一个同轮次 OpenClaw`[Inter-
 
 **OpenRouter Gemini**
 
-- 思考签名清理：剥离非 base64 `thought_signature` 值（保留 base64）。
+- 思考签名清理：剥离非 base64 的 `thought_signature` 值（保留 base64）。
 
 **OpenRouter Anthropic**
 
@@ -183,7 +179,8 @@ OpenClaw 还会在路由提示文本之前添加一个同轮次 OpenClaw`[Inter-
   - 删除空的助手错误轮次。
   - 在工具调用之后修剪助手内容。
 
-这种复杂性导致了跨提供商的回归（特别是 `openai-responses` `call_id|fc_id` 配对）。2026.1.22 的清理工作移除了该扩展，将逻辑集中在运行器中，并使 OpenAI 除了图像清理外变为 **no-touch**（不触碰）。
+这种复杂性导致了跨提供商的回归（特别是 `openai-responses`
+`call_id|fc_id` 配对）。2026.1.22 的清理工作移除了该扩展，将逻辑集中到运行器中，并使 OpenAI 在图像清理之外保持**不干预**（no-touch）。
 
 ## 相关
 

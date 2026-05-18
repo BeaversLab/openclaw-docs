@@ -99,7 +99,7 @@ openclaw onboard --non-interactive \
     Si el Gateway se ejecuta como un demonio (launchd/systemd), asegúrese de que `CLOUDFLARE_AI_GATEWAY_API_KEY` esté disponible para ese proceso.
 
     <Warning>
-    Una clave que solo se encuentre en `~/.profile` no ayudará a un demonio launchd/systemd a menos que ese entorno también se importe allí. Establezca la clave en `~/.openclaw/.env` o a través de `env.shellEnv` para asegurar que el proceso del gateway pueda leerla.
+    Una clave exportada solo en un shell interactivo no ayudará a un demonio launchd/systemd a menos que ese entorno también se importe allí. Establezca la clave en `~/.openclaw/.env` o mediante `env.shellEnv` para garantizar que el proceso del gateway pueda leerla.
     </Warning>
 
   </Accordion>

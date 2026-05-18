@@ -103,7 +103,7 @@ Cron 是 Gateway 內建的排程器，用於精確的時機控制。它會保存
 
 ### 心跳
 
-Heartbeat 是一種週期性的主會話輪次（預設每 30 分鐘一次）。它在一次代理輪次中以完整的會話上下文批次處理多項檢查（收件匣、日曆、通知）。Heartbeat 輪次不會建立任務記錄，也不會延長每日/閒置會話重設的新鮮度。對於小型檢查清單，請使用 `HEARTBEAT.md`，或者如果您希望在 heartbeat 內部進行僅限到期檢查，請使用 `tasks:` 區塊。空的 heartbeat 檔案會跳過 `empty-heartbeat-file`；僅限到期任務模式會跳過 `no-tasks-due`。當 cron 工作處於活動或佇列狀態時，Heartbeat 會延遲執行，而 `heartbeat.skipWhenBusy` 也可以在子代理或巢狀通道忙碌時延遲它們。
+Heartbeat 是一種週期性的主會話輪詢（預設每 30 分鐘一次）。它會在一次代理輪詢中批次處理多項檢查（收件匣、行事曆、通知），並擁有完整的會語情境。Heartbeat 輪詢不會建立任務記錄，也不會延長每日/閒置會語重設的新鮮度。請使用 `HEARTBEAT.md` 進行小型檢查清單，或者在想要於 heartbeat 內部進行僅到期週期性檢查時，使用 `tasks:` 區塊。空的 heartbeat 檔案會以 `empty-heartbeat-file` 跳過；僅到期任務模式會以 `no-tasks-due` 跳過。當 cron 工作處於啟用或佇列狀態時，Heartbeat 會延遲執行，而 `heartbeat.skipWhenBusy` 也可以在該代理的會語金鑰子代理或巢狀通道忙碌時延遲該代理。
 
 請參閱 [Heartbeat](/zh-Hant/gateway/heartbeat)。
 

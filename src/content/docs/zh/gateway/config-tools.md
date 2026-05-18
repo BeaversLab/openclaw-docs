@@ -410,6 +410,8 @@ sidebarTitle: "工具和自定义提供商"
 
 OpenClaw 使用内置模型目录。可以通过 config 中的 OpenClaw`models.providers` 或 `~/.openclaw/agents/<agentId>/agent/models.json` 添加自定义提供商。
 
+配置自定义/本地提供商 `baseUrl`OpenClaw 也是对模型 HTTP 请求的严格网络信任决策：OpenClaw 允许该确切的 `scheme://host:port` 源通过受保护的获取路径，而无需添加单独的配置选项或信任其他私有源。
+
 ```json5
 {
   models: {
@@ -438,86 +440,86 @@ OpenClaw 使用内置模型目录。可以通过 config 中的 OpenClaw`models.p
 ```
 
 <AccordionGroup>
-  <Accordion title="身份验证和合并优先级">
-    - 使用 `authHeader: true` + `headers` 来满足自定义身份验证需求。
+  <Accordion title="Auth and merge precedence">
+    - 使用 `authHeader: true` + `headers` 满足自定义身份验证需求。
     - 使用 `OPENCLAW_AGENT_DIR`（或 `PI_CODING_AGENT_DIR`，一个旧版环境变量别名）覆盖 agent 配置根。
-    - 匹配提供商 ID 的合并优先级：
+    - 匹配的提供商 ID 的合并优先级：
       - 非空的 agent `models.json` `baseUrl` 值优先。
-      - 非空的 agent `apiKey` 值仅在该提供商在当前配置/身份验证配置文件上下文中不由 SecretRef 管理时优先。
-      - SecretRef 管理的提供商 `apiKey` 值从源标记（env 引用为 `ENV_VAR_NAME`，file/exec 引用为 `secretref-managed`）刷新，而不是持久化已解析的密钥。
-      - SecretRef 管理的提供商 header 值从源标记（env 引用为 `secretref-env:ENV_VAR_NAME`，file/exec 引用为 `secretref-managed`）刷新。
+      - 非空的 agent `apiKey` 值仅在该提供商在当前配置/auth-profile 上下文中未由 SecretRef 管理时才优先。
+      - SecretRef 管理的提供商 `apiKey` 值从源标记刷新（环境引用为 `ENV_VAR_NAME`，文件/exec 引用为 `secretref-managed`），而不是持久化已解析的密钥。
+      - SecretRef 管理的提供商标头值从源标记刷新（环境引用为 `secretref-env:ENV_VAR_NAME`，文件/exec 引用为 `secretref-managed`）。
       - 空或缺失的 agent `apiKey`/`baseUrl` 回退到配置中的 `models.providers`。
-      - 匹配的模型 `contextWindow`/`maxTokens` 使用显式配置和隐式目录值中较高的那个。
-      - 匹配的模型 `contextTokens` 在存在时保留显式运行时上限；使用它来限制有效上下文而不更改原生模型元数据。
-      - 当您希望配置完全覆盖 `models.json` 时，请使用 `models.mode: "replace"`。
-      - 标记持久化以源为准：标记是从活动源配置快照（解析前）写入的，而不是从解析后的运行时密钥值写入。
+      - 匹配的模型 `contextWindow`/`maxTokens` 使用显式配置和隐式目录值中的较高值。
+      - 匹配的模型 `contextTokens` 在存在时保留显式的运行时上限；使用它来限制有效上下文而不更改原生模型元数据。
+      - 当您希望配置完全重写 `models.json` 时，请使用 `models.mode: "replace"`。
+      - 标记持久化以源为权威：标记是从活动源配置快照（解析前）写入的，而不是从解析的运行时密钥值写入。
 
   </Accordion>
 </AccordionGroup>
 
-### 提供商字段详情
+### Provider 字段详细信息
 
 <AccordionGroup>
   <Accordion title="顶级目录">
-    - `models.mode`: 提供商目录行为（`merge` 或 `replace`）。
+    - `models.mode`: 提供商目录行为 (`merge` 或 `replace`)。
     - `models.providers`: 按提供商 ID 键入的自定义提供商映射。
-      - 安全编辑：使用 `openclaw config set models.providers.<id> '<json>' --strict-json --merge` 或 `openclaw config set models.providers.<id>.models '<json-array>' --strict-json --merge` 进行增量更新。`config set` 会拒绝破坏性替换，除非您传递 `--replace`。
+      - 安全编辑：使用 `openclaw config set models.providers.<id> '<json>' --strict-json --merge` 或 `openclaw config set models.providers.<id>.models '<json-array>' --strict-json --merge` 进行增量更新。`config set` 拒绝破坏性替换，除非您传递 `--replace`。
 
   </Accordion>
   <Accordion title="Provider connection and auth">
-    - `models.providers.*.api`：请求适配器（`openai-completions`、`openai-responses`、`anthropic-messages`、`google-generative-ai` 等）。对于自托管的 `/v1/chat/completions`OpenAI 后端（如 MLX、vLLM、SGLang 和大多数 OpenAI 兼容的本地服务器），请使用 `openai-completions`。具有 `baseUrl` 但没有 `api` 的自定义提供商默认为 `openai-completions`；仅当后端支持 `/v1/responses` 时才设置 `openai-responses`。
-    - `models.providers.*.apiKey`：提供商凭证（首选 SecretRef/env 替换）。
-    - `models.providers.*.auth`：认证策略（`api-key`、`token`、`oauth`、`aws-sdk`）。
-    - `models.providers.*.contextWindow`：当模型条目未设置 `contextWindow` 时，此提供商下模型的默认本机上下文窗口。
-    - `models.providers.*.contextTokens`：当模型条目未设置 `contextTokens` 时，此提供商下模型的默认有效运行时上下文上限。
-    - `models.providers.*.maxTokens`：当模型条目未设置 `maxTokens` 时，此提供商下模型的默认输出 token 上限。
-    - `models.providers.*.timeoutSeconds`：可选的每个提供商模型 HTTP 请求超时时间（秒），包括连接、标头、正文和总请求中止处理。
-    - `models.providers.*.injectNumCtxForOpenAICompat`Ollama：对于 Ollama + `openai-completions`，将 `options.num_ctx` 注入请求中（默认：`true`）。
-    - `models.providers.*.authHeader`：在需要时，强制在 `Authorization` 标头中传输凭证。
-    - `models.providers.*.baseUrl`API：上游 API 基础 URL。
-    - `models.providers.*.headers`：用于代理/租户路由的额外静态标头。
+    - `models.providers.*.api`: 请求适配器（`openai-completions`、`openai-responses`、`anthropic-messages`、`google-generative-ai` 等）。对于 MLX、vLLM、SGLang 以及大多数与 OpenAI 兼容的本地自托管 `/v1/chat/completions` 后端，请使用 `openai-completions`。具有 `baseUrl` 但没有 `api` 的自定义提供商默认为 `openai-completions`；仅当后端支持 `/v1/responses` 时才设置 `openai-responses`。
+    - `models.providers.*.apiKey`: 提供商凭证（优先使用 SecretRef/环境变量替换）。
+    - `models.providers.*.auth`: 认证策略（`api-key`、`token`、`oauth`、`aws-sdk`）。
+    - `models.providers.*.contextWindow`: 当模型条目未设置 `contextWindow` 时，该提供商下模型的原生上下文窗口默认值。
+    - `models.providers.*.contextTokens`: 当模型条目未设置 `contextTokens` 时，该提供商下模型的有效运行时上下文上限默认值。
+    - `models.providers.*.maxTokens`: 当模型条目未设置 `maxTokens` 时，该提供商下模型的输出令牌上限默认值。
+    - `models.providers.*.timeoutSeconds`: 可选的针对每个提供商模型的 HTTP 请求超时时间（秒），包括连接、标头、正文和总请求中止处理。
+    - `models.providers.*.injectNumCtxForOpenAICompat`: 对于 Ollama + `openai-completions`，将 `options.num_ctx` 注入请求中（默认：`true`）。
+    - `models.providers.*.authHeader`: 在需要时强制在 `Authorization` 标头中传输凭证。
+    - `models.providers.*.baseUrl`: 上游 API 基础 URL。
+    - `models.providers.*.headers`: 用于代理/租户路由的额外静态标头。
 
   </Accordion>
   <Accordion title="请求传输覆盖">
-    `models.providers.*.request`：针对模型提供商 HTTP 请求的传输覆盖设置。
+    `models.providers.*.request`: 模型提供商 HTTP 请求的传输覆盖配置。
 
-    - `request.headers`：额外的请求头（与提供商默认值合并）。值接受 SecretRef。
-    - `request.auth`：身份验证策略覆盖。模式：`"provider-default"`（使用提供商内置的身份验证）、`"authorization-bearer"`（带有 `token`）、`"header"`（带有 `headerName`、`value`、可选的 `prefix`）。
-    - `request.proxy`：HTTP 代理覆盖。模式：`"env-proxy"`（使用 `HTTP_PROXY`/`HTTPS_PROXY` 环境变量）、`"explicit-proxy"`（带有 `url`）。两种模式均接受可选的 `tls` 子对象。
-    - `request.tls`：针对直连的 TLS 覆盖。字段：`ca`、`cert`、`key`、`passphrase`（均接受 SecretRef）、`serverName`、`insecureSkipVerify`。
-    - `request.allowPrivateNetwork`：当为 `true` 时，通过提供商 HTTP 获取守卫（操作员可选择加入信任的自托管 OpenAI 兼容端点），在 DNS 解析为私有、CGNAT 或类似范围时，允许对 `baseUrl` 进行 HTTPS 访问。诸如 `localhost`、`127.0.0.1` 和 `[::1]` 之类的环回模型提供商流式 URL 会被自动允许，除非此选项被明确设置为 `false`；LAN、tailnet 和私有 DNS 主机仍需要选择加入。WebSocket 对请求头/TLS 使用相同的 `request`，但不使用该获取 SSRF 门控。默认为 `false`。
+    - `request.headers`: 额外的请求头（与提供商默认值合并）。值接受 SecretRef。
+    - `request.auth`: 认证策略覆盖。模式：`"provider-default"`（使用提供商内置的认证），`"authorization-bearer"`（使用 `token`），`"header"`（使用 `headerName`、`value`，可选的 `prefix`）。
+    - `request.proxy`: HTTP 代理覆盖。模式：`"env-proxy"`（使用 `HTTP_PROXY`/`HTTPS_PROXY` 环境变量），`"explicit-proxy"`（使用 `url`）。两种模式都接受可选的 `tls` 子对象。
+    - `request.tls`: 直接连接的 TLS 覆盖。字段：`ca`、`cert`、`key`、`passphrase`（均接受 SecretRef），`serverName`，`insecureSkipVerify`。
+    - `request.allowPrivateNetwork`: 当设为 `true` 时，允许通过提供商 HTTP 获取守卫向私有 IP、CGNAT 或类似范围发起模型提供商 HTTP 请求。自定义/本地提供商基础 URL 已信任确切配置的源，但元数据/链路本地源除外，除非明确选择加入，否则它们仍将被阻止。将其设置为 `false` 以退出精确源信任。WebSocket 对请求头/TLS 使用相同的 `request`，但不使用该获取 SSRF 守卫。默认值为 `false`。
 
   </Accordion>
   <Accordion title="模型目录条目">
     - `models.providers.*.models`：显式的提供商模型目录条目。
-    - `models.providers.*.models.*.input`：模型输入模态。对于仅文本模型使用 `["text"]`，对于原生图像/视觉模型使用 `["text", "image"]`。仅当选定的模型被标记为支持图像时，图像附件才会被注入到代理轮次中。
+    - `models.providers.*.models.*.input`：模型输入模态。对于纯文本模型使用 `["text"]`，对于原生图像/视觉模型使用 `["text", "image"]`。仅当选定的模型被标记为具备图像能力时，图像附件才会被注入到代理轮次中。
     - `models.providers.*.models.*.contextWindow`：原生模型上下文窗口元数据。这将覆盖该模型提供商级别的 `contextWindow`。
-    - `models.providers.*.models.*.contextTokens`：可选的运行时上下文上限。这将覆盖提供商级别的 `contextTokens`；当您想要比模型原生 `contextWindow` 更小的有效上下文预算时使用它；当两者不同时，`openclaw models list` 会同时显示这两个值。
-    - `models.providers.*.models.*.compat.supportsDeveloperRole`：可选的兼容性提示。对于具有非空非原生 `baseUrl`（主机不是 `api.openai.com`OpenClaw）的 `api: "openai-completions"`，OpenClaw 会在运行时将其强制设为 `false`。留空或省略 `baseUrl`OpenAI 将保持默认的 OpenAI 行为。
-    - `models.providers.*.models.*.compat.requiresStringContent`OpenAI：用于仅字符串 OpenAI 兼容聊天端点的可选兼容性提示。当 `true`OpenClaw 时，OpenClaw 会在发送请求之前将纯文本 `messages[].content` 数组展平为普通字符串。
-    - `models.providers.*.models.*.compat.strictMessageKeys`OpenAI：用于严格 OpenAI 兼容聊天端点的可选兼容性提示。当 `true`OpenClaw 时，OpenClaw 会在发送请求之前将传出的聊天补全消息对象剥离为 `role` 和 `content`。
-    - `models.providers.*.models.*.compat.thinkingFormat`：可选的思维负载提示。对于顶级 `enable_thinking` 使用 `"qwen"`，或对于支持请求级聊天模板 kwargs（例如 vLLM）的 Qwen 系列 OpenAI 兼容服务器上的 `chat_template_kwargs.enable_thinking`QwenOpenAI 使用 `"qwen-chat-template"`。
+    - `models.providers.*.models.*.contextTokens`：可选的运行时上下文上限。这将覆盖提供商级别的 `contextTokens`；当您想要比模型原生 `contextWindow` 更小的有效上下文预算时使用它；当这两个值不同时，`openclaw models list` 会显示这两个值。
+    - `models.providers.*.models.*.compat.supportsDeveloperRole`：可选的兼容性提示。对于具有非空非原生 `baseUrl`（主机不是 `api.openai.com`）的 `api: "openai-completions"`，OpenClaw 会在运行时将其强制设置为 `false`。空/省略的 `baseUrl` 将保持默认的 OpenAI 行为。
+    - `models.providers.*.models.*.compat.requiresStringContent`：仅限字符串的 OpenAI 兼容聊天端点的可选兼容性提示。当 `true` 时，OpenClaw 会在发送请求之前将纯文本 `messages[].content` 数组扁平化为纯字符串。
+    - `models.providers.*.models.*.compat.strictMessageKeys`：严格 OpenAI 兼容聊天端点的可选兼容性提示。当 `true` 时，OpenClaw 会在发送请求之前将传出的聊天补全消息对象剥离为仅 `role` 和 `content`。
+    - `models.providers.*.models.*.compat.thinkingFormat`：可选的思考负载提示。对于 Together 风格的 `reasoning.enabled` 使用 `"together"`，对于顶级 `enable_thinking` 使用 `"qwen"`，或者对于支持请求级聊天模板 kwargs（如 vLLM）的 Qwen 系列 OpenAI 兼容服务器上的 `chat_template_kwargs.enable_thinking` 使用 `"qwen-chat-template"`。
 
   </Accordion>
   <Accordion title="Amazon BedrockAmazon Bedrock 发现">
-    - `plugins.entries.amazon-bedrock.config.discovery`: Bedrock 自动发现设置的根目录。
-    - `plugins.entries.amazon-bedrock.config.discovery.enabled`: 开启/关闭隐式发现。
+    - `plugins.entries.amazon-bedrock.config.discovery`: Bedrock 自动发现设置的根节点。
+    - `plugins.entries.amazon-bedrock.config.discovery.enabled`: 开启或关闭隐式发现。
     - `plugins.entries.amazon-bedrock.config.discovery.region`: 用于发现的 AWS 区域。
-    - `plugins.entries.amazon-bedrock.config.discovery.providerFilter`: 用于定向发现的可选提供商 ID 过滤器。
+    - `plugins.entries.amazon-bedrock.config.discovery.providerFilter`: 用于定向发现的可选 提供商-id 过滤器。
     - `plugins.entries.amazon-bedrock.config.discovery.refreshInterval`: 发现刷新的轮询间隔。
     - `plugins.entries.amazon-bedrock.config.discovery.defaultContextWindow`: 已发现模型的回退上下文窗口。
-    - `plugins.entries.amazon-bedrock.config.discovery.defaultMaxTokens`: 已发现模型的回退最大输出令牌数。
+    - `plugins.entries.amazon-bedrock.config.discovery.defaultMaxTokens`: 已发现模型的回退最大输出 token 数。
 
   </Accordion>
 </AccordionGroup>
 
-交互式自定义提供商新手引导会为常见的视觉模型 ID（如 GPT-4o、Claude、Gemini、Qwen-VL、LLaVA、Pixtral、InternVL、Mllama、MiniCPM-V 和 GLM-4V）推断图像输入，并为已知的纯文本系列跳过额外的问题。未知的模型 ID 仍会提示是否支持图像。非交互式新手引导使用相同的推断；传递 `--custom-image-input` 以强制支持图像的元数据，或传递 `--custom-text-input` 以强制纯文本元数据。
+交互式自定义提供商引导会推断常见视觉模型 ID（如 GPT-4o、Claude、Gemini、Qwen-VL、LLaVA、Pixtral、InternVL、Mllama、MiniCPM-V 和 GLM-4V）的图像输入，并跳过已知纯文本家族的额外问题。未知的模型 ID 仍会提示图像支持。非交互式引导使用相同的推断；传递 QwenGLM`--custom-image-input` 以强制支持图像的元数据，或传递 `--custom-text-input` 以强制纯文本元数据。
 
 ### 提供商示例
 
 <AccordionGroup>
-  <Accordion title="Cerebras (GLM 4.7 / GPT OSS)">
-    捆绑的 `cerebras` 提供商插件可以通过 `openclaw onboard --auth-choice cerebras-api-key` 对此进行配置。仅在覆盖默认值时才使用显式的提供商配置。
+  <Accordion title="GLMCerebras (GLM 4.7 / GPT OSS)">
+    内置的 `cerebras` 提供商插件可以通过 `openclaw onboard --auth-choice cerebras-api-key` 配置此项。仅在覆盖默认设置时才使用显式提供商配置。
 
     ```json5
     {
@@ -551,7 +553,7 @@ OpenClaw 使用内置模型目录。可以通过 config 中的 OpenClaw`models.p
     }
     ```
 
-    对于 Cerebras 使用 `cerebras/zai-glm-4.7`；对于 Z.AI 直连使用 `zai/glm-4.7`。
+    对 Cerebras 使用 `cerebras/zai-glm-4.7`；对 Z.AI 直连使用 `zai/glm-4.7`。
 
   </Accordion>
   <Accordion title="Kimi Coding">
@@ -565,15 +567,15 @@ OpenClaw 使用内置模型目录。可以通过 config 中的 OpenClaw`models.p
         },
       },
     }
-    ```
+    ```Anthropic
 
-    与 Anthropic 兼容的内置提供商。快捷方式：`openclaw onboard --auth-choice kimi-code-api-key`。
+    兼容 Anthropic 的内置提供商。快捷方式：`openclaw onboard --auth-choice kimi-code-api-key`。
 
   </Accordion>
   <Accordion title="Local models (LM Studio)">
-    请参阅 [Local Models](/zh/gateway/local-models)。TL;DR：在强大的硬件上通过 LM Studio Responses API 运行大型本地模型；保留托管的模型以合并用于回退。
+    请参阅 [Local Models](/en/gateway/local-modelsAPI)。TL;DR：在性能强劲的硬件上通过 LM Studio Responses API 运行大型本地模型；保留托管的模型以进行合并回退。
   </Accordion>
-  <Accordion title="MiniMaxMiniMax M2.7（直接）">
+  <Accordion title="MiniMaxMiniMax M2.7 (direct)">
     ```json5
     {
       agents: {
@@ -608,7 +610,7 @@ OpenClaw 使用内置模型目录。可以通过 config 中的 OpenClaw`models.p
     }
     ```
 
-    设置 `MINIMAX_API_KEY`。快捷方式：`openclaw onboard --auth-choice minimax-global-api` 或 `openclaw onboard --auth-choice minimax-cn-api`AnthropicOpenClawMiniMax。模型目录默认仅限 M2.7。在 Anthropic 兼容的流式路径上，除非您显式设置 `thinking`，否则 OpenClaw 默认会禁用 MiniMax 思考。`/fast on` 或 `params.fastMode: true` 会将 `MiniMax-M2.7` 重写为 `MiniMax-M2.7-highspeed`。
+    设置 `MINIMAX_API_KEY`。快捷方式：`openclaw onboard --auth-choice minimax-global-api` 或 `openclaw onboard --auth-choice minimax-cn-api`AnthropicOpenClawMiniMax。模型目录默认仅包含 M2.7。在 Anthropic 兼容的流式传输路径上，除非您显式自行设置 `thinking`，否则 OpenClaw 默认禁用 MiniMax 思考功能。`/fast on` 或 `params.fastMode: true` 会将 `MiniMax-M2.7` 重写为 `MiniMax-M2.7-highspeed`。
 
   </Accordion>
   <Accordion title="MoonshotMoonshot AI (Kimi)">
@@ -647,7 +649,7 @@ OpenClaw 使用内置模型目录。可以通过 config 中的 OpenClaw`models.p
 
     对于中国区端点：`baseUrl: "https://api.moonshot.cn/v1"` 或 `openclaw onboard --auth-choice moonshot-api-key-cn`Moonshot。
 
-    原生 Moonshot 端点在共享的 `openai-completions`OpenClaw 传输上声明流式使用兼容性，并且 OpenClaw 密钥依赖于端点能力而非仅依赖内置提供商 ID。
+    原生 Moonshot 端点在共享的 `openai-completions`OpenClaw 传输上声明流式传输使用兼容性，并且 OpenClaw 键依据端点功能而非仅依据内置提供商 ID。
 
   </Accordion>
   <Accordion title="OpenCode">
@@ -662,7 +664,7 @@ OpenClaw 使用内置模型目录。可以通过 config 中的 OpenClaw`models.p
     }
     ```
 
-    设置 `OPENCODE_API_KEY`（或 `OPENCODE_ZEN_API_KEY`）。对于 Zen 目录使用 `opencode/...` 引用，对于 Go 目录使用 `opencode-go/...` 引用。快捷方式：`openclaw onboard --auth-choice opencode-zen` 或 `openclaw onboard --auth-choice opencode-go`。
+    设置 `OPENCODE_API_KEY` (或 `OPENCODE_ZEN_API_KEY`)。对于 Zen 目录使用 `opencode/...` 引用，或对于 Go 目录使用 `opencode-go/...` 引用。快捷方式：`openclaw onboard --auth-choice opencode-zen` 或 `openclaw onboard --auth-choice opencode-go`。
 
   </Accordion>
   <Accordion title="AnthropicSynthetic (Anthropic-compatible)">
@@ -699,7 +701,7 @@ OpenClaw 使用内置模型目录。可以通过 config 中的 OpenClaw`models.p
     }
     ```
 
-    Base URL 应省略 `/v1`Anthropic（Anthropic 客户端会自动附加）。快捷方式：`openclaw onboard --auth-choice synthetic-api-key`。
+    基础 URL 应省略 `/v1`Anthropic (Anthropic 客户端会将其附加)。快捷方式：`openclaw onboard --auth-choice synthetic-api-key`。
 
   </Accordion>
   <Accordion title="GLMZ.AI (GLM-4.7)">
@@ -718,7 +720,7 @@ OpenClaw 使用内置模型目录。可以通过 config 中的 OpenClaw`models.p
 
     - 通用端点：`https://api.z.ai/api/paas/v4`
     - 编码端点（默认）：`https://api.z.ai/api/coding/paas/v4`
-    - 对于通用端点，请通过覆盖基础 URL 来定义自定义提供商。
+    - 对于通用端点，请使用基础 URL 覆盖定义自定义提供商。
 
   </Accordion>
 </AccordionGroup>
@@ -727,7 +729,7 @@ OpenClaw 使用内置模型目录。可以通过 config 中的 OpenClaw`models.p
 
 ## 相关
 
-- [Configuration — agents](/zh/gateway/config-agents)
-- [Configuration — channels](/zh/gateway/config-channels)
-- [Configuration reference](/zh/gateway/configuration-reference) — 其他顶级键
-- [Tools and plugins](/zh/tools)
+- [配置 — 代理](/zh/gateway/config-agents)
+- [配置 — 频道](/zh/gateway/config-channels)
+- [配置参考](/zh/gateway/configuration-reference) — 其他顶级键
+- [工具和插件](/zh/tools)

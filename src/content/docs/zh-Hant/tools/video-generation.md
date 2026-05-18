@@ -51,7 +51,7 @@ OpenClaw 將影片生成視為三種執行時模式：
 1. OpenClaw 會將請求提交給提供者，並立即傳回任務 ID。
 2. 提供者會在背景處理工作（通常為 30 秒到數分鐘，視提供者和解析度而定；緩慢的佇列支援提供者可能執行到設定的逾時時間）。
 3. 當影片準備好時，OpenClaw 會透過內部完成事件喚醒同一個工作階段。
-4. 智慧體會通知用戶並附上完成的影片。在使用僅訊息工具可見傳遞的群組/頻道聊天中，智慧體會透過訊息工具轉送結果，而不是由 OpenClaw 直接張貼。
+4. 代理會通知使用者並透過訊息工具附加完成的影片。如果完成代理僅撰寫私人最終回覆，OpenClaw 將不會自動發布影片作為後備方案。
 
 當工作正在進行時，同一工作階段中重複的 `video_generate` 呼叫會傳回目前的任務狀態，而不是開始另一個生成作業。請使用 `openclaw tasks list` 或 `openclaw tasks show <taskId>` 從 CLI 檢查進度。
 
@@ -293,33 +293,33 @@ OpenClaw 依以下順序解析模型：
 
   </Accordion>
   <Accordion title="BytePlus Seedance 1.5">
-    需要安裝 [`@openclaw/byteplus-modelark`](https://www.npmjs.com/package/@openclaw/byteplus-modelark)
-    外掛程式。提供者 ID：`byteplus-seedance15`。模型：
+    需要 [`@openclaw/byteplus-modelark`](https://www.npmjs.com/package/@openclaw/byteplus-modelark)
+    外掛程式。供應商 ID：`byteplus-seedance15`。模型：
     `seedance-1-5-pro-251215`。
 
-    使用統一的 `content[]` API。最多支援 2 張輸入圖片
-    （`first_frame` + `last_frame`）。所有輸入必須是遠端 `https://`
-    URL。請在每張圖片上設定 `role: "first_frame"` / `"last_frame"`，或
-    以位置方式傳遞圖片。
+    使用統一的 `content[]` API。最多支援 2 個輸入影像
+    (`first_frame` + `last_frame`)。所有輸入必須是遠端 `https://`
+    URL。在每個影像上設定 `role: "first_frame"` / `"last_frame"`，或
+    依位置傳遞影像。
 
-    `aspectRatio: "adaptive"` 會從輸入圖片自動偵測比例。
+    `aspectRatio: "adaptive"` 會從輸入影像自動偵測比例。
     `audio: true` 對應至 `generate_audio`。`providerOptions.seed`
-    （數字）會被轉發。
+    (數字) 會被轉發。
 
   </Accordion>
   <Accordion title="BytePlus Seedance 2.0">
     需要 [`@openclaw/byteplus-modelark`](https://www.npmjs.com/package/@openclaw/byteplus-modelark)
-    插件。供應商 ID：`byteplus-seedance2`。模型：
-    `dreamina-seedance-2-0-260128`、
+    外掛程式。供應商 ID：`byteplus-seedance2`。模型：
+    `dreamina-seedance-2-0-260128`,
     `dreamina-seedance-2-0-fast-260128`。
 
-    使用統一的 `content[]` API。支援最多 9 張參考圖片、
+    使用統一的 `content[]` API。最多支援 9 張參考影像、
     3 個參考影片和 3 個參考音訊。所有輸入必須是遠端
     `https://` URL。在每個資產上設定 `role` - 支援的值：
-    `"first_frame"`、`"last_frame"`、`"reference_image"`、
-    `"reference_video"`、`"reference_audio"`。
+    `"first_frame"`、 `"last_frame"`、 `"reference_image"`、
+    `"reference_video"`、 `"reference_audio"`。
 
-    `aspectRatio: "adaptive"` 會從輸入圖片自動偵測比例。
+    `aspectRatio: "adaptive"` 會從輸入影像自動偵測比例。
     `audio: true` 對應至 `generate_audio`。`providerOptions.seed`
     (數字) 會被轉發。
 
@@ -431,12 +431,11 @@ Repo 包裝器：
 pnpm test:live:media video
 ```
 
-此即時檔案會從 `~/.profile` 載入缺失的供應商環境變數，預設優先使用即時/env API 金鑰而非儲存的驗證設定檔，並預設執行發行安全的冒煙測試：
+此即時檔案預設會優先使用已匯出的供應商環境變數，而非儲存的驗證設定檔，並預設執行釋放安全的冒煙測試：
 
-- 針對掃描中的每個非 FAL 供應商執行 `generate`。
+- 針對掃描中的每個非 FAL 供應商進行 `generate`。
 - 一秒鐘的龍蝦提示。
-- 來自
-  `OPENCLAW_LIVE_VIDEO_GENERATION_TIMEOUT_MS` 的每個供應商操作上限（預設為 `180000`）。
+- 來自 `OPENCLAW_LIVE_VIDEO_GENERATION_TIMEOUT_MS` 的每個供應商操作上限（預設為 `180000`）。
 
 FAL 為選用，因為供應商端的佇列延遲可能會主導發行時間：
 
@@ -444,13 +443,12 @@ FAL 為選用，因為供應商端的佇列延遲可能會主導發行時間：
 pnpm test:live:media video --video-providers fal
 ```
 
-設定 `OPENCLAW_LIVE_VIDEO_GENERATION_FULL_MODES=1` 以同時執行宣告的轉換模式，這些模式可透過共用掃描使用本地媒體安全地執行：
+設定 `OPENCLAW_LIVE_VIDEO_GENERATION_FULL_MODES=1` 以也執行共享掃描可使用本地媒體安全練習的宣告轉換模式：
 
-- 當 `capabilities.imageToVideo.enabled` 時執行 `imageToVideo`。
-- 當 `capabilities.videoToVideo.enabled` 且
-  供應商/模型在共用掃描中接受緩衝區支援的本地影片輸入時，執行 `videoToVideo`。
+- 當 `capabilities.imageToVideo.enabled` 時進行 `imageToVideo`。
+- 當 `capabilities.videoToVideo.enabled` 且供應商/模型在共享掃描中接受緩衝支援的本地影片輸入時進行 `videoToVideo`。
 
-目前，共用 `videoToVideo` 即時通道僅在您選擇 `runway/gen4_aleph` 時涵蓋 `runway`。
+目前共享 `videoToVideo` 即時通道僅在您選擇 `runway/gen4_aleph` 時覆蓋 `runway`。
 
 ## 組態
 
@@ -478,18 +476,18 @@ openclaw config set agents.defaults.videoGenerationModel.primary "qwen/wan2.6-t2
 ## 相關
 
 - [Alibaba Model Studio](/zh-Hant/providers/alibaba)
-- [背景任務](/zh-Hant/automation/tasks) - 非同步影片生成的任務追蹤
+- [Background tasks](/zh-Hant/automation/tasks) - 非同步視訊生成的任務追蹤
 - [BytePlus](/zh-Hant/concepts/model-providers#byteplus-international)
 - [ComfyUI](/zh-Hant/providers/comfy)
-- [組態參考](/zh-Hant/gateway/config-agents#agent-defaults)
+- [Configuration reference](/zh-Hant/gateway/config-agents#agent-defaults)
 - [fal](/zh-Hant/providers/fal)
 - [Google (Gemini)](/zh-Hant/providers/google)
 - [MiniMax](/zh-Hant/providers/minimax)
-- [模型](/zh-Hant/concepts/models)
+- [Models](/zh-Hant/concepts/models)
 - [OpenAI](/zh-Hant/providers/openai)
 - [Qwen](/zh-Hant/providers/qwen)
 - [Runway](/zh-Hant/providers/runway)
 - [Together AI](/zh-Hant/providers/together)
-- [工具概覽](/zh-Hant/tools)
+- [Tools overview](/zh-Hant/tools)
 - [Vydra](/zh-Hant/providers/vydra)
 - [xAI](/zh-Hant/providers/xai)

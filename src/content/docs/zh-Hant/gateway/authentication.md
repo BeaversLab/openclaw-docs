@@ -6,13 +6,14 @@ read_when:
 title: "驗證"
 ---
 
-<Note>此頁面是 **模型提供者** 驗證參考（API 金鑰、OAuth、Claude CLI 重複使用和 Anthropic 設定權杖）。關於 **閘道連線** 驗證（權杖、密碼、trusted-proxy），請參閱 [Configuration](/zh-Hant/gateway/configuration) 和 [Trusted Proxy Auth](/zh-Hant/gateway/trusted-proxy-auth)。</Note>
+<Note>此頁面是 **模型提供者** 驗證參考文件（API 金鑰、OAuth、Claude CLI 重複使用以及 Anthropic 設定權杖）。關於 **閘道連線** 驗證（權杖、密碼、trusted-proxy），請參閱 [Configuration](/zh-Hant/gateway/configuration) 與 [Trusted Proxy Auth](/zh-Hant/gateway/trusted-proxy-auth)。</Note>
 
 OpenClaw 支援模型供應商的 OAuth 和 API 金鑰。對於永久運作的閘道主機，API 金鑰通常是最可預期的選項。當訂閱/OAuth 流程符合您的供應商帳戶模型時，也一併支援。
 
-請參閱 [/concepts/oauth](/zh-Hant/concepts/oauth) 以了解完整的 OAuth 流程和儲存配置。
-對於基於 SecretRef 的驗證（`env`/`file`/`exec` 提供者），請參閱 [Secrets Management](/zh-Hant/gateway/secrets)。
-關於 `models status --probe` 使用的憑證資格/原因代碼規則，請參閱 [Auth Credential Semantics](/zh-Hant/auth-credential-semantics)。
+完整的 OAuth 流程與儲存佈局，請參閱 [/concepts/oauth](/zh-Hant/concepts/oauth)。
+關於基於 SecretRef 的驗證（`env`/`file`/`exec` 提供者），請參閱 [Secrets Management](/zh-Hant/gateway/secrets)。
+關於 `models status --probe` 所使用的憑證資格/原因代碼規則，請參閱
+[Auth Credential Semantics](/zh-Hant/auth-credential-semantics)。
 
 ## 推薦設定（API 金鑰，任何供應商）
 
@@ -46,8 +47,8 @@ openclaw doctor
 如果您不想自己管理環境變數，啟用程序可以儲存
 API 金鑰供守護程序使用：`openclaw onboard`。
 
-有關環境繼承的詳細資訊（`env.shellEnv`、
-`~/.openclaw/.env`、systemd/launchd），請參閱 [Help](/zh-Hant/help)。
+關於環境變數繼承（`env.shellEnv`、
+`~/.openclaw/.env`、systemd/launchd）的詳細資訊，請參閱 [Help](/zh-Hant/help)。
 
 ## Anthropic：Claude CLI 和權杖相容性
 
@@ -123,7 +124,7 @@ openclaw models status --probe
 - 如果認證存在，但 OpenClaw 無法解析該提供者的可探測模型候選，探測會回報 `status: no_model`。
 - 速率限制冷卻時間可以範圍限定於模型。針對某個模型正在冷卻的設定檔，對於同一提供者上的兄弟模型仍然可用。
 
-可選的運維腳本 (systemd/Termux) 記錄於此：
+此處記錄了選用的維運腳本（systemd/Termux）：
 [Auth monitoring scripts](/zh-Hant/help/scripts#auth-monitoring-scripts)
 
 ## Anthropic 說明
@@ -159,17 +160,28 @@ requests`, `ThrottlingException`, `concurrency limit reached`，或
 - 非速率限制錯誤不會使用替代金鑰重試。
 - 如果所有金鑰都失敗，將傳回最後一次嘗試的最終錯誤。
 
-## 控制使用的憑證
+## 在閘道執行時移除提供者驗證
 
-### 每個階段 (聊天指令)
+當透過 Gateway 控制平面移除提供者驗證時，OpenClaw 會刪除
+該提供者已儲存的驗證設定檔，並中止作用中的聊天或代理執行
+（若其選取的模型提供者符合被移除的提供者）。被中止的執行會發出
+一般的聊天取消與生命週期事件，並附帶
+`stopReason: "auth-revoked"`，因此連線的用戶端可以顯示該執行
+是因為憑證被移除而停止。
 
-使用 `/model <alias-or-id>@<profileId>` 為目前階段指定特定的提供者憑證（範例設定檔 ID：`anthropic:default`、`anthropic:work`）。
+移除已儲存的驗證並不會在提供者端撤銷金鑰。當您需要在提供者端使其失效時，請在提供者儀表板中輪替或撤銷金鑰。
 
-使用 `/model`（或 `/model list`） 以開啟精簡選擇器；使用 `/model status` 以檢視完整資訊（候選項目 + 下一個認證設定檔，以及已設定的提供者端點詳細資料）。
+## 控制使用哪個憑證
 
-### 逐 Agent（CLI 覆蓋）
+### 每次工作階段（聊天指令）
 
-為 Agent 設定明確的認證設定檔順序覆蓋（儲存於該 Agent 的 `auth-state.json` 中）：
+使用 `/model <alias-or-id>@<profileId>` 釘選特定的提供者憑證給目前的工作階段（範例設定檔 ID：`anthropic:default`、`anthropic:work`）。
+
+使用 `/model`（或 `/model list`） 以取得精簡選擇器；使用 `/model status` 以取得完整檢視（候選者 + 下個驗證設定檔，並在設定時包含提供者端點詳細資訊）。
+
+### 每個代理（CLI 覆寫）
+
+為代理設定明確的認證設定檔順序覆寫（儲存在該代理的 `auth-state.json` 中）：
 
 ```bash
 openclaw models auth order get --provider anthropic
@@ -177,18 +189,18 @@ openclaw models auth order set --provider anthropic anthropic:default
 openclaw models auth order clear --provider anthropic
 ```
 
-使用 `--agent <id>` 來指定特定的 agent；省略它則使用配置的預設 agent。
-當您除錯順序問題時，`openclaw models status --probe` 會將省略的
-已儲存設定檔顯示為 `excluded_by_auth_order`，而不是靜默跳過它們。
-當您除錯冷卻問題時，請記住速率限制冷卻可能綁定到
-單一模型 ID，而非整個供應商設定檔。
+使用 `--agent <id>` 指定特定的代理；省略它則使用設定的預設代理。
+當您調試順序問題時，`openclaw models status --probe` 會將省略的
+儲存設定檔顯示為 `excluded_by_auth_order`，而不是靜默地跳過它們。
+當您調試冷卻問題時，請記住速率限制冷卻可能綁定到
+一個模型 ID，而不是整個供應商設定檔。
 
-## 疑難排解
+## 故障排除
 
 ### "找不到憑證"
 
-如果缺少 Anthropic 設定檔，請在 **gateway host** 上設定 Anthropic API 金鑰
-或設置 Anthropic setup-token 路徑，然後重新檢查：
+如果缺少 Anthropic 設定檔，請在 **gateway 主機** 上設定 Anthropic API 金鑰
+或設定 Anthropic setup-token 路徑，然後重新檢查：
 
 ```bash
 openclaw models status
@@ -202,6 +214,6 @@ Anthropic token 設定檔遺失或已過期，請透過 setup-token 重新整理
 
 ## 相關
 
-- [機密管理](/zh-Hant/gateway/secrets)
-- [遠端存取](/zh-Hant/gateway/remote)
-- [驗證儲存](/zh-Hant/concepts/oauth)
+- [Secrets management](/zh-Hant/gateway/secrets)
+- [Remote access](/zh-Hant/gateway/remote)
+- [Auth storage](/zh-Hant/concepts/oauth)

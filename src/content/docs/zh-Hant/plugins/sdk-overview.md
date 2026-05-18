@@ -10,9 +10,9 @@ read_when:
 
 Plugin SDK 是外掛與核心之間的類型合約。本頁面提供關於 **要匯入什麼** 以及 **您可以註冊什麼** 的參考。
 
-<Note>本頁面適用於在 OpenClaw 內部使用 `openclaw/plugin-sdk/*` 的外掛作者。對於希望透過 Gateway 執行代理程式的外部應用程式、腳本、儀表板、CI 工作和 IDE 擴充功能，請改用 [OpenClaw App SDK](/zh-Hant/concepts/openclaw-sdk) 和 `@openclaw/sdk` 套件。</Note>
+<Note>此頁面適用於在 OpenClaw 內部使用 `openclaw/plugin-sdk/*` 的外掛作者。對於想要透過 Gateway 執行代理程式的外部應用程式、腳本、儀表板、CI 工作和 IDE 擴充功能，請改用 [OpenClaw App SDK](/zh-Hant/concepts/openclaw-sdk) 和 `@openclaw/sdk` 套件。</Note>
 
-<Tip>改在尋找操作指南嗎？請從 [建構外掛](/zh-Hant/plugins/building-plugins) 開始，針對通道外掛使用 [通道外掛](/zh-Hant/plugins/sdk-channel-plugins)，提供者外掛使用 [提供者外掛](/zh-Hant/plugins/sdk-provider-plugins)，本機 AI CLI 後端使用 [CLI 後端外掛](/zh-Hant/plugins/cli-backend-plugins)，以及工具或生命週期掛勾外掛使用 [外掛掛勾](/zh-Hant/plugins/hooks)。</Tip>
+<Tip>改尋找操作指南？請從 [建置外掛](/zh-Hant/plugins/building-plugins) 開始，針對通道外掛使用 [通道外掛](/zh-Hant/plugins/sdk-channel-plugins)，提供者外掛使用 [提供者外掛](/zh-Hant/plugins/sdk-provider-plugins)，本機 AI CLI 後端使用 [CLI 後端外掛](/zh-Hant/plugins/cli-backend-plugins)，以及工具或生命週期掛勾外掛使用 [外掛掛勾](/zh-Hant/plugins/hooks)。</Tip>
 
 ## 匯入慣例
 
@@ -41,7 +41,7 @@ import { defineChannelPluginEntry } from "openclaw/plugin-sdk/channel-core";
 
 ## 子路徑參考
 
-外掛 SDK 以一組按區域分組的狹窄子路徑（外掛進入點、通道、提供者、驗證、執行時、功能、記憶體和保留的捆綁外掛輔助程式）公開。有關完整的目錄——已分組並連結——請參閱 [外掛 SDK 子路徑](/zh-Hant/plugins/sdk-subpaths)。
+外掛 SDK 以一組依區域分組的狹窄子路徑形式公開（外掛入口、通道、提供者、驗證、執行階段、功能、記憶體和保留的捆綁外掛輔助程式）。若要查看完整的分類目錄（已分組並連結），請參閱 [外掛 SDK 子路徑](/zh-Hant/plugins/sdk-subpaths)。
 
 編譯器進入點清單位於 `scripts/lib/plugin-sdk-entrypoints.json` 中；套件匯出是從公開子集中生成的，該子集在減去 `scripts/lib/plugin-sdk-private-local-only-subpaths.json` 中列出的儲存庫本機測試/內部子路徑後得出。執行 `pnpm plugin-sdk:surface` 以稽核公開匯出計數。已棄用的公開子路徑（舊到足以且未被捆綁擴充功能生產程式碼使用）會在 `scripts/lib/plugin-sdk-deprecated-public-subpaths.json` 中追蹤；廣泛的已棄用重新匯出匯整會在 `scripts/lib/plugin-sdk-deprecated-barrel-subpaths.json` 中追蹤。
 
@@ -69,50 +69,52 @@ import { defineChannelPluginEntry } from "openclaw/plugin-sdk/channel-core";
 
 ### 工具和指令
 
+對於具有固定工具名稱的簡單僅工具外掛，請使用 [`defineToolPlugin`](/zh-Hant/plugins/tool-plugins)。對於混合外掛或完全動態的工具註冊，請直接使用 `api.registerTool(...)`。
+
 | 方法                            | 註冊內容                                    |
 | ------------------------------- | ------------------------------------------- |
-| `api.registerTool(tool, opts?)` | 代理程式工具（必填或 `{ optional: true }`） |
+| `api.registerTool(tool, opts?)` | 代理程式工具（必要或 `{ optional: true }`） |
 | `api.registerCommand(def)`      | 自訂指令（繞過 LLM）                        |
 
-當代理需要一個簡短的、由命令擁有的路由提示時，外掛命令可以設定 `agentPromptGuidance`。請保持該文字與命令本身相關；不要在核心提示建構器中新增提供者或外掛特定的策略。
+當代理程式需要簡短的指令專屬路由提示時，外掛指令可以設定 `agentPromptGuidance`。請保持該文字與指令本身相關；請勿將提供者或外掛特定的政策新增至核心提示建構器中。
 
 ### 基礎架構
 
-| 方法                                           | 註冊內容                          |
-| ---------------------------------------------- | --------------------------------- |
-| `api.registerHook(events, handler, opts?)`     | 事件掛鉤                          |
-| `api.registerHttpRoute(params)`                | Gateway HTTP 端點                 |
-| `api.registerGatewayMethod(name, handler)`     | Gateway RPC 方法                  |
-| `api.registerGatewayDiscoveryService(service)` | 本機 Gateway 探索廣告程式         |
-| `api.registerCli(registrar, opts?)`            | CLI 子指令                        |
-| `api.registerNodeCliFeature(registrar, opts?)` | `openclaw nodes` 下的節點功能 CLI |
-| `api.registerService(service)`                 | 背景服務                          |
-| `api.registerInteractiveHandler(registration)` | 互動式處理程式                    |
-| `api.registerAgentToolResultMiddleware(...)`   | 執行階段工具結果中介軟體          |
-| `api.registerMemoryPromptSupplement(builder)`  | 新增記憶體相鄰提示區段            |
-| `api.registerMemoryCorpusSupplement(adapter)`  | 新增記憶體搜尋/讀取語料庫         |
+| 方法                                           | 註冊內容                               |
+| ---------------------------------------------- | -------------------------------------- |
+| `api.registerHook(events, handler, opts?)`     | 事件掛勾                               |
+| `api.registerHttpRoute(params)`                | Gateway HTTP 端點                      |
+| `api.registerGatewayMethod(name, handler)`     | Gateway RPC 方法                       |
+| `api.registerGatewayDiscoveryService(service)` | 本機 Gateway 探索廣告器                |
+| `api.registerCli(registrar, opts?)`            | CLI 子指令                             |
+| `api.registerNodeCliFeature(registrar, opts?)` | 位於 `openclaw nodes` 下的節點功能 CLI |
+| `api.registerService(service)`                 | 背景服務                               |
+| `api.registerInteractiveHandler(registration)` | 互動式處理程式                         |
+| `api.registerAgentToolResultMiddleware(...)`   | Runtime tool-result 中介軟體           |
+| `api.registerMemoryPromptSupplement(builder)`  | 累加式記憶體相鄰提示區段               |
+| `api.registerMemoryCorpusSupplement(adapter)`  | 累加式記憶體搜尋/讀取語料庫            |
 
-### 工作流程外掛的主機掛鉤
+### 工作流程外掛程式的主機掛鉤
 
-主機掛鉤是外掛的 SDK 介面，適用於需要參與主機生命週期，而不僅僅是新增提供者、通道或工具的外掛。它們是通用契約；計畫模式可以使用它們，但審核工作流程、工作區原則閘道、背景監視器、設定精靈和 UI 伴隨外掛也可以使用它們。
+主機掛鉤是供需要參與主機生命週期，而不僅是新增提供者、通道或工具的外掛程式使用的 SDK 介面。它們是通用契約；計劃模式可以使用它們，但審核工作流程、工作區原則閘道、背景監視器、設定精靈和 UI 伴隨外掛程式也可以使用它們。
 
-| 方法                                                                                 | 擁有的契約                                                                                            |
-| ------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------- |
-| `api.session.state.registerSessionExtension(...)`                                    | 透過 Gateway 會話投射的外掛擁有、JSON 相容會話狀態                                                    |
-| `api.session.workflow.enqueueNextTurnInjection(...)`                                 | 針對單一會話注入至下一個 Agent 輪次的持久化僅執行一次背景                                             |
-| `api.registerTrustedToolPolicy(...)`                                                 | 可封鎖或重寫工具參數的配套/受信任外掛前工具原則                                                       |
-| `api.registerToolMetadata(...)`                                                      | 不變更工具實作的工具目錄顯示中繼資料                                                                  |
-| `api.registerCommand(...)`                                                           | 範圍外掛命令；命令結果可以設定 `continueAgent: true`；Discord 原生命令支援 `descriptionLocalizations` |
-| `api.session.controls.registerControlUiDescriptor(...)`                              | 針對工作階段、工具、執行或設定期面的控制 UI 貢獻描述項                                                |
-| `api.lifecycle.registerRuntimeLifecycle(...)`                                        | 在重置/刪除/重新載入路徑上，針對外掛程式擁有的執行時資源的清理回呼                                    |
-| `api.agent.events.registerAgentEventSubscription(...)`                               | 針對工作流程狀態和監視器的已清理事件訂閱                                                              |
-| `api.runContext.setRunContext(...)` / `getRunContext(...)` / `clearRunContext(...)`  | 每次執行的外掛程式暫存狀態，會在最終執行生命週期時被清除                                              |
-| `api.session.workflow.registerSessionSchedulerJob(...)`                              | 清理外掛擁有的排程器作業的中繼資料；不排程工作或建立工作記錄                                          |
-| `api.session.workflow.sendSessionAttachment(...)`                                    | 僅限打包版本的主機中繼檔案附件傳遞至作用中的直接輸出會話路由                                          |
-| `api.session.workflow.scheduleSessionTurn(...)` / `unscheduleSessionTurnsByTag(...)` | 僅限打包版本的 Cron 支援排程會話輪次以及基於標籤的清理                                                |
-| `api.session.controls.registerSessionAction(...)`                                    | 客戶端可以透過 Gateway 分派的類型化會話操作                                                           |
+| 方法                                                                                 | 它擁有的契約                                                                                              |
+| ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------- |
+| `api.session.state.registerSessionExtension(...)`                                    | 外掛程式擁有的、透過 Gateway 會話投射的 JSON 相容會話狀態                                                 |
+| `api.session.workflow.enqueueNextTurnInjection(...)`                                 | 針對單一会話注入至下一個 Agent 週期的持久精確一次上下文                                                   |
+| `api.registerTrustedToolPolicy(...)`                                                 | 可封鎖或重寫工具參數的內建/受信賴外掛前工具原則                                                           |
+| `api.registerToolMetadata(...)`                                                      | 不變更工具實作的工具目錄顯示中繼資料                                                                      |
+| `api.registerCommand(...)`                                                           | 範圍外掛程式指令；指令結果可以設定 `continueAgent: true`；Discord 原生指令支援 `descriptionLocalizations` |
+| `api.session.controls.registerControlUiDescriptor(...)`                              | 針對會話、工具、執行或設定介面的控制 UI 貢獻描述項                                                        |
+| `api.lifecycle.registerRuntimeLifecycle(...)`                                        | 在重置/刪除/重新載入路徑上，針對外掛程式擁有之執行時期資源的清理回呼                                      |
+| `api.agent.events.registerAgentEventSubscription(...)`                               | 針對工作流程狀態和監視器的經清理事件訂閱                                                                  |
+| `api.runContext.setRunContext(...)` / `getRunContext(...)` / `clearRunContext(...)`  | 每次執行外掛程式暫存狀態，在終端執行生命週期時清除                                                        |
+| `api.session.workflow.registerSessionSchedulerJob(...)`                              | 外掛程式擁有的排程器工作清理中繼資料；不排程工作或建立工作記錄                                            |
+| `api.session.workflow.sendSessionAttachment(...)`                                    | 僅限內建的主機中介檔案附加傳送至作用中直接輸出會話路由                                                    |
+| `api.session.workflow.scheduleSessionTurn(...)` / `unscheduleSessionTurnsByTag(...)` | 僅限內建的 Cron 支援排程會話週期加上基於標籤的清理                                                        |
+| `api.session.controls.registerSessionAction(...)`                                    | 用戶端可透過 Gateway 分派的類型會話動作                                                                   |
 
-新的外掛程式碼請使用分組命名空間：
+對於新的外掛程式碼，請使用分組命名空間：
 
 - `api.session.state.registerSessionExtension(...)`
 - `api.session.workflow.enqueueNextTurnInjection(...)`
@@ -127,48 +129,57 @@ import { defineChannelPluginEntry } from "openclaw/plugin-sdk/channel-core";
 - `api.runContext.setRunContext(...)` / `getRunContext(...)` / `clearRunContext(...)`
 - `api.lifecycle.registerRuntimeLifecycle(...)`
 
-對等的扁平方法仍作為已棄用的兼容別名提供給現有插件使用。請勿添加直接呼叫
+同等的扁平方法仍作為已棄用的相容性別名提供，以供現有外掛使用。請勿加入直接呼叫
 `api.registerSessionExtension`、`api.enqueueNextTurnInjection`、
 `api.registerControlUiDescriptor`、`api.registerRuntimeLifecycle`、
 `api.registerAgentEventSubscription`、`api.emitAgentEvent`、
 `api.setRunContext`、`api.getRunContext`、`api.clearRunContext`、
 `api.registerSessionSchedulerJob`、`api.registerSessionAction`、
 `api.sendSessionAttachment`、`api.scheduleSessionTurn` 或
-`api.unscheduleSessionTurnsByTag` 的新插件代碼。
+`api.unscheduleSessionTurnsByTag` 的新外掛程式碼。
 
-`scheduleSessionTurn(...)` 是基於 Gateway Cron 排程器的會話範圍便捷工具。Cron 負責計時並在輪次執行時創建後台任務記錄；Plugin SDK 僅約束目標會話、插件擁有的命名和清理。當工作本身需要持久的多步驟 Task Flow 狀態時，請在預定的輪次內使用 `api.runtime.tasks.managedFlows`。
+`scheduleSessionTurn(...)` 是針對 Gateway Cron 排程器的範圍限定會話便利方法。Cron 擁有計時權，並在輪次執行時建立背景任務記錄；外掛 SDK 僅限制目標會話、外掛擁有的命名和清理。當工作本身需要持久的的多步驟任務流程狀態時，請在排定的輪次內使用 `api.runtime.tasks.managedFlows`。
 
 這些合約刻意分割了權限：
 
-- 外部插件可以擁有會話擴展、UI 描述符、命令、工具元數據、下一輪次注入和普通鉤子。
-- 受信任的工具策略在普通的 `before_tool_call` 鉤子之前執行，並且僅限打包版，因為它們參與主機安全策略。
-- 保留的命令所有權僅限打包版。外部插件應使用其自己的命令名稱或別名。
-- `allowPromptInjection=false` 會停用提示變更鉤子，包括
+- 外部外掛可以擁有會話延伸、UI 描述元、指令、工具中繼資料、下一輪注入和一般掛勾。
+- 受信任的工具原則會在一般 `before_tool_call` 掛勾之前執行，並且僅限打包版，因為它們參與主機安全原則。
+- 保留的指令擁有權僅限打包版。外部外掛應使用其自己的指令名稱或別名。
+- `allowPromptInjection=false` 會停用提示詞變更的 hooks，包括
   `agent_turn_prepare`、`before_prompt_build`、`heartbeat_prompt_contribution`、
-  來自舊版 `before_agent_start` 的提示欄位以及
+  來自舊版 `before_agent_start` 的提示詞欄位，以及
   `enqueueNextTurnInjection`。
 
-非 Plan 消費者範例：
+非 Plan 消費者的範例：
 
-| 插件原型            | 使用的鉤子                                                                           |
-| ------------------- | ------------------------------------------------------------------------------------ |
-| 審批工作流          | 會話擴展、命令繼續、下一輪次注入、UI 描述符                                          |
-| 預算/工作區策略閘道 | 受信任的工具策略、工具元數據、會話投影                                               |
-| 後台生命週期監控器  | 執行時生命週期清理、代理程式事件訂閱、會話排程器擁有權/清理、心跳提示貢獻、UI 描述符 |
-| 設定或上架精靈      | 會話擴充、範圍指令、控制 UI 描述符                                                   |
+| Plugin 原型         | 使用的 Hooks                                                                             |
+| ------------------- | ---------------------------------------------------------------------------------------- |
+| 審核工作流程        | Session 擴充、指令接續、下一輪注入、UI 描述器                                            |
+| 預算/工作區策略閘道 | 受信任工具策略、工具中繼資料、session 投射                                               |
+| 背景生命週期監控器  | 執行時生命週期清理、agent 事件訂閱、session 排程器所有權/清理、心跳提示詞貢獻、UI 描述器 |
+| 設定或上架精靈      | Session 擴充、範圍指令、控制 UI 描述器                                                   |
 
-<Note>保留的核心管理員命名空間 (`config.*`, `exec.approvals.*`, `wizard.*`, `update.*`) 即使外掛嘗試分配 更窄的閘道方法範圍，也會保持 `operator.admin`。 對於外掛擁有的方法，建議優先使用外掛特定的前綴。</Note>
+<Note>保留的核心管理員命名空間 (`config.*`、`exec.approvals.*`、`wizard.*`、 `update.*`) 即使 plugin 嘗試指定 更狹隘的 gateway 方法範圍，也會保持 `operator.admin`。 對於 plugin 擁有的方法，建議優先使用 plugin 專屬的前綴。</Note>
 
 <Accordion title="何時使用工具結果中介軟體">
-  當套件組合的外掛需要在執行後、執行時將結果回饋給模型之前重寫工具結果時，可以使用 `api.registerAgentToolResultMiddleware(...)`。這是受信任的與執行時無關的接縫，適用於 tokenjuice 等非同步輸出減少器。
+  捆綁的 plugin 可以在執行後、執行時將結果
+  餵回模型之前重寫工具結果時，使用 `api.registerAgentToolResultMiddleware(...)`。這是受信任的
+  執行時中立接縫，用於像 tokenjuice 這樣的非同步輸出縮減器。
 
-套件組合的外掛必須為每個目標執行時宣告 `contracts.agentToolResultMiddleware`，例如 `["pi", "codex"]`。外部外掛無法註冊此中介軟體；對於不需要模型前工具結果計時的工作，請保留標準的 OpenClaw 外掛勾點。僅限 Pi 的舊式嵌入式延伸工廠註冊路徑已被移除。
+捆綁的 plugin 必須針對每個
+目標執行時宣告 `contracts.agentToolResultMiddleware`，例如 `["pi", "codex"]`。外部 plugin
+無法註冊此中介軟體；對於不需要
+模型前工具結果時序的工作，請保留一般的 OpenClaw plugin hooks。舊版僅限 Pi 的
+內嵌擴充工廠註冊路徑已被移除。
 
 </Accordion>
 
-### 閘道探索註冊
+### Gateway 探索註冊
 
-`api.registerGatewayDiscoveryService(...)` 允許外掛透過 mDNS/Bonjour 等本機探索傳輸公開使用中的閘道。當啟用本機探索時，OpenClaw 會在閘道啟動期間呼叫此服務，傳遞目前的閘道連接埠和非機密 TXT 提示資料，並在閘道關閉時呼叫傳回的 `stop` 處理程式。
+`api.registerGatewayDiscoveryService(...)` 允許外掛程式在本地探索傳輸（如 mDNS/Bonjour）上通告作用中的
+Gateway。當啟用本地探索時，OpenClaw 會在 Gateway 啟動期間呼叫該服務，傳遞目前的
+Gateway 連接埠和非秘密 TXT 提示資料，並在 Gateway 關閉期間呼叫傳回的
+`stop` 處理程式。
 
 ```typescript
 api.registerGatewayDiscoveryService({
@@ -184,24 +195,26 @@ api.registerGatewayDiscoveryService({
 });
 ```
 
-閘道探索外掛不得將公開的 TXT 值視為機密或驗證資訊。
-探索是一種路由提示；閘道驗證和 TLS 釘選仍然擁有信任權。
+Gateway 探索外掛程式不得將通告的 TXT 值視為秘密或
+驗證機制。探索是一種路由提示；Gateway 驗證和 TLS 釘選仍然
+擁有信任權。
 
 ### CLI 註冊元資料
 
-`api.registerCli(registrar, opts?)` 接受兩種指令元資料：
+`api.registerCli(registrar, opts?)` 接受兩種命令元資料：
 
-- `commands`：由註冊者擁有的明確指令名稱
-- `descriptors`：用於 CLI 說明、路由和延遲外掛 CLI 註冊的剖析時指令描述符
-- `parentPath`：選用項目，用於巢狀指令群組的父指令路徑，例如
+- `commands`：由註冊者擁有的明確命令名稱
+- `descriptors`：用於 CLI 說明、
+  路由和延遲外掛程式 CLI 註冊的剖析時間命令描述元
+- `parentPath`：用於巢狀命令群組的可選父命令路徑，例如
   `["nodes"]`
 
-對於配對節點功能，請優先使用
-`api.registerNodeCliFeature(registrar, opts?)`。它是 `api.registerCli(..., { parentPath: ["nodes"] })` 的小型包裝器，並使諸如
-`openclaw nodes canvas` 之類的指令成為明確的插件擁有節點功能。
+對於成對節點功能，請優先使用
+`api.registerNodeCliFeature(registrar, opts?)`。它是 `api.registerCli(..., { parentPath: ["nodes"] })` 的小型包裝函式，並使諸如
+`openclaw nodes canvas` 之類的命令成為明確的外掛程式擁有節點功能。
 
-如果您希望插件指令在一般根 CLI 路徑中保持延遲載入，
-請提供 `descriptors`，涵蓋該註冊器公開的每個頂層指令根目錄。
+如果您希望外掛程式命令在一般根 CLI 路徑中保持延遲載入，
+請提供 `descriptors` 以涵蓋該註冊者公開的每個頂層命令根。
 
 ```typescript
 api.registerCli(
@@ -221,7 +234,7 @@ api.registerCli(
 );
 ```
 
-巢狀指令會將解析後的父指令作為 `program` 接收：
+巢狀命令會將解析的父命令接收為 `program`：
 
 ```typescript
 api.registerCli(
@@ -243,101 +256,97 @@ api.registerCli(
 ```
 
 僅當您不需要延遲根 CLI 註冊時，才單獨使用 `commands`。
-該急切相容性路徑仍受支援，但不會安裝
-描述符支援的預留位置以進行解析時的延遲載入。
+該急切相容性路徑仍受支援，但它不會安裝
+由描述元支援的預留位置以供剖析時延遲載入。
 
 ### CLI 後端註冊
 
-`api.registerCliBackend(...)` 允許插件擁有本機
-AI CLI 後端（例如 `codex-cli`）的預設設定。
+`api.registerCliBackend(...)` 允許外掛程式擁有本地
+AI CLI 後端（例如 `claude-cli` 或 `my-cli`）的預設設定。
 
-- 後端 `id` 會成為模型參考中的提供者前綴，例如 `codex-cli/gpt-5`。
+- 後端 `id` 會成為模型參考中的提供者前綴，例如 `my-cli/gpt-5`。
 - 後端 `config` 使用與 `agents.defaults.cliBackends.<id>` 相同的形狀。
-- 使用者設定仍優先。OpenClaw 在執行 CLI 之前，會將 `agents.defaults.cliBackends.<id>` 合併到
-  插件預設值之上。
-- 當後端在合併後需要相容性重寫時使用 `normalizeConfig`
-  （例如正規化舊的標誌形狀）。
-- 對於屬於 CLI 方言的請求範圍 argv 重寫，請使用 `resolveExecutionArgs`，
-  例如將 OpenClaw 思考層級映射到原生努力標誌。
+- 使用者設定仍然優先。OpenClaw 會在執行 CLI 之前將
+  `agents.defaults.cliBackends.<id>` 合併到外掛程式預設值之上。
+- 當後端在合併後需要相容性重寫（例如正規化舊的旗標形狀）時，請使用 `normalizeConfig`。
+- 針對屬於 CLI 方言的請求範圍 argv 重寫（例如將 OpenClaw 思考等級對應到原生的 effort 旗標），請使用 `resolveExecutionArgs`。
 
-如需端對端撰寫指南，請參閱
-[CLI 後端插件](/zh-Hant/plugins/cli-backend-plugins)。
+若要查看端到端的撰寫指南，請參閱
+[CLI 後端外掛程式](/zh-Hant/plugins/cli-backend-plugins)。
 
 ### 獨佔插槽
 
-| 方法                                       | 註冊內容                                                                                                                |
-| ------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------- |
-| `api.registerContextEngine(id, factory)`   | 語境引擎（一次啟用一個）。`assemble()` 回呼會接收 `availableTools` 和 `citationsMode`，以便引擎可以調整提示詞新增內容。 |
-| `api.registerMemoryCapability(capability)` | 統一記憶體功能                                                                                                          |
-| `api.registerMemoryPromptSection(builder)` | 記憶體提示詞區段建構器                                                                                                  |
-| `api.registerMemoryFlushPlan(resolver)`    | 記憶體排空計畫解析器                                                                                                    |
-| `api.registerMemoryRuntime(runtime)`       | 記憶體執行適配器                                                                                                        |
+| 方法                                       | 註冊內容                                                                                                            |
+| ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------- |
+| `api.registerContextEngine(id, factory)`   | 情境引擎（一次啟用一個）。`assemble()` 回呼會接收 `availableTools` 和 `citationsMode`，以便引擎能調整提示新增內容。 |
+| `api.registerMemoryCapability(capability)` | 統一記憶體功能                                                                                                      |
+| `api.registerMemoryPromptSection(builder)` | 記憶體提示區段建構器                                                                                                |
+| `api.registerMemoryFlushPlan(resolver)`    | 記憶體排空計畫解析器                                                                                                |
+| `api.registerMemoryRuntime(runtime)`       | 記憶體執行階段配接器                                                                                                |
 
-### 記憶體嵌入適配器
+### 記憶體嵌入配接器
 
-| 方法                                           | 註冊內容                       |
-| ---------------------------------------------- | ------------------------------ |
-| `api.registerMemoryEmbeddingProvider(adapter)` | 現用外掛程式的記憶體嵌入適配器 |
+| 方法                                           | 註冊內容                             |
+| ---------------------------------------------- | ------------------------------------ |
+| `api.registerMemoryEmbeddingProvider(adapter)` | 用於作用中外掛程式的記憶體嵌入配接器 |
 
-- `registerMemoryCapability` 是首選的專屬記憶體外掛程式 API。
-- `registerMemoryCapability` 也可以公開 `publicArtifacts.listArtifacts(...)`
-  以便伴隨外掛程式可以透過 `openclaw/plugin-sdk/memory-host-core` 取用匯出的記憶體構件，
-  而非存取特定記憶體外掛程式的私有佈局。
+- `registerMemoryCapability` 是首選的獨佔記憶體外掛程式 API。
+- `registerMemoryCapability` 也可以公開 `publicArtifacts.listArtifacts(...)`，
+  以便伴隨外掛程式能透過 `openclaw/plugin-sdk/memory-host-core` 取用匯出的記憶體成品，
+  而不需存取特定記憶體外掛程式的私有配置。
 - `registerMemoryPromptSection`、`registerMemoryFlushPlan` 和
-  `registerMemoryRuntime` 是與舊版相容的專屬記憶體外掛程式 API。
-- `MemoryFlushPlan.model` 可以將排空輪次釘選到確切的 `provider/model`
-  參考（例如 `ollama/qwen3:8b`），而不繼承現用的後援鏈。
-- `registerMemoryEmbeddingProvider` 讓現用記憶體外掛程式註冊一個
-  或多個嵌入適配器 ID（例如 `openai`、`gemini` 或自訂
+  `registerMemoryRuntime` 是相容舊版的獨佔記憶體外掛程式 API。
+- `MemoryFlushPlan.model` 可以將排空輪次釘選到精確的 `provider/model`
+  參考（例如 `ollama/qwen3:8b`），而不繼承作用中的後援鏈。
+- `registerMemoryEmbeddingProvider` 允許作用中的記憶體外掛程式註冊一個
+  或多個嵌入配接器 ID（例如 `openai`、`gemini` 或自訂
   外掛程式定義的 ID）。
-- 諸如 `agents.defaults.memorySearch.provider` 和
-  `agents.defaults.memorySearch.fallback` 等使用者設定會根據這些已註冊的
-  適配器 ID 進行解析。
+- 使用者設定（例如 `agents.defaults.memorySearch.provider` 和
+  `agents.defaults.memorySearch.fallback`）會根據這些註冊的配接器 ID 進行解析。
 
 ### 事件與生命週期
 
-| 方法                                         | 作用                 |
-| -------------------------------------------- | -------------------- |
-| `api.on(hookName, handler, opts?)`           | 具型別的生命週期掛鉤 |
-| `api.onConversationBindingResolved(handler)` | 對話繫結回呼         |
+| 方法                                         | 作用               |
+| -------------------------------------------- | ------------------ |
+| `api.on(hookName, handler, opts?)`           | 具型別生命週期勾點 |
+| `api.onConversationBindingResolved(handler)` | 對話綁定回呼       |
 
-請參閱 [外掛程式掛鉤](/zh-Hant/plugins/hooks) 以了解範例、常見掛鉤名稱和防護
-語意。
+請參閱 [Plugin hooks](/zh-Hant/plugins/hooks) 以取得範例、常見 Hook 名稱和防護語意。
 
-### 掛鉤決策語意
+### Hook 決策語意
 
-- `before_tool_call`：傳回 `{ block: true }` 即為終止。一旦任何處理程式設定該值，就會跳過較低優先順序的處理程式。
-- `before_tool_call`：傳回 `{ block: false }` 會被視為未做決定（等同於省略 `block`），而非覆寫。
-- `before_install`：傳回 `{ block: true }` 即為終止。一旦任何處理程式設定該值，就會跳過較低優先順序的處理程式。
-- `before_install`：傳回 `{ block: false }` 被視為未作決定（與省略 `block` 相同），而非覆寫。
-- `reply_dispatch`：傳回 `{ handled: true, ... }` 是終止性的。一旦任何處理程序聲明分派，較低優先級的處理程式和預設模型分派路徑將被跳過。
-- `message_sending`：傳回 `{ cancel: true }` 是終止性的。一旦任何處理程式設定它，較低優先級的處理程式將被跳過。
-- `message_sending`：傳回 `{ cancel: false }` 被視為未作決定（與省略 `cancel` 相同），而非覆寫。
-- `message_received`：當您需要入站執行緒/主題路由時，請使用具型別的 `threadId` 欄位。將 `metadata` 用於通道特定的額外資訊。
-- `message_sending`：在回退到通道特定的 `metadata` 之前，使用具型別的 `replyToId` / `threadId` 路由欄位。
-- `gateway_start`：使用 `ctx.config`、`ctx.workspaceDir` 和 `ctx.getCron?.()` 來處理閘道擁有的啟動狀態，而不是依賴內部的 `gateway:startup` hooks。
-- `cron_changed`：觀察閘道擁有的 cron 生命週期變更。在同步外部喚醒排程器時使用 `event.job?.state?.nextRunAtMs` 和 `ctx.getCron?.()`，並將 OpenClaw 作為到期檢查和執行的唯一事實來源。
+- `before_tool_call`：返回 `{ block: true }` 是終止的。一旦任何處理程式設定了它，較低優先級的處理程式將被跳過。
+- `before_tool_call`：返回 `{ block: false }` 被視為無決定（與省略 `block` 相同），而非覆寫。
+- `before_install`：返回 `{ block: true }` 是終止的。一旦任何處理程式設定了它，較低優先級的處理程式將被跳過。
+- `before_install`：返回 `{ block: false }` 被視為無決定（與省略 `block` 相同），而非覆寫。
+- `reply_dispatch`：返回 `{ handled: true, ... }` 是終止的。一旦任何處理程式宣告分派，較低優先級的處理程式和預設模型分派路徑將被跳過。
+- `message_sending`：返回 `{ cancel: true }` 是終止的。一旦任何處理程式設定了它，較低優先級的處理程式將被跳過。
+- `message_sending`：返回 `{ cancel: false }` 被視為無決定（與省略 `cancel` 相同），而非覆寫。
+- `message_received`：當您需要入站執行緒/主題路由時，請使用類型化的 `threadId` 欄位。保留 `metadata` 用於通道特定的額外資訊。
+- `message_sending`：在回退到通道特定的 `metadata` 之前，請使用類型化的 `replyToId` / `threadId` 路由欄位。
+- `gateway_start`：請使用 `ctx.config`、`ctx.workspaceDir` 和 `ctx.getCron?.()` 來處理 Gateway 擁有的啟動狀態，而不要依賴內部的 `gateway:startup` hooks。
+- `cron_changed`：觀察 Gateway 所擁有的 cron 生命週期變更。在同步外部喚醒排程器時使用 `event.job?.state?.nextRunAtMs` 和 `ctx.getCron?.()`，並將 OpenClaw 作為到期檢查和執行的真實來源。
 
 ### API 物件欄位
 
-| 欄位                     | 類型                      | 描述                                                                      |
-| ------------------------ | ------------------------- | ------------------------------------------------------------------------- |
-| `api.id`                 | `string`                  | 外掛 ID                                                                   |
-| `api.name`               | `string`                  | 顯示名稱                                                                  |
-| `api.version`            | `string?`                 | 外掛版本（選填）                                                          |
-| `api.description`        | `string?`                 | 外掛描述（選填）                                                          |
-| `api.source`             | `string`                  | 外掛來源路徑                                                              |
-| `api.rootDir`            | `string?`                 | 外掛程式根目錄（可選）                                                    |
-| `api.config`             | `OpenClawConfig`          | 目前設定快照（可用時為活躍的記憶體內執行時快照）                          |
-| `api.pluginConfig`       | `Record<string, unknown>` | 來自 `plugins.entries.<id>.config` 的外掛程式特定設定                     |
-| `api.runtime`            | `PluginRuntime`           | [執行時輔助程式](/zh-Hant/plugins/sdk-runtime)                                 |
-| `api.logger`             | `PluginLogger`            | 範圍記錄器（`debug`、`info`、`warn`、`error`）                            |
-| `api.registrationMode`   | `PluginRegistrationMode`  | 目前載入模式；`"setup-runtime"` 是完整的項目啟動/設定視窗之前的輕量級視窗 |
-| `api.resolvePath(input)` | `(string) => string`      | 解析相對於外掛程式根目錄的路徑                                            |
+| 欄位                     | 類型                      | 說明                                                              |
+| ------------------------ | ------------------------- | ----------------------------------------------------------------- |
+| `api.id`                 | `string`                  | 外掛程式 ID                                                       |
+| `api.name`               | `string`                  | 顯示名稱                                                          |
+| `api.version`            | `string?`                 | 外掛程式版本 (可選)                                               |
+| `api.description`        | `string?`                 | 外掛程式描述 (可選)                                               |
+| `api.source`             | `string`                  | 外掛程式來源路徑                                                  |
+| `api.rootDir`            | `string?`                 | 外掛程式根目錄 (可選)                                             |
+| `api.config`             | `OpenClawConfig`          | 目前設定快照 (可用時為作用中的記憶體內執行時期快照)               |
+| `api.pluginConfig`       | `Record<string, unknown>` | 來自 `plugins.entries.<id>.config` 的外掛程式專屬設定             |
+| `api.runtime`            | `PluginRuntime`           | [執行時期輔助函式](/zh-Hant/plugins/sdk-runtime)                       |
+| `api.logger`             | `PluginLogger`            | 範圍 Logger (`debug`, `info`, `warn`, `error`)                    |
+| `api.registrationMode`   | `PluginRegistrationMode`  | 目前載入模式；`"setup-runtime"` 是輕量級的完整進入前啟動/設定視窗 |
+| `api.resolvePath(input)` | `(string) => string`      | 解析相對於外掛程式根目錄的路徑                                    |
 
 ## 內部模組慣例
 
-在您的外掛程式內，使用本地 barrel 檔案進行內部匯入：
+在您的外掛程式中，請使用本地 barrel 檔案進行內部匯入：
 
 ```
 my-plugin/
@@ -348,33 +357,35 @@ my-plugin/
 ```
 
 <Warning>
-  永遠不要在生產程式碼中透過 `openclaw/plugin-sdk/<your-plugin>` 匯入您自己的外掛程式。
-  請透過 `./api.ts` 或 `./runtime-api.ts` 路由內部匯入。
-  SDK 路徑僅供外部合約使用。
+  請勿從生產程式碼透過 `openclaw/plugin-sdk/<your-plugin>`
+  匯入您自己的外掛程式。請透過 `./api.ts` 或
+  `./runtime-api.ts` 路由內部匯入。SDK 路徑僅為外部合約。
 </Warning>
 
-Facade載入的捆綁外掛程式公共介面（`api.ts`、`runtime-api.ts`、
-`index.ts`、`setup-entry.ts` 和類似的公共入口檔案）在 OpenClaw
-已執行時優先使用活躍的執行時設定快照。如果執行時快照尚不存在，它們會退回到磁碟上的解析設定檔。
-打包的捆綁外掛程式 facade 應透過 OpenClaw 的外掛程式 facade 載入器載入；
-直接從 `dist/extensions/...` 匯入會繞過清單和執行時 sidecar 檢查，
-而這些檢查是打包安裝用於外掛程式擁有程式碼的。
+外觀載入的捆綁外掛公開表面（`api.ts`、`runtime-api.ts`、
+`index.ts`、`setup-entry.ts` 和類似的公開進入檔案）在 OpenClaw 已運行時優先使用
+作用中的執行時設定快照。如果尚未存在執行時快照，它們會
+回退到磁碟上的解析設定檔。
+打包的捆綁外掛外觀應透過 OpenClaw 的外掛
+外觀載入器載入；從 `dist/extensions/...` 直接匯入會繞過清單
+和執行時 sidecar 檢查，這些檢查是打包安裝用於外掛擁有程式碼的。
 
-提供者外掛程式可以在輔助程式專門針對特定提供者且尚未屬於通用 SDK
-子路徑時，公開一個狹窄的外掛程式本地合約 barrel。捆綁範例：
+提供者外掛可以在輔助功能
+刻意針對特定提供者且尚不屬於通用 SDK
+子路徑時，公開一個狹窄的外掛本機合約 barrel。捆綁範例：
 
-- **Anthropic**：針對 Claude 的公開 `api.ts` / `contract-api.ts` 接縫，
-  以及 beta-header 和 `service_tier` 串流輔助函式。
+- **Anthropic**：公開 `api.ts` / `contract-api.ts` 縫合用於 Claude
+  beta-header 和 `service_tier` 串流輔助功能。
 - **`@openclaw/openai-provider`**：`api.ts` 匯出提供者建構器、
-  預設模型輔助函式，以及即時提供者建構器。
+  預設模型輔助功能和即時提供者建構器。
 - **`@openclaw/openrouter-provider`**：`api.ts` 匯出提供者建構器
-  以及上架/配置輔助函式。
+  加上上手/設定輔助功能。
 
 <Warning>
-  擴充功能的生產程式碼也應避免 `openclaw/plugin-sdk/<other-plugin>`
-  匯入。如果輔助函式確實是共用的，請將其提升至中立的 SDK 子路徑
-  （例如 `openclaw/plugin-sdk/speech`、`.../provider-model-shared` 或其他
-  面向功能的介面），而不是將兩個外掛程式耦合在一起。
+  擴充生產程式碼也應避免 `openclaw/plugin-sdk/<other-plugin>`
+  匯入。如果輔助功能確實是共享的，請將其提升到中立的 SDK 子路徑，
+  例如 `openclaw/plugin-sdk/speech`、`.../provider-model-shared` 或其他
+  以功能為導向的表面，而不是將兩個外掛耦合在一起。
 </Warning>
 
 ## 相關
@@ -383,19 +394,19 @@ Facade載入的捆綁外掛程式公共介面（`api.ts`、`runtime-api.ts`、
   <Card title="進入點" icon="door-open" href="/zh-Hant/plugins/sdk-entrypoints">
     `definePluginEntry` 和 `defineChannelPluginEntry` 選項。
   </Card>
-  <Card title="執行時輔助函式" icon="gears" href="/zh-Hant/plugins/sdk-runtime">
+  <Card title="執行時輔助功能" icon="gears" href="/zh-Hant/plugins/sdk-runtime">
     完整的 `api.runtime` 命名空間參考。
   </Card>
   <Card title="設定與配置" icon="sliders" href="/zh-Hant/plugins/sdk-setup">
-    打包、清單與配置結構描述。
+    打包、資訊清單和配置架構。
   </Card>
   <Card title="測試" icon="vial" href="/zh-Hant/plugins/sdk-testing">
-    測試工具與 Lint 規則。
+    測試工具程式和 Lint 規則。
   </Card>
   <Card title="SDK 遷移" icon="arrows-turn-right" href="/zh-Hant/plugins/sdk-migration">
-    從已棄用的介面遷移。
+    從已棄用的介面進行遷移。
   </Card>
-  <Card title="Plugin internals" icon="diagram-project" href="/zh-Hant/plugins/architecture">
-    深層架構與能力模型。
+  <Card title="外掛程式內部機制" icon="diagram-project" href="/zh-Hant/plugins/architecture">
+    深度架構和功能模型。
   </Card>
 </CardGroup>

@@ -186,7 +186,7 @@ Eso almacena candidatos duraderos anclados en el almacén de soñado a corto pla
     - Mostrar la migración que aplicó.
     - Reescribir `~/.openclaw/openclaw.json` con el esquema actualizado.
 
-    El inicio de Gateway rechaza los formatos de configuración heredados y le pide que ejecute `openclaw doctor --fix`; no reescribe `openclaw.json` al iniciarse. Las migraciones del almacén de trabajos cron también son manejadas por `openclaw doctor --fix`.
+    El inicio de la Gateway rechaza los formatos de configuración heredados y le pide que ejecute `openclaw doctor --fix`; no reescribe `openclaw.json` durante el inicio. Las migraciones de la tienda de trabajos de Cron también son manejadas por `openclaw doctor --fix`.
 
     Migraciones actuales:
 
@@ -195,7 +195,7 @@ Eso almacena candidatos duraderos anclados en el almacén de soñado a corto pla
     - `routing.groupChat.historyLimit` → `messages.groupChat.historyLimit`
     - `routing.groupChat.mentionPatterns` → `messages.groupChat.mentionPatterns`
     - `channels.telegram.requireMention` → `channels.telegram.groups."*".requireMention`
-    - configuraciones de canal configurado sin política de respuesta visible → `messages.groupChat.visibleReplies: "message_tool"`
+    - configuraciones de configured-channel que carecen de política de respuesta visible → `messages.groupChat.visibleReplies: "message_tool"`
     - `routing.queue` → `messages.queue`
     - `routing.bindings` → `bindings` de nivel superior
     - `routing.agents`/`routing.defaultAgentId` → `agents.list` + `agents.list[].default`
@@ -214,21 +214,21 @@ Eso almacena candidatos duraderos anclados en el almacén de soñado a corto pla
     - `plugins.entries.voice-call.config.streaming.sttProvider` → `plugins.entries.voice-call.config.streaming.provider`
     - `plugins.entries.voice-call.config.streaming.openaiApiKey|sttModel|silenceDurationMs|vadThreshold` → `plugins.entries.voice-call.config.streaming.providers.openai.*`
     - `bindings[].match.accountID` → `bindings[].match.accountId`
-    - Para canales con `accounts` con nombre pero con valores de canal de nivel superior de una sola cuenta persistentes, mueva esos valores con ámbito de cuenta a la cuenta promovida elegida para ese canal (`accounts.default` para la mayoría de los canales; Matrix puede conservar un objetivo con nombre/predeterminado existente que coincida)
+    - Para canales con `accounts` con nombre, pero con valores de canal de nivel superior de una sola cuenta persistentes, mueva esos valores con ámbito de cuenta a la cuenta promovida elegida para ese canal (`accounts.default` para la mayoría de los canales; Matrix puede conservar un objetivo con nombre/predeterminado coincidente existente)
     - `identity` → `agents.list[].identity`
-    - `agent.*` → `agents.defaults` + `tools.*` (herramientas/elevadas/exec/sandbox/subagentes)
+    - `agent.*` → `agents.defaults` + `tools.*` (tools/elevated/exec/sandbox/subagents)
     - `agent.model`/`allowedModels`/`modelAliases`/`modelFallbacks`/`imageModelFallbacks` → `agents.defaults.models` + `agents.defaults.model.primary/fallbacks` + `agents.defaults.imageModel.primary/fallbacks`
-    - eliminar `agents.defaults.llm`; use `models.providers.<id>.timeoutSeconds` para tiempos de espera lentos de proveedor/modelo
+    - eliminar `agents.defaults.llm`; use `models.providers.<id>.timeoutSeconds` para tiempos de espera lentos de proveedor/modelo, y mantenga el tiempo de espera del agente/ejecución por encima de ese valor cuando toda la ejecución deba durar más
     - `browser.ssrfPolicy.allowPrivateNetwork` → `browser.ssrfPolicy.dangerouslyAllowPrivateNetwork`
     - `browser.profiles.*.driver: "extension"` → `"existing-session"`
-    - eliminar `browser.relayBindHost` (configuración de relé de extensión heredada)
-    - `models.providers.*.api: "openai"` heredado → `"openai-completions"` (el inicio de Gateway también omite los proveedores cuyo `api` está configurado en un valor de enumeración futuro o desconocido en lugar de fallar de forma segura)
-    - eliminar `plugins.entries.codex.config.codexDynamicToolsProfile`; el servidor de aplicaciones de Codex siempre mantiene las herramientas del espacio de trabajo nativas de Codex de forma nativa
+    - eliminar `browser.relayBindHost` (configuración heredada de relé de extensiones)
+    - `models.providers.*.api: "openai"` heredado → `"openai-completions"` (el inicio de la puerta de enlace también omite los proveedores cuyo `api` está establecido en un valor de enumeración futuro o desconocido en lugar de fallar de forma cerrada)
+    - eliminar `plugins.entries.codex.config.codexDynamicToolsProfile`; El servidor de aplicaciones Codex siempre mantiene las herramientas del espacio de trabajo nativas de Codex como nativas
 
-    Las advertencias de Doctor también incluyen orientación predeterminada de cuenta para canales multicuenta:
+    Las advertencias de Doctor también incluyen orientación predeterminada de la cuenta para canales multicuenta:
 
-    - Si se configuran dos o más entradas `channels.<channel>.accounts` sin `channels.<channel>.defaultAccount` o `accounts.default`, Doctor advierte que el enrutamiento de reserva puede elegir una cuenta inesperada.
-    - Si `channels.<channel>.defaultAccount` está configurado en un ID de cuenta desconocido, Doctor advierte y enumera los ID de cuenta configurados.
+    - Si se configuran dos o más entradas `channels.<channel>.accounts` sin `channels.<channel>.defaultAccount` o `accounts.default`, doctor advierte que el enrutamiento de respaldo puede elegir una cuenta inesperada.
+    - Si `channels.<channel>.defaultAccount` está establecido en un ID de cuenta desconocido, doctor advierte y enumera los IDs de cuenta configurados.
 
   </Accordion>
   <Accordion title="2b. Anulaciones del proveedor OpenCode">

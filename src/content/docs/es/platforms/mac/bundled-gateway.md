@@ -49,15 +49,14 @@ Comportamiento:
 
 Registro:
 
-- stdout/err de launchd: `/tmp/openclaw/openclaw-gateway.log`
+- launchd stdout: `~/Library/Logs/openclaw/gateway.log` (los perfiles usan `gateway-<profile>.log`)
+- launchd stderr: suprimido
 
 ## Compatibilidad de versiones
 
-La aplicación de macOS verifica la versión de gateway contra su propia versión. Si
-son incompatibles, actualice la CLI global para que coincida con la versión de la
-aplicación.
+La aplicación de macOS verifica la versión de la puerta de enlace con su propia versión. Si son incompatibles, actualice la CLI global para que coincida con la versión de la aplicación.
 
-## Prueba rápida
+## Verificación rápida
 
 ```bash
 openclaw --version
@@ -67,7 +66,7 @@ OPENCLAW_SKIP_CANVAS_HOST=1 \
 openclaw gateway --port 18999 --bind loopback
 ```
 
-Luego:
+Entonces:
 
 ```bash
 openclaw gateway call health --url ws://127.0.0.1:18999 --timeout 3000
@@ -75,5 +74,5 @@ openclaw gateway call health --url ws://127.0.0.1:18999 --timeout 3000
 
 ## Relacionado
 
-- [macOS app](/es/platforms/macos)
-- [Gateway runbook](/es/gateway)
+- [aplicación macOS](/es/platforms/macos)
+- [manual de Gateway](/es/gateway)

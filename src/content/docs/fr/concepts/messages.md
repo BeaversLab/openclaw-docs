@@ -112,11 +112,11 @@ Les tampons d'historique sont configurables via `messages.groupChat.historyLimit
 
 ## Mise en file d'attente et suivi
 
-Si une exécution est déjà active, les messages entrants peuvent être mis en file d'attente, orientés vers l'exécution actuelle, ou collectés pour un tour de suivi.
+Si une exécution est déjà active, les messages entrants sont dirigés vers l'exécution en cours par défaut. `messages.queue` sélectionne si les messages de l'exécution active sont dirigés, mis en file d'attente pour plus tard, collectés en un seul tour ultérieur, ou s'ils interrompent l'exécution active.
 
 - Configurez via `messages.queue` (et `messages.queue.byChannel`).
-- Le mode par défaut est `steer`, avec un anti-rebond de suivi de 500 ms lorsque l'orientation revient à une livraison de suivi en file d'attente.
-- Modes : `steer`, `followup`, `collect`, `steer-backlog`, `interrupt`, et le mode hérité un par un `queue`.
+- Le mode par défaut est `steer`, avec un anti-rebond de 500 ms pour les lots de direction Codex et les files d'attente de suivi/collecte.
+- Modes : `steer`, `followup`, `collect` et `interrupt`.
 
 Détails : [File d'attente de commandes](/fr/concepts/queue) et [File d'attente d'orientation](/fr/concepts/queue-steering).
 
@@ -134,7 +134,7 @@ Paramètres clés :
 - `agents.defaults.blockStreamingDefault` (`on|off`, désactivé par défaut)
 - `agents.defaults.blockStreamingBreak` (`text_end|message_end`)
 - `agents.defaults.blockStreamingChunk` (`minChars|maxChars|breakPreference`)
-- `agents.defaults.blockStreamingCoalesce` (regroupement basé sur l'inactivité)
+- `agents.defaults.blockStreamingCoalesce` (traitement par lot basé sur l'inactivité)
 - `agents.defaults.humanDelay` (pause de type humain entre les réponses par bloc)
 - Remplacements de channel : `*.blockStreaming` et `*.blockStreamingCoalesce` (les canaux non-Telegram nécessitent un `*.blockStreaming: true` explicite)
 
@@ -146,7 +146,7 @@ OpenClaw peut exposer ou masquer le raisonnement du model :
 
 - `/reasoning on|off|stream` contrôle la visibilité.
 - Le contenu du raisonnement compte toujours dans l'utilisation des jetons lorsqu'il est produit par le model.
-- Telegram prend en charge le flux de raisonnement dans une bulle de brouillon transitoire qui est supprimée après la livraison finale ; utilisez `/reasoning on` pour une sortie de raisonnement persistante.
+- Telegram prend en charge le flux de raisonnement dans une bulle de brouillon éphémère qui est supprimée après la livraison finale ; utilisez `/reasoning on` pour une sortie de raisonnement persistante.
 
 Détails : [Thinking + reasoning directives](/fr/tools/thinking) et [Token use](/fr/reference/token-use).
 
@@ -155,27 +155,26 @@ Détails : [Thinking + reasoning directives](/fr/tools/thinking) et [Token use](
 Le formatage des messages sortants est centralisé dans `messages` :
 
 - `messages.responsePrefix`, `channels.<channel>.responsePrefix` et `channels.<channel>.accounts.<id>.responsePrefix` (cascade de préfixes sortants), plus `channels.whatsapp.messagePrefix` (préfixe entrant WhatsApp)
-- Fils de discussion de réponse via `replyToMode` et les valeurs par défaut par channel
+- Fil de discussion des réponses via `replyToMode` et les valeurs par défaut par channel
 
 Détails : [Configuration](/fr/gateway/config-agents#messages) et la documentation des canaux.
 
 ## Réponses silencieuses
 
-Le jeton silencieux exact `NO_REPLY` / `no_reply` signifie « ne pas livrer de réponse visible par l'utilisateur ».
+Le jeton silencieux exact `NO_REPLY` / `no_reply` signifie "ne pas livrer de réponse visible par l'utilisateur".
 Lorsqu'un tour a également des médias d'outil en attente, tels que de l'audio TTS généré, OpenClaw
 supprime le texte silencieux mais livre toujours la pièce jointe média.
 OpenClaw résout ce comportement par type de conversation :
 
-- Les conversations directes interdisent le silence par défaut et réécrivent une réponse silencieuse nue
-  en un repli visible court.
-- Les groupes/canaux autorisent le silence par défaut.
+- Les conversations directes ne reçoivent jamais `NO_REPLY` de conseil de prompt. Si une exécution directe renvoie accidentellement un jeton silencieux brut, OpenClaw le supprime au lieu de le réécrire ou de le livrer.
+- Les groupes/canaux autorisent le silence par défaut uniquement pour les réponses automatiques de groupe. Dans le mode `message_tool` visible-reply, le silence signifie que le modèle n'appelle pas `message(action=send)`.
 - L'orchestration interne autorise le silence par défaut.
 
-OpenClaw utilise également des réponses silencieuses pour les échecs internes du runner qui surviennent avant toute réponse de l'assistant dans les chats non directs, afin que les groupes/canaux ne voient pas le texte standard d'erreur de passerelle. Les chats directs affichent par défaut un message d'échec compact ; les détails bruts du runner ne sont affichés que lorsque OpenClaw`/verbose` est `on` ou `full`.
+OpenClaw utilise également des réponses silencieuses pour les échecs internes du runner qui se produisent avant toute réponse de l'assistant dans les chats non directs, afin que les groupes/canaux ne voient pas le texte standard d'erreur de passerelle. Les chats directs affichent par défaut un message d'échec compact ; les détails bruts du runner ne sont affichés que lorsque `/verbose` est `on` ou `full`.
 
-Les valeurs par défaut se trouvent sous `agents.defaults.silentReply` et `agents.defaults.silentReplyRewrite` ; `surfaces.<id>.silentReply` et `surfaces.<id>.silentReplyRewrite` peuvent les remplacer pour chaque surface.
+Les valeurs par défaut se trouvent sous `agents.defaults.silentReply` ; `surfaces.<id>.silentReply` peut remplacer la stratégie de groupe/interne par surface.
 
-Lorsque la session parente possède une ou plusieurs exécutions de sous-agent en attente, les réponses silencieuses nues sont ignorées sur toutes les surfaces au lieu d'être réécrites, afin que le parent reste silencieux jusqu'à ce que l'événement d'achèvement de l'enfant livre la véritable réponse.
+Les réponses silencieuses brutes sont abandonnées sur toutes les surfaces, de sorte que les sessions parentes restent silencieuses au lieu de réécrire le texte sentinelle en bavardage de secours.
 
 ## Connexes
 

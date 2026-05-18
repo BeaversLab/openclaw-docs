@@ -65,7 +65,14 @@ pnpm test:docker:update-migration
 
 重要车道：
 
-- `test:docker:plugins` 验证插件安装冒烟、本地文件夹安装、本地文件夹更新跳过行为、具有预安装依赖项的本地文件夹、`file:` 包安装、通过 CLI 执行的 git 安装、git 移动引用更新、具有提升传递依赖项的 npm 注册表安装、npm 更新无操作、本地 ClawHub 夹具安装和更新无操作、市场更新行为以及 Claude-bundle 启用/检查。设置 `OPENCLAW_PLUGINS_E2E_CLAWHUB=0` 以保持 ClawHub 块的隔离/离线状态。
+- `test:docker:plugins` 验证插件安装冒烟测试、本地文件夹安装、
+  本地文件夹更新跳过行为、具有预安装
+  依赖项的本地文件夹、`file:` 包安装、带有 CLI 执行的 git 安装、git
+  moving-ref 更新、具有提升传递
+  依赖项的 npm 注册表安装、npm 更新空操作、格式错误的 npm 包元数据拒绝、
+  本地 ClawHub 固件安装和更新空操作、marketplace 更新行为，
+  以及 Claude-bundle 启用/检查。设置 `OPENCLAW_PLUGINS_E2E_CLAWHUB=0`
+  以保持 ClawHub 模块隔离/离线。
 - `test:docker:plugin-lifecycle-matrix` 在裸容器中安装候选包，通过 install、inspect、disable、enable、explicit upgrade、explicit downgrade 和 uninstall（删除插件代码后）运行 npm 插件。它记录每个阶段的 RSS 和 CPU 指标。
 - `test:docker:plugin-update` 验证已安装的未更改插件在 `openclaw plugins update` 期间不会重新安装或丢失安装元数据。
 - `test:docker:upgrade-survivor` 在脏的旧用户夹具上安装候选 tarball，运行包更新和非交互式 doctor，然后启动回环 Gateway(网关) 并检查状态保留。

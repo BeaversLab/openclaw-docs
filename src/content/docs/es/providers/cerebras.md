@@ -6,7 +6,7 @@ read_when:
   - You need the Cerebras API key env var or CLI auth choice
 ---
 
-[Cerebras](https://www.cerebras.ai) ofrece inferencia de alta velocidad compatible con OpenAI en hardware de inferencia personalizado. OpenClaw incluye un plugin de proveedor de Cerebras integrado con un catálogo estático de cuatro modelos.
+[Cerebras](https://www.cerebras.ai) proporciona inferencia de alta velocidad compatible con OpenAI en hardware de inferencia personalizado. OpenClaw incluye un complemento de proveedor de Cerebras integrado con un catálogo estático de cuatro modelos.
 
 | Propiedad                            | Valor                                        |
 | ------------------------------------ | -------------------------------------------- |
@@ -22,8 +22,8 @@ read_when:
 ## Introducción
 
 <Steps>
-  <Step title="Obtén una clave de API">
-    Crea una clave de API en la [Consola en la nube de Cerebras](https://cloud.cerebras.ai).
+  <Step title="Get an API key">
+    Cree una clave API en la [Cerebras Cloud Console](https://cloud.cerebras.ai).
   </Step>
   <Step title="Ejecuta la incorporación">
     <CodeGroup>
@@ -106,7 +106,7 @@ El complemento incluido generalmente significa que solo necesitas la clave API. 
 }
 ```
 
-<Note>Si el Gateway se ejecuta como demonio (launchd, systemd, Docker), asegúrate de que `CEREBRAS_API_KEY` esté disponible para ese proceso, por ejemplo en `~/.openclaw/.env` o a través de `env.shellEnv`. Una clave que solo esté en `~/.profile` no servirá para un servicio administrado a menos que el entorno se importe por separado.</Note>
+<Note>Si el Gateway se ejecuta como un demonio (launchd, systemd, Docker), asegúrese de que `CEREBRAS_API_KEY` esté disponible para ese proceso, por ejemplo en `~/.openclaw/.env` o a través de `env.shellEnv`. Una clave exportada solo en un shell interactivo no ayudará a un servicio administrado a menos que el entorno se importe por separado.</Note>
 
 ## Relacionado
 

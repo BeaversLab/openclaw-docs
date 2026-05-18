@@ -104,7 +104,7 @@ Les tarifs sont par million de tokens en USD, tels qu'annoncés par Tencent. Rem
     Si le Gateway s'exécute en tant que service géré (launchd, systemd, Docker), `TOKENHUB_API_KEY` doit être visible pour ce processus. Définissez-le dans `~/.openclaw/.env` ou via `env.shellEnv` afin que les environnements d'exécution launchd, systemd ou Docker puissent le lire.
 
     <Warning>
-      Les clés définies uniquement dans `~/.profile` ne sont pas visibles pour les processus de passerelle gérés. Utilisez le fichier d'environnement ou la couture de configuration (config seam) pour une disponibilité persistante.
+      Les clés exportées uniquement dans un shell interactif ne sont pas visibles pour les processus de passerelle gérés. Utilisez le fichier d'environnement ou le seam de configuration pour une disponibilité persistante.
     </Warning>
 
   </Accordion>

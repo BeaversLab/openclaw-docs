@@ -124,7 +124,7 @@ Par défaut, OpenClaw injecte un ensemble fixe de fichiers de l'espace de travai
 
 Les fichiers volumineux sont tronqués par fichier à l'aide de `agents.defaults.bootstrapMaxChars` (défaut `12000` caractères). OpenClaw applique également une limite totale d'injection d'amorçage sur l'ensemble des fichiers avec `agents.defaults.bootstrapTotalMaxChars` (défaut `60000` caractères). `/context` affiche les tailles **brutes par rapport à injectées** et indique si une troncation a eu lieu.
 
-Lorsqu'une troncation se produit, l'exécution peut injecter un bloc d'avertissement dans le prompt sous Project Context. Configurez ceci avec `agents.defaults.bootstrapPromptTruncationWarning` (`off`, `once`, `always` ; défaut `once`).
+Lorsqu'une troncation se produit, le runtime peut injecter un bloc d'avertissement dans le prompt sous le contexte du projet. Configurez ceci avec `agents.defaults.bootstrapPromptTruncationWarning` (`off`, `once`, `always`; par défaut `always`).
 
 ## Compétences : injectées vs chargées à la demande
 

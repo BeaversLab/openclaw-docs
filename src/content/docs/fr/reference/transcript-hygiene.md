@@ -7,7 +7,7 @@ read_when:
 title: "Hygiène des transcriptions"
 ---
 
-OpenClaw applique des **correctifs spécifiques au fournisseur** aux transcripts avant une exécution (construction du contexte du modèle). La plupart de ces ajustements se font **en mémoire** pour satisfaire les exigences strictes des fournisseurs. Une passe de réparation distincte du fichier de session peut également réécrire le JSONL stocké avant le chargement de la session, mais uniquement pour les lignes malformées ou les tours persistants qui sont des enregistrements durables invalides. Les réponses de l'assistant livrées sont préservées sur le disque ; le suppression spécifique au fournisseur du préremplissage de l'assistant (assistant-prefill) ne se produit que lors de la construction des charges utiles sortantes. Lorsqu'une réparation se produit, le fichier d'origine est sauvegardé aux côtés du fichier de session.
+OpenClaw applique des correctifs spécifiques au fournisseur aux transcriptions avant une exécution (création du contexte du modèle). La plupart de ces ajustements se font en mémoire pour satisfaire les exigences strictes du fournisseur. Une passe de réparation distincte du fichier de session peut également réécrire le JSONL stocké avant le chargement de la session, mais uniquement pour les lignes malformées ou les tours persistés qui sont des enregistrements durables invalides. Les réponses de l'assistant livrées sont conservées sur disque ; le nettoyage spécifique au fournisseur des préremplissages de l'assistant ne se produit que lors de la construction des charges utiles sortantes. Lorsqu'une réparation se produit, le fichier d'origine est écrit dans un fichier `*.bak-<pid>-<ts>` temporaire avant le remplacement atomique et supprimé une fois le remplacement réussi ; la sauvegarde n'est conservée que si le nettoyage lui-même échoue (auquel cas le chemin est signalé).
 
 La portée inclut :
 
@@ -25,7 +25,7 @@ La portée inclut :
 
 Si vous avez besoin de détails sur le stockage des transcripts, consultez :
 
-- [Session management deep dive](/fr/reference/session-management-compaction)
+- [Examen approfondi de la gestion de session](/fr/reference/session-management-compaction)
 
 ---
 
@@ -48,9 +48,9 @@ TUI, REST ou SSE.
 Toute l'hygiène des transcripts est centralisée dans le runner intégré :
 
 - Sélection de la stratégie : `src/agents/transcript-policy.ts`
-- Application de la désinfection/réparation : `sanitizeSessionHistory` dans `src/agents/pi-embedded-runner/replay-history.ts`
+- Application de la nettoyage/réparation : `sanitizeSessionHistory` dans `src/agents/pi-embedded-runner/replay-history.ts`
 
-La stratégie utilise `provider`, `modelApi` et `modelId` pour décider ce qu'il faut appliquer.
+La stratégie utilise `provider`, `modelApi` et `modelId` pour décider quoi appliquer.
 
 Indépendamment de l'hygiène des transcripts, les fichiers de session sont réparés (si nécessaire) avant le chargement :
 
@@ -76,7 +76,9 @@ Mise en œuvre :
 
 ## Règle globale : appels d'outil malformés
 
-Les blocs d'appels d'outil de l'assistant qui manquent à la fois `input` et `arguments` sont supprimés avant la construction du contexte du modèle. Cela empêche les rejets du provider dus à des appels d'outil partiellement persistés (par exemple, après une défaillance de limite de débit).
+Les blocs d'appels d'outil de l'assistant qui manquent à la fois `input` et `arguments` sont supprimés
+avant la construction du contexte du modèle. Cela empêche les rejets du fournisseur dus à des appels d'outil
+partiellement persistés (par exemple, après un échec de limite de taux).
 
 Mise en œuvre :
 
@@ -87,11 +89,12 @@ Mise en œuvre :
 
 ## Règle globale : provenance des entrées inter-sessions
 
-Lorsqu'un agent envoie une invite dans une autre session via `sessions_send` (y compris les étapes de réponse/annonce agent-à-agent), OpenClaw persiste le tour d'utilisateur créé avec :
+Lorsqu'un agent envoie une invite dans une autre session via `sessions_send` (y compris
+les étapes de réponse/annonce agent-à-agent), OpenClaw persiste le tour utilisateur créé avec :
 
 - `message.provenance.kind = "inter_session"`
 
-OpenClaw préfixe également un marqueur `[Inter-session message ... isUser=false]` du même tour avant le texte de l'invite routée, afin que l'appel de modèle actif puisse distinguer la sortie de session étrangère des instructions de l'utilisateur final externe. Ce marqueur inclut la session source, le canal et l'outil lorsqu'ils sont disponibles. La transcription utilise toujours `role: "user"` pour la compatibilité du provider, mais le texte visible et les métadonnées de provenance marquent tous deux le tour comme étant des données inter-sessions.
+OpenClaw précède également le texte d'invite routé d'une marqueur de même tour OpenClaw`[Inter-session message ... isUser=false]` afin que l'appel de modèle actif puisse distinguer la sortie de session étrangère des instructions externes de l'utilisateur final. Ce marqueur inclut la session source, le canal et l'outil lorsqu'ils sont disponibles. La transcription utilise toujours `role: "user"` pour la compatibilité du fournisseur, mais le texte visible et les métadonnées de provenance marquent tous deux le tour comme donnée intersession.
 
 Pendant la reconstruction du contexte, OpenClaw applique le même marqueur aux anciens tours d'utilisateur inter-sessions persistés qui ne possèdent que des métadonnées de provenance.
 
@@ -103,17 +106,17 @@ Pendant la reconstruction du contexte, OpenClaw applique le même marqueur aux a
 
 - Nettoyage des images uniquement.
 - Supprimer les signatures de raisonnement orphelines (éléments de raisonnement autonomes sans bloc de contenu suivant) pour les transcriptions OpenAI Responses/Codex, et supprimer le raisonnement rejetable OpenAI après un changement de route de model.
-- Préserver les charges utiles d'éléments de raisonnement OpenAI Responses rejetables, y compris les éléments de résumé vide chiffrés, afin que la relecture manuelle/WebSocket conserve l'état `rs_*` requis associé aux éléments de sortie de l'assistant.
-- Les réponses natives ChatGPT Codex Responses suivent la parité de protocole Codex en relisant les charges utiles de raisonnement/message/fonction Responses précédentes sans identifiants d'élément précédents tout en préservant la session `prompt_cache_key`.
+- Préserver les charges utiles des éléments de raisonnement des réponses OpenAI rejetables, y compris les éléments de résumé vide chiffrés, afin que la relecture manuelle/WebSocket maintienne l'état OpenAI`rs_*` requis associé aux éléments de sortie de l'assistant.
+- Les réponses natives Codex ChatGPT suivent la parité de liaison Codex en relayant les charges utiles de raisonnement/message/fonction de réponses antérieures sans identifiants d'élément antérieurs tout en préservant la session `prompt_cache_key`.
 - Aucun nettoyage des id de tool.
-- La réparation de l'appariement des résultats de tool peut déplacer les sorties correspondantes réelles et synthétiser des sorties de style Codex `aborted` pour les appels de tool manquants.
+- La réparation de l'appariement des résultats d'outils peut déplacer les sorties correspondantes réelles et synthétiser des sorties `aborted` de style Codex pour les appels d'outils manquants.
 - Aucune validation ou réorganisation des tours.
-- Les sorties de tool de la famille OpenAI Responses manquantes sont synthétisées sous la forme `aborted` pour correspondre à la normalisation de la relecture Codex.
+- Les sorties d'outil de la famille de réponses OpenAI manquantes sont synthétisées sous forme de OpenAI`aborted` pour correspondre à la normalisation de relecture Codex.
 - Aucun retrait de signature de pensée.
 
 **Chat Completions compatibles avec OpenAI**
 
-- Les blocs de réflexion/raisonnement historiques de l'assistant sont supprimés avant la relecture, afin que les serveurs compatibles OpenAI de type local ou proxy ne reçoivent pas les champs de raisonnement des tours précédents, tels que `reasoning` ou `reasoning_content`.
+- Les blocs de pensée/raisonnement historiques de l'assistant sont supprimés avant la relecture afin que les serveurs compatibles OpenAI de style local et proxy ne reçoivent pas les champs de raisonnement de tour antérieur tels que `reasoning` ou `reasoning_content`.
 - Les continuations d'appels de tool du même tour gardent le bloc de raisonnement de l'assistant
   attaché à l'appel de tool jusqu'à ce que le résultat du tool ait été relu.
 - Les exceptions détenues par le fournisseur peuvent choisir de s'exclure lorsque leur protocole de transmission exige des métadonnées de raisonnement relues.
@@ -136,7 +139,7 @@ Pendant la reconstruction du contexte, OpenClaw applique le même marqueur aux a
 
 **Amazon BedrockAPI (API Converse)**
 
-- Les tours d'erreur de flux de l'assistant vides sont réparés en un bloc de texte de repli non vide avant la relecture. Bedrock Converse rejette les messages de l'assistant avec `content: []`, les tours d'assistant persistés avec `stopReason: "error"` et un contenu vide sont donc également réparés sur disque avant le chargement.
+- Les tours d'erreur de flux d'assistant vides sont réparés en un bloc de texte de repli non vide avant la relecture. Bedrock Converse rejette les messages d'assistant avec `content: []`, donc les tours d'assistant persistés avec `stopReason: "error"` et un contenu vide sont également réparés sur le disque avant le chargement.
 - Les tours d'erreur de flux de l'assistant qui ne contiennent que des blocs de texte vierges sont supprimés de la copie de relecture en mémoire, au lieu de relire un bloc vierge invalide.
 - Les blocs de réflexion de Claude dont les signatures de relecture sont manquantes, vides ou ne contiennent que des espaces sont supprimés avant la relecture Converse. Si cela vide un tour d'assistant, OpenClaw conserve la forme du tour avec un texte omitted-reasoning non vide.
 - Les anciens tours d'assistant de réflexion uniquement qui doivent être supprimés sont remplacés par un texte omitted-reasoning non vide afin que la relecture Converse conserve une forme de tour stricte.
@@ -149,7 +152,7 @@ Pendant la reconstruction du contexte, OpenClaw applique le même marqueur aux a
 
 **OpenRouter Gemini**
 
-- Nettoyage des signatures de pensée : supprimer les valeurs `thought_signature` non base64 (garder le base64).
+- Nettoyage de la signature de pensée : supprimer les valeurs `thought_signature` non base64 (conserver le base64).
 
 **OpenRouter Anthropic**
 
@@ -167,16 +170,16 @@ Avant la version 2026.1.22, OpenClaw appliquait plusieurs couches d'hygiène de 
 
 - Une **extension transcript-sanitize** s'exécutait à chaque construction de contexte et pouvait :
   - Réparer le pairage utilisation/résultat d'outil.
-  - Nettoyer les ID d'appel d'outil (y compris un mode non strict qui préservait `_`/`-`).
+  - Nettoyer les identifiants des appels d'outils (y compris un mode non strict qui préservait `_`/`-`).
 - Le lanceur effectuait également une nettoyage spécifique au fournisseur, ce qui doublait le travail.
 - Des mutations supplémentaires se produisaient en dehors de la stratégie du fournisseur, notamment :
   - Suppression des balises `<final>` du texte de l'assistant avant la persistance.
   - Abandon des tours d'erreur d'assistant vides.
   - Rogner le contenu de l'assistant après les appels d'outils.
 
-Cette complexité a provoqué des régressions multi-fournisseurs (notamment le pairage `openai-responses`
-`call_id|fc_id`). Le nettoyage de 2026.1.22 a supprimé l'extension, centralisé
-la logique dans le lanceur, et rendu OpenAI **sans-toucher** au-delà du nettoyage des images.
+Cette complexité a provoqué des régressions multi-fournisseurs (notamment l'association `openai-responses`
+`call_id|fc_id`). Le nettoyage du 22 janvier 2026 a supprimé l'extension, centralisé
+la logique dans le lanceur et rendu OpenAI **no-touch** au-delà de la nettoyage des images.
 
 ## Connexes
 

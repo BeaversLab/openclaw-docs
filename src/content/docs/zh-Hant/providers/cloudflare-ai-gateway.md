@@ -92,11 +92,11 @@ openclaw onboard --non-interactive \
 
   </Accordion>
 
-  <Accordion title="環境備註">
-    如果 Gateway 作為守護程序 (launchd/systemd) 運行，請確保 `CLOUDFLARE_AI_GATEWAY_API_KEY` 對該程序可用。
+  <Accordion title="環境提示">
+    如果 Gateway 作為守護進程 (launchd/systemd) 運行，請確保 `CLOUDFLARE_AI_GATEWAY_API_KEY` 對該進程可用。
 
     <Warning>
-    僅存在於 `~/.profile` 中的金鑰對 launchd/systemd 守護程序沒有幫助，除非該環境也已在其中匯入。請在 `~/.openclaw/.env` 中設定金鑰或透過 `env.shellEnv` 設定，以確保 gateway 程序可以讀取它。
+    僅在互動式 Shell 中匯出的金鑰對 launchd/systemd 守護進程沒有幫助，除非該環境也在那裡被匯入。請在 `~/.openclaw/.env` 中設定金鑰或透過 `env.shellEnv`，以確保 Gateway 進程可以讀取它。
     </Warning>
 
   </Accordion>

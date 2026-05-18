@@ -29,7 +29,7 @@ Para instalar sin ejecutar el proceso de incorporación:
   <Tab title="Windows (PowerShell)">```powershell & ([scriptblock]::Create((iwr -useb https://openclaw.ai/install.ps1))) -NoOnboard ```</Tab>
 </Tabs>
 
-Para ver todas las opciones de indicadores y CI/automatización, consulte [Funcionamiento interno del instalador](/es/install/installer).
+Para ver todas las opciones de indicadores y CI/automatización, consulte [Aspectos internos del instalador](/es/install/installer).
 
 ## Métodos de instalación alternativos
 
@@ -42,9 +42,9 @@ Para ver todas las opciones de indicadores y CI/automatización, consulte [Funci
 curl -fsSL https://openclaw.ai/install-cli.sh | bash
 ```
 
-Admite instalaciones de npm de forma predeterminada, además de instalaciones de git-checkout bajo el mismo flujo de prefijo. Referencia completa: [Funcionamiento interno del instalador](/es/install/installer#install-clish).
+Admite instalaciones con npm de forma predeterminada, además de instalaciones mediante git-checkout bajo el mismo flujo de prefijo. Referencia completa: [Aspectos internos del instalador](/es/install/installer#install-clish).
 
-¿Ya instalado? Cambie entre instalaciones de paquetes y git con
+¿Ya instalado? Cambie entre instalaciones de paquete y git con
 `openclaw update --channel dev` y `openclaw update --channel stable`. Consulte
 [Actualización](/es/install/updating#switch-between-npm-and-git-installs).
 
@@ -58,6 +58,13 @@ Si ya administra Node usted mismo:
     npm install -g openclaw@latest
     openclaw onboard --install-daemon
     ```
+
+    <Note>
+    El instalador alojado borra los filtros de frescura de npm, como `min-release-age`
+    para la instalación del paquete OpenClaw. Si instala manualmente con npm, su propia
+    política de npm aún se aplica.
+    </Note>
+
   </Tab>
   <Tab title="pnpm">
     ```bash
@@ -105,7 +112,7 @@ pnpm link --global
 openclaw onboard --install-daemon
 ```
 
-O omita el enlace y use `pnpm openclaw ...` desde dentro del repositorio. Consulte [Configuración](/es/start/setup) para ver los flujos de trabajo completos de desarrollo.
+O omita el enlace y use `pnpm openclaw ...` desde dentro del repositorio. Consulte [Configuración](/es/start/setup) para ver los flujos de trabajo de desarrollo completos.
 
 ### Instalar desde GitHub main
 
@@ -143,7 +150,7 @@ openclaw gateway status # verify the Gateway is running
 
 Si desea un inicio administrado después de la instalación:
 
-- macOS: LaunchAgent vía `openclaw onboard --install-daemon` o `openclaw gateway install`
+- macOS: LaunchAgent a través de `openclaw onboard --install-daemon` o `openclaw gateway install`
 - Linux/WSL2: servicio de usuario de systemd mediante los mismos comandos
 - Windows nativo: Tarea programada primero, con un elemento de inicio de sesión de la carpeta de Inicio por usuario como alternativa si se deniega la creación de la tarea
 
@@ -198,9 +205,9 @@ Despliega OpenClaw en un servidor en la nube o VPS:
   </Card>
 </CardGroup>
 
-## Solución de problemas: no se encontró `openclaw`
+## Solución de problemas: `openclaw` no encontrado
 
-Si la instalación se realizó correctamente pero no se encontró `openclaw` en su terminal:
+Si la instalación se realizó correctamente pero `openclaw` no se encuentra en su terminal:
 
 ```bash
 node -v           # Node installed?

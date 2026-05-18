@@ -12,7 +12,7 @@ title: "Amazon BedrockAmazon Bedrock 插件"
 ## 分发
 
 - 软件包：`@openclaw/amazon-bedrock-provider`
-- 安装方式：npm
+- 安装途径：npm；ClawHub
 
 ## 表面
 

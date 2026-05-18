@@ -16,11 +16,9 @@ OpenClaw utilise un répertoire unique d'espace de travail de l'agent (OpenClaw`
 
 Recommandé : utilisez `openclaw setup` pour créer `~/.openclaw/openclaw.json` s'il est manquant et initialiser les fichiers de l'espace de travail.
 
-Guide complet de la disposition de l'espace de travail + sauvegarde : [Espace de travail de l'agent](/fr/concepts/agent-workspace)
+Plan complet de l'espace de travail + guide de sauvegarde : [Espace de travail de l'agent](/fr/concepts/agent-workspace)
 
-Si `agents.defaults.sandbox` est activé, les sessions non principales peuvent remplacer ceci par
-des espaces de travail par session sous `agents.defaults.sandbox.workspaceRoot`Gateway (voir
-[Configuration de la Gateway](/fr/gateway/configuration)).
+Si `agents.defaults.sandbox` est activé, les sessions non principales peuvent remplacer cela par des espaces de travail par session sous `agents.defaults.sandbox.workspaceRoot` (voir [configuration du Gateway](/fr/gateway/configuration)).
 
 ## Fichiers d'amorçage (injectés)
 
@@ -62,7 +60,7 @@ OpenClaw charge les compétences depuis ces emplacements (du plus prioritaire au
 - Groupés (fournis avec l'installation)
 - Dossiers de compétences supplémentaires : `skills.load.extraDirs`
 
-Les compétences peuvent être limitées par la configuration/l'environnement (voir `skills` dans [configuration Gateway](/fr/gateway/configuration)).
+Les compétences peuvent être limitées par la configuration/l'environnement (voir `skills` dans [configuration du Gateway](/fr/gateway/configuration)).
 
 ## Limites du runtime
 
@@ -79,27 +77,25 @@ Les dossiers de sessions hérités d'autres outils ne sont pas lus.
 
 ## Pilotage pendant le streaming
 
-Lorsque le mode de file d'attente est `steer`, les messages entrants sont injectés dans l'exécution en cours. La direction en file d'attente est délivrée **une fois que le tour de l'assistant actuel a fini d'exécuter ses appels d'outils**, avant le prochain appel LLM. Pi vide tous les messages de direction en attente ensemble pour `steer` ; le mode hérité `queue` vide un message par frontière de model. La direction ne saute plus les appels d'outils restants du message de l'assistant actuel.
+Les invites entrantes qui arrivent en cours d'exécution sont dirigées vers l'exécution en cours par défaut.
+La direction est délivrée **après que le tour de l'assistant actuel a terminé d'exécuter ses appels d'outil**, avant le prochain appel LLM, et ne saute plus les appels d'outil restants du message de l'assistant actuel.
 
-Lorsque le mode de file d'attente est `followup` ou `collect`, les messages entrants sont retenus jusqu'à la fin du tour actuel, puis un nouveau tour d'agent commence avec les charges utiles mises en file d'attente. Voir [File d'attente](/fr/concepts/queue) et [File d'attente de direction](/fr/concepts/queue-steering) pour le comportement du mode et des frontières.
+`/queue steer` est le comportement par défaut de l'exécution active. `/queue followup` et `/queue collect` font attendre les messages pour un tour ultérieur au lieu de diriger.
+`/queue interrupt` abandonne l'exécution active à la place. Voir [File d'attente](/fr/concepts/queue) et [File d'attente de direction](/fr/concepts/queue-steering) pour le comportement de la file d'attente et des limites.
 
-Le Block streaming envoie les blocs d'assistant terminés dès qu'ils sont finis ; il est **désactivé par défaut** (`agents.defaults.blockStreamingDefault: "off"`).
-Ajustez la frontière via `agents.defaults.blockStreamingBreak` (`text_end` vs `message_end` ; par défaut text_end).
-Contrôlez le découpage souple des blocs avec `agents.defaults.blockStreamingChunk` (par défaut
-800-1200 caractères ; préfère les sauts de paragraphe, puis les sauts de ligne ; les phrases en dernier).
-Fusionnez les fragments diffusés avec `agents.defaults.blockStreamingCoalesce` pour réduire
-le spam sur une seule ligne (fusion basée sur l'inactivité avant l'envoi). Les canaux non-Telegram nécessitent
-un `*.blockStreaming: true` explicite pour activer les réponses par bloc.
-Les résumés d'outils détaillés sont émis au début de l'outil (sans anti-rebond) ; L'interface de contrôle
-diffuse la sortie des outils via les événements de l'agent lorsqu'ils sont disponibles.
-Plus de détails : [Streaming + chunking](/fr/concepts/streaming).
+Le bloc streaming envoie les blocs d'assistant terminés dès qu'ils sont finis ; il est **désactivé par défaut** (`agents.defaults.blockStreamingDefault: "off"`).
+Ajustez la limite via `agents.defaults.blockStreamingBreak` (`text_end` vs `message_end` ; par défaut text_end).
+Contrôlez le découpage souple des blocs avec `agents.defaults.blockStreamingChunk` (par défaut 800-1200 caractères ; préfère les sauts de paragraphe, puis les nouvelles lignes ; les phrases en dernier).
+Fusionnez les morceaux diffusés avec `agents.defaults.blockStreamingCoalesce` pour réduire le spam d'une seule ligne (fusion basée sur l'inactivité avant l'envoi). Les canaux non-Telegram nécessitent un `*.blockStreaming: true` explicite pour activer les réponses par bloc.
+Les résumés d'outils verbeux sont émis au début de l'outil (sans rebond) ; L'interface de contrôle diffuse la sortie de l'outil via les événements de l'agent lorsque disponible.
+Plus de détails : [Streaming + découpage](/fr/concepts/streaming).
 
 ## Model refs
 
-Les références de modèle dans la configuration (par exemple `agents.defaults.model` et `agents.defaults.models`) sont analysées en divisant sur la **première** `/`.
+Les références de modèle dans la configuration (par exemple `agents.defaults.model` et `agents.defaults.models`) sont analysées en divisant sur le **premier** `/`.
 
-- Utilisez `provider/model` lors de la configuration des modèles.
-- Si l'ID du modèle lui-même contient `/` (style OpenRouter), incluez le préfixe du provider (exemple : `openrouter/moonshotai/kimi-k2`).
+- Utilisez `provider/model` lors de la configuration des models.
+- Si l'ID du model lui-même contient `/` (style OpenRouter), incluez le préfixe du provider (exemple : `openrouter/moonshotai/kimi-k2`).
 - Si vous omettez le fournisseur, OpenClaw essaie d'abord un alias, puis une correspondance unique
   de fournisseur configuré pour cet ID de modèle exact, et ne revient ensuite qu'au
   fournisseur par défaut configuré. Si ce fournisseur n'expose plus le
@@ -115,7 +111,7 @@ Au minimum, définissez :
 
 ---
 
-_Suivant : [Groupes de discussion](/fr/channels/group-messages)_ 🦞
+_Suite : [Group Chats](/fr/channels/group-messages)_ 🦞
 
 ## Connexes
 

@@ -7,7 +7,7 @@ read_when:
 ---
 
 El [Vercel AI Gateway](https://vercel.com/ai-gateway) proporciona una API unificada para
-acceder a cientos de modelos a través de un único punto de conexión.
+acceder a cientos de modelos a través de un único punto final.
 
 | Propiedad           | Valor                                                |
 | ------------------- | ---------------------------------------------------- |
@@ -76,35 +76,35 @@ tiempo de ejecución:
 ## Configuración avanzada
 
 <AccordionGroup>
-  <Accordion title="Variable de entorno para procesos demonio">
-    Si el OpenClaw Gateway se ejecuta como un demonio (launchd/systemd), asegúrese de que
+  <Accordion title="Variable de entorno para procesos daemon">
+    Si el OpenClaw Gateway se ejecuta como un daemon (launchd/systemd), asegúrese de que
     `AI_GATEWAY_API_KEY` esté disponible para ese proceso.
 
     <Warning>
-    Una clave establecida solo en `~/.profile` no será visible para un demonio
-    launchd/systemd a menos que ese entorno se importe explícitamente. Establezca la clave en
-    `~/.openclaw/.env` o a través de `env.shellEnv` para garantizar que el proceso de la puerta de enlace pueda
-    leerla.
+    Una clave exportada solo en un shell interactivo no será visible para un
+    daemon launchd/systemd a menos que ese entorno se importe explícitamente. Establezca
+    la clave en `~/.openclaw/.env` o vía `env.shellEnv` para asegurar que el proceso
+    de la puerta de enlace pueda leerla.
     </Warning>
 
   </Accordion>
 
-  <Accordion title="Enrutamiento del proveedor">
-    Vercel AI Gateway enruta las solicitudes al proveedor ascendente basándose en el prefijo de
-    referencia del modelo. Por ejemplo, `vercel-ai-gateway/anthropic/claude-opus-4.6` se enruta
+  <Accordion title="Enrutamiento de proveedores">
+    Vercel AI Gateway enruta las solicitudes al proveedor upstream basándose en el prefijo
+    de referencia del modelo. Por ejemplo, `vercel-ai-gateway/anthropic/claude-opus-4.6` se enruta
     a través de Anthropic, mientras que `vercel-ai-gateway/openai/gpt-5.5` se enruta a través de
     OpenAI y `vercel-ai-gateway/moonshotai/kimi-k2.6` se enruta a través de
     MoonshotAI. Su único `AI_GATEWAY_API_KEY` maneja la autenticación para todos
-    los proveedores ascendentes.
+    los proveedores upstream.
   </Accordion>
-  <Accordion title="Thinking levels">
-    Las opciones de `/think` siguen los prefijos de modelos upstream de confianza cuando OpenClaw conoce
-    el contrato del proveedor upstream. `vercel-ai-gateway/anthropic/...` usa el
-    perfil de pensamiento de Claude, incluyendo valores predeterminados adaptativos para modelos Claude 4.6.
-    Las referencias estilo `vercel-ai-gateway/openai/gpt-5.4`, `gpt-5.5` y Codex exponen
+  <Accordion title="Niveles de pensamiento">
+    Las opciones de `/think` siguen prefijos de modelos upstream confiables cuando OpenClaw conoce
+    el contrato del proveedor upstream. `vercel-ai-gateway/anthropic/...` utiliza el
+    perfil de pensamiento de Claude, incluyendo valores predeterminados adaptables para modelos Claude 4.6.
+    `vercel-ai-gateway/openai/gpt-5.4`, `gpt-5.5` y las referencias estilo Codex exponen
     `/think xhigh` igual que los proveedores directos de OpenAI/OpenAI Codex. Otras
     referencias con espacio de nombres mantienen los niveles normales de razonamiento a menos que sus metadatos
-    de catálogo declaren más.
+    del catálogo declaren más.
   </Accordion>
 </AccordionGroup>
 

@@ -54,10 +54,10 @@ Secciones disponibles:
 
 Notas:
 
-- Elegir dónde se ejecuta el Gateway siempre actualiza `gateway.mode`. Puede seleccionar "Continue" sin otras secciones si eso es todo lo que necesita.
+- El asistente completo y las secciones relacionadas con el gateway preguntan dónde se ejecuta el Gateway y actualizan `gateway.mode`. Los filtros de sección que no incluyen `gateway`, `daemon` o `health` van directamente a la configuración solicitada.
 - Después de escribir la configuración local, configure instala los complementos descargables seleccionados cuando la ruta de configuración elegida los requiere. La configuración remota del Gateway no instala paquetes de complementos locales.
 - Los servicios orientados a canales (Slack/Discord/Matrix/Microsoft Teams) solicitan listas de permitidos (allowlists) de canales/salas durante la configuración. Puede ingresar nombres o ID; el asistente resuelve los nombres a ID cuando es posible.
-- Si ejecuta el paso de instalación del demonio, la autenticación por token requiere un token y `gateway.auth.token` está administrado por SecretRef, configure valida el SecretRef pero no persiste los valores de token de texto plano resueltos en los metadatos del entorno del servicio supervisor.
+- Si ejecuta el paso de instalación del demonio, la autenticación de token requiere un token, y si `gateway.auth.token` está gestionado por SecretRef, configure valida el SecretRef pero no persiste los valores de token en texto sin formato resueltos en los metadatos del entorno del servicio supervisor.
 - Si la autenticación por token requiere un token y el SecretRef del token configurado no está resuelto, configure bloquea la instalación del demonio con una guía de remediation accionable.
 - Si tanto `gateway.auth.token` como `gateway.auth.password` están configurados y `gateway.auth.mode` no está establecido, configure bloquea la instalación del demonio hasta que el modo se establezca explícitamente.
 

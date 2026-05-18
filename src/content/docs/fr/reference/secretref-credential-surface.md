@@ -54,6 +54,7 @@ Intention de la portée :
 - `plugins.entries.voice-call.config.streaming.providers.*.apiKey`
 - `plugins.entries.voice-call.config.tts.providers.*.apiKey`
 - `plugins.entries.voice-call.config.twilio.authToken`
+- `tools.web.search.*.apiKey`
 - `tools.web.search.apiKey`
 - `gateway.auth.password`
 - `gateway.auth.token`
@@ -117,22 +118,22 @@ Intention de la portée :
 
 Notes :
 
-- Les cibles de plan de profil d'authentification nécessitent `agentId`.
-- Les entrées de plan ciblent `profiles.*.key` / `profiles.*.token` et écrivent des références sœurs (`keyRef` / `tokenRef`).
-- Les références de profil d'authentification sont incluses dans la résolution au moment de l'exécution et la couverture d'audit.
-- Dans `openclaw.json`, les SecretRefs doivent utiliser des objets structurés tels que `{"source":"env","provider":"default","id":"DISCORD_BOT_TOKEN"}`. Les chaînes de marqueur `secretref-env:<ENV_VAR>` héritées sont rejetées sur les chemins d'informations d'identification SecretRef ; exécutez `openclaw doctor --fix` pour migrer les marqueurs valides.
-- Garde de stratégie OAuth : `auth.profiles.<id>.mode = "oauth"` ne peut pas être combiné avec des entrées SecretRef pour ce profil. Le démarrage/rechargement et la résolution du profil d'authentification échouent rapidement lorsque cette stratégie est violée.
-- Pour les fournisseurs de modèle gérés par SecretRef, les entrées `agents/*/agent/models.json` générées conservent des marqueurs non secrets (pas les valeurs de secrètes résolues) pour les surfaces `apiKey`/header.
-- La persistance des marqueurs est basée sur la source : OpenClaw écrit les marqueurs à partir de l'instantané de la configuration source active (pré-résolution), et non à partir des valeurs de secrètes résolues au moment de l'exécution.
+- Les cibles du plan de profil d'authentification nécessitent `agentId`.
+- Les entrées du plan ciblent `profiles.*.key` / `profiles.*.token` et écrivent des références sœurs (`keyRef` / `tokenRef`).
+- Les références de profil d'authentification sont incluses dans la résolution à l'exécution et la couverture d'audit.
+- Dans `openclaw.json`, les SecretRefs doivent utiliser des objets structurés tels que `{"source":"env","provider":"default","id":"DISCORD_BOT_TOKEN"}`. Les chaînes de marqueurs `secretref-env:<ENV_VAR>` héritées sont rejetées sur les chemins d'identification SecretRef ; exécutez `openclaw doctor --fix` pour migrer les marqueurs valides.
+- Garantie de stratégie OAuth : `auth.profiles.<id>.mode = "oauth"` ne peut pas être combiné avec des entrées SecretRef pour ce profil. Le démarrage/rechargement et la résolution du profil d'authentification échouent rapidement lorsque cette stratégie est violée.
+- Pour les fournisseurs de modèles gérés par SecretRef, les entrées `agents/*/agent/models.json` générées conservent des marqueurs non secrets (et non les valeurs de secrets résolues) pour les surfaces `apiKey`/en-tête.
+- La persistance des marqueurs est basée sur la source : OpenClaw écrit les marqueurs à partir de l'instantané actif de la configuration source (pré-résolution), et non à partir des valeurs de secrets résolus à l'exécution.
 - Pour la recherche Web :
-  - En mode fournisseur explicite (`tools.web.search.provider` défini), seule la clé de fournisseur sélectionnée est active.
-  - En mode automatique (`tools.web.search.provider` non défini), seule la première clé de fournisseur résolue par priorité est active.
-  - En mode automatique, les références de fournisseur non sélectionnées sont traitées comme inactives jusqu'à leur sélection.
-  - Les chemins de fournisseur `tools.web.search.*` hérités sont toujours résolus pendant la fenêtre de compatibilité, mais la surface SecretRef canonique est `plugins.entries.<plugin>.config.webSearch.*`.
+  - En mode fournisseur explicite (`tools.web.search.provider` défini), seule la clé du fournisseur sélectionné est active.
+  - En mode automatique (`tools.web.search.provider` non défini), seule la première clé de fournisseur qui se résout par priorité est active.
+  - En mode automatique, les références de fournisseurs non sélectionnés sont traitées comme inactives jusqu'à leur sélection.
+  - Les chemins de fournisseur `tools.web.search.*` hérités se résolvent toujours pendant la fenêtre de compatibilité, mais la surface SecretRef canonique est `plugins.entries.<plugin>.config.webSearch.*`.
 
-## Informations d'identification non prises en charge
+## Identifiants non pris en charge
 
-Les informations d'identification hors portée incluent :
+Les identifiants hors portée incluent :
 
 [//]: # "secretref-unsupported-list-start"
 
@@ -148,11 +149,11 @@ Les informations d'identification hors portée incluent :
 
 [//]: # "secretref-unsupported-list-end"
 
-Justification :
+Rationale :
 
-- Ces informations d'identification sont des classes créées, rotatives, porteuses de session ou durables OAuth qui ne correspondent pas à la résolution externe en lecture seule de SecretRef.
+- Ces identifiants sont créés, renouvelés, porteurs de session ou des classes durables OAuth qui ne correspondent pas à la résolution externe en lecture seule de SecretRef.
 
 ## Connexes
 
 - [Gestion des secrets](/fr/gateway/secrets)
-- [Sémantique des informations d'identification d'authentification](/fr/auth-credential-semantics)
+- [Sémantique des identifiants d'authentification](/fr/auth-credential-semantics)

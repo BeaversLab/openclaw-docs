@@ -323,16 +323,16 @@ openclaw config set channels.discord.token \
     - `--allow-exec` es solo para ejecución en seco y genera un error si se usa sin `--dry-run`.
 
   </Accordion>
-  <Accordion title="campos --dry-run --">
+  <Accordion title="--dry-run -- fields">
     `--dry-run --json` imprime un informe legible por máquina:
 
-    - `ok`: si la ejecución en seco fue exitosa
+    - `ok`: si la ejecución en seco pasó
     - `operations`: número de asignaciones evaluadas
-    - `checks`: si se ejecutaron las comprobaciones de esquema/resolubilidad
-    - `checks.resolvabilityComplete`: si las comprobaciones de resolubilidad se completaron (falso cuando se omiten las referencias de ejecución)
-    - `refsChecked`: número de referencias realmente resueltas durante la ejecución en seco
+    - `checks`: si se ejecutaron las comprobaciones de esquema/resolvabilidad
+    - `checks.resolvabilityComplete`: si las comprobaciones de resolvabilidad se ejecutaron hasta completarse (falso cuando se omiten las referencias de ejecución)
+    - `refsChecked`: número de referencias resueltas realmente durante la ejecución en seco
     - `skippedExecRefs`: número de referencias de ejecución omitidas porque `--allow-exec` no estaba establecido
-    - `errors`: fallos estructurados de esquema/resolubilidad cuando `ok=false`
+    - `errors`: fallos estructurados de ruta faltante, esquema o resolvabilidad cuando `ok=false`
 
   </Accordion>
 </AccordionGroup>
@@ -344,7 +344,7 @@ openclaw config set channels.discord.token \
   ok: boolean,
   operations: number,
   configPath: string,
-  inputModes: ["value" | "json" | "builder", ...],
+  inputModes: ["value" | "json" | "builder" | "unset", ...],
   checks: {
     schema: boolean,
     resolvability: boolean,
@@ -354,7 +354,7 @@ openclaw config set channels.discord.token \
   skippedExecRefs: number,
   errors?: [
     {
-      kind: "schema" | "resolvability",
+      kind: "missing-path" | "schema" | "resolvability",
       message: string,
       ref?: string, // present for resolvability errors
     },

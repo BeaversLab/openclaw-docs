@@ -35,18 +35,17 @@ openclaw qr --url wss://gateway.example/ws
 
 - `--token` 和 `--password` 互斥。
 - 设置代码本身现在携带一个不透明的短期 `bootstrapToken`，而不是共享的 Gateway(网关) 令牌/密码。
-- 在内置的节点/操作员引导流程中，主节点令牌仍然由 `scopes: []` 接收。
-- 如果引导交接还发放了操作员令牌，它将仅限于引导允许列表：`operator.approvals`, `operator.read`, `operator.talk.secrets`, `operator.write`。
-- 引导范围检查带有角色前缀。该操作员允许列表仅满足操作员请求；非操作员角色仍需要在其自身角色前缀下的范围。
-- 对于 Tailscale/公开的 Tailscale`ws://` Gateway URL，移动端配对默认失败。私有 LAN 地址和 `.local`Bonjour Bonjour 主机仍支持通过 `ws://`TailscaleTailscale 连接，但 Tailscale/公开的移动路由应使用 Tailscale Serve/Funnel 或 `wss://` Gateway URL。
+- 内置设置代码引导仅适用于节点。批准后，主节点令牌将位于 `scopes: []`。
+- 内置设置代码流程不返回已移交的操作员令牌；操作员访问需要单独的已批准操作员配对或令牌流程。
+- 对于 Tailscale/公用 Tailscale`ws://` Gateway URL，移动配对会以失败关闭。专用 LAN 地址和 `.local`Bonjour Bonjour 主机仍通过 `ws://`TailscaleTailscale 受支持，但 Tailscale/公用移动路由应使用 Tailscale Serve/Funnel 或 `wss://` Gateway URL。
 - 使用 `--remote`OpenClaw 时，OpenClaw 需要 `gateway.remote.url` 或
   `gateway.tailscale.mode=serve|funnel`。
-- 使用 `--remote` 时，如果有效活动的远程凭据被配置为 SecretRefs，并且您未传递 `--token` 或 `--password`，该命令将从活动的 Gateway 快照中解析它们。如果 Gateway 不可用，该命令将快速失败。
-- 如果不使用 `--remote`CLI，当未传递 CLI 认证覆盖时，将解析本地 Gateway 认证 SecretRefs：
-  - 当令牌认证可胜出时（显式的 `gateway.auth.mode="token"` 或没有密码源胜出的推断模式），`gateway.auth.token` 会被解析。
-  - 当密码认证可胜出时（显式的 `gateway.auth.mode="password"` 或来自 auth/env 没有胜出令牌的推断模式），`gateway.auth.password` 会被解析。
-- 如果同时配置了 `gateway.auth.token` 和 `gateway.auth.password`（包括 SecretRefs）且未设置 `gateway.auth.mode`，则设置代码解析将失败，直到显式设置模式。
-- Gateway 版本偏差说明：此命令路径需要支持 Gateway(网关)`secrets.resolve` 的 Gateway；较旧的 Gateway 将返回未知方法错误。
+- 使用 `--remote` 时，如果有效活动的远程凭据配置为 SecretRefs 并且您未传递 `--token` 或 `--password`，该命令将从活动的 Gateway 快照解析它们。如果 Gateway 不可用，该命令将快速失败。
+- 如果不使用 `--remote`CLI，则在未传递 CLI 身份验证覆盖时，会解析本地 Gateway 身份验证 SecretRefs：
+  - 当令牌身份验证可以获胜时（显式 `gateway.auth.mode="token"` 或未获胜的密码源推断模式），`gateway.auth.token` 会被解析。
+  - 当密码身份验证可以获胜时（显式 `gateway.auth.mode="password"` 或来自 auth/env 的无获胜令牌的推断模式），`gateway.auth.password` 会被解析。
+- 如果 `gateway.auth.token` 和 `gateway.auth.password` 均已配置（包括 SecretRefs）并且 `gateway.auth.mode` 未设置，则在显式设置模式之前，设置代码解析将失败。
+- Gateway 版本偏差说明：此命令路径需要支持 Gateway(网关)`secrets.resolve` 的 Gateway；较旧的 Gateway 会返回未知方法错误。
 - 扫描后，使用以下命令批准设备配对：
   - `openclaw devices list`
   - `openclaw devices approve <requestId>`

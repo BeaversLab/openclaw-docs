@@ -91,12 +91,12 @@ Elija su método de configuración y modo preferidos.
   </Tab>
 
   <Tab title="Configuración manual">
-    **Lo mejor para:** control total sobre la configuración en la nube o local.
+    **Ideal para:** control total sobre la configuración en la nube o local.
 
     <Steps>
       <Step title="Elegir nube o local">
         - **Nube + Local**: instala Ollama, inicia sesión con `ollama signin` y enruta las solicitudes de la nube a través de ese host
-        - **Solo nube**: usa `https://ollama.com` con una `OLLAMA_API_KEY`
+        - **Solo nube**: usa `https://ollama.com` con un `OLLAMA_API_KEY`
         - **Solo local**: instala Ollama desde [ollama.com/download](https://ollama.com/download)
 
       </Step>
@@ -123,7 +123,7 @@ Elija su método de configuración y modo preferidos.
         openclaw config set models.providers.ollama.apiKey "OLLAMA_API_KEY"
         ```
       </Step>
-      <Step title="Inspeccionar y configurar tu modelo">
+      <Step title="Inspeccionar y establecer tu modelo">
         ```bash
         openclaw models list
         openclaw models set ollama/gemma4
@@ -825,10 +825,10 @@ Para un demonio local con sesión iniciada, OpenClaw utiliza el proxy `/api/expe
 
   </Accordion>
 
-  <Accordion title="Context windows">
-    Para los modelos descubiertos automáticamente, OpenClaw utiliza la ventana de contexto reportada por Ollama cuando está disponible, incluyendo valores más grandes de `PARAMETER num_ctx` de Modelfiles personalizados. De lo contrario, recurre a la ventana de contexto predeterminada de Ollama utilizada por OpenClaw.
+  <Accordion title="Ventanas de contexto">
+    Para los modelos descubiertos automáticamente, OpenClaw utiliza la ventana de contexto reportada por Ollama cuando está disponible, incluyendo valores `PARAMETER num_ctx` más grandes de Modelfiles personalizados. De lo contrario, recurre a la ventana de contexto predeterminada de Ollama utilizada por OpenClaw.
 
-    Puede establecer los valores predeterminados a nivel de proveedor para `contextWindow`, `contextTokens` y `maxTokens` para cada modelo bajo ese proveedor Ollama, y luego anularlos por modelo cuando sea necesario. `contextWindow` es el presupuesto de prompt y compactación de OpenClaw. Las solicitudes nativas de Ollama dejan `options.num_ctx` sin configurar a menos que configure explícitamente `params.num_ctx`, por lo que Ollama puede aplicar su propio modelo, `OLLAMA_CONTEXT_LENGTH` o valor predeterminado basado en VRAM. Para limitar o forzar el contexto de tiempo de ejecución por solicitud de Ollama sin reconstruir un Modelfile, configure `params.num_ctx`; se ignoran los valores inválidos, cero, negativos y no finitos. El adaptador Ollama compatible con OpenAI todavía inyecta `options.num_ctx` de manera predeterminada desde el `params.num_ctx` configurado o `contextWindow`; deshabilite esto con `injectNumCtxForOpenAICompat: false` si su servidor rechaza `options`.
+    Puede establecer los valores predeterminados `contextWindow`, `contextTokens` y `maxTokens` a nivel de proveedor para cada modelo bajo ese proveedor Ollama, y luego anularlos por modelo cuando sea necesario. `contextWindow` es el presupuesto de solicitud y compactación de OpenClaw. Las solicitudes nativas de Ollaman dejan `options.num_ctx` sin establecer a menos que configure explícitamente `params.num_ctx`, por lo que Ollama puede aplicar su propio modelo, `OLLAMA_CONTEXT_LENGTH`, o valor predeterminado basado en VRAM. Para limitar o forzar el contexto de tiempo de ejecución por solicitud de Ollama sin reconstruir un Modelfile, configure `params.num_ctx`; se ignoran los valores no válidos, cero, negativos y no finitos. Si actualizó una configuración anterior que usaba solo `contextWindow` o `maxTokens` para forzar un contexto de solicitud nativo de Ollama, ejecute `openclaw doctor --fix` para copiar esos presupuestos explícitos de proveedor o modelo en `params.num_ctx`. El adaptador Ollama compatible con OpenAI todavía inyecta `options.num_ctx` de forma predeterminada desde el `params.num_ctx` configurado o `contextWindow`; deshabilítelo con `injectNumCtxForOpenAICompat: false` si su flujo superior rechaza `options`.
 
     Las entradas de modelos nativos de Ollama también aceptan las opciones comunes de tiempo de ejecución de Ollama bajo `params`, incluyendo `temperature`, `top_p`, `top_k`, `min_p`, `num_predict`, `stop`, `repeat_penalty`, `num_batch`, `num_thread` y `use_mmap`. OpenClaw reenvía solo las claves de solicitud de Ollama, por lo que los parámetros de tiempo de ejecución de OpenClaw como `streaming` no se filtran a Ollama. Use `params.think` o `params.thinking` para enviar `think` de Ollama de nivel superior; `false` deshabilita el pensamiento a nivel de API para modelos de pensamiento estilo Qwen.
 
@@ -857,12 +857,12 @@ Para un demonio local con sesión iniciada, OpenClaw utiliza el proxy `/api/expe
     }
     ```
 
-    El `agents.defaults.models["ollama/<model>"].params.num_ctx` por modelo también funciona. Si ambos están configurados, la entrada explícita del modelo del proveedor tiene prioridad sobre el predeterminado del agente.
+    `agents.defaults.models["ollama/<model>"].params.num_ctx` por modelo también funciona. Si ambos están configurados, la entrada del modelo de proveedor explícito tiene prioridad sobre el valor predeterminado del agente.
 
   </Accordion>
 
   <Accordion title="Thinking control">
-    Para los modelos nativos de Ollama, OpenClaw reenvía el control del pensamiento como Ollama espera: `think` de nivel superior, no `options.think`. Los modelos descubiertos automáticamente cuya respuesta `/api/show` incluye la capacidad `thinking` exponen `/think low`, `/think medium`, `/think high` y `/think max`; los modelos no pensantes exponen solo `/think off`.
+    Para los modelos nativos de Ollama, OpenClaw reenvía el control del pensamiento tal como Ollama espera: `think` de nivel superior, no `options.think`. Los modelos descubiertos automáticamente cuya respuesta `/api/show` incluye la capacidad `thinking` exponen `/think low`, `/think medium`, `/think high` y `/think max`; los modelos no pensantes exponen solo `/think off`.
 
     ```bash
     openclaw agent --model ollama/gemma4 --thinking off
@@ -885,27 +885,27 @@ Para un demonio local con sesión iniciada, OpenClaw utiliza el proxy `/api/expe
     }
     ```
 
-    El `params.think` o `params.thinking` por modelo puede desactivar o forzar el pensamiento de la API de Ollama para un modelo configurado específico. OpenClaw conserva esos parámetros explícitos del modelo cuando la ejecución activa solo tiene el `off` predeterminado implícito; los comandos de tiempo de ejecución que no son de desactivación, como `/think medium`, aún anulan la ejecución activa.
+    El `params.think` o `params.thinking` por modelo pueden desactivar o forzar el pensamiento de la API de Ollama para un modelo configurado específico. OpenClaw conserva esos parámetros explícitos del modelo cuando la ejecución activa solo tiene el `off` predeterminado implícito; los comandos de tiempo de ejecución no desactivados, como `/think medium`, aún anulan la ejecución activa.
 
   </Accordion>
 
   <Accordion title="Reasoning models">
-    OpenClaw trata los modelos con nombres como `deepseek-r1`, `reasoning` o `think` como capaces de razonamiento de forma predeterminada.
+    OpenClaw trata los modelos con nombres como `deepseek-r1`, `reasoning` o `think` como con capacidad de razonamiento de forma predeterminada.
 
     ```bash
     ollama pull deepseek-r1:32b
     ```
 
-    No se necesita ninguna configuración adicional. OpenClaw los marca automáticamente.
+    No se necesita configuración adicional. OpenClaw los marca automáticamente.
 
   </Accordion>
 
 <Accordion title="Model costs">Ollama es gratuito y se ejecuta localmente, por lo que todos los costos de los modelos se establecen en $0. Esto se aplica tanto a los modelos descubiertos automáticamente como a los definidos manualmente.</Accordion>
 
   <Accordion title="Incrustaciones de memoria">
-    El complemento Ollama incluido registra un proveedor de incrustaciones de memoria para
+    El plugin Ollama incluido registra un proveedor de incrustaciones de memoria para
     [búsqueda de memoria](/es/concepts/memory). Utiliza la URL base de Ollama configurada
-    y la clave de API, llama al punto final actual de Ollama `/api/embed` y agrupa
+    y la clave API, llama al endpoint actual de Ollama `/api/embed` y agrupa
     múltiples fragmentos de memoria en una sola solicitud `input` cuando es posible.
 
     | Propiedad      | Valor               |
@@ -913,7 +913,7 @@ Para un demonio local con sesión iniciada, OpenClaw utiliza el proxy `/api/expe
     | Modelo por defecto | `nomic-embed-text`  |
     | Extracción automática     | Sí — el modelo de incrustación se extrae automáticamente si no está presente localmente |
 
-    Las incrustaciones en tiempo de consulta utilizan prefijos de recuperación para modelos que los requieren o recomiendan, incluyendo `nomic-embed-text`, `qwen3-embedding` y `mxbai-embed-large`. Los lotes de documentos de memoria se mantienen sin procesar para que los índices existentes no necesiten una migración de formato.
+    Las incrustaciones en el momento de la consulta utilizan prefijos de recuperación para modelos que los requieren o recomiendan, incluyendo `nomic-embed-text`, `qwen3-embedding` y `mxbai-embed-large`. Los lotes de documentos de memoria permanecen sin procesar para que los índices existentes no necesiten una migración de formato.
 
     Para seleccionar Ollama como proveedor de incrustaciones de búsqueda de memoria:
 
@@ -955,13 +955,13 @@ Para un demonio local con sesión iniciada, OpenClaw utiliza el proxy `/api/expe
 
   </Accordion>
 
-  <Accordion title="Configuración de streaming">
-    La integración de Ollama de OpenClaw utiliza la **API nativa de Ollama** (`/api/chat`) de forma predeterminada, que admite completamente el streaming y la llamada de herramientas simultáneamente. No se requiere ninguna configuración especial.
+  <Accordion title="Configuración de transmisión">
+    La integración de Ollama de OpenClaw utiliza la **API nativa de Ollama** (`/api/chat`) de forma predeterminada, la cual admite completamente la transmisión y las llamadas a herramientas simultáneamente. No se necesita ninguna configuración especial.
 
-    Para las solicitudes nativas de `/api/chat`, OpenClaw también reenvía el control de pensamiento directamente a Ollama: `/think off` y `openclaw agent --thinking off` envían `think: false` de nivel superior a menos que se configure un valor explícito de modelo `params.think`/`params.thinking`, mientras que `/think low|medium|high` envían la cadena de esfuerzo `think` de nivel superior coincidente. `/think max` se asigna al mayor esfuerzo nativo de Ollama, `think: "high"`.
+    Para las solicitudes nativas de `/api/chat`, OpenClaw también reenvía el control de pensamiento directamente a Ollama: `/think off` y `openclaw agent --thinking off` envían `think: false` de nivel superior a menos que se configure un valor `params.think`/`params.thinking` de modelo explícito, mientras que `/think low|medium|high` envían la cadena de esfuerzo `think` de nivel superior coincidente. `/think max` se asigna al esfuerzo nativo más alto de Ollama, `think: "high"`.
 
     <Tip>
-    Si necesita utilizar el punto final compatible con OpenAI, consulte la sección "Modo heredado compatible con OpenAI" anterior. El streaming y la llamada de herramientas pueden no funcionar simultáneamente en ese modo.
+    Si necesita utilizar el endpoint compatible con OpenAI, consulte la sección "Modo heredado compatible con OpenAI" anterior. La transmisión y las llamadas a herramientas pueden no funcionar simultáneamente en ese modo.
     </Tip>
 
   </Accordion>
@@ -970,10 +970,10 @@ Para un demonio local con sesión iniciada, OpenClaw utiliza el proxy `/api/expe
 ## Solución de problemas
 
 <AccordionGroup>
-  <Accordion title="Bucle de bloqueo de WSL2 (reinicio repetido)">
-    En WSL2 con NVIDIA/CUDA, el instalador oficial de Linux de Ollama crea una unidad `ollama.service` systemd con `Restart=always`. Si ese servicio se inicia automáticamente y carga un modelo con soporte de GPU durante el arranque de WSL2, Ollama puede anclar la memoria del host mientras se carga el modelo. La recuperación de memoria de Hyper-V no siempre puede recuperar esas páginas ancladas, por lo que Windows puede terminar la máquina virtual WSL2, systemd inicia Ollama nuevamente y el bucle se repite.
+  <Accordion title="Bucle de bloqueo de WSL2 (reinicios repetidos)">
+    En WSL2 con NVIDIA/CUDA, el instalador oficial de Ollama para Linux crea una unidad de `ollama.service` systemd con `Restart=always`. Si ese servicio se inicia automáticamente y carga un modelo con respaldo de GPU durante el arranque de WSL2, Ollama puede fijar la memoria del host mientras se carga el modelo. La recuperación de memoria de Hyper-V no siempre puede recuperar esas páginas fijadas, por lo que Windows puede terminar la VM de WSL2, systemd inicia Ollama nuevamente y el bucle se repite.
 
-    Evidencias comunes:
+    Evidencia común:
 
     - reinicios o terminaciones repetidas de WSL2 desde el lado de Windows
     - alto uso de CPU en `app.slice` o `ollama.service` poco después del inicio de WSL2
@@ -994,7 +994,7 @@ Para un demonio local con sesión iniciada, OpenClaw utiliza el proxy `/api/expe
     autoMemoryReclaim=disabled
     ```
 
-    Configure un keep-alive más corto en el entorno del servicio Ollama, o inicie Ollama manualmente solo cuando lo necesite:
+    Configure un keep-alive más corto en el entorno del servicio Ollama o inicie Ollama manualmente solo cuando lo necesite:
 
     ```bash
     export OLLAMA_KEEP_ALIVE=5m
@@ -1021,7 +1021,7 @@ Para un demonio local con sesión iniciada, OpenClaw utiliza el proxy `/api/expe
   </Accordion>
 
   <Accordion title="No hay modelos disponibles">
-    Si su modelo no aparece en la lista, extráigalo localmente o defínalo explícitamente en `models.providers.ollama`.
+    Si su modelo no aparece en la lista, descargue el modelo localmente o defínalo explícitamente en `models.providers.ollama`.
 
     ```bash
     ollama list  # See what's installed
@@ -1056,16 +1056,16 @@ Para un demonio local con sesión iniciada, OpenClaw utiliza el proxy `/api/expe
     Causas comunes:
 
     - `baseUrl` apunta a `localhost`, pero el Gateway se ejecuta en Docker o en otro host.
-    - La URL usa `/v1`, que selecciona el comportamiento compatible con OpenAI en lugar del nativo de Ollama.
+    - La URL usa `/v1`, lo que selecciona el comportamiento compatible con OpenAI en lugar de Ollama nativo.
     - El host remoto necesita cambios en el firewall o en el enlace de LAN en el lado de Ollama.
-    - El modelo está presente en el demonio de su portátil, pero no en el demonio remoto.
+    - El modelo está presente en el demonio de su computadora portátil, pero no en el demonio remoto.
 
   </Accordion>
 
-  <Accordion title="El modelo genera el JSON de la herramienta como texto">
+  <Accordion title="El modelo genera JSON de herramientas como texto">
     Esto generalmente significa que el proveedor está usando el modo compatible con OpenAI o que el modelo no puede manejar esquemas de herramientas.
 
-    Prefiera el modo nativo de Ollama:
+    Prefiera el modo Ollama nativo:
 
     ```json5
     {
@@ -1080,14 +1080,14 @@ Para un demonio local con sesión iniciada, OpenClaw utiliza el proxy `/api/expe
     }
     ```
 
-    Si un modelo local pequeño sigue fallando en los esquemas de herramientas, establezca `compat.supportsTools: false` en esa entrada de modelo y vuelva a probar.
+    Si un modelo local pequeño todavía falla en los esquemas de herramientas, establezca `compat.supportsTools: false` en esa entrada de modelo y vuelva a probar.
 
   </Accordion>
 
-  <Accordion title="Kimi o GLM devuelve símbolos ilegibles">
-    Las respuestas alojadas de Kimi/GLM que son secuencias largas de símbolos no lingüísticos se tratan como una salida fallida del proveedor en lugar de una respuesta exitosa del asistente. Esto permite que la reintento normal, la alternativa o el manejo de errores tome el control sin persistir el texto corrupto en la sesión.
+  <Accordion title="Kimi o GLM devuelven símbolos ilegibles">
+    Las respuestas alojadas de Kimi/GLM que son secuencias largas de símbolos no lingüísticos se tratan como una salida fallida del proveedor en lugar de una respuesta exitosa del asistente. Esto permite que la gestión de errores, el reintento normal o la alternativa se hagan cargo sin persistir el texto corrupto en la sesión.
 
-    Si sucede repetidamente, capture el nombre del modelo sin procesar, el archivo de la sesión actual y si la ejecución usó `Cloud + Local` o `Cloud only`, luego intente una sesión nueva y un modelo alternativo:
+    Si sucede repetidamente, capture el nombre sin procesar del modelo, el archivo de sesión actual y si la ejecución usó `Cloud + Local` o `Cloud only`, luego pruebe una sesión nueva y un modelo alternativo:
 
     ```bash
     openclaw infer model run --model ollama/kimi-k2.5:cloud --prompt "Reply with exactly: ok" --json
@@ -1118,12 +1118,12 @@ Para un demonio local con sesión iniciada, OpenClaw utiliza el proxy `/api/expe
     }
     ```
 
-    Si el propio host es lento para aceptar conexiones, `timeoutSeconds` también extiende el tiempo de espera de conexión protegido de Undici para este proveedor.
+    Si el propio host es lento para aceptar conexiones, `timeoutSeconds` también amplía el tiempo de espera de conexión protegido de Undici para este proveedor.
 
   </Accordion>
 
   <Accordion title="El modelo de contexto grande es demasiado lento o se queda sin memoria">
-    Muchos modelos de Ollama anuncian contextos que son más grandes de lo que su hardware puede ejecutar cómodamente. Ollama nativo utiliza el contexto de ejecución predeterminado de Ollama a menos que configure `params.num_ctx`. Limite tanto el presupuesto de OpenClaw como el contexto de solicitud de Ollama cuando desee una latencia predecible del primer token:
+    Muchos modelos de Ollama anuncian contextos que son más grandes de lo que su hardware puede ejecutar cómodamente. Ollama nativo utiliza el contexto de ejecución predeterminado de Ollama a menos que establezca `params.num_ctx`. Limite tanto el presupuesto de OpenClaw como el contexto de solicitud de Ollama cuando desee una latencia predecible del primer token:
 
     ```json5
     {
@@ -1145,7 +1145,7 @@ Para un demonio local con sesión iniciada, OpenClaw utiliza el proxy `/api/expe
     }
     ```
 
-    Reduzca `contextWindow` primero si OpenClaw está enviando demasiado prompt. Reduzca `params.num_ctx` si Ollama está cargando un contexto de ejecución demasiado grande para la máquina. Reduzca `maxTokens` si la generación tarda demasiado.
+    Baje `contextWindow` primero si OpenClaw está enviando demasiado prompt. Baje `params.num_ctx` si Ollama está cargando un contexto de ejecución que es demasiado grande para la máquina. Baje `maxTokens` si la generación tarda demasiado.
 
   </Accordion>
 </AccordionGroup>

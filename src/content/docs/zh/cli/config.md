@@ -326,13 +326,13 @@ openclaw config set channels.discord.token \
   <Accordion title="--dry-run -- fields">
     `--dry-run --json` 打印机器可读的报告：
 
-    - `ok`：试运行是否通过
+    - `ok`：dry-run 是否通过
     - `operations`：评估的赋值数量
-    - `checks`：是否运行了架构/可解析性检查
-    - `checks.resolvabilityComplete`：可解析性检查是否运行完成（当跳过 exec refs 时为 false）
-    - `refsChecked`：试运行期间实际解析的 refs 数量
+    - `checks`：是否运行了 schema/可解析性检查
+    - `checks.resolvabilityComplete`：可解析性检查是否运行完成（跳过 exec refs 时为 false）
+    - `refsChecked`：dry-run 期间实际解析的 refs 数量
     - `skippedExecRefs`：因未设置 `--allow-exec` 而跳过的 exec refs 数量
-    - `errors`：当 `ok=false` 时的结构化架构/可解析性失败信息
+    - `errors`：当 `ok=false` 时结构化的缺失路径、schema 或可解析性失败信息
 
   </Accordion>
 </AccordionGroup>
@@ -344,7 +344,7 @@ openclaw config set channels.discord.token \
   ok: boolean,
   operations: number,
   configPath: string,
-  inputModes: ["value" | "json" | "builder", ...],
+  inputModes: ["value" | "json" | "builder" | "unset", ...],
   checks: {
     schema: boolean,
     resolvability: boolean,
@@ -354,7 +354,7 @@ openclaw config set channels.discord.token \
   skippedExecRefs: number,
   errors?: [
     {
-      kind: "schema" | "resolvability",
+      kind: "missing-path" | "schema" | "resolvability",
       message: string,
       ref?: string, // present for resolvability errors
     },

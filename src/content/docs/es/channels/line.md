@@ -38,9 +38,9 @@ openclaw plugins install ./path/to/local/line-plugin
 https://gateway-host/line/webhook
 ```
 
-La puerta de enlace responde a la verificación de webhook de LINE (GET) y a los eventos entrantes (POST).
-Si necesita una ruta personalizada, establezca `channels.line.webhookPath` o
-`channels.line.accounts.<id>.webhookPath` y actualice la URL en consecuencia.
+La puerta de enlace responde a la verificación del webhook de LINE (GET) y reconoce los eventos entrantes firmados (POST) inmediatamente después de la validación de la firma y el payload; el procesamiento del agente continúa de forma asincrónica.
+Si necesitas una ruta personalizada, establece `channels.line.webhookPath` o
+`channels.line.accounts.<id>.webhookPath` y actualiza la URL en consecuencia.
 
 Nota de seguridad:
 

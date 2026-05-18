@@ -16,13 +16,13 @@ de runners Docker. Ce document est un guide "comment nous testons" :
 - Comment ajouter des régressions pour les problèmes réels de modèles/providers.
 
 <Note>
-**QA stack (qa-lab, qa-channel, live transport lanes)** est documenté séparément :
+**Pile QA (qa-lab, qa-channel, live transport lanes)** est documentée séparément :
 
-- [Aperçu QA](/fr/concepts/qa-e2e-automation) - architecture, surface de commande, création de scénarios.
+- [Aperçu QA](/fr/concepts/qa-e2e-automation) - architecture, surface de commande, rédaction de scénarios.
 - [Matrix QA](/fr/concepts/qa-matrix) - référence pour `pnpm openclaw qa matrix`.
-- [QA channel](/fr/channels/qa-channel) - le plugin de transport synthétique utilisé par les scénarios basés sur le dépôt.
+- [Channel QA](/fr/channels/qa-channel) - le plugin de transport synthétique utilisé par les scénarios basés sur le dépôt.
 
-Cette page couvre l'exécution des suites de tests régulières et des exécuteurs Docker/Parallels. La section sur les exécuteurs spécifiques QA ci-dessous ([Exécuteurs spécifiques QA](#qa-specific-runners)) répertorie les invocations concrètes `qa` et fait référence aux documents ci-dessus.
+Cette page couvre l'exécution des suites de tests régulières et des runners Docker/Parallels. La section sur les runners spécifiques QA ci-dessous ([QA-specific runners](#qa-specific-runners)) liste les invocations concrètes de `qa` et pointe vers les références ci-dessus.
 
 </Note>
 
@@ -280,7 +280,7 @@ gh workflow run package-acceptance.yml --ref main \
   - Démarre uniquement le serveur de fournisseur AIMock local pour le test de fumée direct du protocole.
 - `pnpm openclaw qa matrix`
   - Exécute la voie QA Matrix en direct sur un serveur domestique Tuwunel éphémère soutenu par MatrixDocker. Source-checkout uniquement - les installations empaquetées n'incluent pas `qa-lab`.
-  - CLI complet, catalogue de profils/scénarios, env vars et structure des artefacts : [Matrix QA](/fr/concepts/qa-matrix).
+  - CLI complet, catalogue de profils/scénarios, env vars, et structure des artefacts : [Matrix QA](/fr/concepts/qa-matrix).
 - `pnpm openclaw qa telegram`
   - Exécute la voie QA en direct Telegram contre un groupe privé réel en utilisant les jetons de bot du pilote et du SUT provenant de l'environnement.
   - Nécessite `OPENCLAW_QA_TELEGRAM_GROUP_ID`, `OPENCLAW_QA_TELEGRAM_DRIVER_BOT_TOKEN` et `OPENCLAW_QA_TELEGRAM_SUT_BOT_TOKEN`. L'identifiant de groupe doit être l'identifiant de chat numérique Telegram.
@@ -314,7 +314,7 @@ L'agent Mantis lit la PR, décide quel comportement visible sur Telegram prouve 
   - Telegram Desktop a toujours besoin d'une connexion/profil utilisateur. Le jeton de bot ne configure qu'OpenClaw. Utilisez TelegramOpenClaw`--telegram-profile-archive-env <name>` pour une archive de profil `.tgz` en base64, ou utilisez `--keep-lease` et connectez-vous manuellement via VNC une fois.
   - Écrit `mantis-telegram-desktop-builder-report.md`, `mantis-telegram-desktop-builder-summary.json`, `telegram-desktop-builder.png` et `telegram-desktop-builder.mp4` sous le répertoire de sortie.
 
-Les voies de transport en direct partagent un contrat standard afin que les nouveaux transports ne dérivent pas ; la matrice de couverture par voie se trouve dans [Aperçu QA → Couverture du transport en direct](/fr/concepts/qa-e2e-automation#live-transport-coverage). `qa-channel` est la suite synthétique large et ne fait pas partie de cette matrice.
+Les lignes de transport live partagent un contrat standard pour éviter que les nouveaux transports ne dérivent ; la matrice de couverture par ligne se trouve dans [Aperçu QA → Couverture du transport live](/fr/concepts/qa-e2e-automation#live-transport-coverage). `qa-channel` est la suite synthétique large et ne fait pas partie de cette matrice.
 
 ### Identifiants Telegram partagés via Convex (v1)
 
@@ -474,7 +474,7 @@ pour les lignes Slack.
 
 ### Ajouter un canal à la QA
 
-L'architecture et les noms des helpers de scénario pour les nouveaux adaptateurs de canal se trouvent dans [Aperçu de la QA → Ajouter un canal](/fr/concepts/qa-e2e-automation#adding-a-channel). Le minimum requis : implémenter le runner de transport sur le seam d'hôte partagé `qa-lab`, déclarer `qaRunners` dans le manifeste du plugin, monter en tant que `openclaw qa <runner>`, et rédiger des scénarios sous `qa/scenarios/`.
+L'architecture et les noms des assistants de scénario pour les nouveaux adaptateurs de channel se trouvent dans [Aperçu QA → Ajouter un channel](/fr/concepts/qa-e2e-automation#adding-a-channel). La barre minimale : implémenter le runner de transport sur le seam d'hôte partagé `qa-lab`, déclarer `qaRunners` dans le manifeste du plugin, monter en tant que `openclaw qa <runner>`, et rédiger des scénarios sous `qa/scenarios/`.
 
 ## Suites de tests (ce qui s'exécute où)
 
@@ -659,155 +659,156 @@ Politique de dépendance native :
   - Non stable pour l'CI par conception (réseaux réels, politiques réelles des providers, quotas, pannes)
   - Coûte de l'argent / utilise des limites de taux
   - Préférer l'exécution de sous-ensembles réduits plutôt que de "tout"
-- Les exécutions Live sourcent `~/.profile` pour récupérer les clés API manquantes.
-- Par défaut, les exécutions Live isolent toujours `HOME` et copient le matériel de configuration/authentification dans un répertoire personnel de test temporaire afin que les fixtures unitaires ne puissent pas modifier votre vrai `~/.openclaw`.
-- Définissez `OPENCLAW_LIVE_USE_REAL_HOME=1` uniquement lorsque vous avez intentionnellement besoin que les tests Live utilisent votre vrai répertoire personnel.
-- `pnpm test:live` est maintenant par défaut en mode plus silencieux : il conserve la sortie de progression `[live] ...`, mais supprime l'avertissement supplémentaire `~/.profile` et réduit les journaux d'amorçage de la passerelle et les bavardages Bonjour. Définissez `OPENCLAW_LIVE_TEST_QUIET=0` si vous souhaitez récupérer les journaux de démarrage complets.
-- Rotation des clés API (spécifique au provider) : définissez `*_API_KEYS` avec un format virgule/point-virgule ou `*_API_KEY_1`, `*_API_KEY_2` (par exemple `OPENAI_API_KEYS`, `ANTHROPIC_API_KEYS`, `GEMINI_API_KEYS`) ou une substitution par test via `OPENCLAW_LIVE_*_KEY` ; les tests réessayent en cas de réponse de limite de taux.
+- Les exécutions live utilisent des clés API déjà exportées et des profils d'authentification mis en attente.
+- Par défaut, les exécutions live isolent toujours `HOME` et copient le matériau de configuration/authentification dans un répertoire de test temporaire pour que les fixtures unitaires ne puissent pas modifier votre vrai `~/.openclaw`.
+- Définissez `OPENCLAW_LIVE_USE_REAL_HOME=1` uniquement lorsque vous avez intentionnellement besoin que les tests live utilisent votre vrai répertoire personnel.
+- `pnpm test:live` utilise par défaut un mode plus silencieux : il conserve la sortie de progression `[live] ...`Bonjour et désactive les journaux de démarrage de la passerelle et les bavardages Bonjour. Définissez `OPENCLAW_LIVE_TEST_QUIET=0` si vous souhaitez récupérer les journaux de démarrage complets.
+- Rotation des clés API (spécifique au provider) : définissez `*_API_KEYS` avec un format virgule/point-virgule ou `*_API_KEY_1`, `*_API_KEY_2` (par exemple `OPENAI_API_KEYS`, `ANTHROPIC_API_KEYS`, `GEMINI_API_KEYS`) ou une substitution par test live via `OPENCLAW_LIVE_*_KEY` ; les tests réessaient en cas de réponses de limitation de débit.
 - Sortie de progression/heartbeat :
   - Les suites Live émettent désormais des lignes de progression sur stderr, de sorte que les appels longs au provider sont visiblement actifs même lorsque la capture de console de Vitest est silencieuse.
-  - `vitest.live.config.ts` désactive l'interception de la console Vitest, de sorte que les lignes de progression du provider/du gateway sont diffusées immédiatement lors des exécutions en direct.
-  - Ajustez les signaux de cœur du modèle direct avec `OPENCLAW_LIVE_HEARTBEAT_MS`.
-  - Ajustez les signaux de cœur du gateway/sonde avec `OPENCLAW_LIVE_GATEWAY_HEARTBEAT_MS`.
+  - `vitest.live.config.ts` désactive l'interception de la console Vitest afin que les lignes de progression du provider/de la passerelle diffusent immédiatement pendant les exécutions en direct.
+  - Ajustez les heartbeats du model direct avec `OPENCLAW_LIVE_HEARTBEAT_MS`.
+  - Ajustez les heartbeats de la passerelle/sonde avec `OPENCLAW_LIVE_GATEWAY_HEARTBEAT_MS`.
 
 ## Quelle suite dois-je exécuter ?
 
 Utilisez ce tableau de décision :
 
-- Modification de la logique/tests : exécutez `pnpm test` (et `pnpm test:coverage` si vous avez beaucoup modifié)
-- Touching gateway networking / WS protocol / pairing: add `pnpm test:e2e`
-- Debugging "my bot is down" / provider-specific failures / tool calling: run a narrowed `pnpm test:live`
+- Modification de la logique/tests : exécutez `pnpm test` (et `pnpm test:coverage` si vous avez modifié beaucoup de choses)
+- Modification du réseau de la passerelle / du protocole WS / de l'appairage : ajoutez `pnpm test:e2e`
+- Débogage de « mon bot est en panne » / échecs spécifiques au provider / appel d'outil : exécutez un `pnpm test:live` ciblé
 
 ## Live (network-touching) tests
 
-For the live model matrix, CLI backend smokes, ACP smokes, Codex app-server
-harness, and all media-provider live tests (Deepgram, BytePlus, ComfyUI, image,
-music, video, media harness) - plus credential handling for live runs - see
-[Testing live suites](/fr/help/testing-live). For the dedicated update and
-plugin validation checklist, see
-[Testing updates and plugins](/fr/help/testing-updates-plugins).
+Pour la matrice de modèles en direct, les smokes de backend CLI, les smokes ACP, le harnais de serveur d'application Codex, et tous les tests live de média-provider (Deepgram, BytePlus, ComfyUI, image, musique, vidéo, harnais média) — ainsi que la gestion des identifiants pour les exécutions live — consultez [Testing live suites](/fr/help/testing-live). Pour la liste de contrôle dédiée à la validation des mises à jour et des plugins, consultez [Testing updates and plugins](/fr/help/testing-updates-plugins).
 
 ## Runners Docker (vérifications optionnelles "fonctionne sous Linux")
 
 Ces runners Docker sont divisés en deux catégories :
 
-- Live-model runners: `test:docker:live-models` and `test:docker:live-gateway` run only their matching profile-key live file inside the repo Docker image (`src/agents/models.profiles.live.test.ts` and `src/gateway/gateway-models.profiles.live.test.ts`), mounting your local config dir and workspace (and sourcing `~/.profile` if mounted). The matching local entrypoints are `test:live:models-profiles` and `test:live:gateway-profiles`.
-- Les runners live Docker utilisent par défaut une limite de smoke plus petite afin qu'un balayage Docker complet reste pratique :
-  `test:docker:live-models` defaults to `OPENCLAW_LIVE_MAX_MODELS=12`, and
-  `test:docker:live-gateway` defaults to `OPENCLAW_LIVE_GATEWAY_SMOKE=1`,
+- Runners de modèle en direct : `test:docker:live-models` et `test:docker:live-gateway` n'exécutent que leur fichier live correspondant à la clé de profil à l'intérieur de l'image Docker du dépôt (`src/agents/models.profiles.live.test.ts` et `src/gateway/gateway-models.profiles.live.test.ts`), en montant votre répertoire de configuration local, votre espace de travail et un fichier d'environnement de profil optionnel. Les points d'entrée locaux correspondants sont `test:live:models-profiles` et `test:live:gateway-profiles`.
+- Les runners live Docker sont par défaut limités à une petite plage de tests de fumée, afin qu'un balayage Docker complet reste praticable :
+  `test:docker:live-models` par défaut à `OPENCLAW_LIVE_MAX_MODELS=12`, et
+  `test:docker:live-gateway` par défaut à `OPENCLAW_LIVE_GATEWAY_SMOKE=1`,
   `OPENCLAW_LIVE_GATEWAY_MAX_MODELS=8`,
-  `OPENCLAW_LIVE_GATEWAY_STEP_TIMEOUT_MS=45000`, and
-  `OPENCLAW_LIVE_GATEWAY_MODEL_TIMEOUT_MS=90000`. Override those env vars when you
-  explicitly want the larger exhaustive scan.
-- `test:docker:all`Docker construit l'image Docker live une fois via `test:docker:live-build`OpenClawnpm, emballe OpenClaw une fois en tant qu'archive tar npm via `scripts/package-openclaw-for-docker.mjs`, puis construit/réutilise deux images `scripts/e2e/Dockerfile`. L'image nue est uniquement le runner Node/Git pour les voies d'installation/de mise à jour/dépendances de plugin ; ces voies montent l'archive tar préconstruite. L'image fonctionnelle installe la même archive dans `/app`Docker pour les voies de fonctionnalité d'application construite. Les définitions des voies Docker se trouvent dans `scripts/lib/docker-e2e-scenarios.mjs` ; la logique du planificateur se trouve dans `scripts/lib/docker-e2e-plan.mjs` ; `scripts/test-docker-all.mjs` exécute le plan sélectionné. L'agrégat utilise un planificateur local pondéré : `OPENCLAW_DOCKER_ALL_PARALLELISM`npm contrôle les créneaux de processus, tandis que les limites de ressources empêchent les voies lourdes, npm-install et multi-service de démarrer toutes en même temps. Si une seule voie est plus lourde que les limites actives, le planificateur peut toujours la démarrer lorsque le pool est vide, puis la faire fonctionner seule jusqu'à ce que la capacité soit à nouveau disponible. Les valeurs par défaut sont 10 créneaux, `OPENCLAW_DOCKER_ALL_LIVE_LIMIT=9`, `OPENCLAW_DOCKER_ALL_NPM_LIMIT=10` et `OPENCLAW_DOCKER_ALL_SERVICE_LIMIT=7` ; ajustez `OPENCLAW_DOCKER_ALL_WEIGHT_LIMIT` ou `OPENCLAW_DOCKER_ALL_DOCKER_LIMIT`DockerDockerOpenClaw uniquement lorsque l'hôte Docker dispose de plus de marge. Le runner effectue une vérification préalable Docker par défaut, supprime les conteneurs OpenClaw E2E obsolètes, imprime le statut toutes les 30 secondes, stocke les timings de voies réussis dans `.artifacts/docker-tests/lane-timings.json`, et utilise ces timings pour démarrer d'abord les voies plus longues lors des exécutions ultérieures. Utilisez `OPENCLAW_DOCKER_ALL_DRY_RUN=1`Docker pour imprimer le manifeste des voies pondérées sans construire ou exécuter Docker, ou `node scripts/test-docker-all.mjs --plan-json` pour imprimer le plan CI pour les voies sélectionnées, les besoins en packages/images et les identifiants.
-- `Package Acceptance` est la porte de paquets native GitHub pour « est-ce que cette archive tar installable fonctionne en tant que produit ? ». Elle résout un paquet candidat depuis `source=npm`, `source=ref`, `source=url` ou `source=artifact`, le téléverse en tant que `package-under-test`, puis exécute les voies E2E Docker réutilisables contre cette archive tar exacte au lieu de recomprimer la référence sélectionnée. Les profils sont ordonnés par portée : `smoke`, `package`, `product` et `full`. Voir [Testing updates and plugins](/fr/help/testing-updates-plugins) pour le contrat paquet/mise à jour/plugin, la matrice de survie des mises à niveau publiées, les paramètres par défaut de publication et le triage des échecs.
-- Les vérifications de build et de publication exécutent `scripts/check-cli-bootstrap-imports.mjs` après tsdown. Le garde parcourt le graphe de build statique depuis `dist/entry.js` et `dist/cli/run-main.js` et échoue si l'importation de démarrage pré-répartition importe des dépendances de paquets telles que Commander, prompt UI, undici ou logging avant la répartition des commandes ; il maintient également le bloc d'exécution de la passerelle regroupée sous le budget et rejette les importations statiques de chemins de passerelle froids connus. Le test de fumée du CLI empaqueté couvre également l'aide racine, l'aide à l'intégration, l'aide du docteur, le statut, le schéma de configuration et une commande de liste de modèles.
-- La compatibilité héritée de l'acceptation des paquets est plafonnée à `2026.4.25` (`2026.4.25-beta.*` inclus). Jusqu'à cette limite, le harnais tolère uniquement les lacunes de métadonnées des paquets expédiés : entrées d'inventaire QA privées omises, `gateway install --wrapper` manquant, fichiers de correctifs manquants dans le git dérivé de l'archive tar, `update.channel` persistants manquants, emplacements hérités des enregistrements d'installation de plugins, persistance des enregistrements d'installation de la place de marché manquante, et migration des métadonnées de configuration pendant `plugins update`. Pour les paquets après `2026.4.25`, ces chemins sont des échecs stricts.
-- Container smoke runners : `test:docker:openwebui`, `test:docker:onboard`, `test:docker:npm-onboard-channel-agent`, `test:docker:skill-install`, `test:docker:update-channel-switch`, `test:docker:upgrade-survivor`, `test:docker:published-upgrade-survivor`, `test:docker:session-runtime-context`, `test:docker:agents-delete-shared-workspace`, `test:docker:gateway-network`, `test:docker:browser-cdp-snapshot`, `test:docker:mcp-channels`, `test:docker:pi-bundle-mcp-tools`, `test:docker:cron-mcp-cleanup`, `test:docker:plugins`, `test:docker:plugin-update`, `test:docker:plugin-lifecycle-matrix` et `test:docker:config-reload` démarrent un ou plusieurs conteneurs réels et vérifient les chemins d'intégration de niveau supérieur.
+  `OPENCLAW_LIVE_GATEWAY_STEP_TIMEOUT_MS=45000`, et
+  `OPENCLAW_LIVE_GATEWAY_MODEL_TIMEOUT_MS=90000`. Modifiez ces env vars lorsque vous
+  souhaitez explicitement effectuer le balayage exhaustif plus large.
+- `test:docker:all`Docker construit l'image Docker live une fois via `test:docker:live-build`OpenClawnpm, empaquète OpenClaw une fois sous forme d'archive tarball npm via `scripts/package-openclaw-for-docker.mjs`, puis construit/réutilise deux images `scripts/e2e/Dockerfile`. L'image bare ne contient que le lanceur Node/Git pour les voies d'installation/de mise à jour/de dépendances de plugins ; ces voies montent l'archive préconstruite. L'image fonctionnelle installe la même archive dans `/app`Docker pour les voies de fonctionnalité de l'application construite. Les définitions des voies Docker résident dans `scripts/lib/docker-e2e-scenarios.mjs` ; la logique du planificateur réside dans `scripts/lib/docker-e2e-plan.mjs` ; `scripts/test-docker-all.mjs` exécute le plan sélectionné. L'agrégat utilise un ordonnanceur local pondéré : `OPENCLAW_DOCKER_ALL_PARALLELISM`npm contrôle les créneaux de processus, tandis que les plafonds de ressources empêchent les voies lourdes live, npm-install et multi-service de démarrer toutes en même temps. Si une voie unique est plus lourde que les plafonds actifs, l'ordonnanceur peut tout de même la démarrer lorsque le pool est vide, puis la maintenir en cours d'exécution seule jusqu'à ce que la capacité soit à nouveau disponible. Les valeurs par défaut sont 10 créneaux, `OPENCLAW_DOCKER_ALL_LIVE_LIMIT=9`, `OPENCLAW_DOCKER_ALL_NPM_LIMIT=10` et `OPENCLAW_DOCKER_ALL_SERVICE_LIMIT=7` ; ajustez `OPENCLAW_DOCKER_ALL_WEIGHT_LIMIT` ou `OPENCLAW_DOCKER_ALL_DOCKER_LIMIT`DockerDockerOpenClaw uniquement lorsque l'hôte Docker dispose d'une plus grande marge de manœuvre. Le lanceur effectue une pré-vérification Docker par défaut, supprime les conteneurs OpenClaw E2E périmés, imprime le statut toutes les 30 secondes, stocke les durées de voie réussies dans `.artifacts/docker-tests/lane-timings.json` et utilise ces durées pour démarrer d'abord les voies les plus longues lors des exécutions ultérieures. Utilisez `OPENCLAW_DOCKER_ALL_DRY_RUN=1`Docker pour imprimer le manifeste des voies pondérées sans construire ni exécuter Docker, ou `node scripts/test-docker-all.mjs --plan-json` pour imprimer le plan CI pour les voies sélectionnées, les besoins en packages/images et les informations d'identification.
+- `Package Acceptance` est la passerelle de paquet native GitHub pour « est-ce que cette archive tar installable fonctionne en tant que produit ? ». Elle résout un paquet candidat parmi `source=npm`, `source=ref`, `source=url` ou `source=artifact`, le télécharge sous forme de `package-under-test`, puis exécute les voies E2E Docker réutilisables sur cette archive tar exacte au lieu de réempaqueter la référence sélectionnée. Les profils sont ordonnés par portée : `smoke`, `package`, `product` et `full`. Consultez [Testing updates and plugins](/fr/help/testing-updates-plugins) pour le contrat paquet/mise à jour/plugin, la matrice de survie des mises à niveau publiées, les valeurs par défaut de version et le triage des échecs.
+- Les vérifications de build et de version exécutent `scripts/check-cli-bootstrap-imports.mjs` après tsdown. Le garde parcourt le graphe de build statique à partir de `dist/entry.js` et `dist/cli/run-main.js` et échoue si l'importation de démarrage avant répartition importe des dépendances de paquet telles que Commander, l'interface utilisateur d'invite, undici ou la journalisation avant la répartition des commandes ; il maintient également le segment d'exécution de la passerelle regroupée sous le budget et rejette les importations statiques de chemins de passerelle froids connus. Le test de fumée du CLI empaqueté couvre également l'aide racine, l'aide à l'intégration, l'aide du docteur, l'état, le schéma de configuration et une commande model-list.
+- La compatibilité héritée de l'acceptation des paquets est plafonnée à `2026.4.25` (`2026.4.25-beta.*` incluse). Jusqu'à cette limite, le harnais tolère uniquement les lacunes de métadonnées des paquets expédiés : entrées d'inventaire QA privées omises, `gateway install --wrapper` manquant, fichiers de correctifs manquants dans le fixture git dérivé de l'archive tar, `update.channel` persistant manquant, emplacements des enregistrements d'installation de plugins hérités, persistance des enregistrements d'installation du marketplace manquante et migration des métadonnées de configuration pendant `plugins update`. Pour les paquets après `2026.4.25`, ces chemins sont des échecs stricts.
+- Container smoke runners : `test:docker:openwebui`, `test:docker:onboard`, `test:docker:npm-onboard-channel-agent`, `test:docker:release-user-journey`, `test:docker:release-typed-onboarding`, `test:docker:release-media-memory`, `test:docker:release-upgrade-user-journey`, `test:docker:release-plugin-marketplace`, `test:docker:skill-install`, `test:docker:update-channel-switch`, `test:docker:upgrade-survivor`, `test:docker:published-upgrade-survivor`, `test:docker:session-runtime-context`, `test:docker:agents-delete-shared-workspace`, `test:docker:gateway-network`, `test:docker:browser-cdp-snapshot`, `test:docker:mcp-channels`, `test:docker:pi-bundle-mcp-tools`, `test:docker:cron-mcp-cleanup`, `test:docker:plugins`, `test:docker:plugin-update`, `test:docker:plugin-lifecycle-matrix` et `test:docker:config-reload` démarrent un ou plusieurs conteneurs réels et vérifient les chemins d'intégration de niveau supérieur.
 
 Les runners Docker live-model montent également par liaison uniquement les répertoires d'authentification DockerCLICLI nécessaires (ou tous ceux pris en charge lorsque l'exécution n'est pas restreinte), puis les copient dans le répertoire personnel du conteneur avant l'exécution afin que l'OAuth externe puisse actualiser les jetons sans modifier le magasin d'authentification de l'hôte :
 
 - Modèles directs : `pnpm test:docker:live-models` (script : `scripts/test-live-models-docker.sh`)
-- ACP bind smoke : `pnpm test:docker:live-acp-bind` (script : `scripts/test-live-acp-bind-docker.sh` ; couvre Claude, Codex et Gemini par défaut, avec une couverture stricte de Droid/OpenCode via `pnpm test:docker:live-acp-bind:droid` et `pnpm test:docker:live-acp-bind:opencode`)
+- ACP bind smoke : `pnpm test:docker:live-acp-bind` (script : `scripts/test-live-acp-bind-docker.sh` ; couvre Claude, Codex et Gemini par défaut, avec une couverture stricte Droid/OpenCode via `pnpm test:docker:live-acp-bind:droid` et `pnpm test:docker:live-acp-bind:opencode`)
 - CLI backend smoke : CLI`pnpm test:docker:live-cli-backend` (script : `scripts/test-live-cli-backend-docker.sh`)
 - Codex app-server harness smoke : `pnpm test:docker:live-codex-harness` (script : `scripts/test-live-codex-harness-docker.sh`)
 - Gateway + dev agent : Gateway`pnpm test:docker:live-gateway` (script : `scripts/test-live-gateway-models-docker.sh`)
-- Observability smoke : `pnpm qa:otel:smoke` est une voie privée de checkout source QA. Elle n'est intentionnellement pas incluse dans les voies de publication de package Docker car l'archive tar npm omet le QA Lab.
+- Observability smoke : `pnpm qa:otel:smoke`Dockernpm est une voie privée de checkout source QA. Il ne fait pas intentionnellement partie des voies de publication Docker du package car l'archive npm omet QA Lab.
 - Open WebUI live smoke : `pnpm test:docker:openwebui` (script : `scripts/e2e/openwebui-docker.sh`)
 - Assistant d'intégration (TTY, échafaudage complet) : `pnpm test:docker:onboard` (script : `scripts/e2e/onboard-docker.sh`)
-- Test de fumée onboarding/channel/agent de tarball Npm : `pnpm test:docker:npm-onboard-channel-agent` installe la tarball OpenClaw empaquetée globalement dans Docker, configure OpenAI via env-ref onboarding ainsi que Telegram par défaut, exécute doctor, et exécute un tour d'agent OpenAI simulé. Réutilisez une tarball préconstruite avec `OPENCLAW_CURRENT_PACKAGE_TGZ=/path/to/openclaw-*.tgz`, sautez la reconstruction de l'hôte avec `OPENCLAW_NPM_ONBOARD_HOST_BUILD=0`, ou changez de channel avec `OPENCLAW_NPM_ONBOARD_CHANNEL=discord` ou `OPENCLAW_NPM_ONBOARD_CHANNEL=slack`.
-- Test de fumée d'installation de compétence : `pnpm test:docker:skill-install` installe la tarball OpenClaw empaquetée globalement dans Docker, désactive les installations d'archive téléchargées dans la configuration, résout le slug de compétence ClawHub actif actuel à partir de la recherche, l'installe avec `openclaw skills install`, et vérifie la compétence installée ainsi que les métadonnées d'origine/verrouillage `.clawhub`.
-- Test de fumée de changement de channel de mise à jour : `pnpm test:docker:update-channel-switch` installe la tarball OpenClaw empaquetée globalement dans Docker, passe du package `stable` à git `dev`, vérifie le channel persisté et le fonctionnement du plugin après mise à jour, puis repasse au package `stable` et vérifie l'état de la mise à jour.
-- Test de fumée de survie de mise à niveau : `pnpm test:docker:upgrade-survivor` installe la tarball OpenClaw empaquetée sur un appareil d'ancien utilisateur sale avec des agents, une configuration de channel, des listes d'autorisation de plugins, un état de dépendance de plugin obsolète, et des fichiers d'espace de travail/session existants. Il exécute la mise à jour du package ainsi que le doctor non interactif sans clés de provider ou de channel actif, puis démarre un Gateway en boucle et vérifie la préservation de la configuration/de l'état ainsi que les budgets de démarrage/statut.
-- Survivor de mise à niveau publiée : `pnpm test:docker:published-upgrade-survivor` installe `openclaw@latest` par défaut, sème des fichiers réalistes d'utilisateur existant, configure cette ligne de base avec une recette de commande intégrée, valide la configuration résultante, met à jour cette installation publiée vers l'archive tar candidate, exécute le doctor en mode non interactif, écrit `.artifacts/upgrade-survivor/summary.json`Gateway, puis démarre un Gateway en boucle et vérifie les intentions configurées, la préservation de l'état, le démarrage, `/healthz`, `/readyz`RPC, et les budgets de statut RPC. Remplacez une ligne de base par `OPENCLAW_UPGRADE_SURVIVOR_BASELINE_SPEC`, demandez au planificateur agrégé d'étendre les lignes de base locales exactes avec `OPENCLAW_UPGRADE_SURVIVOR_BASELINE_SPECS` telles que `openclaw@2026.5.2 openclaw@2026.4.23 openclaw@2026.4.15`, et étendez les fixtures en forme de ticket avec `OPENCLAW_UPGRADE_SURVIVOR_SCENARIOS` telles que `reported-issues` ; l'ensemble des tickets signalés inclut `configured-plugin-installs`OpenClaw pour la réparation automatique de l'installation du plugin externe OpenClaw. L'acceptation de package expose ceux-ci en tant que `published_upgrade_survivor_baseline`, `published_upgrade_survivor_baselines` et `published_upgrade_survivor_scenarios`, résout les jetons de méta-ligne de base tels que `last-stable-4` ou `all-since-2026.4.23`, et la validation complète de release étend la porte de package de trempage de release à `last-stable-4 2026.4.23 2026.5.2 2026.4.15` plus `reported-issues`.
-- Survie du contexte d'exécution de session : `pnpm test:docker:session-runtime-context` vérifie la persistance de la transcription du contexte d'exécution caché ainsi que la réparation par doctor des branches de réécriture de prompt dupliquées affectées.
-- Survie de l'installation globale Bun : Bun`bash scripts/e2e/bun-global-install-smoke.sh` empaquète l'arborescence actuelle, l'installe avec `bun install -g` dans un répertoire personnel isolé, et vérifie que `openclaw infer image providers --json` renvoie les fournisseurs d'images groupés au lieu de bloquer. Réutilisez une archive tar préconstruite avec `OPENCLAW_BUN_GLOBAL_SMOKE_PACKAGE_TGZ=/path/to/openclaw-*.tgz`, sautez la construction de l'hôte avec `OPENCLAW_BUN_GLOBAL_SMOKE_HOST_BUILD=0`, ou copiez `dist/`Docker depuis une image Docker construite avec `OPENCLAW_BUN_GLOBAL_SMOKE_DIST_IMAGE=openclaw-dockerfile-smoke:local`.
-- Test de fumée de l'installeur Docker : Docker`bash scripts/test-install-sh-docker.sh`npmnpmnpm partage un cache npm entre ses conteneurs racine, update et direct-npm. Le test de fumée de mise à jour utilise par défaut npm `latest` comme base stable avant de passer à l'archive candidate. Remplacez-le par `OPENCLAW_INSTALL_SMOKE_UPDATE_BASELINE=2026.4.22` en local, ou avec l'entrée `update_baseline_version`GitHubnpm du workflow Install Smoke sur GitHub. Les vérifications de l'installeur non root maintiennent un cache npm isolé afin que les entrées de cache appartenant au root ne masquent pas le comportement d'installation local à l'utilisateur. Définissez `OPENCLAW_INSTALL_SMOKE_NPM_CACHE_DIR=/path/to/cache`npm pour réutiliser le cache root/update/direct-npm lors des exécutions locales répétées.
-- La CI Install Smoke ignore la mise à jour globale direct-npm en double avec npm`OPENCLAW_INSTALL_SMOKE_SKIP_NPM_GLOBAL=1` ; exécutez le script localement sans cette variable d'environnement lorsque la couverture directe `npm install -g` est nécessaire.
-- Test de fumée CLI de suppression d'espace de travail partagé par les agents : CLI`pnpm test:docker:agents-delete-shared-workspace` (script : `scripts/e2e/agents-delete-shared-workspace-docker.sh`) construit par défaut l'image du Dockerfile racine, initialise deux agents avec un espace de travail dans un répertoire home de conteneur isolé, exécute `agents delete --json`, et vérifie le JSON valide ainsi que le comportement de l'espace de travail conservé. Réutilisez l'image install-smoke avec `OPENCLAW_AGENTS_DELETE_SHARED_WORKSPACE_E2E_IMAGE=openclaw-dockerfile-smoke:local OPENCLAW_AGENTS_DELETE_SHARED_WORKSPACE_E2E_SKIP_BUILD=1`.
-- Réseau Gateway (deux conteneurs, auth WS + santé) : Gateway`pnpm test:docker:gateway-network` (script : `scripts/e2e/gateway-network-docker.sh`)
-- Test de fumée de snapshot CDP du navigateur : `pnpm test:docker:browser-cdp-snapshot` (script : `scripts/e2e/browser-cdp-snapshot-docker.sh`) construit l'image E2E source plus une couche Chromium, démarre Chromium avec CDP brut, exécute `browser doctor --deep`, et vérifie que les snapshots de rôle CDP couvrent les URL des liens, les éléments cliquables promus par le curseur, les références iframe et les métadonnées de frame.
-- Régression de raisonnement minimal web_search des réponses OpenAI : OpenAI`pnpm test:docker:openai-web-search-minimal` (script : `scripts/e2e/openai-web-search-minimal-docker.sh`OpenAIGateway) exécute un serveur OpenAI simulé via le Gateway, vérifie que `web_search` déclenche `reasoning.effort` de `minimal` à `low`Gateway, force ensuite le rejet du schéma du provider et vérifie que les détails bruts apparaissent dans les journaux du Gateway.
-- Pont de channel MCP (Gateway initialisé + pont stdio + test de fumée du cadre de notification brute de Claude) : Gateway`pnpm test:docker:mcp-channels` (script : `scripts/e2e/mcp-channels-docker.sh`)
-- Outils MCP du bundle Pi (serveur MCP stdio réel + test de fumée d'autorisation/refus du profil Pi intégré) : `pnpm test:docker:pi-bundle-mcp-tools` (script : `scripts/e2e/pi-bundle-mcp-tools-docker.sh`)
-- Nettoyage MCP Cron/subagent (Gateway réel + démontage de l'enfant MCP stdio après des tâches cron isolées et des exécutions de sous-agent ponctuelles) : Gateway`pnpm test:docker:cron-mcp-cleanup` (script : `scripts/e2e/cron-mcp-cleanup-docker.sh`)
-- Plugins (test de fumée d'installation/mise à jour pour le chemin local, `file:`npmClawHub, le registre npm avec des dépendances hissées, les références git mouvantes, le kitchen-sink ClawHub, les mises à jour de la place de marché, et l'activation/inspection du bundle Claude) : `pnpm test:docker:plugins` (script : `scripts/e2e/plugins-docker.sh`)
-  Définissez `OPENCLAW_PLUGINS_E2E_CLAWHUB=0`ClawHub pour ignorer le bloc ClawHub, ou remplacez la paire paquet/runtime par défaut du kitchen-sink par `OPENCLAW_PLUGINS_E2E_CLAWHUB_SPEC` et `OPENCLAW_PLUGINS_E2E_CLAWHUB_ID`. Sans `OPENCLAW_CLAWHUB_URL`/`CLAWHUB_URL`ClawHub, le test utilise un serveur de fixture ClawHub local hermétique.
-- Test de fumée de mise à jour de plugin inchangée : `pnpm test:docker:plugin-update` (script : `scripts/e2e/plugin-update-unchanged-docker.sh`)
-- Plugin lifecycle matrix smoke: `pnpm test:docker:plugin-lifecycle-matrix`OpenClawnpmnpm installe l'archive tar d'OpenClaw empaquetée dans un conteneur nu, installe un plugin npm, active/désactive, effectue des mises à niveau et des rétrogradations via un registre npm local, supprime le code installé, puis vérifie que la désinstallation supprime toujours l'état obsolète tout en consignant les métriques RSS/CPU pour chaque phase du cycle de vie.
-- Config reload metadata smoke: `pnpm test:docker:config-reload` (script : `scripts/e2e/config-reload-source-docker.sh`)
-- Plugins : `pnpm test:docker:plugins` couvre le smoke test d'installation/de mise à jour pour le chemin local, `file:`npmClawHub, le registre npm avec dépendances hissées, les références git mobiles, les fixtures ClawHub, les mises à jour de la marketplace et l'activation/inspection des bundles Claude. `pnpm test:docker:plugin-update` couvre le comportement de mise à jour inchangée pour les plugins installés. `pnpm test:docker:plugin-lifecycle-matrix`npm couvre l'installation, l'activation, la désactivation, la mise à niveau, la rétrogradation et la désinstallation de code manquant pour les plugins npm suivis en tant que ressources.
+- Test de fumée d'intégration/onboarding/channel/agent de tarball Npm : `pnpm test:docker:npm-onboard-channel-agent`OpenClawDockerOpenAITelegramOpenAI installe la tarball OpenClaw empaquetée globalement dans Docker, configure OpenAI via env-ref onboarding plus Telegram par défaut, exécute doctor, et exécute un tour d'agent OpenAI simulé. Réutilisez une tarball préconstruite avec `OPENCLAW_CURRENT_PACKAGE_TGZ=/path/to/openclaw-*.tgz`, sautez la reconstruction de l'hôte avec `OPENCLAW_NPM_ONBOARD_HOST_BUILD=0`, ou changez de channel avec `OPENCLAW_NPM_ONBOARD_CHANNEL=discord` ou `OPENCLAW_NPM_ONBOARD_CHANNEL=slack`.
 
-Pour préconstruire et réutiliser manuellement l'image fonctionnelle partagée :
+- Test de fumée du parcours utilisateur de version : `pnpm test:docker:release-user-journey`OpenClawDockerOpenAIGateway installe la tarball OpenClaw empaquetée globalement dans un domicile Docker propre, exécute l'intégration (onboarding), configure un provider OpenAI simulé, exécute un tour d'agent, installe/désinstalle des plugins externes, configure ClickClack contre un fixture local, vérifie la messagerie sortante/entrante, redémarre Gateway, et exécute doctor.
+- Test de fumée d'intégration typée de version : `pnpm test:docker:release-typed-onboarding` installe la tarball empaquetée, pilote `openclaw onboard`OpenAI via un vrai TTY, configure OpenAI en tant que provider env-ref, vérifie l'absence de persistance de clé brute, et exécute un tour d'agent simulé.
+- Test de fumée média/mémoire de version : `pnpm test:docker:release-media-memory`OpenAIGateway installe la tarball empaquetée, vérifie la compréhension d'image depuis une pièce jointe PNG, la sortie de génération d'image compatible OpenAI, le rappel de recherche mémoire, et la survie du rappel après le redémarrage de Gateway.
+- Test de fumée du parcours utilisateur de mise à niveau de version : `pnpm test:docker:release-upgrade-user-journey` installe `openclaw@latest` par défaut, configure l'état provider/plugin/ClickClack sur le package publié, met à niveau vers la tarball candidate, puis réexécute le parcours cœur agent/plugin/channel. Remplacez la ligne de base avec `OPENCLAW_RELEASE_UPGRADE_BASELINE_SPEC=openclaw@<version>`.
+- Test de fumée de la place de marché de plugins de version : `pnpm test:docker:release-plugin-marketplace`CLI installe depuis une place de marché de fixture locale, met à jour le plugin installé, le désinstalle, et vérifie que le CLI du plugin disparaît avec les métadonnées d'installation élaguées.
+- Skill install smoke : `pnpm test:docker:skill-install` installe l'archive tar OpenClaw empaquetée globalement dans Docker, désactive les installations d'archives téléchargées dans la configuration, résout le slug de compétence live actuel ClawHub à partir de la recherche, l'installe avec `openclaw skills install` et vérifie la compétence installée ainsi que les métadonnées d'origine/verrouillage `.clawhub`.
+- Update channel switch smoke : `pnpm test:docker:update-channel-switch` installe l'archive tar OpenClaw empaquetée globalement dans Docker, passe du paquet `stable` à git `dev`, vérifie le channel persistant et le fonctionnement du plugin après la mise à jour, puis repasse au paquet `stable` et vérifie le statut de mise à jour.
+- Upgrade survivor smoke : `pnpm test:docker:upgrade-survivor` installe l'archive tar OpenClaw empaquetée sur un appareil d'ancien utilisateur sale avec des agents, une configuration de channel, des listes autorisées de plugins, un état obsolète des dépendances de plugins et des fichiers d'espace de travail/session existants. Il exécute la mise à jour du paquet ainsi qu'un médecin non interactif sans clés de provider ou de channel live, puis démarre un Gateway en boucle et vérifie la préservation de la configuration/de l'état ainsi que les budgets de démarrage/statut.
+- Published upgrade survivor smoke : `pnpm test:docker:published-upgrade-survivor` installe `openclaw@latest` par défaut, initialise des fichiers d'utilisateur existants réalistes, configure cette base de référence avec une commande de recette intégrée, valide la configuration résultante, met à jour cette installation publiée vers l'archive tar candidate, exécute le doctor en mode non interactif, écrit `.artifacts/upgrade-survivor/summary.json`Gateway, puis démarre un Gateway en boucle et vérifie les intents configurés, la préservation de l'état, le démarrage, `/healthz`, `/readyz`RPC et les budgets d'état RPC. Remplacez une base de référence par `OPENCLAW_UPGRADE_SURVIVOR_BASELINE_SPEC`, demandez au planificateur agrégé d'étendre les bases de référence locales exactes avec `OPENCLAW_UPGRADE_SURVIVOR_BASELINE_SPECS` telles que `openclaw@2026.5.2 openclaw@2026.4.23 openclaw@2026.4.15`, et étendez les fixtures de type issue avec `OPENCLAW_UPGRADE_SURVIVOR_SCENARIOS` telles que `reported-issues` ; l'ensemble des problèmes signalés comprend `configured-plugin-installs`OpenClaw pour la réparation automatique de l'installation du plugin externe OpenClaw. Package Acceptance expose ceux-ci comme `published_upgrade_survivor_baseline`, `published_upgrade_survivor_baselines` et `published_upgrade_survivor_scenarios`, résout les jetons de méta-base de référence tels que `last-stable-4` ou `all-since-2026.4.23`, et Full Release Validation étend la porte de package release-soak à `last-stable-4 2026.4.23 2026.5.2 2026.4.15` plus `reported-issues`.
+- Session runtime context smoke : `pnpm test:docker:session-runtime-context` vérifie la persistance de la transcription du contexte d'exécution caché ainsi que la réparation par le doctor des branches de réécriture de prompt dupliquées affectées.
+- Bun global install smoke : Bun`bash scripts/e2e/bun-global-install-smoke.sh` empaquette l'arborescence actuelle, l'installe avec `bun install -g` dans un répertoire personnel isolé, et vérifie que `openclaw infer image providers --json` renvoie les fournisseurs d'images groupés au lieu de bloquer. Réutilisez une archive tar préconstruite avec `OPENCLAW_BUN_GLOBAL_SMOKE_PACKAGE_TGZ=/path/to/openclaw-*.tgz`, sautez la construction de l'hôte avec `OPENCLAW_BUN_GLOBAL_SMOKE_HOST_BUILD=0`, ou copiez `dist/`Docker depuis une image Docker construite avec `OPENCLAW_BUN_GLOBAL_SMOKE_DIST_IMAGE=openclaw-dockerfile-smoke:local`.
+- Docker d'installation de smoke : Docker`bash scripts/test-install-sh-docker.sh`npmnpm partage un cache npm entre ses conteneurs racine, update et direct-npm. Le smoke de mise à jour utilise par défaut npm `latest` comme base stable avant de passer à l'archive candidate. Remplacez-le par `OPENCLAW_INSTALL_SMOKE_UPDATE_BASELINE=2026.4.22` en local, ou avec l'entrée `update_baseline_version` du workflow Install Smoke sur GitHubnpm. Les vérifications de l'installateur non-root conservent un cache npm isolé pour que les entrées de cache détenues par root ne masquent pas le comportement d'installation local à l'utilisateur. Définissez `OPENCLAW_INSTALL_SMOKE_NPM_CACHE_DIR=/path/to/cache`npm pour réutiliser le cache root/update/direct-npm lors des exécutions locales successives.
+- Le CI Install Smoke ignore la mise à jour globale direct-npm en double avec npm`OPENCLAW_INSTALL_SMOKE_SKIP_NPM_GLOBAL=1` ; exécutez le script localement sans cet environnement lorsqu'une couverture directe `npm install -g` est nécessaire.
+- Les agents suppriment le smoke de l'espace de travail partagé CLI : `pnpm test:docker:agents-delete-shared-workspace` (script : `scripts/e2e/agents-delete-shared-workspace-docker.sh`) construit par défaut l'image Dockerfile racine, ensemence deux agents avec un espace de travail dans un répertoire conteneur isolé, exécute `agents delete --json` et vérifie le JSON valide ainsi que le comportement de l'espace de travail conservé. Réutilisez l'image install-smoke avec `OPENCLAW_AGENTS_DELETE_SHARED_WORKSPACE_E2E_IMAGE=openclaw-dockerfile-smoke:local OPENCLAW_AGENTS_DELETE_SHARED_WORKSPACE_E2E_SKIP_BUILD=1`.
+- Mise en réseau du Gateway (deux conteneurs, auth WS + santé) : `pnpm test:docker:gateway-network` (script : `scripts/e2e/gateway-network-docker.sh`)
+- Smoke de snapshot CDP du navigateur : `pnpm test:docker:browser-cdp-snapshot` (script : `scripts/e2e/browser-cdp-snapshot-docker.sh`) construit l'image E2E source plus une couche Chromium, démarre Chromium avec du CDP brut, exécute `browser doctor --deep` et vérifie que les snapshots de rôle CDP couvrent les URLs des liens, les éléments cliquables promus par le curseur, les références iframe et les métadonnées de frame.
+- Régression de raisonnement minimal web_search des réponses OpenAI : OpenAI`pnpm test:docker:openai-web-search-minimal` (script : `scripts/e2e/openai-web-search-minimal-docker.sh`OpenAIGateway) exécute un serveur OpenAI simulé via Gateway, vérifie que `web_search` déclenche `reasoning.effort` de `minimal` à `low`Gateway, puis force le rejet du schéma du provider et vérifie que les détails bruts apparaissent dans les logs de Gateway.
+- Pont de channel MCP (Gateway amorcée + pont stdio + test de fumée des trames de notification Claude brutes) : Gateway`pnpm test:docker:mcp-channels` (script : `scripts/e2e/mcp-channels-docker.sh`)
+- Outils MCP groupés Pi (serveur MCP stdio réel + test de fumée d'autorisation/refus du profil Pi intégré) : `pnpm test:docker:pi-bundle-mcp-tools` (script : `scripts/e2e/pi-bundle-mcp-tools-docker.sh`)
+- Nettoyage MCP Cron/subagent (Gateway réel + démontage de l'enfant MCP stdio après des exécutions cron isolées et des sous-agents ponctuels) : Gateway`pnpm test:docker:cron-mcp-cleanup` (script : `scripts/e2e/cron-mcp-cleanup-docker.sh`)
+- Plugins (test de fumée d'installation/mise à jour pour le chemin local, `file:`npmnpmClawHub, le registre npm avec les dépendances hissées, les métadonnées de package npm malformées, les références git mobiles, ClawHub fourre-tout, les mises à jour du marketplace, et l'activation/inspection du groupement Claude) : `pnpm test:docker:plugins` (script : `scripts/e2e/plugins-docker.sh`)
+  Définissez `OPENCLAW_PLUGINS_E2E_CLAWHUB=0`ClawHub pour ignorer le bloc ClawHub, ou remplacez la paire par défaut de package/runtime fourre-tout par `OPENCLAW_PLUGINS_E2E_CLAWHUB_SPEC` et `OPENCLAW_PLUGINS_E2E_CLAWHUB_ID`. Sans `OPENCLAW_CLAWHUB_URL`/`CLAWHUB_URL`ClawHub, le test utilise un serveur de fixture local hermétique ClawHub.
+- Test de fumée de mise à jour de plugin inchangée : `pnpm test:docker:plugin-update` (script : `scripts/e2e/plugin-update-unchanged-docker.sh`)
+- Plugin lifecycle matrix smoke: `pnpm test:docker:plugin-lifecycle-matrix`OpenClawnpmnpm installe l'archive tar OpenClaw compressée dans un conteneur nu, installe un plugin npm, active/désactive, effectue des mises à niveau et des régressions via un registre npm local, supprime le code installé, puis vérifie que la désinstallation supprime toujours l'état obsolète tout en consignant les métriques RSS/CPU pour chaque phase du cycle de vie.
+- Config reload metadata smoke: `pnpm test:docker:config-reload` (script: `scripts/e2e/config-reload-source-docker.sh`)
+- Plugins: `pnpm test:docker:plugins` couvre le smoke test d'installation/de mise à jour pour le chemin local, `file:`npmClawHub, le registre npm avec des dépendances hissées, les refs git mobiles, les fixtures ClawHub, les mises à jour du marketplace et l'activation/inspection du bundle Claude. `pnpm test:docker:plugin-update` couvre le comportement de mise à jour inchangée pour les plugins installés. `pnpm test:docker:plugin-lifecycle-matrix`npm couvre l'installation, l'activation, la désactivation, la mise à niveau, la régression et la désinstallation de code manquant des plugins npm suivis par les ressources.
+
+Pour précompiler et réutiliser manuellement l'image fonctionnelle partagée :
 
 ```bash
 OPENCLAW_DOCKER_E2E_IMAGE=openclaw-docker-e2e-functional:local pnpm test:docker:e2e-build
 OPENCLAW_DOCKER_E2E_IMAGE=openclaw-docker-e2e-functional:local OPENCLAW_SKIP_DOCKER_BUILD=1 pnpm test:docker:mcp-channels
 ```
 
-Les redéfinitions d'image spécifiques aux suites, telles que `OPENCLAW_GATEWAY_NETWORK_E2E_IMAGE`, priment toujours lorsqu'elles sont définies. Lorsque `OPENCLAW_SKIP_DOCKER_BUILD=1`Docker pointe vers une image partagée distante, les scripts la tirent si elle n'est pas déjà locale. Les tests Docker QR et d'installation conservent leurs propres Dockerfiles car ils valident le comportement de package/d'installation plutôt que le runtime de l'application construite partagée.
+Les remplacements d'image spécifiques aux suites tels que `OPENCLAW_GATEWAY_NETWORK_E2E_IMAGE` priment toujours lorsqu'ils sont définis. Lorsque `OPENCLAW_SKIP_DOCKER_BUILD=1`Docker pointe vers une image partagée distante, les scripts la tirent si elle n'est pas déjà locale. Les tests Docker du QR et de l'installeur conservent leurs propres Dockerfiles car ils valident le comportement du package/de l'installation plutôt que le temps d'exécution de l'application construite partagée.
 
-Les exécuteurs Docker de modèle live montent également en liaison l'extraction actuelle en lecture seule et la mettent en scène dans un répertoire de travail temporaire à l'intérieur du conteneur. Cela permet de garder l'image d'exécution légère tout en exécutant Vitest par rapport à votre source/configuration locale exacte. L'étape de mise en scène ignore les caches locaux volumineux et les sorties de construction de l'application tels que Docker`.pnpm-store`, `.worktrees`, `__openclaw_vitest__`Docker`.build`, et les répertoires de sortie Gradle locaux à l'application afin que les exécutions Docker live ne passent pas des minutes à copier des artefacts spécifiques à la machine. Ils définissent également `OPENCLAW_SKIP_CHANNELS=1`TelegramDiscord afin que les sondes live du Gateway ne démurrent pas de vrais workers de canal Telegram/Discord/etc. à l'intérieur du conteneur. `test:docker:live-models` exécute toujours `pnpm test:live`, faites donc passer `OPENCLAW_LIVE_GATEWAY_*`Docker également lorsque vous devez réduire ou exclure la couverture live du Gateway de cette voie Docker. `test:docker:openwebui`OpenClawOpenAI est un test de fumée de compatibilité de plus haut niveau : il démarre un conteneur Gateway OpenClaw avec les points de terminaison HTTP compatibles OpenAI activés, démarre un conteneur Open WebUI épinglé contre ce Gateway, se connecte via Open WebUI, vérifie que `/api/models` expose `openclaw/default`, puis envoie une vraie demande de chat via le proxy `/api/chat/completions` d'Open WebUI. Définissez `OPENWEBUI_SMOKE_MODE=models`Docker pour les vérifications CI du chemin de publication qui doivent s'arrêter après la connexion et la découverte de modèle d'Open WebUI, sans attendre une complétion de modèle live. La première exécution peut être sensiblement plus lente car Docker peut avoir besoin de tirer l'image Open WebUI et Open WebUI peut avoir besoin de terminer sa propre configuration de démarrage à froid. Cette voie s'attend à une clé de modèle live utilisable, et `OPENCLAW_PROFILE_FILE` (`~/.profile` par défaut) est le moyen principal de la fournir lors des exécutions Dockerisées. Les exécutions réussies impriment une petite charge utile JSON comme `{ "ok": true, "model": "openclaw/default", ... }`. `test:docker:mcp-channels`TelegramDiscordiMessageGateway est intentionnellement déterministe et n'a pas besoin d'un vrai compte Telegram, Discord ou iMessage. Il démarre un conteneur Gateway amorcé, démarre un deuxième conteneur qui génère `openclaw mcp serve`, puis vérifie la découverte de conversation acheminée, les lectures de transcription, les métadonnées de pièce jointe, le comportement de la file d'attente d'événements live, le routage d'envoi sortant et les notifications de canal + d'autorisation de style Claude sur le vrai pont MCP stdio. La vérification des notifications inspecte directement les trames MCP stdio brutes afin que le test de fumée valide ce que le pont émet réellement, et pas seulement ce qu'un SDK client spécifique se trouve à présenter. `test:docker:pi-bundle-mcp-tools`Docker est déterministe et n'a pas besoin d'une clé de modèle live. Il construit l'image Docker du dépôt, démarre un vrai serveur de sonde MCP stdio à l'intérieur du conteneur, matérialise ce serveur via le runtime MCP du bundle Pi intégré, exécute l'outil, puis vérifie que `coding` et `messaging` gardent les outils `bundle-mcp` tandis que `minimal` et `tools.deny: ["bundle-mcp"]` les filtrent. `test:docker:cron-mcp-cleanup`Gateway est déterministe et n'a pas besoin d'une clé de modèle live. Il démarre un Gateway amorcé avec un vrai serveur de sonde MCP stdio, exécute un tour cron isolé et un tour enfant ponctuel `/subagents spawn`, puis vérifie que le processus enfant MCP se termine après chaque exécution.
+Les exécuteurs Docker live-model montent également en liaison (bind-mount) l'extraction actuelle en lecture seule et la mettent en scène dans un répertoire de travail temporaire à l'intérieur du conteneur. Cela permet de garder l'image d'exécution légère tout en exécutant Vitest par rapport à votre source/configuration locale exacte. L'étape de mise en scène ignore les caches locaux volumineux et les sorties de build de l'application tels que Docker`.pnpm-store`, `.worktrees`, `__openclaw_vitest__`, et les répertoires de sortie Gradle ou `.build` locaux à l'application, afin que les exécutions live Docker ne passent pas des minutes à copier des artefacts spécifiques à la machine. Ils définissent également `OPENCLAW_SKIP_CHANNELS=1` afin que les sondes live du gateway ne démarrent pas de vrais workers de channel Telegram/Discord/etc. à l'intérieur du conteneur. `test:docker:live-models` exécute toujours `pnpm test:live`, donc passez également `OPENCLAW_LIVE_GATEWAY_*` lorsque vous devez restreindre ou exclure la couverture live du gateway de cette voie Docker. `test:docker:openwebui` est un test de fumée de compatibilité de plus haut niveau : il démarre un conteneur gateway OpenClaw avec les points de terminaison HTTP compatibles OpenAI activés, démarre un conteneur Open WebUI épinglé contre ce gateway, se connecte via Open WebUI, vérifie que `/api/models` expose `openclaw/default`, puis envoie une vraie demande de chat via le proxy `/api/chat/completions` d'Open WebUI. Définissez `OPENWEBUI_SMOKE_MODE=models` pour les vérifications CI du chemin de version qui doivent s'arrêter après la connexion et la découverte du modèle Open WebUI, sans attendre une complétion de modèle live. La première exécution peut être sensiblement plus lente car Docker peut avoir besoin de tirer l'image Open WebUI et Open WebUI peut avoir besoin de terminer sa propre configuration de démarrage à froid. Cette voie attend une clé de modèle live utilisable. Fournissez-la via l'environnement de processus, les profils d'authentification mis en scène, ou un `OPENCLAW_PROFILE_FILE` explicite. Les exécutions réussies impriment une petite charge utile JSON comme `{ "ok": true, "model": "openclaw/default", ... }`. `test:docker:mcp-channels` est intentionnellement déterministe et n'a pas besoin d'un vrai compte Telegram, Discord ou iMessageGateway. Il démarre un conteneur Gateway amorcé, démarre un deuxième conteneur qui génère `openclaw mcp serve`, puis vérifie la découverte de conversations acheminées, les lectures de transcriptions, les métadonnées de pièces jointes, le comportement de la file d'attente d'événements live, l'acheminement des envois sortants, et les notifications de channel et d'autorisations style Claude sur le vrai pont stdio MCP. La vérification des notifications inspecte directement les trames stdio MCP brutes, de sorte que le test valide ce que le pont émet réellement, et pas seulement ce qu'un SDK client spécifique se trouve à exposer. `test:docker:pi-bundle-mcp-tools`Docker est déterministe et n'a pas besoin d'une clé de modèle live. Il construit l'image Docker du dépôt, démarre un vrai serveur de sonde stdio MCP à l'intérieur du conteneur, matérialise ce serveur via le runtime MCP du bundle Pi intégré, exécute l'outil, puis vérifie que `coding` et `messaging` gardent les outils `bundle-mcp` tandis que `minimal` et `tools.deny: ["bundle-mcp"]` les filtrent. `test:docker:cron-mcp-cleanup`Gateway est déterministe et n'a pas besoin d'une clé de modèle live. Il démarre un Gateway amorcé avec un vrai serveur de sonde stdio MCP, exécute un tour cron isolé et un tour enfant unique `/subagents spawn`, puis vérifie que le processus enfant MCP se termine après chaque exécution.
 
-Test de fumée de fil en langage clair ACP manuel (pas CI) :
+Test de smoke du fil de discussion en langage clair ACP manuel (pas CI) :
 
 - `bun scripts/dev/discord-acp-plain-language-smoke.ts --channel <discord-channel-id> ...`
-- Gardez ce script pour les workflows de régression/débogage. Il pourrait être nécessaire à nouveau pour la validation du routage des fils ACP, alors ne le supprimez pas.
+- Gardez ce script pour les workflows de régression/débogage. Il peut être nécessaire à nouveau pour la validation du routage des fils de discussion ACP, ne le supprimez donc pas.
 
-Variables d'environnement utiles :
+Env vars utiles :
 
 - `OPENCLAW_CONFIG_DIR=...` (défaut : `~/.openclaw`) monté sur `/home/node/.openclaw`
 - `OPENCLAW_WORKSPACE_DIR=...` (défaut : `~/.openclaw/workspace`) monté sur `/home/node/.openclaw/workspace`
-- `OPENCLAW_PROFILE_FILE=...` (défaut : `~/.profile`) monté sur `/home/node/.profile` et sourcé avant l'exécution des tests
-- `OPENCLAW_DOCKER_PROFILE_ENV_ONLY=1` pour vérifier uniquement les variables d'environnement sourcées depuis `OPENCLAW_PROFILE_FILE`CLI, en utilisant des répertoires de config/workspace temporaires et aucun montage d'auth CLI externe
-- `OPENCLAW_DOCKER_CLI_TOOLS_DIR=...` (défaut : `~/.cache/openclaw/docker-cli-tools`) monté sur `/home/node/.npm-global`CLIDocker pour les installations CLI mises en cache à l'intérieur de Docker
-- Les répertoires/fichiers d'auth CLI externes sous CLI`$HOME` sont montés en lecture seule sous `/host-auth...`, puis copiés dans `/home/node/...` avant le début des tests
+- `OPENCLAW_PROFILE_FILE=...` monté et sourcé avant l'exécution des tests
+- `OPENCLAW_DOCKER_PROFILE_ENV_ONLY=1` pour vérifier uniquement les env vars sourcés à partir de `OPENCLAW_PROFILE_FILE`, en utilisant des répertoires de config/workspace temporaires et aucun montage d'auth CLI externe
+- `OPENCLAW_DOCKER_CLI_TOOLS_DIR=...` (défaut : `~/.cache/openclaw/docker-cli-tools`) monté sur `/home/node/.npm-global` pour les installations CLI mises en cache dans Docker
+- Les répertoires/fichiers d'auth CLI externes sous `$HOME` sont montés en lecture seule sous `/host-auth...`, puis copiés dans `/home/node/...` avant le début des tests
   - Répertoires par défaut : `.minimax`
   - Fichiers par défaut : `~/.codex/auth.json`, `~/.codex/config.toml`, `.claude.json`, `~/.claude/.credentials.json`, `~/.claude/settings.json`, `~/.claude/settings.local.json`
-  - Les exécutions de fournisseur restreintes ne montent que les répertoires/fichiers nécessaires déduits de `OPENCLAW_LIVE_PROVIDERS` / `OPENCLAW_LIVE_GATEWAY_PROVIDERS`
+  - Les exécutions de provider restreintes ne montent que les répertoires/fichiers nécessaires déduits de `OPENCLAW_LIVE_PROVIDERS` / `OPENCLAW_LIVE_GATEWAY_PROVIDERS`
   - Remplacer manuellement avec `OPENCLAW_DOCKER_AUTH_DIRS=all`, `OPENCLAW_DOCKER_AUTH_DIRS=none`, ou une liste séparée par des virgules comme `OPENCLAW_DOCKER_AUTH_DIRS=.claude,.codex`
 - `OPENCLAW_LIVE_GATEWAY_MODELS=...` / `OPENCLAW_LIVE_MODELS=...` pour restreindre l'exécution
-- `OPENCLAW_LIVE_GATEWAY_PROVIDERS=...` / `OPENCLAW_LIVE_PROVIDERS=...` pour filtrer les fournisseurs dans le conteneur
+- `OPENCLAW_LIVE_GATEWAY_PROVIDERS=...` / `OPENCLAW_LIVE_PROVIDERS=...` pour filtrer les providers dans le conteneur
 - `OPENCLAW_SKIP_DOCKER_BUILD=1` pour réutiliser une image `openclaw:local-live` existante pour les réexécutions qui ne nécessitent pas de reconstruction
-- `OPENCLAW_LIVE_REQUIRE_PROFILE_KEYS=1` pour s'assurer que les identifiants proviennent du magasin de profils (pas de l'env)
-- `OPENCLAW_OPENWEBUI_MODEL=...` pour choisir le modèle exposé par la Gateway pour le test de fumée Open WebUI
-- `OPENCLAW_OPENWEBUI_PROMPT=...` pour remplacer l'invite de vérification de nonce utilisée par le test de fumée Open WebUI
-- `OPENWEBUI_IMAGE=...` pour remplacer la balise d'image épinglée Open WebUI
+- `OPENCLAW_LIVE_REQUIRE_PROFILE_KEYS=1` pour s'assurer que les informations d'identification proviennent du magasin de profils (pas de l'env)
+- `OPENCLAW_OPENWEBUI_MODEL=...` pour choisir le modèle exposé par le Gateway pour le test de fumée d'Open WebUI
+- `OPENCLAW_OPENWEBUI_PROMPT=...` pour remplacer l'invite de vérification de nonce utilisée par le test de fumée d'Open WebUI
+- `OPENWEBUI_IMAGE=...` pour remplacer la balise d'image épinglée d'Open WebUI
 
-## Cohérence de la documentation
+## Validation de la documentation
 
-Exécutez les vérifications de documentation après les modifications : `pnpm check:docs`.
+Exécutez les vérifications de la documentation après les modifications : `pnpm check:docs`.
 Exécutez la validation complète des ancres Mintlify lorsque vous avez également besoin de vérifications des titres dans la page : `pnpm docs:check-links:anchors`.
 
-## Régression hors ligne (sûre pour CI)
+## Régression hors ligne (sécurisé pour CI)
 
-Ce sont des régressions de « vrai pipeline » sans vrais fournisseurs :
+Ce sont des régressions de « pipeline réel » sans vrais fournisseurs :
 
-- Appel de tool Gateway (OpenAI simulé, vraie boucle gateway + agent) : GatewayOpenAI`src/gateway/gateway.test.ts`OpenAI (cas : « exécute un appel tool OpenAI simulé de bout en bout via la boucle de l'agent gateway »)
-- Assistant Gateway (WS Gateway`wizard.start`/`wizard.next`, écrit la config + auth forcée) : `src/gateway/gateway.test.ts` (cas : « exécute l'assistant via ws et écrit la config du jeton d'auth »)
+- Appel d'outil Gateway (mock OpenAI, vraie boucle gateway + agent) : GatewayOpenAI`src/gateway/gateway.test.ts`OpenAI (cas : « exécute un appel d'outil mock OpenAI de bout en bout via la boucle d'agent du gateway »)
+- Assistant Gateway (WS Gateway`wizard.start`/`wizard.next`, écrit la config + auth appliquée) : `src/gateway/gateway.test.ts` (cas : « exécute l'assistant sur ws et écrit la config du jeton d'auth »)
 
 ## Évaluations de fiabilité de l'agent (Skills)
 
-Nous avons déjà quelques tests sûrs pour CI qui se comportent comme des « évaluations de fiabilité de l'agent » :
+Nous avons déjà quelques tests sécurisés pour CI qui se comportent comme des « évaluations de fiabilité de l'agent » :
 
-- Appel de tool simulé via la vraie boucle gateway + agent (`src/gateway/gateway.test.ts`).
+- Appel d'outil simulé via la vraie boucle gateway + agent (`src/gateway/gateway.test.ts`).
 - Flux de bout en bout de l'assistant qui valident le câblage de session et les effets de configuration (`src/gateway/gateway.test.ts`).
 
 Ce qui manque encore pour les Skills (voir [Skills](/fr/tools/skills)) :
 
-- **Prise de décision :** lorsque les Skills sont répertoriés dans l'invite, l'agent choisit-il la bonne skill (ou évite-t-il celles non pertinentes) ?
+- **Prise de décision :** lorsque des Skills sont répertoriés dans l'invite, l'agent choisit-il le bon Skill (ou évite-t-il ceux qui ne sont pas pertinents) ?
 - **Conformité :** l'agent lit-il `SKILL.md` avant utilisation et suit-il les étapes/arguments requis ?
-- **Contrats de workflow :** scénarios à plusieurs tours qui affirment l'ordre des tools, le report de l'historique de session et les limites du bac à sable.
+- **Contrats de flux de travail :** scénarios à plusieurs tours qui vérifient l'ordre des outils, le report de l'historique de session et les limites du bac à sable.
 
 Les futures évaluations doivent d'abord rester déterministes :
 
-- Un exécuteur de scénario utilisant des fournisseurs simulés pour affirmer les appels de tools + l'ordre, les lectures de fichiers de skills et le câblage de session.
-- Une petite suite de scénarios axés sur les skills (utilisation vs évitement, limitation, injection d'invite).
-- Évaluations en direct optionnelles (opt-in, restreintes par env) uniquement après la mise en place de la suite sûre pour CI.
+- Un scénario de test utilisant des fournisseurs simulés pour vérifier les appels d'outils + l'ordre, les lectures de fichiers Skills et le câblage de session.
+- Une petite suite de scénarios axés sur les Skills (utilisation vs évitement, verrouillage, injection d'invite).
+- Évaluations en direct facultatives (opt-in, limitées par env) uniquement après la mise en place de la suite sécurisée pour CI.
 
 ## Tests de contrat (forme du plugin et du channel)
 
-Les tests de contrat vérifient que chaque plugin et channel enregistré est conforme à son contrat d'interface. Ils parcourent tous les plugins découverts et exécutent une suite d'assertions sur la forme et le comportement. La `pnpm test` unit lane par défaut omet intentionnellement ces fichiers communs de jointure et de fumée ; exécutez les commandes de contrat explicitement lorsque vous touchez aux surfaces partagées du channel ou du provider.
+Les tests de contrat vérifient que chaque plugin et channel enregistré est conforme à son contrat d'interface. Ils parcourent tous les plugins découverts et exécutent une suite d'assertions sur la forme et le comportement. La voie `pnpm test` unitaire ignore intentionnellement ces fichiers de jointure et de fumée partagés ; exécutez les commandes de contrat explicitement lorsque vous touchez aux surfaces partagées de channel ou de provider.
 
 ### Commandes
 
@@ -826,14 +827,14 @@ Situés dans `src/channels/plugins/contracts/*.contract.test.ts` :
 - **inbound** - Gestion des messages entrants
 - **actions** - Gestionnaires d'actions de channel
 - **threading** - Gestion de l'ID de fil de discussion
-- **directory** - API de répertoire/liste API
+- **directory** - API de l'annuaire/de la liste
 - **group-policy** - Application de la stratégie de groupe
 
 ### Contrats de statut de provider
 
 Situés dans `src/plugins/contracts/*.contract.test.ts`.
 
-- **status** - sondes de statut du channel
+- **status** - Sonde de statut du channel
 - **registry** - Forme du registre de plugins
 
 ### Contrats de provider
@@ -841,10 +842,10 @@ Situés dans `src/plugins/contracts/*.contract.test.ts`.
 Situés dans `src/plugins/contracts/*.contract.test.ts` :
 
 - **auth** - Contrat de flux d'authentification
-- **auth-choice** - Choix/sélection d'authentification
-- **catalog** - API du catalogue de modèles API
+- **auth-choice** - Choix/sélection de l'authentification
+- **catalog** - API du catalogue de modèles
 - **discovery** - Découverte de plugins
-- **loader** - Chargement de plugins
+- **loader** - Chargement des plugins
 - **runtime** - Runtime du provider
 - **shape** - Forme/interface du plugin
 - **wizard** - Assistant de configuration
@@ -859,19 +860,19 @@ Les tests de contrat s'exécutent dans CI et ne nécessitent pas de vraies clés
 
 ## Ajout de régressions (recommandations)
 
-Lorsque vous corrigez un problème de provider/model découvert en live :
+Lorsque vous corrigez un problème provider/model découvert en live :
 
-- Ajoutez si possible une régression compatible CI (provider simulé/bouchonné, ou capturez la transformation exacte de la forme de la requête)
-- Si c'est intrinsèquement uniquement en live (limites de débit, stratégies d'auth), gardez le test live étroit et opt-in via des env vars
+- Ajoutez si possible une régression sans danger pour la CI (provider simulé/bouchon, ou capturez la transformation exacte de la forme de la requête)
+- S'il est intrinsèquement exclusif au live (limites de taux, stratégies d'authentification), gardez le test live étroit et optionnel via des env vars
 - Privilégiez le ciblage de la plus petite couche qui détecte le bogue :
   - bug de conversion/relecture de requête provider → test direct des modèles
-  - bug de pipeline session/historique/tool de la passerelle → test de fumée live de la passerelle ou test simulé de passerelle sûr pour la CI
-- Garde-fou de traversée SecretRef :
-  - `src/secrets/exec-secret-ref-id-parity.test.ts` dérive une cible échantillonnée par classe SecretRef à partir des métadonnées du registre (`listSecretTargetRegistryEntries()`), puis affirme que les ids d'exécution de segment de traversée sont rejetés.
-  - Si vous ajoutez une nouvelle famille de cibles SecretRef `includeInPlan` dans `src/secrets/target-registry-data.ts`, mettez à jour `classifyTargetClass` dans ce test. Le test échoue intentionnellement sur les ids de cibles non classifiés afin que les nouvelles classes ne puissent pas être ignorées silencieusement.
+  - bogue du pipeline session/historique/tool de la passerelle → test de fumée live de la passerelle ou test simulé sécurisé pour la CI de la passerelle
+- Garde-fou contre le parcours SecretRef :
+  - `src/secrets/exec-secret-ref-id-parity.test.ts` dérive une cible échantillonnée par classe SecretRef à partir des métadonnées du registre (`listSecretTargetRegistryEntries()`), puis affirme que les ids d'exécution de segment de parcours sont rejetés.
+  - Si vous ajoutez une nouvelle famille de cibles `includeInPlan` SecretRef dans `src/secrets/target-registry-data.ts`, mettez à jour `classifyTargetClass` dans ce test. Le test échoue intentionnellement sur les ids de cible non classés afin que les nouvelles classes ne puissent pas être ignorées silencieusement.
 
 ## Connexes
 
-- [Tests en direct](/fr/help/testing-live)
-- [Tests des mises à jour et des plugins](/fr/help/testing-updates-plugins)
+- [Testing live](/fr/help/testing-live)
+- [Testing updates and plugins](/fr/help/testing-updates-plugins)
 - [CI](/fr/ci)

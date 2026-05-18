@@ -113,11 +113,11 @@ Los búferes de historial son configurables a través de `messages.groupChat.his
 
 ## Puesta en cola y seguimientos
 
-Si una ejecución ya está activa, los mensajes entrantes pueden ponerse en cola, dirigirse a la ejecución actual o recopilarse para un turno de seguimiento.
+Si una ejecución ya está activa, los mensajes entrantes se dirigen a la ejecución actual de forma predeterminada. `messages.queue` selecciona si los mensajes de ejecución activa se dirigen, se ponen en cola para más tarde, se recopilan en un turno posterior o interrumpen la ejecución activa.
 
-- Configurar a través de `messages.queue` (y `messages.queue.byChannel`).
-- El modo predeterminado es `steer`, con un antirrebote de seguimiento de 500 ms cuando la dirección vuelve a la entrega de seguimiento en cola.
-- Modos: `steer`, `followup`, `collect`, `steer-backlog`, `interrupt`, y el modo heredado de uno a la vez `queue`.
+- Configure mediante `messages.queue` (y `messages.queue.byChannel`).
+- El modo predeterminado es `steer`, con un antirrebote de 500 ms para lotes de dirección de Codex y colas de seguimiento/recopilación.
+- Modos: `steer`, `followup`, `collect` y `interrupt`.
 
 Detalles: [Cola de comandos](/es/concepts/queue) y [Cola de dirección](/es/concepts/queue-steering).
 
@@ -137,7 +137,7 @@ Configuración clave:
 - `agents.defaults.blockStreamingChunk` (`minChars|maxChars|breakPreference`)
 - `agents.defaults.blockStreamingCoalesce` (agrupamiento basado en inactividad)
 - `agents.defaults.humanDelay` (pausa similar a la humana entre respuestas de bloques)
-- Sobrescrituras de canal: `*.blockStreaming` y `*.blockStreamingCoalesce` (los canales que no son Telegram requieren `*.blockStreaming: true` explícito)
+- anulaciones de canal: `*.blockStreaming` y `*.blockStreamingCoalesce` (los canales que no sean Telegram requieren `*.blockStreaming: true` explícito)
 
 Detalles: [Streaming + chunking](/es/concepts/streaming).
 
@@ -155,35 +155,33 @@ Detalles: [Thinking + reasoning directives](/es/tools/thinking) y [Token use](/e
 
 El formato de los mensajes salientes está centralizado en `messages`:
 
-- `messages.responsePrefix`, `channels.<channel>.responsePrefix` y `channels.<channel>.accounts.<id>.responsePrefix` (cascada de prefijos de salida), más `channels.whatsapp.messagePrefix` (prefijo de entrada de WhatsApp)
-- Hilos de respuesta a través de `replyToMode` y valores predeterminados por canal
+- `messages.responsePrefix`, `channels.<channel>.responsePrefix` y `channels.<channel>.accounts.<id>.responsePrefix` (cascada de prefijos salientes), más `channels.whatsapp.messagePrefix` (prefijo entrante de WhatsApp)
+- Hilos de respuesta mediante `replyToMode` y valores predeterminados por canal
 
 Detalles: [Configuration](/es/gateway/config-agents#messages) y documentación de canales.
 
 ## Respuestas silenciosas
 
 El token silencioso exacto `NO_REPLY` / `no_reply` significa "no entregar una respuesta visible para el usuario".
-Cuando un turno también tiene medios de herramientas pendientes, como audio TTS generado, OpenClaw
-elimina el texto silencioso pero aún entrega el archivo adjunto de medios.
+Cuando un turno también tiene medios de herramientas pendientes, como audio TTS generado, OpenClaw elimina el texto silencioso pero aún entrega el archivo adjunto de medios.
 OpenClaw resuelve ese comportamiento por tipo de conversación:
 
-- Las conversaciones directas no permiten el silencio de forma predeterminada y reescriben una respuesta silenciosa simple
-  a una alternativa visible corta.
-- Los grupos/canales permiten el silencio de forma predeterminada.
+- Las conversaciones directas nunca reciben orientación de prompt `NO_REPLY`. Si una ejecución directa devuelve accidentalmente un token silencioso simple, OpenClaw lo suprime en lugar de reescribirlo o entregarlo.
+- Los grupos/canales permiten el silencio de forma predeterminada solo para las respuestas automáticas de grupo.
+  En el modo `message_tool` visible-reply, silencio significa que el modelo no llama a
+  `message(action=send)`.
 - La orquestación interna permite el silencio de forma predeterminada.
 
-OpenClaw también utiliza respuestas silenciosas para fallos internos del ejecutor que ocurren
-antes de cualquier respuesta del asistente en chats no directos, de modo que los grupos/canales no vean
-el texto estándar de error de puerta de enlace. Los chats directos muestran un texto de fallo compacto de forma predeterminada;
-los detalles brutos del ejecutor se muestran solo cuando `/verbose` está `on` o `full`.
+OpenClaw también utiliza respuestas silenciosas para fallos internos del runner que ocurren
+antes de cualquier respuesta del asistente en chats no directos, por lo que los grupos/canales no ven
+el texto estándar de error de la puerta de enlace. Los chats directos muestran un texto de fallo compacto de forma predeterminada;
+los detalles del runner sin procesar solo se muestran cuando `/verbose` es `on` o `full`.
 
-Los valores predeterminados se encuentran en `agents.defaults.silentReply` y
-`agents.defaults.silentReplyRewrite`; `surfaces.<id>.silentReply` y
-`surfaces.<id>.silentReplyRewrite` pueden anularlos por superficie.
+Los valores predeterminados se encuentran en `agents.defaults.silentReply`; `surfaces.<id>.silentReply`
+puede anular la política de grupo/interna por superficie.
 
-Cuando la sesión principal tiene una o más ejecuciones de subagente generadas pendientes, las
-respuestas silenciosas simples se descartan en todas las superficies en lugar de ser reescritas, por lo que
-el padre permanece en silencio hasta que el evento de finalización del hijo entrega la respuesta real.
+Las respuestas silenciosas simples se descartan en todas las superficies, por lo que las sesiones principales se mantienen en silencio
+en lugar de reescribir el texto centinela en una conversación alternativa.
 
 ## Relacionado
 

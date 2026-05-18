@@ -47,13 +47,14 @@ Plist 位置（每用户）：
 
 日志记录：
 
-- launchd stdout/err：`/tmp/openclaw/openclaw-gateway.log`
+- launchd stdout: `~/Library/Logs/openclaw/gateway.log`（配置文件使用 `gateway-<profile>.log`）
+- launchd stderr：已屏蔽
 
 ## 版本兼容性
 
-macOS 应用会检查 gateway 版本与其自身版本。如果它们不兼容，请更新全局 CLI 以匹配应用版本。
+macOS 应用会检查 Gateway 版本与其自身版本是否匹配。如果不兼容，请更新全局 CLI 以匹配应用版本。
 
-## 冒烟测试
+## 冒烟测试"
 
 ```bash
 openclaw --version
@@ -71,5 +72,5 @@ openclaw gateway call health --url ws://127.0.0.1:18999 --timeout 3000
 
 ## 相关
 
-- [macOS 应用](/zh/platforms/macos)
-- [Gateway(网关) 运维手册](/zh/gateway)
+- [macOS 应用](macOS/en/platforms/macos)
+- [Gateway 运维手册](<Gateway(网关)/en/gateway>)

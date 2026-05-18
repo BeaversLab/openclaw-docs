@@ -13,13 +13,13 @@ title: "配對"
 1. **DM 配對**（誰被允許與機器人交談）
 2. **節點配對**（哪些設備/節點被允許加入閘道網路）
 
-安全性背景：[Security](/zh-Hant/gateway/security)
+安全背景：[Security](/zh-Hant/gateway/security)
 
 ## 1) DM 配對（入站聊天存取）
 
 當頻道使用 DM 政策 `pairing` 進行配置時，未知傳送者會收到一個短代碼，並且在他們的訊息**不會被處理**，直到您核准為止。
 
-預設的 DM 政策記錄於：[Security](/zh-Hant/gateway/security)
+預設 DM 政策記錄於：[Security](/zh-Hant/gateway/security)
 
 `dmPolicy: "open"` 只有在有效的 DM 許可清單包含 `"*"` 時才是公開的。
 設定與驗證需要該萬用字元用於公開開放的配置。如果現有狀態包含 `open` 且具有具體的 `allowFrom` 項目，執行時仍僅允許這些傳送者，且配對儲存庫的核准不會擴大 `open` 的存取權。
@@ -67,7 +67,7 @@ openclaw pairing approve telegram <CODE>
 }
 ```
 
-存取群組在此處有詳細文件說明：[存取群組](/zh-Hant/channels/access-groups)
+存取群組在此處有詳細記錄：[Access groups](/zh-Hant/channels/access-groups)
 
 ### 狀態儲存位置
 
@@ -108,22 +108,15 @@ openclaw pairing approve telegram <CODE>
 
 該引導令牌攜帶內建的配對引導配置檔案：
 
-- 主要移交的 `node` 令牌保持 `scopes: []`
-- 任何移交的 `operator` 令牌保持受限於引導允許列表：
-  `operator.approvals`、`operator.read`、`operator.talk.secrets`、`operator.write`
-- 引導範圍檢查是以角色為前綴，而不是一個扁平的範圍池：
-  操作員範圍條目僅滿足操作員請求，而非操作員角色
-  仍必須在其自己的角色前綴下請求範圍
-- 後續的令牌輪換/撤銷仍然受限於設備已批准的
-  角色合約以及呼叫者會話的操作員範圍
+- 內建的設定檔僅允許 `node` 角色
+- 批准後，移交的 `node` token 保持 `scopes: []`
+- 內建的 setup-code 流程不會移交 `operator` token
+- 操作員存取需要單獨的已批准操作員配對或 token 流程
+- 後續的 token 輪換/撤銷仍受設備的批准角色合約和呼叫者會話的操作員範圍限制
 
-在設置代碼有效期間，請像對待密碼一樣對待它。
+在設定代碼有效時，請將其視為密碼處理。
 
-對於 Tailscale、公開或其他遠端行動裝置配對，請使用 Tailscale Serve/Funnel
-或其他 `wss://` 閘道 URL。純文字 `ws://` 設置代碼僅接受
-來自回環、私有 LAN 位址、`.local` Bonjour 主機和 Android
-模擬器主機的連線。Tailnet CGNAT 位址、`.ts.net` 名稱和公開主機在
-發出 QR/設置代碼之前仍然會被封鎖。
+對於 Tailscale、公開或其他遠端行動裝置配對，請使用 Tailscale Serve/Funnel 或另一個 `wss://` Gateway URL。僅接受純文字 `ws://` 設定代碼用於回送、私有 LAN 位址、`.local` Bonjour 主機和 Android 模擬器主機。Tailnet CGNAT 位址、`.ts.net` 名稱和公開主機在發出 QR/設定代碼之前仍會失敗關閉。
 
 ### 批准節點設備
 
@@ -133,23 +126,16 @@ openclaw devices approve <requestId>
 openclaw devices reject <requestId>
 ```
 
-當明確批准被拒絕，因為批准配對設備會話
-是僅使用配對範圍開啟時，CLI 會使用
-`operator.admin` 重試相同的請求。這讓現有的具備管理員能力的配對設備能夠恢復新的
-控制 UI/瀏覽器配對，而無需手動編輯 `devices/paired.json`。閘道
-仍然會驗證重試的連線；無法透過 `operator.admin` 進行身份驗證的
-令牌仍會被封鎖。
+當明確批准被拒絕時，因為批准的配對設備會話是以僅配對範圍開啟的，CLI 會使用 `operator.admin` 重試相同的請求。這允許現有的具有管理員能力的配對設備恢復新的 Control UI/瀏覽器配對，而無需手動編輯 `devices/paired.json`。閘道仍會驗證重試的連線；無法使用 `operator.admin` 進行驗證的 token 仍會被阻止。
 
-如果同一設備使用不同的身份驗證詳細資訊（例如不同的
-角色/範圍/公開金鑰）重試，則先前的待處理請求將被取代，並建立一個新的
-`requestId`。
+如果同一設備使用不同的驗證詳細資訊（例如不同的角色/範圍/公鑰）重試，則先前的待處理請求將被取代，並建立新的 `requestId`。
 
-<Note>已配對的設備不會靜默獲得更廣泛的訪問權限。如果它重新連接時請求更多範圍或更廣泛的角色，OpenClaw 將保持現有批准不變，並創建一個新的待處理升級請求。在您批准之前，請使用 `openclaw devices list` 比較當前批准的訪問權限與新請求的訪問權限。</Note>
+<Note>已配對的裝置不會在無聲無息中獲得更廣泛的存取權限。如果它重新連接並請求更多範圍或更廣泛的角色，OpenClaw 將保持現有的批准不變，並建立一個新的待處理升級請求。在您批准之前，請使用 `openclaw devices list` 比較目前批准的存取權限與新請求的存取權限。</Note>
 
-### 可選的受信任 CIDR 節點自動批准
+### 選用的信任 CIDR 節點自動批准
 
-預設情況下，設備配對保持為手動。對於嚴格控制的節點網絡，
-您可以選擇通過明確的 CIDR 或確切的 IP 來首次自動批准節點：
+預設情況下，裝置配對仍需手動進行。對於嚴密控制的節點網路，
+您可以選擇透過明確的 CIDR 或確切 IP 啟用首次節點自動批准：
 
 ```json5
 {
@@ -163,30 +149,31 @@ openclaw devices reject <requestId>
 }
 ```
 
-這僅適用於沒有請求範圍的新 `role: node` 配對請求。操作員、瀏覽器、控制 UI 和 WebChat 客戶端仍需手動
-批准。角色、範圍、元數據和公鑰更改仍需手動
+這僅適用於沒有請求
+範圍的全新 `role: node` 配對請求。操作員、瀏覽器、Control UI 和 WebChat 用戶端仍需手動
+批准。角色、範圍、中繼資料和公鑰變更仍需手動
 批准。
 
-### 節點配對狀態存儲
+### 節點配對狀態儲存
 
-存儲在 `~/.openclaw/devices/` 下：
+儲存在 `~/.openclaw/devices/` 下：
 
-- `pending.json` (短期；待處理的請求會過期)
-- `paired.json` (已配對設備 + 令牌)
+- `pending.json` （短期有效；待處理的請求會過期）
+- `paired.json` （已配對的裝置 + 權杖）
 
-### 注意事項
+### 備註
 
-- 舊版 `node.pair.*` API (CLI: `openclaw nodes pending|approve|reject|remove|rename`) 是一個
-  單獨的網關擁有的配對存儲。WS 節點仍需要設備配對。
-- 配對記錄是已批准角色的持久性真實來源。活動
-  設備令牌保持綁定到該已批准的角色集；在已批准角色之外的孤立令牌條目
-  不會創建新的訪問權限。
+- 舊版 `node.pair.*` API （CLI：`openclaw nodes pending|approve|reject|remove|rename`） 是一個
+  獨立的閘道擁有的配對儲存。WS 節點仍需要裝置配對。
+- 配對記錄是已批准角色的持久性真實來源。作用中
+  的裝置權杖保持綁定到該批准的角色集；在已批准角色之外的孤立權杖條目
+  不會建立新的存取權限。
 
-## 相關文檔
+## 相關文件
 
-- 安全模型 + 提示注入：[安全](/zh-Hant/gateway/security)
-- 安全更新 (運行 doctor)：[更新](/zh-Hant/install/updating)
-- 通道配置：
+- 安全性模型 + 提示注入：[安全性](/zh-Hant/gateway/security)
+- 安全更新（執行 doctor）：[更新](/zh-Hant/install/updating)
+- 頻道設定：
   - Telegram：[Telegram](/zh-Hant/channels/telegram)
   - WhatsApp：[WhatsApp](/zh-Hant/channels/whatsapp)
   - Signal：[Signal](/zh-Hant/channels/signal)

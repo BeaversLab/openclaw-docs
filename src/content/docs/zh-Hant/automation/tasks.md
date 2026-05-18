@@ -8,7 +8,7 @@ title: "背景任務"
 sidebarTitle: "背景任務"
 ---
 
-<Note>正在尋找排程功能？請參閱 [Automation](/zh-Hant/automation) 以選擇合適的機制。此頁面是背景工作的活動記錄，而非排程器。</Note>
+<Note>尋找排程功能？請參閱 [Automation](/zh-Hant/automation) 以選擇合適的機制。此頁面是背景工作的活動紀錄，而非排程器。</Note>
 
 背景任務會追蹤在您的主要對話工作階段**之外**執行的工作：ACP 執行、子代理生成、隔離的 cron 工作執行，以及 CLI 初始化的操作。
 
@@ -82,27 +82,27 @@ sidebarTitle: "背景任務"
 
 ## 什麼會建立任務
 
-| 來源                  | 執行時期類型 | 建立任務記錄的時機                                      | 預設通知原則 |
-| --------------------- | ------------ | ------------------------------------------------------- | ------------ |
-| ACP 背景執行          | `acp`        | 產生子 ACP 工作階段                                     | `done_only`  |
-| 子代理協調流程        | `subagent`   | 透過 `sessions_spawn` 產生子代理                        | `done_only`  |
-| Cron 工作（所有類型） | `cron`       | 每次 cron 執行（主要工作階段與隔離）                    | `silent`     |
-| CLI 操作              | `cli`        | 透過閘道執行的 `openclaw agent` 指令                    | `silent`     |
-| 代理媒體工作          | `cli`        | 由對話階段支援的 `music_generate`/`video_generate` 執行 | `silent`     |
+| 來源                  | 執行時期類型 | 建立任務記錄的時機                                                     | 預設通知原則 |
+| --------------------- | ------------ | ---------------------------------------------------------------------- | ------------ |
+| ACP 背景執行          | `acp`        | 產生子 ACP 工作階段                                                    | `done_only`  |
+| 子代理協調流程        | `subagent`   | 透過 `sessions_spawn` 產生子代理                                       | `done_only`  |
+| Cron 工作（所有類型） | `cron`       | 每次 cron 執行（主要工作階段與隔離）                                   | `silent`     |
+| CLI 操作              | `cli`        | 透過閘道執行的 `openclaw agent` 指令                                   | `silent`     |
+| 代理媒體工作          | `cli`        | Session-backed `image_generate`/`music_generate`/`video_generate` runs | `silent`     |
 
 <AccordionGroup>
-  <Accordion title="Cron 和媒體的預設通知方式">
-    主會話 cron 任務預設使用 `silent` 通知原則——它們會建立記錄以便追蹤，但不會產生通知。隔離 cron 任務同樣預設為 `silent`，但因為它們在自己的會話中執行，所以更為顯眼。
+  <Accordion title="Notify defaults for cron and media">
+    主會話 cron 任務預設使用 `silent` 通知政策 — 它們會建立紀錄以供追蹤，但不會產生通知。獨立 cron 任務也預設為 `silent`，但因為它們在自己的會話中執行，所以更容易被看見。
 
-    會話支援的 `music_generate` 和 `video_generate` 執行也使用 `silent` 通知原則。它們仍會建立任務記錄，但完成狀態會作為內部喚醒返回給原始代理會話，以便代理能撰寫後續訊息並自行附加完成的媒體。群組/頻道完成作業遵循正常的可見回覆原則，因此當來源傳遞需要時，代理會使用訊息工具。如果完成代理在僅限工具的路由中未能產生訊息工具傳遞證據，OpenClaw 會直接將完成後備傳送至原始頻道，而不會將媒體保留為私人。
+    Session-backed `image_generate`、`music_generate` 和 `video_generate` runs 也使用 `silent` 通知政策。它們仍會建立任務紀錄，但完成狀態會作為內部喚醒傳回原始 agent 會話，讓 agent 能撰寫後續訊息並自行附加完成的媒體。群組/頻道的完成作業遵循正常的可見回覆政策，因此當來源遞送需要時，agent 會使用訊息工具。如果在僅工具路徑中，完成 agent 未能產生訊息工具遞送證據，OpenClaw 會將完成回退直接傳送至原始頻道，而不是讓媒體保持私密。
 
   </Accordion>
-  <Accordion title="並發 video_generate 防護機制">
-    當會話支援的 `video_generate` 任務仍處於活動狀態時，該工具也充當防護機制：在同一會話中重複的 `video_generate` 呼叫會傳回活動任務狀態，而不是啟動第二次並發生成。當您想要從代理端明確查詢進度/狀態時，請使用 `action: "status"`。
+  <Accordion title="Concurrent media-generation guardrail">
+    當 session-backed 媒體產生任務仍處於活動狀態時，該工具也會充當防護措施：在同一個會話中重複呼叫 `image_generate`、`music_generate` 或 `video_generate` 會傳回活動任務狀態，而不是啟動第二次並行產生。當您想要從 agent 端進行明確的進度/狀態查詢時，請使用 `action: "status"`。
   </Accordion>
   <Accordion title="什麼不會建立任務">
-    - Heartbeat 週期——主會話；請參閱 [Heartbeat](/zh-Hant/gateway/heartbeat)
-    - 正常的互動式聊天週期
+    - Heartbeat 週期 - 主會話；請參閱 [Heartbeat](/zh-Hant/gateway/heartbeat)
+    - 一般的互動聊天週期
     - 直接的 `/command` 回應
 
   </Accordion>
@@ -134,22 +134,22 @@ stateDiagram-v2
 
 轉換會自動發生——當關聯的代理執行結束時，任務狀態會隨之更新以相符。
 
-Agent 執行完成對於活動任務記錄具有決定性。成功的獨立執行會定稿為 `succeeded`，一般執行錯誤會定稿為 `failed`，而逾時或中止結果會定稿為 `timed_out`。如果操作員已取消該任務，或執行時環境已記錄了更強的終止狀態（例如 `failed`、`timed_out` 或 `lost`），則後續的成功訊號不會降低該終止狀態。
+Agent 執行的完成狀態是作用中任務記錄的依據。成功的獨立執行會結束為 `succeeded`，一般執行錯誤會結束為 `failed`，而逾時或中止的結果會結束為 `timed_out`。如果操作員已經取消任務，或執行階段已經記錄了更強的終止狀態（例如 `failed`、`timed_out` 或 `lost`），稍後的成功訊號不會將該終止狀態降級。
 
-`lost` 感知執行時環境：
+`lost` 是感知執行階段的：
 
 - ACP 任務：備份 ACP 子會話元數據已消失。
 - 子代理任務：備份子會話從目標代理存儲中消失。
 - Cron 任務：cron 運行時不再追蹤該任務為活動和持久狀態，
   且 cron 運行歷史未顯示該運行的最終結果。離線 CLI
   審計不會將其自己空的進程中 cron 運行時狀態視為權威。
-- CLI 任務：具有執行 ID / 來源 ID 的任務會使用即時執行上下文，因此在閘道擁有的執行消失後，殘留的子會話或聊天會話記錄不會使它們保持活動狀態。沒有執行身分的舊版 CLI 任務仍然會回退到子會話。由閘道支援的 `openclaw agent` 執行也會根據其執行結果定稿，因此已完成的執行不會處於活動狀態，直到清理程式將其標記為 `lost`。
+- CLI 任務：具有執行 ID/來源 ID 的任務會使用即時執行內容，因此當閘道擁有的執行消失後，殘留的子會話或聊天會話記錄不會讓它們保持作用狀態。沒有執行身分的舊版 CLI 任務仍會退回至子會話。閘道支援的 `openclaw agent` 執行也會根據其執行結果進行最終處理，因此已完成的執行不會保持作用狀態，直到清理程式將其標記為 `lost`。
 
 ## 交付與通知
 
 當任務達到最終狀態時，OpenClaw 會通知您。有兩種交付途徑：
 
-**直接傳遞** - 如果任務具有頻道目標 (即 `requesterOrigin`)，完成訊息會直接傳送至該頻道 (Telegram、Discord、Slack 等)。群組和頻道任務的完成訊息則會改由請求者工作階段路由，以便父代理程式能撰寫可見的回覆。對於子代理程式的完成項目，OpenClaw 還會在可用時保留綁定的執行緒/主題路由，並且可以在放棄直接傳遞之前，從請求者工作階段的儲存路由 (`lastChannel` / `lastTo` / `lastAccountId`) 中填入遺漏的 `to` / 帳號。
+**直接傳遞** - 如果任務具有頻道目標（即 `requesterOrigin`），完成訊息會直接發送到該頻道（Telegram、Discord、Slack 等）。群組和頻道任務的完成訊息會改為透過請求者會話路由，以便父代理程式能夠撰寫可見的回覆。對於子代理程式的完成訊息，只要可行，OpenClaw 也會保留綁定的執行緒/主題路由，並可以在放棄直接傳遞之前，從請求者會話的儲存路由（`lastChannel` / `lastTo` / `lastAccountId`）中填入遺失的 `to` / 帳戶。
 
 **會話排隊傳遞** - 如果直接傳遞失敗或未設定來源，更新會作為系統事件在請求者的會話中排隊，並在下次心跳時顯示。
 
@@ -197,7 +197,7 @@ openclaw tasks notify <lookup> state_changes
     openclaw tasks cancel <lookup>
     ```
 
-    對於 ACP 和子代理任務，這會終止子會話。對於 CLI 追蹤的任務，取消會記錄在任務註冊表中（沒有單獨的子執行時句柄）。狀態轉換為 `cancelled`，並在適用時發送傳遞通知。
+    對於 ACP 和子代理程式任務，這會終止子會話。對於 CLI 追蹤的任務，取消操作會記錄在任務登錄檔中（沒有獨立的子執行階段處理常式）。狀態會轉變為 `cancelled`，並在適用時發送傳遞通知。
 
   </Accordion>
   <Accordion title="tasks notify">
@@ -210,15 +210,15 @@ openclaw tasks notify <lookup> state_changes
     openclaw tasks audit [--json]
     ```
 
-    顯示操作問題。當檢測到問題時，發現結果也會出現在 `openclaw status` 中。
+    顯示操作問題。當偵測到問題時，發現結果也會出現在 `openclaw status` 中。
 
-    | 發現                   | 嚴重性   | 觸發條件                                                                                                      |
+    | Finding                   | Severity   | Trigger                                                                                                      |
     | ------------------------- | ---------- | ------------------------------------------------------------------------------------------------------------ |
-    | `stale_queued`            | warn       | 排隊超過 10 分鐘                                                                              |
-    | `stale_running`           | error      | 執行超過 30 分鐘                                                                             |
-    | `lost`                    | warn/error | 執行時支援的任務所有權消失；保留的遺失任務會發出警告直到 `cleanupAfter`，然後變為錯誤 |
+    | `stale_queued`            | warn       | 排隊超過 10 分鐘                                                                                |
+    | `stale_running`           | error      | 執行超過 30 分鐘                                                                               |
+    | `lost`                    | warn/error | Runtime-backed 任務擁有權消失；保留的遺失任務在 `cleanupAfter` 之前會發出警告，之後會變成錯誤 |
     | `delivery_failed`         | warn       | 傳遞失敗且通知策略不是 `silent`                                                            |
-    | `missing_cleanup`         | warn       | 終端任務沒有清理時間戳                                                                      |
+    | `missing_cleanup`         | warn       | 沒有清理時間戳記的終端任務                                                                      |
     | `inconsistent_timestamps` | warn       | 時間線違規（例如在開始前結束）                                                        |
 
   </Accordion>
@@ -228,24 +228,24 @@ openclaw tasks notify <lookup> state_changes
     openclaw tasks maintenance --apply [--json]
     ```
 
-    使用此項目來預覽或套用對任務、Task Flow 狀態及過時 cron 執行階段註冊表項目的對帳、清理標記與修剪。
+    使用此指令可預覽或套用對工作、Task Flow 狀態以及過時 cron 執行階段註冊表項目的對帳、清理標記和修剪作業。
 
-    對帳具有執行時期感知能力：
+    對帳功能具有執行階段感知能力：
 
-    - ACP/subagent 任務會檢查其備援的子階段。
-    - 若子階段具有重新啟動-復原標記，subagent 任務將被標記為遺失，而非視為可復原的備援階段。
-    - Cron 任務會檢查 cron 執行時期是否仍擁有該工作，然後在退回至 `lost` 之前，從持久化的 cron 執行日誌/工作狀態復原終端狀態。僅 Gateway 程序對記憶體中的 cron 活動工作集具有權威性；離線 CLI 審計會使用持久歷史紀錄，但不會僅因為本機 Set 為空就將 cron 任務標記為遺失。
-    - 具有執行身分識別的 CLI 任務會檢查擁有的即時執行內容，而不僅是子階段或聊天階段項目。
+    - ACP/子代理工作會檢查其支援的子階段。
+    - 若子代理工作的子階段具有重啟復原標記，則會將其標記為遺失，而非視為可復原的支援階段。
+    - Cron 工作會檢查 cron 執行階段是否仍擁有該工作，然後在回退到 `lost` 之前，從持久的 cron 執行記錄/工作狀態中復原終端狀態。僅閘道程序對記憶體中的 cron 活動工作集合具有權威性；離線 CLI 稽核會使用持久的歷史記錄，但不會僅因為該本機集合為空，就將 cron 工作標記為遺失。
+    - 具有執行身分識別的 CLI 工作會檢查擁有的即時執行內容，而不僅是檢查子階段或聊天階段資料列。
 
-    完成清理也具有執行時期感知能力：
+    完成清理也具有執行階段感知能力：
 
-    - Subagent 完成會在宣布清理繼續之前，盡力為子階段關閉受追蹤的瀏覽器分頁/程序。
-    - 隔離 cron 完成會在執行完全拆除之前，盡力為 cron 階段關閉受追蹤的瀏覽器分頁/程序。
-    - 隔離 cron 傳遞會在需要時等待後代 subagent 的後續動作，並抑制過時的父層確認文字，而不是宣布它。
-    - Subagent 完成傳遞偏好最新的可見助理文字；如果為空，則退回至經過清理的最新 tool/toolResult 文字，且僅逾時的工具呼叫執行可以折疊為簡短的部分進度摘要。終端失敗的執行會宣布失敗狀態，而不重新播放捕獲的回覆文字。
-    - 清理失敗不會遮蔽真正的任務結果。
+    - 子代理完成時會盡力關閉子階段中追蹤的瀏覽器分頁/程序，然後再繼續公告清理。
+    - 隔離 cron 完成時會盡力關閉 cron 階段中追蹤的瀏覽器分頁/程序，然後再讓執行完全終止。
+    - 隔離 cron 傳遞會視需要等待後代子代理的後續處理，並抑制過時的父項確認文字，而非將其公告。
+    - 子代理完成傳遞偏好最新的可見助理文字；若為空，則回退至已清理的最新工具/toolResult 文字，且僅逾時的工具呼叫執行可折疊為簡短的部分進度摘要。終端失敗的執行會公告失敗狀態，而不重新播放捕獲的回覆文字。
+    - 清理失敗不會掩蓋真實的工作結果。
 
-    當套用維護時，OpenClaw 也會移除超過 7 天的過時 `cron:<jobId>:run:<uuid>` 階段註冊表項目，同時保留目前執行中 cron 工作的項目，並保留非 cron 階段項目不變。
+    套用維護時，OpenClaw 也會移除 7 天前的過時 `cron:<jobId>:run:<uuid>` 階段註冊表項目，同時保留目前執行中 cron 工作的項目，並保持非 cron 階段項目不變。
 
   </Accordion>
   <Accordion title="tasks flow list | show | cancel">
@@ -260,13 +260,13 @@ openclaw tasks notify <lookup> state_changes
   </Accordion>
 </AccordionGroup>
 
-## 聊天任務看板 (`/tasks`)
+## 聊天工作面板 (`/tasks`)
 
-在任何聊天階段中使用 `/tasks` 來查看連結至該階段的背景任務。看板會顯示作用中及最近完成的任務，並包含執行時期、狀態、時序以及進度或錯誤詳細資訊。
+在任何聊天階段中使用 `/tasks` 來查看連結至該階段的背景工作。面板會顯示作用中及最近完成的工作，並包含執行階段、狀態、時機、進度或錯誤詳細資訊。
 
-當前工作階段若沒有可見的連結任務，`/tasks` 會退回使用代理本地的任務計數，讓您仍然能獲得概覽，而不會洩漏其他工作階段的細節。
+當目前工作階段沒有可見的連結任務時，`/tasks` 會回退到代理程式本機任務計數，以便您仍能獲得概覽而不會洩漏其他工作階段的詳細資訊。
 
-若要查看完整的操作員帳本，請使用 CLI：`openclaw tasks list`。
+如需完整的操作員帳本，請使用 CLI：`openclaw tasks list`。
 
 ## 狀態整合 (任務壓力)
 
@@ -280,9 +280,9 @@ Tasks: 3 queued · 2 running · 1 issues
 
 - **active** - `queued` + `running` 的計數
 - **failures** - `failed` + `timed_out` + `lost` 的計數
-- **byRuntime** - 依 `acp`、`subagent`、`cron`、`cli` 細分
+- **byRuntime** - 依 `acp`、`subagent`、`cron`、`cli` 的細分
 
-`/status` 和 `session_status` 工具都使用具備清理感知的任務快照：優先顯示作用中任務，隱藏陳舊的已完成項目，且僅當沒有作用中工作時才顯示最近的失敗。這能讓狀態卡片專注於當下重要的事項。
+`/status` 和 `session_status` 工具都使用具備清理感知能力的任務快照：優先顯示作用中任務，隱藏過期的完成項目，並且僅在沒有剩餘作用中工作時才顯示最近的失敗。這能讓狀態卡片聚焦於當下重要的事項。
 
 ## 儲存與維護
 
@@ -294,18 +294,18 @@ Tasks: 3 queued · 2 running · 1 issues
 $OPENCLAW_STATE_DIR/tasks/runs.sqlite
 ```
 
-註冊表會在閘道啟動時載入記憶體，並將寫入同步至 SQLite 以確保重啟後的持久性。
-閘道透過使用 SQLite 預設的自動檢查點 (autocheckpoint) 臨界值，加上定期與關機時的 `TRUNCATE` 檢查點，來讓 SQLite 的預寫日誌 (write-ahead log) 保持受限。
+登錄表會在閘道啟動時載入記憶體，並將寫入同步至 SQLite 以確保重新啟動後的持久性。
+閘道透過使用 SQLite 的預設自動檢查點閾值，加上定期和關機 `TRUNCATE` 檢查點，來保持 SQLite 預寫日誌的大小在一定範圍內。
 
 ### 自動維護
 
 掃掠程式 (sweeper) 每 **60 秒** 執行一次，並處理四件事：
 
 <Steps>
-  <Step title="Reconciliation">檢查作用中任務是否仍具備具權威性的執行期後端。ACP/子代理任務使用子工作階段狀態，Cron 任務使用作用中工作擁有權，而具備執行身分的 CLI 任務則使用擁有該執行的內容。如果該後端狀態消失超過 5 分鐘，任務會被標記為 `lost`。</Step>
+  <Step title="Reconciliation">檢查作用中任務是否仍具有權威的執行階段支援。ACP/子代理程式任務使用子工作階段狀態，cron 任務使用作用中工作擁有權，而具有執行身分的 CLI 任務則使用擁有的執行內容。如果該支援狀態超過 5 分鐘仍未存在，該任務會被標記為 `lost`。</Step>
   <Step title="ACP session repair">關閉終結或孤立的父擁有一次性 ACP 工作階段，並僅當沒有剩餘的作用中對話連結時，才關閉陳舊的終結或孤立持久式 ACP 工作階段。</Step>
-  <Step title="清理標記">在終止任務上設定 `cleanupAfter` 時間戳（endedAt + 7 天）。在保留期間，遺失的任務仍會在稽核中以警告形式顯示；在 `cleanupAfter` 過期或缺少清理元數據時，它們會變為錯誤。</Step>
-  <Step title="修剪">刪除超過其 `cleanupAfter` 日期的記錄。</Step>
+  <Step title="Cleanup stamping">在終端任務上設定 `cleanupAfter` 時間戳記 (endedAt + 7 天)。在保留期間，遺失的任務仍會在稽核中以警告形式顯示；在 `cleanupAfter` 過期或缺少清理元資料時，則會顯示為錯誤。</Step>
+  <Step title="Pruning">刪除超過其 `cleanupAfter` 日期的記錄。</Step>
 </Steps>
 
 <Note>**保留期限：** 終止任務記錄會保留 **7 天**，然後自動修剪。無需配置。</Note>
@@ -313,29 +313,29 @@ $OPENCLAW_STATE_DIR/tasks/runs.sqlite
 ## 任務與其他系統的關聯
 
 <AccordionGroup>
-  <Accordion title="任務與任務流程">
-    [任務流程](/zh-Hant/automation/taskflow) 是位於背景任務之上的流程編排層。單一流程可在其生命週期內使用受管或鏡像同步模式協調多個任務。使用 `openclaw tasks` 檢查個別任務記錄，並使用 `openclaw tasks flow` 檢查編排流程。
+  <Accordion title="Tasks and Task Flow">
+    [Task Flow](/zh-Hant/automation/taskflow) 是位於背景任務之上的流程編排層。單一流程可能會在其生命週期中使用受控或鏡像同步模式來協調多個任務。使用 `openclaw tasks` 來檢查個別任務記錄，並使用 `openclaw tasks flow` 來檢查協調流程。
 
-    詳情請參閱 [任務流程](/zh-Hant/automation/taskflow)。
-
-  </Accordion>
-  <Accordion title="任務與 cron">
-    cron 工作 **定義** 駐留在 `~/.openclaw/cron/jobs.json` 中；執行階段執行狀態則駐留在旁邊的 `~/.openclaw/cron/jobs-state.json` 中。**每** 次 cron 執行都會建立一個任務記錄——包括主工作階段和隔離式。主工作階段的 cron 任務預設使用 `silent` 通知政策，以便在不產生通知的情況下進行追蹤。
-
-    請參閱 [Cron 工作](/zh-Hant/automation/cron-jobs)。
+    詳情請參閱 [Task Flow](/zh-Hant/automation/taskflow)。
 
   </Accordion>
-  <Accordion title="任務與心跳">
-    心跳執行是主工作階段的輪次——它們不會建立任務記錄。當任務完成時，它可以觸發心跳喚醒，以便您即時查看結果。
+  <Accordion title="Tasks and cron">
+    Cron 工作 **定義** 存在於 `~/.openclaw/cron/jobs.json` 中；執行時期狀態則存在於旁邊的 `~/.openclaw/cron/jobs-state.json` 中。**每個** cron 執行都會建立一個任務記錄——包括主工作階段和獨立式。主工作階段的 cron 任務預設使用 `silent` 通知原則，以便進行追蹤而不產生通知。
 
-    請參閱 [心跳](/zh-Hant/gateway/heartbeat)。
+    請參閱 [Cron Jobs](/zh-Hant/automation/cron-jobs)。
+
+  </Accordion>
+  <Accordion title="Tasks and heartbeat">
+    Heartbeat 執行是主工作階段的回合——它們不會建立任務記錄。當任務完成時，它可以觸發 heartbeat 喚醒，以便您立即看到結果。
+
+    請參閱 [Heartbeat](/zh-Hant/gateway/heartbeat)。
 
   </Accordion>
   <Accordion title="Tasks and sessions">
-    任務可能會參考 `childSessionKey`（工作執行的地方）和 `requesterSessionKey`（誰啟動了它）。Session 是對話上下文；任務則是在其之上的活動追蹤。
+    任務可能會參照 `childSessionKey` (工作執行的地方) 和 `requesterSessionKey` (啟動它的人)。工作階段是對話上下文；任務則是建構在這之上的活動追蹤。
   </Accordion>
   <Accordion title="Tasks and agent runs">
-    任務的 `runId` 會連結到執行工作的 agent run。Agent 生命週期事件（開始、結束、錯誤）會自動更新任務狀態 - 您不需要手動管理生命週期。
+    任務的 `runId` 連結到執行工作的 agent 執行。Agent 生命週期事件 (開始、結束、錯誤) 會自動更新任務狀態——您無需手動管理生命週期。
   </Accordion>
 </AccordionGroup>
 
@@ -343,6 +343,6 @@ $OPENCLAW_STATE_DIR/tasks/runs.sqlite
 
 - [Automation](/zh-Hant/automation) - 所有自動化機制一覽
 - [CLI: Tasks](/zh-Hant/cli/tasks) - CLI 指令參考
-- [Heartbeat](/zh-Hant/gateway/heartbeat) - 定期主會話回合
-- [Scheduled Tasks](/zh-Hant/automation/cron-jobs) - 排程背景工作
-- [Task Flow](/zh-Hant/automation/taskflow) - 任務之上的流程編排
+- [Heartbeat](/zh-Hant/gateway/heartbeat) - 定期主工作階段回合
+- [排程任務](/zh-Hant/automation/cron-jobs) - 排程背景工作
+- [任務流程](/zh-Hant/automation/taskflow) - 任務層級之上的流程編排

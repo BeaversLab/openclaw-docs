@@ -16,7 +16,7 @@ Añade soporte para el proveedor de modelos fal a OpenClaw.
 
 ## Superficie
 
-proveedores: fal; contratos: imageGenerationProviders, videoGenerationProviders
+proveedores: fal; contratos: imageGenerationProviders, musicGenerationProviders, videoGenerationProviders
 
 ## Documentos relacionados
 

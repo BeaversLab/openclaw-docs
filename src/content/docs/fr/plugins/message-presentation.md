@@ -1,5 +1,5 @@
 ---
-summary: "Cartes de messages sémantiques, boutons, sélections, texte de repli et indices de livraison pour les plugins de canal"
+summary: "Cartes de message sémantiques, boutons, sélections, texte de repli et indices de livraison pour les plugins de channel"
 title: "Présentation des messages"
 read_when:
   - Adding or modifying message card, button, or select rendering
@@ -19,8 +19,9 @@ Utilisez la présentation pour une interface utilisateur de message portable :
 - menus de sélection
 - titre et ton de la carte
 
-N'ajoutez pas de nouveaux champs natifs au fournisseur tels que Discord `components`, Slack
-`blocks`, Telegram `buttons`, Teams `card` ou Feishu `card` à l'outil de message partagé. Ce sont des sorties du moteur de restitution appartenant au plugin de canal.
+N'ajoutez pas de nouveaux champs natifs du provider tels que Discord Discord`components`Slack, Slack
+`blocks`Telegram, Telegram `buttons`, Teams `card` ou Feishu `card` à l'outil de
+message partagé. Ce sont des sorties du renderer appartenant au plugin de channel.
 
 ## Contrat
 
@@ -45,6 +46,11 @@ type MessagePresentationButton = {
   label: string;
   value?: string;
   url?: string;
+  webApp?: { url: string };
+  /** @deprecated Use webApp. Accepted for legacy JSON payloads only. */
+  web_app?: { url: string };
+  priority?: number;
+  disabled?: boolean;
   style?: "primary" | "secondary" | "success" | "danger";
 };
 
@@ -66,16 +72,29 @@ type ReplyPayloadDelivery = {
 
 Sémantique des boutons :
 
-- `value` est une valeur d'action d'application routée via le chemin d'interaction existant du canal lorsque celui-ci prend en charge les commandes cliquables.
+- `value` est une valeur d'action d'application routée via le chemin d'interaction
+  existant du channel lorsque celui-ci prend en charge les contrôles cliquables.
 - `url` est un bouton de lien. Il peut exister sans `value`.
+- `webApp`Telegram décrit un bouton d'application web natif du channel. Telegram l'affiche
+  sous la forme `web_app` et ne le prend en charge que dans les chats privés. `web_app` est toujours
+  accepté dans les payloads JSON libres pour compatibilité, mais les producteurs TypeScript
+  devraient utiliser `webApp`.
 - `label` est obligatoire et est également utilisé dans le texte de repli.
-- `style` est consultatif. Les moteurs de restitution doivent mapper les styles non pris en charge à une valeur par défaut sécurisée, sans échouer l'envoi.
+- `style` est consultatif. Les renderers doivent mapper les styles non pris en charge à une valeur
+  par défaut sûre, et ne pas échouer l'envoi.
+- `priority` est facultatif. Lorsqu'un channel publie des limites d'action et que des contrôles
+  doivent être supprimés, le core garde en priorité les boutons de priorité supérieure et préserve
+  l'ordre original parmi les boutons de même priorité. Lorsque tous les contrôles tiennent, l'ordre
+  de rédaction est préservé.
+- `disabled` est facultatif. Les channels doivent s'inscrire avec `supportsDisabled` ; sinon
+  le core dégrade le contrôle désactivé en texte de repli non interactif.
 
-Sémantique des sélections :
+Sémantique de sélection :
 
-- `options[].value` est la valeur de l'application sélectionnée.
-- `placeholder` est consultatif et peut être ignoré par les canaux sans support natif des sélections.
-- Si un canal ne prend pas en charge les sélections, le texte de repli liste les étiquettes.
+- `options[].value` est la valeur d'application sélectionnée.
+- `placeholder` est consultatif et peut être ignoré par les channels sans prise en charge
+  native des sélections.
+- Si un channel ne prend pas en charge les sélections, le texte de repli liste les étiquettes.
 
 ## Exemples de producteurs
 
@@ -99,7 +118,7 @@ Carte simple :
 }
 ```
 
-Bouton de lien URL uniquement :
+Bouton de lien uniquement URL :
 
 ```json
 {
@@ -108,6 +127,19 @@ Bouton de lien URL uniquement :
     {
       "type": "buttons",
       "buttons": [{ "label": "Open notes", "url": "https://example.com/release" }]
+    }
+  ]
+}
+```
+
+Bouton Mini App Telegram :
+
+```json
+{
+  "blocks": [
+    {
+      "type": "buttons",
+      "buttons": [{ "label": "Launch", "web_app": { "url": "https://example.com/app" } }]
     }
   ]
 }
@@ -161,9 +193,9 @@ Livraison épinglée avec JSON explicite :
 }
 ```
 
-## Contrat du moteur de restitution
+## Contrat du moteur de rendu
 
-Les plugins de canal déclarent le support de la restitution sur leur adaptateur sortant :
+Les plugins de channel déclarent la prise en charge du rendu sur leur adaptateur sortant :
 
 ```ts
 const adapter: ChannelOutboundAdapter = {
@@ -174,6 +206,27 @@ const adapter: ChannelOutboundAdapter = {
     selects: true,
     context: true,
     divider: true,
+    limits: {
+      actions: {
+        maxActions: 25,
+        maxActionsPerRow: 5,
+        maxRows: 5,
+        maxLabelLength: 80,
+        maxValueBytes: 100,
+        supportsStyles: true,
+        supportsDisabled: false,
+      },
+      selects: {
+        maxOptions: 25,
+        maxLabelLength: 100,
+        maxValueBytes: 100,
+      },
+      text: {
+        maxLength: 2000,
+        encoding: "characters",
+        markdownDialect: "discord-markdown",
+      },
+    },
   },
   deliveryCapabilities: {
     pin: true,
@@ -187,23 +240,57 @@ const adapter: ChannelOutboundAdapter = {
 };
 ```
 
-Les champs de capacité sont des booléens intentionnellement simples. Ils décrivent ce que le moteur de restitution peut rendre interactif, et non chaque limite de la plateforme native. Les moteurs de restitution possèdent toujours les limites spécifiques à la plateforme, telles que le nombre maximum de boutons, le nombre de blocs et la taille de la carte.
+Les booléens de capacité décrivent ce que le moteur de rendu peut rendre interactif. Les `limits` facultatifs décrivent l'enveloppe générique que le cœur peut adapter avant d'appeler le moteur de rendu :
 
-## Flux de restitution principal
+```ts
+type ChannelPresentationCapabilities = {
+  supported?: boolean;
+  buttons?: boolean;
+  selects?: boolean;
+  context?: boolean;
+  divider?: boolean;
+  limits?: {
+    actions?: {
+      maxActions?: number;
+      maxActionsPerRow?: number;
+      maxRows?: number;
+      maxLabelLength?: number;
+      maxValueBytes?: number;
+      supportsStyles?: boolean;
+      supportsDisabled?: boolean;
+      supportsLayoutHints?: boolean;
+    };
+    selects?: {
+      maxOptions?: number;
+      maxLabelLength?: number;
+      maxValueBytes?: number;
+    };
+    text?: {
+      maxLength?: number;
+      encoding?: "characters" | "utf8-bytes" | "utf16-units";
+      markdownDialect?: "plain" | "markdown" | "html" | "slack-mrkdwn" | "discord-markdown";
+      supportsEdit?: boolean;
+    };
+  };
+};
+```
 
-Lorsqu'un `ReplyPayload` ou une action de message inclut `presentation`, le cœur :
+Le cœur applique des limites génériques aux contrôles sémantiques avant le rendu. Les moteurs de rendu conservent la validation finale spécifique au provider et le découpage pour le nombre de blocs natifs, la taille des cartes, les limites d'URL et les particularités du provider qui ne peuvent pas être exprimées dans le contrat générique. Si les limites suppriment tous les contrôles d'un bloc, le cœur conserve les libellés sous forme de texte contextuel non interactif afin que le message envoyé conserve toujours un repli visible.
+
+## Flux de rendu du cœur
+
+Lorsqu'une `ReplyPayload` ou une action de message inclut `presentation`, le cœur :
 
 1. Normalise la charge utile de présentation.
 2. Résout l'adaptateur sortant du channel cible.
 3. Lit `presentationCapabilities`.
-4. Appelle `renderPresentation` lorsque l'adaptateur peut rendre la charge utile.
-5. Revient à du texte conservateur lorsque l'adaptateur est absent ou ne peut pas rendre.
-6. Envoie la charge utile résultante via le chemin de livraison normal du channel.
-7. Applique les métadonnées de livraison telles que `delivery.pin` après le premier
-   message envoyé avec succès.
+4. Applique les limites de capacité génériques telles que le nombre d'actions, la longueur du libellé et le nombre d'options de sélection lorsque l'adaptateur les annonce.
+5. Appelle `renderPresentation` lorsque l'adaptateur peut rendre la charge utile.
+6. Revient à un texte conservateur lorsque l'adaptateur est absent ou ne peut pas rendre.
+7. Envoie la charge utile résultante via le chemin de livraison normal du channel.
+8. Applique les métadonnées de livraison telles que `delivery.pin` après le premier message envoyé avec succès.
 
-Le cœur gère le comportement de repli afin que les producteurs puissent rester indépendants du channel. Les plugins de
-channel gèrent le rendu natif et la gestion des interactions.
+Le cœur est responsable du comportement de repli afin que les producteurs puissent rester agnostiques vis-à-vis des channels. Les plugins de channel sont responsables du rendu natif et de la gestion des interactions.
 
 ## Règles de dégradation
 
@@ -215,39 +302,38 @@ Le texte de repli comprend :
 - Les blocs `text` comme paragraphes normaux
 - Les blocs `context` comme lignes de contexte compactes
 - Les blocs `divider` comme séparateur visuel
-- les étiquettes des boutons, y compris les URL pour les boutons de lien
-- les étiquettes des options de sélection
+- les libellés des boutons, y compris les URL pour les boutons de lien
+- les libellés des options de sélection
 
 Les contrôles natifs non pris en charge doivent se dégrader plutôt que de faire échouer tout l'envoi.
 Exemples :
 
 - Telegram avec les boutons en ligne désactivés envoie le texte de repli.
-- Un channel sans support de sélection liste les options de sélection sous forme de texte.
-- Un bouton uniquement URL devient soit un bouton de lien natif, soit une ligne d'URL de repli.
-- Les échecs d'épinglage optionnels ne font pas échouer le message livré.
+- Un canal sans prise en charge des sélections répertorie les options de sélection sous forme de texte.
+- Un bouton avec uniquement une URL devient soit un bouton de lien natif, soit une ligne de URL de repli.
+- Les échecs d'épinglage facultatifs ne font pas échouer le message délivré.
 
-L'exception principale est `delivery.pin.required: true` ; si l'épinglage est demandé comme
-requis et que le channel ne peut pas épingler le message envoyé, la livraison signale un échec.
+L'exception principale est `delivery.pin.required: true` ; si l'épinglage est demandé comme étant requis et que le canal ne peut pas épingler le message envoyé, la livraison signale un échec.
 
-## Mappage du provider
+## Mappage de provider
 
 Moteurs de rendu groupés actuels :
 
-| Channel         | Cible de rendu natif                   | Notes                                                                                                                                                                                       |
+| Canal           | Cible de rendu native                  | Remarques                                                                                                                                                                                   |
 | --------------- | -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Discord         | Composants et conteneurs de composants | Préserve l'ancien `channelData.discord.components` pour les producteurs de charges utiles natives de provider existants, mais les nouveaux envois partagés doivent utiliser `presentation`. |
 | Slack           | Block Kit                              | Préserve l'ancien `channelData.slack.blocks` pour les producteurs de charges utiles natives de provider existants, mais les nouveaux envois partagés doivent utiliser `presentation`.       |
-| Telegram        | Texte plus claviers en ligne           | Les boutons/sélections nécessitent la capacité de bouton en ligne pour la surface cible ; sinon le texte de repli est utilisé.                                                              |
-| Mattermost      | Texte plus props interactifs           | Les autres blocs se dégradent en texte.                                                                                                                                                     |
-| Microsoft Teams | Cartes adaptatives                     | Le texte `message` brut est inclus avec la carte lorsque les deux sont fournis.                                                                                                             |
+| Telegram        | Texte plus claviers en ligne           | Les boutons/sélections nécessitent la capacité de bouton en ligne pour la surface cible ; sinon, un repli texte est utilisé.                                                                |
+| Mattermost      | Texte plus props interactives          | Les autres blocs dégradent en texte.                                                                                                                                                        |
+| Microsoft Teams | Adaptive Cards                         | Le texte brut `message` est inclus avec la carte lorsque les deux sont fournis.                                                                                                             |
 | Feishu          | Cartes interactives                    | L'en-tête de la carte peut utiliser `title` ; le corps évite de dupliquer ce titre.                                                                                                         |
-| Canaux simples  | Repli de texte                         | Les canaux sans moteur de rendu obtiennent toujours une sortie lisible.                                                                                                                     |
+| Canaux simples  | Repli texte                            | Les canaux sans moteur de rendu obtiennent toujours une sortie lisible.                                                                                                                     |
 
-La compatibilité avec les payloads natifs du fournisseur est une mesure de transition pour les producteurs de réponse existants. Ce n'est pas une raison pour ajouter de nouveaux champs natifs partagés.
+La compatibilité avec les charges utiles natives de provider est une facilité de transition pour les producteurs de réponses existants. Ce n'est pas une raison pour ajouter de nouveaux champs natifs partagés.
 
-## Presentation vs InteractiveReply
+## Présentation vs InteractiveReply
 
-`InteractiveReply` est le sous-ensemble interne plus ancien utilisé par les helpers d'approbation et d'interaction. Il prend en charge :
+`InteractiveReply` est le sous-ensemble interne plus ancien utilisé par les assistants d'approbation et d'interaction. Il prend en charge :
 
 - texte
 - boutons
@@ -259,51 +345,80 @@ La compatibilité avec les payloads natifs du fournisseur est une mesure de tran
 - ton
 - contexte
 - diviseur
-- boutons URL uniquement
+- boutons avec uniquement une URL
 - métadonnées de livraison génériques via `ReplyPayload.delivery`
 
-Utilisez les helpers de `openclaw/plugin-sdk/interactive-runtime` lors de la connexion de
-l'ancien code :
+Utilisez les assistants de `openclaw/plugin-sdk/interactive-runtime` lors du pontage avec un ancien code :
 
 ```ts
-import { interactiveReplyToPresentation, normalizeMessagePresentation, presentationToInteractiveControlsReply, presentationToInteractiveReply, renderMessagePresentationFallbackText } from "openclaw/plugin-sdk/interactive-runtime";
+import { adaptMessagePresentationForChannel, applyPresentationActionLimits, interactiveReplyToPresentation, normalizeMessagePresentation, presentationPageSize, presentationToInteractiveControlsReply, presentationToInteractiveReply, renderMessagePresentationFallbackText } from "openclaw/plugin-sdk/interactive-runtime";
 ```
 
-Le nouveau code doit accepter ou produire `MessagePresentation` directement.
+Le nouveau code doit accepter ou produire `MessagePresentation` directement. Les payloads `interactive` existants sont un sous-ensemble obsolète de `presentation` ; la prise en charge à l'exécution est maintenue pour les anciens producteurs.
 
-`presentationToInteractiveReply(...)` préserve le texte de présentation visible en mappant le titre, le texte, le contexte, les boutons et les sélections dans l'ancienne forme `InteractiveReply`. Les moteurs de rendu de composants qui dessinent déjà nativement des blocs de titre, de texte, de contexte et de séparateur devraient plutôt utiliser `presentationToInteractiveControlsReply(...)`, puis ajouter uniquement les contrôles de bouton et de sélection.
+Les types `InteractiveReply*` hérités et les aides de conversion sont marqués `@deprecated` dans le SDK :
 
-`renderMessagePresentationFallbackText(...)` renvoie une chaîne vide pour les blocs de présentation qui n'ont pas de repli textuel, comme une présentation composée uniquement d'un séparateur. Les transports qui nécessitent un corps d'envoi non vide peuvent passer `emptyFallback` pour opter pour un corps minimal sans modifier le contrat de repli par défaut.
+- `InteractiveReply`, `InteractiveReplyBlock`, `InteractiveReplyButton`,
+  `InteractiveReplyOption`, `InteractiveReplySelectBlock`, et
+  `InteractiveReplyTextBlock`
+- `normalizeInteractiveReply(...)`
+- `hasInteractiveReplyBlocks(...)`
+- `interactiveReplyToPresentation(...)`
+- `presentationToInteractiveReply(...)`
+- `presentationToInteractiveControlsReply(...)`
+- `resolveInteractiveTextFallback(...)`
+- `reduceInteractiveReply(...)`
+
+`presentationToInteractiveReply(...)` et
+`presentationToInteractiveControlsReply(...)` restent disponibles en tant que ponts de rendu
+pour les implémentations de canal héritées. Le nouveau code de producteur ne doit pas les
+appeler ; envoyez `presentation` et laissez l'adaptation du canal principal gérer le rendu.
+
+Les assistants d'approbation ont également des remplacements basés sur la présentation :
+
+- utilisez `buildApprovalPresentationFromActionDescriptors(...)` au lieu de
+  `buildApprovalInteractiveReplyFromActionDescriptors(...)`
+- utilisez `buildApprovalPresentation(...)` au lieu de
+  `buildApprovalInteractiveReply(...)`
+- utilisez `buildExecApprovalPresentation(...)` au lieu de
+  `buildExecApprovalInteractiveReply(...)`
+
+`renderMessagePresentationFallbackText(...)` renvoie une chaîne vide pour
+les blocs de présentation qui n'ont pas de repli textuel, comme une présentation
+composée uniquement d'un séparateur. Les transports qui nécessitent un corps d'envoi non vide peuvent passer
+`emptyFallback` pour opter pour un corps minimal sans modifier le contrat de repli par défaut.
 
 ## Épinglage de livraison
 
-L'épinglage est un comportement de livraison, pas une présentation. Utilisez `delivery.pin` au lieu des champs natifs du provider tels que `channelData.telegram.pin`.
+L'épinglage est un comportement de livraison, pas une présentation. Utilisez `delivery.pin` au lieu de
+champs natifs du fournisseur tels que `channelData.telegram.pin`.
 
 Sémantique :
 
 - `pin: true` épingle le premier message livré avec succès.
-- `pin.notify` correspond par défaut à `false`.
-- `pin.required` correspond par défaut à `false`.
-- Les échecs d'épinglage optionnel dégradent et laissent le message envoyé intact.
-- Les échecs d'épinglage requis font échouer la livraison.
-- Les messages fractionnés épinglent le premier bloc livré, et non le bloc de queue.
+- `pin.notify` est `false` par défaut.
+- `pin.required` est `false` par défaut.
+- Les échecs d'épinglage facultatifs dégradent et laissent le message envoyé intact.
+- Les échecs d'épinglage requis entraînent l'échec de la livraison.
+- Les messages fragmentés épinglent le premier fragment livré, et non le dernier fragment.
 
-Les actions de message manuelles `pin`, `unpin` et `pins` existent toujours pour les messages existants lorsque le provider prend en charge ces opérations.
+Les actions de message `pin`, `unpin` et `pins` manuelles existent toujours pour les messages existants lorsque le provider prend en charge ces opérations.
 
 ## Liste de contrôle pour l'auteur de plugin
 
 - Déclarez `presentation` à partir de `describeMessageTool(...)` lorsque le channel peut restituer ou dégrader en toute sécurité la présentation sémantique.
-- Ajoutez `presentationCapabilities` à l'adaptateur sortant (outbound) au runtime.
-- Implémentez `renderPresentation` dans le code d'exécution (runtime), et non dans le code de configuration du plugin du plan de contrôle.
-- Gardez les bibliothèques d'interface utilisateur natives en dehors des chemins de configuration/catalogue à chaud.
-- Conservez les limites de la plateforme dans le moteur de rendu et les tests.
-- Ajoutez des tests de repli pour les boutons, sélections, boutons d'URL non pris en charge, la duplication de titre/texte et les envois mixtes `message` plus `presentation`.
-- Ajoutez la prise en charge de l'épinglage de livraison via `deliveryCapabilities.pin` et `pinDeliveredMessage` uniquement lorsque le provider peut épingler l'identifiant du message envoyé.
-- N'exposez pas de nouveaux champs natifs de fournisseur pour les cartes/blocs/composants/boutons via le schéma d'action de message partagé.
+- Ajoutez `presentationCapabilities` à l'adaptateur sortant au moment de l'exécution.
+- Implémentez `renderPresentation` dans le code d'exécution, et non dans le code de configuration du plugin du plan de contrôle.
+- Gardez les bibliothèques d'interface utilisateur natives hors des chemins de configuration/de catalogue à chaud.
+- Déclarez les limites de capacités génériques sur `presentationCapabilities.limits` lorsqu'elles sont connues.
+- Conservez les limites finales de la plateforme dans le moteur de rendu et les tests.
+- Ajoutez des tests de repli pour les boutons non pris en charge, les sélections, les boutons d'URL, la duplication de titre/texte et les envois mixtes `message` et `presentation`.
+- Ajoutez la prise en charge de l'épinglage de livraison via `deliveryCapabilities.pin` et `pinDeliveredMessage` uniquement lorsque le provider peut épingler l'id du message envoyé.
+- N'exposez pas de nouveaux champs natifs de carte/bloc/composant/bouton du provider via le schéma d'action de message partagé.
 
 ## Documentation connexe
 
 - [Message CLI](/fr/cli/message)
-- [Aperçu du Plugin SDK](/fr/plugins/sdk-overview)
+- [Aperçu du SDK de plugin](/fr/plugins/sdk-overview)
 - [Architecture du plugin](/fr/plugins/architecture-internals#message-tool-schemas)
-- [Plan de refonte de la présentation du canal](/fr/plan/ui-channels)
+- [Plan de refactorisation de la présentation des channels](/fr/plan/ui-channels)

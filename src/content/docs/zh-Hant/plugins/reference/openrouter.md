@@ -16,7 +16,7 @@ title: "OpenRouter 外掛程式"
 
 ## 介面
 
-providers: openrouter; contracts: imageGenerationProviders, mediaUnderstandingProviders, speechProviders, videoGenerationProviders
+providers: openrouter; contracts: imageGenerationProviders, mediaUnderstandingProviders, musicGenerationProviders, speechProviders, videoGenerationProviders
 
 ## 相關文件
 

@@ -133,6 +133,9 @@ OpenClaw.
 
 ## Ejemplo de ds4
 
+Para la configuración completa, la guía del tamaño del contexto y los comandos de verificación, consulte
+[ds4](/es/providers/ds4).
+
 ```json5
 {
   models: {
@@ -143,9 +146,9 @@ OpenClaw.
         api: "openai-completions",
         timeoutSeconds: 300,
         localService: {
-          command: "/Users/you/Projects/oss/ds4/ds4-server",
-          args: ["--model", "/Users/you/Projects/oss/ds4/ds4flash.gguf", "--host", "127.0.0.1", "--port", "18000", "--ctx", "393216"],
-          cwd: "/Users/you/Projects/oss/ds4",
+          command: "<DS4_DIR>/ds4-server",
+          args: ["--model", "<DS4_DIR>/ds4flash.gguf", "--host", "127.0.0.1", "--port", "18000", "--ctx", "32768", "--tokens", "128"],
+          cwd: "<DS4_DIR>",
           healthUrl: "http://127.0.0.1:18000/v1/models",
           readyTimeoutMs: 300000,
           idleStopMs: 0,
@@ -157,24 +160,24 @@ OpenClaw.
 }
 ```
 
-## Notas operacionales
+## Notas operativas
 
-- Un proceso de OpenClaw gestiona el hijo que inició. Otro proceso de OpenClaw
+- Un proceso de OpenClaw gestiona el proceso secundario que inició. Otro proceso de OpenClaw
   que ve la misma URL de salud ya activa la reutilizará sin adoptarla.
-- El inicio se serializa por comando y conjunto de argumentos del proveedor, por lo que las
-  solicitudes concurrentes no generan servidores duplicados para la misma configuración.
-- Las respuestas de transmisión activas mantienen una concesión; el apagado por inactividad espera hasta que el
-  manejo del cuerpo de la respuesta se complete.
-- Use `timeoutSeconds` en proveedores locales lentos para que los inicios en frío y las generaciones
-  largas no alcancen el tiempo de espera de solicitud de modelo predeterminado.
-- Use un `healthUrl` explícito si su servidor expone la disponibilidad en algún lugar distinto
+- El inicio se serializa por comando de proveedor y conjunto de argumentos, por lo que las
+  solicitudes simultáneas no generan servidores duplicados para la misma configuración.
+- Las respuestas de transmisión activas mantienen una concesión; el apagado inactivo espera hasta que el manejo
+  del cuerpo de la respuesta se complete.
+- Use `timeoutSeconds` en proveedores locales lentos para que los inicios en frío y las generaciones largas
+  no alcancen el tiempo de espera predeterminado de la solicitud del modelo.
+- Use un `healthUrl` explícito si su servidor expone la preparación en algún lugar distinto
   de `/v1/models`.
 
 ## Relacionado
 
 <CardGroup cols={2}>
-  <Card title="Modelos locales" href="/es/gateway/local-models" icon="servidor">
-    Configuración de modelos locales, opciones de proveedor y guía de seguridad.
+  <Card title="Modelos locales" href="/es/gateway/local-models" icon="server">
+    Configuración de modelos locales, opciones de proveedores y guía de seguridad.
   </Card>
   <Card title="Inferrs" href="/es/providers/inferrs" icon="cpu">
     Ejecute OpenClaw a través del servidor local compatible con OpenAI de inferrs.

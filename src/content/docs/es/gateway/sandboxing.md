@@ -161,7 +161,7 @@ Use `backend: "ssh"` cuando desee que OpenClaw aisle `exec`, herramientas de arc
 
 ### Backend OpenShell
 
-Use `backend: "openshell"` cuando quieras que OpenClaw ejecute herramientas en un entorno remoto administrado por OpenShell. Para obtener la guía de configuración completa, la referencia de configuración y la comparación de modos de espacio de trabajo, consulte la [página dedicada a OpenShell](/es/gateway/openshell).
+Use `backend: "openshell"` cuando desee que OpenClaw aisle las herramientas en un entorno remoto gestionado por OpenShell. Para la guía completa de configuración, la referencia de configuración y la comparación de modos de espacio de trabajo, consulte la [página de OpenShell](/es/gateway/openshell) dedicada.
 
 OpenShell reutiliza el mismo transporte SSH central y puente de sistema de archivos remoto que el backend SSH genérico, y agrega un ciclo de vida específico de OpenShell (`sandbox create/get/delete`, `sandbox ssh-config`) más el modo de espacio de trabajo opcional `mirror`.
 
@@ -337,17 +337,17 @@ Ejemplo (fuente de solo lectura + un directorio de datos adicional):
 ```
 
 <Warning>
-**Seguridad de los enlaces (binds)**
+**Seguridad de enlaces (binds)**
 
-- Los enlaces omiten el sistema de archivos del entorno restringido: exponen rutas del host con el modo que configures (`:ro` o `:rw`).
-- OpenClaw bloquea fuentes de enlace peligrosas (por ejemplo: `docker.sock`, `/etc`, `/proc`, `/sys`, `/dev` y los montajes principales que los expondrían).
-- OpenClaw también bloquea raíces comunes de credenciales del directorio de inicio, como `~/.aws`, `~/.cargo`, `~/.config`, `~/.docker`, `~/.gnupg`, `~/.netrc`, `~/.npm` y `~/.ssh`.
+- Los enlaces omiten el sistema de archivos del sandbox: exponen las rutas del host con el modo que configure (`:ro` o `:rw`).
+- OpenClaw bloquea fuentes de enlaces peligrosas (por ejemplo: `docker.sock`, `/etc`, `/proc`, `/sys`, `/dev`, y montajes principales que los expondrían).
+- OpenClaw también bloquea raíces de credenciales comunes del directorio de inicio, como `~/.aws`, `~/.cargo`, `~/.config`, `~/.docker`, `~/.gnupg`, `~/.netrc`, `~/.npm`, y `~/.ssh`.
 - La validación de enlaces no es solo coincidencia de cadenas. OpenClaw normaliza la ruta de origen y luego la resuelve de nuevo a través del ancestro existente más profundo antes de volver a verificar las rutas bloqueadas y las raíces permitidas.
-- Eso significa que los escapes a través de enlaces simbólicos principales seguirán fallando de forma cerrada incluso cuando la hoja final aún no exista. Ejemplo: `/workspace/run-link/new-file` todavía se resuelve como `/var/run/...` si `run-link` apunta allí.
-- Las raíces de origen permitidas se canonicalizan de la misma manera, por lo que una ruta que solo parece estar dentro de la lista de permitidos antes de la resolución de enlaces simbólicos todavía se rechaza como `outside allowed roots`.
-- Los montajes sensibles (secretos, claves SSH, credenciales de servicio) deben ser `:ro` a menos que sean absolutamente necesarios.
-- Combínalo con `workspaceAccess: "ro"` si solo necesitas acceso de lectura al espacio de trabajo; los modos de enlace siguen siendo independientes.
-- Consulta [Sandbox vs Tool Policy vs Elevated](/es/gateway/sandbox-vs-tool-policy-vs-elevated) para ver cómo interactúan los enlaces con la política de herramientas y la ejecución elevada.
+- Eso significa que los escapes de enlaces simbólicos principales aún fallan de forma cerrada incluso cuando la hoja final aún no existe. Ejemplo: `/workspace/run-link/new-file` todavía se resuelve como `/var/run/...` si `run-link` apunta allí.
+- Las raíces de origen permitidas se canonicalizan de la misma manera, por lo que una ruta que solo parece estar dentro de la lista de permitidos antes de la resolución del enlace simbólico todavía se rechaza como `outside allowed roots`.
+- Los montajes sensibles (secretos, claves SSH, credenciales de servicio) deben ser `:ro` a menos que sea absolutamente necesario.
+- Combínelo con `workspaceAccess: "ro"` si solo necesita acceso de lectura al espacio de trabajo; los modos de enlace se mantienen independientes.
+- Consulte [Sandbox vs Tool Policy vs Elevated](/es/gateway/sandbox-vs-tool-policy-vs-elevated) para ver cómo los enlaces interactúan con la política de herramientas y la ejecución elevada.
 
 </Warning>
 
@@ -356,11 +356,11 @@ Ejemplo (fuente de solo lectura + un directorio de datos adicional):
 Imagen predeterminada de Docker: `openclaw-sandbox:bookworm-slim`
 
 <Note>
-**Repositorio de código fuente vs npm install**
+**Obtención del código fuente vs npm install**
 
-Los scripts de ayuda `scripts/sandbox-setup.sh`, `scripts/sandbox-common-setup.sh` y `scripts/sandbox-browser-setup.sh` solo están disponibles al ejecutarse desde un [repositorio de código fuente](https://github.com/openclaw/openclaw). No están incluidos en el paquete npm.
+Los scripts de ayuda `scripts/sandbox-setup.sh`, `scripts/sandbox-common-setup.sh` y `scripts/sandbox-browser-setup.sh` solo están disponibles cuando se ejecuta desde una [obtención del código fuente](https://github.com/openclaw/openclaw). No se incluyen en el paquete npm.
 
-Si instalaste OpenClaw mediante `npm install -g openclaw`, utiliza los comandos `docker build` en línea que se muestran a continuación.
+Si instaló OpenClaw mediante `npm install -g openclaw`, utilice los comandos `docker build` en línea que se muestran a continuación.
 
 </Note>
 
@@ -393,28 +393,28 @@ Si instalaste OpenClaw mediante `npm install -g openclaw`, utiliza los comandos 
     OpenClaw no sustituye silenciosamente `debian:bookworm-slim` plano cuando falta `openclaw-sandbox:bookworm-slim`. Las ejecuciones en el sandbox que apuntan a la imagen predeterminada fallan rápidamente con una instrucción de construcción hasta que la construyas, porque la imagen empaquetada lleva `python3` para los ayudantes de escritura/edición del sandbox.
 
   </Step>
-  <Step title="Opcional: construir la imagen común">
-    Para una imagen de sandbox más funcional con herramientas comunes (por ejemplo, `curl`, `jq`, `nodejs`, `python3`, `git`):
+  <Step title="Opcional: compilar la imagen común">
+    Para una imagen de sandbox más funcional con herramientas comunes (por ejemplo `curl`, `jq`, `nodejs`, `python3`, `git`):
 
-    Desde un repositorio de código fuente:
+    Desde una obtención del código fuente:
 
     ```bash
     scripts/sandbox-common-setup.sh
     ```
 
-    Desde una instalación de npm, construye primero la imagen predeterminada (ver arriba) y luego construye la imagen común encima usando el [`scripts/docker/sandbox/Dockerfile.common`](https://github.com/openclaw/openclaw/blob/main/scripts/docker/sandbox/Dockerfile.common) del repositorio.
+    Desde una instalación npm, compile primero la imagen predeterminada (ver arriba), luego compile la imagen común encima usando el [`scripts/docker/sandbox/Dockerfile.common`](https://github.com/openclaw/openclaw/blob/main/scripts/docker/sandbox/Dockerfile.common) del repositorio.
 
-    Luego establece `agents.defaults.sandbox.docker.image` en `openclaw-sandbox-common:bookworm-slim`.
+    Luego establezca `agents.defaults.sandbox.docker.image` en `openclaw-sandbox-common:bookworm-slim`.
 
   </Step>
-  <Step title="Opcional: construir la imagen del navegador sandbox">
-    Desde un repositorio de código fuente:
+  <Step title="Opcional: compilar la imagen del navegador sandbox">
+    Desde una obtención del código fuente:
 
     ```bash
     scripts/sandbox-browser-setup.sh
     ```
 
-    Desde una instalación de npm, construye usando el [`scripts/docker/sandbox/Dockerfile.browser`](https://github.com/openclaw/openclaw/blob/main/scripts/docker/sandbox/Dockerfile.browser) del repositorio.
+    Desde una instalación npm, compile usando el [`scripts/docker/sandbox/Dockerfile.browser`](https://github.com/openclaw/openclaw/blob/main/scripts/docker/sandbox/Dockerfile.browser) del repositorio.
 
   </Step>
 </Steps>
@@ -458,9 +458,9 @@ De forma predeterminada, los contenedores de sandbox de Docker se ejecutan **sin
   </Accordion>
 </AccordionGroup>
 
-Las instalaciones de Docker y el gateway en contenedores se encuentran aquí: [Docker](/es/install/docker)
+Las instalaciones de Docker y la puerta de enlace (gateway) contenida se encuentran aquí: [Docker](/es/install/docker)
 
-Para los despliegues del gateway Docker, `scripts/docker/setup.sh` puede inicializar la configuración del sandbox. Establezca `OPENCLAW_SANDBOX=1` (o `true`/`yes`/`on`) para habilitar esa ruta. Puede anular la ubicación del socket con `OPENCLAW_DOCKER_SOCKET`. Configuración completa y referencia de variables de entorno: [Docker](/es/install/docker#agent-sandbox).
+Para los despliegues de la puerta de enlace Docker, `scripts/docker/setup.sh` puede iniciar la configuración del sandbox. Establezca `OPENCLAW_SANDBOX=1` (o `true`/`yes`/`on`) para habilitar esa ruta. Puede anular la ubicación del socket con `OPENCLAW_DOCKER_SOCKET`. Configuración completa y referencia de variables de entorno: [Docker](/es/install/docker#agent-sandbox).
 
 ## setupCommand (configuración única del contenedor)
 
@@ -473,11 +473,12 @@ Rutas:
 
 <AccordionGroup>
   <Accordion title="Errores comunes">
-    - El valor predeterminado de `docker.network` es `"none"` (sin salida), por lo que la instalación de paquetes fallará.
+    - El valor predeterminado de `docker.network` es `"none"` (sin salida), por lo que las instalaciones de paquetes fallarán.
     - `docker.network: "container:<id>"` requiere `dangerouslyAllowContainerNamespaceJoin: true` y es solo para casos de emergencia.
-    - `readOnlyRoot: true` previene la escritura; establezca `readOnlyRoot: false` o prepare una imagen personalizada.
-    - `user` debe ser root para la instalación de paquetes (omite `user` o establece `user: "0:0"`).
-    - La ejecución en el sandbox **no** hereda el `process.env` del host. Use `agents.defaults.sandbox.docker.env` (o una imagen personalizada) para las claves API de habilidades.
+    - `readOnlyRoot: true` impide escrituras; establezca `readOnlyRoot: false` o prepare una imagen personalizada.
+    - `user` debe ser root para las instalaciones de paquetes (omite `user` o establece `user: "0:0"`).
+    - La ejecución en el sandbox **no** hereda el `process.env` del host. Usa `agents.defaults.sandbox.docker.env` (o una imagen personalizada) para las claves API de las habilidades.
+    - Los valores en `agents.defaults.sandbox.docker.env` se pasan como variables de entorno explícitas del contenedor Docker. Cualquier persona con acceso al demonio Docker puede inspeccionarlas con comandos de metadatos de Docker como `docker inspect`. Usa una imagen personalizada, un archivo secreto montado u otra ruta de entrega de secretos si esa exposición de metadatos no es aceptable.
 
   </Accordion>
 </AccordionGroup>
@@ -486,18 +487,18 @@ Rutas:
 
 Las políticas de permiso/denegación de herramientas todavía se aplican antes que las reglas del sandbox. Si una herramienta se deniega globalmente o por agente, el sandbox no la restaura.
 
-`tools.elevated` es una vía de escape explícita que ejecuta `exec` fuera del sandbox (`gateway` de forma predeterminada, o `node` cuando el objetivo de ejecución es `node`). Las directivas `/exec` solo se aplican a remitentes autorizados y persisten por sesión; para deshabilitar `exec` de manera estricta, use la denegación de política de herramientas (consulte [Sandbox vs Tool Policy vs Elevated](/es/gateway/sandbox-vs-tool-policy-vs-elevated)).
+`tools.elevated` es una salida de emergencia explícita que ejecuta `exec` fuera del sandbox (`gateway` de forma predeterminada, o `node` cuando el objetivo de ejecución es `node`). Las directivas `/exec` solo se aplican a remitentes autorizados y persisten por sesión; para deshabilitar totalmente `exec`, usa la política de denegación de herramientas (consulta [Sandbox vs Tool Policy vs Elevated](/es/gateway/sandbox-vs-tool-policy-vs-elevated)).
 
 Depuración:
 
-- Use `openclaw sandbox explain` para inspeccionar el modo efectivo del sandbox, la política de herramientas y las claves de configuración de corrección.
-- Consulte [Sandbox vs Tool Policy vs Elevated](/es/gateway/sandbox-vs-tool-policy-vs-elevated) para el modelo mental de "¿por qué está bloqueado esto?".
+- Usa `openclaw sandbox explain` para inspeccionar el modo de sandbox efectivo, la política de herramientas y las claves de configuración de reparación.
+- Consulta [Sandbox vs Tool Policy vs Elevated](/es/gateway/sandbox-vs-tool-policy-vs-elevated) para obtener el modelo mental "¿por qué está bloqueado esto?".
 
 Manténgalo protegido.
 
 ## Invalidaciones de multiagente
 
-Cada agente puede anular sandbox + herramientas: `agents.list[].sandbox` y `agents.list[].tools` (más `agents.list[].tools.sandbox.tools` para la política de herramientas de sandbox). Consulte [Multi-Agent Sandbox & Tools](/es/tools/multi-agent-sandbox-tools) para obtener información sobre la precedencia.
+Cada agente puede anular el sandbox y las herramientas: `agents.list[].sandbox` y `agents.list[].tools` (más `agents.list[].tools.sandbox.tools` para la política de herramientas del sandbox). Consulta [Multi-Agent Sandbox & Tools](/es/tools/multi-agent-sandbox-tools) para conocer la precedencia.
 
 ## Ejemplo de habilitación mínima
 
@@ -518,7 +519,7 @@ Cada agente puede anular sandbox + herramientas: `agents.list[].sandbox` y `agen
 ## Relacionado
 
 - [Multi-Agent Sandbox & Tools](/es/tools/multi-agent-sandbox-tools) — anulaciones por agente y precedencia
-- [OpenShell](/es/gateway/openshell) — configuración del backend de sandbox administrado, modos de espacio de trabajo y referencia de configuración
-- [Sandbox configuration](/es/gateway/config-agents#agentsdefaultssandbox)
-- [Sandbox vs Tool Policy vs Elevated](/es/gateway/sandbox-vs-tool-policy-vs-elevated) — depuración de "¿por qué está bloqueado esto?"
-- [Security](/es/gateway/security)
+- [OpenShell](/es/gateway/openshell) — configuración del backend de espacio aislado administrado, modos de área de trabajo y referencia de configuración
+- [Configuración del espacio aislado](/es/gateway/config-agents#agentsdefaultssandbox)
+- [Espacio aislado frente a política de herramientas frente a elevado](/es/gateway/sandbox-vs-tool-policy-vs-elevated) — depuración de "¿por qué está bloqueado esto?"
+- [Seguridad](/es/gateway/security)

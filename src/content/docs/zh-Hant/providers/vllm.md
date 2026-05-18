@@ -88,7 +88,6 @@ GET http://127.0.0.1:8000/v1/models
         baseUrl: "http://127.0.0.1:8000/v1",
         apiKey: "${VLLM_API_KEY}",
         api: "openai-completions",
-        request: { allowPrivateNetwork: true },
         timeoutSeconds: 300, // Optional: extend connect/header/body/request timeout for slow local models
         models: [
           {
@@ -251,7 +250,7 @@ GET http://127.0.0.1:8000/v1/models
   </Accordion>
 
   <Accordion title="自訂基礎 URL">
-    如果您的 vLLM 伺服器在非預設主機或連接埠上執行，請在明確的提供者設定中設定 `baseUrl`：
+    如果您的 vLLM 伺服器在非預設的主機或連接埠上執行，請在明確的供應商設定中設定 `baseUrl`：
 
     ```json5
     {
@@ -261,7 +260,6 @@ GET http://127.0.0.1:8000/v1/models
             baseUrl: "http://192.168.1.50:9000/v1",
             apiKey: "${VLLM_API_KEY}",
             api: "openai-completions",
-            request: { allowPrivateNetwork: true },
             timeoutSeconds: 300,
             models: [
               {
@@ -286,8 +284,8 @@ GET http://127.0.0.1:8000/v1/models
 
 <AccordionGroup>
   <Accordion title="首次回應緩慢或遠端伺服器逾時">
-    對於大型本機模型、遠端 LAN 主機或 tailnet 連結，請設定
-    提供者層級的要求逾時時間：
+    對於大型本地模型、遠端 LAN 主機或 tailnet 連線，請設定一個
+    供應商範圍的請求逾時：
 
     ```json5
     {
@@ -297,7 +295,6 @@ GET http://127.0.0.1:8000/v1/models
             baseUrl: "http://192.168.1.50:8000/v1",
             apiKey: "${VLLM_API_KEY}",
             api: "openai-completions",
-            request: { allowPrivateNetwork: true },
             timeoutSeconds: 300,
             models: [{ id: "your-model-id", name: "Local vLLM Model" }],
           },
@@ -306,47 +303,50 @@ GET http://127.0.0.1:8000/v1/models
     }
     ```
 
-    `timeoutSeconds` 僅適用於 vLLM 模型 HTTP 要求，包括
-    連線設定、回應標頭、主體串流以及總體
-    guarded-fetch 中止。建議優先使用此選項，而非增加
-    `agents.defaults.timeoutSeconds`，後者控制的是整個代理程式的執行。
+    `timeoutSeconds` 僅適用於 vLLM 模型 HTTP 請求，包括
+    連線設定、回應標頭、主體串流以及總計
+    的 guarded-fetch 中止。在增加
+    `agents.defaults.timeoutSeconds` 之前建議先使用此設定，因後者控制整個代理程式的執行。
 
   </Accordion>
 
   <Accordion title="無法連線至伺服器">
-    請檢查 vLLM 伺服器是否正在執行且可存取：
+    檢查 vLLM 伺服器是否正在執行且可存取：
 
     ```bash
     curl http://127.0.0.1:8000/v1/models
     ```
 
-    如果您看到連線錯誤，請驗證主機、連接埠，以及 vLLM 是否已以 OpenAI 相容伺服器模式啟動。
-    對於明確指定的 loopback、LAN 或 Tailscale 端點，請同時設定
-    `models.providers.vllm.request.allowPrivateNetwork: true`；除非提供者
-    已明確信任，否則提供者要求預設會封鎖私人網路 URL。
+    如果您看到連線錯誤，請驗證主機、連接埠，以及 vLLM 是否以 OpenAI 相容的伺服器模式啟動。
+    對於明確的 loopback、LAN 或 Tailscale 端點，OpenClaw 會信任
+    精確設定的 `models.providers.vllm.baseUrl` 來源以進行受保護的模型
+    請求。沒有明確
+    加入的情況下，中繼資料/連結本機來源仍會被封鎖。僅在
+    vLLM 請求必須到達另一個私人來源時設定 `models.providers.vllm.request.allowPrivateNetwork: true`，並將其設為 `false`
+    以退出精確來源信任。
 
   </Accordion>
 
-  <Accordion title="要求發生驗證錯誤">
-    如果要求因驗證錯誤而失敗，請設定符合您伺服器設定的真實 `VLLM_API_KEY`，或是在 `models.providers.vllm` 下明確設定提供者。
+  <Accordion title="請求發生驗證錯誤">
+    如果請求因驗證錯誤而失敗，請設定符合您伺服器設定的真實 `VLLM_API_KEY`，或在 `models.providers.vllm` 下明確設定供應商。
 
     <Tip>
-    如果您的 vLLM 伺服器未強制執行驗證，`VLLM_API_KEY` 的任何非空值均可作為 OpenClaw 的啟用信號。
+    如果您的 vLLM 伺服器未強制執行驗證，則 `VLLM_API_KEY` 的任何非空值均可作為 OpenClaw 的加入訊號。
     </Tip>
 
   </Accordion>
 
-<Accordion title="未發現任何模型">自動探索需要設定 `VLLM_API_KEY`。如果您已定義 `models.providers.vllm`，除非 `agents.defaults.models` 包含 `"vllm/*": {}`，否則 OpenClaw 將僅使用您宣告的模型。</Accordion>
+<Accordion title="未發現模型">自動探索需要設定 `VLLM_API_KEY`。如果您已定義 `models.providers.vllm`，OpenClaw 將僅使用您宣告的模型，除非 `agents.defaults.models` 包含 `"vllm/*": {}`。</Accordion>
 
   <Accordion title="工具呈現為原始文字">
-    如果 Qwen 模型列印 JSON/XML 工具語法而非執行技能，
-    請查看上方「進階設定」中的 Qwen 指引。通常的修復方法是：
+    如果 Qwen 模型輸出 JSON/XML 工具語法而不是執行技能，
+    請檢查上方進階設定中的 Qwen 指引。通常的解決方法是：
 
     - 使用該模型的正確解析器/模板啟動 vLLM
     - 使用 `openclaw models list --provider vllm` 確認確切的模型 ID
-    - 僅當 `tool_choice: "auto"` 仍返回空或僅文字的
-      工具呼叫時，才新增專屬的各模型 `params.extra_body.tool_choice: "required"`
-      覆蓋
+    - 新增專屬的個別模型 `params.extra_body.tool_choice: "required"`
+      僅在 `tool_choice: "auto"` 仍然傳回空值或僅含文字的
+      工具呼叫時才進行覆寫
 
   </Accordion>
 </AccordionGroup>

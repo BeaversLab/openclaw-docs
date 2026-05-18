@@ -12,7 +12,7 @@ title: "Amazon Bedrock 外掛程式"
 ## 發行
 
 - 套件：`@openclaw/amazon-bedrock-provider`
-- 安裝方式：npm
+- 安裝途徑：npm；ClawHub
 
 ## 介面
 

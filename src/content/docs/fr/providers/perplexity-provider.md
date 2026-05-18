@@ -8,7 +8,7 @@ read_when:
 
 Le plugin Perplexity fournit des capacités de recherche web via l'API de recherche Perplexity ou Perplexity Sonar via OpenRouter.
 
-<Note>Cette page concerne la configuration du **provider** Perplexity. Pour l'**outil** Perplexity (comment l'agent l'utilise), consultez [Perplexity tool](/fr/tools/perplexity-search).</Note>
+<Note>This page is the Perplexity **provider** setup. For the Perplexity **tool** (how the agent uses it), see [Perplexity tool](PerplexityPerplexityPerplexity/en/tools/perplexity-search).</Note>
 
 | Propriété               | Valeur                                                                 |
 | ----------------------- | ---------------------------------------------------------------------- |
@@ -70,27 +70,27 @@ Lors de l'utilisation de l'API native Perplexity API, les recherches prennent en
 ## Configuration avancée
 
 <AccordionGroup>
-  <Accordion title="Variable d'environnement pour les processus daemon">
-    Si le OpenClaw Gateway s'exécute en tant que démon (launchd/systemd), assurez-vous
+  <Accordion title="Variable d'environnement pour les processus démon"OpenClawGateway>
+    Si le Gateway OpenClaw s'exécute en tant que démon (launchd/systemd), assurez-vous
     que `PERPLEXITY_API_KEY` est disponible pour ce processus.
 
     <Warning>
-    Une clé définie uniquement dans `~/.profile` ne sera pas visible pour un démon
-    launchd/systemd, sauf si cet environnement est explicitement importé. Définissez la clé dans
-    `~/.openclaw/.env` ou via `env.shellEnv` pour garantir que le processus de la passerelle puisse
-    la lire.
+    Une clé exportée uniquement dans un shell interactif ne sera pas visible pour un
+    démon launchd/systemd, sauf si cet environnement est explicitement importé. Définissez
+    la clé dans `~/.openclaw/.env` ou via `env.shellEnv` pour garantir que le processus
+    gateway puisse la lire.
     </Warning>
 
   </Accordion>
 
-  <Accordion title="Configuration du proxy OpenRouter">
+  <Accordion title="OpenRouterConfiguration du proxy OpenRouter"PerplexityOpenRouter>
     Si vous préférez acheminer les recherches Perplexity via OpenRouter, définissez une
-    `OPENROUTER_API_KEY` (préfixe `sk-or-`) au lieu d'une clé native Perplexity.
+    `OPENROUTER_API_KEY` (préfixe `sk-or-`PerplexityOpenClawOpenRouterOpenRouter) au lieu d'une clé native Perplexity.
     OpenClaw détectera le préfixe et basculera automatiquement vers le transport Sonar.
 
     <Tip>
     Le transport OpenRouter est utile si vous possédez déjà un compte OpenRouter
-    et souhaitez une facturation consolidée sur plusieurs fournisseurs.
+    et souhaitez une facturation consolidée sur plusieurs providers.
     </Tip>
 
   </Accordion>
