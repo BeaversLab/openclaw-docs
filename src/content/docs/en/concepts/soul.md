@@ -105,10 +105,10 @@ Sharp is good. Annoying is not.
 
 <CardGroup cols={2}>
   <Card title="Agent workspace" href="/en/concepts/agent-workspace" icon="folder-open">
-    Workspace files OpenClaw injects into the system prompt.
+    Workspace files OpenClaw injects into model context.
   </Card>
   <Card title="System prompt" href="/en/concepts/system-prompt" icon="message-lines">
-    How `SOUL.md` is composed into the per-turn system prompt.
+    How `SOUL.md` is composed into OpenClaw and Codex runtime context.
   </Card>
   <Card title="SOUL.md template" href="/en/reference/templates/SOUL" icon="file-lines">
     Starter template for a personality file.
