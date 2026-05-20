@@ -84,7 +84,7 @@ sidebarTitle: "WhatsAppWhatsApp 群组"
 - 为了避免嘈杂的广播，故意跳过群组的心跳。
 - 回声抑制使用组合的批次字符串；如果您在没有提及的情况下两次发送相同的文本，只有第一个会收到回复。
 - 会话存储条目将显示为 `agent:<agentId>:whatsapp:group:<jid>` 在会话存储中（默认为 `~/.openclaw/agents/<agentId>/sessions/sessions.json`）；缺少条目仅表示该群组尚未触发运行。
-- 群组中的输入指示器遵循 `agents.defaults.typingMode`。当可见回复使用默认的仅消息工具模式时，默认情况下输入会立即开始，以便群组成员可以看到 Agent 正在工作，即使没有发布自动最终回复。显式的输入模式配置仍然优先。
+- 群组中的正在输入指示符遵循 `agents.defaults.typingMode`。当可见回复选择了仅消息工具模式时，默认情况下立即开始输入，以便群组成员即使在没有发布自动最终回复的情况下也能看到代理正在工作。显式的输入模式配置仍然优先。
 
 ## 相关
 

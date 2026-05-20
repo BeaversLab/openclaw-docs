@@ -36,7 +36,7 @@ title: "Raspberry PiRaspberry Pi"
 
 <Steps>
   <Step title="刷入操作系统">
-    使用 **Raspberry Pi OS Lite (64-bit)** —— 无头服务器不需要桌面环境。
+    使用 **Raspberry PiRaspberry Pi OS Lite (64-bit)** —— 无头服务器不需要桌面环境。
 
     1. 下载 [Raspberry Pi Imager](https://www.raspberrypi.com/software/)。
     2. 选择操作系统：**Raspberry Pi OS Lite (64-bit)**。
@@ -45,7 +45,7 @@ title: "Raspberry PiRaspberry Pi"
        - 启用 SSH
        - 设置用户名和密码
        - 配置 WiFi（如果不使用以太网）
-    4. 刷入到您的 SD 卡或 USB 驱动器，插入它并启动 Pi。
+    4. 刷入到您的 SD 卡或 USB 驱动器，插入并启动 Pi。
 
   </Step>
 
@@ -92,7 +92,7 @@ title: "Raspberry PiRaspberry Pi"
 
 <Step title="验证">```bash openclaw status systemctl --user status openclaw-gateway.service journalctl --user -u openclaw-gateway.service -f ```</Step>
 
-  <Step title="Access the Control UI">
+  <Step title="访问控制界面">
     在您的电脑上，从 Pi 获取仪表板 URL：
 
     ```bash
@@ -105,7 +105,7 @@ title: "Raspberry PiRaspberry Pi"
     ssh -N -L 18789:127.0.0.1:18789 user@gateway-host
     ```
 
-    在本地浏览器中打开打印的 URL。有关始终在线的远程访问，请参阅 [Tailscale 集成](/zh/gateway/tailscale)。
+    在本地浏览器中打开打印出的 URL。如需始终在线的远程访问，请参阅 [Tailscale 集成](/zh/gateway/tailscale)。
 
   </Step>
 </Steps>
@@ -124,6 +124,8 @@ export OPENCLAW_NO_RESPAWN=1
 EOF
 source ~/.bashrc
 ```
+
+`OPENCLAW_NO_RESPAWN=1`Gateway(网关) 保持常规的 Gateway(网关) 重启在进程内进行，这避免了额外的进程交接，并让小型主机上的 PID 跟踪保持简单。
 
 **减少内存使用** —— 对于无头设置，释放 GPU 内存并禁用未使用的服务：
 
@@ -147,11 +149,11 @@ RestartSec=2
 TimeoutStartSec=90
 ```
 
-然后 `systemctl --user daemon-reload && systemctl --user restart openclaw-gateway.service`。在无头 Pi 上，还要启用一次 lingering，以便用户服务在注销后继续运行：`sudo loginctl enable-linger "$(whoami)"`。
+然后 `systemctl --user daemon-reload && systemctl --user restart openclaw-gateway.service`。在无头 Pi 上，还要启用一次 linger，以便用户服务在注销后继续运行：`sudo loginctl enable-linger "$(whoami)"`。
 
 ## 推荐的模型设置
 
-由于 Pi 仅运行网关，请使用云端托管的 API 模型：
+由于 Pi 仅运行 Gateway(网关)，请使用云端托管的 API 模型：
 
 ```json
 {
@@ -166,47 +168,47 @@ TimeoutStartSec=90
 }
 ```
 
-不要在 Pi 上运行本地 LLM —— 即使是小型模型也太慢而无法使用。让 Claude 或 GPT 来处理模型工作。
+不要在 Pi 上运行本地 LLM —— 即使是小模型也太慢而无法发挥作用。让 Claude 或 GPT 来处理模型的工作。
 
 ## ARM 二进制文件说明
 
-大多数 OpenClaw 功能在 ARM64 上无需更改即可工作（Node.js、Telegram、WhatsApp/Baileys、Chromium）。偶尔缺少 ARM 构建版本的二进制文件通常是技能附带的可选 Go/Rust CLI 工具。在回退到从源码构建之前，请检查缺失二进制文件的发布页面以获取 `linux-arm64` / `aarch64` 构件。
+大多数 OpenClaw 功能无需修改即可在 ARM64 上运行（Node.js、Telegram、WhatsApp/Baileys、Chromium）。偶尔缺少 ARM 构建版的二进制文件通常是技能随附的可选 Go/Rust CLI 工具。在回退到从源代码构建之前，请验证缺失二进制文件的发布页面是否有 `linux-arm64` / `aarch64` 构件。
 
-## 持久化和备份
+## 持久化与备份
 
-OpenClaw 状态存储在以下位置：
+OpenClaw 的状态存储在：
 
-- `~/.openclaw/` — `openclaw.json`、每个代理的 `auth-profiles.json`、渠道/提供商状态、会话。
-- `~/.openclaw/workspace/` — 代理工作区 (SOUL.md, memory, artifacts)。
+- `~/.openclaw/` — `openclaw.json`，每个代理的 `auth-profiles.json`，渠道/提供商状态，会话。
+- `~/.openclaw/workspace/` — 代理工作区（SOUL.md，记忆，构件）。
 
-这些内容在重启后依然保留。使用以下命令创建便携式快照：
+这些数据在重启后仍然存在。使用以下命令创建便携式快照：
 
 ```bash
 openclaw backup create
 ```
 
-如果您将这些内容保存在 SSD 上，性能和耐用性都会比使用 SD 卡更好。
+如果您将这些数据保存在 SSD 上，性能和耐用性都将比使用 SD 卡有所提升。
 
 ## 故障排除
 
-**内存不足** -- 使用 `free -h` 验证交换空间是否已激活。禁用未使用的服务 (`sudo systemctl disable cups bluetooth avahi-daemon`)。仅使用基于 API 的模型。
+**内存不足** -- 使用 `free -h` 验证交换空间是否处于活动状态。禁用未使用的服务（`sudo systemctl disable cups bluetooth avahi-daemon`）。仅使用基于 API 的模型。
 
-**性能缓慢** -- 使用 USB SSD 代替 SD 卡。使用 `vcgencmd get_throttled` 检查 CPU 是否降频 (应返回 `0x0`)。
+**性能缓慢** -- 使用 USB SSD 代替 SD 卡。使用 `vcgencmd get_throttled` 检查 CPU 降频情况（应返回 `0x0`）。
 
 **服务无法启动** -- 使用 `journalctl --user -u openclaw-gateway.service --no-pager -n 100` 检查日志并运行 `openclaw doctor --non-interactive`。如果是无头 Pi，还需验证是否启用了 lingering：`sudo loginctl enable-linger "$(whoami)"`。
 
-**ARM 二进制文件问题** -- 如果某个技能因“exec format error”而失败，请检查该二进制文件是否有 ARM64 版本。使用 `uname -m` 验证架构（应显示 `aarch64`）。
+**ARM 二进制文件问题** -- 如果技能因“exec format error”而失败，请检查该二进制文件是否有 ARM64 构建版。使用 `uname -m` 验证架构（应显示 `aarch64`）。
 
-**WiFi 掉线** -- 禁用 WiFi 电源管理：`sudo iwconfig wlan0 power off`。
+**WiFi 断连** -- 禁用 WiFi 电源管理：`sudo iwconfig wlan0 power off`。
 
 ## 后续步骤
 
-- [频道](/zh/channels) -- 连接 Telegram、WhatsApp、Discord 等
-- [Gateway(网关) 配置](/zh/gateway/configuration) —— 所有配置选项
-- [更新](/zh/install/updating) —— 保持 OpenClaw 为最新版本
+- [渠道](/zh/channels) -- 连接 Telegram、WhatsApp、Discord 等
+- [Gateway(网关) 配置](/zh/gateway/configuration) -- 所有配置选项
+- [更新](/zh/install/updating) -- 保持 OpenClaw 为最新版本
 
-## 相关
+## 相关内容
 
-- [安装概述](/zh/install)
-- [Linux 服务器](/zh/vps)
+- [安装概览](/zh/install)
+- [Linux 服务器](Linux/en/vps)
 - [平台](/zh/platforms)

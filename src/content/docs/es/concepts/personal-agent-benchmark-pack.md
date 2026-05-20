@@ -3,7 +3,7 @@ summary: "Escenarios locales del canal de QA para verificaciones de flujos de tr
 read_when:
   - Running local personal agent reliability checks
   - Extending the repo-backed QA scenario catalog
-  - Verifying reminder, reply, memory, redaction, and safe tool followthrough behavior
+  - Verifying reminder, reply, memory, redaction, safe tool followthrough, and task status behavior
 title: "Paquete de referencia del agente personal"
 ---
 
@@ -20,10 +20,12 @@ El primer paquete es intencionalmente limitado:
 - recuerdo de preferencias falsas desde los archivos de memoria del espacio de trabajo temporal de QA
 - verificaciones de secretos falsos sin eco
 - seguimiento seguro de herramientas respaldadas por lectura después de un turno breve de estilo aprobación
+- aprobación denegación comportamiento de detención para una solicitud de lectura local sensible
+- informes de estado de tareas basados en pruebas que mantienen pendiente, bloqueado y hecho separados
 
 ## Escenarios
 
-Los metadatos legibles por máquina del paquete viven en
+Los metadatos del paquete legibles por máquina residen en
 `extensions/qa-lab/src/scenario-packs.ts`. Ejecute el paquete con
 `--pack personal-agent`:
 
@@ -36,33 +38,31 @@ OPENCLAW_ENABLE_PRIVATE_QA_CLI=1 pnpm openclaw qa suite \
 
 `--pack` es aditivo con banderas `--scenario` repetidas. Los escenarios explícitos se ejecutan
 primero, luego los escenarios del paquete se ejecutan en orden `QA_PERSONAL_AGENT_SCENARIO_IDS` con
-los duplicados eliminados.
+duplicados eliminados.
 
 El paquete está diseñado para `qa-channel` con `mock-openai` u otro carril local de
-proveedor de QA. No debe apuntar a servicios de chat en vivo o cuentas personales
+proveedor de QA. No debe apuntarse a servicios de chat en vivo o cuentas personales
 reales.
 
 ## Modelo de privacidad
 
 Los escenarios usan solo usuarios falsos, preferencias falsas, secretos falsos y el
 espacio de trabajo de puerta de enlace de QA temporal creado por el conjunto. No deben leer ni escribir
-memoria de usuario, sesiones, credenciales, agentes de inicio, configuraciones globales
-ni el estado de la puerta de enlace en vivo de OpenClaw.
+memoria de usuario real de OpenClaw, sesiones, credenciales, agentes de inicio, configuraciones globales
+o el estado de la puerta de enlace en vivo.
 
-Los artefactos permanecen en el directorio de artefactos del conjunto de QA existente y deben tratarse
-como resultados de pruebas. Las verificaciones de redacción usan marcadores falsos para que sea seguro
-inspeccionar los fallos y archivarlos en problemas.
+Los artefactos permanecen en el directorio de artefactos del conjunto de QA existente y deben ser
+tratados como resultados de pruebas. Las comprobaciones de redacción usan marcadores falsos para que las fallas sean seguras
+de inspeccionar y registrar en problemas.
 
 ## Ampliar el paquete
 
-Agregue nuevos casos bajo `qa/scenarios/personal/`, luego agregue el id del escenario a
+Agregue nuevos casos bajo `qa/scenarios/personal/`, luego agregue el ID del escenario a
 `QA_PERSONAL_AGENT_SCENARIO_IDS`. Mantenga cada caso pequeño, local, determinista en
-`mock-openai` y enfocado en un comportamiento del asistente personal.
+`mock-openai` y enfocado en un comportamiento de asistente personal.
 
 Buenos candidatos para el seguimiento:
 
-- corrección de la denegación de aprobación
-- aserciones del libro de tareas de varios pasos
 - comprobaciones de exportación de trayectoria redactada
 - comprobaciones de flujo de trabajo de complementos solo locales
 

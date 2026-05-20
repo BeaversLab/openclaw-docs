@@ -11,9 +11,12 @@ OpenClaw 附带了一个用于 Grok 模型的内置 `xai` 提供商插件。
 ## 入门指南
 
 <Steps>
-  <Step title="选择认证">
-    使用来自 [xAI console](https://console.x.ai/) 的 API 密钥或
-    拥有 SuperGrok 订阅的 xAI Grok OAuth。
+  <Step title="Choose auth">
+    使用来自 [xAI 控制台](https://console.x.ai/) 的 API 密钥或
+    具有符合条件的 xAI 账户的 xAI OAuth 浏览器登录。OAuth 不需要
+    xAI API 密钥，并且 OpenClaw 不需要 Grok Build 应用。
+    由于 OpenClaw 使用
+    xAI 的共享 OAuth 客户端，xAI 可能仍会将许可应用标记为 Grok Build。
   </Step>
   <Step title="登录">
     设置 `XAI_API_KEY`，运行 API 密钥向导，或启动 OAuth 流程：
@@ -376,9 +379,9 @@ Fast 和 Grok Code 别名，但 OpenClaw 不再在可选目录中显示
 
   </Accordion>
 
-<Accordion title="已知限制" APIOAuthOAuth>
-  - xAI 身份验证可以使用 API 密钥、环境变量、插件配置回退，或者通过 SuperGrok 订阅使用 xAI Grok OAuth。OAuth 在 `127.0.0.1:56121` 上使用本地回调；对于远程主机，请在打开登录 URL 之前转发该端口。 - `grok-4.20-multi-agent-experimental-beta-0304`APIOpenClawOpenClaw 在常规 xAI 提供商路径上不受支持，因为它需要的上游 API 表面与标准 OpenClaw xAI 传输不同。 - xAI Realtime voice 尚未注册为 OpenClaw
-  提供商。它需要与批处理 STT 或流式转录不同的双向语音会话合约。 - xAI 图像 `quality`、图像 `mask` 以及额外的仅限原生纵横比，在共享 `image_generate` 工具具有相应的跨提供商控制之前，不会公开。
+<Accordion title="Known limits">
+  - xAI 身份验证可以使用 API 密钥、环境变量、插件配置回退， 或具有符合条件的 xAI 账户的 xAI OAuth 浏览器登录。OAuth 在 `127.0.0.1:56121` 上使用 本地回调；对于远程主机，请在打开登录 URL 之前转发该端口。 xAI 决定哪些账户可以接收 OAuth API 令牌，并且即使 OpenClaw 不需要 Grok Build 应用，许可页面也可能显示 Grok Build。 - `grok-4.20-multi-agent-experimental-beta-0304` 在 标准的 xAI
+  提供商路径上不受支持，因为它需要与标准 API xAI 传输不同的上游 OpenClaw 接口。 - xAI Realtime voice 尚未注册为 OpenClaw 提供商。它 需要与批量 STT 或 流式转录不同的双向语音会话契约。 - xAI 图像 `quality`、图像 `mask` 和额外的仅限原生宽高比 在共享 `image_generate` 工具具有相应的 跨提供商控制之前不会公开。
 </Accordion>
 
   <Accordion title="Advanced notes">

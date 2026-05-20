@@ -53,7 +53,7 @@ openclaw status --all
 | 随机断开连接/重新登录循环 | `openclaw channels status --probe` + 日志      | 即使当前已连接，最近的重新连接也会被标记；观察日志，重启网关，如果继续抖动则重新链接。 |
 | 回复延迟数秒/数分钟到达   | `openclaw doctor --fix`                        | 当经过验证的过时本地 TUI 客户端降低 Gateway(网关) 事件循环性能时，Doctor 会将其停止。  |
 
-完整故障排除：[WhatsApp 故障排除](/zh/channels/whatsapp#troubleshooting)
+完整故障排除：[WhatsApp 故障排除](WhatsApp/en/channels/whatsapp#troubleshooting)
 
 ## Telegram
 
@@ -69,18 +69,18 @@ openclaw status --all
 | 启动时 `setMyCommands` 被拒绝   | 检查日志中的 `BOT_COMMANDS_TOO_MUCH`       | 减少插件/技能/自定义 Telegram 命令或禁用本机菜单。                                                        |
 | 已升级且白名单阻止了您          | `openclaw security audit` 和配置白名单     | 运行 `openclaw doctor --fix` 或将 `@username` 替换为数字发送者 ID。                                       |
 
-完整故障排除：[Telegram 故障排除](/zh/channels/telegram#troubleshooting)
+完整故障排除：[Telegram 故障排除](Telegram/en/channels/telegram#troubleshooting)
 
 ## Discord
 
 ### Discord 故障特征
 
-| 症状                             | 最快检查                                                       | 修复                                                                                                                                                                                                                                                         |
-| -------------------------------- | -------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Bot 在线但没有公会回复           | `openclaw channels status --probe`                             | 允许公会/频道并验证消息内容意图。                                                                                                                                                                                                                            |
-| 群组消息被忽略                   | 检查日志中的提及过滤丢弃                                       | 提及机器人或设置公会/频道 `requireMention: false`。                                                                                                                                                                                                          |
-| 输入/令牌使用但没有 Discord 消息 | 检查这是否是环境房间事件还是错过了 `message(action=send)` 调用 | 检查网关详细日志中是否有被抑制的最终有效负载元数据，验证 `messages.groupChat.unmentionedInbound`，阅读 [Ambient room events](/zh/channels/ambient-room-events)，或设置 `messages.groupChat.visibleReplies: "automatic"` 以对普通组请求使用旧的最终回复路径。 |
-| 私信回复丢失                     | `openclaw pairing list discord`                                | 批准私信配对或调整私信策略。                                                                                                                                                                                                                                 |
+| 症状                             | 最快检查                                                                                        | 修复                                                                                                                                                                                                                               |
+| -------------------------------- | ----------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Bot 在线但没有公会回复           | `openclaw channels status --probe`                                                              | 允许公会/频道并验证消息内容意图。                                                                                                                                                                                                  |
+| 群组消息被忽略                   | 检查日志中的提及过滤丢弃                                                                        | 提及机器人或设置公会/频道 `requireMention: false`。                                                                                                                                                                                |
+| 输入/令牌使用但没有 Discord 消息 | 检查这是否是环境房间事件或者是已加入的 `message_tool` 房间，且模型错过了 `message(action=send)` | 检查网关详细日志中是否有被抑制的最终有效负载元数据，验证 `messages.groupChat.unmentionedInbound`，阅读 [环境房间事件](/zh/channels/ambient-room-events)，或者为普通群组请求保持 `messages.groupChat.visibleReplies: "automatic"`。 |
+| 私信回复丢失                     | `openclaw pairing list discord`                                                                 | 批准私信配对或调整私信策略。                                                                                                                                                                                                       |
 
 完整故障排除：[Discord 故障排除](Discord/en/channels/discord#troubleshooting)
 
@@ -88,11 +88,11 @@ openclaw status --all
 
 ### Slack 故障特征
 
-| 症状                      | 最快检查                           | 修复                                                                                                                              |
-| ------------------------- | ---------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| Socket 模式已连接但无响应 | `openclaw channels status --probe` | 验证应用令牌 + 机器人令牌和所需范围；在基于 SecretRef 的设置中注意 `botTokenStatus` / `appTokenStatus = configured_unavailable`。 |
-| 私信被阻止                | `openclaw pairing list slack`      | 批准配对或放宽私信策略。                                                                                                          |
-| 渠道消息被忽略            | 检查 `groupPolicy` 和渠道允许列表  | 允许该渠道或将策略切换至 `open`。                                                                                                 |
+| 症状                      | 最快检查                           | 修复                                                                                                                                       |
+| ------------------------- | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| Socket 模式已连接但无响应 | `openclaw channels status --probe` | 验证 App token + Bot token 以及所需的 scopes；在基于 SecretRef 的设置上注意 `botTokenStatus` / `appTokenStatus = configured_unavailable`。 |
+| 私信被阻止                | `openclaw pairing list slack`      | 批准配对或放宽私信策略。                                                                                                                   |
+| 渠道消息被忽略            | 检查 `groupPolicy` 和渠道允许列表  | 允许该渠道或将策略切换为 `open`。                                                                                                          |
 
 完整故障排除：[Slack 故障排除](Slack/en/channels/slack#troubleshooting)
 
@@ -100,11 +100,11 @@ openclaw status --all
 
 ### iMessage 故障特征
 
-| 症状                                | 最快检查                                              | 修复                                                                     |
-| ----------------------------------- | ----------------------------------------------------- | ------------------------------------------------------------------------ |
-| `imsg`macOS 缺失或在非 macOS 上失败 | `openclaw channels status --probe --channel imessage` | 在 Messages Mac 上运行 OpenClaw 或为 OpenClaw`cliPath` 使用 SSH 包装器。 |
-| 在 macOS 上能发送但无法接收         | 检查 Messages 自动化的 macOS 隐私权限                 | 重新授予 TCC 权限并重启渠道进程。                                        |
-| 私信发送者被阻止                    | `openclaw pairing list imessage`                      | 批准配对或更新允许列表。                                                 |
+| 症状                           | 最快检查                                              | 修复                                                             |
+| ------------------------------ | ----------------------------------------------------- | ---------------------------------------------------------------- |
+| `imsg` 缺失或在非 macOS 上失败 | `openclaw channels status --probe --channel imessage` | 在 Messages Mac 上运行 OpenClaw 或为 `cliPath` 使用 SSH 包装器。 |
+| 在 macOS 上能发送但无法接收    | 检查 Messages 自动化的 macOS 隐私权限                 | 重新授予 TCC 权限并重启渠道进程。                                |
+| 私信发送者被阻止               | `openclaw pairing list imessage`                      | 批准配对或更新允许列表。                                         |
 
 完整故障排除：
 
@@ -116,11 +116,11 @@ openclaw status --all
 
 | 症状                       | 最快检查                           | 修复                                            |
 | -------------------------- | ---------------------------------- | ----------------------------------------------- |
-| 守护进程可达但机器人无响应 | `openclaw channels status --probe` | 验证 `signal-cli` 守护进程 URL/帐户和接收模式。 |
+| 守护进程可达但机器人无响应 | `openclaw channels status --probe` | 验证 `signal-cli` 守护进程 URL/账户和接收模式。 |
 | 私信被阻止                 | `openclaw pairing list signal`     | 批准发送者或调整私信策略。                      |
 | 群组回复未触发             | 检查群组允许列表和提及模式         | 添加发送者/群组或放宽限制。                     |
 
-完整故障排除：[Signal Signal](/zh/channels/signal#troubleshooting)
+完整故障排除：[Signal 故障排除](Signal/en/channels/signal#troubleshooting)
 
 ## QQ Bot
 
@@ -128,7 +128,7 @@ openclaw status --all
 
 | 症状                   | 最快检查                               | 修复                                                |
 | ---------------------- | -------------------------------------- | --------------------------------------------------- |
-| Bot 回复“gone to Mars” | 在配置中验证 `appId` 和 `clientSecret` | 设置凭据或重启 Gateway。                            |
+| Bot 回复“gone to Mars” | 验证配置中的 `appId` 和 `clientSecret` | 设置凭据或重启 Gateway。                            |
 | 无入站消息             | `openclaw channels status --probe`     | 在 QQ 开放平台上验证凭据。                          |
 | 语音未转录             | 检查 STT 提供商配置                    | 配置 `channels.qqbot.stt` 或 `tools.media.audio`。  |
 | 主动消息未送达         | 检查 QQ 平台互动要求                   | 如果没有最近的互动，QQ 可能会阻止机器人发起的消息。 |
@@ -147,10 +147,10 @@ openclaw status --all
 | 备份恢复待处理/失败       | `openclaw matrix verify backup status` | 运行 `openclaw matrix verify backup restore` 或使用恢复密钥重新运行。 |
 | 交叉签名/引导看起来不正常 | `openclaw matrix verify bootstrap`     | 一次性修复密钥存储、交叉签名和备份状态。                              |
 
-完整设置和配置：[Matrix](/zh/channels/matrix)
+完整的设置和配置：[Matrix](/zh/channels/matrix)
 
 ## 相关
 
 - [配对](/zh/channels/pairing)
-- [渠道路由](/zh/channels/channel-routing)
-- [Gateway 故障排除](<Gateway(网关)/en/gateway/troubleshooting>)
+- [通道路由](/zh/channels/channel-routing)
+- [Gateway(网关) 故障排除](/zh/gateway/troubleshooting)

@@ -249,9 +249,9 @@ openclaw pairing approve discord <CODE>
   <Step title="Allow responses without @mention">
     預設情況下，您的代理程式僅在伺服器頻道中被 @提及 時才會回應。對於私人伺服器，您可能希望它回應每則訊息。
 
-    在伺服器頻道中，可見的 Discord 輸出預設應使用 `message` 工具，這樣代理程式可以保持潛伏，並僅在決定頻道回覆有用時才發佈訊息。除非該工具發送訊息，否則環境房間事件會保持靜默。如需完整的潛伏模式設定，請參閱 [Ambient room events](/zh-Hant/channels/ambient-room-events)。
+    在伺服器頻道中，正常回覆預設會自動發布。對於共享的常駐房間，請選擇加入 `messages.groupChat.visibleReplies: "message_tool"`，讓代理程式可以潛伏，並僅在它認為頻道回覆有用時才發布。此設定與最新一代、工具可靠的模型（如 GPT 5.5）搭配使用效果最佳。除非工具發送內容，否則環境房間事件將保持靜默。有關完整的潛伏模式設定，請參閱 [Ambient room events](/zh-Hant/channels/ambient-room-events)。
 
-    這表示所選的模型應可靠地呼叫工具。如果 Discord 顯示正在輸入且日誌顯示使用了 token 但沒有發佈訊息，請檢查該輪次是否被設定為環境房間事件，或使用下方的設定來針對正常的群組請求恢復舊版的自動最終回覆。
+    如果 Discord 顯示正在輸入且日誌顯示使用了 token 但沒有發布訊息，請檢查該輪次是否被設定為環境房間事件，或是選擇加入了訊息工具可見回覆。
 
     <Tabs>
       <Tab title="Ask your agent">
@@ -274,7 +274,7 @@ openclaw pairing approve discord <CODE>
 }
 ```
 
-        若要針對群組/頻道房間恢復舊版的自動最終回覆，請設定 `messages.groupChat.visibleReplies: "automatic"`。
+        若要針對可見的群組/頻道回覆要求使用訊息工具發送，請設定 `messages.groupChat.visibleReplies: "message_tool"`。
 
       </Tab>
     </Tabs>
@@ -1576,27 +1576,26 @@ openclaw logs --follow
   </Accordion>
 
   <Accordion title="Bot to bot loops">
-    根據預設，由機器人傳送的訊息會被忽略。
+    預設會忽略由機器人發送的訊息。
 
-    如果您設定了 `channels.discord.allowBots=true`，請使用嚴格的提及和允許清單規則來避免迴圈行為。
-    建議優先使用 `channels.discord.allowBots="mentions"` 以僅接受提及該機器人的機器人訊息。
+    如果您設定了 `channels.discord.allowBots=true`，請使用嚴格提及 和允許清單規則 來避免迴圈行為。建議優先使用 `channels.discord.allowBots="mentions"`，僅接受提及該機器人的機器人訊息。
 
-    OpenClaw 也內建了共用的 [機器人迴圈防護](/zh-Hant/channels/bot-loop-protection)。每當 `allowBots` 讓由機器人傳送的訊息抵達派發層級時，Discord 會將傳入事件對應至 `(account, channel, bot pair)` 事實，而通用配對守衛會在該配對超過設定的事件預算後抑制該配對。此守衛可防止以往必須透過 Discord 速率限制才能阻止的失控雙機器人迴圈；這不會影響單一機器人部署或保持在預算內的一次性機器人回覆。
+    OpenClaw 也內建了共享的 [機器人迴圈保護](/zh-Hant/channels/bot-loop-protection)。每當 `allowBots` 允許機器人發送的訊息進入分發 時，Discord 會將傳入事件對應到 `(account, channel, bot pair)` 事實，並在通用配對守衛 超過設定的事件預算後抑制該配對。此守衛可防止以前必須透過 Discord 速率限制才能阻止的失控雙機器人迴圈；它不會影響單一機器人部署或保持在預算內的一次性機器人回覆。
 
-    預設設定（當設定 `allowBots` 時啟用）如下：
+    預設設定 (當設定 `allowBots` 時啟用)：
 
-    - `maxEventsPerWindow: 20` -- 機器人配對可在滑動視窗內交換 20 則訊息
+    - `maxEventsPerWindow: 20` -- 機器人配對可以在滑動視窗內交換 20 則訊息
     - `windowSeconds: 60` -- 滑動視窗長度
-    - `cooldownSeconds: 60` -- 一旦觸發預算，任何方向每則額外的機器人對機器人訊息都將被丟棄一分鐘
+    - `cooldownSeconds: 60` -- 一旦超出預算，雙向任何額外的機器人對機器人訊息都將被丟棄一分鐘
 
-    在 `channels.defaults.botLoopProtection` 下設定一次共用的預設值，然後當合法的工作流程需要更多空間時覆寫 Discord 設定。優先順序為：
+    在 `channels.defaults.botLoopProtection` 下設定一次共享預設值，然後當合法的工作流程需要更多餘量時再覆寫 Discord。優先順序為：
 
     - `channels.discord.accounts.<account>.botLoopProtection`
     - `channels.discord.botLoopProtection`
     - `channels.defaults.botLoopProtection`
     - 內建預設值
 
-    Discord 使用通用的 `maxEventsPerWindow`、`windowSeconds` 和 `cooldownSeconds` 鍵值。
+    Discord 使用通用的 `maxEventsPerWindow`、`windowSeconds` 和 `cooldownSeconds` 金鑰。
 
 ```json5
 {
@@ -1623,7 +1622,7 @@ openclaw logs --follow
           // Molty listens to all bot-authored Discord messages.
           allowBots: true,
           mentionAliases: {
-            // Lets Molty write "@Mantis" and send a real Discord mention.
+            // Lets Molty write a Mantis Discord mention with the configured user id.
             Mantis: "MANTIS_DISCORD_USER_ID",
           },
           botLoopProtection: {

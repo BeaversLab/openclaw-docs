@@ -37,7 +37,7 @@ Bun est un runtime local optionnel pour exécuter TypeScript directement (`bun r
 
 Bun bloque les scripts de cycle de vie des dépendances à moins qu'ils ne soient explicitement approuvés. Pour ce dépôt, les scripts couramment bloqués ne sont pas requis :
 
-- `baileys` `preinstall` -- vérifie que la version principale de Node est >= 20 (OpenClaw utilise par défaut Node 24 et prend toujours en charge Node 22 LTS, actuellement `22.16+`)
+- `baileys` `preinstall` -- vérifie que la version majeure de Node est >= 20 (OpenClaw est configuré par défaut avec Node 24 et prend toujours en charge Node 22 LTS, actuellement `22.19+`)
 - `protobufjs` `postinstall` -- émet des avertissements concernant les schémas de version incompatibles (pas d'artefacts de build)
 
 Si vous rencontrez un problème d'exécution nécessitant ces scripts, accordez-leur explicitement votre confiance :

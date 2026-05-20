@@ -59,7 +59,7 @@ Ne possède pas :
 
 Possède :
 
-- pack de scénarios GPT-5.5 vs Opus 4.6 de première vague
+- pack de scénarios de première vague GPT-5.5 contre Opus 4.7
 - documentation de parité
 - rapport de parité et mécanismes de verrouillage de release
 
@@ -123,7 +123,7 @@ Artefacts attendus du PR D :
 
 ## Porte de version (Release gate)
 
-Ne prétendez pas à la parité GPT-5.5 ou à la supériorité sur Opus 4.6 tant que :
+Ne prétendez pas à la parité ou à la supériorité de GPT-5.5 sur Opus 4.7 avant :
 
 - PR A, PR B et PR C sont fusionnés
 - PR D exécute proprement le pack de parité de la première vague
@@ -133,7 +133,7 @@ Ne prétendez pas à la parité GPT-5.5 ou à la supériorité sur Opus 4.6 tant
 ```mermaid
 flowchart LR
     A["PR A-C merged"] --> B["Run GPT-5.5 parity pack"]
-    A --> C["Run Opus 4.6 parity pack"]
+    A --> C["Run Opus 4.7 parity pack"]
     B --> D["qa-suite-summary.json"]
     C --> E["qa-suite-summary.json"]
     D --> F["qa parity-report"]
@@ -146,7 +146,7 @@ flowchart LR
 
 Le harnais de parité n'est pas la seule source de preuves. Gardez cette séparation explicite lors de la révision :
 
-- PR D détient la comparaison basée sur les scénarios entre GPT-5.5 et Opus 4.6
+- La PR D est responsable de la comparaison scénario par scénario entre GPT-5.5 et Opus 4.7
 - les suites déterministes du PR B détiennent toujours les preuves de véracité auth/proxy/DNS et d'accès complet
 
 ## Workflow rapide de fusion par le mainteneur
@@ -179,7 +179,7 @@ Si l'un des éléments de la barre de preuves est manquant, demandez des modific
 | Pas de fausse progression ni de fausse achèvement d'outil | PR A + PR D            | nombre de faux succès de parité plus détails du rapport au niveau du scénario |
 | Pas de fausse orientation `/elevated full`                | PR B                   | suites de véracité d'exécution déterministes                                  |
 | Les échecs de reprise/activité restent explicites         | PR C + PR D            | suites cycle de vie/reprise plus `compaction-retry-mutating-tool`             |
-| GPT-5.5 égale ou surpasse Opus 4.6                        | PR D                   | `qa-agentic-parity-report.md` et `qa-agentic-parity-summary.json`             |
+| GPT-5.5 est équivalent ou supérieur à Opus 4.7            | PR D                   | `qa-agentic-parity-report.md` et `qa-agentic-parity-summary.json`             |
 
 ## Raccourci réviseur : avant vs après
 

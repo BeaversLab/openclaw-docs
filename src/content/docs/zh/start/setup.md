@@ -18,7 +18,7 @@ title: "设置"
 
 ## Prereqs (from source)
 
-- 推荐使用 Node 24（目前为 `22.16+` 的 Node 22 LTS 仍然受支持）
+- 推荐使用 Node 24（Node 22 LTS，目前为 `22.19+`，仍受支持）
 - 源码检出需要 `pnpm`OpenClaw。OpenClaw 在开发模式下从
   `extensions/*` pnpm 工作区包加载捆绑插件，因此根目录 `npm install`
   不会准备完整的源代码树。

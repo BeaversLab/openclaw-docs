@@ -18,7 +18,7 @@ Choisissez un workflow de configuration en fonction de la fréquence à laquelle
 
 ## Prérequis (à partir du code source)
 
-- Node 24 recommandé (Node 22 LTS, actuellement `22.16+`, toujours pris en charge)
+- Node 24 recommandé (Node 22 LTS, actuellement `22.19+`, toujours pris en charge)
 - `pnpm` requis pour les extractions de source. OpenClaw charge les plugins groupés à partir des
   packages de l'espace de travail pnpm `extensions/*` en mode dev, donc le `npm install` racine ne
   prépare pas l'intégralité de l'arborescence des sources.

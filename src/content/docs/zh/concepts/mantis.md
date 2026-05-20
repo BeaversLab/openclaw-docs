@@ -172,16 +172,7 @@ Telegram QA 摘要和观察到的消息工件，通过 Crabbox 桌面浏览器
 Telegram Web 登录状态对于正常的 Mantis 自动化
 并不是必需的。
 
-`Mantis Telegram Desktop Proof` 是基于代理的原生 Telegram Desktop
-前后对比封装工具。维护者可以通过 PR 评论中的
-`@Mantis telegram desktop proof`、Actions UI 中的自由格式说明，或者通过通用的
-`Mantis Scenario` 调度器来触发它。该工作流将 PR、基线引用、
-候选引用以及维护者说明移交给 Codex。
-代理会阅读 PR，确定哪种 Telegram 可见的行为可以证明
-更改，针对基线和候选运行真实用户的 Crabbox Telegram Desktop 证明通道，
-迭代直到原生 GIF 有用为止，将成对的
-`motionPreview` 制品写入 `mantis-evidence.json`，上传该包，并在
-有 PR 编号时发布双列 PR 证据表。
+`Mantis Telegram Desktop Proof` 是原生 Telegram 桌面版的前后包装代理。维护者可以通过 PR 评论中的 `@openclaw-mantis telegram desktop proof`、Actions UI 中的自由格式指令，或通过通用 `Mantis Scenario` 分发器来触发它。该工作流将 PR、基准引用、候选引用和维护者指令交给 Codex。代理读取 PR，决定哪些 Telegram 可见行为可以证明该更改，为基准和候选运行真实用户的 Crabbox Telegram 桌面版证明通道，迭代直到原生 GIF 有用为止，将成对的 `motionPreview` 制品写入 `mantis-evidence.json`，上传包，并在有 PR 编号时发布双列 PR 证据表。
 
 对于人机协作的 Telegram 桌面端设置，请使用场景构建器：
 }
@@ -264,21 +255,21 @@ Artifact `path` 值是相对于清单目录的。`targetPath`
 您也可以直接从 PR 评论触发状态反应运行：
 
 ```text
-@Mantis discord status reactions
+@openclaw-mantis discord status reactions
 ```
 
 评论触发器是有意限制范围的。它仅在来自具有写入、维护或管理员权限的用户的拉取请求评论上运行，并且仅识别 Discord 状态反应请求。默认情况下，它使用已知的错误基准引用和当前的 PR head SHA 作为候选。维护者可以覆盖任一引用：
 
 ```text
-@Mantis discord status reactions baseline=origin/main candidate=HEAD
+@openclaw-mantis discord status reactions baseline=origin/main candidate=HEAD
 ```
 
 Telegram 实时 QA 也可以从 PR 评论触发：
 
 ```text
-@Mantis telegram
-@Mantis telegram scenario=telegram-status-command
-@Mantis telegram scenarios=telegram-status-command,telegram-mentioned-message-reply
+@openclaw-mantis telegram
+@openclaw-mantis telegram scenario=telegram-status-command
+@openclaw-mantis telegram scenarios=telegram-status-command,telegram-mentioned-message-reply
 ```
 
 默认情况下，它使用当前的 PR head SHA 作为候选引用，并运行

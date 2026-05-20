@@ -176,17 +176,17 @@ El valor `agents.list[].groupChat.unmentionedInbound` específico del agente anu
 
 ## Modos de respuesta visibles
 
-`messages.groupChat.visibleReplies: "message_tool"` es el valor predeterminado recomendado para grupos y canales. Permite que el agente decida cuándo hablar llamando a la herramienta de mensaje. Si el modelo devuelve texto final sin llamar a la herramienta, OpenClaw mantiene ese texto final como privado y registra los metadatos de entrega suprimida.
+`messages.groupChat.visibleReplies` por defecto es `"automatic"` para las solicitudes de usuarios de grupos/canales normales. Mantenga ese valor predeterminado cuando desee que el texto final del asistente se publique visiblemente sin requerir una llamada explícita a la herramienta de mensaje.
 
-Usa `messages.groupChat.visibleReplies: "automatic"` solo cuando desees el comportamiento heredado donde las solicitudes de grupo normales publican el texto final del asistente automáticamente.
+Para salas ambiente siempre activas, `messages.groupChat.visibleReplies: "message_tool"` sigue siendo recomendado, especialmente con modelos de última generación confiables en herramientas como GPT 5.5. Permite que el agente decida cuándo hablar llamando a la herramienta de mensaje. Si el modelo devuelve texto final sin llamar a la herramienta, OpenClaw mantiene ese texto final privado y registra los metadatos de entrega suprimidos.
 
-Los eventos de sala se mantienen estrictos incluso cuando otras solicitudes de grupo usan respuestas automáticas. Los eventos de sala ambiente sin mención todavía requieren `message(action=send)` para una salida visible.
+Los eventos de la sala se mantienen estrictos incluso cuando otras solicitudes grupales usan respuestas automáticas. Los eventos de sala ambiente no mencionados aún requieren `message(action=send)` para una salida visible.
 
 ## Historial
 
 `messages.groupChat.historyLimit` controla el valor predeterminado global del historial de grupos. Los canales pueden anularlo con `channels.<channel>.historyLimit`, y algunos canales también admiten límites de historial por cuenta.
 
-Establece `historyLimit: 0` en para desactivar el contexto del historial de grupos.
+Establezca `historyLimit: 0` para desactivar el contexto del historial de grupos.
 
 Los canales compatibles con eventos de sala mantienen los mensajes de sala ambiente recientes como contexto. Discord mantiene el historial de eventos de sala hasta que tenga éxito un envío visible de Discord, por lo que el contexto silencioso no se pierde antes de la entrega de la herramienta de mensaje.
 
@@ -195,14 +195,14 @@ Los canales compatibles con eventos de sala mantienen los mensajes de sala ambie
 Si la sala muestra actividad de escritura o uso de tokens pero ningún mensaje visible:
 
 1. Confirma que la sala está permitida por la lista de permitidos de canales y la lista de permitidos de remitentes.
-2. Confirma que `requireMention: false` está establecido en el nivel de sala que esperas.
-3. Verifica si `messages.groupChat.unmentionedInbound` o el override del agente es `"room_event"`.
-4. Inspecciona los registros en busca de metadatos de carga final suprimida o `didSendViaMessagingTool: false`.
-5. Utilice un modelo/runtime que llame a las herramientas de forma fiable, o configure `messages.groupChat.visibleReplies: "automatic"` para respuestas finales heredadas en solicitudes de grupo normales.
+2. Confirme que `requireMention: false` está configurado en el nivel de sala que espera.
+3. Compruebe si `messages.groupChat.unmentionedInbound` o la anulación del agente es `"room_event"`.
+4. Inspeccione los registros en busca de metadatos de carga final suprimidos o `didSendViaMessagingTool: false`.
+5. Para las solicitudes de grupo normales, mantenga o restaure `messages.groupChat.visibleReplies: "automatic"` si desea que las respuestas finales se publiquen automáticamente. Para las salas ambiente que usan `message_tool`, utilice un modelo/tiempo de ejecución que llame a las herramientas de manera confiable.
 
 Si las salas ambientales de Telegram no se activan en absoluto, verifique el modo de privacidad de BotFather y asegúrese de que el Gateway esté recibiendo mensajes de grupo normales.
 
-Si las salas ambientales de Slack no se activan, verifique que la clave del canal sea el ID del canal de Slack y que la aplicación tenga el alcance `channels:history` o `groups:history` requerido para ese tipo de sala.
+Si las salas ambiente de Slack no se activan, verifique que la clave del canal sea el ID del canal de Slack y que la aplicación tenga el alcance `channels:history` o `groups:history` requerido para ese tipo de sala.
 
 ## Relacionado
 

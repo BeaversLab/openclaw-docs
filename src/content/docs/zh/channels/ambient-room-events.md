@@ -176,15 +176,15 @@ Telegram 群组 ID 通常是负数，例如 Telegram`-1001234567890`。请从 `o
 
 ## 可见回复模式
 
-`messages.groupChat.visibleReplies: "message_tool"`OpenClaw 是推荐的群组和渠道默认设置。它允许代理通过调用消息工具来决定何时发言。如果模型返回最终文本但未调用工具，OpenClaw 将把该最终文本设为私有，并记录已抑制的传递元数据。
+对于普通的群组/渠道用户请求，`messages.groupChat.visibleReplies` 默认为 `"automatic"`。如果您希望最终助手文本可见地发布而无需显式调用消息工具，请保留该默认值。
 
-仅当您希望使用旧版行为（即正常的群组请求会自动发布最终助手文本）时，才使用 `messages.groupChat.visibleReplies: "automatic"`。
+对于始终开启的环境房间，仍然推荐使用 `messages.groupChat.visibleReplies: "message_tool"`OpenClaw，尤其是对于像 GPT 5.5 这样可靠调用工具的最新一代模型。它允许代理通过调用消息工具来决定何时发言。如果模型返回最终文本但未调用工具，OpenClaw 将把该最终文本设为私密，并记录被抑制的传递元数据。
 
-即使其他群组请求使用自动回复，房间事件仍保持严格。未提及的环境房间事件仍需要 `message(action=send)` 才能获得可见输出。
+即使其他群组请求使用自动回复，房间事件仍保持严格模式。未提及的环境房间事件仍然需要 `message(action=send)` 才能产生可见输出。
 
 ## 历史记录
 
-`messages.groupChat.historyLimit` 控制全局群组历史记录默认值。渠道可以使用 `channels.<channel>.historyLimit` 覆盖该值，某些渠道还支持针对每个账户的历史记录限制。
+`messages.groupChat.historyLimit` 控制全局群组历史记录的默认值。渠道可以使用 `channels.<channel>.historyLimit` 覆盖它，某些渠道还支持每个账户的历史记录限制。
 
 设置 `historyLimit: 0` 以禁用群组历史记录上下文。
 
@@ -197,12 +197,12 @@ Telegram 群组 ID 通常是负数，例如 Telegram`-1001234567890`。请从 `o
 1. 确认该房间是否被渠道白名单和发送者白名单允许。
 2. 确认 `requireMention: false` 已在您预期的房间级别设置。
 3. 检查 `messages.groupChat.unmentionedInbound` 或代理覆盖是否为 `"room_event"`。
-4. 检查日志中是否有被抑制的最终负载元数据或 `didSendViaMessagingTool: false`。
-5. 使用能够可靠调用工具的模型/运行时，或为普通群组请求上的传统最终回复设置 `messages.groupChat.visibleReplies: "automatic"`。
+4. 检查日志中是否有被抑制的最终有效负载元数据或 `didSendViaMessagingTool: false`。
+5. 对于普通的群组请求，如果您希望自动发布最终回复，请保留或恢复 `messages.groupChat.visibleReplies: "automatic"`。对于使用 `message_tool` 的环境房间，请使用可靠调用工具的模型/运行时。
 
 如果 Telegram 环境房间根本没有触发，请检查 BotFather 隐私模式并验证 Gateway(网关) 是否正在接收正常的群组消息。
 
-如果 Slack 环境房间没有触发，请验证渠道密钥是否为 Slack 渠道 ID，并且应用对于该房间类型具有所需的 SlackSlack`channels:history` 或 `groups:history` 作用域。
+如果 Slack 环境房间未触发，请验证渠道键是否为 Slack 渠道 ID，且应用程序对该房间类型具有所需的 SlackSlack`channels:history` 或 `groups:history` 范围（scope）。
 
 ## 相关
 

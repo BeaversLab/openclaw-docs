@@ -438,17 +438,17 @@ title: "常見問題"
     是的。請參閱 [沙盒](/zh-Hant/gateway/sandboxing)。若需 Docker 專屬設定（Docker 中的完整閘道或沙盒映像檔），請參閱 [Docker](/zh-Hant/install/docker)。
   </Accordion>
 
-  <Accordion title="Docker 感覺受限 - 如何啟用完整功能？">
-    預設映像檔以安全性為優先並以 `node` 使用者身份執行，因此它不
-    包含系統套件、Homebrew 或內建瀏覽器。若要進行更完整的設定：
+  <Accordion title="Docker 感覺受限了 - 我要如何啟用完整功能？">
+    預設映像檔優先考量安全性，並以 `node` 使用者身分執行，因此不包含
+    系統套件、Homebrew 或內建瀏覽器。若需要更完整的設定：
 
-    - 使用 `OPENCLAW_HOME_VOLUME` 持續保存 `/home/node`，以便快取能留存。
-    - 使用 `OPENCLAW_DOCKER_APT_PACKAGES` 將系統相依性建置到映像檔中。
-    - 透過內建 CLI 安裝 Playwright 瀏覽器：
+    - 使用 `OPENCLAW_HOME_VOLUME` 持續化 `/home/node`，讓快取得以保留。
+    - 使用 `OPENCLAW_IMAGE_APT_PACKAGES` 將系統相依項目 baked 進映像檔中。
+    - 透過內建的 CLI 安裝 Playwright 瀏覽器：
       `node /app/node_modules/playwright-core/cli.js install chromium`
-    - 設定 `PLAYWRIGHT_BROWSERS_PATH` 並確保該路徑已被持續保存。
+    - 設定 `PLAYWRIGHT_BROWSERS_PATH` 並確保該路徑已被持續化。
 
-    文件：[Docker](/zh-Hant/install/docker)、[瀏覽器](/zh-Hant/tools/browser)。
+    文件：[Docker](/zh-Hant/install/docker)、[Browser](/zh-Hant/tools/browser)。
 
   </Accordion>
 

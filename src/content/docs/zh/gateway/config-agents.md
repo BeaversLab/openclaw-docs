@@ -851,8 +851,8 @@ Anthropic Claude 4.6 模型在未设置显式思考级别时，默认为 `adapti
 
 **后端：**
 
-- `docker`Docker：本地 Docker 运行时（默认）
-- `ssh`：基于 SSH 的通用远程运行时
+- `docker`：本地 Docker 运行时（默认）
+- `ssh`：通用的基于 SSH 的远程运行时
 - `openshell`：OpenShell 运行时
 
 当选择 `backend: "openshell"` 时，特定于运行时的设置会移动到
@@ -864,7 +864,7 @@ Anthropic Claude 4.6 模型在未设置显式思考级别时，默认为 `adapti
 - `command`：SSH 客户端命令（默认：`ssh`）
 - `workspaceRoot`：用于每个作用域工作区的绝对远程根目录
 - `identityFile` / `certificateFile` / `knownHostsFile`：传递给 OpenSSH 的现有本地文件
-- `identityData` / `certificateData` / `knownHostsData`OpenClaw：OpenClaw 在运行时实例化为临时文件的内联内容或 SecretRef
+- `identityData` / `certificateData` / `knownHostsData`：内联内容或 SecretRef，OpenClaw 在运行时将其具体化为临时文件
 - `strictHostKeyChecking` / `updateHostKeys`：OpenSSH 主机密钥策略控件
 
 **SSH 认证优先级：**
@@ -872,21 +872,21 @@ Anthropic Claude 4.6 模型在未设置显式思考级别时，默认为 `adapti
 - `identityData` 优先于 `identityFile`
 - `certificateData` 优先于 `certificateFile`
 - `knownHostsData` 优先于 `knownHostsFile`
-- 基于 SecretRef 的 `*Data` 值将在沙箱会话开始之前从活动机密运行时快照中解析
+- SecretRef 支持的 `*Data` 值在沙箱会话开始之前从活动密钥运行时快照中解析
 
 **SSH 后端行为：**
 
 - 在创建或重新创建后播种远程工作区一次
-- 然后保持远程 SSH 工作区为规范状态
+- 然后保持远程 SSH 工作区为基准
 - 通过 SSH 路由 `exec`、文件工具和媒体路径
 - 不会自动将远程更改同步回主机
 - 不支持沙箱浏览器容器
 
 **工作区访问：**
 
-- `none`：`~/.openclaw/sandboxes` 下的每个作用域沙箱工作区
-- `ro`：位于 `/workspace` 的沙箱工作区，代理工作区以只读方式挂载于 `/agent`
-- `rw`：代理工作区以读写方式挂载于 `/workspace`
+- `none`：`~/.openclaw/sandboxes` 下每个作用域的沙箱工作区
+- `ro`：`/workspace` 处的沙箱工作区，代理工作区以只读方式挂载在 `/agent`
+- `rw`：代理工作区以读/写方式挂载在 `/workspace`
 
 **作用域：**
 
@@ -922,30 +922,31 @@ Anthropic Claude 4.6 模型在未设置显式思考级别时，默认为 `adapti
 
 **OpenShell 模式：**
 
-- `mirror`：执行前从本地播种远程，执行后同步回本地；本地工作区保持为规范状态
-- `remote`：在创建沙箱时播种远程一次，然后保持远程工作区为规范状态
+- `mirror`：在执行前从本地播种远程，在执行后同步回；本地工作区保持为基准
+- `remote`：在创建沙箱时播种远程一次，然后保持远程工作区为基准
 
-在 `remote`OpenClaw 模式下，在 OpenClaw 之外进行的主机本地编辑在播种步骤之后不会自动同步到沙箱中。
-传输是通过 SSH 进入 OpenShell 沙箱，但插件拥有沙箱生命周期和可选的镜像同步。
+在 `remote` 模式下，在 OpenClaw 之外进行的主机本地编辑在播种步骤之后不会自动同步到沙箱中。
+传输是 SSH 进入 OpenShell 沙箱，但插件拥有沙箱生命周期和可选的镜像同步。
 
-**`setupCommand`** 在容器创建后运行一次（通过 `sh -lc`）。需要网络出口、可写根目录、root 用户。
+**`setupCommand`** 在容器创建后（通过 `sh -lc`）运行一次。需要网络出站、可写根目录、root 用户。
 
 **容器默认为 `network: "none"`** — 如果代理需要出站访问，请设置为 `"bridge"`（或自定义桥接网络）。
-`"host"` 被阻止。除非您显式设置
-`sandbox.docker.dangerouslyAllowContainerNamespaceJoin: true`（紧急情况），否则 `"container:<id>"` 默认被阻止。
+`"host"` 被阻止。除非您明确设置
+`sandbox.docker.dangerouslyAllowContainerNamespaceJoin: true`（break-glass），否则默认阻止 `"container:<id>"`。
+Codex 应用服务器在活动的 OpenClaw 沙箱中运行时，对其本机代码模式网络访问使用相同的出站设置。
 
 **入站附件** 被暂存到活动工作区中的 `media/inbound/*`。
 
-**`docker.binds`** 挂载其他主机目录；全局和每个代理的绑定项会被合并。
+**`docker.binds`** 挂载其他主机目录；全局和每个代理的绑定会被合并。
 
-**沙箱隔离浏览器** （`sandbox.browser.enabled`）：容器中的 Chromium + CDP。noVNC URL 被注入到系统提示中。不需要 `browser.enabled` 在 `openclaw.json`OpenClaw 中。
-noVNC 观察者访问默认使用 VNC 身份验证，OpenClaw 会发出一个短期令牌 URL（而不是在共享 URL 中暴露密码）。
+**沙箱隔离浏览器**（`sandbox.browser.enabled`）：容器中的 Chromium + CDP。noVNC URL 被注入到系统提示中。不需要 `openclaw.json` 中的 `browser.enabled`。
+noVNC 观察者访问默认使用 VNC 认证，并且 OpenClaw 发出一个短期令牌 URL（而不是在共享 URL 中暴露密码）。
 
 - `allowHostControl: false`（默认）阻止沙箱隔离会话以主机浏览器为目标。
 - `network` 默认为 `openclaw-sandbox-browser`（专用桥接网络）。仅当您明确需要全局桥接连接时才设置为 `bridge`。
-- `cdpSourceRange` 可选地在容器边缘将 CDP 入站限制为 CIDR 范围（例如 `172.21.0.1/32`）。
+- `cdpSourceRange` 可选择将容器边缘的 CDP 入站限制为 CIDR 范围（例如 `172.21.0.1/32`）。
 - `sandbox.browser.binds` 仅将其他主机目录挂载到沙箱浏览器容器中。设置时（包括 `[]`），它将替换浏览器容器的 `docker.binds`。
-- 启动默认值在 `scripts/sandbox-browser-entrypoint.sh` 中定义，并针对容器主机进行了调整：
+- 启动默认值在 `scripts/sandbox-browser-entrypoint.sh` 中定义，并针对容器主机进行了优化：
   - `--remote-debugging-address=127.0.0.1`
   - `--remote-debugging-port=<derived from OPENCLAW_BROWSER_CDP_PORT>`
   - `--user-data-dir=${HOME}/.chrome`
@@ -966,13 +967,12 @@ noVNC 观察者访问默认使用 VNC 身份验证，OpenClaw 会发出一个短
   - `--disable-3d-apis`、`--disable-software-rasterizer` 和 `--disable-gpu`
     默认启用，如果 WebGL/3D 使用需要，可以使用
     `OPENCLAW_BROWSER_DISABLE_GRAPHICS_FLAGS=0` 禁用。
-  - `OPENCLAW_BROWSER_DISABLE_EXTENSIONS=0` 如果您的工作流程
-    依赖扩展，则会重新启用它们。
+  - 如果您的工作流依赖于扩展，`OPENCLAW_BROWSER_DISABLE_EXTENSIONS=0` 会重新启用它们。
   - `--renderer-process-limit=2` 可以通过
     `OPENCLAW_BROWSER_RENDERER_PROCESS_LIMIT=<N>` 更改；设置 `0` 以使用 Chromium 的
     默认进程限制。
-  - 当启用 `noSandbox` 时，加上 `--no-sandbox`。
-  - 默认值是容器镜像基准；使用具有自定义入口点的自定义浏览器镜像来更改容器默认值。
+  - 加上启用 `noSandbox` 时的 `--no-sandbox`。
+  - 默认值是容器镜像基线；使用带有自定义入口点的自定义浏览器镜像来更改容器默认值。
 
 </Accordion>
 

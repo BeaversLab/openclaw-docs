@@ -44,7 +44,7 @@ Le playbook Ansible installe et configure :
 1. **Tailscale** -- VPN maillé pour un accès distant sécurisé
 2. **Pare-feu UFW** -- uniquement les ports SSH + Tailscale
 3. **Docker CE + Compose V2** -- pour le backend de sandbox de l'agent par défaut
-4. **Node.js 24 + pnpm** -- dépendances d'exécution (Node 22 LTS, actuellement `22.16+`, reste pris en charge)
+4. **Node.js 24 + pnpm** -- dépendances d'exécution (Node 22 LTS, actuellement `22.19+`, reste pris en charge)
 5. **OpenClaw** -- basé sur l'hôte, non conteneurisé
 6. **Service Systemd** -- démarrage automatique avec durcissement de la sécurité
 

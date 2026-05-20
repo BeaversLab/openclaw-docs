@@ -84,7 +84,7 @@ Seul le numéro du propriétaire (issu de `channels.whatsapp.allowFrom`, ou l'E.
 - Les battements de cœur (heartbeats) sont intentionnellement ignorés pour les groupes afin d'éviter les diffusions bruyantes.
 - La suppression d'écho utilise la chaîne de lot combinée ; si vous envoyez deux fois un texte identique sans mentions, seul le premier recevra une réponse.
 - Les entrées du magasin de session apparaîtront sous la forme `agent:<agentId>:whatsapp:group:<jid>` dans le magasin de session (`~/.openclaw/agents/<agentId>/sessions/sessions.json` par défaut) ; une entrée manquante signifie simplement que le groupe n'a pas encore déclenché d'exécution.
-- Les indicateurs de frappe dans les groupes suivent `agents.defaults.typingMode`. Lorsque les réponses visibles utilisent le mode par défaut message-tool-only, la frappe commence immédiatement par défaut pour que les membres du groupe voient que l'agent travaille, même si aucune réponse finale automatique n'est publiée. La configuration explicite du mode de frappe prime toujours.
+- Les indicateurs de frappe dans les groupes suivent `agents.defaults.typingMode`. Lorsque les réponses visibles sont activées en mode "message-tool-only", la frappe commence immédiatement par défaut afin que les membres du groupe puissent voir que l'agent travaille, même si aucune réponse finale automatique n'est publiée. La configuration explicite du mode de frappe prévaut toujours.
 
 ## Connexes
 

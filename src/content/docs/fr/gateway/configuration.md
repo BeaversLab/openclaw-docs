@@ -141,15 +141,15 @@ Le Gateway conserve une copie de confiance du dernier état connu après chaque 
 
   </Accordion>
 
-  <Accordion title="Set up group chat mention gating">
-    Les messages de groupe nécessitent par défaut une **mention**. Configurez les motifs de déclenchement par agent, et gardez les réponses visibles de la salle sur le chemin par défaut de l'outil de message, sauf si vous souhaitez volontairement que chaque réponse de groupe normale utilise l'ancien chemin de réponse finale automatique :
+  <Accordion title="Configurer le filtrage par mention pour les discussions de groupe">
+    Les messages de groupe sont réglés par défaut sur **exiger une mention**. Configurez les modèles de déclenchement par agent. Les réponses normales de groupe/canal sont publiées automatiquement ; optez pour le chemin de l'outil de message pour les salons partagés où l'agent doit décider quand parler :
 
     ```json5
     {
       messages: {
         visibleReplies: "automatic", // set "message_tool" to require message-tool sends everywhere
         groupChat: {
-          visibleReplies: "message_tool", // default; visible output requires message(action=send)
+          visibleReplies: "message_tool", // opt-in; visible output requires message(action=send)
           unmentionedInbound: "room_event", // unmentioned always-on group chatter is quiet context
         },
       },
@@ -171,10 +171,10 @@ Le Gateway conserve une copie de confiance du dernier état connu après chaque 
     }
     ```
 
-    - **Mentions de métadonnées** : mentions @ natives (tapoter pour mentionner sur WhatsApp, @bot sur Telegram, etc.)
-    - **Motifs de texte** : motifs regex sûrs dans `mentionPatterns`
-    - **Réponses visibles** : `messages.visibleReplies` peut exiger des envois d'outil de message globalement ; `messages.groupChat.visibleReplies` cela remplace cela pour les groupes/chaînes.
-    - Consultez la [référence complète](/fr/gateway/config-channels#group-chat-mention-gating) pour les modes de réponse visible, les remplacements par chaîne et le mode de chat avec soi-même.
+    - **Mentions par métadonnées** : mentions natives @-mentions (tapoter pour mentionner sur WhatsApp, @bot sur Telegram, etc.)
+    - **Modèles de texte** : modèles d'expressions régulières sécurisés dans `mentionPatterns`
+    - **Réponses visibles** : `messages.visibleReplies` peut exiger l'envoi par l'outil de message globalement ; `messages.groupChat.visibleReplies` cela pour les groupes/canaux.
+    - Consultez la [référence complète](/fr/gateway/config-channels#group-chat-mention-gating) pour les modes de réponse visible, les substitutions par canal et le mode d'auto-discussion.
 
   </Accordion>
 

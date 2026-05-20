@@ -166,8 +166,8 @@ Elija su método de autenticación preferido y siga los pasos de configuración.
 
   </Tab>
 
-  <Tab title="Suscripción Codex">
-    **Mejor para:** usar tu suscripción ChatGPT/Codex con ejecución nativa del servidor de aplicaciones Codex en lugar de una clave API separada. La nube Codex requiere inicio de sesión en ChatGPT.
+  <Tab title="Suscripción a Codex">
+    **Mejor para:** usar tu suscripción a ChatGPT/Codex con la ejecución nativa del servidor de aplicaciones Codex en lugar de una clave de API separada. La nube de Codex requiere el inicio de sesión en ChatGPT.
 
     <Steps>
       <Step title="Ejecutar Codex OAuth">
@@ -181,7 +181,7 @@ Elija su método de autenticación preferido y siga los pasos de configuración.
         openclaw models auth login --provider openai-codex
         ```
 
-        Para configuraciones sin cabeza o hostiles a las devoluciones de llamada, añada `--device-code` para iniciar sesión con un flujo de código de dispositivo de ChatGPT en lugar de la devolución de llamada del navegador en localhost:
+        Para configuraciones sin interfaz gráfica o hostiles a las devoluciones de llamada, añada `--device-code` para iniciar sesión con un flujo de código de dispositivo de ChatGPT en lugar de la devolución de llamada del navegador localhost:
 
         ```bash
         openclaw models auth login --provider openai-codex --device-code
@@ -192,41 +192,42 @@ Elija su método de autenticación preferido y siga los pasos de configuración.
         openclaw config set agents.defaults.model.primary openai/gpt-5.5
         ```
 
-        No se requiere configuración de tiempo de ejecución para la ruta predeterminada. Los turnos del agente OpenAI
-        seleccionarán automáticamente el tiempo de ejecución nativo del servidor de aplicaciones Codex, y OpenClaw
-        instalará o reparará el complemento Codex incluido cuando se elija esta ruta.
+        No se requiere configuración de tiempo de ejecución para la ruta predeterminada. Los giros del agente OpenAI
+        seleccionan automáticamente el tiempo de ejecución del servidor de aplicaciones Codex nativo, y OpenClaw
+        instala o repara el complemento Codex incluido cuando se elige esta ruta.
       </Step>
-      <Step title="Verificar que la autenticación Codex esté disponible">
+      <Step title="Verificar que la autenticación de Codex está disponible">
         ```bash
         openclaw models list --provider openai-codex
         ```
 
         Después de que la puerta de enlace se esté ejecutando, envíe `/codex status` o `/codex models`
-        en el chat para verificar el tiempo de ejecución nativo del servidor de aplicaciones.
+        en el chat para verificar el tiempo de ejecución del servidor de aplicaciones nativo.
       </Step>
     </Steps>
 
     ### Resumen de rutas
 
-    | Ref. de modelo | Config. de tiempo de ejecución | Ruta | Autenticación |
+    | Referencia del modelo | Configuración de tiempo de ejecución | Ruta | Autenticación |
     |-----------|----------------|-------|------|
-    | `openai/gpt-5.5` | omitido / proveedor/modelo `agentRuntime.id: "codex"` | Arnés nativo del servidor de aplicaciones Codex | Inicio de sesión Codex o perfil de autenticación `openai` ordenado |
-    | `openai/gpt-5.5` | proveedor/modelo `agentRuntime.id: "pi"` | Tiempo de ejecución integrado PI con transporte de autenticación Codex interna | Perfil `openai-codex` seleccionado |
+    | `openai/gpt-5.5` | omitido / proveedor/modelo `agentRuntime.id: "codex"` | Arnés del servidor de aplicaciones Codex nativo | Inicio de sesión de Codex o perfil de autenticación `openai` ordenado |
+    | `openai/gpt-5.5` | proveedor/modelo `agentRuntime.id: "pi"` | Tiempo de ejecución integrado de PI con transporte de autenticación Codex interna | Perfil `openai-codex` seleccionado |
     | `openai-codex/gpt-5.5` | reparado por doctor | Ruta heredada reescrita a `openai/gpt-5.5` | Perfil `openai-codex` existente |
-    | `codex-cli/gpt-5.5` | reparado por doctor | Ruta de línea de comandos heredada reescrita a `openai/gpt-5.5` | Autenticación del servidor de aplicaciones Codex |
+    | `codex-cli/gpt-5.5` | reparado por doctor | Ruta heredada de CLI reescrita a `openai/gpt-5.5` | Autenticación del servidor de aplicaciones Codex |
 
     <Warning>
-    No configure referencias de modelos antiguas `openai-codex/gpt-5.1*`, `openai-codex/gpt-5.2*`, o
-    `openai-codex/gpt-5.3*`. Las cuentas ChatGPT/Codex OAuth ahora rechazan
-    esos modelos. Use `openai/gpt-5.5`; los turnos del agente OpenAI ahora seleccionarán el tiempo de ejecución
-    Codex de manera predeterminada.
+    Prefiera `openai/gpt-5.5` para la nueva configuración de agente respaldada por suscripción. Las referencias
+    `openai-codex/gpt-*` más antiguas son rutas heredadas de PI, no la ruta del tiempo de ejecución nativo de Codex;
+    ejecute `openclaw doctor --fix` cuando desee migrarlas a referencias
+    `openai/*` canónicas.
     </Warning>
 
     <Note>
-    El prefijo de modelo `openai-codex/*` es configuración heredada reparada por doctor. Para
-    la configuración común de suscripción más tiempo de ejecución nativo, inicie sesión con autenticación Codex
-    pero mantenga la referencia del modelo como `openai/gpt-5.5`. La nueva configuración debe colocar el orden de autenticación del agente OpenAI bajo `auth.order.openai`; las entradas antiguas `auth.order.openai-codex`
-    siguen siendo válidas.
+    El prefijo de modelo `openai-codex/*` es una configuración heredada reparada por doctor. Para
+    la configuración común de suscripción más tiempo de ejecución nativo, inicie sesión con la autenticación de Codex
+    pero mantenga la referencia del modelo como `openai/gpt-5.5`. La nueva configuración debe colocar el orden de autenticación del agente OpenAI bajo `auth.order.openai`; las entradas
+    `auth.order.openai-codex`
+    más antiguas permanecen válidas.
     </Note>
 
     ### Ejemplo de configuración
@@ -242,9 +243,9 @@ Elija su método de autenticación preferido y siga los pasos de configuración.
     }
     ```
 
-    Con una copia de seguridad de clave API, mantenga el modelo en `openai/gpt-5.5` y ponga el
-    orden de autenticación bajo `openai`. OpenClaw intentará primero la suscripción, luego
-    la clave API, mientras se mantiene en el arnés Codex:
+    Con una copia de seguridad de clave de API, mantenga el modelo en `openai/gpt-5.5` y coloque el
+    orden de autenticación bajo `openai`. OpenClaw intentará primero la suscripción y luego
+    la clave de API, mientras se mantiene en el arnés de Codex:
 
     ```json5
     {
@@ -266,10 +267,10 @@ Elija su método de autenticación preferido y siga los pasos de configuración.
     ```
 
     <Note>
-    La incorporación ya no importa material OAuth de `~/.codex`. Inicie sesión con OAuth del navegador (predeterminado) o el flujo de código de dispositivo anterior; OpenClaw gestiona las credenciales resultantes en su propio almacén de autenticación de agentes.
+    La incorporación ya no importa material OAuth de `~/.codex`. Inicie sesión con OAuth del navegador (predeterminado) o con el flujo de código de dispositivo anterior; OpenClaw gestiona las credenciales resultantes en su propio almacén de autenticación de agentes.
     </Note>
 
-    ### Verificar y recuperar el enrutamiento OAuth de Codex
+    ### Verificar y recuperar el enrutamiento de OAuth de Codex
 
     Use estos comandos para ver qué modelo, tiempo de ejecución y ruta de autenticación está usando su agente
     predeterminado:
@@ -288,8 +289,8 @@ Elija su método de autenticación preferido y siga los pasos de configuración.
     openclaw models auth list --agent <id> --provider openai-codex
     ```
 
-    Si una configuración antigua todavía tiene `openai-codex/gpt-*` o un pin de sesión PI de OpenAI obsoleto
-    sin una configuración explícita de tiempo de ejecución, repárelo:
+    Si una configuración anterior todavía tiene `openai-codex/gpt-*` o un pin de sesión de PI de OpenAI obsoleto
+    sin una configuración explícita de tiempo de ejecución, repárela:
 
     ```bash
     openclaw doctor --fix
@@ -304,22 +305,22 @@ Elija su método de autenticación preferido y siga los pasos de configuración.
     openclaw models status --probe --probe-provider openai-codex
     ```
 
-    `openai/*` es la ruta del modelo para los turnos del agente OpenAI a través de Codex. El
-    id del proveedor de autenticación/perfil `openai-codex` sigue siendo aceptado para perfiles
-    existentes y listados de línea de comandos.
+    `openai/*` es la ruta del modelo para los giros del agente OpenAI a través de Codex. El id
+    del proveedor de autenticación/perfil `openai-codex` sigue siendo aceptado para los perfiles
+    existentes y el listado de CLI.
 
     ### Indicador de estado
 
     El chat `/status` muestra qué tiempo de ejecución del modelo está activo para la sesión actual.
-    El arnés incluido del servidor de aplicaciones Codex aparece como `Runtime: OpenAI Codex` para
-    los turnos del modelo del agente OpenAI. Los pines de sesión PI obsoletos se reparan a Codex a menos que
+    El arnés del servidor de aplicaciones Codex incluido aparece como `Runtime: OpenAI Codex` para
+    los giros del modelo del agente OpenAI. Los pines de sesión de PI obsoletos se reparan a Codex a menos que
     la configuración fije explícitamente PI.
 
     ### Advertencia del doctor
 
-    Si las rutas `openai-codex/*` o los pines PI de OpenAI obsoletos permanecen en la configuración o
-    el estado de la sesión, `openclaw doctor --fix` los reescribe a `openai/*` con el
-    tiempo de ejecución Codex a menos que PI esté configurado explícitamente.
+    Si las rutas `openai-codex/*` o los pines de PI de OpenAI obsoletos permanecen en la configuración o
+    en el estado de la sesión, `openclaw doctor --fix` los reescribe a `openai/*` con el
+    tiempo de ejecución de Codex a menos que PI esté configurado explícitamente.
 
     ### Límite de la ventana de contexto
 
@@ -345,15 +346,15 @@ Elija su método de autenticación preferido y siga los pasos de configuración.
     ```
 
     <Note>
-    Use `contextWindow` para declarar metadatos del modelo nativo. Use `contextTokens` para limitar el presupuesto del contexto de tiempo de ejecución.
+    Use `contextWindow` para declarar los metadatos del modelo nativo. Use `contextTokens` para limitar el presupuesto del contexto de tiempo de ejecución.
     </Note>
 
     ### Recuperación del catálogo
 
-    OpenClaw utiliza los metadatos del catálogo Codex anterior para `gpt-5.5` cuando están
-    presentes. Si el descubrimiento en vivo de Codex omite la fila `gpt-5.5` mientras
+    OpenClaw utiliza los metadatos del catálogo de Codex aguas arriba para `gpt-5.5` cuando está
+    presente. Si el descubrimiento en vivo de Codex omite la fila `gpt-5.5` mientras
     la cuenta está autenticada, OpenClaw sintetiza esa fila del modelo OAuth para que
-    las ejecuciones de cron, subagente y modelo predeterminado configurado no fallen con
+    cron, subagente y las ejecuciones del modelo predeterminado configurado no fallen con
     `Unknown model`.
 
   </Tab>

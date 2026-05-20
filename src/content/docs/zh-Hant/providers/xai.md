@@ -12,8 +12,11 @@ OpenClaw 內建了 Grok 模型的 `xai` 提供者插件。
 
 <Steps>
   <Step title="選擇驗證方式">
-    使用來自 [xAI console](https://console.x.ai/) 的 API 金鑰或
-    具備 SuperGrok 訂閱的 xAI Grok OAuth。
+    使用來自 [xAI console](https://console.x.ai/) 的 API 金鑰，
+    或使用符合條件的 xAI 帳戶進行 xAI OAuth 瀏覽器登入。OAuth 不
+    需要提供 xAI API 金鑰，而且 OpenClaw 不需要 Grok Build 應用程式。
+    xAI 可能仍會將同意應用程式標記為 Grok Build，因為 OpenClaw 使用
+    xAI 的共用 OAuth 客戶端。
   </Step>
   <Step title="登入">
     設定 `XAI_API_KEY`，執行 API 金鑰精靈，或啟動 OAuth 流程：
@@ -383,8 +386,8 @@ Fast 和 Grok Code 代碼，但 OpenClaw 不再在可選目錄中顯示
   </Accordion>
 
 <Accordion title="已知限制">
-  - xAI 驗證可以使用 API 金鑰、環境變數、外掛程式設定備援，或搭配 SuperGrok 訂閱的 xAI Grok OAuth。OAuth 在 `127.0.0.1:56121` 上使用本機回呼；對於遠端主機，請在開啟登入 URL 之前轉發該連接埠。 - 在標準的 xAI 提供者路徑上不支援 `grok-4.20-multi-agent-experimental-beta-0304`，因為它需要與標準 OpenClaw xAI 傳輸不同的上游 API 介面。 - xAI Realtime voice 尚未註冊為 OpenClaw 提供者。與批次 STT
-  或串流轉錄相比，它需要不同的雙向語音工作階段合約。 - 在共享的 `image_generate` 工具具有相應的跨提供者控制項之前，不會公開 xAI 圖像 `quality`、圖像 `mask` 以及額外的僅限原生的長寬比。
+  - xAI 驗證可以使用 API 金鑰、環境變數、外掛程式設定備援機制， 或使用符合條件的 xAI 帳戶進行 xAI OAuth 瀏覽器登入。OAuth 使用 `127.0.0.1:56121` 上的本機回呼；對於遠端主機，請在開啟登入 URL 之前轉發該連接埠。 xAI 決定哪些帳戶可以接收 OAuth API 權杖，且即使 OpenClaw 不需要 Grok Build 應用程式，同意頁面可能仍會顯示 Grok Build。 - `grok-4.20-multi-agent-experimental-beta-0304` 在 正常的 xAI
+  提供者路徑上不受支援，因為它需要與標準 OpenClaw xAI 傳輸不同的上游 API 介面。 - xAI Realtime voice 尚未註冊為 OpenClaw 提供者。 它需要與批次 STT 或串流轉錄不同的雙向語音工作階段合約。 - xAI 影像 `quality`、影像 `mask` 和額外的僅原生比例 不會公開，直到共用的 `image_generate` 工具具有對應的 跨提供者控制項。
 </Accordion>
 
   <Accordion title="進階說明">

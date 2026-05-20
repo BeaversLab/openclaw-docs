@@ -247,16 +247,16 @@ Une fois que les DMs fonctionnent, vous pouvez configurer votre serveur Discord 
 
   </Step>
 
-  <Step title="Autoriser les réponses sans mention">
-    Par défaut, votre agent répond uniquement dans les channels de guilde lorsqu'il est @mentionné. Pour un serveur privé, vous voudrez probablement qu'il réponde à chaque message.
+  <Step title="Allow responses without @mention">
+    Par défaut, votre agent ne répond dans les canaux de guilde que lorsqu'il est @mentionné. Pour un serveur privé, vous souhaitez probablement qu'il réponde à chaque message.
 
-    Dans les channels de guilde, la sortie visible Discord devrait utiliser le tool `message` par défaut, afin que l'agent puisse rester en observation et ne publier que lorsqu'il juge une réponse de channel utile. Les événements ambiants de la salle restent silencieux à moins que le tool n'envoie quelque chose. Voir [Ambient room events](/fr/channels/ambient-room-events) pour la configuration complète du mode observation.
+    Dans les canaux de guilde, les réponses normales sont publiées automatiquement par défaut. Pour les salons partagés toujours actifs, optez pour `messages.groupChat.visibleReplies: "message_tool"` afin que l'agent puisse observer et ne publier que lorsqu'il décide qu'une réponse dans le canal est utile. Cela fonctionne mieux avec les modèles de dernière génération, fiables en matière d'outils, tels que GPT 5.5. Les événements ambiants de salon restent silencieux sauf si l'outil envoie. Voir [Ambient room events](/fr/channels/ambient-room-events) pour la configuration complète du mode observation.
 
-    Cela signifie que le model sélectionné doit appeler les tools de manière fiable. Si Discord affiche l'état de frappe et que les journaux montrent une utilisation de jetons mais aucun message publié, vérifiez si le tour a été configuré comme un événement ambiant de la salle ou utilisez la configuration ci-dessous pour rétablir les réponses finales automatiques héritées pour les demandes de groupe normales.
+    Si Discord affiche « en train d'écrire » et que les journaux indiquent une utilisation de jetons mais aucun message publié, vérifiez si le tour a été configuré comme un événement ambiant de salon ou s'il a opté pour des réponses visibles via l'outil de message.
 
     <Tabs>
-      <Tab title="Demander à votre agent">
-        > "Autoriser mon agent à répondre sur ce serveur sans avoir à être @mentionné"
+      <Tab title="Ask your agent">
+        > « Allow my agent to respond on this server without having to be @mentioned »
       </Tab>
       <Tab title="Config">
         Définissez `requireMention: false` dans votre configuration de guilde :
@@ -275,7 +275,7 @@ Une fois que les DMs fonctionnent, vous pouvez configurer votre serveur Discord 
 }
 ```
 
-        Pour rétablir les réponses finales automatiques héritées pour les salles de groupe/channel, définissez `messages.groupChat.visibleReplies: "automatic"`.
+        Pour exiger les envois de l'outil de message pour les réponses visibles de groupe/canal, définissez `messages.groupChat.visibleReplies: "message_tool"`.
 
       </Tab>
     </Tabs>
@@ -1578,10 +1578,10 @@ openclaw logs --follow
   <Accordion title="Bot to bot loops">
     Par défaut, les messages créés par des bots sont ignorés.
 
-    Si vous définissez `channels.discord.allowBots=true`, utilisez des règles de mention strictes et des listes d'autorisation pour éviter les boucles.
-    Privilégiez `channels.discord.allowBots="mentions"` pour n'accepter que les messages de bots qui mentionnent le bot.
+    Si vous définissez `channels.discord.allowBots=true`, utilisez des règles strictes de mention et de liste autorisée pour éviter les boucles.
+    Privilégiez `channels.discord.allowBots="mentions"`OpenClaw pour n'accepter que les messages de bots qui mentionnent le bot.
 
-    OpenClaw inclut également une [protection commune contre les boucles de bots](/fr/channels/bot-loop-protection). Chaque fois que `allowBots` laisse les messages créés par des bots atteindre la répartition, Discord mappe l'événement entrant sur des faits `(account, channel, bot pair)` et le garde de paire générique supprime la paire après qu'elle a dépassé le budget d'événements configuré. Le garde empêche les boucles incontrôlables entre deux bots qui devaient auparavant être arrêtées par les limites de débit de Discord ; cela n'affecte pas les déploiements à bot unique ou les réponses ponctuelles de bots qui restent dans le budget.
+    OpenClaw fournit également une [protection commune contre les boucles de bots](/fr/channels/bot-loop-protection). Chaque fois que `allowBots`Discord laisse les messages créés par des bots atteindre la distribution, Discord mappe l'événement entrant aux faits `(account, channel, bot pair)`Discord et le garde générique de paires supprime la paire après qu'elle a dépassé le budget d'événements configuré. Le garde empêche les boucles incontrôlables entre deux bots qui devaient auparavant être arrêtées par les limites de taux de Discord ; cela n'affecte pas les déploiements à bot unique ni les réponses ponctuelles des bots qui restent dans le budget.
 
     Paramètres par défaut (actifs lorsque `allowBots` est défini) :
 
@@ -1589,11 +1589,11 @@ openclaw logs --follow
     - `windowSeconds: 60` -- longueur de la fenêtre glissante
     - `cooldownSeconds: 60` -- une fois le budget dépassé, chaque message supplémentaire de bot à bot dans les deux sens est supprimé pendant une minute
 
-    Configurez la valeur par défaut commune une fois sous `channels.defaults.botLoopProtection`, puis redéfinissez Discord lorsqu'un workflow légitime a besoin de plus de marge. La priorité est :
+    Configurez la valeur par défaut partagée une fois sous `channels.defaults.botLoopProtection`Discord, puis remplacez Discord lorsqu'un workflow légitime a besoin de plus de marge. La priorité est :
 
     - `channels.discord.accounts.<account>.botLoopProtection`
     - `channels.discord.botLoopProtection`
-    - `channels.defaults.botLoopProtection`
+    - `channels.defaults.botLoopProtection`Discord
     - valeurs par défaut intégrées
 
     Discord utilise les clés génériques `maxEventsPerWindow`, `windowSeconds` et `cooldownSeconds`.
@@ -1623,7 +1623,7 @@ openclaw logs --follow
           // Molty listens to all bot-authored Discord messages.
           allowBots: true,
           mentionAliases: {
-            // Lets Molty write "@Mantis" and send a real Discord mention.
+            // Lets Molty write a Mantis Discord mention with the configured user id.
             Mantis: "MANTIS_DISCORD_USER_ID",
           },
           botLoopProtection: {

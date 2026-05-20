@@ -171,6 +171,7 @@ HTTP 狀態盡可能遵循 Gateway 錯誤。例如，`INVALID_REQUEST` 傳回 `4
 - gateway: `health`, `status`, `logs.tail`, `usage.status`, `usage.cost`, `gateway.restart.request`
 - config: `config.get`, `config.schema`, `config.schema.lookup`, `config.set`, `config.patch`, `config.apply`
 - channels: `channels.status`, `channels.start`, `channels.stop`, `channels.logout`
+- web: `web.login.start`, `web.login.wait`
 - models: `models.list`, `models.authStatus`
 - agents: `agents.list`, `agents.create`, `agents.update`, `agents.delete`
 - approvals: `exec.approvals.get`, `exec.approvals.set`, `exec.approvals.node.get`, `exec.approvals.node.set`
@@ -180,36 +181,36 @@ HTTP 狀態盡可能遵循 Gateway 錯誤。例如，`INVALID_REQUEST` 傳回 `4
 - tasks: `tasks.list`, `tasks.get`, `tasks.cancel`
 - diagnostics: `doctor.memory.status`, `update.status`
 
-其他 Gateway 方法會被封鎖，直到被刻意加入為止。
+其他 Gateway 方法將被阻擋，直到被有意新增為止。
 
 ## WebSocket 比較
 
-正常的 Gateway WebSocket RPC 路徑仍然是 OpenClaw 用戶端的首選控制平面 API。僅針對需要請求/回應 HTTP 介面的主機工具使用 Admin HTTP RPC。
+正常的 Gateway WebSocket RPC 路徑仍然是 OpenClaw 用戶端的首選控制平面 API。請僅對需要請求/回應 HTTP 介面的主機工具使用 admin HTTP RPC。
 
-沒有受信任裝置身分的共享權杖 (Shared-token) WebSocket 用戶端無法在連線時自行宣告管理員範圍 (admin scopes)。管理員 HTTP RPC 刻意遵循現有的受信任 HTTP 操作員模型：當啟用外掛程式時，共享密鑰承載驗證 (shared-secret bearer auth) 會被視為此管理員介面的完整操作員存取權限。
+沒有受信任裝置身分的共享 Token WebSocket 用戶端無法在連線時自行宣告 admin 範圍。Admin HTTP RPC 刻意遵循現有的受信任 HTTP 操作員模型：當啟用外掛程式時，共享秘密 bearer 驗證會被視為此 admin 介面的完整操作員存取權。
 
 ## 疑難排解
 
 `404 Not Found`
 
-：此外掛程式已停用、啟用後 Gateway 尚未重新啟動，或請求發送至不同的 Gateway 處理程序。
+：此外掛程式已停用、Gateway 自啟用以來尚未重新啟動，或是請求被傳送到不同的 Gateway 程序。
 
 `401 Unauthorized`
 
-：請求未滿足 Gateway HTTP 驗證。請檢查承載權杖 (bearer token) 或受信任代理身分標頭。
+：請求未滿足 Gateway HTTP 驗證。請檢查 bearer token 或受信任代理身分標頭。
 
 `400 INVALID_REQUEST`
 
-：請求主體不是有效的 JSON、缺少 `method` 欄位，或是方法不在外掛程式允許清單中。
+：請求主體不是有效的 JSON、缺少 `method` 欄位，或者該方法不在插件允許清單中。
 
 `503 UNAVAILABLE`
 
 ：Gateway 方法處理程式無法使用。請檢查 Gateway 記錄，並在 Gateway 完成啟動後重試。
 
-## 相關連結
+## 相關
 
-- [操作員範圍](/zh-Hant/gateway/operator-scopes)
+- [Operator 範圍](/zh-Hant/gateway/operator-scopes)
 - [Gateway 安全性](/zh-Hant/gateway/security)
 - [遠端存取](/zh-Hant/gateway/remote)
-- [外掛程式清單](/zh-Hant/plugins/manifest#contracts)
+- [Plugin 資訊清單](/zh-Hant/plugins/manifest#contracts)
 - [SDK 子路徑](/zh-Hant/plugins/sdk-subpaths)

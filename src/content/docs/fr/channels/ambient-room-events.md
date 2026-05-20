@@ -176,15 +176,15 @@ La valeur `agents.list[].groupChat.unmentionedInbound` spécifique à l'agent re
 
 ## Modes de réponse visibles
 
-`messages.groupChat.visibleReplies: "message_tool"` est la valeur par défaut recommandée pour les groupes et les canaux. Elle permet à l'agent de décider quand parler en appelant l'outil de message. Si le modèle renvoie du texte final sans appeler l'outil, OpenClaw garde ce texte final privé et enregistre les métadonnées de livraison supprimées.
+`messages.groupChat.visibleReplies` est défini par défaut sur `"automatic"` pour les requêtes utilisateur normales dans les groupes/canaux. Conservez cette valeur par défaut lorsque vous souhaitez que le texte final de l'assistant soit publié visiblement sans nécessiter d'appel explicite à l'outil de message.
 
-Utilisez `messages.groupChat.visibleReplies: "automatic"` uniquement lorsque vous souhaitez un comportement hérité où les requêtes de groupe normales publient automatiquement le texte final de l'assistant.
+Pour les salons permanents ambiants, `messages.groupChat.visibleReplies: "message_tool"` est toujours recommandé, en particulier avec les modèles de dernière génération fiables en matière d'outils tels que GPT 5.5. Il permet à l'agent de décider quand parler en appelant l'outil de message. Si le modèle renvoie du texte final sans appeler l'outil, OpenClaw garde ce texte final privé et enregistre les métadonnées de livraison supprimées.
 
-Les événements de salle restent stricts même lorsque d'autres requêtes de groupe utilisent des réponses automatiques. Les événements de salle ambiants non mentionnés nécessitent toujours `message(action=send)` pour une sortie visible.
+Les événements de salon restent stricts même lorsque les autres demandes de groupe utilisent des réponses automatiques. Les événements de salon ambiants non mentionnés nécessitent toujours `message(action=send)` pour une sortie visible.
 
 ## Historique
 
-`messages.groupChat.historyLimit` contrôle la valeur par défaut de l'historique des groupes globaux. Les canaux peuvent la remplacer avec `channels.<channel>.historyLimit`, et certains canaux prennent également en charge les limites d'historique par compte.
+`messages.groupChat.historyLimit` contrôle la valeur par défaut de l'historique des groupes globaux. Les canaux peuvent la remplacer par `channels.<channel>.historyLimit`, et certains canaux prennent également en charge des limites d'historique par compte.
 
 Définissez `historyLimit: 0` pour désactiver le contexte de l'historique des groupes.
 
@@ -195,14 +195,14 @@ Les canaux d'événements de salle pris en charge conservent les messages ambian
 Si la salle affiche une frappe ou une utilisation de jetons mais aucun message visible :
 
 1. Confirmez que la salle est autorisée par la liste d'autorisation des canaux et la liste d'autorisation des expéditeurs.
-2. Confirmez que `requireMention: false` est défini au niveau de salle que vous attendez.
+2. Confirmez que `requireMention: false` est défini au niveau du salon que vous attendez.
 3. Vérifiez si `messages.groupChat.unmentionedInbound` ou la priorité de l'agent est `"room_event"`.
 4. Inspectez les journaux pour les métadonnées de charge utile finale supprimées ou `didSendViaMessagingTool: false`.
-5. Utilisez un modèle/runtime qui appelle de manière fiable les outils, ou définissez `messages.groupChat.visibleReplies: "automatic"` pour les réponses finales héritées sur les demandes de groupe normales.
+5. Pour les demandes de groupe normales, conservez ou restaurez `messages.groupChat.visibleReplies: "automatic"` si vous souhaitez que les réponses finales soient publiées automatiquement. Pour les salons ambiants utilisant `message_tool`, utilisez un modèle/exécution qui appelle les outils de manière fiable.
 
 Si les salles ambiantes Telegram ne se déclenchent pas du tout, vérifiez le mode de confidentialité de BotFather et vérifiez que le Gateway reçoit les messages de groupe normaux.
 
-Si les salles ambiantes Slack ne se déclenchent pas, vérifiez que la clé du canal est l'ID du canal Slack et que l'application dispose de la portée `channels:history` ou `groups:history` requise pour ce type de salle.
+Si les salons ambiants Slack ne se déclenchent pas, vérifiez que la clé du canal est l'identifiant du canal Slack et que l'application dispose de la portée `channels:history` ou `groups:history` requise pour ce type de salon.
 
 ## Connexes
 

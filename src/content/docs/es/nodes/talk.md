@@ -10,26 +10,27 @@ El modo Talk tiene dos formas de ejecución:
 
 - El modo Talk nativo de macOS/iOS/Android utiliza reconocimiento de voz local, chat de Gateway y TTS `talk.speak`. Los nodos anuncian la capacidad `talk` y declaran los comandos `talk.*` que admiten.
 - El modo Talk en el navegador utiliza `talk.client.create` para sesiones `webrtc` y `provider-websocket` propiedad del cliente, o `talk.session.create` para sesiones `gateway-relay` propiedad del Gateway. `managed-room` está reservado para el traspaso del Gateway y las salas de walkie-talkie.
-- Los clientes de solo transcripción utilizan `talk.session.create({ mode: "transcription", transport: "gateway-relay", brain: "none" })`, luego `talk.session.appendAudio`, `talk.session.cancelTurn` y `talk.session.close` cuando necesitan subtítulos o dictado sin una respuesta de voz del asistente.
+- Android Talk puede optar por sesiones de retransmisión en tiempo real propiedad de Gateway con `talk.realtime.mode: "realtime"` y `talk.realtime.transport: "gateway-relay"`. De lo contrario, se mantiene en el reconocimiento de voz nativo, chat de Gateway y `talk.speak`.
+- Los clientes de solo transcripción usan `talk.session.create({ mode: "transcription", transport: "gateway-relay", brain: "none" })`, luego `talk.session.appendAudio`, `talk.session.cancelTurn` y `talk.session.close` cuando necesitan subtítulos o dictado sin una respuesta de voz del asistente.
 
-El modo Talk nativo es un bucle continuo de conversación de voz:
+Native Talk es un bucle continuo de conversación de voz:
 
 1. Escuchar el habla
 2. Enviar la transcripción al modelo a través de la sesión activa
 3. Esperar la respuesta
 4. Reproducirla a través del proveedor de Talk configurado (`talk.speak`)
 
-El modo Talk en tiempo real en el navegador reenvía las llamadas a herramientas del proveedor a través de `talk.client.toolCall`; los clientes del navegador no llaman a `chat.send` directamente para consultas en tiempo real.
+El Talk en tiempo real del navegador reenvía las llamadas a herramientas del proveedor a través de `talk.client.toolCall`; los clientes del navegador no llaman a `chat.send` directamente para consultas en tiempo real.
 
-El modo Talk de solo transcripción emite el mismo sobre de eventos común de Talk que las sesiones en tiempo real y STT/TTS, pero utiliza `mode: "transcription"` y `brain: "none"`. Está diseñado para subtítulos, dictado y captura de voz de solo observación; las notas de voz cargadas de un solo uso siguen utilizando la ruta multimedia/audio.
+El Talk de solo transcripción emite el mismo sobre de eventos de Talk común que las sesiones en tiempo real y STT/TTS, pero usa `mode: "transcription"` y `brain: "none"`. Está destinado a subtítulos, dictado y captura de voz de solo observación; las notas de voz cargadas de un solo uso aún usan la ruta multimedia/audio.
 
 ## Comportamiento (macOS)
 
 - **Superposición siempre activa** mientras el modo Talk está habilitado.
-- **Escuchando → Pensando → Hablando** transiciones de fase.
-- En una **pausa breve** (ventana de silencio), se envía la transcripción actual.
+- Transiciones de fase **Escuchando → Pensando → Hablando**.
+- En una **pausa corta** (ventana de silencio), se envía la transcripción actual.
 - Las respuestas se **escriben en WebChat** (igual que al escribir).
-- **Interrumpir al hablar** (activado por defecto): si el usuario empieza a hablar mientras el asistente está hablando, detenemos la reproducción y registramos la marca de tiempo de la interrupción para el siguiente mensaje.
+- **Interrumpir al hablar** (activado por defecto): si el usuario empieza a hablar mientras el asistente está hablando, detenemos la reproducción y anotamos la marca de tiempo de interrupción para el siguiente aviso.
 
 ## Directivas de voz en las respuestas
 
@@ -44,10 +45,10 @@ Reglas:
 - Solo la primera línea no vacía.
 - Las claves desconocidas se ignoran.
 - `once: true` se aplica solo a la respuesta actual.
-- Sin `once`, la voz se convierte en la nueva predeterminada para el modo Talk.
+- Sin `once`, la voz se convierte en el nuevo valor predeterminado para el modo Talk.
 - La línea JSON se elimina antes de la reproducción TTS.
 
-Claves compatibles:
+Claves admitidas:
 
 - `voice` / `voice_id` / `voiceId`
 - `model` / `model_id` / `modelId`
@@ -97,56 +98,57 @@ Claves compatibles:
 Valores predeterminados:
 
 - `interruptOnSpeech`: true
-- `silenceTimeoutMs`: cuando no está establecido, Talk mantiene la ventana de pausa predeterminada de la plataforma antes de enviar la transcripción (`700 ms on macOS and Android, 900 ms on iOS`)
+- `silenceTimeoutMs`: cuando no está configurado, Talk mantiene la ventana de pausa predeterminada de la plataforma antes de enviar la transcripción (`700 ms on macOS and Android, 900 ms on iOS`)
 - `provider`: selecciona el proveedor de Talk activo. Use `elevenlabs`, `mlx` o `system` para las rutas de reproducción locales de macOS.
 - `providers.<provider>.voiceId`: recurre a `ELEVENLABS_VOICE_ID` / `SAG_VOICE_ID` para ElevenLabs (o a la primera voz de ElevenLabs cuando la clave de API está disponible).
-- `providers.elevenlabs.modelId`: de forma predeterminada es `eleven_v3` cuando no está establecido.
-- `providers.mlx.modelId`: de forma predeterminada es `mlx-community/Soprano-80M-bf16` cuando no está establecido.
+- `providers.elevenlabs.modelId`: el valor predeterminado es `eleven_v3` cuando no está configurado.
+- `providers.mlx.modelId`: el valor predeterminado es `mlx-community/Soprano-80M-bf16` cuando no está configurado.
 - `providers.elevenlabs.apiKey`: recurre a `ELEVENLABS_API_KEY` (o al perfil de shell de la puerta de enlace si está disponible).
 - `consultThinkingLevel`: anulación opcional del nivel de pensamiento para la ejecución completa del agente OpenClaw detrás de las llamadas `openclaw_agent_consult` en tiempo real.
 - `consultFastMode`: anulación opcional del modo rápido para las llamadas `openclaw_agent_consult` en tiempo real.
-- `realtime.provider`: selecciona el proveedor de voz en tiempo real del navegador/servidor activo. Use `openai` para WebRTC, `google` para el proveedor WebSocket, o un proveedor solo puente a través del relay de Gateway.
-- `realtime.providers.<provider>` almacena la configuración en tiempo real del proveedor. El navegador recibe solo credenciales de sesión efímeras o restringidas, nunca una clave API estándar.
-- `realtime.providers.openai.voice`: id de voz en tiempo real integrado de OpenAI. Las voces `gpt-realtime-2` actuales son `alloy`, `ash`, `ballad`, `coral`, `echo`, `sage`, `shimmer`, `verse`, `marin` y `cedar`; se recomiendan `marin` y `cedar` para obtener la mejor calidad.
-- `realtime.brain`: `agent-consult` enruta las llamadas a herramientas en tiempo real a través de la política de Gateway; `direct-tools` es un comportamiento de compatibilidad solo para el propietario; `none` es para transcripción orquestación externa.
-- `realtime.instructions`: añade instrucciones del sistema orientadas al proveedor al prompt en tiempo real integrado de OpenClaw. Úselo para el estilo y el tono de voz; OpenClaw mantiene la guía `openclaw_agent_consult` predeterminada.
-- `talk.catalog` expone los modos válidos, transportes, estrategias cerebrales, formatos de audio en tiempo real y indicadores de capacidad de cada proveedor para que los clientes de Talk de primera parte puedan evitar combinaciones no compatibles.
-- Los proveedores de transcripción en streaming se descubren a través de `talk.catalog.transcription`. El relay de Gateway actual utiliza la configuración del proveedor de streaming de Voice Call hasta que se agregue la superficie de configuración de transcripción dedicada de Talk.
+- `realtime.provider`: selecciona el proveedor de voz en tiempo real activo del navegador/servidor. Use `openai` para WebRTC, `google` para el WebSocket del proveedor, o un proveedor solo puente a través del relé de la puerta de enlace.
+- `realtime.providers.<provider>` almacena la configuración en tiempo real propiedad del proveedor. El navegador recibe solo credenciales de sesión efímeras o restringidas, nunca una clave de API estándar.
+- `realtime.providers.openai.voice`: id de voz de OpenAI Realtime integrado. Las voces `gpt-realtime-2` actuales son `alloy`, `ash`, `ballad`, `coral`, `echo`, `sage`, `shimmer`, `verse`, `marin` y `cedar`; se recomiendan `marin` y `cedar` para obtener la mejor calidad.
+- `realtime.transport`: `webrtc` y `provider-websocket` son transportes en tiempo real del navegador. Android utiliza el relé en tiempo real solo cuando esto es `gateway-relay`; de lo contrario, Android Talk utiliza su bucle nativo de STT/TTS.
+- `realtime.brain`: `agent-consult` enruta las llamadas a herramientas en tiempo real a través de la política de Gateway; `direct-tools` es un comportamiento de compatibilidad solo para propietarios; `none` es para transcripción orquestación externa.
+- `realtime.instructions`: añade instrucciones del sistema orientadas al proveedor al aviso en tiempo real integrado de OpenClaw. Úselo para el estilo y el tono de voz; OpenClaw mantiene la guía `openclaw_agent_consult` predeterminada.
+- `talk.catalog` expone los modos válidos, transportes, estrategias cerebrales, formatos de audio en tiempo real y banderas de capacidad de cada proveedor para que los clientes Talk de primera parte puedan evitar combinaciones no compatibles.
+- Los proveedores de transcripción en streaming se descubren a través de `talk.catalog.transcription`. El relé de Gateway actual utiliza la configuración del proveedor de streaming de Voice Call hasta que se agregue la superficie de configuración de transcripción dedicada de Talk.
 - `speechLocale`: id de configuración regional BCP 47 opcional para el reconocimiento de voz de Talk en el dispositivo en iOS/macOS. Déjelo sin establecer para usar el valor predeterminado del dispositivo.
-- `outputFormat`: el valor predeterminado es `pcm_44100` en macOS/iOS y `pcm_24000` en Android (establezca `mp3_*` para forzar la transmisión MP3)
+- `outputFormat`: de forma predeterminada es `pcm_44100` en macOS/iOS y `pcm_24000` en Android (establezca `mp3_*` para forzar el streaming MP3)
 
 ## Interfaz de usuario de macOS
 
 - Alternar en la barra de menús: **Talk**
-- Pestaña Configuración: grupo **Talk Mode** (id. de voz + alternar interrupción)
+- Pestaña Configuración: grupo **Talk Mode** (id de voz + alternar interrupción)
 - Superposición:
   - **Escuchando**: la nube pulsa con el nivel del micrófono
   - **Pensando**: animación de hundimiento
   - **Hablando**: anillos radiantes
-  - Clic en la nube: dejar de hablar
-  - Clic en X: salir del modo Talk
+  - Haz clic en la nube: dejar de hablar
+  - Haz clic en X: salir del modo Talk
 
 ## Interfaz de usuario de Android
 
-- Alternar en la pestaña Voz: **Talk**
+- Alternar pestaña Voz: **Talk**
 - El **Micrófono** manual y **Talk** son modos de captura en tiempo de ejecución mutuamente excluyentes.
-- El micrófono manual se detiene cuando la aplicación sale del primer plano o el usuario abandona la pestaña Voz.
-- El modo Talk sigue ejecutándose hasta que se desactiva o se desconecta el nodo de Android, y utiliza el tipo de servicio en primer plano del micrófono de Android mientras está activo.
+- El micrófono manual se detiene cuando la aplicación sale del primer plano o el usuario sale de la pestaña Voz.
+- El modo Talk sigue ejecutándose hasta que se desactiva o el nodo de Android se desconecta, y utiliza el tipo de servicio en primer plano del micrófono de Android mientras está activo.
 
 ## Notas
 
-- Requiere permisos de Voz + Micrófono.
-- Talk nativo utiliza la sesión activa de Gateway y solo recurre al sondeo del historial cuando los eventos de respuesta no están disponibles.
-- Talk en tiempo real del navegador utiliza `talk.client.toolCall` para `openclaw_agent_consult` en lugar de exponer `chat.send` a las sesiones del navegador propiedad del proveedor.
-- Talk solo de transcripción utiliza `talk.session.create`, `talk.session.appendAudio`, `talk.session.cancelTurn` y `talk.session.close`; los clientes se suscriben a `talk.event` para actualizaciones parciales/finales de la transcripción.
-- La puerta de enlace resuelve la reproducción de Talk a través de `talk.speak` utilizando el proveedor de Talk activo. Android recurre al sistema TTS local solo cuando ese RPC no está disponible.
-- La reproducción local de MLX en macOS utiliza el asistente `openclaw-mlx-tts` incluido cuando está presente, o un ejecutable en `PATH`. Establezca `OPENCLAW_MLX_TTS_BIN` para señalar un binario de asistente personalizado durante el desarrollo.
+- Requiere permisos de voz + micrófono.
+- Talk nativo utiliza la sesión activa de Gateway y solo recurre al sondeo de historial cuando los eventos de respuesta no están disponibles.
+- Talk en tiempo real del navegador utiliza `talk.client.toolCall` para `openclaw_agent_consult` en lugar de exponer `chat.send` a sesiones del navegador propiedad del proveedor.
+- Talk de solo transcripción utiliza `talk.session.create`, `talk.session.appendAudio`, `talk.session.cancelTurn` y `talk.session.close`; los clientes se suscriben a `talk.event` para actualizaciones parciales/finales de la transcripción.
+- El gateway resuelve la reproducción de Talk a través de `talk.speak` utilizando el proveedor de Talk activo. Android solo recurre al sistema TTS local cuando ese RPC no está disponible.
+- La reproducción local de MLX en macOS utiliza el auxiliar `openclaw-mlx-tts` incluido cuando está presente, o un ejecutable en `PATH`. Establezca `OPENCLAW_MLX_TTS_BIN` para apuntar a un binario auxiliar personalizado durante el desarrollo.
 - `stability` para `eleven_v3` se valida como `0.0`, `0.5` o `1.0`; otros modelos aceptan `0..1`.
 - `latency_tier` se valida como `0..4` cuando se establece.
-- Android admite los formatos de salida `pcm_16000`, `pcm_22050`, `pcm_24000` y `pcm_44100` para la transmisión AudioTrack de baja latencia.
+- Android admite los formatos de salida `pcm_16000`, `pcm_22050`, `pcm_24000` y `pcm_44100` para transmisión AudioTrack de baja latencia.
 
 ## Relacionado
 
 - [Activación por voz](/es/nodes/voicewake)
 - [Notas de audio y voz](/es/nodes/audio)
-- [Comprensión multimedia](/es/nodes/media-understanding)
+- [Comprensión de medios](/es/nodes/media-understanding)

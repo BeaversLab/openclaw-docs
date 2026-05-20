@@ -67,7 +67,7 @@ OpenClaw incluye tres scripts de instalación, disponibles desde `openclaw.ai`.
     Soporta macOS y Linux (incluyendo WSL). Si se detecta macOS, instala Homebrew si falta.
   </Step>
   <Step title="Asegurar Node.js 24 por defecto">
-    Comprueba la versión de Node e instala Node 24 si es necesario (Homebrew en macOS, scripts de configuración de NodeSource en Linux apt/dnf/yum). OpenClaw aún admite Node 22 LTS, actualmente `22.16+`, por compatibilidad.
+    Verifica la versión de Node e instala Node 24 si es necesario (Homebrew en macOS, scripts de configuración de NodeSource en Linux apt/dnf/yum). OpenClaw todavía admite Node 22 LTS, actualmente `22.19+`, por compatibilidad.
   </Step>
   <Step title="Asegurar Git">
     Instala Git si falta.
@@ -236,7 +236,7 @@ El script termina con el código `2` por una selección de método no válida o 
     Requiere PowerShell 5+.
   </Step>
   <Step title="Asegurar Node.js 24 por defecto">
-    Si falta, intenta la instalación a través de winget, luego Chocolatey y luego Scoop. Node 22 LTS, actualmente `22.16+`, sigue siendo compatible por compatibilidad.
+    Si falta, intenta la instalación mediante winget, luego Chocolatey y luego Scoop. Node 22 LTS, actualmente `22.19+`, sigue siendo compatible para compatibilidad.
   </Step>
   <Step title="Instalar OpenClaw">
     - Método `npm` (predeterminado): instalación global de npm usando el `-Tag` seleccionado, iniciado desde un directorio temporal de instalación con permisos de escritura para que los shells abiertos en carpetas protegidas como `C:\` sigan funcionando

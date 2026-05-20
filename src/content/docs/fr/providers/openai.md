@@ -166,7 +166,7 @@ Choisissez votre méthode d'authentification préférée et suivez les étapes d
   </Tab>
 
   <Tab title="Abonnement Codex"API>
-    **Idéal pour :** utiliser votre abonnement ChatGPT/Codex avec l'exécution native de l'application serveur Codex au lieu d'une clé API distincte. Le cloud Codex nécessite une connexion ChatGPT.
+    **Idéal pour :** utiliser votre abonnement ChatGPT/Codex avec l'exécution native de l'application serveur Codex au lieu d'une clé API séparée. Le cloud Codex nécessite une connexion ChatGPT.
 
     <Steps>
       <Step title="OAuthExécuter Codex OAuth">
@@ -174,13 +174,13 @@ Choisissez votre méthode d'authentification préférée et suivez les étapes d
         openclaw onboard --auth-choice openai-codex
         ```OAuth
 
-        Ou exécutez OAuth directement :
+        Ou exécuter OAuth directement :
 
         ```bash
         openclaw models auth login --provider openai-codex
         ```
 
-        Pour les configurations sans tête ou hostiles aux rappels (callback), ajoutez `--device-code` pour vous connecter avec un flux de code d'appareil ChatGPT au lieu du rappel du navigateur localhost :
+        Pour les configurations sans interface ou hostiles aux rappels (callback), ajoutez `--device-code` pour vous connecter avec un flux de code d'appareil ChatGPT au lieu du rappel du navigateur localhost :
 
         ```bash
         openclaw models auth login --provider openai-codex --device-code
@@ -189,42 +189,43 @@ Choisissez votre méthode d'authentification préférée et suivez les étapes d
       <Step title="OpenAIUtiliser la route canonique du modèle OpenAI">
         ```bash
         openclaw config set agents.defaults.model.primary openai/gpt-5.5
-        ```
+        ```OpenAIOpenClaw
 
-        Aucune configuration d'exécution n'est requise pour le chemin par défaut. Les tours de l'agent OpenAI
-        sélectionnent automatiquement l'exécution native de l'application serveur Codex, et OpenClaw
-        installe ou répare le plugin Codex intégré lorsque cette route est choisie.
+        Aucune configuration d'exécution n'est requise pour le chemin par défaut. Les tours d'agent
+        OpenAI sélectionnent automatiquement l'environnement d'exécution de l'application serveur Codex native, et OpenClaw
+        installe ou répare le plugin Codex fourni lorsque cette route est choisie.
       </Step>
       <Step title="Vérifier que l'auth Codex est disponible">
         ```bash
         openclaw models list --provider openai-codex
         ```
 
-        Une fois la passerelle en cours d'exécution, envoyez `/codex status` ou `/codex models`
-        dans le chat pour vérifier l'exécution native de l'application serveur.
+        Une fois la passerelle démarrée, envoyez `/codex status` ou `/codex models`
+        dans le chat pour vérifier l'environnement d'exécution de l'application serveur native.
       </Step>
     </Steps>
 
     ### Résumé des routes
 
-    | Réf. de modèle | Config. d'exécution | Route | Auth |
+    | Réf de modèle | Config d'exécution | Route | Auth |
     |-----------|----------------|-------|------|
-    | `openai/gpt-5.5` | omis / provider/model `agentRuntime.id: "codex"` | Harnais d'application serveur Codex natif | Connexion Codex ou profil d'auth `openai` ordonné |
-    | `openai/gpt-5.5` | provider/model `agentRuntime.id: "pi"` | Exécution intégrée PI avec transport d'auth Codex interne | Profil `openai-codex` sélectionné |
-    | `openai-codex/gpt-5.5` | réparé par le docteur | Ancienne route réécrite en `openai/gpt-5.5` | Profil `openai-codex` existant |
-    | `codex-cli/gpt-5.5` | réparé par le docteur | Ancienne route CLI réécrite en `openai/gpt-5.5` | Auth d'application serveur Codex |
+    | `openai/gpt-5.5` | omis / provider/model `agentRuntime.id: "codex"` | Harnais de l'application serveur Codex native | Connexion Codex ou profil d'auth `openai` ordonné |
+    | `openai/gpt-5.5` | provider/model `agentRuntime.id: "pi"` | Environnement intégré PI avec transport d'auth Codex interne | Profil `openai-codex` sélectionné |
+    | `openai-codex/gpt-5.5` | réparé par doctor | Ancienne route réécrite vers `openai/gpt-5.5` | Profil `openai-codex` existant |
+    | `codex-cli/gpt-5.5`CLI | réparé par doctor | Ancienne route CLI réécrite vers `openai/gpt-5.5` | Auth application serveur Codex |
 
     <Warning>
-    Ne configurez pas les anciennes références de modèle `openai-codex/gpt-5.1*`, `openai-codex/gpt-5.2*`, ou
-    `openai-codex/gpt-5.3*`. Les comptes ChatGPT/Codex OAuth rejettent désormais
-    ces modèles. Utilisez `openai/gpt-5.5` ; les tours de l'agent OpenAI sélectionnent désormais l'exécution Codex par défaut.
+    Préférez `openai/gpt-5.5` pour les nouvelles configurations d'agent basées sur un abonnement. Les anciennes
+    références `openai-codex/gpt-*` sont d'anciennes routes PI, et non le chemin d'exécution
+    Codex natif ; exécutez `openclaw doctor --fix` lorsque vous souhaitez les migrer vers les références canoniques
+    `openai/*`.
     </Warning>
 
     <Note>
-    Le préfixe de modèle `openai-codex/*` est une configuration héritée réparée par le docteur. Pour
-    la configuration courante d'abonnement plus exécution native, connectez-vous avec l'auth Codex
-    mais conservez la référence de modèle comme `openai/gpt-5.5`. La nouvelle configuration doit placer l'ordre d'auth de l'agent OpenAI
-    sous `auth.order.openai` ; les anciennes entrées `auth.order.openai-codex`
+    Le préfixe de modèle `openai-codex/*` est une ancienne configuration réparée par doctor. Pour
+    la configuration courante d'abonnement plus environnement d'exécution natif, connectez-vous avec l'auth Codex
+    mais gardez la référence de modèle comme `openai/gpt-5.5`OpenAI. Les nouvelles configurations doivent placer l'ordre d'auth de l'agent
+    OpenAI sous `auth.order.openai` ; les anciennes entrées `auth.order.openai-codex`
     restent valides.
     </Note>
 
@@ -239,10 +240,10 @@ Choisissez votre méthode d'authentification préférée et suivez les étapes d
         },
       },
     }
-    ```
+    ```API
 
-    Avec une sauvegarde par clé API, gardez le modèle sur `openai/gpt-5.5` et placez l'ordre
-    d'auth sous `openai`. OpenClaw tentera d'abord l'abonnement, puis
+    Avec une clé API de secours, gardez le modèle sur `openai/gpt-5.5` et placez l'ordre
+    d'auth sous `openai`OpenClawAPI. OpenClaw essaiera d'abord l'abonnement, puis
     la clé API, tout en restant sur le harnais Codex :
 
     ```json5
@@ -262,16 +263,16 @@ Choisissez votre méthode d'authentification préférée et suivez les étapes d
         },
       },
     }
-    ```
+    ```OAuth
 
     <Note>
-    L'intégration n'importe plus le matériel OAuth depuis `~/.codex`. Connectez-vous via le navigateur OAuth (par défaut) ou le flux de code d'appareil ci-dessus — OpenClaw gère les informations d'identification résultantes dans son propre magasin d'auth d'agent.
+    L'intégration (Onboarding) n'importe plus les éléments OAuth depuis `~/.codex`OAuthOpenClawOAuth. Connectez-vous avec OAuth navigateur (par défaut) ou le flux de code d'appareil ci-dessus — OpenClaw gère les informations d'identification résultantes dans son propre stock d'auth d'agent.
     </Note>
 
-    ### Vérifier et récupérer le routage Codex OAuth
+    ### Vérifier et récupérer le routage OAuth Codex
 
-    Utilisez ces commandes pour voir quel modèle, quelle exécution et quelle route d'auth votre agent
-    par défaut utilise :
+    Utilisez ces commandes pour voir quel modèle, environnement d'exécution et route d'auth votre agent par défaut
+    utilise :
 
     ```bash
     openclaw models status
@@ -287,46 +288,48 @@ Choisissez votre méthode d'authentification préférée et suivez les étapes d
     openclaw models auth list --agent <id> --provider openai-codex
     ```
 
-    Si une ancienne configuration possède encore `openai-codex/gpt-*` ou une épingle de session PI OpenAI obsolète sans configuration d'exécution explicite, réparez-la :
+    Si une ancienne configuration possède encore `openai-codex/gpt-*`OpenAI ou un épingle de session OpenAI PI
+    obsolète sans configuration d'exécution explicite, réparez-la :
 
     ```bash
     openclaw doctor --fix
     openclaw config validate
     ```
 
-    Si `models auth list --provider openai-codex` n'affiche aucun profil utilisable, reconnectez-vous :
+    Si `models auth list --provider openai-codex` n'affiche aucun profil utilisable, connectez-vous
+    à nouveau :
 
     ```bash
     openclaw models auth login --provider openai-codex
     openclaw models status --probe --probe-provider openai-codex
     ```
 
-    `openai/*` est la route de modèle pour les tours de l'agent OpenAI via Codex. L'identifiant
-    de fournisseur de profil/auth `openai-codex` reste accepté pour les profils existants et le listing CLI.
+    `openai/*`OpenAI est la route de modèle pour les tours d'agent OpenAI via Codex. L'ID de fournisseur
+    d'auth/profil `openai-codex`CLI reste accepté pour les profils existants et le listage CLI.
 
     ### Indicateur de statut
 
-    Le chat `/status` montre quelle exécution de modèle est active pour la session actuelle.
-    Le harnais d'application serveur Codex intégré apparaît comme `Runtime: OpenAI Codex` pour
-    les tours de modèle de l'agent OpenAI. Les épingles de session PI obsolètes sont réparées vers Codex sauf si
-    la configuration épingle explicitement PI.
+    Le chat `/status` montre quel environnement d'exécution de modèle est actif pour la session actuelle.
+    Le harnais de l'application serveur Codex fourni apparaît comme `Runtime: OpenAI Codex`OpenAI pour
+    les tours de modèle d'agent OpenAI. Les épingles de session PI obsolètes sont réparées vers Codex à moins que
+    la configuration n'épingle explicitement PI.
 
     ### Avertissement du docteur
 
-    Si les routes `openai-codex/*` ou les épingles PI OpenAI obsolètes restent dans la configuration ou
-    l'état de session, `openclaw doctor --fix` les réécrit en `openai/*` avec l'exécution
-    Codex sauf si PI est explicitement configuré.
+    Si les routes `openai-codex/*`OpenAI ou les épingles OpenAI PI obsolètes restent dans la configuration ou
+    l'état de la session, `openclaw doctor --fix` les réécrit vers `openai/*`OpenClaw avec l'environnement
+    d'exécution Codex, sauf si PI est explicitement configuré.
 
     ### Plafond de fenêtre de contexte
 
     OpenClaw traite les métadonnées du modèle et le plafond de contexte d'exécution comme des valeurs distinctes.
 
-    Pour `openai/gpt-5.5` via le catalogue OAuth de Codex :
+    Pour `openai/gpt-5.5`OAuth via le catalogue OAuth Codex :
 
-    - `contextWindow` natif : `1000000`
-    - Plafond d'`contextTokens` d'exécution par défaut : `272000`
+    - `contextWindow` native : `1000000`
+    - Plafond d'exécution `contextTokens` par défaut : `272000`
 
-    Le plafond par défaut plus petit offre de meilleures caractéristiques de latence et de qualité en pratique. Remplacez-le par `contextTokens` :
+    Le plafond par défaut plus petit offre de meilleures caractéristiques de latence et de qualité en pratique. Remplacez-le avec `contextTokens` :
 
     ```json5
     {
@@ -341,15 +344,15 @@ Choisissez votre méthode d'authentification préférée et suivez les étapes d
     ```
 
     <Note>
-    Utilisez `contextWindow` pour déclarer les métadonnées de modèle natives. Utilisez `contextTokens` pour limiter le budget de contexte d'exécution.
+    Utilisez `contextWindow` pour déclarer les métadonnées natives du modèle. Utilisez `contextTokens`OpenClaw pour limiter le budget de contexte d'exécution.
     </Note>
 
     ### Récupération du catalogue
 
-    OpenClaw utilise les métadonnées du catalogue en amont de Codex pour `gpt-5.5` lorsqu'il est
-    présent. Si la découverte en direct de Codex omet la ligne `gpt-5.5` alors
+    OpenClaw utilise les métadonnées du catalogue Codex en amont pour `gpt-5.5` lorsqu'elles sont
+    présentes. Si la découverte Codex en direct omet la ligne `gpt-5.5`OpenClawOAuth alors
     que le compte est authentifié, OpenClaw synthétise cette ligne de modèle OAuth afin que
-    cron, les sous-agents et les exécutions de modèle par défaut configurées ne échouent pas avec
+    cron, le sous-agent et les exécutions du modèle par défaut configuré ne échouent pas avec
     `Unknown model`.
 
   </Tab>

@@ -14,7 +14,7 @@ Gateway en ejecución (o se conecta a un Gateway local existente si ya se está 
 
 ## Instalar la CLI (necesario para el modo local)
 
-Node 24 es el runtime predeterminado en Mac. Node 22 LTS, actualmente `22.16+`, todavía funciona por compatibilidad. Luego instale `openclaw` globalmente:
+Node 24 es el tiempo de ejecución predeterminado en Mac. Node 22 LTS, actualmente `22.19+`, todavía funciona por compatibilidad. A continuación, instale `openclaw` globalmente:
 
 ```bash
 npm install -g openclaw@<version>

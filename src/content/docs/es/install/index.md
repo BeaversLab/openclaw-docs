@@ -9,7 +9,7 @@ title: "Instalación"
 
 ## Requisitos del sistema
 
-- **Node 24** (recomendado) o Node 22.16+ - el script de instalación maneja esto automáticamente
+- **Node 24** (recomendado) o Node 22.19+ - el script de instalación se encarga de esto automáticamente
 - **macOS, Linux o Windows** - se admiten tanto Windows nativo como WSL2; WSL2 es más estable. Consulte [Windows](/es/platforms/windows).
 - `pnpm` solo es necesario si compila desde el código fuente
 

@@ -212,7 +212,7 @@ Obtiene la referencia del arnés del flujo de trabajo, construye árboles de tra
 --credential-role ci`, writes a `mantis-evidence.` manifiesto desde el resumen de QA de Telegram y el artefacto de mensaje observado, renderiza el HTML de la transcripción redactada a través de un navegador de escritorio Crabbox, genera un GIF recortado por movimiento
 con `crabbox media preview`, y publica el comentario de evidencia del PR en línea cuando hay un número de PR disponible. Este carril es visual-transcripcional en lugar de prueba de Telegram Web con sesión iniciada: la API de Bot de Telegram proporciona evidencia estable de mensajes en vivo, pero el estado de inicio de sesión de Telegram Web no es necesario para la automatización normal de Mantis.
 
-`Mantis Telegram Desktop Proof` es el contenedor nativo agentic de antes/después de Telegram Desktop. Un mantenedor puede activarlo desde un comentario de PR con `@Mantis telegram desktop proof`, desde la interfaz de usuario de Actions con instrucciones de forma libre, o a través del despachador genérico `Mantis Scenario`. El flujo de trabajo entrega el PR, la referencia de base, la referencia candidata y las instrucciones del mantenedor a Codex. El agente lee el PR, decide qué comportamiento visible en Telegram demuestra el cambio, ejecuta el carril de prueba real de usuario Crabbox Telegram Desktop para la base y el candidato, itera hasta que los GIF nativos sean útiles, escribe artefactos `motionPreview` emparejados en `mantis-evidence.json`, carga el paquete y publica una tabla de evidencia del PR de 2 columnas cuando hay disponible un número de PR.
+`Mantis Telegram Desktop Proof` es el contenedor nativo basado en agentes antes/después para Telegram Desktop. Un mantenedor puede activarlo desde un comentario de PR con `@openclaw-mantis telegram desktop proof`, desde la interfaz de usuario de Actions con instrucciones de forma libre, o a través del despachador genérico `Mantis Scenario`. El flujo de trabajo entrega el PR, la referencia de línea base, la referencia candidata y las instrucciones del mantenedor a Codex. El agente lee el PR, decide qué comportamiento visible en Telegram demuestra el cambio, ejecuta la línea de prueba de usuario real Crabbox Telegram Desktop para la línea base y el candidato, itera hasta que los GIF nativos sean útiles, escribe artefactos `motionPreview` emparejados en `mantis-evidence.json`, carga el paquete y publica una tabla de evidencia de PR de 2 columnas cuando hay un número de PR disponible.
 
 Para la configuración de escritorio de Telegram con humano en el bucle, use el generador de escenarios:
 
@@ -286,21 +286,21 @@ El editor reutilizable es `scripts/mantis/publish-pr-evidence.mjs`. Los flujos d
 También puedes activar la ejecución de reacciones de estado directamente desde un comentario de PR:
 
 ```text
-@Mantis discord status reactions
+@openclaw-mantis discord status reactions
 ```
 
 El disparador de comentarios es intencionalmente estrecho. Solo se ejecuta en comentarios de solicitudes de extracción (pull requests) de usuarios con acceso de escritura, mantenimiento o administración, y solo reconoce solicitudes de reacción de estado de Discord. De manera predeterminada, utiliza la referencia de línea base incorrecta conocida y el SHA actual del encabezado de la PR como candidato. Los mantenedores pueden anular cualquier referencia:
 
 ```text
-@Mantis discord status reactions baseline=origin/main candidate=HEAD
+@openclaw-mantis discord status reactions baseline=origin/main candidate=HEAD
 ```
 
 El QA en vivo de Telegram también se puede activar desde un comentario de una PR:
 
 ```text
-@Mantis telegram
-@Mantis telegram scenario=telegram-status-command
-@Mantis telegram scenarios=telegram-status-command,telegram-mentioned-message-reply
+@openclaw-mantis telegram
+@openclaw-mantis telegram scenario=telegram-status-command
+@openclaw-mantis telegram scenarios=telegram-status-command,telegram-mentioned-message-reply
 ```
 
 De forma predeterminada, usa el SHA actual del head del PR como candidato y ejecuta

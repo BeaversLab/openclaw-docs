@@ -771,9 +771,15 @@ IRC 由 plugin 支援，並在 `channels.irc` 下進行設定。
 
 群組訊息預設為 **需要提及**（元資料提及或安全的 regex 模式）。適用於 WhatsApp、Telegram、Discord、Google Chat 和 iMessage 群組聊天。
 
-可見回覆是單獨控制的。群組/頻道房間預設為 `messages.groupChat.visibleReplies: "message_tool"`：OpenClaw 仍會處理該輪次並要求 Agent 使用 `message(action=send)` 進行可見房間輸出。如果模型返回最終文字但未呼叫訊息工具，該最終文字將保持私密，且 gateway 的詳細日誌會記錄被隱藏的 payload 元資料。當您希望所有可見的群組回覆都使用舊版的最終回覆路徑時，請設定 `"automatic"`。若要將相同的「僅限工具」可見回覆行為也套用至直接聊天，請設定 `messages.visibleReplies: "message_tool"`；Codex harness 也將此「僅限工具」行為作為其未設定的直接聊天預設值。
+可見回覆是分開控制的。一般的群組/頻道請求預設為 `messages.groupChat.visibleReplies: "automatic"`：最終的助手文字透過舊版可見回覆路徑發佈。當共用房間應該只在代理程式呼叫 `message(action=send)` 之後才發佈可見輸出時，請設定 `"message_tool"`。如果模型返回最終文字而未呼叫訊息工具，該最終文字將保持私密，且閘道詳細記錄會記錄被隱藏的負載元資料。若要對直接聊天也套用相同的僅工具可見回覆行為，請設定 `messages.visibleReplies: "message_tool"`；Codex 測試線束也將該僅工具行用作其未設定的直接聊天預設值。
 
-僅限工具的可見回覆需要一個能可靠呼叫工具的模型/執行環境。如果會話日誌顯示助理文字帶有 `didSendViaMessagingTool: false`，表示模型產生了私密的最終文字，而非呼叫訊息工具。請切換至該頻道使用更強的「工具呼叫」模型，檢查 gateway 詳細日誌中的被隱藏 payload 摘要，或者設定 `messages.groupChat.visibleReplies: "automatic"` 以對每個群組/頻道請求使用舊版的可見最終回覆。
+僅工具的可見回覆需要一個可靠呼叫工具的模型/執行時，且建議用於 GPT 5.5 等最新世代模型的共用氛圍房間。如果
+會話記錄顯示帶有 `didSendViaMessagingTool: false` 的助手文字，這表示
+模型產生了私密的最終文字，而不是呼叫訊息工具。請
+為該頻道切換到更強的工具呼叫模型，檢查閘道詳細
+記錄中的被隱藏負載摘要，或是設定
+`messages.groupChat.visibleReplies: "automatic"` 以對每個
+群組/頻道請求使用可見的最終回覆。
 
 如果在現行工具原則下無法使用訊息工具，OpenClaw 將會回退為自動可見回覆，而不是靜靜地隱藏回應。`openclaw doctor` 會針對此不匹配發出警告。
 
@@ -792,7 +798,7 @@ Gateway 會在檔案儲存後熱重新載入 `messages` 設定。僅在部署中
     groupChat: {
       historyLimit: 50,
       unmentionedInbound: "room_event", // always-on unmentioned room chatter becomes quiet context
-      visibleReplies: "message_tool", // default; use "automatic" for legacy final replies
+      visibleReplies: "message_tool", // opt-in; require message(action=send) for visible room replies
     },
   },
   agents: {

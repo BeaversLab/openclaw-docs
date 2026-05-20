@@ -153,15 +153,15 @@ candidato contiene marcadores de posición de secretos redactados como `***`.
 
   </Accordion>
 
-  <Accordion title="Configurar el control de menciones en chats de grupo">
-    Los mensajes de grupo tienen como valor predeterminado **requerir mención**. Configure los patrones de activación por agente y mantenga las respuestas visibles de la sala en la ruta predeterminada de la herramienta de mensajes (message-tool), a menos que desee intencionalmente que cada respuesta normal de grupo use la ruta heredada de respuesta final automática:
+  <Accordion title="Configurar el control de menciones en chats grupales">
+    Los mensajes grupales predeterminados **requieren mención**. Configure patrones de activación por agente. Las respuestas normales a grupos/canales se publican automáticamente; opte por la ruta de herramienta de mensajes (message-tool) para salas compartidas donde el agente debe decidir cuándo hablar:
 
     ```json5
     {
       messages: {
         visibleReplies: "automatic", // set "message_tool" to require message-tool sends everywhere
         groupChat: {
-          visibleReplies: "message_tool", // default; visible output requires message(action=send)
+          visibleReplies: "message_tool", // opt-in; visible output requires message(action=send)
           unmentionedInbound: "room_event", // unmentioned always-on group chatter is quiet context
         },
       },
@@ -183,10 +183,10 @@ candidato contiene marcadores de posición de secretos redactados como `***`.
     }
     ```
 
-    - **Menciones de metadatos**: menciones nativas con @ (menciones al tocar en WhatsApp, @bot en Telegram, etc.)
+    - **Menciones de metadatos**: menciones nativas de @ (@-mentions en WhatsApp al tocar para mencionar, @bot en Telegram, etc.)
     - **Patrones de texto**: patrones de regex seguros en `mentionPatterns`
-    - **Respuestas visibles**: `messages.visibleReplies` puede requerir envíos a través de la herramienta de mensajes (message-tool) globalmente; `messages.groupChat.visibleReplies` anula esto para grupos/canales.
-    - Consulte la [referencia completa](/es/gateway/config-channels#group-chat-mention-gating) para ver los modos de respuesta visible, las anulaciones por canal y el modo de chat propio.
+    - **Respuestas visibles**: `messages.visibleReplies` puede requerir envíos a través de la herramienta de mensajes globalmente; `messages.groupChat.visibleReplies` anula eso para grupos/canales.
+    - Consulte la [referencia completa](/es/gateway/config-channels#group-chat-mention-gating) para ver los modos de respuesta visible, anulaciones por canal y el modo de chat propio.
 
   </Accordion>
 

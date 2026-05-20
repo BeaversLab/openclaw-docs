@@ -44,7 +44,7 @@ curl -fsSL https://raw.githubusercontent.com/openclaw/openclaw-ansible/main/inst
 1. **Tailscale** —— 用于安全远程访问的网状 VPN
 2. **UFW 防火墙** —— 仅开放 SSH 和 Tailscale 端口
 3. **Docker CE + Compose V2** —— 用于默认的代理沙箱后端
-4. **Node.js 24 + pnpm** —— 运行时依赖（Node 22 LTS，目前为 `22.16+`，仍受支持）
+4. **Node.js 24 + pnpm** -- 运行时依赖（Node 22 LTS，目前为 `22.19+`，仍受支持）
 5. **OpenClaw** —— 基于主机，未容器化
 6. **Systemd 服务** —— 开机自动启动并包含安全加固
 

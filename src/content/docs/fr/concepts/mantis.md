@@ -185,7 +185,7 @@ Il extrait la référence du harnais de workflow, construit des arbres de travai
 `Mantis Telegram Live` encapsule le lane QA en direct Telegram existant dans le même pipeline de preuves de PR. Il extrait la référence candidate de confiance dans un arbre de travail séparé, exécute `pnpm openclaw qa telegram --credential-source convex
 --credential-role ci`, writes a `mantis-evidence.` manifest à partir du résumé QA Telegram et de l'artefact de message observé, rend le HTML de la transcription expurgée via un navigateur de bureau Crabbox, génère un GIF rogné au mouvement avec `crabbox media preview`, et publie le commentaire de preuve PR en ligne lorsqu'un numéro de PR est disponible. Ce lane est visuel par transcription plutôt qu'une preuve Telegram Web connectée : le Telegram Bot API fournit des preuves de messages en direct stables, mais l'état de connexion Telegram Web n'est pas requis pour l'automatisation Mantis normale.
 
-`Mantis Telegram Desktop Proof` est le wrapper natif agentique avant/après pour Telegram Desktop. Un mainteneur peut le déclencher depuis un commentaire de PR avec `@Mantis telegram desktop proof`, depuis l'interface utilisateur Actions avec des instructions libres, ou via le répartiteur générique `Mantis Scenario`. Le workflow transmet la PR, la référence de base, la référence candidate et les instructions du mainteneur à Codex. L'agent lit la PR, décide quel comportement visible sur Telegram prouve le changement, exécute la ligne de preuve Crabbox Telegram Desktop pour utilisateur réel pour la base et le candidat, itère jusqu'à ce que les GIF natifs soient utiles, écrit des artefacts `motionPreview` appariés dans `mantis-evidence.json`, télécharge le bundle et publie un tableau de preuves PR à 2 colonnes lorsqu'un numéro de PR est disponible.
+`Mantis Telegram Desktop Proof` est le wrapper natif agnostique avant/après pour Telegram Desktop. Un mainteneur peut le déclencher depuis un commentaire de PR avec `@openclaw-mantis telegram desktop proof`, depuis l'interface Actions avec des instructions libres, ou via le répartiteur générique `Mantis Scenario`. Le workflow transmet la PR, la référence de base, la référence candidate et les instructions du mainteneur à Codex. L'agent lit la PR, détermine quel comportement visible dans Telegram prouve le changement, exécute la voie de preuve réelle utilisateur Crabbox Telegram Desktop pour la base et le candidat, itère jusqu'à ce que les GIF natifs soient utiles, écrit des artefacts `motionPreview` appariés dans `mantis-evidence.json`, télécharge le bundle et publie un tableau de preuves PR à 2 colonnes lorsqu'un numéro de PR est disponible.
 
 Pour la configuration du bureau Telegram avec humain dans la boucle, utilisez le constructeur de scénario :
 
@@ -259,21 +259,21 @@ L'éditeur réutilisable est `scripts/mantis/publish-pr-evidence.mjs`. Les workf
 Vous pouvez également déclencher l'exécution des réactions de statut directement depuis un commentaire de PR :
 
 ```text
-@Mantis discord status reactions
+@openclaw-mantis discord status reactions
 ```
 
 Le déclencheur de commentaire est intentionnellement restreint. Il ne s'exécute que sur les commentaires de pull request d'utilisateurs ayant un accès en écriture, de maintenance ou d'administrateur, et il ne reconnaît que les demandes de réactions de statut Discord. Par défaut, il utilise la référence de base connue comme mauvaise et le SHA de la tête de la PR actuelle comme candidat. Les mainteneurs peuvent remplacer l'une ou l'autre référence :
 
 ```text
-@Mantis discord status reactions baseline=origin/main candidate=HEAD
+@openclaw-mantis discord status reactions baseline=origin/main candidate=HEAD
 ```
 
 La QA en direct Telegram peut également être déclenchée depuis un commentaire de PR :
 
 ```text
-@Mantis telegram
-@Mantis telegram scenario=telegram-status-command
-@Mantis telegram scenarios=telegram-status-command,telegram-mentioned-message-reply
+@openclaw-mantis telegram
+@openclaw-mantis telegram scenario=telegram-status-command
+@openclaw-mantis telegram scenarios=telegram-status-command,telegram-mentioned-message-reply
 ```
 
 Par défaut, il utilise le SHA de la tête de la PR actuelle comme candidat et exécute

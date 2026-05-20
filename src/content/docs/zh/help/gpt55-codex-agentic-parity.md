@@ -13,7 +13,7 @@ OpenClaw 在使用工具的先进模型上已经运行良好，但 GPT-5.5 和 C
 - 它们可能错误地使用严格的 OpenAI/Codex 工具模式
 - 即使完全访问是不可能的，它们也可能请求 `/elevated full`
 - 在重放或压缩期间，它们可能会丢失长时间运行的任务状态
-- 针对 Claude Opus 4.6 的同等性声明是基于轶事，而不是可重复的场景
+- 针对 Claude Opus 4.7 的等效性声称是基于轶事而非可重复的情景
 
 此同等性程序在四个可审查的部分修复了这些差距。
 
@@ -51,7 +51,7 @@ OpenClaw 在使用工具的先进模型上已经运行良好，但 GPT-5.5 和 C
 
 ### PR D：对等工具
 
-此部分增加了首批 QA 实验室对等包，以便 GPT-5.5 和 Opus 4.6 可以通过相同的场景进行测试，并使用共享的证据进行比较。
+此版本增加了首批 QA 实验室等效性包，以便 GPT-5.5 和 Opus 4.7 可以通过相同的情景进行测试，并使用共享的证据进行比较。
 
 对等包是验证层。它本身不会改变运行时行为。
 
@@ -60,8 +60,8 @@ OpenClaw 在使用工具的先进模型上已经运行良好，但 GPT-5.5 和 C
 ```bash
 pnpm openclaw qa parity-report \
   --repo-root . \
-  --candidate-summary .artifacts/qa-e2e/gpt55/qa-suite-summary.json \
-  --baseline-summary .artifacts/qa-e2e/opus46/qa-suite-summary.json \
+  --candidate-summary .artifacts/qa-e2e/openai-candidate/qa-suite-summary.json \
+  --baseline-summary .artifacts/qa-e2e/anthropic-baseline/qa-suite-summary.json \
   --output-dir .artifacts/qa-e2e/parity
 ```
 
@@ -122,7 +122,7 @@ flowchart TD
 ```mermaid
 flowchart LR
     A["Merged runtime slices (PR A-C)"] --> B["Run GPT-5.5 parity pack"]
-    A --> C["Run Opus 4.6 parity pack"]
+    A --> C["Run Opus 4.7 parity pack"]
     B --> D["qa-suite-summary.json"]
     C --> E["qa-suite-summary.json"]
     D --> F["openclaw qa parity-report"]
@@ -178,7 +178,7 @@ flowchart LR
 - 没有真实执行就不会有虚假完成
 - 没有错误的 `/elevated full` 指导
 - 没有静默重放或压缩丢弃
-- 同等套件指标至少与约定的 Opus 4.6 基线一样强
+- 等效性包指标至少与商定的 Opus 4.7 基线一样强劲
 
 对于第一波测试工具，关卡会比较：
 
@@ -189,7 +189,7 @@ flowchart LR
 
 同等证据有意分为两层：
 
-- PR D 通过 QA 实验室证明相同场景下 GPT-5.5 与 Opus 4.6 的行为
+- PR D 通过 QA 实验室证明了相同情景下 GPT-5.5 与 Opus 4.7 的行为对比
 - PR B 确定性套件在工具外部证明 auth、proxy、DNS 和 `/elevated full` 的真实性
 
 ## 目标到证据矩阵
@@ -200,13 +200,13 @@ flowchart LR
 | GPT-5.5 不再伪造进度或虚假工具完成           | PR A + PR D | 同等报告场景结果和虚假成功计数                                    | 没有可疑的通过结果，也没有仅包含评论的完成                         |
 | GPT-5.5 不再提供错误的 `/elevated full` 指导 | PR B        | 确定性真实性套件                                                  | 阻塞原因和完全访问提示保持运行时准确                               |
 | 重放/活跃性失败保持明确                      | PR C + PR D | PR C 生命周期/重放套件加上 `compaction-retry-mutating-tool`       | 突变工作使重放不安全性保持明确，而不是静默消失                     |
-| GPT-5.5 在约定指标上匹配或超越 Opus 4.6      | PR D        | `qa-agentic-parity-report.md` 和 `qa-agentic-parity-summary.json` | 相同的场景覆盖范围，并且在完成、停止行为或有效工具使用方面没有回归 |
+| GPT-5.5 在商定的指标上与 Opus 4.7 持平或胜出 | PR D        | `qa-agentic-parity-report.md` 和 `qa-agentic-parity-summary.json` | 相同的场景覆盖范围，并且在完成、停止行为或有效工具使用方面没有回归 |
 
 ## 如何解读同等结论
 
 将 `qa-agentic-parity-summary.json` 中的结论作为第一波同等套件的最终机器可读决策。
 
-- `pass` 意味着 GPT-5.5 覆盖了与 Opus 4.6 相同的场景，并且在商定的综合指标上没有退步。
+- `pass` 意味着 GPT-5.5 覆盖了与 Opus 4.7 相同的情景，并且在商定的综合指标上没有退化。
 - `fail` 意味着至少有一个硬性门槛被触发：补全能力较弱、非预期停止情况更严重、有效工具使用能力较弱、任何虚假成功案例，或场景覆盖率不匹配。
 - "shared/base CI issue" 本身并不是一个对等性结果。如果 PR D 之外的 CI 噪音阻碍了运行，则裁决应等待一次干净的合并运行时执行，而不是从分支时期的日志中进行推断。
 - Auth、proxy、DNS 和 `/elevated full` 真实性仍然来自 PR B 的确定性套件，因此最终的发布声明需要同时满足：通过的 PR D 对等性裁决和绿色的 PR B 真实性覆盖率。

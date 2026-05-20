@@ -171,6 +171,7 @@ El estado HTTP sigue el error de Gateway cuando es posible. Por ejemplo, `INVALI
 - gateway: `health`, `status`, `logs.tail`, `usage.status`, `usage.cost`, `gateway.restart.request`
 - config: `config.get`, `config.schema`, `config.schema.lookup`, `config.set`, `config.patch`, `config.apply`
 - channels: `channels.status`, `channels.start`, `channels.stop`, `channels.logout`
+- web: `web.login.start`, `web.login.wait`
 - models: `models.list`, `models.authStatus`
 - agents: `agents.list`, `agents.create`, `agents.update`, `agents.delete`
 - approvals: `exec.approvals.get`, `exec.approvals.set`, `exec.approvals.node.get`, `exec.approvals.node.set`
@@ -180,23 +181,23 @@ El estado HTTP sigue el error de Gateway cuando es posible. Por ejemplo, `INVALI
 - tasks: `tasks.list`, `tasks.get`, `tasks.cancel`
 - diagnostics: `doctor.memory.status`, `update.status`
 
-Otros métodos de Gateway están bloqueados hasta que se agreguen intencionalmente.
+Otros métodos de Gateway están bloqueados hasta que se añadan intencionalmente.
 
 ## Comparación con WebSocket
 
-La ruta RPC de WebSocket normal de Gateway sigue siendo la API del plano de control preferida para los clientes de OpenClaw. Utilice el RPC HTTP de administración solo para herramientas de host que necesiten una superficie HTTP de solicitud/respuesta.
+La ruta RPC de WebSocket normal de Gateway sigue siendo la API de plano de control preferida para los clientes de OpenClaw. Use el admin HTTP RPC solo para herramientas de host que necesiten una superficie HTTP de solicitud/respuesta.
 
-Los clientes de WebSocket con token compartido que no tienen una identidad de dispositivo de confianza no pueden declarar ámbitos de administrador por sí mismos durante la conexión. El RPC HTTP de administrador sigue deliberadamente el modelo de operador HTTP de confianza existente: cuando el complemento está habilitado, la autenticación de portador de secreto compartido se trata como acceso de operador completo para esta superficie de administrador.
+Los clientes WebSocket con token compartido sin una identidad de dispositivo confiable no pueden declarar alcances de administrador por sí mismos durante la conexión. El admin HTTP RPC sigue deliberadamente el modelo de operador HTTP confiable existente: cuando el complemento está habilitado, la autenticación bearer con secreto compartido se trata como acceso de operador completo para esta superficie de administración.
 
 ## Solución de problemas
 
 `404 Not Found`
 
-: El complemento está deshabilitado, Gateway no se ha reiniciado desde que se habilitó o la solicitud se está enviando a un proceso de Gateway diferente.
+: El complemento está deshabilitado, el Gateway no se ha reiniciado desde que se habilitó, o la solicitud se está enviando a un proceso diferente de Gateway.
 
 `401 Unauthorized`
 
-: La solicitud no cumplió con la autenticación HTTP de Gateway. Verifique el token de portador o los encabezados de identidad de proxy de confianza.
+: La solicitud no cumplió con la autenticación HTTP de Gateway. Verifique el token bearer o los encabezados de identidad de proxy confiable.
 
 `400 INVALID_REQUEST`
 
@@ -204,11 +205,11 @@ Los clientes de WebSocket con token compartido que no tienen una identidad de di
 
 `503 UNAVAILABLE`
 
-: El controlador del método de Gateway no está disponible. Verifique los registros de Gateway y vuelva a intentar después de que Gateway termine el inicio.
+: El controlador del método de Gateway no está disponible. Compruebe los registros de Gateway y vuelva a intentarlo después de que Gateway termine el inicio.
 
 ## Relacionado
 
-- [Ámbitos de operador](/es/gateway/operator-scopes)
+- [Ámbitos del operador](/es/gateway/operator-scopes)
 - [Seguridad de Gateway](/es/gateway/security)
 - [Acceso remoto](/es/gateway/remote)
 - [Manifiesto del complemento](/es/plugins/manifest#contracts)

@@ -59,7 +59,7 @@ read_when:
 
 拥有：
 
-- 第一波 GPT-5.5 与 Opus 4.6 的场景包
+- 第一波 GPT-5.5 与 Opus 4.7 场景包
 - 对等文档
 - 对等报告和发布门控机制
 
@@ -123,7 +123,7 @@ PR D 的预期产出：
 
 ## 发布关卡
 
-在满足以下条件之前，不得声称 GPT-5.5 与 Opus 4.6 持平或更优：
+在满足以下条件之前，不得声称 GPT-5.5 与 Opus 4.7 相当或优于 Opus 4.7：
 
 - PR A、PR B 和 PR C 已合并
 - PR D 干净地运行了首批对等性包
@@ -133,7 +133,7 @@ PR D 的预期产出：
 ```mermaid
 flowchart LR
     A["PR A-C merged"] --> B["Run GPT-5.5 parity pack"]
-    A --> C["Run Opus 4.6 parity pack"]
+    A --> C["Run Opus 4.7 parity pack"]
     B --> D["qa-suite-summary.json"]
     C --> E["qa-suite-summary.json"]
     D --> F["qa parity-report"]
@@ -146,7 +146,7 @@ flowchart LR
 
 对等性工具不是唯一的证据来源。在审查时请明确区分：
 
-- PR D 负责基于场景的 GPT-5.5 与 Opus 4.6 对比
+- PR D 负责基于场景的 GPT-5.5 与 Opus 4.7 的对比
 - PR B 确定性套件仍负责 auth/proxy/DNS 和完全访问权限真实性证据
 
 ## 快速维护者合并工作流
@@ -179,7 +179,7 @@ flowchart LR
 | 无虚假进度或虚假工具完成       | PR A + PR D | 对等虚假成功计数加上场景级报告详细信息                            |
 | 无错误的 `/elevated full` 指导 | PR B        | 确定性运行时真实性套件                                            |
 | 重放/存活失败保持明确          | PR C + PR D | 生命周期/重放套件加上 `compaction-retry-mutating-tool`            |
-| GPT-5.5 匹配或优于 Opus 4.6    | PR D        | `qa-agentic-parity-report.md` 和 `qa-agentic-parity-summary.json` |
+| GPT-5.5 匹配或击败 Opus 4.7    | PR D        | `qa-agentic-parity-report.md` 和 `qa-agentic-parity-summary.json` |
 
 ## 审查者速记：之前 vs 之后
 

@@ -18,7 +18,7 @@ Elige un flujo de trabajo de configuración según la frecuencia con la que quie
 
 ## Requisitos previos (desde el código fuente)
 
-- Se recomienda Node 24 (Node 22 LTS, actualmente `22.16+`, todavía compatible)
+- Se recomienda Node 24 (Node 22 LTS, actualmente `22.19+`, todavía compatible)
 - `pnpm` requerido para las descargas de origen. OpenClaw carga los complementos empaquetados desde los
   paquetes del espacio de trabajo pnpm `extensions/*` en modo de desarrollo, por lo que la raíz `npm install` no
   prepara el árbol de origen completo.

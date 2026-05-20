@@ -84,7 +84,7 @@ Solo el número de propietario (de `channels.whatsapp.allowFrom`, o el propio E.
 - Los latidos se omiten intencionalmente para los grupos para evitar transmisiones ruidosas.
 - La supresión de eco utiliza la cadena de lote combinada; si envías el mismo texto dos veces sin menciones, solo el primero obtendrá una respuesta.
 - Las entradas del almacén de sesiones aparecerán como `agent:<agentId>:whatsapp:group:<jid>` en el almacén de sesiones (`~/.openclaw/agents/<agentId>/sessions/sessions.json` por defecto); una entrada que falta solo significa que el grupo aún no ha activado una ejecución.
-- Los indicadores de escritura en los grupos siguen `agents.defaults.typingMode`. Cuando las respuestas visibles utilizan el modo predeterminado de solo herramienta de mensajes, la escritura comienza inmediatamente de forma predeterminada para que los miembros del grupo puedan ver que el agente está trabajando, incluso si no se publica ninguna respuesta final automática. La configuración explícita del modo de escritura todavía tiene prioridad.
+- Los indicadores de escritura en los grupos siguen `agents.defaults.typingMode`. Cuando las respuestas visibles están configuradas en el modo de solo herramienta de mensaje, la escritura comienza de inmediato de forma predeterminada para que los miembros del grupo puedan ver que el agente está trabajando, incluso si no se publica ninguna respuesta final automática. La configuración explícita del modo de escritura tiene prioridad.
 
 ## Relacionado
 

@@ -66,8 +66,8 @@ OpenClaw 提供三個安裝程式腳本，可從 `openclaw.ai` 取得。
   <Step title="偵測作業系統">
     支援 macOS 和 Linux (包括 WSL)。如果偵測到 macOS，會在缺少時安裝 Homebrew。
   </Step>
-  <Step title="預設確保 Node.js 24">
-    檢查 Node 版本並視需求安裝 Node 24（macOS 上使用 Homebrew，Linux apt/dnf/yum 上使用 NodeSource 設定腳本）。為了相容性，OpenClaw 仍支援 Node 22 LTS，目前為 `22.16+`。
+  <Step title="Ensure Node.js 24 by default">
+    檢查 Node 版本並在需要時安裝 Node 24（macOS 上使用 Homebrew，Linux apt/dnf/yum 上使用 NodeSource 設定腳本）。出於相容性考量，OpenClaw 仍支援 Node 22 LTS，目前為 `22.19+`。
   </Step>
   <Step title="確保 Git">
     如果缺少 Git 則進行安裝。
@@ -235,8 +235,8 @@ OpenClaw 提供三個安裝程式腳本，可從 `openclaw.ai` 取得。
   <Step title="確保 PowerShell + Windows 環境">
     需要 PowerShell 5+。
   </Step>
-  <Step title="預設確保 Node.js 24">
-    如果缺少，會嘗試透過 winget，然後 Chocolatey，再來 Scoop 進行安裝。為了相容性，Node 22 LTS，目前為 `22.16+`，仍受支援。
+  <Step title="Ensure Node.js 24 by default">
+    如果缺失，會嘗試透過 winget，接著是 Chocolatey，然後是 Scoop 進行安裝。出於相容性考量，目前仍支援 Node 22 LTS，版本為 `22.19+`。
   </Step>
   <Step title="安裝 OpenClaw">
     - `npm` 方法（預設）：使用選定的 `-Tag` 進行全域 npm 安裝，從可寫入的安裝程式暫存目錄啟動，以便在受保護資料夾（例如 `C:\`）中開啟的 Shell 仍能正常運作

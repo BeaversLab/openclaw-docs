@@ -171,45 +171,46 @@ Le statut HTTP suit l'erreur Gateway lorsque cela est possible. Par exemple, Gat
 - gateway : `health`, `status`, `logs.tail`, `usage.status`, `usage.cost`, `gateway.restart.request`
 - config : `config.get`, `config.schema`, `config.schema.lookup`, `config.set`, `config.patch`, `config.apply`
 - channels : `channels.status`, `channels.start`, `channels.stop`, `channels.logout`
+- web : `web.login.start`, `web.login.wait`
 - models : `models.list`, `models.authStatus`
 - agents : `agents.list`, `agents.create`, `agents.update`, `agents.delete`
 - approvals : `exec.approvals.get`, `exec.approvals.set`, `exec.approvals.node.get`, `exec.approvals.node.set`
 - cron : `cron.status`, `cron.list`, `cron.get`, `cron.runs`, `cron.add`, `cron.update`, `cron.remove`, `cron.run`
 - devices : `device.pair.list`, `device.pair.approve`, `device.pair.reject`, `device.pair.remove`
-- nœuds : `node.list`, `node.describe`, `node.pair.list`, `node.pair.approve`, `node.pair.reject`, `node.pair.remove`, `node.rename`
-- tâches : `tasks.list`, `tasks.get`, `tasks.cancel`
+- nodes : `node.list`, `node.describe`, `node.pair.list`, `node.pair.approve`, `node.pair.reject`, `node.pair.remove`, `node.rename`
+- tasks : `tasks.list`, `tasks.get`, `tasks.cancel`
 - diagnostics : `doctor.memory.status`, `update.status`
 
-Les autres méthodes Gateway sont bloquées jusqu'à ce qu'elles soient ajoutées intentionnellement.
+Les autres méthodes du Gateway sont bloquées jusqu'à ce qu'elles soient ajoutées intentionnellement.
 
 ## Comparaison avec WebSocket
 
-Le chemin normal RPC WebSocket GatewayRPC reste l'API de plan de contrôle préféré pour les clients OpenClawRPC. Utilisez le RPC HTTP admin uniquement pour les outils d'hôte qui nécessitent une surface de HTTP requête/réponse.
+Le chemin normal Gateway WebSocket RPC reste l'API de plan de contrôle privilégié pour les clients OpenClaw. Utilisez l'admin HTTP RPC uniquement pour les outils d'hôte qui ont besoin d'une surface HTTP requête/réponse.
 
-Les clients WebSocket à jeton partagé sans identité d'appareil de confiance ne peuvent pas s'auto-déclarer des étendues admin lors de la connexion. Le RPC HTTP admin suit délibérément le modèle d'opérateur HTTP de confiance existant : lorsque le plugin est activé, l'authentification bearer par secret partagé est traitée comme un accès opérateur complet pour cette surface admin.
+Les clients WebSocket à jeton partagé sans identité d'appareil de confiance ne peuvent pas s'auto-déclarer des étendues d'administrateur lors de la connexion. L'admin HTTP RPC suit délibérément le modèle d'opérateur HTTP de confiance existant : lorsque le plugin est activé, l'authentification bearer par secret partagé est traitée comme un accès opérateur complet pour cette surface d'administration.
 
 ## Dépannage
 
 `404 Not Found`
 
-: Le plugin est désactivé, le Gateway n'a pas redémarré depuis son activation, ou la demande est adressée à un processus Gateway différent.
+: Le plugin est désactivé, le Gateway n'a pas redémarré depuis son activation, ou la requête est adressée à un processus Gateway différent.
 
 `401 Unauthorized`
 
-: La demande n'a pas satisfait l'authentification HTTP Gateway. Vérifiez le jeton bearer ou les en-têtes d'identité du proxy de confiance.
+: La requête n'a pas satisfait l'authentification HTTP du Gateway. Vérifiez le jeton porteur (bearer token) ou les en-têtes d'identité du proxy de confiance.
 
 `400 INVALID_REQUEST`
 
-: Le corps de la demande n'est pas un JSON valide, le champ `method` est manquant, ou la méthode n'est pas dans la liste d'autorisation du plugin.
+: Le corps de la requête n'est pas un JSON valide, le champ `method` est manquant, ou la méthode ne figure pas dans la liste d'autorisation du plugin.
 
 `503 UNAVAILABLE`
 
-: Le gestionnaire de méthode Gateway est indisponible. Vérifiez les journaux Gateway et réessayez après que le Gateway ait terminé son démarrage.
+: Le gestionnaire de méthode du Gateway est indisponible. Vérifiez les journaux du Gateway et réessayez une fois le Gateway terminé son démarrage.
 
 ## Connexes
 
-- [Portées opérateur](/fr/gateway/operator-scopes)
-- [Sécurité Gateway](/fr/gateway/security)
+- [Portées de l'opérateur](/fr/gateway/operator-scopes)
+- [Sécurité du Gateway](/fr/gateway/security)
 - [Accès à distance](/fr/gateway/remote)
 - [Manifeste du plugin](/fr/plugins/manifest#contracts)
 - [Sous-chemins du SDK](/fr/plugins/sdk-subpaths)

@@ -159,7 +159,7 @@ OpenClaw 可以使用 OpenAI 或 OpenAI 相容的嵌入端點來進行
   </Tab>
 
   <Tab title="Codex subscription">
-    **最適用於：** 使用您的 ChatGPT/Codex 訂閱搭配原生 Codex app-server 執行，而非使用獨立的 API 金鑰。Codex cloud 需要 ChatGPT 登入。
+    **最適用於：** 使用您的 ChatGPT/Codex 訂閱搭配原生 Codex 應用程式伺服器執行，而非使用個別的 API 金鑰。Codex cloud 需要登入 ChatGPT。
 
     <Steps>
       <Step title="執行 Codex OAuth">
@@ -167,13 +167,13 @@ OpenClaw 可以使用 OpenAI 或 OpenAI 相容的嵌入端點來進行
         openclaw onboard --auth-choice openai-codex
         ```
 
-        或者直接執行 OAuth：
+        或直接執行 OAuth：
 
         ```bash
         openclaw models auth login --provider openai-codex
         ```
 
-        針對無介面 或回調不友善 的設定，新增 `--device-code` 以使用 ChatGPT device-code flow 登入，而非 localhost 瀏覽器回調：
+        對於無介面 (headless) 或回呼不友善的設定，請加入 `--device-code` 以使用 ChatGPT 裝置代碼流程登入，而不是透過 localhost 瀏覽器回呼：
 
         ```bash
         openclaw models auth login --provider openai-codex --device-code
@@ -184,41 +184,39 @@ OpenClaw 可以使用 OpenAI 或 OpenAI 相容的嵌入端點來進行
         openclaw config set agents.defaults.model.primary openai/gpt-5.5
         ```
 
-        預設路徑不需要執行期 設定。OpenAI agent 輪次
-        會自動選取原生 Codex app-server 執行期，而當選擇此路由時，OpenClaw
-        會安裝或修復內建的 Codex 外掛。
+        預設路徑不需要執行時期設定。OpenAI agent 輪替會自動選取原生 Codex 應用程式伺服器執行時期，且當選擇此路由時，OpenClaw 會安裝或修復內建的 Codex 外掛程式。
       </Step>
-      <Step title="驗證 Codex auth 可用">
+      <Step title="驗證 Codex 驗證可用">
         ```bash
         openclaw models list --provider openai-codex
         ```
 
-        在閘道 執行後，在聊天中傳送 `/codex status` 或 `/codex models`
-        以驗證原生 app-server 執行期。
+        閘道啟動後，請在聊天中傳送 `/codex status` 或 `/codex models`
+        以驗證原生應用程式伺服器執行時期。
       </Step>
     </Steps>
 
     ### 路由摘要
 
-    | Model ref | Runtime config | Route | Auth |
+    | 模型參照 | 執行時期設定 | 路由 | 驗證 |
     |-----------|----------------|-------|------|
-    | `openai/gpt-5.5` | 省略 / provider/model `agentRuntime.id: "codex"` | Native Codex app-server harness | Codex 登入或已排序的 `openai` auth profile |
-    | `openai/gpt-5.5` | provider/model `agentRuntime.id: "pi"` | PI embedded runtime with internal Codex-auth transport | 已選取的 `openai-codex` profile |
-    | `openai-codex/gpt-5.5` | 由 doctor 修復 | Legacy route rewritten to `openai/gpt-5.5` | 現有的 `openai-codex` profile |
-    | `codex-cli/gpt-5.5` | 由 doctor 修復 | Legacy CLI route rewritten to `openai/gpt-5.5` | Codex app-server auth |
+    | `openai/gpt-5.5` | 省略 / provider/model `agentRuntime.id: "codex"` | 原生 Codex 應用程式伺服器套件 | Codex 登入或排序的 `openai` 驗證設定檔 |
+    | `openai/gpt-5.5` | provider/model `agentRuntime.id: "pi"` | PI 嵌入式執行時期搭配內部 Codex 驗證傳輸 | 已選取的 `openai-codex` 設定檔 |
+    | `openai-codex/gpt-5.5` | 由 doctor 修復 | 舊版路由重寫為 `openai/gpt-5.5` | 現有的 `openai-codex` 設定檔 |
+    | `codex-cli/gpt-5.5` | 由 doctor 修復 | 舊版 CLI 路由重寫為 `openai/gpt-5.5` | Codex 應用程式伺服器驗證 |
 
     <Warning>
-    請勿設定較舊的 `openai-codex/gpt-5.1*`、`openai-codex/gpt-5.2*` 或
-    `openai-codex/gpt-5.3*` model refs。ChatGPT/Codex OAuth 帳戶現已拒絕
-    這些模型。請使用 `openai/gpt-5.5`；OpenAI agent 輪次現預設會選取 Codex
-    執行期。
+    對於新的訂閱支援 agent 設定，建議優先使用 `openai/gpt-5.5`。較舊的
+    `openai-codex/gpt-*` 參照是舊版 PI 路由，並非原生 Codex 執行時期
+    路徑；當您想要將其遷移至標準
+    `openai/*` 參照時，請執行 `openclaw doctor --fix`。
     </Warning>
 
     <Note>
     `openai-codex/*` 模型前綴是由 doctor 修復的舊版設定。對於
-    常見的訂閱加原生執行期設定，請使用 Codex auth 登入
-    但將 model ref 保留為 `openai/gpt-5.5`。新設定應將 OpenAI
-    agent auth order 置於 `auth.order.openai` 之下；較舊的 `auth.order.openai-codex`
+    常見的訂閱加原生執行時期設定，請使用 Codex 驗證登入
+    但將模型參照保留為 `openai/gpt-5.5`。新設定應將 OpenAI
+    agent 驗證順序置於 `auth.order.openai` 之下；較舊的 `auth.order.openai-codex`
     項目仍然有效。
     </Note>
 
@@ -235,9 +233,9 @@ OpenClaw 可以使用 OpenAI 或 OpenAI 相容的嵌入端點來進行
     }
     ```
 
-    搭配 API 金鑰備份時，將模型保持在 `openai/gpt-5.5` 並將
-    auth order 置於 `openai` 之下。OpenClaw 會先嘗試訂閱，接著
-    是 API 金鑰，同時維持在 Codex harness 上：
+    若使用 API 金鑰備援，請將模型保留在 `openai/gpt-5.5` 上並將
+    驗證順序置於 `openai` 之下。OpenClaw 會先嘗試訂閱，接著
+    嘗試 API 金鑰，同時維持在 Codex 套件上：
 
     ```json5
     {
@@ -259,13 +257,13 @@ OpenClaw 可以使用 OpenAI 或 OpenAI 相容的嵌入端點來進行
     ```
 
     <Note>
-    Onboarding 不再從 `~/.codex` 匯入 OAuth 資料。請使用瀏覽器 OAuth (預設) 或上述的 device-code flow 登入 — OpenClaw 會在其自身的 agent auth store 中管理產生的憑證。
+    Onboarding 不再從 `~/.codex` 匯入 OAuth 資料。請使用瀏覽器 OAuth (預設) 或上述裝置代碼流程登入 — OpenClaw 會在其自己的 agent 驗證儲存庫中管理產生的憑證。
     </Note>
 
-    ### 檢查與修復 Codex OAuth 路由
+    ### 檢查並復原 Codex OAuth 路由
 
     使用這些指令來查看您的預設
-    agent 正在使用哪個模型、執行期和 auth 路由：
+    agent 正在使用哪種模型、執行時期和驗證路由：
 
     ```bash
     openclaw models status
@@ -274,22 +272,22 @@ OpenClaw 可以使用 OpenAI 或 OpenAI 相容的嵌入端點來進行
     openclaw config get models.providers.openai.agentRuntime --json
     ```
 
-    針對特定 agent，新增 `--agent <id>`：
+    若是特定的 agent，請加入 `--agent <id>`：
 
     ```bash
     openclaw models status --agent <id>
     openclaw models auth list --agent <id> --provider openai-codex
     ```
 
-    如果較舊的設定仍有 `openai-codex/gpt-*` 或過時的 OpenAI PI
-    session pin 但沒有明確的 runtime config，請修復它：
+    如果較舊的設定仍然包含 `openai-codex/gpt-*` 或沒有明確執行時期設定的過時 OpenAI PI
+    會話釘選，請修復它：
 
     ```bash
     openclaw doctor --fix
     openclaw config validate
     ```
 
-    如果 `models auth list --provider openai-codex` 顯示沒有可用的 profile，請重新
+    如果 `models auth list --provider openai-codex` 顯示沒有可用的設定檔，請重新
     登入：
 
     ```bash
@@ -297,32 +295,33 @@ OpenClaw 可以使用 OpenAI 或 OpenAI 相容的嵌入端點來進行
     openclaw models status --probe --probe-provider openai-codex
     ```
 
-    `openai/*` 是 OpenAI agent 透過 Codex 的模型路由。`openai-codex`
-    auth/profile provider id 對於現有的 profile 和 CLI 列表仍被接受。
+    `openai/*` 是透過 Codex 的 OpenAI agent 輪替模型路由。
+    `openai-codex` 驗證/設定檔提供者 ID 對於現有
+    設定檔和 CLI 列表仍然被接受。
 
     ### 狀態指示器
 
-    聊天 `/status` 顯示當前工作階段啟用的是哪個模型執行期。
-    內建的 Codex app-server harness 會顯示為 `Runtime: OpenAI Codex`
-    用於 OpenAI agent 模型輪次。過時的 PI session pins 會被修復為 Codex，除非
-    設定明確鎖定 PI。
+    聊天 `/status` 會顯示目前作用中的模型執行時期。
+    內建的 Codex 應用程式伺服器套件會以 `Runtime: OpenAI Codex` 顯示，用於
+    OpenAI agent 模型輪替。過時的 PI 會話釘選會被修復為 Codex，除非
+    設定明確釘選了 PI。
 
     ### Doctor 警告
 
-    如果 `openai-codex/*` 路由或過時的 OpenAI PI pins 仍留在設定或
-    工作階段狀態中，`openclaw doctor --fix` 會將其重寫為 `openai/*` 並搭配
-    Codex 執行期，除非明確設定 PI。
+    如果設定或
+    會話狀態中仍有 `openai-codex/*` 路由或過時的 OpenAI PI 釘選，`openclaw doctor --fix` 會將其重寫為 `openai/*` 並使用
+    Codex 執行時期，除非明確設定為 PI。
 
-    ### Context window cap
+    ### 語境視窗上限
 
-    OpenClaw 將模型元資料 和執行期 context cap 視為不同的值。
+    OpenClaw 將模型中繼資料和執行時期語境上限視為不同的值。
 
-    針對透過 Codex OAuth catalog 的 `openai/gpt-5.5`：
+    透過 Codex OAuth 目錄的 `openai/gpt-5.5`：
 
     - 原生 `contextWindow`：`1000000`
-    - 預設執行期 `contextTokens` cap：`272000`
+    - 預設執行時期 `contextTokens` 上限：`272000`
 
-    較小的預設 cap 在實務上具有更好的延遲和品質特性。使用 `contextTokens` 覆蓋它：
+    較小的預設上限在實務上具有更好的延遲和品質特性。使用 `contextTokens` 覆寫它：
 
     ```json5
     {
@@ -337,15 +336,15 @@ OpenClaw 可以使用 OpenAI 或 OpenAI 相容的嵌入端點來進行
     ```
 
     <Note>
-    使用 `contextWindow` 來宣告原生模型元資料。使用 `contextTokens` 來限制執行期 context 預算。
+    使用 `contextWindow` 宣告原生模型中繼資料。使用 `contextTokens` 限制執行時期語境預算。
     </Note>
 
-    ### Catalog recovery
+    ### 目錄復原
 
-    當 `gpt-5.5` 存在時，OpenClaw 會使用上游 Codex catalog 元資料。
-    如果即時 Codex 探索在帳戶已驗證的情況下遺漏了 `gpt-5.5` 資料列，
-    OpenClaw 會綜合該 OAuth 模型資料列，以免 cron、sub-agent 和已設定的 default-model 執行失敗並出現
-    `Unknown model`。
+    OpenClaw 在存在時會使用上游 Codex 目錄中繼資料作為 `gpt-5.5`。如果即時 Codex 探索在帳戶已通過驗證時
+    省略了 `gpt-5.5` 列，OpenClaw 會綜合該 OAuth 模型列，以便
+    cron、子 agent 和設定的預設模型執行不會因
+    `Unknown model` 而失敗。
 
   </Tab>
 </Tabs>

@@ -176,17 +176,17 @@ Telegram 群組 ID 通常是負數，例如 `-1001234567890`。請從 `openclaw 
 
 ## 可見回覆模式
 
-`messages.groupChat.visibleReplies: "message_tool"` 是建議的群組和頻道預設值。它讓代理程式透過呼叫訊息工具來決定何時發言。如果模型傳回最終文字但未呼叫工具，OpenClaw 會將該最終文字保持私密，並記錄已隱藏的傳送中繼資料。
+`messages.groupChat.visibleReplies` 針對一般的群組/頻道使用者請求預設為 `"automatic"`。當您希望最終的助理文字可見地發布，且無需明確呼叫 message-tool 時，請保持該預設值。
 
-僅當您需要舊版行為（即一般群組請求會自動貼上最終助理文字）時，才使用 `messages.groupChat.visibleReplies: "automatic"`。
+對於恆常運作的環境房間，`messages.groupChat.visibleReplies: "message_tool"` 仍然被推薦，特別是搭配最新一代、工具可靠的模型（如 GPT 5.5）。它允許代理程式透過呼叫訊息工具來決定何時發言。如果模型返回最終文字但未呼叫工具，OpenClaw 會將該最終文字設為私密，並記錄被抑制的傳遞元資料。
 
-即使其他群組請求使用自動回覆，房間事件仍保持嚴格模式。未提及的環境房間事件仍需要 `message(action=send)` 才能產生可見輸出。
+即使其他群組請求使用自動回覆，房間事件仍保持嚴格模式。未被提及的環境房間事件仍然需要 `message(action=send)` 才能產生可見的輸出。
 
 ## 歷史記錄
 
-`messages.groupChat.historyLimit` 控制全域群組歷史記錄預設值。頻道可以使用 `channels.<channel>.historyLimit` 加以覆寫，且部分頻道也支援每個帳戶的歷史記錄限制。
+`messages.groupChat.historyLimit` 控制全域群組歷史記錄的預設值。頻道可以使用 `channels.<channel>.historyLimit` 覆寫它，且部分頻道也支援每個帳戶的歷史記錄限制。
 
-設定 `historyLimit: 0` 以停用群組歷史記錄語境。
+設定 `historyLimit: 0` 以停用群組歷史記錄內容。
 
 支援房間事件的頻道會將最近的环境房間訊息保留為語境。Discord 會保留房間事件歷史記錄，直到可見的 Discord 傳送成功為止，因此在訊息工具傳送之前不會遺失靜默語境。
 
@@ -195,14 +195,14 @@ Telegram 群組 ID 通常是負數，例如 `-1001234567890`。請從 `openclaw 
 如果房間顯示正在輸入或使用 Token 但沒有可見訊息：
 
 1. 確認房間是否已加入頻道允許清單和發送者允許清單。
-2. 確認 `requireMention: false` 已設在您預期的房間層級。
+2. 確認 `requireMention: false` 已設定在您預期的房間層級。
 3. 檢查 `messages.groupChat.unmentionedInbound` 或代理程式覆寫是否為 `"room_event"`。
-4. 檢查日誌中是否有已隱藏的最終負載中繼資料或 `didSendViaMessagingTool: false`。
-5. 請使用可靠呼叫工具的模型/執行環境，或是設定 `messages.groupChat.visibleReplies: "automatic"` 以便在一般群組請求上使用舊版的最終回覆。
+4. 檢查日誌中是否有被抑制的最終載荷元資料或 `didSendViaMessagingTool: false`。
+5. 對於一般的群組請求，如果您希望最終回覆自動發布，請保留或恢復 `messages.groupChat.visibleReplies: "automatic"`。對於使用 `message_tool` 的環境房間，請使用可靠呼叫工具的模型/執行時期環境。
 
 如果 Telegram 環境房間完全沒有觸發，請檢查 BotFather 隱私模式，並確認 Gateway 有接收到一般群組訊息。
 
-如果 Slack 環境房間沒有觸發，請確認頻道金鑰是 Slack 頻道 ID，且應用程式擁有該房間類型所需的 `channels:history` 或 `groups:history` 範圍權限。
+如果 Slack 環境房間未觸發，請驗證頻道金鑰是否為 Slack 頻道 ID，並且應用程式是否具有該房間類型所需的 `channels:history` 或 `groups:history` 範圍權限。
 
 ## 相關
 
@@ -211,4 +211,4 @@ Telegram 群組 ID 通常是負數，例如 `-1001234567890`。請從 `openclaw 
 - [Slack](/zh-Hant/channels/slack)
 - [Telegram](/zh-Hant/channels/telegram)
 - [頻道疑難排解](/zh-Hant/channels/troubleshooting)
-- [頻道設定參考](/zh-Hant/gateway/config-channels)
+- [頻道組態參考](/zh-Hant/gateway/config-channels)

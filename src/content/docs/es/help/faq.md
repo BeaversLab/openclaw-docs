@@ -447,16 +447,17 @@ n sincronizar sus propias habilidades. Para instalaciones compartidas entre agen
     Sí. Consulta [Sandboxing](/es/gateway/sandboxing). Para una configuración específica de Docker (puerta de enlace completa en Docker o imágenes de sandbox), consulta [Docker](/es/install/docker).
   </Accordion>
 
-  <Accordion title="Docker se siente limitado, ¿cómo habilito todas las funciones?">
-    La imagen predeterminada prioriza la seguridad y se ejecuta como el usuario `node`, por lo que no incluye paquetes del sistema, Homebrew ni navegadores integrados. Para una configuración más completa:
+  <Accordion title="Docker se siente limitado: ¿cómo habilito todas las funciones?">
+    La imagen predeterminada prioriza la seguridad y se ejecuta como el usuario `node`, por lo que no incluye
+    paquetes del sistema, Homebrew ni navegadores empaquetados. Para una configuración más completa:
 
     - Persiste `/home/node` con `OPENCLAW_HOME_VOLUME` para que las cachés sobrevivan.
-    - Incorpora dependencias del sistema en la imagen con `OPENCLAW_DOCKER_APT_PACKAGES`.
+    - Incluye las dependencias del sistema en la imagen con `OPENCLAW_IMAGE_APT_PACKAGES`.
     - Instala los navegadores de Playwright a través de la CLI incluida:
       `node /app/node_modules/playwright-core/cli.js install chromium`
     - Establece `PLAYWRIGHT_BROWSERS_PATH` y asegúrate de que la ruta se persista.
 
-    Documentación: [Docker](/es/install/docker), [Navegador](/es/tools/browser).
+    Documentación: [Docker](/es/install/docker), [Browser](/es/tools/browser).
 
   </Accordion>
 

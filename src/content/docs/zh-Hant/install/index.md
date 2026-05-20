@@ -9,7 +9,7 @@ title: "安裝"
 
 ## 系統需求
 
-- **Node 24**（推薦）或 Node 22.16+ - 安裝程式腳本會自動處理此項
+- **Node 24**（建議）或 Node 22.19+ - 安裝程式會自動處理此項
 - **macOS、Linux 或 Windows** - 支援原生 Windows 和 WSL2；WSL2 更穩定。請參閱 [Windows](/zh-Hant/platforms/windows)。
 - `pnpm` 僅在您從原始碼建置時才需要
 

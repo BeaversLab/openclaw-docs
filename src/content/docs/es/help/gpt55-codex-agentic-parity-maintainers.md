@@ -59,7 +59,7 @@ No es propietario de:
 
 Es propietario de:
 
-- paquete de escenarios de primera ola GPT-5.5 vs Opus 4.6
+- paquete de escenarios de primera ola de GPT-5.5 frente a Opus 4.7
 - documentación de paridad
 - informe de paridad y mecánicas de puerta de lanzamiento
 
@@ -123,7 +123,7 @@ Artefactos esperados de la PR D:
 
 ## Portal de lanzamiento
 
-No afirme la paridad o superioridad de GPT-5.5 sobre Opus 4.6 hasta que:
+No afirme la paridad o superioridad de GPT-5.5 sobre Opus 4.7 hasta que:
 
 - la PR A, la PR B y la PR C se hayan fusionado
 - la PR D ejecute el paquete de paridad de primera ola limpiamente
@@ -133,7 +133,7 @@ No afirme la paridad o superioridad de GPT-5.5 sobre Opus 4.6 hasta que:
 ```mermaid
 flowchart LR
     A["PR A-C merged"] --> B["Run GPT-5.5 parity pack"]
-    A --> C["Run Opus 4.6 parity pack"]
+    A --> C["Run Opus 4.7 parity pack"]
     B --> D["qa-suite-summary.json"]
     C --> E["qa-suite-summary.json"]
     D --> F["qa parity-report"]
@@ -146,7 +146,7 @@ flowchart LR
 
 El arnés de paridad no es la única fuente de evidencia. Mantenga esta división explícita en la revisión:
 
-- la PR D es propietaria de la comparación basada en escenarios entre GPT-5.5 y Opus 4.6
+- El PR D es el propietario de la comparación basada en escenarios entre GPT-5.5 y Opus 4.7
 - las suites deterministas de la PR B siguen siendo propietarias de la evidencia de veracidad de auth/proxy/DNS y de acceso completo
 
 ## Flujo de trabajo de fusión rápido para el encargado de mantenimiento
@@ -179,7 +179,7 @@ Si falta alguno de los elementos de la barra de evidencia, solicite cambios en l
 | Sin progreso falso o finalización falsa de herramientas       | PR A + PR D           | recuento de éxitos falsos de paridad más detalles del informe a nivel de escenario       |
 | Sin guía falsa de `/elevated full`                            | PR B                  | suites deterministas de veracidad en tiempo de ejecución                                 |
 | Los fallos de reproducción/actividad siguen siendo explícitos | PR C + PR D           | suites de ciclo de vida/reproducción más `compaction-retry-mutating-tool`                |
-| GPT-5.5 iguala o supera a Opus 4.6                            | PR D                  | `qa-agentic-parity-report.md` y `qa-agentic-parity-summary.json`                         |
+| GPT-5.5 iguala o supera a Opus 4.7                            | PR D                  | `qa-agentic-parity-report.md` y `qa-agentic-parity-summary.json`                         |
 
 ## Abreviatura del revisor: antes vs después
 

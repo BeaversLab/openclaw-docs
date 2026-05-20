@@ -14,7 +14,7 @@ Las aplicaciones complementarias nativas de Linux están planeadas. Las contribu
 
 ## Ruta rápida para principiantes (VPS)
 
-1. Instale Node 24 (recomendado; Node 22 LTS, actualmente `22.16+`, sigue funcionando por compatibilidad)
+1. Instale Node 24 (recomendado; Node 22 LTS, actualmente `22.19+`, todavía funciona por compatibilidad)
 2. `npm i -g openclaw@latest`
 3. `openclaw onboard --install-daemon`
 4. Desde tu portátil: `ssh -N -L 18789:127.0.0.1:18789 <user>@<host>`

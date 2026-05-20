@@ -171,7 +171,8 @@ HTTP 状态码尽可能遵循 Gateway(网关) 错误。例如，Gateway(网关)`
 - gateway: `health`, `status`, `logs.tail`, `usage.status`, `usage.cost`, `gateway.restart.request`
 - config: `config.get`, `config.schema`, `config.schema.lookup`, `config.set`, `config.patch`, `config.apply`
 - channels: `channels.status`, `channels.start`, `channels.stop`, `channels.logout`
-- models: `models.list`, `models.authStatus`
+- web: `web.login.start`, `web.login.wait`
+- 模型: `models.list`, `models.authStatus`
 - agents: `agents.list`, `agents.create`, `agents.update`, `agents.delete`
 - approvals: `exec.approvals.get`, `exec.approvals.set`, `exec.approvals.node.get`, `exec.approvals.node.set`
 - cron: `cron.status`, `cron.list`, `cron.get`, `cron.runs`, `cron.add`, `cron.update`, `cron.remove`, `cron.run`
@@ -180,36 +181,36 @@ HTTP 状态码尽可能遵循 Gateway(网关) 错误。例如，Gateway(网关)`
 - tasks: `tasks.list`, `tasks.get`, `tasks.cancel`
 - diagnostics: `doctor.memory.status`, `update.status`
 
-其他 Gateway(网关) 方法将被阻止，直到它们被有意添加。
+其他 Gateway(网关) 方法将被阻止，直到被有意添加为止。
 
-## WebSocket 比较
+## WebSocket 对比
 
-标准的 Gateway(网关) WebSocket RPC 路径仍然是 API 客户端的首选控制平面 OpenClaw。请仅对需要请求/响应 HTTP 界面的主机工具使用管理 HTTP RPC。
+正常的 Gateway(网关) WebSocket RPC 路径仍然是 API 客户端的首选控制面 OpenClaw。请仅对需要请求/响应 HTTP 接口的主机工具使用 admin HTTP RPC。
 
-没有可信设备身份的共享令牌 WebSocket 客户端无法在连接期间自行声明管理范围。管理 HTTP RPC 故意遵循现有的可信 HTTP 操作员模型：启用插件后，共享密钥不记名认证将被视为此管理界面的完整操作员访问权限。
+没有可信设备身份的共享令牌 WebSocket 客户端无法在连接期间自行声明 admin 范围。Admin HTTP RPC 故意遵循现有的可信 HTTP 操作员模型：启用插件后，共享密钥承载身份验证被视为此管理界面的完全操作员访问权限。
 
 ## 故障排除
 
 `404 Not Found`
 
-：插件已禁用，启用后 Gateway(网关) 尚未重启，或者请求发送到了不同的 Gateway(网关) 进程。
+: 插件已禁用，启用后 Gateway(网关) 尚未重启，或者请求正在发往不同的 Gateway(网关) 进程。
 
 `401 Unauthorized`
 
-：请求未满足 Gateway(网关) HTTP 身份验证。请检查不记名令牌或可信代理身份标头。
+: 请求未满足 Gateway(网关) HTTP 身份验证。请检查不记名令牌 或 trusted-proxy 身份标头。
 
 `400 INVALID_REQUEST`
 
-：请求正文不是有效的 JSON，缺少 `method` 字段，或者该方法不在插件允许列表中。
+: 请求正文不是有效的 JSON，缺少 `method` 字段，或者该方法不在插件允许列表中。
 
 `503 UNAVAILABLE`
 
-：Gateway(网关) 方法处理程序不可用。请检查 Gateway(网关) 日志，并在 Gateway(网关) 完成启动后重试。
+: Gateway(网关) 方法处理程序不可用。请检查 Gateway(网关) 日志，并在 Gateway(网关) 完成启动后重试。
 
 ## 相关
 
-- [操作员范围](/zh/gateway/operator-scopes)
-- [Gateway(网关) 安全性](/zh/gateway/security)
-- [远程访问](/zh/gateway/remote)
-- [插件清单](/zh/plugins/manifest#contracts)
-- [SDK 子路径](/zh/plugins/sdk-subpaths)
+- [Operator scopes](/zh/gateway/operator-scopes)
+- [Gateway(网关) 安全](<Gateway(网关)/en/gateway/security>)
+- [Remote access](/zh/gateway/remote)
+- [Plugin manifest](/zh/plugins/manifest#contracts)
+- [SDK subpaths](/zh/plugins/sdk-subpaths)

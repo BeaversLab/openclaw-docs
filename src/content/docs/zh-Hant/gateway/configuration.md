@@ -134,14 +134,14 @@ Gateway 在每次成功啟動後會保留一份受信任的「最後已知良好
   </Accordion>
 
   <Accordion title="Set up group chat mention gating">
-    群組訊息預設為**需要提及**。請為每個代理程式配置觸發模式，並將可見的房間回覆保留在預設的 message-tool 路徑上，除非您有意讓所有正常的群組回覆都使用舊版的自動最終回覆路徑：
+    群組訊息預設為**需要提及**。請為每個代理程式設定觸發模式。一般的群組/頻道回覆會自動張貼；在代理程式應決定何時發言的共享聊天室中，選擇加入 message-tool 路徑：
 
     ```json5
     {
       messages: {
         visibleReplies: "automatic", // set "message_tool" to require message-tool sends everywhere
         groupChat: {
-          visibleReplies: "message_tool", // default; visible output requires message(action=send)
+          visibleReplies: "message_tool", // opt-in; visible output requires message(action=send)
           unmentionedInbound: "room_event", // unmentioned always-on group chatter is quiet context
         },
       },
@@ -163,10 +163,10 @@ Gateway 在每次成功啟動後會保留一份受信任的「最後已知良好
     }
     ```
 
-    - **中繼資料提及**：原生的 @-提及（WhatsApp 點擊提及、Telegram @bot 等）
-    - **文字模式**：`mentionPatterns` 中的安全 regex 模式
-    - **可見回覆**：`messages.visibleReplies` 可以全域要求 message-tool 發送；`messages.groupChat.visibleReplies` 則針對群組/頻道覆寫該設定。
-    - 參閱[完整參考資料](/zh-Hant/gateway/config-channels#group-chat-mention-gating)以了解可見回覆模式、各頻道覆寫和自我聊天模式。
+    - **中繼資料提及**：原生 @-提及（WhatsApp 點擊提及、Telegram @bot 等）
+    - **文字模式**：`mentionPatterns` 中的安全正規表示式模式
+    - **可見回覆**：`messages.visibleReplies` 可以全域要求使用 message-tool 傳送；`messages.groupChat.visibleReplies` 則會針對群組/頻道覆寫該設定。
+    - 請參閱[完整參考資料](/zh-Hant/gateway/config-channels#group-chat-mention-gating)以了解可見回覆模式、各頻道覆寫設定以及自聊模式。
 
   </Accordion>
 

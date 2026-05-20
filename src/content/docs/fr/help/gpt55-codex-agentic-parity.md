@@ -13,7 +13,7 @@ OpenClaw fonctionnait déjà bien avec les modèles de pointe utilisant des outi
 - ils pouvaient utiliser de manière incorrecte les schémas d'outils stricts OpenAI/Codex
 - ils pouvaient demander `/elevated full` même lorsqu'un accès complet était impossible
 - ils pouvaient perdre l'état des tâches de longue durée lors de la relecture ou de la compaction
-- les revendications de parité avec Claude Opus 4.6 reposaient sur des anecdotes plutôt que sur des scénarios reproductibles
+- les affirmations de parité avec Claude Opus 4.7 reposaient sur des anecdotes plutôt que sur des scénarios reproductibles
 
 Ce programme de parité corrige ces lacunes en quatre tranches examinables.
 
@@ -51,7 +51,7 @@ Le travail de compatibilité des outils réduit la friction de schéma pour l'en
 
 ### PR D : harnais de parité
 
-Cette tranche ajoute le premier pack de parité du laboratoire QA afin que GPT-5.5 et Opus 4.6 puissent être exercés à travers les mêmes scénarios et comparés en utilisant des preuves partagées.
+Cette tranche ajoute le premier pack de parité du labo QA afin que GPT-5.5 et Opus 4.7 puissent être testés via les mêmes scénarios et comparés à l'aide de preuves partagées.
 
 Le pack de parité est la couche de preuve. Il ne modifie pas le comportement d'exécution par lui-même.
 
@@ -60,8 +60,8 @@ Une fois que vous avez deux artefacts `qa-suite-summary.json`, générez la comp
 ```bash
 pnpm openclaw qa parity-report \
   --repo-root . \
-  --candidate-summary .artifacts/qa-e2e/gpt55/qa-suite-summary.json \
-  --baseline-summary .artifacts/qa-e2e/opus46/qa-suite-summary.json \
+  --candidate-summary .artifacts/qa-e2e/openai-candidate/qa-suite-summary.json \
+  --baseline-summary .artifacts/qa-e2e/anthropic-baseline/qa-suite-summary.json \
   --output-dir .artifacts/qa-e2e/parity
 ```
 
@@ -122,7 +122,7 @@ flowchart TD
 ```mermaid
 flowchart LR
     A["Merged runtime slices (PR A-C)"] --> B["Run GPT-5.5 parity pack"]
-    A --> C["Run Opus 4.6 parity pack"]
+    A --> C["Run Opus 4.7 parity pack"]
     B --> D["qa-suite-summary.json"]
     C --> E["qa-suite-summary.json"]
     D --> F["openclaw qa parity-report"]
@@ -178,7 +178,7 @@ Résultats requis :
 - pas de fausse complétion sans exécution réelle
 - pas de conseils incorrects `/elevated full`
 - pas d'abandon silencieux de relecture ou de compactage
-- métriques du pack de parité qui sont au moins aussi solides que la base de référence Opus 4.6 convenue
+- les métriques du pack de parité qui sont au moins aussi solides que la base de référence convenue pour Opus 4.7
 
 Pour le harnais de première vague, le critère compare :
 
@@ -189,7 +189,7 @@ Pour le harnais de première vague, le critère compare :
 
 Les preuves de parité sont intentionnellement réparties sur deux niveaux :
 
-- La PR D prouve le comportement de GPT-5.5 vs Opus 4.6 dans le même scénario avec le QA-lab
+- PR D prouve le comportement de GPT-5.5 par rapport à Opus 4.7 dans les mêmes scénarios avec le labo QA
 - Les suites déterministes de la PR B prouvent la véracité de l'auth, du proxy, du DNS et de `/elevated full` en dehors du harnais
 
 ## Matrice objectif-preuve
@@ -200,13 +200,13 @@ Les preuves de parité sont intentionnellement réparties sur deux niveaux :
 | GPT-5.5 ne falsifie plus les progrès ou la fausse complétion d'outil | PR A + PR D     | résultats des scénarios du rapport de parité et nombre de faux succès             | pas de résultats de réussite suspects et pas de complétion avec uniquement des commentaires                                    |
 | GPT-5.5 ne donne plus de faux conseils `/elevated full`              | PR B            | suites de véracité déterministes                                                  | les raisons de blocage et les indices d'accès complet restent précis au niveau de l'exécution                                  |
 | les échecs de relecture/vivacité restent explicites                  | PR C + PR D     | suites de cycle de vie/relecture de la PR C plus `compaction-retry-mutating-tool` | le travail de mutation garde le danger de relecture explicite au lieu de disparaître silencieusement                           |
-| GPT-5.5 correspond ou surpasse Opus 4.6 sur les métriques convenues  | PR D            | `qa-agentic-parity-report.md` et `qa-agentic-parity-summary.json`                 | même couverture de scénario et aucune régression sur la complétion, le comportement d'arrêt ou l'utilisation valide de l'outil |
+| GPT-5.5 égale ou surpasse Opus 4.7 sur les métriques convenues       | PR D            | `qa-agentic-parity-report.md` et `qa-agentic-parity-summary.json`                 | même couverture de scénario et aucune régression sur la complétion, le comportement d'arrêt ou l'utilisation valide de l'outil |
 
 ## Comment lire le verdict de parité
 
 Utilisez le verdict dans `qa-agentic-parity-summary.json` comme décision finale lisible par machine pour le pack de parité de première vague.
 
-- `pass` signifie que GPT-5.5 couvrait les mêmes scénarios qu'Opus 4.6 et n'a pas régressé sur les métriques globales convenues.
+- `pass` signifie que GPT-5.5 a couvert les mêmes scénarios qu'Opus 4.7 et n'a pas régressé sur les métriques globales convenues.
 - `fail` signifie qu'au moins une porte stricte s'est déclenchée : achèvement plus faible, arrêts non intentionnels pires, utilisation valide des outils plus faible, tout cas de fausse réussite, ou couverture de scénario non concordante.
 - "shared/base CI issue" n'est pas en soi un résultat de parité. Si le bruit CI en dehors de la PR D bloque une exécution, le verdict doit attendre une exécution runtime fusionnée propre plutôt que d'être déduit des journaux de l'époque de la branche.
 - Auth, proxy, DNS et la véracité `/elevated full` proviennent toujours des suites déterministes de la PR B, donc la déclaration de version finale nécessite les deux : un verdict de parité PR D réussi et une couverture de véracité PR B verte.

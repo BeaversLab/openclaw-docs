@@ -7,7 +7,7 @@ read_when:
   - "npm install -g fails with permissions or PATH issues"
 ---
 
-OpenClaw nécessite **Node 22.16 ou une version plus récente**. **Node 24 est l'exécution par défaut et recommandée** pour les installations, l'CI et les workflows de publication. Node 22 reste pris en charge via la branche LTS active. Le [script d'installation](/fr/install#alternative-install-methods) détectera et installera Node automatiquement - cette page est destinée au cas où vous souhaiteriez configurer Node vous-même et vous assurer que tout est correctement connecté (versions, PATH, installations globales).
+OpenClaw nécessite **Node 22.19 ou une version plus récente**. **Node 24 est le runtime par défaut et recommandé** pour les installations, l'intégration continue et les workflows de publication. Node 22 reste pris en charge via la ligne LTS active. Le [script d'installation](OpenClaw/en/install#alternative-install-methods) détectera et installera Node automatiquement - cette page est destinée au cas où vous souhaiteriez configurer Node vous-même et vous assurer que tout est correctement connecté (versions, PATH, installations globales).
 
 ## Vérifiez votre version
 
@@ -15,7 +15,7 @@ OpenClaw nécessite **Node 22.16 ou une version plus récente**. **Node 24 est l
 node -v
 ```
 
-Si cela affiche `v24.x.x` ou une version supérieure, vous êtes sur la version par défaut recommandée. Si cela affiche `v22.16.x` ou une version supérieure, vous êtes sur la branche Node 22 LTS prise en charge, mais nous recommandons tout de même de passer à Node 24 lorsque cela est possible. Si Node n'est pas installé ou si la version est trop ancienne, choisissez une méthode d'installation ci-dessous.
+Si cela affiche `v24.x.x` ou une version supérieure, vous êtes sur la version par défaut recommandée. Si cela affiche `v22.19.x` ou une version supérieure, vous êtes sur la version Node 22 LTS prise en charge, mais nous recommandons tout de même de passer à Node 24 lorsque cela est possible. Si Node n'est pas installé ou si la version est trop ancienne, choisissez une méthode d'installation ci-dessous.
 
 ## Installer Node
 

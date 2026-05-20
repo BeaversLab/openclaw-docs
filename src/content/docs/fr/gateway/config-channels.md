@@ -771,9 +771,9 @@ Voir l'index complet des channels : [Channels](/fr/channels).
 
 Les messages de groupe nécessitent par défaut une **mention** (mention dans les métadonnées ou motifs regex sûrs). S'applique aux discussions de groupe WhatsApp, Telegram, Discord, Google Chat et iMessage.
 
-Les réponses visibles sont contrôlées séparément. Les salons de groupe/channel utilisent par défaut `messages.groupChat.visibleReplies: "message_tool"` : OpenClaw traite toujours le tour et demande à l'agent d'utiliser `message(action=send)` pour la sortie visible dans le salon. Si le modèle renvoie du texte final sans appeler l'outil de message, ce texte final reste privé et le journal détaillé de la passerelle enregistre les métadonnées de charge utile supprimées. Définissez `"automatic"` lorsque vous souhaitez que toutes les réponses de groupe visibles utilisisent le chemin de réponse finale hérité. Pour appliquer le même comportement de réponse visible uniquement par outil aux discussions directes également, définissez `messages.visibleReplies: "message_tool"` ; le harnais Codex utilise également ce comportement uniquement par outil comme valeur par défaut non définie pour les discussions directes.
+Les réponses visibles sont contrôlées séparément. Les requêtes de groupe/channel normales sont `messages.groupChat.visibleReplies: "automatic"` par défaut : le texte final de l'assistant est publié via le chemin de réponse visible hérité. Définissez `"message_tool"` lorsqu'une salle partagée ne doit publier une sortie visible qu'après que l'agent a appelé `message(action=send)`. Si le modèle renvoie du texte final sans appeler l'outil de message, ce texte final reste privé et le journal détaillé de la passerelle enregistre les métadonnées de la charge utile supprimée. Pour appliquer le même comportement de réponse visible « outil uniquement » aux discussions directes également, définissez `messages.visibleReplies: "message_tool"` ; le harnais Codex utilise également ce comportement « outil uniquement » comme valeur par défaut non définie pour les discussions directes.
 
-Les réponses visibles uniquement par outil nécessitent un modèle/runtime qui appelle de manière fiable les outils. Si le journal de session montre du texte d'assistant avec `didSendViaMessagingTool: false`, le modèle a produit du texte final privé au lieu d'appeler l'outil de message. Passez à un modèle d'appel d'outil plus robuste pour ce channel, inspectez le journal détaillé de la passerelle pour le résumé de la charge utile supprimée, ou définissez `messages.groupChat.visibleReplies: "automatic"` pour utiliser les réponses finales visibles héritées pour chaque requête de groupe/channel.
+Les réponses visibles « outil uniquement » nécessitent un modèle/exécution qui appelle de manière fiable les outils, et sont recommandées pour les salles ambiantes partagées sur des modèles de dernière génération tels que GPT 5.5. Si le journal de session affiche du texte d'assistant avec `didSendViaMessagingTool: false`, le modèle a produit du texte final privé au lieu d'appeler l'outil de message. Passez à un modèle d'appel d'outil plus robuste pour ce channel, inspectez le journal détaillé de la passerelle pour le résumé de la charge utile supprimée, ou définissez `messages.groupChat.visibleReplies: "automatic"` pour utiliser des réponses finales visibles pour chaque requête de groupe/channel.
 
 Si l'outil de message n'est pas disponible sous la stratégie d'outil active, OpenClaw revient par défaut à des réponses visibles automatiques au lieu de supprimer silencieusement la réponse. `openclaw doctor` avertit de cette inadéquation.
 
@@ -792,7 +792,7 @@ La passerelle recharge à chaud la configuration `messages` après l'enregistrem
     groupChat: {
       historyLimit: 50,
       unmentionedInbound: "room_event", // always-on unmentioned room chatter becomes quiet context
-      visibleReplies: "message_tool", // default; use "automatic" for legacy final replies
+      visibleReplies: "message_tool", // opt-in; require message(action=send) for visible room replies
     },
   },
   agents: {

@@ -45,8 +45,7 @@ openclaw browser --browser-profile openclaw snapshot
 如果您收到「Browser disabled」（瀏覽器已停用）的訊息，請在設定中啟用它（見下文）並重新啟動
 Gateway。
 
-如果完全缺少 `openclaw browser`，或者代理程式表示瀏覽器工具
-無法使用，請跳至 [Missing browser command or tool](/zh-Hant/tools/browser#missing-browser-command-or-tool)。
+如果完全缺少 `openclaw browser`，或者代理表示瀏覽器工具無法使用，請跳至 [Missing browser command or tool](/zh-Hant/tools/browser#missing-browser-command-or-tool)。
 
 ## 外掛程式控制
 
@@ -330,10 +329,7 @@ OpenClaw 在呼叫 `/json/*` 端點以及連線
 
 ## Browserless（託管的遠端 CDP）
 
-[Browserless](https://browserless.io) 是一個託管的 Chromium 服務，透過
-HTTPS 和 WebSocket 公開 CDP 連線 URL。OpenClaw 可以使用任一種形式，但
-對於遠端瀏覽器設定檔，最簡單的選項是直接使用來自 Browserless 連線文件的
-WebSocket URL。
+[Browserless](https://browserless.io) 是一個託管的 Chromium 服務，透過 HTTPS 和 WebSocket 公開 CDP 連線 URL。OpenClaw 可以使用任何一種形式，但對於遠端瀏覽器設定檔，最簡單的選項是來自 Browserless 連線文件中的直接 WebSocket URL。
 
 範例：
 
@@ -407,22 +403,11 @@ CDP URL 格式並自動選擇正確的連線策略：
   路徑的 `ws://host[:port]/devtools/<kind>/<id>` 或
   `wss://...`。OpenClaw 透過 WebSocket 交握直接連線，並完全
   跳過 `/json/version`。
-- **裸 WebSocket 根目錄** - 沒有
-  `/devtools/...` 路徑的 `ws://host[:port]` 或 `wss://host[:port]`（例如 [Browserless](https://browserless.io)、
-  [Browserbase](https://www.browserbase.com)）。OpenClaw 首先嘗試 HTTP
-  `/json/version` 探索（將協定正規化為 `http`/`https`）；
-  如果探索返回 `webSocketDebuggerUrl`，則使用它，否則 OpenClaw
-  會退回到裸根目錄的直接 WebSocket 交握。如果公告的
-  WebSocket 端點拒絕 CDP 交握，但設定的裸根目錄
-  接受它，OpenClaw 也會退回到該根目錄。這讓指向本機
-  Chrome 的裸 `ws://` 仍然可以連線，因為 Chrome 僅在來自 `/json/version` 的
-  特定每目標路徑上接受 WebSocket 升級，而託管
-  提供商當其探索端點公告一個不適用於 Playwright CDP 的短期
-  URL 時，仍然可以使用其根 WebSocket 端點。
+- **純 WebSocket 根路徑** - 沒有 `/devtools/...` 路徑的 `ws://host[:port]` 或 `wss://host[:port]`（例如 [Browserless](https://browserless.io)、[Browserbase](https://www.browserbase.com)）。OpenClaw 首先嘗試 HTTP `/json/version` 探索（將協議標準化為 `http`/`https`）；如果探索返回 `webSocketDebuggerUrl`，則使用它，否則 OpenClaw 會回退到純根路徑的直接 WebSocket 握手。如果公佈的 WebSocket 端點拒絕 CDP 握手，但設定的純根路徑接受它，OpenClaw 也會回退到該根路徑。這使得指向本機 Chrome 的純 `ws://` 仍然可以連線，因為 Chrome 只接受來自 `/json/version` 的特定目標路徑上的 WebSocket 升級，而託管提供商當其探索端點公佈不適合 Playwright CDP 的短期 URL 時，仍然可以使用其根 WebSocket 端點。
 
 ### Browserbase
 
-[Browserbase](https://www.browserbase.com) 是一個用於執行無頭瀏覽器的雲端平台，內建 CAPTCHA 解決、隱身模式和住宅代理。
+[Browserbase](https://www.browserbase.com) 是一個用於執行無頭瀏覽器的雲端平台，具有內建的 CAPTCHA 解決、隱身模式和住宅代理。
 
 ```json5
 {
@@ -443,12 +428,12 @@ CDP URL 格式並自動選擇正確的連線策略：
 
 備註：
 
-- [註冊](https://www.browserbase.com/sign-up) 並從 [總覽儀表板](https://www.browserbase.com/overview) 複製您的 **API Key**。
+- [註冊](https://www.browserbase.com/sign-up) 並從 [Overview dashboard](https://www.browserbase.com/overview) 複製您的 **API Key**。
 - 將 `<BROWSERBASE_API_KEY>` 替換為您真實的 Browserbase API 金鑰。
 - Browserbase 會在 WebSocket 連接時自動建立瀏覽器會話，因此不需要
   手動建立會話的步驟。
-- 免費層級允許一個並行會話和每月一個瀏覽器小時。請參閱 [定價](https://www.browserbase.com/pricing) 以了解付費方案的額度。
-- 請參閱 [Browserbase 文件](https://docs.browserbase.com) 以獲得完整的 API 參考、SDK 指南和整合範例。
+- 免費層級允許每月一個並行會話和一個瀏覽器小時。請參閱 [pricing](https://www.browserbase.com/pricing) 以了解付費方案的限制。
+- 請參閱 [Browserbase docs](https://docs.browserbase.com) 以獲取完整的 API 參考、SDK 指南和整合範例。
 
 ## 安全性
 
@@ -603,12 +588,13 @@ Agent 使用方式：
 
 <Accordion title="Existing-session feature limitations">
 
-與受管理的 `openclaw` 設定檔相比，existing-session 驅動程式有更多限制：
+與受控的 `openclaw` 設定檔相比，現有會話驅動程式受到更多限制：
 
-- **螢幕截圖** - 頁面擷取和 `--ref` 元素擷取可用；CSS `--element` 選擇器則不行。`--full-page` 無法與 `--ref` 或 `--element` 結合使用。頁面或基於參照的元素螢幕截圖不需要 Playwright。
-- **動作** - `click`、`type`、`hover`、`scrollIntoView`、`drag` 和 `select` 需要快照參照（無 CSS 選擇器）。`click-coords` 點擊可視視口座標，不需要快照參照。`click` 僅限左鍵。`type` 不支援 `slowly=true`；請使用 `fill` 或 `press`。`press` 不支援 `delayMs`。`type`、`hover`、`scrollIntoView`、`drag`、`select`、`fill` 和 `evaluate` 不支援單次呼叫逾時。`select` 接受單一值。
-- **等待 / 上傳 / 對話方塊** - `wait --url` 支援精確、子字串和全域模式；不支援 `wait --load networkidle`。上傳掛勾需要 `ref` 或 `inputRef`，每次一個檔案，不可使用 CSS `element`。對話方塊掛勾不支援逾時覆寫。
-- **僅限受管理的功能** - 批次動作、PDF 匯出、下載攔截和 `responsebody` 仍需要受管理的瀏覽器路徑。
+- **螢幕擷圖** - 頁面擷取和 `--ref` 元素擷取有效；CSS `--element` 選擇器無效。`--full-page` 不能與 `--ref` 或 `--element` 結合使用。頁面或基於參照的元素擷圖不需要 Playwright。
+- **動作** - `click`、`type`、`hover`、`scrollIntoView`、`drag` 和 `select` 需要快照參照（不支援 CSS 選擇器）。`click-coords` 點擊可見視口座標，不需要快照參照。`click` 僅限左鍵。`type` 不支援 `slowly=true`；請使用 `fill` 或 `press`。`press` 不支援 `delayMs`。`type`、`hover`、`scrollIntoView`、`drag`、`select`、`fill` 和 `evaluate` 不支援個別呼叫逾時。`select` 接受單一值。
+- **等待 / 上傳 / 對話框** - `wait --url` 支援完全符合、子字串和 glob 模式；不支援 `wait --load networkidle`。上傳掛鉤需要 `ref` 或 `inputRef`，一次一個檔案，不支援 CSS `element`。對話框掛鉤不支援逾時覆寫或 `dialogId`。
+- **對話框可見性** - 受控瀏覽器動作回應在動作開啟強制回應對話框時包含 `blockedByDialog` 和 `browserState.dialogs.pending`；快照也包含待處理對話框狀態。當對話框待處理時，以 `browser dialog --accept/--dismiss --dialog-id <id>` 回應。在 OpenClaw 外部處理的對話框會出現在 `browserState.dialogs.recent` 下。
+- **僅限受控的功能** - 批次動作、PDF 匯出、下載攔截和 `responsebody` 仍需要受控瀏覽器路徑。
 
 </Accordion>
 
@@ -616,8 +602,9 @@ Agent 使用方式：
 
 - **專用使用者資料目錄**：絕不會接觸您的個人瀏覽器設定檔。
 - **專用連接埠**：避免 `9222` 以防止與開發工作流程發生衝突。
-- **確定性分頁控制**：`tabs` 首先傳回 `suggestedTargetId`，接著是穩定的 `tabId` 控制碼，例如 `t1`、選用標籤以及原始 `targetId`。
-  Agent 應重複使用 `suggestedTargetId`；原始 ID 仍可用於偵錯和相容性。
+- **確定性分頁控制**：`tabs` 首先返回 `suggestedTargetId`，然後是穩定的 `tabId` 控制碼，例如 `t1`、可選標籤以及原始 `targetId`。
+  智慧體應重複使用 `suggestedTargetId`；原始 ID 仍然可用於
+  偵錯和相容性。
 
 ## 瀏覽器選擇
 
@@ -629,30 +616,30 @@ Agent 使用方式：
 4. Chromium
 5. Chrome Canary
 
-您可以使用 `browser.executablePath` 覆蓋。
+您可以使用 `browser.executablePath` 覆蓋設定。
 
 平台：
 
 - macOS：檢查 `/Applications` 和 `~/Applications`。
 - Linux：檢查 `/usr/bin`、
   `/snap/bin`、`/opt/google`、`/opt/brave.com`、`/usr/lib/chromium` 和
-  `/usr/lib/chromium-browser` 下的常見 Chrome/Brave/Edge/Chromium 位置，以及
+  `/usr/lib/chromium-browser` 下常見的 Chrome/Brave/Edge/Chromium 位置，以及位於
   `PLAYWRIGHT_BROWSERS_PATH` 或 `~/.cache/ms-playwright` 下由 Playwright 管理的 Chromium。
 - Windows：檢查常見的安裝位置。
 
 ## 控制 API (選用)
 
-為了腳本撰寫和偵錯，Gateway 公開了一個小型的 **僅限回環 HTTP
-控制 API** 以及對應的 `openclaw browser` CLI（快照、參照、等待
-強化功能、JSON 輸出、偵錯工作流程）。請參閱
-[瀏覽器控制 API](/zh-Hant/tools/browser-control) 以取得完整參考資料。
+為了腳本編寫和偵錯，Gateway 提供了一個小型**僅限回環 HTTP
+控制 API** 以及配套的 `openclaw browser` CLI（快照、參照、等待
+增強功能、JSON 輸出、偵錯工作流程）。請參閱
+[瀏覽器控制 API](/zh-Hant/tools/browser-control) 以取得完整參考。
 
 ## 疑難排解
 
-針對 Linux 特定問題（特別是 snap Chromium），請參閱
+關於 Linux 特定問題（特別是 snap Chromium），請參閱
 [瀏覽器疑難排解](/zh-Hant/tools/browser-linux-troubleshooting)。
 
-針對 WSL2 Gateway + Windows Chrome 分割主機設定，請參閱
+關於 WSL2 Gateway + Windows Chrome 分割主機設定，請參閱
 [WSL2 + Windows + 遠端 Chrome CDP 疑難排解](/zh-Hant/tools/browser-wsl2-windows-remote-cdp-troubleshooting)。
 
 ### CDP 啟動失敗 vs 導覽 SSRF 封鎖
@@ -667,10 +654,10 @@ Agent 使用方式：
 - CDP 啟動或就緒失敗：
   - `Chrome CDP websocket for profile "openclaw" is not reachable after start`
   - `Remote CDP for profile "<name>" is not reachable at <cdpUrl>`
-  - 當
-    設定了回環外部 CDP 服務但沒有 `attachOnly: true` 時，會出現 `Port <port> is in use for profile "<name>" but not by openclaw`
+  - 當在沒有 `attachOnly: true` 的情況下
+    設定了回環外部 CDP 服務時發生 `Port <port> is in use for profile "<name>" but not by openclaw`
 - 導覽 SSRF 封鎖：
-  - `open`、`navigate`、快照或開啟分頁流程因瀏覽器/網路原則錯誤而失敗，但 `start` 和 `tabs` 仍正常運作
+  - `open`、`navigate`、快照或開啟分頁流程因瀏覽器/網路策略錯誤而失敗，但 `start` 和 `tabs` 仍然正常運作
 
 使用這個最精簡的順序來區分這兩者：
 
@@ -682,22 +669,22 @@ openclaw browser --browser-profile openclaw open https://example.com
 
 如何閱讀結果：
 
-- 如果 `start` 失敗並出現 `not reachable after start`，請先對 CDP 準備狀況進行疑難排解。
-- 如果 `start` 成功但 `tabs` 失敗，表示控制平面仍不正常。請將此視為 CDP 連線問題，而非頁面導覽問題。
-- 如果 `start` 和 `tabs` 成功但 `open` 或 `navigate` 失敗，則瀏覽器控制平面已啟動，失敗原因在於導航策略或目標頁面。
-- 如果 `start`、`tabs` 和 `open` 全部成功，則基本的受管理瀏覽器控制路徑是正常的。
+- 如果 `start` 失敗並顯示 `not reachable after start`，請先針對 CDP 就緒狀態進行疑難排解。
+- 如果 `start` 成功但 `tabs` 失敗，控制平面仍然不健康。將其視為 CDP 連線性問題，而非頁面導覽問題。
+- 如果 `start` 和 `tabs` 成功但 `open` 或 `navigate` 失敗，表示瀏覽器控制平面已啟動，失敗原因在於導覽策略或目標頁面。
+- 如果 `start`、`tabs` 和 `open` 全部成功，則基本的管理瀏覽器控制路徑是健康的。
 
 重要的行為細節：
 
-- 即使您未配置 `browser.ssrfPolicy`，瀏覽器配置預設也會採用封閉式失敗（fail-closed）的 SSRF 策略物件。
-- 對於本地迴路 `openclaw` 受管理配置檔案，CDP 健康檢查會刻意跳過針對 OpenClaw 自身本地控制平面的瀏覽器 SSRF 連線性強制執行。
-- 導航保護是分開的。`start` 或 `tabs` 的成功結果並不表示之後的 `open` 或 `navigate` 目標是被允許的。
+- 即使您未設定 `browser.ssrfPolicy`，瀏覽器設定預設也會採用封閉失敗的 SSRF 策略物件。
+- 對於本地回環 `openclaw` 設定檔，CDP 健康檢查會有意跳過對 OpenClaw 本地控制平面的瀏覽器 SSRF 連線性強制執行。
+- 導覽保護是分開的。成功的 `start` 或 `tabs` 結果並不表示稍後的 `open` 或 `navigate` 目標是被允許的。
 
 安全性指引：
 
 - 預設情況下**切勿**放寬瀏覽器 SSRF 原則。
-- 比起廣泛的私有網路存取，優先使用諸如 `hostnameAllowlist` 或 `allowedHostnames` 這類狹窄的主機例外。
-- 僅在經過審查且需要私有網路瀏覽器存取的刻意信任環境中使用 `dangerouslyAllowPrivateNetwork: true`。
+- 優先使用狹隘的主機例外，例如 `hostnameAllowlist` 或 `allowedHostnames`，而不是廣泛的私人網路存取。
+- 僅在經過審查且需要私人網路瀏覽器存取的可信意圖環境中使用 `dangerouslyAllowPrivateNetwork: true`。
 
 ## 代理程式工具 + 控制運作方式
 
@@ -707,21 +694,21 @@ openclaw browser --browser-profile openclaw open https://example.com
 
 對應方式：
 
-- `browser snapshot` 會傳回穩定的 UI 樹狀結構（AI 或 ARIA）。
-- `browser act` 使用快照 `ref` ID 來點選/輸入/拖曳/選取。
+- `browser snapshot` 返回穩定的 UI 樹狀結構（AI 或 ARIA）。
+- `browser act` 使用快照 `ref` ID 來進行點擊/輸入/拖曳/選取。
 - `browser screenshot` 擷取像素（完整頁面、元素或標記參照）。
-- `browser doctor` 檢查 Gateway、外掛程式、設定檔、瀏覽器和分頁的準備情況。
+- `browser doctor` 檢查 Gateway、外掛程式、設定檔、瀏覽器和分頁的就緒狀態。
 - `browser` 接受：
-  - `profile` 用於選擇具名的瀏覽器設定檔（openclaw、chrome 或遠端 CDP）。
-  - `target` (`sandbox` | `host` | `node`) 用於選擇瀏覽器所在的位置。
+  - `profile` 用於選擇命名的瀏覽器設定檔（openclaw、chrome 或遠端 CDP）。
+  - `target` (`sandbox` | `host` | `node`) 以選擇瀏覽器的所在地。
   - 在沙盒化工作階段中，`target: "host"` 需要 `agents.defaults.sandbox.browser.allowHostControl=true`。
-  - 如果省略了 `target`：沙盒會話預設為 `sandbox`，非沙盒會話預設為 `host`。
-  - 如果連接了具備瀏覽器功能的節點，除非您固定 `target="host"` 或 `target="node"`，否則工具可能會自動路由至該節點。
+  - 如果省略 `target`：沙盒化工作階段預設為 `sandbox`，非沙盒工作階段預設為 `host`。
+  - 如果連接了具備瀏覽器功能的節點，工具可能會自動路由至該節點，除非您指定了 `target="host"` 或 `target="node"`。
 
 這能保持代理程式的確定性，並避免脆弱的選擇器。
 
 ## 相關
 
-- [工具總覽](/zh-Hant/tools) - 所有可用的代理程式工具
-- [沙盒機制](/zh-Hant/gateway/sandboxing) - 在沙盒環境中的瀏覽器控制
-- [安全性](/zh-Hant/gateway/security) - 瀏覽器控制的風險與防護加固
+- [工具概覽](/zh-Hant/tools) - 所有可用的代理程式工具
+- [沙盒化](/zh-Hant/gateway/sandboxing) - 在沙盒化環境中的瀏覽器控制
+- [安全性](/zh-Hant/gateway/security) - 瀏覽器控制的風險與強化

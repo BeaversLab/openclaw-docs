@@ -775,9 +775,9 @@ IRC 由插件支持，并在 `channels.irc` 下进行配置。
 
 群组消息默认为**需要提及**（元数据提及或安全的正则表达式模式）。适用于 WhatsApp、Telegram、Discord、Google Chat 和 iMessage 群聊。
 
-可见回复单独控制。群组/渠道房间默认为 `messages.groupChat.visibleReplies: "message_tool"`：OpenClaw 仍会处理该轮次并要求代理使用 `message(action=send)` 生成可见的房间输出。如果模型返回最终文本但未调用消息工具，该最终文本将保持私密，并且网关详细日志会记录被抑制的负载元数据。如果您希望所有可见的群组回复都使用传统的最终回复路径，请设置 `"automatic"`。要对直接聊天应用相同的仅工具可见回复行为，请设置 `messages.visibleReplies: "message_tool"`；Codex 约束器也将该仅工具行为用作其未设置直接聊天的默认值。
+可见回复是单独控制的。普通的群组/渠道请求默认为 `messages.groupChat.visibleReplies: "automatic"`：最终助手文本通过旧版可见回复路径发布。当共享房间应仅在代理调用 `message(action=send)` 后发布可见输出时，请设置 `"message_tool"`。如果模型返回最终文本但未调用消息工具，则该最终文本将保持私密，并且网关详细日志会记录被抑制的有效负载元数据。要将相同的仅工具可见回复行为也应用于直接聊天，请设置 `messages.visibleReplies: "message_tool"`；Codex 线束也将这种仅工具行为用作其未设置的直接聊天默认值。
 
-仅工具可见回复需要可靠调用工具的模型/运行时。如果会话日志显示带有 `didSendViaMessagingTool: false` 的助手文本，则模型生成了私有的最终文本，而不是调用消息工具。请为该渠道切换到功能更强大的工具调用模型，检查网关详细日志中的被抑制负载摘要，或设置 `messages.groupChat.visibleReplies: "automatic"` 以对每个群组/渠道请求使用传统的可见最终回复。
+仅工具可见回复需要可靠调用工具的模型/运行时，建议在最新一代模型（如 GPT 5.5）的共享环境房间中使用。如果会话日志显示带有 `didSendViaMessagingTool: false` 的助手文本，则模型生成了私有最终文本，而不是调用消息工具。请为该渠道切换到更强的工具调用模型，检查网关详细日志以获取被抑制的有效负载摘要，或者设置 `messages.groupChat.visibleReplies: "automatic"` 以对每个群组/渠道请求使用可见的最终回复。
 
 如果消息工具在当前工具策略下不可用，OpenClaw 将回退到自动可见回复，而不是静默抑制响应。`openclaw doctor` 会就此不匹配发出警告。
 
@@ -796,7 +796,7 @@ IRC 由插件支持，并在 `channels.irc` 下进行配置。
     groupChat: {
       historyLimit: 50,
       unmentionedInbound: "room_event", // always-on unmentioned room chatter becomes quiet context
-      visibleReplies: "message_tool", // default; use "automatic" for legacy final replies
+      visibleReplies: "message_tool", // opt-in; require message(action=send) for visible room replies
     },
   },
   agents: {

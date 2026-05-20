@@ -447,15 +447,15 @@ se trouve sur la [First-run FAQ](/fr/help/faq-first-run).
 
   <Accordion title="DockerDocker semble limité - comment activer toutes les fonctionnalités ?">
     L'image par défaut privilégie la sécurité et s'exécute en tant qu'utilisateur `node`, elle n'inclut donc pas
-    les packages système, Homebrew ou les navigateurs intégrés. Pour une configuration plus complète :
+    de paquets système, Homebrew ou navigateurs intégrés. Pour une configuration plus complète :
 
-    - Persistez `/home/node` avec `OPENCLAW_HOME_VOLUME` afin que les caches survivent.
-    - Intégrez les dépendances système dans l'image avec `OPENCLAW_DOCKER_APT_PACKAGES`CLI.
+    - Persistez `/home/node` avec `OPENCLAW_HOME_VOLUME` pour que les caches survivent.
+    - Intégrez les dépendances système dans l'image avec `OPENCLAW_IMAGE_APT_PACKAGES`CLI.
     - Installez les navigateurs Playwright via le CLI intégré :
       `node /app/node_modules/playwright-core/cli.js install chromium`
-    - Définissez `PLAYWRIGHT_BROWSERS_PATH`Docker et assurez-vous que le chemin est persisté.
+    - Définissez `PLAYWRIGHT_BROWSERS_PATH`Docker et assurez-vous que le chemin est persistant.
 
-    Docs : [Docker](/fr/install/docker), [Navigateur](/fr/tools/browser).
+    Documentation : [Docker](/fr/install/docker), [Navigateur](/fr/tools/browser).
 
   </Accordion>
 

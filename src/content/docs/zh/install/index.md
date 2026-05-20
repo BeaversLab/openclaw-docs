@@ -9,7 +9,7 @@ title: "安装"
 
 ## 系统要求
 
-- **Node 24**（推荐）或 Node 22.16+ - 安装程序脚本会自动处理此要求
+- **Node 24**（推荐）或 Node 22.19+ - 安装程序脚本会自动处理此要求
 - **macOS、Linux 或 Windows** - 原生 Windows 和 WSL2 均受支持；WSL2 更加稳定。请参阅 [Windows](/zh/platforms/windows)。
 - `pnpm` 仅在从源码构建时需要
 

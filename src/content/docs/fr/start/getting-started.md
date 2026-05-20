@@ -12,7 +12,7 @@ et une session de chat fonctionnelle.
 
 ## Ce dont vous avez besoin
 
-- **Node.js** — Node 24 recommandé (Node 22.16+ également pris en charge)
+- **Node.js** — Node 24 recommandé (Node 22.19+ également pris en charge)
 - **Une clé API** d'un provider de modèle (Anthropic, OpenAI, Google, etc.) — l'onboarding vous la demandera
 
 <Tip>Vérifiez votre version de Node avec `node --version`. **Utilisateurs Windows :** le Windows natif et le WSL2 sont tous deux pris en charge. Le WSL2 est plus stable et recommandé pour une expérience complète. Voir [Windows](/fr/platforms/windows). Besoin d'installer Node ? Voir [Configuration de Node](/fr/install/node).</Tip>

@@ -3,7 +3,7 @@ summary: "Scénarios locaux du canal QA pour les vérifications des flux de trav
 read_when:
   - Running local personal agent reliability checks
   - Extending the repo-backed QA scenario catalog
-  - Verifying reminder, reply, memory, redaction, and safe tool followthrough behavior
+  - Verifying reminder, reply, memory, redaction, safe tool followthrough, and task status behavior
 title: "Pack de référence pour agents personnels"
 ---
 
@@ -16,10 +16,14 @@ Le premier pack est volontairement restreint :
 - faux rappels de préférences à partir des fichiers mémoire temporaires de l'espace de travail QA
 - fausses vérifications de non-écho de secrets
 - suivi d'outil sécurisé basé sur la lecture après un court tour de type approbation
+- comportement d'arrêt en cas de refus d'approbation pour une demande de lecture locale sensible
+- rapport d'état des tâches basé sur des preuves qui garde distincts les états en attente, bloqués et terminés
 
 ## Scénarios
 
-Les métadonnées lisibles par machine du pack se trouvent dans `extensions/qa-lab/src/scenario-packs.ts`. Exécutez le pack avec `--pack personal-agent` :
+Les métadonnées lisibles par machine du pack se trouvent dans
+`extensions/qa-lab/src/scenario-packs.ts`. Exécutez le pack avec
+`--pack personal-agent` :
 
 ```bash
 OPENCLAW_ENABLE_PRIVATE_QA_CLI=1 pnpm openclaw qa suite \
@@ -28,24 +32,33 @@ OPENCLAW_ENABLE_PRIVATE_QA_CLI=1 pnpm openclaw qa suite \
   --concurrency 1
 ```
 
-`--pack` est additif avec les drapeaux `--scenario` répétés. Les scénarios explicites s'exécutent en premier, puis les scénarios du pack s'exécutent dans l'ordre `QA_PERSONAL_AGENT_SCENARIO_IDS` sans les doublons.
+`--pack` est cumulatif avec les drapeaux `--scenario` répétés. Les scénarios explicites s'exécutent
+en premier, puis les scénarios du pack s'exécutent dans l'ordre `QA_PERSONAL_AGENT_SCENARIO_IDS` sans
+doublons.
 
-Le pack est conçu pour `qa-channel` avec `mock-openai` ou une autre voie de fournisseur QA local. Il ne doit pas être dirigé vers des services de chat en direct ou de vrais comptes personnels.
+Le pack est conçu pour `qa-channel` avec `mock-openai` ou une autre voie locale de
+provider QA. Il ne doit pas être dirigé vers des services de chat en direct ou de vrais
+comptes personnels.
 
 ## Modèle de confidentialité
 
-Les scénarios utilisent uniquement de faux utilisateurs, de fausses préférences, de faux secrets et l'espace de travail de passerelle QA temporaire créé par la suite. Ils ne doivent ni lire ni écrire la mémoire utilisateur réelle OpenClaw, les sessions, les identifiants, les agents de lancement, les configurations globales ou l'état de la passerelle en direct.
+Les scénarios utilisent uniquement de faux utilisateurs, de fausses préférences, de faux secrets et l'espace de travail
+temporaire de la passerelle QA créé par la suite. Ils ne doivent ni lire ni écrire
+dans la mémoire utilisateur réelle OpenClaw, les sessions, les informations d'identification, les agents de lancement, les configurations globales,
+ou l'état de la passerelle en direct.
 
-Les artefacts restent dans le répertoire d'artefacts de la suite QA existante et doivent être traités comme une sortie de test. Les vérifications de rédaction utilisent de faux marqueurs, ce qui permet d'inspecter et de signaler les échecs en toute sécurité.
+Les artefacts restent dans le répertoire des artefacts de la suite QA existante et doivent être
+traités comme une sortie de test. Les vérifications de rédaction utilisent de faux marqueurs, les échecs sont donc sûrs
+à inspecter et à signaler dans les tickets.
 
 ## Extension du pack
 
-Ajoutez de nouveaux cas sous `qa/scenarios/personal/`, puis ajoutez l'identifiant du scénario à `QA_PERSONAL_AGENT_SCENARIO_IDS`. Gardez chaque cas petit, local, déterministe dans `mock-openai`, et axé sur un comportement d'assistant personnel.
+Ajoutez de nouveaux cas sous `qa/scenarios/personal/`, puis ajoutez l'identifiant du scénario à
+`QA_PERSONAL_AGENT_SCENARIO_IDS`. Gardez chaque cas petit, local, déterministe dans
+`mock-openai`, et concentré sur un seul comportement d'assistant personnel.
 
-Bons candidats pour le suivi :
+Bons candidats pour la suite :
 
-- exactitude du refus d'approbation
-- assertions du grand livre de tâches en plusieurs étapes
 - vérifications de l'exportation de trajectoire expurgée
 - vérifications du flux de travail des plugins en local uniquement
 

@@ -861,7 +861,7 @@ Sandbox opcional para el agente incrustado. Consulte [Sandboxing](/es/gateway/sa
 **Backend:**
 
 - `docker`: tiempo de ejecución de Docker local (predeterminado)
-- `ssh`: tiempo de ejecución remoto genérico respaldado por SSH
+- `ssh`: tiempo de ejecución remoto genérico con respaldo SSH
 - `openshell`: tiempo de ejecución de OpenShell
 
 Cuando se selecciona `backend: "openshell"`, la configuración específica del tiempo de ejecución se mueve a
@@ -869,35 +869,35 @@ Cuando se selecciona `backend: "openshell"`, la configuración específica del t
 
 **Configuración del backend SSH:**
 
-- `target`: destino SSH en formato `user@host[:port]`
+- `target`: destino SSH en forma `user@host[:port]`
 - `command`: comando del cliente SSH (predeterminado: `ssh`)
-- `workspaceRoot`: raíz remota absoluta utilizada para espacios de trabajo por alcance
+- `workspaceRoot`: raíz remota absoluta utilizada para espacios de trabajo por ámbito
 - `identityFile` / `certificateFile` / `knownHostsFile`: archivos locales existentes pasados a OpenSSH
 - `identityData` / `certificateData` / `knownHostsData`: contenidos en línea o SecretRefs que OpenClaw materializa en archivos temporales en tiempo de ejecución
-- `strictHostKeyChecking` / `updateHostKeys`: controles de política de claves de host de OpenSSH
+- `strictHostKeyChecking` / `updateHostKeys`: controles de política de clave de host de OpenSSH
 
 **Precedencia de autenticación SSH:**
 
 - `identityData` tiene prioridad sobre `identityFile`
 - `certificateData` tiene prioridad sobre `certificateFile`
 - `knownHostsData` tiene prioridad sobre `knownHostsFile`
-- los valores `*Data` respaldados por SecretRef se resuelven desde la instantánea activa del tiempo de ejecución de secretos antes de que comience la sesión del sandbox
+- los valores `*Data` respaldados por SecretRef se resuelven a partir de la instantánea activa de secretos del tiempo de ejecución antes de que se inicie la sesión del sandbox
 
 **Comportamiento del backend SSH:**
 
-- inicializa el espacio de trabajo remoto una vez después de crear o recrear
+- siembra el espacio de trabajo remoto una vez después de crear o recrear
 - luego mantiene el espacio de trabajo SSH remoto como canónico
-- enruta `exec`, herramientas de archivo y rutas de medios a través de SSH
-- no sincroniza los cambios remotos de vuelta al host automáticamente
-- no soporta contenedores del navegador del sandbox
+- enruta `exec`, herramientas de archivo y rutas multimedia a través de SSH
+- no sincroniza los cambios remotos con el host automáticamente
+- no admite contenedores de navegador sandbox
 
 **Acceso al espacio de trabajo:**
 
-- `none`: espacio de trabajo del sandbox por alcance bajo `~/.openclaw/sandboxes`
-- `ro`: espacio de trabajo del sandbox en `/workspace`, espacio de trabajo del agente montado como solo lectura en `/agent`
+- `none`: espacio de trabajo sandbox por ámbito bajo `~/.openclaw/sandboxes`
+- `ro`: espacio de trabajo sandbox en `/workspace`, espacio de trabajo del agente montado como solo lectura en `/agent`
 - `rw`: espacio de trabajo del agente montado como lectura/escritura en `/workspace`
 
-**Alcance:**
+**Ámbito:**
 
 - `session`: contenedor + espacio de trabajo por sesión
 - `agent`: un contenedor + espacio de trabajo por agente (predeterminado)
@@ -934,26 +934,27 @@ Cuando se selecciona `backend: "openshell"`, la configuración específica del t
 - `mirror`: inicializar remoto desde local antes de la ejecución, sincronizar de vuelta después de la ejecución; el espacio de trabajo local se mantiene canónico
 - `remote`: inicializar remoto una vez cuando se crea el sandbox, luego mantener el espacio de trabajo remoto canónico
 
-En el modo `remote`, las ediciones locales del host realizadas fuera de OpenClaw no se sincronizan en el sandbox automáticamente después del paso de inicialización.
-El transporte es SSH hacia el sandbox OpenShell, pero el complemento posee el ciclo de vida del sandbox y la sincronización opcional de espejo.
+En el modo `remote`, las ediciones locales de host realizadas fuera de OpenClaw no se sincronizan en el sandbox automáticamente después del paso de inicialización.
+El transporte es SSH hacia el sandbox OpenShell, pero el complemento posee el ciclo de vida del sandbox y la sincronización de espejo opcional.
 
-**`setupCommand`** se ejecuta una vez después de la creación del contenedor (vía `sh -lc`). Requiere salida de red, raíz grabable, usuario root.
+**`setupCommand`** se ejecuta una vez después de la creación del contenedor (a través de `sh -lc`). Requiere salida de red, raíz grabable, usuario root.
 
-**Los contenedores tienen `network: "none"` de forma predeterminada** — configúrelo como `"bridge"` (o una red puente personalizada) si el agente necesita acceso de salida.
-`"host"` está bloqueado. `"container:<id>"` está bloqueado de forma predeterminada a menos que establezca explícitamente
-`sandbox.docker.dangerouslyAllowContainerNamespaceJoin: true` (romper vidrio).
+**Los contenedores son `network: "none"` de forma predeterminada** — configúrelo como `"bridge"` (o una red puente personalizada) si el agente necesita acceso de salida.
+`"host"` está bloqueado. `"container:<id>"` está bloqueado de forma predeterminada a menos que configure explícitamente
+`sandbox.docker.dangerouslyAllowContainerNamespaceJoin: true` (romper cristal).
+El servidor de aplicaciones Codex que se activa en un sandbox OpenClaw activo utiliza esta misma configuración de salida para su acceso de red en modo de código nativo.
 
-**Los archivos adjuntos entrantes** se organizan en `media/inbound/*` en el espacio de trabajo activo.
+**Los archivos adjuntos entrantes** se depositan en `media/inbound/*` en el espacio de trabajo activo.
 
 **`docker.binds`** monta directorios de host adicionales; los enlaces globales y por agente se combinan.
 
 **Navegador en sandbox** (`sandbox.browser.enabled`): Chromium + CDP en un contenedor. URL noVNC inyectada en el prompt del sistema. No requiere `browser.enabled` en `openclaw.json`.
-El acceso de observador noVNC usa autenticación VNC de forma predeterminada y OpenClaw emite una URL de token de corta duración (en lugar de exponer la contraseña en la URL compartida).
+El acceso de observador noVNC utiliza autenticación VNC de forma predeterminada y OpenClaw emite una URL de token de corta duración (en lugar de exponer la contraseña en la URL compartida).
 
 - `allowHostControl: false` (predeterminado) bloquea las sesiones en sandbox para que no apunten al navegador host.
-- `network` tiene como valor predeterminado `openclaw-sandbox-browser` (red puente dedicada). Establézcalo en `bridge` solo cuando desee explícitamente conectividad de puente global.
-- `cdpSourceRange` opcionalmente restringe el ingreso CDP en el borde del contenedor a un rango CIDR (por ejemplo `172.21.0.1/32`).
-- `sandbox.browser.binds` monta directorios de host adicionales solo en el contenedor del navegador del sandbox. Cuando se establece (incluyendo `[]`), reemplaza `docker.binds` para el contenedor del navegador.
+- `network` se establece de forma predeterminada en `openclaw-sandbox-browser` (red puente dedicada). Establézcalo en `bridge` solo cuando desee explícitamente conectividad de puente global.
+- `cdpSourceRange` restringe opcionalmente el ingreso de CDP en el borde del contenedor a un rango CIDR (por ejemplo, `172.21.0.1/32`).
+- `sandbox.browser.binds` monta directorios de host adicionales solo en el contenedor del navegador sandbox. Cuando se establece (incluyendo `[]`), reemplaza `docker.binds` para el contenedor del navegador.
 - Los valores predeterminados de lanzamiento se definen en `scripts/sandbox-browser-entrypoint.sh` y se ajustan para hosts de contenedor:
   - `--remote-debugging-address=127.0.0.1`
   - `--remote-debugging-port=<derived from OPENCLAW_BROWSER_CDP_PORT>`
@@ -973,14 +974,14 @@ El acceso de observador noVNC usa autenticación VNC de forma predeterminada y O
   - `--metrics-recording-only`
   - `--disable-extensions` (habilitado de forma predeterminada)
   - `--disable-3d-apis`, `--disable-software-rasterizer` y `--disable-gpu` están
-    habilitados de forma predeterminada y se pueden deshabilitar con
+    habilitados de forma predeterminada y se pueden desactivar con
     `OPENCLAW_BROWSER_DISABLE_GRAPHICS_FLAGS=0` si el uso de WebGL/3D lo requiere.
   - `OPENCLAW_BROWSER_DISABLE_EXTENSIONS=0` vuelve a habilitar las extensiones si su flujo de trabajo
     depende de ellas.
   - `--renderer-process-limit=2` se puede cambiar con
-    `OPENCLAW_BROWSER_RENDERER_PROCESS_LIMIT=<N>`; establezca `0` para usar el
-    límite de proceso predeterminado de Chromium.
-  - más `--no-sandbox` cuando `noSandbox` está habilitado.
+    `OPENCLAW_BROWSER_RENDERER_PROCESS_LIMIT=<N>`; establezca `0` para utilizar el
+    límite de procesos predeterminado de Chromium.
+  - además de `--no-sandbox` cuando `noSandbox` está habilitado.
   - Los valores predeterminados son la línea base de la imagen del contenedor; use una imagen de navegador personalizada con un
     punto de entrada personalizado para cambiar los valores predeterminados del contenedor.
 

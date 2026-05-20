@@ -12,8 +12,11 @@ OpenClaw fournit un plugin de fournisseur `xai` intégré pour les modèles Grok
 
 <Steps>
   <Step title="Choisir l'auth">
-    Utilisez soit une clé API issue de la [console xAI](https://console.x.ai/) soit
-    xAI Grok OAuth avec un abonnement SuperGrok.
+    Utilisez soit une clé API depuis la [console xAI](https://console.x.ai/) ou
+    la connexion par navigateur xAI OAuth avec un compte xAI éligible. OAuth ne nécessite
+    pas de clé API xAI, et OpenClaw ne nécessite pas l'application Grok Build.
+    xAI peut toujours étiqueter l'application de consentement comme Grok Build car OpenClaw utilise
+    le client OAuth partagé de xAI.
   </Step>
   <Step title="Se connecter">
     Définissez `XAI_API_KEY`, exécutez l'assistant de clé API, ou démarrez le flux OAuth :
@@ -382,10 +385,10 @@ Les alias hérités sont toujours normalisés vers les ids groupés canoniques :
 
   </Accordion>
 
-<Accordion title="Limites connues">
-  - L'authentification xAI peut utiliser une clé API, une variable d'environnement, le repli de configuration du plugin, ou xAI Grok OAuth avec un abonnement SuperGrok. OAuth utilise un rappel local sur `127.0.0.1:56121` ; pour les hôtes distants, redirigez ce port avant d'ouvrir l'URL de connexion. - `grok-4.20-multi-agent-experimental-beta-0304` n'est pas pris en charge sur le chemin normal du
-  fournisseur xAI car il nécessite une surface API en amont différente du transport xAI standard de OpenClaw. - La voix xAI Realtime n'est pas encore enregistrée en tant que fournisseur OpenClaw. Elle nécessite un contrat de session vocal bidirectionnel différent du STT par lot ou de la transcription en continu. - Les ratios d'aspect xAI image `quality`, image `mask` et les ratios d'aspect natifs
-  supplémentaires ne sont pas exposés tant que l'outil `image_generate` partagé ne dispose pas des contrôles correspondants entre fournisseurs.
+<Accordion title="Known limits">
+  - xAI auth can use an API key, environment variable, plugin config fallback, or xAI OAuth browser sign-in with an eligible xAI account. OAuth uses a local callback on `127.0.0.1:56121`; for remote hosts, forward that port before opening the sign-in URL. xAI decides which accounts can receive OAuth API tokens, and the consent page may show Grok Build even though OpenClaw does not require the Grok
+  Build app. - `grok-4.20-multi-agent-experimental-beta-0304` is not supported on the normal xAI provider path because it requires a different upstream API surface than the standard OpenClaw xAI transport. - xAI Realtime voice is not registered as an OpenClaw provider yet. It needs a different bidirectional voice session contract than batch STT or streaming transcription. - xAI image `quality`,
+  image `mask`, and extra native-only aspect ratios are not exposed until the shared `image_generate` tool has corresponding cross-provider controls.
 </Accordion>
 
   <Accordion title="Advanced notes">

@@ -13,7 +13,7 @@ Administra la superficie de control del navegador de OpenClaw y ejecuta acciones
 
 Relacionado:
 
-- Herramienta de navegador + API: [Herramienta de navegador](/es/tools/browser)
+- Herramienta y API del navegador: [Browser tool](/es/tools/browser)
 
 ## Indicadores comunes
 
@@ -48,7 +48,7 @@ openclaw browser --browser-profile openclaw tabs
 openclaw browser --browser-profile openclaw open https://example.com
 ```
 
-Orientación detallada: [Solución de problemas del navegador](/es/tools/browser#cdp-startup-failure-vs-navigation-ssrf-block)
+Guía detallada: [Browser troubleshooting](/es/tools/browser#cdp-startup-failure-vs-navigation-ssrf-block)
 
 ## Ciclo de vida
 
@@ -100,7 +100,7 @@ Un bloque raíz explícito `browser`, por ejemplo `browser.enabled=true` o
 `browser.profiles.<name>`, también activa el complemento del navegador incluido bajo una
 lista blanca de complementos restrictiva.
 
-Relacionado: [Herramienta de navegador](/es/tools/browser#missing-browser-command-or-tool)
+Relacionado: [Browser tool](/es/tools/browser#missing-browser-command-or-tool)
 
 ## Perfiles
 
@@ -204,12 +204,17 @@ openclaw browser upload /tmp/openclaw/uploads/file.pdf --ref <ref>
 openclaw browser waitfordownload
 openclaw browser download <ref> report.pdf
 openclaw browser dialog --accept
+openclaw browser dialog --dismiss --dialog-id d1
 ```
 
-Los perfiles de Chrome administrados guardan las descargas activadas por clics ordinarios en el directorio de descargas de OpenClaw
-(`/tmp/openclaw/downloads` de forma predeterminada, o la raíz temporal configurada).
-Use `waitfordownload` o `download` cuando el agente necesite esperar un
-archivo específico y devolver su ruta; esos esperadores explícitos se apropian de la siguiente descarga.
+Los perfiles de Chrome administrados guardan las descargas desencadenadas por clics ordinarios en el directorio
+de descargas de OpenClaw (`/tmp/openclaw/downloads` de forma predeterminada, o la raíz temporal
+configurada). Use `waitfordownload` o `download` cuando el agente necesite esperar un
+archivo específico y devolver su ruta; esos esperadores explícitos son dueños de la siguiente descarga.
+Cuando una acción abre un diálogo modal, la respuesta de la acción devuelve
+`blockedByDialog` con `browserState.dialogs.pending`; pase `--dialog-id` para
+responderlo directamente. Los diálogos manejados fuera de OpenClaw aparecen en
+`browserState.dialogs.recent`.
 
 ## Estado y almacenamiento
 
@@ -254,7 +259,7 @@ openclaw browser trace stop --out trace.zip
 
 ## Chrome existente a través de MCP
 
-Use el perfil integrado `user` o cree su propio perfil `existing-session`:
+Use el perfil incorporado `user`, o cree su propio perfil `existing-session`:
 
 ```bash
 openclaw browser --browser-profile user tabs
@@ -269,19 +274,19 @@ Límites actuales de sesión existente:
 
 - las acciones impulsadas por instantáneas usan referencias, no selectores CSS
 - `browser.actionTimeoutMs` establece de forma predeterminada las solicitudes `act` admitidas a 60000 ms cuando
-  los solicitantes omiten `timeoutMs`; `timeoutMs` por llamada sigue teniendo prioridad.
+  los llamadores omiten `timeoutMs`; `timeoutMs` por llamada sigue teniendo prioridad.
 - `click` es solo clic izquierdo
 - `type` no admite `slowly=true`
 - `press` no admite `delayMs`
 - `hover`, `scrollintoview`, `drag`, `select`, `fill` y `evaluate` rechazan
   las anulaciones de tiempo de espera por llamada
-- `select` admite solo un valor
+- `select` admite un solo valor
 - `wait --load networkidle` no es compatible
 - las cargas de archivos requieren `--ref` / `--input-ref`, no admiten CSS
   `--element` y actualmente admiten un archivo a la vez
-- los hooks de diálogo no admiten `--timeout`
+- los enlaces de diálogo no admiten `--timeout`
 - las capturas de pantalla admiten capturas de página y `--ref`, pero no CSS `--element`
-- `responsebody`, la intercepción de descargas, la exportación de PDF y las acciones por lotes aún
+- `responsebody`, la interceptación de descargas, la exportación de PDF y las acciones por lotes aún
   requieren un navegador administrado o un perfil CDP sin procesar
 
 ## Control remoto del navegador (proxy de host de nodo)

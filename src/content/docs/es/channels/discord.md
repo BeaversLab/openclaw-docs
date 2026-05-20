@@ -248,18 +248,18 @@ Una vez que los MDs funcionen, puedes configurar tu servidor de Discord como un 
   </Step>
 
   <Step title="Allow responses without @mention">
-    De forma predeterminada, su agente solo responde en los canales del gremio cuando se le @menciona. Para un servidor privado, probablemente desee que responda a cada mensaje.
+    De manera predeterminada, tu agente solo responde en los canales del gremio cuando es @mencionado. Para un servidor privado, probablemente desees que responda a cada mensaje.
 
-    En los canales del gremio, la salida visible de Discord debe usar la herramienta `message` de forma predeterminada, para que el agente pueda acechar y solo publicar cuando decida que una respuesta en el canal es útil. Los eventos ambientales de la sala permanecen silenciosos a menos que la herramienta los envíe. Consulte [Ambient room events](/es/channels/ambient-room-events) para obtener la configuración completa del modo de acecho.
+    En los canales del gremio, las respuestas normales se publican automáticamente de manera predeterminada. Para salas compartidas siempre activas, opta por `messages.groupChat.visibleReplies: "message_tool"` para que el agente pueda estar al acecho y solo publicue cuando decida que una respuesta en el canal es útil. Esto funciona mejor con modelos de última generación y confiables en herramientas, como GPT 5.5. Los eventos ambientales de la sala permanecen silenciosos a menos que la herramienta los envíe. Consulta [Ambient room events](/es/channels/ambient-room-events) para ver la configuración completa del modo al acecho.
 
-    Esto significa que el modelo seleccionado debe llamar a las herramientas de manera confiable. Si Discord muestra que está escribiendo y los registros muestran el uso de tokens pero no hay ningún mensaje publicado, verifique si el turno se configuró como un evento ambiental de la sala o use la configuración a continuación para restaurar las respuestas finales automáticas heredadas para solicitudes grupales normales.
+    Si Discord muestra que está escribiendo y los registros muestran uso de tokens pero no hay ningún mensaje publicado, verifica si el turno se configuró como un evento ambiental de la sala o si se optó por respuestas visibles de herramientas de mensaje.
 
     <Tabs>
       <Tab title="Ask your agent">
         > "Allow my agent to respond on this server without having to be @mentioned"
       </Tab>
       <Tab title="Config">
-        Establezca `requireMention: false` en su configuración de gremio:
+        Establece `requireMention: false` en la configuración de tu gremio:
 
 ```json5
 {
@@ -275,7 +275,7 @@ Una vez que los MDs funcionen, puedes configurar tu servidor de Discord como un 
 }
 ```
 
-        Para restaurar las respuestas finales automáticas heredadas para salas de grupo/canal, establezca `messages.groupChat.visibleReplies: "automatic"`.
+        Para requerir envíos de herramientas de mensaje para respuestas visibles de grupo/canal, establece `messages.groupChat.visibleReplies: "message_tool"`.
 
       </Tab>
     </Tabs>
@@ -1583,21 +1583,21 @@ openclaw logs --follow
 
   </Accordion>
 
-  <Accordion title="Bucles de bot a bot">
-    Por defecto, se ignoran los mensajes creados por bots.
+  <Accordion title="Bot to bot loops">
+    De forma predeterminada, se ignoran los mensajes creados por bots.
 
-    Si establece `channels.discord.allowBots=true`, use reglas estrictas de mención y lista blanca para evitar el comportamiento de bucle.
+    Si configura `channels.discord.allowBots=true`, use reglas estrictas de mención y listas permitidas para evitar comportamientos de bucle.
     Prefiera `channels.discord.allowBots="mentions"` para aceptar solo mensajes de bots que mencionen al bot.
 
-    OpenClaw también incluye [protección compartida contra bucles de bots](/es/channels/bot-loop-protection). Siempre que `allowBots` permite que los mensajes creados por bots lleguen al despacho, Discord asigna el evento entrante a los hechos `(account, channel, bot pair)` y el par genérico suprime el par después de que cruza el presupuesto de eventos configurado. El guardia evita bucles incontrolables de dos bots que anteriormente debían detenerse mediante los límites de tasa de Discord; no afecta a los despliegues de un solo bot ni a las respuestas de un solo uso de bots que se mantienen dentro del presupuesto.
+    OpenClaw también incluye una [protección contra bucles de bots](/es/channels/bot-loop-protection) compartida. Siempre que `allowBots` permite que los mensajes creados por bots lleguen al despacho, Discord asigna el evento entrante a hechos `(account, channel, bot pair)` y el guardián de pares genérico suprime el par después de que exceda el presupuesto de eventos configurado. El guardián evita bucles incontrolados de dos bots que anteriormente tenían que ser detenidos por los límites de velocidad de Discord; no afecta los despliegues de un solo bot ni las respuestas únicas de bots que se mantienen por debajo del presupuesto.
 
     Configuración predeterminada (activa cuando se establece `allowBots`):
 
     - `maxEventsPerWindow: 20` -- el par de bots puede intercambiar 20 mensajes dentro de la ventana deslizante
-    - `windowSeconds: 60` -- longitud de la ventana deslizante
+    - `windowSeconds: 60` -- duración de la ventana deslizante
     - `cooldownSeconds: 60` -- una vez que se agota el presupuesto, cada mensaje adicional de bot a bot en cualquier dirección se descarta durante un minuto
 
-    Configure el valor predeterminado compartido una vez bajo `channels.defaults.botLoopProtection`, luego anule Discord cuando un flujo de trabajo legítimo necesite más margen. La precedencia es:
+    Configure el valor predeterminado compartido una vez bajo `channels.defaults.botLoopProtection`, luego anule Discord cuando un flujo de trabajo legítimo necesite más espacio. La precedencia es:
 
     - `channels.discord.accounts.<account>.botLoopProtection`
     - `channels.discord.botLoopProtection`
@@ -1631,7 +1631,7 @@ openclaw logs --follow
           // Molty listens to all bot-authored Discord messages.
           allowBots: true,
           mentionAliases: {
-            // Lets Molty write "@Mantis" and send a real Discord mention.
+            // Lets Molty write a Mantis Discord mention with the configured user id.
             Mantis: "MANTIS_DISCORD_USER_ID",
           },
           botLoopProtection: {

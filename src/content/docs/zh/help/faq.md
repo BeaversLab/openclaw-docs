@@ -443,16 +443,17 @@ title: "常见问题"
     是的。请参阅 [沙箱隔离](/en/gateway/sandboxing)。有关 Docker 特定的设置（Docker 中的完整网关或沙箱映像），请参阅 [Docker](/en/install/docker)。
   </Accordion>
 
-  <Accordion title="DockerDocker 感觉受限 - 如何启用完整功能？">
-    默认镜像以安全为优先，并以 `node` 用户身份运行，因此它不包含系统软件包、Homebrew 或捆绑的浏览器。要进行更完整的设置：
+  <Accordion title="DockerDocker 感觉受限——如何启用完整功能？">
+    默认镜像以安全为优先，并以 `node` 用户身份运行，因此它不包含
+    系统软件包、Homebrew 或捆绑的浏览器。若要进行更完整的设置：
 
-    - 使用 `OPENCLAW_HOME_VOLUME` 持久化 `/home/node`，以便缓存能够保留。
-    - 使用 `OPENCLAW_DOCKER_APT_PACKAGES`CLI 将系统依赖项构建到镜像中。
+    - 使用 `OPENCLAW_HOME_VOLUME` 持久化 `/home/node`，以便缓存得以保留。
+    - 使用 `OPENCLAW_IMAGE_APT_PACKAGES`CLI 将系统依赖项烘焙到镜像中。
     - 通过捆绑的 CLI 安装 Playwright 浏览器：
       `node /app/node_modules/playwright-core/cli.js install chromium`
-    - 设置 `PLAYWRIGHT_BROWSERS_PATH`Docker 并确保路径已持久化。
+    - 设置 `PLAYWRIGHT_BROWSERS_PATH`Docker 并确保该路径已持久化。
 
-    文档：[Docker](/en/install/docker)，[Browser](/en/tools/browser)。
+    文档：[Docker](/en/install/docker)、[Browser](/en/tools/browser)。
 
   </Accordion>
 

@@ -75,12 +75,12 @@ openclaw status --all
 
 ### Discord 故障徵兆
 
-| 徵兆                                 | 最快檢查                                                     | 修正                                                                                                                                                                                                                                                           |
-| ------------------------------------ | ------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Bot 線上但無伺服器回覆               | `openclaw channels status --probe`                           | 允許伺服器/頻道並驗證訊息內容意圖。                                                                                                                                                                                                                            |
-| 群組訊息被忽略                       | 檢查日誌中的提及閘門遺漏                                     | 提及 Bot 或設定伺服器/頻道 `requireMention: false`。                                                                                                                                                                                                           |
-| 正在輸入/使用權杖但沒有 Discord 訊息 | 檢查這是否為環境房間事件或錯過的 `message(action=send)` 呼叫 | 檢查 gateway 詳細日誌中是否有被隱藏的最終載荷元數據，驗證 `messages.groupChat.unmentionedInbound`，閱讀 [環境房間事件](/zh-Hant/channels/ambient-room-events)，或設定 `messages.groupChat.visibleReplies: "automatic"` 以使用傳統的最終回覆路徑來處理一般群組請求。 |
-| 缺少私人訊息回覆                     | `openclaw pairing list discord`                              | 批准私人訊息配對或調整私人訊息政策。                                                                                                                                                                                                                           |
+| 徵兆                                 | 最快檢查                                                                             | 修正                                                                                                                                                                                                                            |
+| ------------------------------------ | ------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Bot 線上但無伺服器回覆               | `openclaw channels status --probe`                                                   | 允許伺服器/頻道並驗證訊息內容意圖。                                                                                                                                                                                             |
+| 群組訊息被忽略                       | 檢查日誌中的提及閘門遺漏                                                             | 提及 Bot 或設定伺服器/頻道 `requireMention: false`。                                                                                                                                                                            |
+| 正在輸入/使用權杖但沒有 Discord 訊息 | 檢查這是環境房間事件還是模型遺漏了 `message(action=send)` 的已選 `message_tool` 房間 | 檢查閘道詳細日誌中的隱藏最終負載元資料，驗證 `messages.groupChat.unmentionedInbound`，閱讀 [Ambient room events](/zh-Hant/channels/ambient-room-events)，或是針對一般群組請求保持 `messages.groupChat.visibleReplies: "automatic"`。 |
+| 缺少私人訊息回覆                     | `openclaw pairing list discord`                                                      | 批准私人訊息配對或調整私人訊息政策。                                                                                                                                                                                            |
 
 完整疑難排解：[Discord 疑難排解](/zh-Hant/channels/discord#troubleshooting)
 
@@ -90,9 +90,9 @@ openclaw status --all
 
 | 徵兆                        | 最快檢查                           | 修正                                                                                                                                    |
 | --------------------------- | ---------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
-| Socket 模式已連線但沒有回應 | `openclaw channels status --probe` | 驗證 App token + Bot token 和所需的範圍；在基於 SecretRef 的設定中，注意 `botTokenStatus` / `appTokenStatus = configured_unavailable`。 |
+| Socket 模式已連線但沒有回應 | `openclaw channels status --probe` | 驗證 App token + Bot token 和所需的範圍；在基於 SecretRef 的設定上，留意 `botTokenStatus` / `appTokenStatus = configured_unavailable`。 |
 | DMs 已封鎖                  | `openclaw pairing list slack`      | 批准配對或放寬 DM 政策。                                                                                                                |
-| 頻道訊息被忽略              | 檢查 `groupPolicy` 和頻道允許清單  | 允許該頻道或將政策切換為 `open`。                                                                                                       |
+| 頻道訊息被忽略              | 檢查 `groupPolicy` 和頻道允許清單  | 允許該頻道或將策略切換為 `open`。                                                                                                       |
 
 完整疑難排解：[Slack 疑難排解](/zh-Hant/channels/slack#troubleshooting)
 
@@ -100,11 +100,11 @@ openclaw status --all
 
 ### iMessage 故障特徵
 
-| 症狀                           | 快速檢查                                              | 修復                                                         |
-| ------------------------------ | ----------------------------------------------------- | ------------------------------------------------------------ |
-| `imsg` 遺失或在非 macOS 上失敗 | `openclaw channels status --probe --channel imessage` | 在訊息 Mac 上執行 OpenClaw，或為 `cliPath` 使用 SSH 包裝器。 |
-| 在 macOS 上可發送但無法接收    | 檢查訊息自動化的 macOS 隱私權限                       | 重新授予 TCC 權限並重新啟動頻道程序。                        |
-| DM 發送者被封鎖                | `openclaw pairing list imessage`                      | 批准配對或更新允許清單。                                     |
+| 症狀                           | 快速檢查                                              | 修復                                                                |
+| ------------------------------ | ----------------------------------------------------- | ------------------------------------------------------------------- |
+| `imsg` 缺失或在非 macOS 上失敗 | `openclaw channels status --probe --channel imessage` | 在 Messages Mac 上執行 OpenClaw，或是為 `cliPath` 使用 SSH 包裝器。 |
+| 在 macOS 上可發送但無法接收    | 檢查訊息自動化的 macOS 隱私權限                       | 重新授予 TCC 權限並重新啟動頻道程序。                               |
+| DM 發送者被封鎖                | `openclaw pairing list imessage`                      | 批准配對或更新允許清單。                                            |
 
 完整疑難排解：
 
@@ -116,7 +116,7 @@ openclaw status --all
 
 | 症狀                       | 快速檢查                           | 修復                                          |
 | -------------------------- | ---------------------------------- | --------------------------------------------- |
-| Daemon 可連線但 Bot 無回應 | `openclaw channels status --probe` | 驗證 `signal-cli` daemon URL/帳號和接收模式。 |
+| Daemon 可連線但 Bot 無回應 | `openclaw channels status --probe` | 驗證 `signal-cli` daemon URL/帳戶和接收模式。 |
 | DM 已封鎖                  | `openclaw pairing list signal`     | 批准發送者或調整 DM 政策。                    |
 | 群組回覆未觸發             | 檢查群組允許清單和提及模式         | 新增發送者/群組或放寬閘道。                   |
 
@@ -141,7 +141,7 @@ openclaw status --all
 
 | 症狀                          | 最快速檢查                             | 修復                                                                  |
 | ----------------------------- | -------------------------------------- | --------------------------------------------------------------------- |
-| 已登入但忽略房間訊息          | `openclaw channels status --probe`     | 檢查 `groupPolicy`、房間允許名單和提及閘門。                          |
+| 已登入但忽略房間訊息          | `openclaw channels status --probe`     | 檢查 `groupPolicy`、房間允許清單和提及閘控。                          |
 | 私訊未處理                    | `openclaw pairing list matrix`         | 核准發送者或調整私訊原則。                                            |
 | 加密房間失敗                  | `openclaw matrix verify status`        | 重新驗證裝置，然後檢查 `openclaw matrix verify backup status`。       |
 | 備份還原待處理/失敗           | `openclaw matrix verify backup status` | 執行 `openclaw matrix verify backup restore` 或使用復原金鑰重新執行。 |

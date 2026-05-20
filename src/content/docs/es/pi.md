@@ -23,10 +23,10 @@ OpenClaw utiliza el SDK de pi para incrustar un agente de codificación de IA en
 
 ```json
 {
-  "@earendil-works/pi-agent-core": "0.74.1",
-  "@earendil-works/pi-ai": "0.74.1",
-  "@earendil-works/pi-coding-agent": "0.74.1",
-  "@earendil-works/pi-tui": "0.74.1"
+  "@earendil-works/pi-agent-core": "0.75.1",
+  "@earendil-works/pi-ai": "0.75.1",
+  "@earendil-works/pi-coding-agent": "0.75.1",
+  "@earendil-works/pi-tui": "0.75.1"
 }
 ```
 

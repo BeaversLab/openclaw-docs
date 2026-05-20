@@ -18,7 +18,7 @@ title: "設定"
 
 ## 先決條件 (從原始碼)
 
-- 建議使用 Node 24 (Node 22 LTS，目前為 `22.16+`，仍受支援)
+- 建議使用 Node 24（Node 22 LTS，目前是 `22.19+`，仍受支援）
 - 原始碼簽出需要 `pnpm`。OpenClaw 在開發模式下會從 `extensions/*` pnpm 工作區套件載入捆綁的外掛，因此根目錄的 `npm install` 不會準備完整的原始碼樹。
 - Docker (選用；僅用於容器化設定/e2e - 請參閱 [Docker](/zh-Hant/install/docker))
 

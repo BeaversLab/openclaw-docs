@@ -843,7 +843,7 @@ Sandboxing optionnel pour l'agent embarqué. Voir [Sandboxing](/fr/gateway/sandb
 **Backend :**
 
 - `docker`Docker : runtime Docker local (par défaut)
-- `ssh` : runtime distant générique basé sur SSH
+- `ssh` : runtime distant générique supporté par SSH
 - `openshell` : runtime OpenShell
 
 Lorsque `backend: "openshell"` est sélectionné, les paramètres spécifiques au runtime sont déplacés vers
@@ -855,28 +855,28 @@ Lorsque `backend: "openshell"` est sélectionné, les paramètres spécifiques a
 - `command` : commande client SSH (par défaut : `ssh`)
 - `workspaceRoot` : racine distante absolue utilisée pour les espaces de travail par portée
 - `identityFile` / `certificateFile` / `knownHostsFile` : fichiers locaux existants transmis à OpenSSH
-- `identityData` / `certificateData` / `knownHostsData` : contenus en ligne ou SecretRefs que OpenClaw matérialise dans des fichiers temporaires au runtime
+- `identityData` / `certificateData` / `knownHostsData` : contenus en ligne ou SecretRefs que OpenClaw matérialise en fichiers temporaires au runtime
 - `strictHostKeyChecking` / `updateHostKeys` : commandes de stratégie de clé d'hôte OpenSSH
 
-**Priorité de l'authentification SSH :**
+**Préséance de l'authentification SSH :**
 
 - `identityData` l'emporte sur `identityFile`
 - `certificateData` l'emporte sur `certificateFile`
 - `knownHostsData` l'emporte sur `knownHostsFile`
-- Les valeurs `*Data` basées sur SecretRef sont résolues à partir de l'instantané d'exécution des secrets actifs avant le début de la session du bac à sable
+- Les valeurs `*Data` basées sur SecretRef sont résolues à partir de l'instantané runtime des secrets actifs avant le début de la session de bac à sable
 
 **Comportement du backend SSH :**
 
-- ensemence l'espace de travail distant une seule fois après la création ou la recréation
-- garde ensuite l'espace de travail SSH distant comme référence
-- achemine `exec`, les outils de fichiers et les chemins multimédias via SSH
+- ensemence l'espace de travail distant une fois après la création ou la recréation
+- garde ensuite l'espace de travail SSH distant comme référence canonique
+- achemine `exec`, les outils de fichiers et les chemins média via SSH
 - ne synchronise pas automatiquement les modifications distantes vers l'hôte
 - ne prend pas en charge les conteneurs de navigateur en bac à sable
 
 **Accès à l'espace de travail :**
 
-- `none` : espace de travail du bac à sable par portée sous `~/.openclaw/sandboxes`
-- `ro` : espace de travail du bac à sable à `/workspace`, espace de travail de l'agent monté en lecture seule à `/agent`
+- `none` : espace de travail de bac à sable par portée sous `~/.openclaw/sandboxes`
+- `ro` : espace de travail de bac à sable à `/workspace`, espace de travail de l'agent monté en lecture seule à `/agent`
 - `rw` : espace de travail de l'agent monté en lecture/écriture à `/workspace`
 
 **Portée :**
@@ -913,30 +913,31 @@ Lorsque `backend: "openshell"` est sélectionné, les paramètres spécifiques a
 
 **Mode OpenShell :**
 
-- `mirror` : ensemencer le distant à partir du local avant l'exécution, synchroniser vers le local après l'exécution ; l'espace de travail local reste la référence
-- `remote` : ensemencer le distant une seule fois lors de la création du bac à sable, puis garder l'espace de travail distant comme référence
+- `mirror` : ensemencer le distant à partir du local avant l'exécution, synchroniser vers le local après l'exécution ; l'espace de travail local reste canonique
+- `remote` : ensemencer le distant une fois lors de la création du bac à sable, puis garder l'espace de travail distant canonique
 
-En mode `remote`, les modifications locales faites hors de OpenClaw ne sont pas synchronisées automatiquement dans le bac à sable après l'étape d'ensemencement.
-Le transport est SSH dans le bac à sable OpenShell, mais le plugin gère le cycle de vie du bac à sable et la synchronisation miroir facultative.
+En mode `remote`, les modifications locales à l'hôte effectuées en dehors de OpenClaw ne sont pas synchronisées automatiquement dans le bac à sable après l'étape d'ensemencement.
+Le transport est SSH dans le bac à sable OpenShell, mais le plugin possède le cycle de vie du bac à sable et la synchronisation miroir optionnelle.
 
-**`setupCommand`** s'exécute une seule fois après la création du conteneur (via `sh -lc`). Nécessite un accès réseau sortant, une racine inscriptible et l'utilisateur root.
+**`setupCommand`** s'exécute une fois après la création du conteneur (via `sh -lc`). Nécessite un accès réseau sortant, une racine inscriptible, l'utilisateur root.
 
-**Les conteneurs sont `network: "none"` par défaut** — définissez sur `"bridge"` (ou un réseau de pont personnalisé) si l'agent a besoin d'un accès sortant.
-`"host"` est bloqué. `"container:<id>"` est bloqué par défaut, sauf si vous définissez explicitement
-`sandbox.docker.dangerouslyAllowContainerNamespaceJoin: true` (break-glass).
+**Les conteneurs sont par défaut sur `network: "none"`** — définissez sur `"bridge"` (ou un réseau pont personnalisé) si l'agent a besoin d'un accès sortant.
+`"host"` est bloqué. `"container:<id>"` est bloqué par défaut sauf si vous définissez explicitement
+`sandbox.docker.dangerouslyAllowContainerNamespaceJoin: true` (bris de glace).
+Les serveurs d'application Codex utilisant un bac à sable OpenClaw actif utilisent ce même paramètre de sortie pour leur accès réseau en mode code natif.
 
-**Les pièces jointes entrantes** sont préparées dans `media/inbound/*` dans l'espace de travail actif.
+**Les pièces jointes entrantes** sont mises en attente dans `media/inbound/*` dans l'espace de travail actif.
 
-**`docker.binds`** monte des répertoires d'hôte supplémentaires ; les liaisons globales et par agent sont fusionnées.
+**`docker.binds`** monte des répertoires hôtes supplémentaires ; les liaisons globales et par agent sont fusionnées.
 
-**Navigateur en bac à sable** (`sandbox.browser.enabled`) : Chromium + CDP dans un conteneur. URL noVNC injectée dans le prompt système. Ne nécessite pas `browser.enabled` dans `openclaw.json`.
-L'accès de l'observateur noVNC utilise l'authentification VNC par défaut et OpenClaw émet une URL de jeton à courte durée de vie (au lieu d'exposer le mot de passe dans l'URL partagée).
+**Navigateur en bac à sable** (`sandbox.browser.enabled`) : Chromium + CDP dans un conteneur. URL noVNC injectée dans le système de prompt. Ne nécessite pas `browser.enabled` dans `openclaw.json`.
+L'accès observateur noVNC utilise l'authentification VNC par défaut et OpenClaw émet une URL de jeton à courte durée de vie (au lieu d'exposer le mot de passe dans l'URL partagée).
 
 - `allowHostControl: false` (par défaut) empêche les sessions en bac à sable de cibler le navigateur de l'hôte.
-- `network` est `openclaw-sandbox-browser` par défaut (réseau de pont dédié). Définissez sur `bridge` uniquement lorsque vous souhaitez explicitement une connectivité de pont global.
-- `cdpSourceRange` restreint éventuellement l'ingress CDP au niveau du bord du conteneur à une plage CIDR (par exemple `172.21.0.1/32`).
-- `sandbox.browser.binds` monte des répertoires d'hôte supplémentaires uniquement dans le conteneur du navigateur en bac à sable. Lorsqu'il est défini (y compris `[]`), il remplace `docker.binds` pour le conteneur du navigateur.
-- Les valeurs par défaut de lancement sont définies dans `scripts/sandbox-browser-entrypoint.sh` et ajustées pour les hôtes de conteneurs :
+- `network` est par défaut sur `openclaw-sandbox-browser` (réseau pont dédié). Définissez sur `bridge` uniquement lorsque vous voulez explicitement une connectivité de pont globale.
+- `cdpSourceRange` restreint facultativement l'ingress CDP au niveau du bord du conteneur à une plage CIDR (par exemple `172.21.0.1/32`).
+- `sandbox.browser.binds` monte des répertoires hôtes supplémentaires uniquement dans le conteneur du navigateur en bac à sable. Lorsqu'il est défini (y compris `[]`), il remplace `docker.binds` pour le conteneur du navigateur.
+- Les paramètres de lancement par défaut sont définis dans `scripts/sandbox-browser-entrypoint.sh` et réglés pour les hôtes de conteneurs :
   - `--remote-debugging-address=127.0.0.1`
   - `--remote-debugging-port=<derived from OPENCLAW_BROWSER_CDP_PORT>`
   - `--user-data-dir=${HOME}/.chrome`
@@ -954,15 +955,17 @@ L'accès de l'observateur noVNC utilise l'authentification VNC par défaut et Op
   - `--no-zygote`
   - `--metrics-recording-only`
   - `--disable-extensions` (activé par défaut)
-  - `--disable-3d-apis`, `--disable-software-rasterizer` et `--disable-gpu` sont
+  - `--disable-3d-apis`, `--disable-software-rasterizer`, et `--disable-gpu` sont
     activés par défaut et peuvent être désactivés avec
     `OPENCLAW_BROWSER_DISABLE_GRAPHICS_FLAGS=0` si l'utilisation de WebGL/3D l'exige.
   - `OPENCLAW_BROWSER_DISABLE_EXTENSIONS=0` réactive les extensions si votre workflow
     en dépend.
   - `--renderer-process-limit=2` peut être modifié avec
-    `OPENCLAW_BROWSER_RENDERER_PROCESS_LIMIT=<N>` ; définissez `0` pour utiliser la limite de processus par défaut de Chromium.
+    `OPENCLAW_BROWSER_RENDERER_PROCESS_LIMIT=<N>` ; définissez `0` pour utiliser la
+    limite de processus par défaut de Chromium.
   - plus `--no-sandbox` lorsque `noSandbox` est activé.
-  - Les valeurs par défaut sont la base de l'image de conteneur ; utilisez une image de navigateur personnalisée avec un point d'entrée personnalisé pour modifier les valeurs par défaut du conteneur.
+  - Les valeurs par défaut sont la référence de l'image du conteneur ; utilisez une image de navigateur personnalisée avec un
+    point d'entrée personnalisé pour modifier les valeurs par défaut du conteneur.
 
 </Accordion>
 
