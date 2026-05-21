@@ -103,7 +103,7 @@ title: "Niveles de pensamiento"
 
 - Niveles: `on|off|stream`.
 - Un mensaje solo de directiva alterna si se muestran los bloques de pensamiento en las respuestas.
-- Cuando está habilitado, el razonamiento se envía como un **mensaje separado** prefijado con `Reasoning:`.
+- Cuando está habilitado, el razonamiento se envía como un **mensaje separado** prefijado con `Thinking`.
 - `stream` (solo Telegram): transmite el razonamiento a la burbuja de borrador de Telegram mientras se genera la respuesta, y luego envía la respuesta final sin razonamiento.
 - Alias: `/reason`.
 - Envía `/reasoning` (o `/reasoning:`) sin argumentos para ver el nivel de razonamiento actual.
@@ -118,7 +118,7 @@ Las etiquetas de razonamiento de modelo local mal formadas se manejan de forma c
 ## Latidos
 
 - El cuerpo de la sonda de latido es el mensaje de latido configurado (predeterminado: `Read HEARTBEAT.md if it exists (workspace context). Follow it strictly. Do not infer or repeat old tasks from prior chats. If nothing needs attention, reply HEARTBEAT_OK.`). Las directivas en línea en un mensaje de latido se aplican de la forma habitual (pero evite cambiar los valores predeterminados de la sesión desde los latidos).
-- La entrega de latidos se limita de forma predeterminada solo a la carga útil final. Para también enviar el mensaje separado `Reasoning:` (cuando esté disponible), establezca `agents.defaults.heartbeat.includeReasoning: true` o por agente `agents.list[].heartbeat.includeReasoning: true`.
+- La entrega de latidos predeterminada es solo la carga útil final. Para enviar también el mensaje separado `Thinking` (cuando esté disponible), configure `agents.defaults.heartbeat.includeReasoning: true` o por agente `agents.list[].heartbeat.includeReasoning: true`.
 
 ## Interfaz de usuario de chat web
 

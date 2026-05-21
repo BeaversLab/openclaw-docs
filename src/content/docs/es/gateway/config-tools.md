@@ -399,7 +399,7 @@ Marcadores de herramientas integradas experimentales. Desactivado por defecto a 
 ```
 
 - `model`: modelo predeterminado para sub-agentes generados. Si se omite, los sub-agentes heredan el modelo de quien realiza la llamada.
-- `allowAgents`: lista de permitidos predeterminada de IDs de agente objetivo para `sessions_spawn` cuando el agente solicitante no establece su propio `subagents.allowAgents` (`["*"]` = cualquiera; predeterminado: solo el mismo agente).
+- `allowAgents`: lista blanca predeterminada de ids de agentes de destino para `sessions_spawn` cuando el agente solicitante no establece su propio `subagents.allowAgents` (`["*"]` = cualquier destino configurado; predeterminado: solo el mismo agente).
 - `runTimeoutSeconds`: tiempo de espera predeterminado (segundos) para `sessions_spawn` cuando la llamada a la herramienta omite `runTimeoutSeconds`. `0` significa sin tiempo de espera.
 - `announceTimeoutMs`: tiempo de espera por llamada (milisegundos) para los intentos de entrega de anuncios `agent` de la puerta de enlace. Predeterminado: `120000`. Los reintentos transitorios pueden hacer que la espera total del anuncio sea mayor que un tiempo de espera configurado.
 - Política de herramientas por sub-agente: `tools.subagents.tools.allow` / `tools.subagents.tools.deny`.

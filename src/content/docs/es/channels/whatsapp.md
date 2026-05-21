@@ -623,13 +623,15 @@ Notas sobre el comportamiento:
   </Accordion>
 
   <Accordion title="Mensajes de grupo ignorados inesperadamente">
-    Verifique en este orden:
+    Comprueba en este orden:
 
     - `groupPolicy`
     - `groupAllowFrom` / `allowFrom`
-    - entradas de lista de permitidos `groups`
+    - entradas de la lista de permitidos de `groups`
     - filtrado de menciones (`requireMention` + patrones de mención)
-    - claves duplicadas en `openclaw.json` (JSON5): las entradas posteriores anulan a las anteriores, por lo que debe mantener un solo `groupPolicy` por ámbito
+    - claves duplicadas en `openclaw.json` (JSON5): las entradas posteriores sobrescriben a las anteriores, así que mantén un solo `groupPolicy` por ámbito
+
+    Si `channels.whatsapp.groups` está presente, WhatsApp aún puede observar mensajes de otros grupos, pero OpenClaw los descarta antes del enrutamiento de sesión. Añade el JID del grupo a `channels.whatsapp.groups` o añade `groups["*"]` para admitir todos los grupos mientras se mantiene la autorización del remitente bajo `groupPolicy` y `groupAllowFrom`.
 
   </Accordion>
 
@@ -640,33 +642,33 @@ Notas sobre el comportamiento:
 
 ## Prompts del sistema
 
-WhatsApp admite indicaciones del sistema estilo Telegram para grupos y chats directos a través de los mapas `groups` y `direct`.
+WhatsApp admite prompts del sistema estilo Telegram para grupos y chats directos a través de los mapas `groups` y `direct`.
 
 Jerarquía de resolución para mensajes de grupo:
 
-Primero se determina el mapa `groups` efectivo: si la cuenta define su propio `groups`, este reemplaza completamente el mapa raíz `groups` (sin fusión profunda). Luego, la búsqueda de indicaciones se ejecuta en el mapa único resultante:
+Primero se determina el mapa `groups` efectivo: si la cuenta define su propio `groups`, reemplaza completamente el mapa raíz `groups` (sin fusión profunda). La búsqueda del prompt se ejecuta entonces en el mapa único resultante:
 
-1. **Indicación del sistema específica del grupo** (`groups["<groupId>"].systemPrompt`): se utiliza cuando existe la entrada específica del grupo en el mapa **y** su clave `systemPrompt` está definida. Si `systemPrompt` es una cadena vacía (`""`), se suprime el comodín y no se aplica ninguna indicación del sistema.
-2. **Indicación del sistema comodín de grupo** (`groups["*"].systemPrompt`): se utiliza cuando la entrada específica del grupo está totalmente ausente del mapa, o cuando existe pero no define ninguna clave `systemPrompt`.
+1. **Prompt del sistema específico del grupo** (`groups["<groupId>"].systemPrompt`): se usa cuando la entrada específica del grupo existe en el mapa **y** su clave `systemPrompt` está definida. Si `systemPrompt` es una cadena vacía (`""`), se suprime el comodín y no se aplica ningún prompt del sistema.
+2. **Prompt del sistema con comodín de grupo** (`groups["*"].systemPrompt`): se usa cuando la entrada específica del grupo está totalmente ausente del mapa, o cuando existe pero no define ninguna clave `systemPrompt`.
 
 Jerarquía de resolución para mensajes directos:
 
-Primero se determina el mapa `direct` efectivo: si la cuenta define su propio `direct`, este reemplaza completamente el mapa raíz `direct` (sin fusión profunda). Luego, la búsqueda de indicaciones se ejecuta en el mapa único resultante:
+Primero se determina el mapa `direct` efectivo: si la cuenta define su propio `direct`, reemplaza completamente el mapa raíz `direct` (sin fusión profunda). La búsqueda del prompt se ejecuta entonces en el mapa único resultante:
 
-1. **Indicación del sistema específica directa** (`direct["<peerId>"].systemPrompt`): se utiliza cuando existe la entrada específica del par en el mapa **y** su clave `systemPrompt` está definida. Si `systemPrompt` es una cadena vacía (`""`), se suprime el comodín y no se aplica ninguna indicación del sistema.
-2. **Indicación del sistema comodín directa** (`direct["*"].systemPrompt`): se utiliza cuando la entrada específica del par está totalmente ausente del mapa, o cuando existe pero no define ninguna clave `systemPrompt`.
+1. **Prompt del sistema específico de directo** (`direct["<peerId>"].systemPrompt`): se utiliza cuando la entrada del par específico existe en el mapa **y** su clave `systemPrompt` está definida. Si `systemPrompt` es una cadena vacía (`""`), se suprime el comodín y no se aplica ningún prompt del sistema.
+2. **Prompt del sistema comodín de directo** (`direct["*"].systemPrompt`): se utiliza cuando la entrada del par específico está ausente totalmente del mapa, o cuando existe pero no define ninguna clave `systemPrompt`.
 
 <Note>
-`dms` sigue siendo el depósito de override ligero del historial por mensaje directo (`dms.<id>.historyLimit`). Los overrides de indicaciones residen bajo `direct`.
+`dms` sigue siendo el depósito de anulación del historial por MD ligero (`dms.<id>.historyLimit`). Las anulaciones de prompts residen en `direct`.
 </Note>
 
-**Diferencia con el comportamiento multicuenta de Telegram:** En Telegram, el `groups` raíz se suprime intencionalmente para todas las cuentas en una configuración multicuenta, incluso para las cuentas que no definen su propio `groups`, para evitar que un bot reciba mensajes de grupos a los que no pertenece. WhatsApp no aplica esta protección: el `groups` raíz y el `direct` raíz siempre se heredan en las cuentas que no definen una invalidación a nivel de cuenta, independientemente de cuántas cuentas estén configuradas. En una configuración multicuenta de WhatsApp, si desea avisos por grupo o directos por cuenta, defina el mapa completo en cada cuenta explícitamente en lugar de confiar en los valores predeterminados de nivel raíz.
+**Diferencia con el comportamiento multicuenta de Telegram:** En Telegram, el `groups` raíz se suprime intencionalmente para todas las cuentas en una configuración multicuenta, incluso para las cuentas que no definen su propio `groups`, para evitar que un bot reciba mensajes de grupos a los que no pertenece. WhatsApp no aplica esta protección: el `groups` raíz y el `direct` raíz siempre se heredan en las cuentas que no definen una anulación a nivel de cuenta, independientemente de cuántas cuentas estén configuradas. En una configuración multicuenta de WhatsApp, si desea prompts de grupo o directo por cuenta, defina el mapa completo en cada cuenta explícitamente en lugar de confiar en los valores predeterminados de nivel raíz.
 
 Comportamiento importante:
 
-- `channels.whatsapp.groups` es tanto un mapa de configuración por grupo como la lista de permitidos de grupos a nivel de chat. Tanto en el ámbito raíz como en el de cuenta, `groups["*"]` significa "se admiten todos los grupos" para ese ámbito.
-- Agregue un grupo comodín `systemPrompt` solo cuando ya desee que ese ámbito admita todos los grupos. Si aún desea que solo un conjunto fijo de ID de grupos sean elegibles, no use `groups["*"]` para el aviso predeterminado. En su lugar, repita el aviso en cada entrada de grupo permitido explícitamente.
-- La admisión de grupos y la autorización del remitente son verificaciones separadas. `groups["*"]` amplía el conjunto de grupos que pueden llegar al manejo de grupos, pero por sí solo no autoriza a todos los remitentes en esos grupos. El acceso del remitente todavía se controla por separado mediante `channels.whatsapp.groupPolicy` y `channels.whatsapp.groupAllowFrom`.
+- `channels.whatsapp.groups` es tanto un mapa de configuración por grupo como la lista de permitidos de grupos a nivel de chat. En el ámbito raíz o de cuenta, `groups["*"]` significa "se admiten todos los grupos" para ese ámbito.
+- Solo añada un grupo comodín `systemPrompt` cuando ya quiera que ese ámbito admita todos los grupos. Si todavía solo quiere que un conjunto fijo de ID de grupos sean elegibles, no use `groups["*"]` para el valor predeterminado del prompt. En su lugar, repita el prompt en cada entrada de grupo permitida explícitamente.
+- La admisión en grupos y la autorización de remitentes son verificaciones separadas. `groups["*"]` amplía el conjunto de grupos que pueden alcanzar el manejo de grupos, pero por sí solo no autoriza a todos los remitentes en esos grupos. El acceso del remitente aún se controla por separado mediante `channels.whatsapp.groupPolicy` y `channels.whatsapp.groupAllowFrom`.
 - `channels.whatsapp.direct` no tiene el mismo efecto secundario para los MD. `direct["*"]` solo proporciona una configuración de chat directo predeterminada después de que un MD ya haya sido admitido por `dmPolicy` más `allowFrom` o las reglas del almacén de emparejamiento.
 
 Ejemplo:
@@ -721,8 +723,8 @@ Campos de WhatsApp de alta señal:
 - entrega: `textChunkLimit`, `chunkMode`, `mediaMaxMb`, `sendReadReceipts`, `ackReaction`, `reactionLevel`
 - multicuenta: `accounts.<id>.enabled`, `accounts.<id>.authDir`, anulaciones a nivel de cuenta
 - operaciones: `configWrites`, `debounceMs`, `web.enabled`, `web.heartbeatSeconds`, `web.reconnect.*`, `web.whatsapp.*`
-- comportamiento de la sesión: `session.dmScope`, `historyLimit`, `dmHistoryLimit`, `dms.<id>.historyLimit`
-- sugerencias: `groups.<id>.systemPrompt`, `groups["*"].systemPrompt`, `direct.<id>.systemPrompt`, `direct["*"].systemPrompt`
+- comportamiento de sesión: `session.dmScope`, `historyLimit`, `dmHistoryLimit`, `dms.<id>.historyLimit`
+- prompts: `groups.<id>.systemPrompt`, `groups["*"].systemPrompt`, `direct.<id>.systemPrompt`, `direct["*"].systemPrompt`
 
 ## Relacionado
 

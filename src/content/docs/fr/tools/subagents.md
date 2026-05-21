@@ -317,16 +317,16 @@ Voir [Référence de configuration](/fr/gateway/configuration-reference) et
 ### Liste blanche
 
 <ParamField path="agents.list[].subagents.allowAgents" type="string[]">
-  Liste des identifiants d'agents qui peuvent être ciblés via `agentId` explicite (`["*"]` autorise n'importe lequel). Par défaut : uniquement l'agent demandeur. Si vous définissez une liste et que vous souhaitez toujours que le demandeur puisse se lancer lui-même avec `agentId`, incluez l'identifiant du demandeur dans la liste.
+  Liste des IDs d'agents qui peuvent être ciblés via `agentId` explicite (`["*"]` autorise n'importe quelle cible configurée). Par défaut : uniquement l'agent demandeur. Si vous définissez une liste et souhaitez toujours que le demandeur puisse se générer lui-même avec `agentId`, incluez l'ID du demandeur dans la liste.
 </ParamField>
 <ParamField path="agents.defaults.subagents.allowAgents" type="string[]">
-  Liste d'autorisation des agents cibles par défaut utilisée lorsque l'agent demandeur ne définit pas son propre `subagents.allowAgents`.
+  Liste d'autorisation d'agents cibles par défaut utilisée lorsque l'agent demandeur ne définit pas son propre `subagents.allowAgents`.
 </ParamField>
 <ParamField path="agents.defaults.subagents.requireAgentId" type="boolean" default="false">
   Bloque les appels `sessions_spawn` qui omettent `agentId` (force la sélection explicite du profil). Remplacement par agent : `agents.list[].subagents.requireAgentId`.
 </ParamField>
 <ParamField path="agents.defaults.subagents.announceTimeoutMs" type="number" default="120000">
-  Délai d'expiration par appel pour les tentatives de livraison d'annonce `agent` de la passerelle. Les valeurs sont des nombres entiers positifs en millisecondes et sont limitées au maximum de la minuterie sécurisée pour la plateforme. Les nouvelles tentatives transitoires peuvent prolonger l'attente d'annonce au-delà d'un délai d'expiration configuré.
+  Délai d'expiration par appel pour les tentatives de livraison d'annonce de passerelle `agent`. Les valeurs sont des millisecondes entières positives et sont limitées au maximum de la minuterie sécurisée pour la plateforme. Les tentatives de réessai transitoires peuvent rendre l'attente d'annonce totale plus longue qu'un délai d'expiration configuré.
 </ParamField>
 
 Si la session du demandeur est en bac à sable (sandboxed), `sessions_spawn` rejette les cibles

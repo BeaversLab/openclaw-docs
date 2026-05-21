@@ -5,8 +5,8 @@ read_when:
 title: "測試"
 ---
 
-- 完整測試套件（套件、即時、Docker）：[測試](/zh-Hant/help/testing)
-- 更新和外掛套件驗證：[測試更新與外掛](/zh-Hant/help/testing-updates-plugins)
+- 完整測試套件 (suites、live、Docker)：[測試](/zh-Hant/help/testing)
+- 更新與插件套件驗證：[測試更新與插件](/zh-Hant/help/testing-updates-plugins)
 
 - `pnpm test:force`：終止任何佔用預設控制連接埠的殘留 Gateway 程序，然後使用隔離的 Gateway 連接埠執行完整的 Vitest 套件，以免伺服器測試與運行中的實例發生衝突。當先前的 Gateway 執行佔用了 18789 連接埠時，請使用此指令。
 - `pnpm test:coverage`：執行單元測試套件並產生 V8 涵蓋率報告（透過 `vitest.unit.config.ts`）。這是 default-unit-lane 的涵蓋率閘道，而非整個儲存庫所有檔案的涵蓋率。臨界值為 70% 的行/函式/陳述式以及 55% 的分支。由於 `coverage.all` 為 false，且 default lane 範圍涵蓋率包含非快速單元測試及同層級原始檔，因此該閘道測量的是此 lane 擁有的原始碼，而非其恰好載入的每個傳遞匯入。
@@ -124,9 +124,78 @@ title: "測試"
 - 使用 `pnpm test:startup:bench:update` 更新
 - 使用 `pnpm test:startup:bench:check` 將當前結果與 fixture 比對
 
+## Gateway 啟動基準測試
+
+腳本：[`scripts/bench-gateway-startup.ts`](https://github.com/openclaw/openclaw/blob/main/scripts/bench-gateway-startup.ts)
+
+此基準測試預設使用建置好的 CLI 進入點 `dist/entry.js`；在使用
+package-script 指令前請先執行 `pnpm build`。若要改為測量來源
+runner，請傳入 `--entry scripts/run-node.mjs` 並將這些結果與建置進入點的基準分開。
+
+用法：
+
+- `pnpm test:startup:gateway -- --runs 5 --warmup 1`
+- `pnpm test:startup:gateway -- --case default --runs 10 --warmup 1`
+- `pnpm test:startup:gateway -- --case skipChannels --case fiftyPlugins --runs 5`
+- `node --import tsx scripts/bench-gateway-startup.ts --case default --runs 5 --output .artifacts/gateway-startup.json`
+- `node --import tsx scripts/bench-gateway-startup.ts --case default --runs 3 --cpu-prof-dir .artifacts/gateway-startup-cpu`
+
+案例 ID：
+
+- `default`：正常的 Gateway 啟動。
+- `skipChannels`：略過通道啟動的 Gateway 啟動。
+- `oneInternalHook`：一個設定的內部掛鉤。
+- `allInternalHooks`：所有內部掛鉤。
+- `fiftyPlugins`：50 個清單插件。
+- `fiftyStartupLazyPlugins`：50 個啟動延遲 的清單插件。
+
+輸出包含首次程序輸出、`/healthz`、`/readyz`、HTTP 監聽日誌時間、
+Gateway 就緒日誌時間、CPU 時間、CPU 核心比例、最大 RSS、堆積、啟動追蹤指標、
+事件迴圈延遲以及插件查找表詳細指標。此腳本會在子 Gateway 環境中啟用
+`OPENCLAW_GATEWAY_STARTUP_TRACE=1`。
+
+請將 `/healthz` 視為存活狀態 (liveness)：HTTP 伺服器可以回應。請將
+`/readyz` 視為可用就緒狀態 (usable readiness)：啟動插件 sidecar、通道以及
+就緒關鍵的附加後工作 已完成。Gateway 啟動掛鉤會異步
+分派，並不屬於就緒保證的一部分。就緒日誌時間是 Gateway
+內部的就緒日誌時間戳記；它對於程序端歸因很有用，但不能取代
+外部 `/readyz` 探測。
+
+比較變更時使用 JSON 輸出或 `--output`。僅在追蹤輸出指向無法單獨透過階段時序解釋的匯入、編譯或 CPU 密集型工作後，才使用 `--cpu-prof-dir`。請勿將 source-runner 的結果與內建 `dist/entry.js` 的結果進行比較，因為它們的基準不同。
+
+## Gateway 重啟基準測試
+
+腳本：[`scripts/bench-gateway-restart.ts`](https://github.com/openclaw/openclaw/blob/main/scripts/bench-gateway-restart.ts)
+
+重啟基準測試僅支援 macOS 和 Linux。它使用 SIGUSR1 進行行程內重啟，並會在 Windows 上立即失敗。
+
+基準測試預設使用 `dist/entry.js` 的內建 CLI 入口；在使用 package-script 指令前請先執行 `pnpm build`。若要改為測量 source runner，請傳入 `--entry scripts/run-node.mjs`，並將這些結果與內建入口的基準分開。
+
+用法：
+
+- `pnpm test:restart:gateway -- --case skipChannels --runs 1 --restarts 5`
+- `pnpm test:restart:gateway -- --case default --runs 3 --restarts 3 --warmup 1`
+- `pnpm test:restart:gateway -- --case skipChannelsAcpxProbe --case skipChannelsNoAcpxProbe --runs 1 --restarts 5`
+- `node --import tsx scripts/bench-gateway-restart.ts --case fiftyPlugins --runs 1 --restarts 5 --output .artifacts/gateway-restart.json`
+- `node --import tsx scripts/bench-gateway-restart.ts --json`
+
+案例 ID：
+
+- `skipChannels`：略過頻道的重啟。
+- `skipChannelsAcpxProbe`：略過頻道並啟用 ACPX 啟動探測的重啟。
+- `skipChannelsNoAcpxProbe`：略過頻道並停用 ACPX 啟動探測的重啟。
+- `default`：正常重啟。
+- `fiftyPlugins`：包含 50 個 manifest 插件的重啟。
+
+輸出包含下一個 `/healthz`、下一個 `/readyz`、停機時間、重啟就緒時間、CPU、RSS、替換行程的啟動追蹤指標，以及用於訊號處理、活躍工作排空、關閉階段、下一次啟動、就緒時間和記憶體快照的重啟追蹤指標。該腳本會在子 Gateway 環境中啟用 `OPENCLAW_GATEWAY_STARTUP_TRACE=1` 和 `OPENCLAW_GATEWAY_RESTART_TRACE=1`。
+
+當變更涉及重啟信號、關閉處理程式、重啟後啟動、sidecar 關閉、服務移交或重啟後就緒狀態時，請使用此基準測試。當將 Gateway 機制與通道啟動隔離時，請從 `skipChannels` 開始。僅當狹隘的情況解釋了重啟路徑之後，才使用 `default` 或外掛程式繁重的案例。
+
+追蹤指標是歸因提示，而非判斷結果。重啟變更應根據多個樣本、匹配的擁有者跨度、`/healthz` 和 `/readyz` 行為以及使用者可見的重啟契約來判斷。
+
 ## Onboarding E2E (Docker)
 
-Docker 是選用的；這僅需要用於容器化的 onboarding 測試。
+Docker 是可選的；這僅容器化的入門 煙霧 測試所需。
 
 在乾淨的 Linux 容器中進行完整的冷啟動流程：
 
@@ -134,11 +203,11 @@ Docker 是選用的；這僅需要用於容器化的 onboarding 測試。
 scripts/e2e/onboard-docker.sh
 ```
 
-此腳本透過 pseudo-tty 驅動互動式精靈，驗證 config/workspace/session 檔案，然後啟動 gateway 並執行 `openclaw health`。
+此指令碼透過偽終端機驅動互動式精靈，驗證 config/workspace/session 檔案，然後啟動 gateway 並執行 `openclaw health`。
 
 ## QR import smoke (Docker)
 
-確保維護的 QR runtime helper 可在支援的 Docker Node runtime 下載入（Node 24 預設，Node 22 相容）：
+確保維護的 QR runtime helper 在支援的 Docker Node runtimes 下載入（Node 24 預設，Node 22 相容）：
 
 ```bash
 pnpm test:docker:qr
@@ -147,5 +216,5 @@ pnpm test:docker:qr
 ## 相關
 
 - [測試](/zh-Hant/help/testing)
-- [即時測試](/zh-Hant/help/testing-live)
-- [測試更新與外掛](/zh-Hant/help/testing-updates-plugins)
+- [測試 live](/zh-Hant/help/testing-live)
+- [測試更新和外掛程式](/zh-Hant/help/testing-updates-plugins)

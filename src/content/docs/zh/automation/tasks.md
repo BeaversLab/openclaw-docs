@@ -98,7 +98,7 @@ sidebarTitle: "后台任务"
 
   </Accordion>
   <Accordion title="Concurrent media-generation guardrail">
-    当支持会话的媒体生成任务仍处于活动状态时，该工具也会充当防护措施：在同一会话中重复调用 `image_generate`、`music_generate` 或 `video_generate` 将返回活动任务状态，而不是启动第二次并发生成。当您希望从代理端进行显式的进度/状态查询时，请使用 `action: "status"`。
+    当一个由会话支持的媒体生成任务仍处于活动状态时，媒体工具也会充当防止意外重试的护栏。针对同一提示的重复 `image_generate` 调用将返回匹配的活动任务状态，而不同的图像提示可以启动其自己的任务。`music_generate` 和 `video_generate` 调用仍然返回该会话的活动任务状态，而不是启动第二次并发生成。当你需要从代理侧显式查找进度/状态时，请使用 `action: "status"`。
   </Accordion>
   <Accordion title="What does not create tasks">
     - Heartbeat 轮次 - 主会话；请参阅[Heartbeat](/zh/gateway/heartbeat)

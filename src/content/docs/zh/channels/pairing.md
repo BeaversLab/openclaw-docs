@@ -13,13 +13,13 @@ title: "配对"
 1. **私信配对**（谁被允许与机器人对话）
 2. **节点配对**（哪些设备/节点被允许加入网关网络）
 
-安全上下文：[Security](/zh/gateway/security)
+安全上下文：[安全](/zh/gateway/security)
 
 ## 1) 私信配对（入站聊天访问）
 
 当渠道配置了私信策略 `pairing` 时，未知发送者会收到一个短代码，并且在您批准之前，他们的消息**不会被处理**。
 
-默认的私信策略记录在：[Security](/zh/gateway/security)
+默认私信策略记录在：[安全](/zh/gateway/security)
 
 `dmPolicy: "open"` 只有在有效的私信允许列表包含 `"*"` 时才是公开的。
 设置和验证要求公开开放配置必须包含该通配符。如果现有
@@ -72,7 +72,7 @@ openclaw pairing approve telegram <CODE>
 }
 ```
 
-访问组在此处有详细说明：[Access groups](/zh/channels/access-groups)
+访问组在此处有详细记录：[访问组](/zh/channels/access-groups)
 
 ### 状态存储位置
 
@@ -114,15 +114,22 @@ openclaw pairing approve telegram <CODE>
 
 该引导令牌携带内置的配对引导配置文件：
 
-- 内置的配置文件仅允许 `node` 角色
-- 批准后，移交的 `node` token 保持 `scopes: []`
-- 内置的设置代码流程不会移交 `operator` token
-- 操作员访问需要单独批准的操作员配对或 token 流程
+- 内置设置配置文件仅允许全新的二维码/设置代码基线：
+  `node` 加上有限的 `operator` 移交
+- 移交的 `node` 令牌保持 `scopes: []`
+- 移交的 `operator` 令牌仅限于 `operator.approvals`，
+  `operator.read` 和 `operator.write`
+- `operator.admin` 和 `operator.pairing` 不通过二维码/设置代码
+  引导程序授予；它们需要单独的已批准操作员配对或令牌流程
 - 随后的 token 轮换/撤销仍然受限于设备的批准角色契约和调用者会话的操作员范围
 
 在设置代码有效期间，请将其视为密码处理。
 
-对于 Tailscale、公用或其他远程移动配对，请使用 Tailscale Serve/Funnel 或另一个 `wss://` Gateway(网关) URL。仅对环回地址、专用 LAN 地址、`.local` Bonjour 主机和 Android 模拟器主机接受纯文本 `ws://` 设置代码。Tailnet CGNAT 地址、`.ts.net` 名称和公用主机在发出 QR/设置代码之前仍会失败并关闭。
+对于 TailscaleTailscale、公共或其他远程移动配对，请使用 Tailscale Serve/Funnel
+或另一个 `wss://`Gateway(网关) Gateway(网关) URL。纯文本 `ws://` 设置代码仅被接受
+用于回环、私有 LAN 地址、`.local`BonjourAndroid Bonjour 主机和 Android
+模拟器主机。Tailnet CGNAT 地址、`.ts.net` 名称和公共主机在
+二维码/设置代码签发之前仍然会安全地失败。
 
 ### 批准节点设备
 
@@ -132,11 +139,12 @@ openclaw devices approve <requestId>
 openclaw devices reject <requestId>
 ```
 
-当显式批准被拒绝，因为批准的配对设备会话是仅使用配对范围打开的时，CLI 会使用 `operator.admin` 重试相同的请求。这允许现有的具有管理员权限的配对设备恢复新的控制 UI/浏览器配对，而无需手动编辑 `devices/paired.json`。Gateway(网关) 仍会验证重试的连接；无法使用 `operator.admin` 进行身份验证的 token 仍将被阻止。
+当由于批准配对设备的会话是以仅配对范围打开而导致明确批准被拒绝时，CLI 将使用 CLI`operator.admin` 重试相同的请求。这使得现有的具有管理员功能的配对设备可以恢复新的控制 UI/浏览器配对，而无需手动编辑 `devices/paired.json`Gateway(网关)。Gateway(网关) 仍会验证重试的连接；无法使用 `operator.admin` 进行身份验证的令牌仍将被阻止。
 
-如果同一设备使用不同的身份验证详细信息（例如不同的角色/范围/公钥）重试，则先前的待处理请求将被取代，并创建一个新的 `requestId`。
+如果同一设备使用不同的身份验证详细信息（例如不同的角色/范围/公钥）重试，则先前的待处理请求将被取代，并创建一个新的
+`requestId`。
 
-<Note>已配对的设备不会在静默情况下获得更广泛的访问权限。如果它重新连接并请求更多作用域或更广泛的的角色，OpenClaw 将保持现有的批准不变，并创建一个新的待处理升级请求。在您批准之前，请使用 OpenClaw`openclaw devices list` 比较当前批准的访问权限与新请求的访问权限。</Note>
+<Note>已配对的设备不会静默获得更广泛的访问权限。如果它重新连接并请求更多的作用域或更广泛的角色，OpenClaw 将保持现有的批准不变，并创建一个新的待处理升级请求。在您批准之前，请使用 OpenClaw`openclaw devices list` 将当前批准的访问权限与新请求的访问权限进行比较。</Note>
 
 ### 可选的受信任 CIDR 节点自动批准
 
@@ -155,20 +163,18 @@ openclaw devices reject <requestId>
 }
 ```
 
-这仅适用于没有请求
-作用域的新 `role: node`WebChat 配对请求。Operator、browser、Control UI 和 WebChat 客户端仍然需要手动
-批准。角色、作用域、元数据和公钥更改仍然需要手动批准。
+这仅适用于没有请求作用域的全新 `role: node`WebChat 配对请求。Operator、浏览器、Control UI 和 WebChat 客户端仍然需要手动批准。角色、作用域、元数据和公钥更改仍然需要手动批准。
 
 ### 节点配对状态存储
 
 存储在 `~/.openclaw/devices/` 下：
 
-- `pending.json` (短期存在；待处理的请求会过期)
-- `paired.json` (已配对的设备 + 令牌)
+- `pending.json`（短期存在；待处理的请求会过期）
+- `paired.json`（已配对的设备 + 令牌）
 
 ### 备注
 
-- 旧的 `node.pair.*`APICLI API (CLI: `openclaw nodes pending|approve|reject|remove|rename`) 是一个
+- 旧版 `node.pair.*`APICLI API（CLI：`openclaw nodes pending|approve|reject|remove|rename`）是一个
   独立的网关拥有的配对存储。WS 节点仍然需要设备配对。
 - 配对记录是批准角色的持久事实来源。活动的
   设备令牌保持受限于该批准的角色集；在批准角色之外的孤立令牌条目
@@ -176,12 +182,12 @@ openclaw devices reject <requestId>
 
 ## 相关文档
 
-- 安全模型 + 提示注入：[安全](/zh/gateway/security)
-- 安全更新 (运行 doctor)：[更新](/zh/install/updating)
+- 安全模型 + 提示词注入：[安全](/zh/gateway/security)
+- 安全更新（运行 doctor）：[更新](/zh/install/updating)
 - 频道配置：
-  - Telegram: [Telegram](TelegramTelegram/en/channels/telegram)
-  - WhatsApp: [WhatsApp](WhatsAppWhatsApp/en/channels/whatsapp)
-  - Signal: [Signal](SignalSignal/en/channels/signal)
-  - iMessage: [iMessage](iMessageiMessage/en/channels/imessage)
-  - Discord: [Discord](DiscordDiscord/en/channels/discord)
-  - Slack: [Slack](SlackSlack/en/channels/slack)
+  - Telegram：[Telegram](TelegramTelegram/en/channels/telegram)
+  - WhatsApp：[WhatsApp](WhatsAppWhatsApp/en/channels/whatsapp)
+  - Signal：[Signal](SignalSignal/en/channels/signal)
+  - iMessage：[iMessage](iMessageiMessage/en/channels/imessage)
+  - Discord：[Discord](DiscordDiscord/en/channels/discord)
+  - Slack：[Slack](SlackSlack/en/channels/slack)

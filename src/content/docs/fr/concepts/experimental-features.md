@@ -1,5 +1,5 @@
 ---
-summary: "Ce que signifient les indicateurs expérimentaux dans OpenClaw et lesquels sont actuellement documentés"
+summary: "OpenClawSignification des indicateurs expérimentaux dans OpenClaw et ceux qui sont actuellement documentés"
 title: "Fonctionnalités expérimentales"
 read_when:
   - You see an `.experimental` config key and want to know whether it is stable
@@ -18,15 +18,15 @@ Traitez-les différemment de la configuration normale :
 
 ## Indicateurs actuellement documentés
 
-| Surface                           | Clé                                                       | À utiliser quand                                                                                                                                   | En savoir plus                                                                                             |
-| --------------------------------- | --------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
-| Exécution de modèle local         | `agents.defaults.experimental.localModelLean`             | Un backend local plus petit ou plus strict échoue avec la surface d'outil par défaut complète de OpenClaw                                          | [Modèles locaux](/fr/gateway/local-models)                                                                 |
-| Recherche mémoire                 | `agents.defaults.memorySearch.experimental.sessionMemory` | Vous souhaitez que `memory_search` indexe les transcriptions de session précédentes et acceptez le coût de stockage et d'indexation supplémentaire | [Référence de configuration de la mémoire](/fr/reference/memory-config#session-memory-search-experimental) |
-| Outil de planification structurée | `tools.experimental.planTool`                             | Vous souhaitez que l'outil structuré `update_plan` soit exposé pour le suivi du travail en plusieurs étapes dans les runtimes et UI compatibles    | [Référence de configuration du Gateway](/fr/gateway/config-tools#toolsexperimental)                        |
+| Surface                           | Clé                                                                                        | À utiliser quand                                                                                                                                                    | En savoir plus                                                                                             |
+| --------------------------------- | ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| Exécution de modèle local         | `agents.defaults.experimental.localModelLean`, `agents.list[].experimental.localModelLean` | Un backend local plus petit ou plus strict échoue avec la surface d'outil par défaut complète de OpenClaw                                                           | [Modèles locaux](/fr/gateway/local-models)                                                                 |
+| Recherche mémoire                 | `agents.defaults.memorySearch.experimental.sessionMemory`                                  | Vous voulez que `memory_search` indexe les transcriptions de session précédentes et acceptez le coût de stockage et d'indexation supplémentaire                     | [Référence de configuration de la mémoire](/fr/reference/memory-config#session-memory-search-experimental) |
+| Outil de planification structurée | `tools.experimental.planTool`                                                              | Vous souhaitez que l'outil structuré `update_plan` soit exposé pour le suivi du travail en plusieurs étapes dans les runtimes et interfaces utilisateur compatibles | [Référence de configuration du Gateway](Gateway/en/gateway/config-tools#toolsexperimental)                 |
 
 ## Mode allégé de modèle local
 
-`agents.defaults.experimental.localModelLean: true` est une soupape de sécurité pour les configurations de modèles locaux plus faibles. Lorsqu'elle est activée, OpenClaw supprime trois outils par défaut — `browser`, `cron` et `message` — de la surface d'outils de l'agent à chaque tour. Rien d'autre ne change.
+`agents.defaults.experimental.localModelLean: true`OpenClaw est une soupape de sécurité pour les configurations de modèles locaux plus faibles. Lorsqu'il est activé, OpenClaw supprime trois outils par défaut — `browser`, `cron` et `message` — de la surface d'outils de l'agent à chaque tour. Rien d'autre ne change. Utilisez `agents.list[].experimental.localModelLean` pour activer ou désactiver le même comportement pour un agent configuré.
 
 ### Pourquoi ces trois outils
 
@@ -36,7 +36,7 @@ Ces trois outils ont les plus grandes descriptions et le plus de formes de param
 - Le modèle choisissant le bon outil vs. l'émission d'appels d'outils malformés car il y a trop de schémas similaires.
 - L'adaptateur Chat Completions restant dans les limites de sortie structurée du serveur vs. déclenchant une erreur 400 sur la taille de la charge utile de l'appel d'outil.
 
-Les supprimer ne reconfigure pas silencieusement OpenClaw — cela raccourcit simplement la liste des outils. Le modèle a toujours `read`, `write`, `edit`, `exec`, `apply_patch`, la recherche/récupération web (lorsqu'elle est configurée), la mémoire, et les outils de session/agent disponibles.
+Les supprimer ne reconfigure pas silencieusement OpenClaw — cela raccourcit simplement la liste des outils. Le modèle dispose toujours de OpenClaw`read`, `write`, `edit`, `exec`, `apply_patch`, de la recherche/récupération web (lorsque configuré), de la mémoire, et des outils de session/agent.
 
 ### Quand l'activer
 
@@ -44,13 +44,13 @@ Activez le mode lean lorsque vous avez déjà prouvé que le modèle peut parler
 
 1. `openclaw infer model run --gateway --model <ref> --prompt "Reply with exactly: pong"` réussit.
 2. Un tour d'agent normal échoue avec des appels d'outil malformés, des invites trop volumineuses, ou le modèle ignorant ses outils.
-3. Activer `localModelLean: true` résout l'échec.
+3. Basculer `localModelLean: true` efface l'échec.
 
 ### Quand le désactiver
 
 Si votre backend gère proprement l'exécution par défaut complète, laissez ceci désactivé. Le mode lean est une solution de contournement, pas une valeur par défaut. Il existe car certaines piles locales ont besoin d'une surface d'outil plus petite pour bien fonctionner ; les modèles hébergés et les configurations locales bien dotées en ressources n'en ont pas besoin.
 
-Le mode lean ne remplace pas non plus `tools.profile`, `tools.allow`/`tools.deny`, ou la porte de secours `compat.supportsTools: false` du modèle. Si vous avez besoin d'une surface d'outil plus restreinte de manière permanente pour un agent spécifique, préférez ces boutons stables plutôt que l'indicateur expérimental.
+Le mode lean ne remplace pas non plus `tools.profile`, `tools.allow`/`tools.deny`, ou la porte de sortie `compat.supportsTools: false` du modèle. Si vous avez besoin d'une surface d'outils plus restreinte de manière permanente pour un agent spécifique, préférez ces contrôles stables à l'indicateur expérimental.
 
 ### Activer
 
@@ -66,17 +66,35 @@ Le mode lean ne remplace pas non plus `tools.profile`, `tools.allow`/`tools.deny
 }
 ```
 
-Redémarrez le Gateway après avoir modifié l'indicateur, puis confirmez la liste des outils réduite avec :
+Pour un seul agent uniquement :
+
+```json5
+{
+  agents: {
+    list: [
+      {
+        id: "local",
+        model: "lmstudio/gemma-4-e4b-it",
+        experimental: {
+          localModelLean: true,
+        },
+      },
+    ],
+  },
+}
+```
+
+Redémarrez le Gateway après avoir modifié l'indicateur, puis confirmez la liste d'outils réduite avec :
 
 ```bash
 openclaw status --deep
 ```
 
-La sortie d'état détaillée liste les outils actifs de l'agent ; `browser`, `cron` et `message` devraient être absents lorsque le mode lean est activé.
+La sortie de l'état détaillé répertorie les outils de l'agent actifs ; `browser`, `cron` et `message` doivent être absents lorsque le mode lean est activé.
 
 ## Expérimental ne signifie pas caché
 
-Si une fonctionnalité est expérimentale, OpenClaw doit l'indiquer clairement dans la documentation et dans le chemin de configuration lui-même. Ce qu'il ne doit **pas** faire, c'est introduire subrepticement un comportement de prévisualisation dans un bouton par défaut d'air stable et prétendre que c'est normal. C'est ainsi que les surfaces de configuration deviennent désordonnées.
+Si une fonctionnalité est expérimentale, OpenClaw doit l'indiquer clairement dans la documentation et dans le chemin de configuration lui-même. Ce qu'il ne doit **pas** faire, c'est introduire subrepticement un comportement de prévisualisation dans un paramètre par défaut à l'allure stable et faire semblant que c'est normal. C'est ainsi que les surfaces de configuration deviennent désordonnées.
 
 ## Connexes
 

@@ -100,7 +100,7 @@ pnpm openclaw voicecall smoke --to "+15555550123"
   - `read` probe：測試會在工作區寫入一個 nonce 檔案，並要求 agent `read` 該檔案並將 nonce 回傳。
   - `exec+read` probe：測試會要求 agent 將 nonce `exec`-寫入至暫存檔案，然後將其 `read` 回來。
   - image probe：測試會附加一個產生的 PNG (cat + 隨機程式碼)，並預期模型回傳 `cat <CODE>`。
-  - 實作參考：`src/gateway/gateway-models.profiles.live.test.ts` 和 `src/gateway/live-image-probe.ts`。
+  - 實作參考：`src/gateway/gateway-models.profiles.live.test.ts` 和 `test/helpers/live-image-probe.ts`。
 - 如何啟用：
   - `pnpm test:live` (若直接呼叫 Vitest 則為 `OPENCLAW_LIVE_TEST=1`)
 - 如何選擇模型：
@@ -114,7 +114,7 @@ pnpm openclaw voicecall smoke --to "+15555550123"
   - `read` probe + `exec+read` probe (工具壓力測試)
   - 當模型宣稱支援影像輸入時，影像探測會執行
   - 流程（高階）：
-    - 測試會產生一個帶有 "CAT" + 隨機程式碼的微小 PNG (`src/gateway/live-image-probe.ts`)
+    - 測試會生成一個包含 "CAT" + 隨機代碼的微型 PNG (`test/helpers/live-image-probe.ts`)
     - 透過 `agent` `attachments: [{ mimeType: "image/png", content: "<base64>" }]` 傳送
     - Gateway 將附件解析為 `images[]` (`src/gateway/server-methods/agent.ts` + `src/gateway/chat-attachments.ts`)
     - 內嵌代理將多模態使用者訊息轉送給模型

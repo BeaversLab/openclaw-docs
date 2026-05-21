@@ -275,9 +275,9 @@ Mattermost 将思考、工具活动和部分回复文本流式传输到单一的
     - `off` 禁用预览流式传输。
 
   </Accordion>
-  <Accordion title="Streaming behavior notes"OpenClaw>
-    - 如果流无法就地完成（例如帖子在流传输中途被删除），OpenClaw 将回退到发送一个新的最终帖子，以确保回复不会丢失。
-    - 仅包含推理内容的负载会从渠道帖子中屏蔽，包括作为 `> Reasoning:` 引用块到达的文本。设置 `/reasoning on`Mattermost 以在其他界面查看思考内容；Mattermost 最终帖子仅保留答案。
+  <Accordion title="流式传输行为说明">
+    - 如果流无法在原位完成（例如帖子在流式传输中途被删除），OpenClaw 将回退为发送一个新的最终帖子，以确保回复永不丢失。
+    - 仅包含思考内容的负载会从渠道帖子中屏蔽，包括作为 `> Thinking` blockquote 到达的文本。设置 `/reasoning on` 以在其他界面查看思考内容；Mattermost 最终帖子仅保留答案。
     - 请参阅 [Streaming](/zh/concepts/streaming#preview-streaming-modes) 了解渠道映射矩阵。
 
   </Accordion>

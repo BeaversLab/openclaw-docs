@@ -528,7 +528,7 @@ Remplacez l'invite système entière assemblée par OpenClaw par une chaîne fix
 
 ### `agents.defaults.promptOverlays`
 
-Superpositions d'invite indépendantes du fournisseur appliquées par famille de modèles. Les ID de modèles de la famille GPT-5 reçoivent le contrat de comportement partagé entre les fournisseurs ; `personality` contrôle uniquement la couche de style d'interaction convivial.
+Superpositions de prompts indépendantes du fournisseur appliquées par famille de modèles sur les surfaces de prompts assemblées par OpenClaw. Les IDs de modèles de la famille GPT-5 reçoivent le contrat de comportement partagé sur les routes PI/fournisseur ; OpenClaw`personality`OpenClaw contrôle uniquement la couche de style d'interaction convivial. Les routes natives du serveur d'application Codex conservent les instructions de base/modèle/personnalité détenues par Codex au lieu de cette superposition GPT-5 d'OpenClaw.
 
 ```json5
 {
@@ -1054,7 +1054,7 @@ pour des exemples de fournisseurs et la priorité.
 - `runtime` : descripteur d'exécution facultatif par agent. Utilisez `type: "acp"` avec les valeurs par défaut `runtime.acp` (`agent`, `backend`, `mode`, `cwd`) lorsque l'agent doit utiliser par défaut des sessions ACP harness.
 - `identity.avatar` : chemin relatif à l'espace de travail, URL `http(s)` ou URI `data:`.
 - `identity` dérive les valeurs par défaut : `ackReaction` à partir de `emoji`, `mentionPatterns` à partir de `name`/`emoji`.
-- `subagents.allowAgents` : liste blanche des identifiants d'agents pour les cibles `sessions_spawn.agentId` explicites (`["*"]` = n'importe quel ; par défaut : le même agent uniquement). Incluez l'identifiant du demandeur lorsque les appels `agentId` auto-ciblés doivent être autorisés.
+- `subagents.allowAgents` : liste d'autorisation des IDs d'agents pour les cibles explicites `sessions_spawn.agentId` (`["*"]` = n'importe quelle cible configurée ; par défaut : même agent uniquement). Incluez l'ID du demandeur lorsque les appels `agentId` auto-ciblés doivent être autorisés.
 - Garde d'héritage du bac à sable (Sandbox inheritance guard) : si la session du demandeur est isolée (sandboxed), `sessions_spawn` rejette les cibles qui s'exécuteraient sans isolation.
 - `subagents.requireAgentId` : si vrai, bloque les appels `sessions_spawn` qui omettent `agentId` (force la sélection explicite du profil ; par défaut : faux).
 

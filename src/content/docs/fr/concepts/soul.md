@@ -100,10 +100,10 @@ Précis est bon. Agaçant ne l'est pas.
 
 <CardGroup cols={2}>
   <Card title="Espace de travail de l'agent" href="/fr/concepts/agent-workspace" icon="folder-open">
-    Fichiers de l'espace de travail que OpenClaw injecte dans le système de prompt.
+    Fichiers de l'espace de travail qu'OpenClaw injecte dans le contexte du modèle.
   </Card>
-  <Card title="Système de prompt" href="/fr/concepts/system-prompt" icon="message-lines">
-    Comment `SOUL.md` est composé dans le système de prompt par tour.
+  <Card title="Prompt système" href="/fr/concepts/system-prompt" icon="message-lines">
+    Comment `SOUL.md` est composé dans le contexte d'exécution OpenClaw et Codex.
   </Card>
   <Card title="Modèle SOUL.md" href="/fr/reference/templates/SOUL" icon="file-lines">
     Modèle de démarrage pour un fichier de personnalité.

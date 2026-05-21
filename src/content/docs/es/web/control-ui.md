@@ -215,7 +215,7 @@ Anule el par de claves VAPID a través de variables de entorno en el proceso Gat
 
 - `OPENCLAW_VAPID_PUBLIC_KEY`
 - `OPENCLAW_VAPID_PRIVATE_KEY`
-- `OPENCLAW_VAPID_SUBJECT` (por defecto es `mailto:openclaw@localhost`)
+- `OPENCLAW_VAPID_SUBJECT` (el valor predeterminado es `https://openclaw.ai`)
 
 El Control UI utiliza estos métodos del Gateway con ámbito limitado para registrar y probar las suscripciones del navegador:
 

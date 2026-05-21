@@ -13,7 +13,7 @@ title: "Browser"
 
 相關：
 
-- Browser 工具 + API：[Browser tool](/zh-Hant/tools/browser)
+- 瀏覽器工具 + API：[瀏覽器工具](/zh-Hant/tools/browser)
 
 ## 通用旗標
 
@@ -48,7 +48,7 @@ openclaw browser --browser-profile openclaw tabs
 openclaw browser --browser-profile openclaw open https://example.com
 ```
 
-詳細指南：[Browser troubleshooting](/zh-Hant/tools/browser#cdp-startup-failure-vs-navigation-ssrf-block)
+詳細指南：[瀏覽器疑難排解](/zh-Hant/tools/browser#cdp-startup-failure-vs-navigation-ssrf-block)
 
 ## 生命週期
 
@@ -99,7 +99,7 @@ openclaw browser --browser-profile openclaw reset-profile
 明確的根 `browser` 區塊，例如 `browser.enabled=true` 或
 `browser.profiles.<name>`，也會在嚴格的外掛程式允許清單下啟用捆綁的瀏覽器外掛程式。
 
-相關：[Browser tool](/zh-Hant/tools/browser#missing-browser-command-or-tool)
+相關：[瀏覽器工具](/zh-Hant/tools/browser#missing-browser-command-or-tool)
 
 ## 設定檔
 
@@ -188,9 +188,12 @@ openclaw browser select <ref> OptionA OptionB
 openclaw browser fill --fields '[{"ref":"1","value":"Ada"}]'
 openclaw browser wait --text "Done"
 openclaw browser evaluate --fn '(el) => el.textContent' --ref <ref>
+openclaw browser evaluate --timeout-ms 30000 --fn 'async () => { await window.ready; return true; }'
 ```
 
-動作回應會在動作觸發頁面替換後，且 OpenClaw 能證明替換分頁時，傳回目前的原始 `targetId`。腳本仍應儲存並傳遞 `suggestedTargetId`/labels 以用於長期執行的工作流程。
+當頁面端函數可能需要比預設評估逾時更長的時間時，請使用 `evaluate --timeout-ms <ms>`。
+
+當 OpenClaw 能夠證明替換的分頁時，動作回應會在動作觸發的頁面替換後傳回目前的原始 `targetId`。腳本仍應儲存並傳遞 `suggestedTargetId`/標籤，以用於長期工作流程。
 
 檔案 + 對話方塊輔助工具：
 
@@ -202,17 +205,11 @@ openclaw browser dialog --accept
 openclaw browser dialog --dismiss --dialog-id d1
 ```
 
-受管理的 Chrome 設定檔會將一般點擊觸發的下載儲存至 OpenClaw
-下載目錄（預設為 `/tmp/openclaw/downloads`，或設定的暫存
-根目錄）。當 Agent 需要等待
-特定檔案並傳回其路徑時，請使用 `waitfordownload` 或 `download`；這些明確的等待器會擁有下一次下載。
-當動作開啟強制回應對話方塊時，動作回應會傳回
-`blockedByDialog` 搭配 `browserState.dialogs.pending`；傳遞 `--dialog-id` 即可\直接回應。在 OpenClaw 外部處理的對話方塊會顯示在
-`browserState.dialogs.recent` 下。
+受管理的 Chrome 設定檔會將一般點擊觸發的下載內容儲存到 OpenClaw 下載目錄中（預設為 `/tmp/openclaw/downloads`，或已設定的暫存根目錄）。當代理程式需要等待特定檔案並傳回其路徑時，請使用 `waitfordownload` 或 `download`；這些明確的等待程式會擁有下一個下載項目。當動作開啟強制回應對話方塊時，動作回應會傳回具有 `browserState.dialogs.pending` 的 `blockedByDialog`；傳遞 `--dialog-id` 以直接回答它。在 OpenClaw 外部處理的對話方塊會出現在 `browserState.dialogs.recent` 下。
 
 ## 狀態與儲存空間
 
-視口 + 模擬：
+檢視區 + 模擬：
 
 ```bash
 openclaw browser resize 1280 720
@@ -262,37 +259,35 @@ openclaw browser create-profile --name brave-live --driver existing-session --us
 openclaw browser --browser-profile chrome-live tabs
 ```
 
-此路徑僅適用於主機。對於 Docker、無介面伺服器、Browserless 或其他遠端設定，請改用 CDP 設定檔。
+此路徑僅適用於主機。對於 Docker、無頭伺服器、Browserless 或其他遠端設定，請改用 CDP 設定檔。
 
 目前現有工作階段的限制：
 
-- 由快照驅動的動作使用 refs，而非 CSS 選擇器
-- 當呼叫端省略 `timeoutMs` 時，
-  `browser.actionTimeoutMs` 預設會將支援的 `act` 要求設為 60000 毫秒；
-  每次呼叫的 `timeoutMs` 仍具有優先權。
+- 快照驅動的動作使用參照，而非 CSS 選取器
+- 當呼叫端省略 `timeoutMs` 時，`browser.actionTimeoutMs` 會將支援的 `act` 要求預設為 60000 毫秒；個別呼叫的 `timeoutMs` 仍然優先。
 - `click` 僅支援左鍵點擊
 - `type` 不支援 `slowly=true`
 - `press` 不支援 `delayMs`
-- `hover`、`scrollintoview`、`drag`、`select`、`fill` 和 `evaluate` 會拒絕
-  每次呼叫的逾時覆寫
+- `hover`、`scrollintoview`、`drag`、`select`、`fill` 和 `evaluate` 拒絕
+  每次呼叫逾時覆寫
 - `select` 僅支援一個值
 - 不支援 `wait --load networkidle`
 - 檔案上傳需要 `--ref` / `--input-ref`，不支援 CSS
   `--element`，且目前一次僅支援一個檔案
-- 對話方塊攔截器不支援 `--timeout`
-- 截圖支援頁面擷取和 `--ref`，但不支援 CSS `--element`
-- `responsebody`、下載攔截、PDF 匯出和批次動作仍
-  需要受管理的瀏覽器或原始 CDP 設定檔
+- 對話框掛鉤不支援 `--timeout`
+- 螢幕截圖支援頁面擷取和 `--ref`，但不支援 CSS `--element`
+- `responsebody`、下載攔截、PDF 匯出和批次操作仍然
+  需要受控瀏覽器或原始 CDP 設定檔
 
-## 遠端瀏覽器控制（節點主機代理）
+## 遠端瀏覽器控制 (節點主機代理)
 
-如果 Gateway 在與瀏覽器不同的機器上執行，請在安裝了 Chrome/Brave/Edge/Chromium 的機器上執行 **node host**。Gateway 會將瀏覽器操作代理到該節點（不需要單獨的瀏覽器控制伺服器）。
+如果 Gateway 和瀏覽器執行在不同的機器上，請在安裝了 Chrome/Brave/Edge/Chromium 的機器上執行 **node host**。Gateway 會將瀏覽器操作代理到該節點 (不需要單獨的瀏覽器控制伺服器)。
 
-使用 `gateway.nodes.browser.mode` 控制自動路由，如果連接了多個節點，使用 `gateway.nodes.browser.node` 釘選特定節點。
+使用 `gateway.nodes.browser.mode` 來控制自動路由，如果連接了多個節點，請使用 `gateway.nodes.browser.node` 來釘選特定節點。
 
-安全性 + 遠端設定：[Browser tool](/zh-Hant/tools/browser)、[Remote access](/zh-Hant/gateway/remote)、[Tailscale](/zh-Hant/gateway/tailscale)、[Security](/zh-Hant/gateway/security)
+安全性與遠端設定：[Browser tool](/zh-Hant/tools/browser)、[Remote access](/zh-Hant/gateway/remote)、[Tailscale](/zh-Hant/gateway/tailscale)、[Security](/zh-Hant/gateway/security)
 
 ## 相關
 
-- [CLI 參考資料](/zh-Hant/cli)
-- [Browser](/zh-Hant/tools/browser)
+- [CLI 參考](/zh-Hant/cli)
+- [瀏覽器](/zh-Hant/tools/browser)

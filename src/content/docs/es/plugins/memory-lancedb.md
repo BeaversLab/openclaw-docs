@@ -128,7 +128,7 @@ otro proveedor compatible con embeddings, como GitHub Copilot u Ollama.
 
 ## Embeddings de Ollama
 
-Para las incrustaciones de Ollama, prefiera el proveedor de incrustaciones de Ollama incluido. Utiliza el punto final nativo de Ollama `/api/embed` y sigue las mismas reglas de URL base/autenticación que el proveedor de Ollama documentado en [Ollama](/es/providers/ollama).
+Para las incrustaciones de Ollama, se prefiere el proveedor de incrustaciones de Ollama incluido. Utiliza el endpoint nativo de Ollama `/api/embed` y sigue las mismas reglas de autenticación/URL base que el proveedor de Ollama documentado en [Ollama](/es/providers/ollama).
 
 ```json5
 {
@@ -214,27 +214,27 @@ openclaw ltm search "project preferences"
 openclaw ltm stats
 ```
 
-El complemento también extiende `openclaw memory` con un subcomando `query` no vectorial que se ejecuta directamente sobre la tabla LanceDB:
+El subcomando `query` ejecuta una consulta no vectorial directamente contra la tabla LanceDB:
 
 ```bash
-openclaw memory query --cols id,text,createdAt --limit 20
-openclaw memory query --filter "category = 'preference'" --order-by createdAt:desc
+openclaw ltm query --cols id,text,createdAt --limit 20
+openclaw ltm query --filter "category = 'preference'" --order-by createdAt:desc
 ```
 
-- `--cols <columns>`: lista de permitidos (allowlist) de columnas separadas por comas (por defecto `id`, `text`, `importance`, `category`, `createdAt`).
+- `--cols <columns>`: lista de permitidos de columnas separadas por comas (por defecto `id`, `text`, `importance`, `category`, `createdAt`).
 - `--filter <condition>`: cláusula WHERE estilo SQL; limitada a 200 caracteres y restringida a caracteres alfanuméricos, operadores de comparación, comillas, paréntesis y un pequeño conjunto de puntuación segura.
 - `--limit <n>`: entero positivo; por defecto `10`.
 - `--order-by <column>:<asc|desc>`: ordenamiento en memoria aplicado después del filtro; la columna de ordenamiento se incluye automáticamente en la proyección.
 
 Los agentes también obtienen herramientas de memoria LanceDB del complemento de memoria activo:
 
-- `memory_recall` para el recuerdo respaldado por LanceDB
+- `memory_recall` para la recuperación respaldada por LanceDB
 - `memory_store` para guardar hechos importantes, preferencias, decisiones y entidades
-- `memory_forget` para eliminar recuerdos coincidentes
+- `memory_forget` para eliminar memorias coincidentes
 
 ## Almacenamiento
 
-De forma predeterminada, los datos de LanceDB residen en `~/.openclaw/memory/lancedb`. Anule la ruta con `dbPath`:
+De forma predeterminada, los datos de LanceDB residen bajo `~/.openclaw/memory/lancedb`. Anule la ruta con `dbPath`:
 
 ```json5
 {
@@ -255,8 +255,7 @@ De forma predeterminada, los datos de LanceDB residen en `~/.openclaw/memory/lan
 }
 ```
 
-`storageOptions` acepta pares clave/valor de cadena para los backends de almacenamiento LanceDB y
-soporta la expansión de `${ENV_VAR}`:
+`storageOptions` acepta pares clave/valor de cadena para los backends de almacenamiento LanceDB y admite la expansión de `${ENV_VAR}`:
 
 ```json5
 {
@@ -284,18 +283,11 @@ soporta la expansión de `${ENV_VAR}`:
 
 ## Dependencias de tiempo de ejecución
 
-`memory-lancedb` depende del paquete nativo `@lancedb/lancedb`. OpenClaw
-empaquetado trata ese paquete como parte del paquete del complemento. El inicio
-del Gateway no repara las dependencias del complemento; si falta la dependencia,
-reinstale o actualice el paquete del complemento y reinicie el Gateway.
+`memory-lancedb` depende del paquete nativo `@lancedb/lancedb`. OpenClaw empaquetado trata ese paquete como parte del paquete del complemento. El inicio de Gateway no repara las dependencias del complemento; si falta la dependencia, reinstale o actualice el paquete del complemento y reinicie Gateway.
 
-Si una instalación antigua registra un error de `dist/package.json` faltante o de
-`@lancedb/lancedb` faltante durante la carga del complemento, actualice OpenClaw y reinicie
-el Gateway.
+Si una instalación antigua registra un error de `dist/package.json` faltante o `@lancedb/lancedb` faltante durante la carga del complemento, actualice OpenClaw y reinicie Gateway.
 
-Si el complemento registra que LanceDB no está disponible en `darwin-x64`, use el
-backend de memoria predeterminado en esa máquina, mueva el Gateway a una plataforma
-compatible o deshabilite `memory-lancedb`.
+Si el complemento registra que LanceDB no está disponible en `darwin-x64`, use el backend de memoria predeterminado en esa máquina, mueva Gateway a una plataforma compatible o deshabilite `memory-lancedb`.
 
 ## Solución de problemas
 
@@ -333,26 +325,26 @@ curl http://127.0.0.1:11434/v1/embeddings \
 
 ### Modelo de incrustación no compatible
 
-Sin `dimensions`, solo se conocen las dimensiones de incrustación integradas de
-OpenAI. Para modelos de incrustación locales o personalizados, establezca
-`embedding.dimensions` en el tamaño de vector informado por ese modelo.
+Sin `dimensions`, solo se conocen las dimensiones de incrustación integradas de OpenAI.
+Para modelos de incrustación locales o personalizados, establezca `embedding.dimensions` en el tamaño
+del vector informado por ese modelo.
 
 ### El complemento se carga pero no aparecen memorias
 
-Verifique que `plugins.slots.memory` apunte a `memory-lancedb` y luego ejecute:
+Compruebe que `plugins.slots.memory` apunte a `memory-lancedb` y luego ejecute:
 
 ```bash
 openclaw ltm stats
 openclaw ltm search "recent preference"
 ```
 
-Si `autoCapture` está deshabilitado, el complemento recuperará las memorias existentes
-pero no almacenará automáticamente nuevas. Use la herramienta `memory_store` o habilite
+Si `autoCapture` está deshabilitado, el complemento recordará los recuerdos existentes pero no
+almacenará automáticamente los nuevos. Utilice la herramienta `memory_store` o habilite
 `autoCapture` si desea una captura automática.
 
 ## Relacionado
 
-- [Descripción general de memoria](/es/concepts/memory)
+- [Resumen de memoria](/es/concepts/memory)
 - [Memoria activa](/es/concepts/active-memory)
 - [Búsqueda de memoria](/es/concepts/memory-search)
 - [Wiki de memoria](/es/plugins/memory-wiki)

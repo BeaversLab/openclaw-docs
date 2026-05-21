@@ -123,7 +123,7 @@ OpenAI Codex / ChatGPT OAuth (`openai-codex`) n'est pas un identifiant d'embeddi
 
 ## Embeddings Ollama
 
-Pour les embeddings Ollama, privilégiez le provider d'embeddings Ollama inclus. Il utilise le point de terminaison `/api/embed` natif de Ollama et suit les mêmes règles d'authentification/URL de base que le provider Ollama documenté dans [Ollama](/fr/providers/ollama).
+Pour les embeddings Ollama, il est préférable d'utiliser le fournisseur d'embeddings Ollama inclus. Il utilise le point de terminaison natif Ollama OllamaOllamaOllama`/api/embed`OllamaOllama et suit les mêmes règles d'authentification/URL de base que le fournisseur Ollama documenté dans [Ollama](/fr/providers/ollama).
 
 ```json5
 {
@@ -209,21 +209,21 @@ openclaw ltm search "project preferences"
 openclaw ltm stats
 ```
 
-Le plugin étend également `openclaw memory` avec une sous-commande `query` non vectorielle qui s'exécute directement sur la table LanceDB :
+La sous-commande `query` exécute une requête non vectorielle directement sur la table LanceDB :
 
 ```bash
-openclaw memory query --cols id,text,createdAt --limit 20
-openclaw memory query --filter "category = 'preference'" --order-by createdAt:desc
+openclaw ltm query --cols id,text,createdAt --limit 20
+openclaw ltm query --filter "category = 'preference'" --order-by createdAt:desc
 ```
 
-- `--cols <columns>` : liste d'autorisation de colonnes séparées par des virgules (par défaut `id`, `text`, `importance`, `category`, `createdAt`).
-- `--filter <condition>` : clause WHERE de style SQL ; limitée à 200 caractères et restreinte aux caractères alphanumériques, aux opérateurs de comparaison, aux guillemets, aux parenthèses et à un petit ensemble de ponctuation sûre.
+- `--cols <columns>` : liste autorisée de colonnes séparées par des virgules (par défaut `id`, `text`, `importance`, `category`, `createdAt`).
+- `--filter <condition>` : clause WHERE de style SQL ; limitée à 200 caractères et restreinte aux caractères alphanumériques, opérateurs de comparaison, guillemets, parenthèses et un petit ensemble de ponctuation sûre.
 - `--limit <n>` : entier positif ; par défaut `10`.
 - `--order-by <column>:<asc|desc>` : tri en mémoire appliqué après le filtre ; la colonne de tri est automatiquement incluse dans la projection.
 
 Les agents obtiennent également les outils de mémoire LanceDB à partir du plugin de mémoire actif :
 
-- `memory_recall` pour la restitution basée sur LanceDB
+- `memory_recall` pour le rappel basé sur LanceDB
 - `memory_store` pour enregistrer des faits importants, des préférences, des décisions et des entités
 - `memory_forget` pour supprimer les mémoires correspondantes
 
@@ -251,7 +251,7 @@ chemin par `dbPath` :
 }
 ```
 
-`storageOptions` accepte les paires clé/valeur de chaînes pour les backend de stockage LanceDB et
+`storageOptions` accepte des paires clé/valeur de chaînes pour les moteurs de stockage LanceDB et
 prend en charge l'expansion `${ENV_VAR}` :
 
 ```json5
@@ -280,18 +280,14 @@ prend en charge l'expansion `${ENV_VAR}` :
 
 ## Dépendances d'exécution
 
-`memory-lancedb` dépend du package natif `@lancedb/lancedb`. Le package
-OpenClaw empaqueté considère ce package comme faisant partie du package du plugin. Le démarrage du
+`memory-lancedb` dépend du package natif `@lancedb/lancedb`OpenClawGatewayGateway. La version
+packagée d'OpenClaw considère ce package comme faisant partie du package du plugin. Le démarrage du
 Gateway ne répare pas les dépendances des plugins ; si la dépendance est manquante, réinstallez ou
 mettez à jour le package du plugin et redémarrez le Gateway.
 
-Si une installation plus ancienne enregistre une erreur de `dist/package.json` ou de
-`@lancedb/lancedb` manquant lors du chargement du plugin, mettez à niveau OpenClaw et redémarrez le
-Gateway.
+Si une ancienne installation enregistre une erreur `dist/package.json` ou `@lancedb/lancedb` manquant lors du chargement du plugin, mettez à jour OpenClaw et redémarrez le Gateway.
 
-Si le plugin enregistre que LanceDB n'est pas disponible sur `darwin-x64`, utilisez le backend de
-mémoire par défaut sur cette machine, déplacez le Gateway vers une plate-forme prise en charge ou
-désactivez `memory-lancedb`.
+Si le plugin indique que LanceDB n'est pas disponible sur `darwin-x64`, utilisez le moteur de mémoire par défaut sur cette machine, déplacez le Gateway vers une plateforme prise en charge ou désactivez `memory-lancedb`.
 
 ## Dépannage
 
@@ -303,7 +299,7 @@ Cela signifie généralement que le model d'intégration a rejeté la requête d
 memory-lancedb: recall failed: Error: 400 the input length exceeds the context length
 ```
 
-Définissez une valeur `recallMaxChars` inférieure, puis redémarrez le Gateway :
+Définissez une valeur `recallMaxChars` plus basse, puis redémarrez le Gateway :
 
 ```json5
 {
@@ -330,8 +326,8 @@ curl http://127.0.0.1:11434/v1/embeddings \
 ### Model d'intégration non pris en charge
 
 Sans `dimensions`, seules les dimensions d'intégration OpenAI intégrées sont connues.
-Pour les modèles d'intégration locaux ou personnalisés, définissez `embedding.dimensions` sur la taille du vecteur
-signalée par ce modèle.
+Pour les modèles d'intégration locaux ou personnalisés, définissez `embedding.dimensions` sur la taille
+vectorielle signalée par ce modèle.
 
 ### Le plugin se charge mais aucun souvenir n'apparaît
 
@@ -342,13 +338,13 @@ openclaw ltm stats
 openclaw ltm search "recent preference"
 ```
 
-Si `autoCapture` est désactivé, le plugin rappellera les souvenirs existants mais ne
-stockera pas automatiquement les nouveaux. Utilisez l'outil `memory_store` ou activez
+Si `autoCapture` est désactivé, le plugin rappellera les mémoires existantes mais ne
+les stockera pas automatiquement de nouvelles. Utilisez l'outil `memory_store` ou activez
 `autoCapture` si vous souhaitez une capture automatique.
 
 ## Connexes
 
-- [Aperçu de la mémoire](/fr/concepts/memory)
+- [Vue d'ensemble de la mémoire](/fr/concepts/memory)
 - [Mémoire active](/fr/concepts/active-memory)
 - [Recherche de mémoire](/fr/concepts/memory-search)
 - [Wiki Mémoire](/fr/plugins/memory-wiki)

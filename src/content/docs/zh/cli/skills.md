@@ -26,9 +26,12 @@ openclaw skills install <slug>
 openclaw skills install <slug> --version <version>
 openclaw skills install <slug> --force
 openclaw skills install <slug> --agent <id>
+openclaw skills install <slug> --global
 openclaw skills update <slug>
+openclaw skills update <slug> --global
 openclaw skills update --all
 openclaw skills update --all --agent <id>
+openclaw skills update --all --global
 openclaw skills list
 openclaw skills list --eligible
 openclaw skills list --json
@@ -42,33 +45,25 @@ openclaw skills check --agent <id>
 openclaw skills check --json
 ```
 
-`search`/`install`/`update`ClawHub 直接使用 ClawHub 并安装到活动
-工作区 `skills/` 目录。`list`/`info`/`check` 仍然检查当前
-工作区和配置可见的本地 Skills。工作区支持的命令
-首先从 `--agent <id>` 解析目标工作区，然后当它位于已配置的 agent 工作区内时从当前工作
-directory 解析，最后是默认
-agent。
+`search`/`install`/`update`ClawHub 直接使用 ClawHub。默认情况下，`install` 和 `update` 针对活动工作区 `skills/` 目录；使用 `--global` 时，它们针对共享管理的 skills 目录。`list`/`info`/`check` 仍然检查当前工作区和配置可见的本地 skills。支持工作区的命令首先从 `--agent <id>` 解析目标工作区，然后在位于配置的代理工作区内时解析当前工作目录，最后解析默认代理。
 
-此 CLI CLI`install`ClawHubGateway(网关) 命令从 ClawHub 下载 skill 文件夹。从新手引导或 Skills 设置触发的 Gateway(网关) 支持
-的 skill 依赖安装使用
-单独的 `skills.install` 请求路径。
+此 CLI CLI`install`ClawHubGateway(网关) 命令从 ClawHub 下载 skill 文件夹。从新手引导或 Skills 设置触发的 Gateway 支持的 skill 依赖项安装改用单独的 `skills.install` 请求路径。
 
 注意：
 
-- `search [query...]`ClawHub 接受可选查询；省略它以浏览默认
-  ClawHub 搜索源。
-- `search --limit <n>` 限制返回的结果数量。
-- `install --force` 覆盖相同
-  slug 的现有工作区 skill 文件夹。
-- `--agent <id>` 指定一个已配置的 agent 工作区并覆盖当前
-  工作目录推断。
-- `update --all`ClawHub 仅更新活动工作区中已跟踪的 ClawHub 安装。
-- `check --agent <id>` 检查所选 agent 的工作区并报告哪些
-  就绪的 Skills 实际上对该 agent 的提示或命令界面可见。
+- `search [query...]`ClawHub 接受可选查询；省略它以浏览默认的 ClawHub 搜索订阅源。
+- `search --limit <n>` 限制返回的结果。
+- `install --force` 会覆盖同一 slug 的现有工作区 skill 文件夹。
+- `--global` 针对共享管理的 skills 目录，不能与 `--agent <id>` 组合使用。
+- `--agent <id>` 针对一个已配置的代理工作区，并覆盖当前工作目录推断。
+- `update <slug>` 更新单个已跟踪的 skill。添加 `--global` 以针对共享管理的 skills 目录而不是工作区。
+- `update --all`ClawHub 更新选定工作区中已跟踪的 ClawHub 安装，或在与 `--global` 组合时更新共享管理的 skills 目录中的安装。
+- `check --agent <id>` 检查所选代理的工作区，并报告哪些
+  准备就绪的 Skills 实际上对该代理的提示或命令界面可见。
 - 当未提供子命令时，`list` 是默认操作。
-- `list`、`info` 和 `check` 将其渲染输出写入 stdout。使用
-  `--json` 时，这意味着机器可读的负载保留在 stdout 上，以便用于管道
-  和脚本。
+- `list`、`info` 和 `check` 将其渲染的输出写入 stdout。对于
+  `--json`，这意味着机器可读的有效载荷保留在 stdout 上，以便通过管道
+  和脚本使用。
 
 ## 相关
 

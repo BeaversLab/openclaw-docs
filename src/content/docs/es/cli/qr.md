@@ -35,22 +35,22 @@ openclaw qr --url wss://gateway.example/ws
 
 - `--token` y `--password` son mutuamente excluyentes.
 - El propio código de configuración ahora lleva un `bootstrapToken` opaco de corta duración, no el token/contraseña del gateway compartido.
-- El arranque integrado del código de configuración es solo para nodos. Después de la aprobación, el token del nodo principal llega a `scopes: []`.
-- El flujo integrado del código de configuración no devuelve un token de operador entregado; el acceso de operador requiere un emparejamiento de operador aprobado por separado o un flujo de tokens.
-- El emparejamiento móvil falla cerrado para las URL de puerta de enlace de Tailscale/públicas `ws://`. Las direcciones LAN privadas y los hosts Bonjour `.local` siguen siendo compatibles a través de `ws://`, pero las rutas móviles de Tailscale/públicas deben usar Tailscale Serve/Funnel o una URL de puerta de enlace `wss://`.
+- El arranque del código de configuración integrado devuelve un token `node` primario con `scopes: []` más un token de traspaso `operator` limitado para la incorporación móvil de confianza.
+- El token de operador transferido se limita a `operator.approvals`, `operator.read` y `operator.write`; `operator.admin`, `operator.pairing` y `operator.talk.secrets` requieren un emparejamiento de operador aprobado separado o un flujo de token.
+- El emparejamiento móvil falla de forma cerrada para las URL de puerta de enlace `ws://` de Tailscale/públicas. Las direcciones LAN privadas y los hosts Bonjour `.local` siguen siendo compatibles a través de `ws://`, pero las rutas móviles de Tailscale/públicas deben usar Tailscale Serve/Funnel o una URL de puerta de enlace `wss://`.
 - Con `--remote`, OpenClaw requiere `gateway.remote.url` o
   `gateway.tailscale.mode=serve|funnel`.
-- Con `--remote`, si las credenciales remotas efectivamente activas están configuradas como SecretRefs y no pasas `--token` o `--password`, el comando las resuelve desde la instantánea de la puerta de enlace activa. Si la puerta de enlace no está disponible, el comando falla rápidamente.
-- Sin `--remote`, los SecretRefs de autenticación de la puerta de enlace local se resuelven cuando no se pasa ninguna anulación de autenticación CLI:
+- Con `--remote`, si las credenciales remotas activas efectivas están configuradas como SecretRefs y no pasa `--token` o `--password`, el comando las resuelve desde la instantánea de la puerta de enlace activa. Si la puerta de enlace no está disponible, el comando falla rápidamente.
+- Sin `--remote`, los SecretRefs de autenticación de la puerta de enlace local se resuelven cuando no se pasa ninguna anulación de autenticación de CLI:
   - `gateway.auth.token` se resuelve cuando la autenticación por token puede ganar (`gateway.auth.mode="token"` explícito o modo inferido donde ninguna fuente de contraseña gana).
-  - `gateway.auth.password` se resuelve cuando la autenticación por contraseña puede ganar (`gateway.auth.mode="password"` explícito o modo inferido sin token ganante de auth/env).
-- Si tanto `gateway.auth.token` como `gateway.auth.password` están configurados (incluyendo SecretRefs) y `gateway.auth.mode` no está establecido, la resolución del código de configuración falla hasta que el modo se establece explícitamente.
-- Nota de sesgo de versión de la puerta de enlace: esta ruta de comando requiere una puerta de enlace que admita `secrets.resolve`; las puertas de enlace antiguas devuelven un error de método desconocido.
+  - `gateway.auth.password` se resuelve cuando la autenticación por contraseña puede ganar (`gateway.auth.mode="password"` explícito o modo inferido sin ningún token ganante de auth/env).
+- Si están configurados tanto `gateway.auth.token` como `gateway.auth.password` (incluyendo SecretRefs) y `gateway.auth.mode` no está establecido, la resolución del código de configuración falla hasta que el modo se establece explícitamente.
+- Nota de discrepancia de versión de la puerta de enlace: esta ruta de comando requiere una puerta de enlace que admita `secrets.resolve`; las puertas de enlace antiguas devuelven un error de método desconocido.
 - Después de escanear, apruebe el emparejamiento del dispositivo con:
   - `openclaw devices list`
   - `openclaw devices approve <requestId>`
 
 ## Relacionado
 
-- [Referencia de CLI](/es/cli)
+- [Referencia de la CLI](/es/cli)
 - [Emparejamiento](/es/cli/pairing)

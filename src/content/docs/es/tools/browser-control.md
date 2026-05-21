@@ -7,9 +7,9 @@ read_when:
 title: "API de control del navegador"
 ---
 
-Para la configuración, solución de problemas y puesta a punto, consulte [Browser](/es/tools/browser).
-Esta página es la referencia para la API de control HTTP local, la CLI `openclaw browser`
-y los patrones de secuencias de comandos (snapshots, refs, waits, debug flows).
+Para la configuración, resolución de problemas y solución de problemas, consulte [Browser](/es/tools/browser).
+Esta página es la referencia para la API HTTP de control local, la línea de comandos `openclaw browser`
+y los patrones de scripting (snapshots, refs, waits, debug flows).
 
 ## API de control (opcional)
 
@@ -117,10 +117,10 @@ docker compose run --rm openclaw-cli \
   node /app/node_modules/playwright-core/cli.js install chromium
 ```
 
-Para conservar las descargas del navegador, establezca `PLAYWRIGHT_BROWSERS_PATH` (por ejemplo,
+Para conservar las descargas del navegador, configure `PLAYWRIGHT_BROWSERS_PATH` (por ejemplo,
 `/home/node/.cache/ms-playwright`) y asegúrese de que `/home/node` se conserve mediante
 `OPENCLAW_HOME_VOLUME` o un montaje de enlace (bind mount). OpenClaw detecta automáticamente el
-Chromium persistente en Linux. Consulte [Docker](/es/install/docker).
+Chromium conservado en Linux. Consulte [Docker](/es/install/docker).
 
 ## Cómo funciona (interno)
 
@@ -197,6 +197,7 @@ openclaw browser dialog --dismiss --dialog-id d1
 openclaw browser wait --text "Done"
 openclaw browser wait "#main" --url "**/dash" --load networkidle --fn "window.ready===true"
 openclaw browser evaluate --fn '(el) => el.textContent' --ref 7
+openclaw browser evaluate --timeout-ms 30000 --fn 'async () => { await window.ready; return true; }'
 openclaw browser highlight e12
 openclaw browser trace start
 openclaw browser trace stop
@@ -240,7 +241,7 @@ Marcas de instantánea a un vistazo:
 
 - `--format ai` (predeterminado con Playwright): instantánea de IA con referencias numéricas (`aria-ref="<n>"`).
 - `--format aria`: árbol de accesibilidad con referencias `axN`. Cuando Playwright está disponible, OpenClaw vincula las referencias con los IDs del DOM del backend a la página en vivo para que las acciones de seguimiento puedan usarlas; de lo contrario, trate la salida solo como inspección.
-- `--efficient` (o `--mode efficient`): preajuste de instantánea de rol compacto. Establezca `browser.snapshotDefaults.mode: "efficient"` para que esto sea el predeterminado (consulte [configuración de Gateway](/es/gateway/configuration-reference#browser)).
+- `--efficient` (o `--mode efficient`): preajuste de snapshot de rol compacto. Establezca `browser.snapshotDefaults.mode: "efficient"` para convertir esto en el predeterminado (consulte [Gateway configuration](/es/gateway/configuration-reference#browser)).
 - `--interactive`, `--compact`, `--depth`, `--selector` fuerzan una instantánea de rol con referencias `ref=e12`. `--frame "<iframe>"` limita las instantáneas de rol a un iframe.
 - `--labels` añade una captura de pantalla solo del viewport con etiquetas de referencia superpuestas (imprime `MEDIA:<path>`).
 - `--urls` añade los destinos de enlace descubiertos a las instantáneas de IA.
@@ -358,9 +359,11 @@ Estos son útiles para flujos de trabajo de "hacer que el sitio se comporte como
 - `browser act kind=evaluate` / `openclaw browser evaluate` y `wait --fn`
   ejecutan JavaScript arbitrario en el contexto de la página. La inyección de indicaciones puede dirigir
   esto. Desactívelo con `browser.evaluateEnabled=false` si no lo necesita.
-- Para notas sobre inicios de sesión y antibots (X/Twitter, etc.), consulte [Inicio de sesión del navegador + publicación en X/Twitter](/es/tools/browser-login).
+- Use `openclaw browser evaluate --timeout-ms <ms>` cuando la función del lado de la página
+  pueda necesitar más tiempo que el tiempo de espera de evaluación predeterminado.
+- Para notas sobre inicios de sesión y anti-bot (X/Twitter, etc.), consulte [Browser login + X/Twitter posting](/es/tools/browser-login).
 - Mantenga el host Gateway/node privado (solo loopback o tailnet).
-- Los puntos de conexión CDP remotos son potentes; protéjalos mediante túneles.
+- Los puntos de conexión CDP remotos son potentes; utilice túneles y protéjalos.
 
 Ejemplo en modo estricto (bloquear destinos privados/internos de forma predeterminada):
 
@@ -378,7 +381,7 @@ Ejemplo en modo estricto (bloquear destinos privados/internos de forma predeterm
 
 ## Relacionado
 
-- [Navegador](/es/tools/browser) - descripción general, configuración, perfiles, seguridad
-- [Inicio de sesión del navegador](/es/tools/browser-login) - iniciar sesión en sitios
-- [Solución de problemas del navegador en Linux](/es/tools/browser-linux-troubleshooting)
-- [Solución de problemas del navegador en WSL2](/es/tools/browser-wsl2-windows-remote-cdp-troubleshooting)
+- [Browser](/es/tools/browser) - descripción general, configuración, perfiles, seguridad
+- [Browser login](/es/tools/browser-login) - iniciar sesión en sitios
+- [Browser Linux troubleshooting](/es/tools/browser-linux-troubleshooting)
+- [Browser WSL2 troubleshooting](/es/tools/browser-wsl2-windows-remote-cdp-troubleshooting)

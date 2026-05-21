@@ -103,7 +103,7 @@ title: "Niveaux de réflexion"
 
 - Niveaux : `on|off|stream`.
 - Le message contenant uniquement la directive bascule l'affichage des blocs de réflexion dans les réponses.
-- Lorsqu'elle est activée, le raisonnement est envoyé en tant que **message distinct** préfixé par `Reasoning:`.
+- Lorsqu'elle est activée, le raisonnement est envoyé sous la forme d'un **message distinct** préfixé par `Thinking`.
 - `stream` (Telegram uniquement) : diffuse le raisonnement dans la bulle de brouillon Telegram pendant que la réponse est générée, puis envoie la réponse finale sans le raisonnement.
 - Alias : `/reason`.
 - Envoyez `/reasoning` (ou `/reasoning:`) sans argument pour voir le niveau de raisonnement actuel.
@@ -118,7 +118,7 @@ Les balises de raisonnement de modèle local malformées sont gérées de maniè
 ## Heartbeats
 
 - Le corps de la sonde heartbeat est l'invite heartbeat configurée (par défaut : `Read HEARTBEAT.md if it exists (workspace context). Follow it strictly. Do not infer or repeat old tasks from prior chats. If nothing needs attention, reply HEARTBEAT_OK.`). Les directives en ligne dans un message heartbeat s'appliquent comme d'habitude (mais évitez de modifier les valeurs par défaut de la session depuis les heartbeats).
-- La livraison des heartbeats par défaut uniquement à la charge utile finale. Pour envoyer également le message `Reasoning:` distinct (lorsqu'il est disponible), définissez `agents.defaults.heartbeat.includeReasoning: true` ou `agents.list[].heartbeat.includeReasoning: true` par agent.
+- La livraison des battements de cœur par défaut concerne uniquement la charge utile finale. Pour envoyer également le message distinct `Thinking` (lorsqu'il est disponible), définissez `agents.defaults.heartbeat.includeReasoning: true` ou `agents.list[].heartbeat.includeReasoning: true` par agent.
 
 ## Interface utilisateur du chat Web
 

@@ -215,7 +215,7 @@ Remplacez la paire de clés VAPID via les env vars sur le processus Gateway lors
 
 - `OPENCLAW_VAPID_PUBLIC_KEY`
 - `OPENCLAW_VAPID_PRIVATE_KEY`
-- `OPENCLAW_VAPID_SUBJECT` (par défaut `mailto:openclaw@localhost`)
+- `OPENCLAW_VAPID_SUBJECT` (par défaut `https://openclaw.ai`)
 
 L'interface de contrôle utilise ces méthodes Gateway limitées par portée pour enregistrer et tester les abonnements du navigateur :
 

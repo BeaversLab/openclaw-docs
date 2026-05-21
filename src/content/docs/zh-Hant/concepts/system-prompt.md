@@ -113,7 +113,8 @@ OpenClaw 會在 `test/fixtures/agents/prompt-snapshots/codex-runtime-happy-path/
 
 ## 工作區引導注入
 
-引導文件會被修剪並附加在 **專案上下文** 下，因此模型可以看到身份和配置文件上下文而無需顯式讀取：
+Bootstrap 檔案是從目前的工作區解析的，然後被路由到符合其生命週期的
+提示表面：
 
 - `AGENTS.md`
 - `SOUL.md`
@@ -124,42 +125,73 @@ OpenClaw 會在 `test/fixtures/agents/prompt-snapshots/codex-runtime-happy-path/
 - `BOOTSTRAP.md` （僅限全新的工作區）
 - 如果存在 `MEMORY.md`
 
-除非特定檔案有設置閘門，否則所有這些檔案都會在每一輪**注入到上下文視窗**中。當預設代理停用心跳或 `agents.defaults.heartbeat.includeSystemPromptSection` 為 false 時，`HEARTBEAT.md` 會在一般執行中被省略。請保持注入檔案的精簡，特別是 `MEMORY.md`。`MEMORY.md` 旨在作為長期策展的摘要；詳細的每日筆記應放在 `memory/*.md` 中，以便 `memory_search` 和 `memory_get` 可按需擷取。過大的 `MEMORY.md` 檔案會增加提示詞的使用量，且由於下方的啟動檔案限制，可能會被部分注入。
+在原生的 Codex 鞍具上，OpenClaw 避免在每次使用者回合中重複穩定的工作區檔案。
+Codex 透過其自己的專案文件探索來載入 `AGENTS.md`。`SOUL.md`、`IDENTITY.md`、`TOOLS.md` 和 `USER.md` 被作為
+Codex 開發者指令轉發。`HEARTBEAT.md` 內容不會被注入；心跳回合會收到一個協作模式註記，當該檔案存在且
+非空時指向該檔案。`MEMORY.md` 和啟用的 `BOOTSTRAP.md` 內容目前保持正常的
+回合上下文角色。
 
-當會話在原生 Codex 駝具上執行時，Codex 會透過其自己的專案文件發現機制載入 `AGENTS.md`。OpenClaw 仍會解析其餘的啟動檔案並將其作為 Codex 配置指令轉發，因此 `SOUL.md`、`TOOLS.md`、`IDENTITY.md`、`USER.md`、`HEARTBEAT.md`、`BOOTSTRAP.md` 和 `MEMORY.md` 保持相同的工作區上下文角色，而不重複 `AGENTS.md`。
+在非 Codex 鞍具上，bootstrap 檔案會繼續根據其現有的閘道被組合到
+OpenClaw 提示中。當預設代理停用心跳或
+`agents.defaults.heartbeat.includeSystemPromptSection` 為 false 時，`HEARTBEAT.md` 會在正常執行中被省略。請保持注入的
+檔案簡潔，特別是 `MEMORY.md`。`MEMORY.md` 旨在作為經過策劃的
+長期摘要；詳細的每日筆記應放在 `memory/*.md` 中，
+`memory_search` 和 `memory_get` 可以按需檢索它們。過大的
+`MEMORY.md` 檔案會增加提示用量，並且由於下方的 bootstrap 檔案限制，可能只會被部分注入。
 
-<Note>`memory/*.md` 每日檔案**並不**屬於一般啟動專案上下文的一部分。在一般輪次中，它們是透過 `memory_search` 和 `memory_get` 工具按需存取，因此除非模型明確讀取，否則不會佔用上下文視窗。純 `/new` 和 `/reset` 輪次是例外：執行時環境可以在第一輪將最近的每日記憶體作為一次性啟動上下文塊預先加入。</Note>
+<Note>`memory/*.md` 每日檔案**不**是正常 bootstrap 專案上下文的一部分。在普通回合中，它們是透過 `memory_search` 和 `memory_get` 工具按需存取的，因此除非模型明確讀取它們，否則它們不會佔用上下文視窗的大小。單純的 `/new` 和 `/reset` 回合是例外：執行時可以將最近的每日記憶作為一次性啟動上下文區塊添加到該第一個回合。</Note>
 
-大檔案會被截斷並帶有標記。每個檔案的最大大小由 `agents.defaults.bootstrapMaxChars` 控制（預設：12000）。跨檔案注入的引導內容總量上限由 `agents.defaults.bootstrapTotalMaxChars` 限制（預設：60000）。遺失的檔案會注入一個簡短的遺失檔案標記。發生截斷時，OpenClaw 可以插入簡明的系統提示詞警告通知；透過 `agents.defaults.bootstrapPromptTruncationWarning` 控制此行為（`off`、`once`、`always`；預設：`always`）。詳細的原始/注入計數保留在診斷資訊中，例如 `/context`、`/status`、doctor 和日誌。
+較大的檔案會以標記截斷。每個檔案的大小上限由
+`agents.defaults.bootstrapMaxChars` 控制（預設值：12000）。跨檔案注入的 bootstrap
+內容總計上限由 `agents.defaults.bootstrapTotalMaxChars` 控制
+（預設值：60000）。遺失的檔案會注入一個簡短的遺失檔案標記。當發生截斷
+時，OpenClaw 可以注入簡明的系統提示警告通知；請透過
+`agents.defaults.bootstrapPromptTruncationWarning` 控制此行為（`off`、`once`、`always`；
+預設值：`always`）。詳細的原始/注入計數會保留在診斷資訊中，例如
+`/context`、`/status`、doctor 與記錄檔。
 
-對於記憶檔案，截斷並非資料遺失：檔案在磁碟上保持完整，但模型在直接讀取或搜尋記憶之前，只能看到被截斷的注入副本。如果 `MEMORY.md` 經常被截斷，請將其蒸餾為更簡短且持久的摘要，並將詳細歷史記錄移至 `memory/*.md`，或者有意識地提高引導限制。
+對於記憶檔案，截斷並非資料遺失：檔案在磁碟上保持完整，
+但在模型直接讀取或搜尋記憶之前，僅會看到縮短後的注入副本。如果 `MEMORY.md` 反覆被截斷，請將其提煉為
+更簡短的持久摘要，並將詳細歷史記錄移至 `memory/*.md`，或
+有意識地提高 bootstrap 限制。
 
-子代理程式階段只會注入 `AGENTS.md` 和 `TOOLS.md`（其他引導檔案會被過濾掉，以保持子代理程式的上下文精簡）。
+子代理 時階段僅會注入 `AGENTS.md` 與 `TOOLS.md`（其他 bootstrap 檔案
+會被濾除以維持子代理 的上下文精簡）。
 
-內部掛鉤 可以透過 `agent:bootstrap` 攔截此步驟，以變更或替換注入的引導檔案（例如將 `SOUL.md` 交換為替代的人格設定）。
+內部掛勾 可以透過 `agent:bootstrap` 攔截此步驟，以修改或替換
+注入的 bootstrap 檔案（例如將 `SOUL.md` 替換為其他人格）。
 
-如果您想讓代理程式的聽起來不那麼通用，請從 [SOUL.md Personality Guide](/zh-Hant/concepts/soul) 開始。
+如果您想讓代理 的聽起來較不通用，請從
+[SOUL.md Personality Guide](/zh-Hant/concepts/soul) 開始。
 
-若要檢查每個注入檔案的貢獻程度（原始內容 vs 注入內容、截斷情況，以及工具架構額外負荷），請使用 `/context list` 或 `/context detail`。請參閱 [Context](/zh-Hant/concepts/context)。
+若要檢視每個注入檔案的貢獻程度（原始內容 vs 注入內容、截斷狀況，加上工具架構額外負擔），請使用 `/context list` 或 `/context detail`。請參閱 [Context](/zh-Hant/concepts/context)。
 
 ## 時間處理
 
 當已知使用者時區時，系統提示詞會包含專門的「目前日期與時間」章節。為了保持提示詞快取穩定，它現在僅包含 **時區**（不包含動態時鐘或時間格式）。
 
-當代理需要當前時間時使用 `session_status`；狀態卡包含時間戳記行。同一個工具可以選擇性地設定每個工作階段的模型覆寫（`model=default` 清除它）。
+當代理 需要當前時間時，請使用 `session_status`；狀態卡片
+包含時間戳記行。同一個工具可以選擇性地設定各階段的模型
+覆寫（`model=default` 會將其清除）。
 
 設定如下：
 
 - `agents.defaults.userTimezone`
 - `agents.defaults.timeFormat` (`auto` | `12` | `24`)
 
-參閱 [日期與時間](/zh-Hant/date-time) 以了解完整的行為細節。
+請參閱 [Date & Time](/zh-Hant/date-time) 以瞭解完整的行為詳情。
 
 ## 技能
 
-當存在合格的技能時，OpenClaw 會注入一個精簡的 **可用技能列表**（`formatSkillsForPrompt`），其中包含每個技能的 **檔案路徑**。提示指示模型使用 `read` 來載入列出路徑（工作區、受管理或捆綁）下的 SKILL.md。如果沒有合格的技能，則會省略技能部分。
+當存在合格的技能時，OpenClaw 會注入一個精簡的 **可用技能清單**
+(`formatSkillsForPrompt`)，其中包含每個技能的 **檔案路徑**。該
+提示指示模型使用 `read` 來載入列出路徑
+（工作區、受管理或內建）中的 SKILL.md。如果沒有合格的技能，
+則會省略 Skills 區塊。
 
-合格性包括技能元數據閘門、執行時環境/設定檢查，以及當設定 `agents.defaults.skills` 或 `agents.list[].skills` 時的有效代理技能允許列表。
+資格條件包括技能元數據閘道、執行時環境/設定檢查，
+以及當設定 `agents.defaults.skills` 或
+`agents.list[].skills` 時的有效代理程式技能允許清單。
 
 外掛程式捆綁的技能僅在其所屬的外掛程式啟用時才合格。這讓工具外掛程式能夠公開更深入的作業指南，而無需將所有指導內容直接嵌入到每個工具描述中。
 
@@ -178,33 +210,37 @@ OpenClaw 會在 `test/fixtures/agents/prompt-snapshots/codex-runtime-happy-path/
 技能列表預算由技能子系統擁有：
 
 - 全域預設值：`skills.limits.maxSkillsPromptChars`
-- 每個代理的覆寫：`agents.list[].skillsLimits.maxSkillsPromptChars`
+- 各代理程式覆寫：`agents.list[].skillsLimits.maxSkillsPromptChars`
 
 通用的受限執行時摘錄使用不同的表面：
 
 - `agents.defaults.contextLimits.*`
 - `agents.list[].contextLimits.*`
 
-這種區分使得技能大小與執行時讀取/注入大小（例如 `memory_get`、即時工具結果以及壓縮後的 AGENTS.md 重新整理）保持分開。
+此區分使技能的大小與執行時讀取/注入的大小（例如
+`memory_get`、即時工具結果以及壓縮後的 AGENTS.md 重新整理）分開計算。
 
 ## 文件
 
-系統提示包含一個 **文件** 部分。當本地文件可用時，它指向本地 OpenClaw 文件目錄（Git 檢出中的 `docs/` 或捆綁的 npm 套件文件）。如果本地文件不可用，它會回退到 [https://docs.openclaw.ai](https://docs.openclaw.ai)。
+系統提示包含一個 **Documentation** 區塊。當有本機文件可用時，它會
+指向本機 OpenClaw 文件目錄（Git 簽出中的 `docs/` 或內建的 npm
+套件文件）。如果本機文件不可用，它會回退至
+[https://docs.openclaw.ai](https://docs.openclaw.ai)。
 
-同一部分還包含了 OpenClaw 的原始碼位置。Git 檢出（checkouts）會公開本機的
-source root，以便代理程式可以直接檢查程式碼。套件安裝則包含 GitHub
-原始碼 URL，並告訴代理程式在文件不完整或過時時前往該處檢視原始碼。
-提示詞也註明了公開文件鏡像、社群 Discord 以及 ClawHub
-([https://clawhub.ai](https://clawhub.ai))，用於技能探索。它指示模型
-對於 OpenClaw 的行為、指令、設定或架構，應先查閱文件，並在可能的情況下
-自行執行 `openclaw status`（僅在無權限存取時才詢問使用者）。
-針對設定，它會指引代理程式至 `gateway` 工具動作
-`config.schema.lookup` 以取得精確的欄位層級文件與限制，接著參閱
+同一區塊也包含 OpenClaw 的原始碼位置。Git 簽出會公開本機
+原始碼根目錄，以便代理程式可以直接檢查程式碼。套件安裝則包含 GitHub
+原始碼 URL，並告訴代理程式在文件不完整或陳舊時前往該處檢視原始碼。
+提示還註明了公開文件鏡像、社群 Discord 和 ClawHub
+([https://clawhub.ai](https://clawhub.ai)) 用於探索技能。它指示模型
+優先查閱文件以瞭解 OpenClaw 的行為、指令、設定或架構，並在可能時自行
+執行 `openclaw status`（僅在無權限時才詢問使用者）。
+針對設定，它特別指示代理程式參考 `gateway` 工具動作
+`config.schema.lookup` 以取得精確的欄位層級文件和限制，然後參考
 `docs/gateway/configuration.md` 和 `docs/gateway/configuration-reference.md`
 以獲得更廣泛的指引。
 
 ## 相關
 
-- [代理程式執行時期](/zh-Hant/concepts/agent)
-- [代理程式工作區](/zh-Hant/concepts/agent-workspace)
-- [情境引擎](/zh-Hant/concepts/context-engine)
+- [Agent runtime](/zh-Hant/concepts/agent)
+- [Agent workspace](/zh-Hant/concepts/agent-workspace)
+- [Context engine](/zh-Hant/concepts/context-engine)

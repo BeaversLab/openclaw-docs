@@ -10,7 +10,7 @@ title: "Cron"
 
 管理 Gateway(网关) 网关 调度器的 cron 作业。
 
-<Tip>运行 `openclaw cron --help` 以获取完整的命令界面。请参阅 [Cron jobs](/zh/automation/cron-jobs) 了解概念指南。</Tip>
+<Tip>运行 `openclaw cron --help` 以查看完整的命令行界面。请参阅 [Cron 作业](/zh/automation/cron-jobs) 了解概念指南。</Tip>
 
 ## Sessions
 
@@ -151,20 +151,22 @@ Cron `--model` 是一个**任务主要配置**，而不是聊天会话 `/model` 
 
 ### 结构化拒绝
 
-隔离的 cron 运行首选来自嵌入运行的结构化执行拒绝元数据，然后回退到最终输出中的已知拒绝标记，例如 `SYSTEM_RUN_DENIED`、`INVALID_REQUEST` 和审批绑定拒绝短语。
+隔离的 Cron 运行使用来自嵌入运行的结构化执行拒绝元数据作为权威的拒绝信号。当嵌套的结构化错误消息以 `SYSTEM_RUN_DENIED` 或 `INVALID_REQUEST` 开头时，它们还会遵守节点主机 `UNAVAILABLE` 包装器。
 
-`cron list` 和运行历史会显示拒绝原因，而不是将被阻止的命令报告为 `ok`。
+除非嵌入运行也提供了结构化拒绝元数据，否则 Cron 不会将最终输出的散文或类似审批的拒绝短语归类为拒绝，因此普通的助手文本不会被视为被阻止的命令。
+
+`cron list` 和运行历史记录会显示拒绝原因，而不是将阻止的命令报告为 `ok`。
 
 ## 保留
 
-保留和清理在配置中控制：
+保留和清理通过配置进行控制：
 
-- `cron.sessionRetention`（默认 `24h`）清理已完成的隔离运行会话。
-- `cron.runLog.maxBytes` 和 `cron.runLog.keepLines` 清理 `~/.openclaw/cron/runs/<jobId>.jsonl`。
+- `cron.sessionRetention`（默认为 `24h`）会清理已完成的隔离运行会话。
+- `cron.runLog.maxBytes` 和 `cron.runLog.keepLines` 会清理 `~/.openclaw/cron/runs/<jobId>.jsonl`。
 
 ## 迁移旧作业
 
-<Note>如果您拥有当前交付和存储格式之前的 cron 作业，请运行 `openclaw doctor --fix`。Doctor 会标准化旧版 cron 字段（`jobId`、`schedule.cron`、包括旧版 `threadId` 的顶级交付字段、payload `provider` 交付别名），并在配置了 `cron.webhook` 时将简单的 `notify: true` webhook 回退作业迁移到显式 webhook 交付。</Note>
+<Note>如果您拥有当前交付和存储格式之前的 cron 作业，请运行 `openclaw doctor --fix`。Doctor 会规范化旧的 cron 字段（`jobId`、`schedule.cron`，包括旧版 `threadId` 的顶级交付字段，payload `provider` 交付别名），并在配置了 `cron.webhook` 时将简单的 `notify: true` webhook 回退作业迁移到显式 webhook 交付。</Note>
 
 ## 常见编辑
 
@@ -186,13 +188,13 @@ openclaw cron edit <job-id> --no-deliver
 openclaw cron edit <job-id> --light-context
 ```
 
-公告到特定渠道：
+宣布到特定渠道：
 
 ```bash
 openclaw cron edit <job-id> --announce --channel slack --to "channel:C1234567890"
 ```
 
-公告到 Telegram 论坛主题：
+宣布到 Telegram 论坛主题：
 
 ```bash
 openclaw cron edit <job-id> --announce --channel telegram --to "-1001234567890" --thread-id 42
@@ -210,9 +212,9 @@ openclaw cron add \
   --no-deliver
 ```
 
-`--light-context` 仅适用于隔离的 agent-turn 任务。对于 cron 运行，轻量级模式会使 bootstrap 上下文保持为空，而不是注入完整的工作区 bootstrap 集。
+`--light-context` 仅适用于隔离的代理轮次作业。对于 cron 运行，轻量级模式保持引导上下文为空，而不是注入完整的工作区引导集。
 
-## 常用管理命令
+## 常见管理命令
 
 手动运行和检查：
 
@@ -229,15 +231,15 @@ openclaw cron runs --id <job-id> --limit 50
 openclaw cron runs --id <job-id> --run-id <run-id>
 ```
 
-`openclaw cron list` 默认显示所有匹配的任务。传递 `--agent <id>` 以仅显示有效标准化 agent id 匹配的任务；没有存储 agent id 的任务计为配置的默认 agent。
+`openclaw cron list` 默认显示所有匹配的作业。传递 `--agent <id>` 以仅显示有效规范化代理 ID 匹配的作业；没有存储代理 ID 的作业计为配置的默认代理。
 
-`openclaw cron get <job-id>` 直接返回存储的任务 JSON。当您需要具有交付路由预览的可读视图时，请使用 `cron show <job-id>`。
+`openclaw cron get <job-id>` 直接返回存储的作业 JSON。当您需要带有传递路由预览的可读视图时，请使用 `cron show <job-id>`。
 
-`cron list --json` 和 `cron show <job-id> --json` 在每个任务上包含一个顶级的 `status` 字段，该字段根据 `enabled`、`state.runningAtMs` 和 `state.lastRunStatus` 计算得出。值包括：`disabled`、`running`、`ok`、`error`、`skipped` 或 `idle`。这反映了可读的状态列，以便外部工具可以读取任务状态而无需重新推导。
+`cron list --json` 和 `cron show <job-id> --json` 在每个作业上包含一个顶级 `status` 字段，根据 `enabled`、`state.runningAtMs` 和 `state.lastRunStatus` 计算得出。值包括：`disabled`、`running`、`ok`、`error`、`skipped` 或 `idle`。这反映了可读状态列，以便外部工具可以读取作业状态而无需重新推导。
 
-`cron runs` 条目包含交付诊断信息，其中包括预期的 cron 目标、解析的目标、消息工具发送、回退使用以及已交付状态。
+`cron runs` 条目包含传递诊断信息，其中包含预期的 cron 目标、解析后的目标、消息工具发送、回退使用情况和已传递状态。
 
-Agent 和会话重定向：
+代理和会话重定向：
 
 ```bash
 openclaw cron edit <job-id> --agent ops
@@ -246,9 +248,9 @@ openclaw cron edit <job-id> --session current
 openclaw cron edit <job-id> --session "session:daily-brief"
 ```
 
-当在 agent-turn 任务中省略 `--agent` 时，`openclaw cron add` 会发出警告并回退到默认 agent (`main`)。在创建时传递 `--agent <id>` 以固定特定的 agent。
+当代理轮次作业中省略 `--agent` 时，`openclaw cron add` 会发出警告并回退到默认代理 (`main`)。在创建时传递 `--agent <id>` 以固定特定代理。
 
-交付调整：
+传递调整：
 
 ```bash
 openclaw cron edit <job-id> --announce --channel slack --to "channel:C1234567890"
@@ -259,5 +261,5 @@ openclaw cron edit <job-id> --no-deliver
 
 ## 相关
 
-- [CLI 参考](CLI/en/cli)
+- [CLI 参考](/zh/cli)
 - [计划任务](/zh/automation/cron-jobs)

@@ -399,7 +399,7 @@ Indicateurs d'outil intégrés expérimentaux. Désactivés par défaut, sauf si
 ```
 
 - `model` : modèle par défaut pour les sous-agents générés. S'il est omis, les sous-agents héritent du modèle de l'appelant.
-- `allowAgents` : liste d'autorisation par défaut des IDs d'agents cibles pour `sessions_spawn` lorsque l'agent demandeur ne définit pas son propre `subagents.allowAgents` (`["*"]` = n'importe quel ; par défaut : même agent uniquement).
+- `allowAgents` : liste blanche par défaut des identifiants d'agents cibles pour `sessions_spawn` lorsque l'agent demandeur ne définit pas son propre `subagents.allowAgents` (`["*"]` = n'importe quelle cible configurée ; par défaut : même agent uniquement).
 - `runTimeoutSeconds` : délai d'expiration par défaut (secondes) pour `sessions_spawn` lorsque l'appel d'outil omet `runTimeoutSeconds`. `0` signifie aucun délai d'expiration.
 - `announceTimeoutMs` : délai d'expiration par appel (millisecondes) pour les tentatives de livraison d'annonces `agent` de la passerelle. Par défaut : `120000`. Les nouvelles tentatives transitoires peuvent prolonger l'attente d'annonce totale au-delà d'un délai d'expiration configuré.
 - Stratégie d'outil par sous-agent : `tools.subagents.tools.allow` / `tools.subagents.tools.deny`.

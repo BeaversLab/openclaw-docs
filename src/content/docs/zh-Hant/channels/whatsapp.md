@@ -604,13 +604,15 @@ Ack 反應由 `reactionLevel` 控制——當 `reactionLevel` 為 `"off"` 時，
   </Accordion>
 
   <Accordion title="群組訊息意外被忽略">
-    請按此順序檢查：
+    請依序檢查：
 
     - `groupPolicy`
     - `groupAllowFrom` / `allowFrom`
-    - `groups` 允許清單項目
-    - 提及閘控 (`requireMention` + 提及模式)
-    - `openclaw.json` (JSON5) 中的重複索引鍵：後面的項目會覆寫前面的項目，因此在每個範圍內保持單一 `groupPolicy`
+    - `groups` 許可清單項目
+    - 提及閘控（`requireMention` + 提及模式）
+    - `openclaw.json` (JSON5) 中的重複鍵值：後續項目會覆蓋先前的項目，因此請在每個作用域中保留單一的 `groupPolicy`
+
+    如果存在 `channels.whatsapp.groups`，WhatsApp 仍然可以觀察到來自其他群組的訊息，但 OpenClaw 會在會話路由之前將其丟棄。請將群組 JID 新增至 `channels.whatsapp.groups`，或新增 `groups["*"]` 以允許所有群組，同時在 `groupPolicy` 和 `groupAllowFrom` 下保持發送者授權。
 
   </Accordion>
 
@@ -621,34 +623,34 @@ Ack 反應由 `reactionLevel` 控制——當 `reactionLevel` 為 `"off"` 時，
 
 ## 系統提示
 
-WhatsApp 支援透過 `groups` 和 `direct` 映射，為群組和直接聊天提供 Telegram 風格的系統提示。
+WhatsApp 透過 `groups` 和 `direct` 映射，支援針對群組和直接聊天傳送類似 Telegram 風格的系統提示。
 
 群組訊息的解析層級：
 
-首先會決定有效的 `groups` 映射：如果帳號定義了自己的 `groups`，它將完全取代根 `groups` 映射（不進行深度合併）。然後會在產生的單一映射上執行提示查找：
+首先會決定有效的 `groups` 映射：如果帳戶定義了自己的 `groups`，它會完全取代根層 `groups` 映射（不進行深度合併）。然後會在結果的單一映射上執行提示查找：
 
-1. **群組特定系統提示** (`groups["<groupId>"].systemPrompt`)：當映射中存在特定群組條目**且**定義了其 `systemPrompt` 鍵時使用。如果 `systemPrompt` 是空字串 (`""`)，則會抑制通配符，且不套用任何系統提示。
-2. **群組通配符系統提示** (`groups["*"].systemPrompt`)：當映射中完全不存在特定群組條目時，或者當條目存在但未定義 `systemPrompt` 鍵時使用。
+1. **特定群組系統提示** (`groups["<groupId>"].systemPrompt`)：當映射中存在特定群組項目 **並且** 定義了其 `systemPrompt` 鍵時使用。如果 `systemPrompt` 是空字串 (`""`)，則會抑制萬用字元，且不套用任何系統提示。
+2. **群組萬用字元系統提示** (`groups["*"].systemPrompt`)：當映射中完全不存在特定群組項目，或者存在但未定義 `systemPrompt` 鍵時使用。
 
 直接訊息的解析層級：
 
-首先會決定有效的 `direct` 映射：如果帳號定義了自己的 `direct`，它將完全取代根 `direct` 映射（不進行深度合併）。然後會在產生的單一映射上執行提示查找：
+首先會決定有效的 `direct` 映射：如果帳戶定義了自己的 `direct`，它會完全取代根層 `direct` 映射（不進行深度合併）。然後會在結果的單一映射上執行提示查找：
 
-1. **直接特定系統提示** (`direct["<peerId>"].systemPrompt`)：當映射中存在特定對等條目**且**定義了其 `systemPrompt` 鍵時使用。如果 `systemPrompt` 是空字串 (`""`)，則會抑制通配符，且不套用任何系統提示。
-2. **直接通配符系統提示** (`direct["*"].systemPrompt`)：當映射中完全不存在特定對等條目時，或者當條目存在但未定義 `systemPrompt` 鍵時使用。
+1. **特定對象的系統提示詞** (`direct["<peerId>"].systemPrompt`)：當對應的特定對象條目存在於對照表中 **並且** 定義了其 `systemPrompt` 金鑰時使用。如果 `systemPrompt` 是空字串 (`""`)，則會抑制萬用字元，且不會套用任何系統提示詞。
+2. **特定對象的萬用字元系統提示詞** (`direct["*"].systemPrompt`)：當對應的特定對象條目完全不存在於對照表中時，或是條目存在但未定義 `systemPrompt` 金鑰時使用。
 
 <Note>
-`dms` 仍然是輕量級的每個 DM 歷史覆寫區塊 (`dms.<id>.historyLimit`)。提示覆寫位於 `direct` 之下。
+`dms` 保持為輕量級的每個私訊 (DM) 歷史記錄覆寫區塊 (`dms.<id>.historyLimit`)。提示詞覆寫則位於 `direct` 之下。
 </Note>
 
-**與 Telegram 多帳號行為的差異：** 在 Telegram 中，在多帳號設置中，所有帳號的根 `groups` 都會被故意抑制 — 即使是那些沒有定義自己 `groups` 的帳號 — 以防止機器人接收到其不屬於的群組的群組訊息。WhatsApp 不應用此保護措施：根 `groups` 和根 `direct` 總是被那些沒有定義帳號級別覆蓋的帳號繼承，無論配置了多少個帳號。在多帳號 WhatsApp 設置中，如果您希望每個帳號都有單獨的群組或直接提示，請在每個帳號下明確定義完整的映射，而不是依賴根級別的默認值。
+**與 Telegram 多帳號行為的差異：** 在 Telegram 中，根層級的 `groups` 會在多帳號設定中對所有帳號刻意隱藏——即便是那些未自行定義 `groups` 的帳號——以防止機器人接收到它不屬於的群組訊息。WhatsApp 不會套用此防護：根層級的 `groups` 和根層級的 `direct` 總是會被未定義帳號層級覆寫的帳號繼承，無論配置了多少個帳號。在多帳號 WhatsApp 設定中，如果您想要每個帳號擁有獨立的群組或私訊提示詞，請明確地在每個帳號下定義完整的對照表，而不要依賴根層級的預設值。
 
 重要行為：
 
-- `channels.whatsapp.groups` 既是一個逐群組配置映射，也是聊天級別的群組許可清單。無論是在根範圍還是帳號範圍內，`groups["*"]` 意味著「該範圍內的所有群組均被接納」。
-- 僅當您已經希望該範圍接納所有群組時，才添加通配符群組 `systemPrompt`。如果您仍然只希望一組固定的群組 ID 具有資格，請不要使用 `groups["*"]` 作為提示的默認值。相反，請在每個明確許可的群組條目上重複該提示。
-- 群組接納和發送者授權是分開的檢查。`groups["*"]` 擴展了可以到達群組處理的群組集，但它本身並不授權這些群組中的每個發送者。發送者存取權限仍由 `channels.whatsapp.groupPolicy` 和 `channels.whatsapp.groupAllowFrom` 單獨控制。
-- `channels.whatsapp.direct` 對於 DM（直撥訊息）沒有相同的副作用。`direct["*"]` 僅在 DM 已被 `dmPolicy` 加上 `allowFrom` 或配對存儲規則接納後，才提供默認的直接聊天配置。
+- `channels.whatsapp.groups` 既是每個群組的設定對照表，也是聊天層級的群組允許清單。無論是在根層級還是帳號範圍內，`groups["*"]` 都代表該範圍「允許所有群組」。
+- 僅當您已經希望該範圍允許所有群組時，才新增萬用字元群組 `systemPrompt`。如果您仍然只希望有一組固定的群組 ID 符合資格，請不要針對提示詞預設值使用 `groups["*"]`。請改為將提示詞重複套用於每個明確加入允許清單的群組條目上。
+- 群組許可和發送者授權是分開的檢查。`groups["*"]` 擴展了可以到達群組處理的群組集，但它本身並不授權這些群組中的每個發送者。發送者存取仍然由 `channels.whatsapp.groupPolicy` 和 `channels.whatsapp.groupAllowFrom` 分別控制。
+- `channels.whatsapp.direct` 對於直接訊息（DM）沒有相同的副作用。`direct["*"]` 僅在直接訊息已被 `dmPolicy` 加上 `allowFrom` 或配對儲存（pairing-store）規則允許後，提供預設的直接聊天配置。
 
 範例：
 
@@ -698,12 +700,12 @@ WhatsApp 支援透過 `groups` 和 `direct` 映射，為群組和直接聊天提
 
 高優先級 WhatsApp 字段：
 
-- access: `dmPolicy`, `allowFrom`, `groupPolicy`, `groupAllowFrom`, `groups`
-- delivery: `textChunkLimit`, `chunkMode`, `mediaMaxMb`, `sendReadReceipts`, `ackReaction`, `reactionLevel`
-- multi-account: `accounts.<id>.enabled`, `accounts.<id>.authDir`, 帳戶層級覆寫
-- operations: `configWrites`, `debounceMs`, `web.enabled`, `web.heartbeatSeconds`, `web.reconnect.*`, `web.whatsapp.*`
-- session behavior: `session.dmScope`, `historyLimit`, `dmHistoryLimit`, `dms.<id>.historyLimit`
-- prompts: `groups.<id>.systemPrompt`, `groups["*"].systemPrompt`, `direct.<id>.systemPrompt`, `direct["*"].systemPrompt`
+- 存取：`dmPolicy`, `allowFrom`, `groupPolicy`, `groupAllowFrom`, `groups`
+- 傳遞：`textChunkLimit`, `chunkMode`, `mediaMaxMb`, `sendReadReceipts`, `ackReaction`, `reactionLevel`
+- 多帳號：`accounts.<id>.enabled`, `accounts.<id>.authDir`, 帳號層級覆寫
+- 操作：`configWrites`, `debounceMs`, `web.enabled`, `web.heartbeatSeconds`, `web.reconnect.*`, `web.whatsapp.*`
+- 會話行為：`session.dmScope`, `historyLimit`, `dmHistoryLimit`, `dms.<id>.historyLimit`
+- 提示詞：`groups.<id>.systemPrompt`, `groups["*"].systemPrompt`, `direct.<id>.systemPrompt`, `direct["*"].systemPrompt`
 
 ## 相關
 

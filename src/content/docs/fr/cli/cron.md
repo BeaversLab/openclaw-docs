@@ -10,7 +10,7 @@ title: "Cron"
 
 Gérer les tâches cron pour le planificateur du Gateway.
 
-<Tip>Exécutez `openclaw cron --help` pour l'ensemble complet des commandes. Voir [Tâches Cron](/fr/automation/cron-jobs) pour le guide conceptuel.</Tip>
+<Tip>Exécutez `openclaw cron --help` pour accéder à l'interface complète des commandes. Consultez [Tâches cron](/fr/automation/cron-jobs) pour le guide conceptuel.</Tip>
 
 ## Sessions
 
@@ -151,27 +151,29 @@ Si une exécution cron isolée renvoie uniquement le jeton silencieux (`NO_REPLY
 
 ### Refus structurés
 
-Les exécutions cron isolées privilégient les métadonnées structurées de refus d'exécution de l'exécution intégrée, puis reviennent aux marqueurs de refus connus dans la sortie finale, tels que `SYSTEM_RUN_DENIED`, `INVALID_REQUEST`, et les phrases de refus de liaison d'approbation.
+Les exécutions cron isolées utilisent les métadonnées structurées de refus d'exécution de l'exécution intégrée comme signal de refus faisant autorité. Elles respectent également les wrappers `UNAVAILABLE` de l'hôte nœud lorsque le message d'erreur structuré imbriqué commence par `SYSTEM_RUN_DENIED` ou `INVALID_REQUEST`.
 
-`cron list` et l'historique des exécutions affichent le motif du refus au lieu de signaler une commande bloquée comme `ok`.
+Cron ne classe pas le texte final ou les phrases de refus ressemblant à une approbation comme des refus, sauf si l'exécution intégrée fournit également des métadonnées de refus structurées. Par conséquent, le texte ordinaire de l'assistant n'est pas traité comme une commande bloquée.
+
+`cron list` et l'historique des exécutions affichent la raison du refus au lieu de signaler une commande bloquée comme `ok`.
 
 ## Rétention
 
-La rétention et l'élagage sont contrôlés dans la configuration :
+La rétention et le nettoyage sont contrôlés dans la configuration :
 
-- `cron.sessionRetention` (par défaut `24h`) élimine les sessions d'exécution isolées terminées.
-- `cron.runLog.maxBytes` et `cron.runLog.keepLines` éliminent les `~/.openclaw/cron/runs/<jobId>.jsonl`.
+- `cron.sessionRetention` (par défaut `24h`) nettoie les sessions d'exécution isolées terminées.
+- `cron.runLog.maxBytes` et `cron.runLog.keepLines` nettoient `~/.openclaw/cron/runs/<jobId>.jsonl`.
 
 ## Migration des anciennes tâches
 
 <Note>
-  Si vous avez des tâches cron d'avant le format actuel de livraison et de stockage, exécutez `openclaw doctor --fix`. Doctor normalise les champs cron hérités (`jobId`, `schedule.cron`, champs de livraison de premier niveau y compris l'hérité `threadId`, alias de livraison de payload `provider`) et migre les simples tâches de repli de webhook `notify: true` vers une livraison webhook explicite
+  Si vous avez des tâches cron antérieures au format de livraison et de stockage actuel, exécutez `openclaw doctor --fix`. Doctor normalise les champs cron hérités (`jobId`, `schedule.cron`, champs de livraison de premier niveau incluant l'ancien `threadId`, alias de livraison de payload `provider`) et migre les simples tâches de repli webhook `notify: true` vers une livraison webhook explicite
   lorsque `cron.webhook` est configuré.
 </Note>
 
 ## Modifications courantes
 
-Mettre à jour les paramètres de livraison sans changer le message :
+Mettre à jour les paramètres de livraison sans modifier le message :
 
 ```bash
 openclaw cron edit <job-id> --announce --channel telegram --to "123456789"
@@ -189,13 +191,13 @@ Activer le contexte d'amorçage léger pour une tâche isolée :
 openclaw cron edit <job-id> --light-context
 ```
 
-Annoncer à un channel spécifique :
+Annoncer sur un channel spécifique :
 
 ```bash
 openclaw cron edit <job-id> --announce --channel slack --to "channel:C1234567890"
 ```
 
-Annoncer à un sujet de forum Telegram :
+Annoncer sur un sujet de forum Telegram :
 
 ```bash
 openclaw cron edit <job-id> --announce --channel telegram --to "-1001234567890" --thread-id 42
@@ -213,7 +215,7 @@ openclaw cron add \
   --no-deliver
 ```
 
-`--light-context` s'applique uniquement aux tâches isolées de type agent-turn. Pour les exécutions cron, le mode léger garde le contexte d'amorçage vide au lieu d'injecter l'ensemble complet d'amorçage de l'espace de travail.
+`--light-context` s'applique uniquement aux tâches isolées de tour d'agent. Pour les exécutions cron, le mode léger maintient le contexte d'amorçage vide au lieu d'injecter l'ensemble complet d'amorçage de l'espace de travail.
 
 ## Commandes d'administration courantes
 
@@ -232,15 +234,15 @@ openclaw cron runs --id <job-id> --limit 50
 openclaw cron runs --id <job-id> --run-id <run-id>
 ```
 
-`openclaw cron list` affiche toutes les tâches correspondantes par défaut. Passez `--agent <id>` pour afficher uniquement les tâches dont l'ID d'agent effectif normalisé correspond ; les tâches sans ID d'agent stocké comptent comme l'agent par défaut configuré.
+`openclaw cron list` affiche toutes les tâches correspondantes par défaut. Passez `--agent <id>` pour n'afficher que les tâches dont l'ID d'agent effectif normalisé correspond ; les tâches sans ID d'agent stocké comptent comme l'agent par défaut configuré.
 
-`openclaw cron get <job-id>` renvoie directement le JSON de la tâche stockée. Utilisez `cron show <job-id>` lorsque vous souhaitez la vue lisible par l'homme avec un aperçu de la route de livraison.
+`openclaw cron get <job-id>` renvoie directement le JSON de la tâche stockée. Utilisez `cron show <job-id>` lorsque vous souhaitez la vue lisible par un humain avec l'aperçu de la route de livraison.
 
-`cron list --json` et `cron show <job-id> --json` incluent un champ de premier niveau `status` sur chaque tâche, calculé à partir de `enabled`, `state.runningAtMs` et `state.lastRunStatus`. Valeurs : `disabled`, `running`, `ok`, `error`, `skipped` ou `idle`. Cela reflète la colonne d'état lisible par l'homme afin que les outils externes puissent lire l'état de la tâche sans avoir à le redériver.
+`cron list --json` et `cron show <job-id> --json` incluent un champ `status` de niveau supérieur sur chaque tâche, calculé à partir de `enabled`, `state.runningAtMs` et `state.lastRunStatus`. Valeurs : `disabled`, `running`, `ok`, `error`, `skipped` ou `idle`. Cela reflète la colonne d'état lisible par l'homme afin que les outils externes puissent lire l'état de la tâche sans avoir à le recalculer.
 
-Les entrées `cron runs` incluent des diagnostics de livraison avec la cible cron prévue, la cible résolue, les envois de l'outil de message, l'utilisation du repli et l'état de livraison.
+Les entrées `cron runs` incluent des diagnostics de livraison avec la cible cron prévue, la cible résolue, les envois du message-tool, l'utilisation du repli et l'état de livraison.
 
-Redéfinition de l'agent et de la session :
+Redirection d'agent et de session :
 
 ```bash
 openclaw cron edit <job-id> --agent ops
@@ -249,7 +251,7 @@ openclaw cron edit <job-id> --session current
 openclaw cron edit <job-id> --session "session:daily-brief"
 ```
 
-`openclaw cron add` avertit lorsque `--agent` est omis sur les tâches de type agent-turn et revient à l'agent par défaut (`main`). Passez `--agent <id>` au moment de la création pour épingler un agent spécifique.
+`openclaw cron add` avertit lorsque `--agent` est omis sur les tâches de tour d'agent (agent-turn) et revient à l'agent par défaut (`main`). Passez `--agent <id>` au moment de la création pour épingler un agent spécifique.
 
 Ajustements de livraison :
 

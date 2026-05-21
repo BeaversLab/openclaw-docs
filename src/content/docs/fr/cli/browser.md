@@ -13,7 +13,7 @@ Gérer la surface de contrôle du navigateur de OpenClaw et exécuter des action
 
 Connexes :
 
-- Outil navigateur + API : [Outil navigateur](API/en/tools/browser)
+- Outil de navigateur + API : [Outil de navigateur](/fr/tools/browser)
 
 ## Indicateurs communs
 
@@ -100,7 +100,7 @@ Un bloc racine explicite `browser`, par exemple `browser.enabled=true` ou
 `browser.profiles.<name>`, active également le plugin de navigateur intégré sous une
 liste d'autorisation de plugins restrictive.
 
-Connexes : [Outil navigateur](/fr/tools/browser#missing-browser-command-or-tool)
+Connexes : [Outil de navigateur](/fr/tools/browser#missing-browser-command-or-tool)
 
 ## Profils
 
@@ -189,11 +189,14 @@ openclaw browser select <ref> OptionA OptionB
 openclaw browser fill --fields '[{"ref":"1","value":"Ada"}]'
 openclaw browser wait --text "Done"
 openclaw browser evaluate --fn '(el) => el.textContent' --ref <ref>
+openclaw browser evaluate --timeout-ms 30000 --fn 'async () => { await window.ready; return true; }'
 ```
 
-Les réponses aux actions renvoient la `targetId` brute actuelle après le remplacement de la page déclenché par l'action lorsque OpenClaw peut prouver l'onglet de remplacement. Les scripts doivent toujours stocker et transmettre les `suggestedTargetId`/étiquettes pour les workflows de longue durée.
+Utilisez `evaluate --timeout-ms <ms>` lorsque la fonction côté page peut avoir besoin de plus de temps que le délai d'évaluation par défaut.
 
-Assistants de fichier et de boîte de dialogue :
+Les réponses aux actions renvoient l'`targetId` brut actuel après le remplacement de la page déclenché par l'action lorsque OpenClaw peut prouver l'onglet de remplacement. Les scripts doivent toujours stocker et transmettre les `suggestedTargetId`/étiquettes pour les workflows de longue durée.
+
+Assistants pour les fichiers + boîtes de dialogue :
 
 ```bash
 openclaw browser upload /tmp/openclaw/uploads/file.pdf --ref <ref>
@@ -203,7 +206,7 @@ openclaw browser dialog --accept
 openclaw browser dialog --dismiss --dialog-id d1
 ```
 
-Les profils Chrome gérés enregistrent les téléchargements déclenchés par un clic classique dans le répertoire de téléchargements OpenClaw (OpenClaw`/tmp/openclaw/downloads` par défaut, ou la racine temporaire configurée). Utilisez `waitfordownload` ou `download` lorsque l'agent doit attendre un fichier spécifique et renvoyer son chemin ; ces attentes explicites revendiquent le prochain téléchargement. Lorsqu'une action ouvre une boîte de dialogue modale, la réponse de l'action renvoie `blockedByDialog` avec `browserState.dialogs.pending` ; passez `--dialog-id`OpenClaw pour y répondre directement. Les boîtes de dialogue gérées en dehors d'OpenClaw apparaissent sous `browserState.dialogs.recent`.
+Les profils Chrome gérés enregistrent les téléchargements ordinaires déclenchés par un clic dans le répertoire de téléchargements de OpenClaw (`/tmp/openclaw/downloads` par défaut, ou la racine temporaire configurée). Utilisez `waitfordownload` ou `download` lorsque l'agent doit attendre un fichier spécifique et renvoyer son chemin ; ces attentes explicites possèdent le prochain téléchargement. Lorsqu'une action ouvre une boîte de dialogue modale, la réponse de l'action renvoie `blockedByDialog` avec `browserState.dialogs.pending` ; passez `--dialog-id` pour y répondre directement. Les boîtes de dialogue gérées en dehors de OpenClaw apparaissent sous `browserState.dialogs.recent`.
 
 ## État et stockage
 
@@ -257,29 +260,29 @@ openclaw browser create-profile --name brave-live --driver existing-session --us
 openclaw browser --browser-profile chrome-live tabs
 ```
 
-Ce chemin est uniquement pour l'hôte. Pour Docker, les serveurs sans tête, Browserless ou d'autres configurations distantes, utilisez plutôt un profil CDP.
+Ce chemin est uniquement pour l'hôte. Pour Docker, les serveurs sans interface (headless), Browserless ou d'autres configurations distantes, utilisez plutôt un profil CDP.
 
 Limites actuelles de la session existante :
 
-- les actions basées sur des snapshots utilisent des références, pas les sélecteurs CSS
-- `browser.actionTimeoutMs` définit par défaut les requêtes `act` prises en charge à 60000 ms lorsque
-  les appelants omettent `timeoutMs` ; le `timeoutMs` par appel prévaut toujours.
-- `click` prend uniquement en charge le clic gauche
+- les actions basées sur des instantanés utilisent des références, pas des sélecteurs CSS
+- `browser.actionTimeoutMs` définit par défaut les requêtes `act` prises en charge à 60000 ms lorsque les appelants omettent `timeoutMs` ; le `timeoutMs` par appel l'emporte toujours.
+- `click` est uniquement un clic gauche
 - `type` ne prend pas en charge `slowly=true`
 - `press` ne prend pas en charge `delayMs`
-- `hover`, `scrollintoview`, `drag`, `select`, `fill` et `evaluate` rejettent
-  les substitutions de délai d'attente par appel
-- `select` prend en charge une seule valeur
+- `hover`, `scrollintoview`, `drag`, `select`, `fill`, et `evaluate` rejettent
+  les remplacements du délai d'attente par appel
+- `select` ne prend en charge qu'une seule valeur
 - `wait --load networkidle` n'est pas pris en charge
-- les téléchargements de fichiers nécessitent `--ref` / `--input-ref`, ne prennent pas en charge le sélecteur CSS
+- les téléchargements de fichiers nécessitent `--ref` / `--input-ref`, ne prennent pas en charge le CSS
   `--element` et prennent actuellement en charge un seul fichier à la fois
-- les hooks de dialogue ne prennent pas en charge `--timeout`
-- les captures d'écran prennent en charge les captures de page et `--ref`, mais pas le sélecteur CSS `--element`
-- `responsebody`, l'interception des téléchargements, l'export PDF et les actions par lot nécessitent toujours un navigateur géré ou un profil CDP brut
+- les crochets de boîte de dialogue ne prennent pas en charge `--timeout`
+- les captures d'écran prennent en charge les captures de page et `--ref`, mais pas le CSS `--element`
+- `responsebody`, l'interception des téléchargements, l'exportation PDF et les actions par lots nécessitent toujours
+  un navigateur géré ou un profil CDP brut
 
-## Contrôle distant du navigateur (proxy node host)
+## Contrôle à distance du navigateur (proxy de l'hôte de nœud)
 
-Si la Gateway s'exécute sur une machine différente de celle du navigateur, exécutez un **node host** sur la machine qui dispose de Chrome/Brave/Edge/Chromium. La Gateway effectuera un proxy des actions du navigateur vers ce nœud (aucun serveur de contrôle de navigateur distinct requis).
+Si le Gateway s'exécute sur une machine différente de celle du navigateur, exécutez un **node host** sur la machine qui dispose de Chrome/Brave/Edge/Chromium. Le Gateway agira comme proxy pour les actions du navigateur vers ce nœud (aucun serveur de contrôle de navigateur séparé requis).
 
 Utilisez `gateway.nodes.browser.mode` pour contrôler le routage automatique et `gateway.nodes.browser.node` pour épingler un nœud spécifique si plusieurs sont connectés.
 

@@ -124,14 +124,14 @@ sidebarTitle: "Slash commands"
 
 <AccordionGroup>
   <Accordion title="Sessions and runs">
-    - `/new [model]` 啟動一個新會話；`/reset` 是重設的別名。
-    - 控制介面會攔截輸入的 `/new` 以建立並切換到一個全新的儀表板會話，除非 `session.dmScope: "main"` 已配置且目前的父級是代理程式的主會話；在這種情況下，`/new` 會原地重設主會話。輸入 `/reset` 仍會執行 Gateway 的原地重設。
-    - `/reset soft [message]` 保留目前的對話記錄，捨棄重複使用的 CLI 後端會話 ID，並原地重新執行啟動/系統提示載入。
-    - `/compact [instructions]` 壓縮會話內容。參見 [壓縮](/zh-Hant/concepts/compaction)。
-    - `/stop` 中止目前的執行。
+    - `/new [model]` 將歸檔當前會話並啟動一個新會話；`/reset` 會就地清除當前會話。它們不是別名。
+    - Control UI 會攔截輸入的 `/new` 以建立並切換到一個新的儀表板會話，除非已設定 `session.dmScope: "main"` 且當前的父會話是代理的主會話；在這種情況下，`/new` 會就地重設主會話。輸入 `/reset` 仍會執行 Gateway 的就地重設。
+    - `/reset soft [message]` 保留當前的逐字稿，捨棄重複使用的 CLI 後端會話 ID，並就地重新執行啟動/系統提示的載入。
+    - `/compact [instructions]` 壓縮會話上下文。請參閱 [壓縮](/zh-Hant/concepts/compaction)。
+    - `/stop` 中止當前的運行。
     - `/session idle <duration|off>` 和 `/session max-age <duration|off>` 管理執行緒綁定的過期時間。
-    - `/export-session [path]` 將目前會話匯出為 HTML。別名：`/export`。
-    - `/export-trajectory [path]` 請求執行核准，然後匯出目前會話的 JSONL [軌跡套件](/zh-Hant/tools/trajectory)。當您需要某個 OpenClaw 會話的提示、工具和對話記錄時間軸時使用。在群組聊天中，核准提示和匯出結果會私下傳送給擁有者。別名：`/trajectory`。
+    - `/export-session [path]` 將當前會話匯出為 HTML。別名：`/export`。
+    - `/export-trajectory [path]` 請求執行核准，然後將當前會話匯出為 JSONL [trajectory bundle](/zh-Hant/tools/trajectory)。當您需要某個 OpenClaw 會話的提示、工具和逐字稿時間軸時，請使用它。在群組聊天中，核准提示和匯出結果將私下傳送給擁有者。別名：`/trajectory`。
 
   </Accordion>
   <Accordion title="Model and run controls">

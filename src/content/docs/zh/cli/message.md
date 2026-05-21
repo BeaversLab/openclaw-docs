@@ -70,7 +70,7 @@ openclaw message <subcommand> [flags]
   - 渠道：WhatsApp/Telegram/Discord/Google Chat/Slack/Mattermost (插件)/Signal/iMessage/Matrix/Microsoft Teams
   - 必需：`--target`，加上 `--message`、`--media` 或 `--presentation`
   - 可选：`--media`、`--presentation`、`--delivery`、`--pin`、`--reply-to`、`--thread-id`、`--gif-playback`、`--force-document`、`--silent`
-  - 共享呈现负载：`--presentation` 发送语义块（`text`、`context`、`divider`、`buttons`、`select`），核心通过选定渠道声明的功能进行渲染。参见 [消息呈现](/zh/plugins/message-presentation)。
+  - 共享展示负载：`--presentation` 发送语义块（`text`、`context`、`divider`、`buttons`、`select`），核心通过所选渠道声明的功能进行渲染。参见 [Message Presentation](/zh/plugins/message-presentation)。
   - 通用投递首选项：`--delivery` 接受 `{ "pin": true }` 等投递提示；当渠道支持时，`--pin` 是固定投递的简写形式。
   - Telegram + WhatsApp：Telegram + WhatsApp：`--force-document`（将图片、GIF 和视频作为文档发送以避免渠道压缩）
   - 仅限 Telegram：Telegram only：`--thread-id`（论坛主题 ID）
@@ -86,122 +86,123 @@ openclaw message <subcommand> [flags]
   - 仅限 Telegram：Telegram only：`--poll-duration-seconds`（5-600）、`--silent`、`--poll-anonymous` / `--poll-public`、`--thread-id`
 
 - `react`
-  - 频道：Discord/Google Chat/Slack/Telegram/WhatsApp/Signal/Matrix
+  - 渠道：Discord/Google Chat/Matrix/Nextcloud Talk/Signal/Slack/Telegram/WhatsApp
   - 必填：`--message-id`、`--target`
   - 可选：`--emoji`、`--remove`、`--participant`、`--from-me`、`--target-author`、`--target-author-uuid`
   - 注意：`--remove` 需要 `--emoji`（在支持的情况下，省略 `--emoji` 以清除自己的表情反应；请参见 /tools/reactions）
   - 仅限 WhatsApp：WhatsApp only：`--participant`、`--from-me`
   - Signal 群组回应：Signal`--target-author` 或 `--target-author-uuid` 为必填项
+  - Nextcloud Talk：仅添加表情回应；`--remove` 会被拒绝并返回明确的错误（参见 /tools/reactions）
 
 - `reactions`
-  - 频道：Discord/Google Chat/Slack/Matrix
-  - 必填：`--message-id`，`--target`
+  - 渠道：Discord/Google Chat/Slack/Matrix
+  - 必需：`--message-id`、`--target`
   - 可选：`--limit`
 
 - `read`
-  - 频道：Discord/Slack/Matrix
-  - 必填：`--target`
-  - 可选：`--limit`，`--message-id`，`--before`，`--after`
-  - 仅限 Slack：Slack`--message-id`Slack 读取特定的 Slack 消息时间戳；结合 `--thread-id` 以读取确切的线程回复。
-  - 仅限 Discord：Discord`--around`
+  - 渠道：Discord/Slack/Matrix
+  - 必需：`--target`
+  - 可选：`--limit`、`--message-id`、`--before`、`--after`
+  - 仅 Slack：`--message-id` 读取特定的 Slack 消息时间戳；与 `--thread-id` 结合使用以读取确切的线程回复。
+  - 仅 Discord：`--around`
 
 - `edit`
-  - 频道：Discord/Slack/Matrix
-  - 必填：`--message-id`，`--message`，`--target`
+  - 渠道：Discord/Slack/Matrix
+  - 必需：`--message-id`、`--message`、`--target`
 
 - `delete`
   - 渠道：Discord/Slack/Telegram/Matrix
-  - 必填：`--message-id`，`--target`
+  - 必需：`--message-id`、`--target`
 
 - `pin` / `unpin`
-  - 渠道：Discord/Slack/Matrix
-  - 必填：`--message-id`，`--target`
+  - 频道：Discord/Slack/Matrix
+  - 必需：`--message-id`、`--target`
 
-- `pins` (列表)
+- `pins`（列表）
   - 渠道：Discord/Slack/Matrix
-  - 必填：`--target`
+  - 必需：`--target`
 
 - `permissions`
   - 渠道：Discord/Matrix
-  - 必填：`--target`
+  - 必需：`--target`
   - 仅限 Matrix：当启用 Matrix 加密并允许验证操作时可用
 
 - `search`
   - 渠道：Discord
-  - 必填：`--guild-id`，`--query`
-  - 可选：`--channel-id`，`--channel-ids`（可重复），`--author-id`，`--author-ids`（可重复），`--limit`
+  - 必需：`--guild-id`、`--query`
+  - 可选：`--channel-id`、`--channel-ids`（可重复）、`--author-id`、`--author-ids`（可重复）、`--limit`
 
-### Threads
+### 线程
 
 - `thread create`
   - 渠道：Discord
-  - 必填：`--thread-name`，`--target`（渠道 ID）
-  - 可选：`--message-id`，`--message`，`--auto-archive-min`
+  - 必需：`--thread-name`、`--target`（渠道 ID）
+  - 可选：`--message-id`、`--message`、`--auto-archive-min`
 
 - `thread list`
   - 渠道：Discord
-  - 必填：`--guild-id`
-  - 可选：`--channel-id`，`--include-archived`，`--before`，`--limit`
+  - 必需：`--guild-id`
+  - 可选：`--channel-id`、`--include-archived`、`--before`、`--limit`
 
 - `thread reply`
   - 渠道：Discord
-  - 必填：`--target`（thread id），`--message`
-  - 可选：`--media`，`--reply-to`
+  - 必需：`--target`（线程 ID）、`--message`
+  - 可选：`--media`、`--reply-to`
 
-### Emojis
+### 表情符号
 
 - `emoji list`
-  - Discord：Discord`--guild-id`
-  - Slack: 无额外标志
+  - Discord：`--guild-id`
+  - Slack：无额外标志
 
 - `emoji upload`
-  - 频道：Discord
-  - 必填：`--guild-id`，`--emoji-name`，`--media`
+  - 渠道：Discord
+  - 必填：`--guild-id`、`--emoji-name`、`--media`
   - 可选：`--role-ids`（可重复）
 
-### 贴纸
+### 表情贴纸
 
 - `sticker send`
   - 频道：Discord
-  - 必填：`--target`，`--sticker-id`（可重复）
+  - 必填：`--target`、`--sticker-id`（可重复）
   - 可选：`--message`
 
 - `sticker upload`
   - 频道：Discord
-  - 必填：`--guild-id`，`--sticker-name`，`--sticker-desc`，`--sticker-tags`，`--media`
+  - 必填：`--guild-id`、`--sticker-name`、`--sticker-desc`、`--sticker-tags`、`--media`
 
 ### 角色 / 频道 / 成员 / 语音
 
-- `role info`Discord (Discord)：`--guild-id`
-- `role add` / `role remove`Discord (Discord)：`--guild-id`，`--user-id`，`--role-id`
-- `channel info`Discord (Discord)：`--target`
-- `channel list`Discord (Discord)：`--guild-id`
-- `member info`DiscordSlack (Discord/Slack)：`--user-id`（Discord 需要 + `--guild-id`Discord）
-- `voice status`Discord (Discord)：`--guild-id`，`--user-id`
+- `role info` (Discord)：`--guild-id`
+- `role add` / `role remove` (Discord)：`--guild-id`、`--user-id`、`--role-id`
+- `channel info` (Discord)：`--target`
+- `channel list` (Discord)：`--guild-id`
+- `member info` (Discord/Slack)：`--user-id`（Discord 需要 + `--guild-id`）
+- `voice status` (Discord)：`--guild-id`、`--user-id`
 
 ### 事件
 
-- `event list`Discord (Discord)：`--guild-id`
-- `event create`Discord (Discord)：`--guild-id`，`--event-name`，`--start-time`
+- `event list` (Discord)：`--guild-id`
+- `event create` (Discord)：`--guild-id`、`--event-name`、`--start-time`
   - 可选：`--end-time`、`--desc`、`--channel-id`、`--location`、`--event-type`
 
-### 审核 (Discord)
+### 管理 (Discord)
 
-- `timeout`：`--guild-id`、`--user-id`（可选 `--duration-min` 或 `--until`；省略两者以清除超时）
-- `kick`：`--guild-id`、`--user-id`（+ `--reason`）
-- `ban`：`--guild-id`、`--user-id`（+ `--delete-days`、`--reason`）
+- `timeout`: `--guild-id`, `--user-id` (可选 `--duration-min` 或 `--until`; 省略两者以清除超时)
+- `kick`: `--guild-id`, `--user-id` (+ `--reason`)
+- `ban`: `--guild-id`, `--user-id` (+ `--delete-days`, `--reason`)
   - `timeout` 也支持 `--reason`
 
 ### 广播
 
 - `broadcast`
-  - 渠道：任何已配置的渠道；使用 `--channel all` 以定位所有提供商
+  - 渠道：任何已配置的渠道；使用 `--channel all` 来定位所有提供商
   - 必需：`--targets <target...>`
-  - 可选：`--message`、`--media`、`--dry-run`
+  - 可选：`--message`, `--media`, `--dry-run`
 
 ## 示例
 
-发送 Discord 回复：
+发送一条 Discord 回复：
 
 ```
 openclaw message send --channel discord \
@@ -216,9 +217,9 @@ openclaw message send --channel discord \
   --presentation '{"blocks":[{"type":"buttons","buttons":[{"label":"Approve","value":"approve","style":"success"},{"label":"Decline","value":"decline","style":"danger"}]}]}'
 ```
 
-Core 根据渠道能力，将相同的 `presentation` 负载渲染为 Discord 组件、Slack 块、Telegram 内联按钮、Mattermost 属性或 Teams/Feishu 卡片。有关完整契约和回退规则，请参阅 [消息呈现](/zh/plugins/message-presentation)。
+Core 根据渠道能力，将相同的 `presentation` 载荷渲染为 Discord 组件、Slack 块、Telegram 内联按钮、Mattermost 属性或 Teams/Feishu 卡片。有关完整协议和回退规则，请参阅 [消息展示](/zh/plugins/message-presentation)。
 
-发送更丰富的展示负载：
+发送更丰富的展示载荷：
 
 ```bash
 openclaw message send --channel googlechat --target spaces/AAA... \
@@ -284,16 +285,16 @@ openclaw message send --channel telegram --target @mychat --message "Choose:" \
   --presentation '{"blocks":[{"type":"buttons","buttons":[{"label":"Yes","value":"cmd:yes"},{"label":"No","value":"cmd:no"}]}]}'
 ```
 
-通过通用呈现发送 Telegram Mini App 按钮：
+通过通用展示发送 Telegram Mini App 按钮：
 
 ```
 openclaw message send --channel telegram --target 123456789 --message "Open app:" \
   --presentation '{"blocks":[{"type":"buttons","buttons":[{"label":"Launch","webApp":{"url":"https://example.com/app"}}]}]}'
 ```
 
-Telegram Web App 按钮仅在用户和机器人之间的私人聊天中受支持。使用 `web_app` 的旧 JSON 负载仍可解析，但 `webApp` 是规范的呈现字段。
+Telegram Web App 按钮仅支持在用户和机器人之间的私人聊天中使用。使用 `web_app` 的旧 JSON 载荷仍然可以解析，但 `webApp` 是规范的展示字段。
 
-通过通用呈现发送 Teams 卡片：
+通过通用展示发送 Teams 卡片：
 
 ```bash
 openclaw message send --channel msteams \
@@ -301,7 +302,7 @@ openclaw message send --channel msteams \
   --presentation '{"title":"Status update","blocks":[{"type":"text","text":"Build completed"}]}'
 ```
 
-将 Telegram 或 WhatsApp 图像作为文档发送以避免压缩：
+发送 Telegram 或 WhatsApp 图片作为文档以避免压缩：
 
 ```bash
 openclaw message send --channel telegram --target @mychat \
@@ -311,4 +312,4 @@ openclaw message send --channel telegram --target @mychat \
 ## 相关
 
 - [CLI 参考](/zh/cli)
-- [Agent 发送](/zh/tools/agent-send)
+- [Agent send](/zh/tools/agent-send)

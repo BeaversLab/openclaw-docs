@@ -99,10 +99,10 @@ Save the new `SOUL.md`. Welcome to having a personality.
 
 <CardGroup cols={2}>
   <Card title="Agent workspace" href="/zh-Hant/concepts/agent-workspace" icon="folder-open">
-    OpenClaw 注入到系統提示中的工作區檔案。
+    OpenClaw 注入到模型上下文中的工作區檔案。
   </Card>
   <Card title="System prompt" href="/zh-Hant/concepts/system-prompt" icon="message-lines">
-    `SOUL.md` 如何組合成每輪的系統提示。
+    `SOUL.md` 如何組合成 OpenClaw 和 Codex 執行時期上下文。
   </Card>
   <Card title="SOUL.md template" href="/zh-Hant/reference/templates/SOUL" icon="file-lines">
     個性檔案的入門範本。

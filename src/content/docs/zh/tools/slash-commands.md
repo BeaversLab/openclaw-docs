@@ -124,14 +124,14 @@ sidebarTitle: "斜杠命令"
 
 <AccordionGroup>
   <Accordion title="会话和运行">
-    - `/new [model]` 启动新会话；`/reset` 是重置别名。
-    - 控制界面会拦截输入的 `/new` 以创建并切换到新的仪表板会话，除非配置了 `session.dmScope: "main"` 且当前父级是代理的主会话；在这种情况下，`/new` 会原地重置主会话。输入的 `/reset`Gateway(网关) 仍会运行 Gateway 的原地重置。
-    - `/reset soft [message]`CLI 保留当前记录稿，丢弃重用的 CLI 后端会话 ID，并原地重新运行启动/系统提示词加载。
+    - `/new [model]` 归档当前会话并启动一个新会话；`/reset` 原地清除当前会话。它们不是彼此的别名。
+    - 控制界面会拦截输入的 `/new` 以创建并切换到一个新的仪表盘会话，除非配置了 `session.dmScope: "main"` 且当前父级是代理的主会话；在后一种情况下，`/new` 会原地重置主会话。输入 `/reset` 仍然运行 Gateway(网关) 的原地重置。
+    - `/reset soft [message]` 保留当前记录，丢弃已复用的 CLI 后端会话 ID，并原地重新运行启动/系统提示加载。
     - `/compact [instructions]` 压缩会话上下文。请参阅 [压缩](/zh/concepts/compaction)。
     - `/stop` 中止当前运行。
     - `/session idle <duration|off>` 和 `/session max-age <duration|off>` 管理线程绑定过期。
     - `/export-session [path]` 将当前会话导出为 HTML。别名：`/export`。
-    - `/export-trajectory [path]` 请求执行批准，然后为当前会话导出 JSONL [轨迹包](/zh/tools/trajectoryOpenClaw)。当您需要一个 OpenClaw 会话的提示词、工具和记录稿时间线时使用它。在群组聊天中，批准提示和导出结果将私下发送给所有者。别名：`/trajectory`。
+    - `/export-trajectory [path]` 请求执行批准，然后为当前会话导出 JSONL [轨迹包](/zh/tools/trajectory)。当您需要单个 OpenClaw 会话的提示、工具和记录时间线时使用它。在群组聊天中，批准提示和导出结果将私下发送给所有者。别名：`/trajectory`。
 
   </Accordion>
   <Accordion title="模型和运行控制">

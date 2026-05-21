@@ -538,7 +538,7 @@ Anthropic Claude 4.6 模型在未設定明確思考等級時，預設為 `adapti
 
 ### `agents.defaults.promptOverlays`
 
-依模型系列套用的獨立於供應商的提示詞疊加層。GPT-5 系列的模型 ID 會接收跨供應商的共享行為合約；`personality` 僅控制友善的互動樣式層。
+依模型系列套用於 OpenClaw 組合的提示層面上，與供應商無關的提示覆蓋。GPT-5 系列的模型 ID 會接收跨 PI/供應商路由的共享行為約定；`personality` 僅控制友善的互動樣式層。原生 Codex 應用伺服器路由會保留 Codex 擁有的基底/模型/人格指令，而非此 OpenClaw GPT-5 覆蓋層。
 
 ```json5
 {
@@ -1057,7 +1057,7 @@ scripts/sandbox-browser-setup.sh   # optional browser image
 - `runtime`：可選的個別代理執行時間描述符。當代理應預設為 ACP harness 工作階段時，請使用帶有 `runtime.acp` 預設值 (`agent`、`backend`、`mode`、`cwd`) 的 `type: "acp"`。
 - `identity.avatar`：工作區相對路徑、`http(s)` URL 或 `data:` URI。
 - `identity` 推導預設值：從 `emoji` 推導 `ackReaction`，從 `name`/`emoji` 推導 `mentionPatterns`。
-- `subagents.allowAgents`：針對明確 `sessions_spawn.agentId` 目標的代理 ID 白名單（`["*"]` = 任意；預設：僅限相同代理）。當允許自我目標的 `agentId` 呼叫時，包含請求者 ID。
+- `subagents.allowAgents`：針對明確 `sessions_spawn.agentId` 目標的代理程式 ID 白名單（`["*"]` = 任何已設定的目標；預設值：僅限同一個代理程式）。當允許自我目標 `agentId` 呼叫時，應包含請求者 ID。
 - 沙箱繼承防護：如果請求者會話位於沙箱中，`sessions_spawn` 將拒絕會以非沙箱方式執行的目標。
 - `subagents.requireAgentId`：當為 true 時，封鎖省略 `agentId` 的 `sessions_spawn` 呼叫（強制明確選擇設定檔；預設：false）。
 

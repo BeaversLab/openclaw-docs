@@ -604,17 +604,20 @@ Utilisez ces éléments comme points de départ et remplacez les ID de modèle p
   </Accordion>
 
   <Accordion title="Lean local model profile">
-    Certains modèles locaux peuvent répondre à des invites simples mais ont des difficultés avec la surface complète des outils de l'agent. Commencez par limiter les outils et le contexte avant de modifier les paramètres d'exécution globaux.
+    Certains modèles locaux peuvent répondre à des instructions simples mais ont des difficultés avec la surface complète des outils de l'agent. Commencez par limiter les outils et le contexte avant de modifier les paramètres d'exécution globaux.
 
     ```json5
     {
       agents: {
-        defaults: {
-          experimental: {
-            localModelLean: true,
+        list: [
+          {
+            id: "local",
+            experimental: {
+              localModelLean: true,
+            },
+            model: { primary: "ollama/gemma4" },
           },
-          model: { primary: "ollama/gemma4" },
-        },
+        ],
       },
       models: {
         providers: {
@@ -639,7 +642,7 @@ Utilisez ces éléments comme points de départ et remplacez les ID de modèle p
     ```
 
     Utilisez `compat.supportsTools: false` uniquement lorsque le modèle ou le serveur échoue de manière fiable sur les schémas d'outils. Cela échange la capacité de l'agent contre la stabilité.
-    `localModelLean`Ollama supprime les outils de navigateur, cron et de messagerie de la surface de l'agent, mais cela ne modifie pas le contexte d'exécution ou le mode de réflexion d'Ollama. Associez-le à des `params.num_ctx` et `params.thinking: false`Qwen explicites pour les petits modèles de réflexion de style Qwen qui bouclent ou dépensent leur budget de réponse en raisonnement caché.
+    `localModelLean` supprime les outils de navigateur, cron et de message de la surface de l'agent, mais cela ne modifie pas le contexte d'exécution ou le mode de réflexion d'Ollama. Associez-le à des `params.num_ctx` et `params.thinking: false` explicites pour les petits modèles de réflexion de type Qwen qui bouclent ou dépensent leur budget de réponse en raisonnement caché.
 
   </Accordion>
 </AccordionGroup>

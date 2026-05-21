@@ -101,7 +101,7 @@ Les tests en direct sont divisés en deux couches afin que nous puissions isoler
   - Sondage `read` : le test écrit un fichier nonce dans l'espace de travail et demande à l'agent de `read` et de renvoyer le nonce.
   - Sondage `exec+read` : le test demande à l'agent de `exec`-écrire un nonce dans un fichier temporaire, puis de `read` en retour.
   - Sondage d'image : le test joint un PNG généré (chat + code aléatoire) et s'attend à ce que le modèle renvoie `cat <CODE>`.
-  - Référence de l'implémentation : `src/gateway/gateway-models.profiles.live.test.ts` et `src/gateway/live-image-probe.ts`.
+  - Référence de l'implémentation : `src/gateway/gateway-models.profiles.live.test.ts` et `test/helpers/live-image-probe.ts`.
 - Comment activer :
   - `pnpm test:live` (ou `OPENCLAW_LIVE_TEST=1` si vous appelez Vitest directement)
 - Comment sélectionner les modèles :
@@ -115,7 +115,7 @@ Les tests en direct sont divisés en deux couches afin que nous puissions isoler
   - Sondage `read` + sondage `exec+read` (stress de l'outil)
   - Le sondage d'image s'exécute lorsque le modèle annonce la prise en charge des entrées d'image
   - Flux (haut niveau) :
-    - Le test génère un petit PNG avec "CAT" + code aléatoire (`src/gateway/live-image-probe.ts`)
+    - Le test génère un petit PNG avec "CAT" + un code aléatoire (`test/helpers/live-image-probe.ts`)
     - L'envoie via `agent` `attachments: [{ mimeType: "image/png", content: "<base64>" }]`
     - Gateway analyse les pièces jointes en `images[]` (`src/gateway/server-methods/agent.ts` + `src/gateway/chat-attachments.ts`)
     - L'agent intégré transmet un message utilisateur multimodal au modèle

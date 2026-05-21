@@ -399,7 +399,7 @@ sidebarTitle: "工具和自定义提供商"
 ```
 
 - `model`：生成的子代理的默认模型。如果省略，子代理将继承调用者的模型。
-- `allowAgents`: 当请求者代理未设置其自己的 `subagents.allowAgents` 时，`sessions_spawn` 的目标代理 ID 默认允许列表（`["*"]` = 任意；默认值：仅限同一代理）。
+- `allowAgents`：当请求代理未设置其自己的 `subagents.allowAgents` 时，`sessions_spawn` 的默认目标代理 ID 允许列表（`["*"]` = 任何已配置的目标；默认值：仅限同一代理）。
 - `runTimeoutSeconds`：当工具调用省略 `runTimeoutSeconds` 时，`sessions_spawn` 的默认超时时间（秒）。`0` 表示无超时。
 - `announceTimeoutMs`：网关 `agent` 公告传递尝试的每次调用超时（毫秒）。默认值：`120000`。临时重试可能会导致总公告等待时间长于配置的一次超时。
 - 每个子智能体工具策略：`tools.subagents.tools.allow` / `tools.subagents.tools.deny`。

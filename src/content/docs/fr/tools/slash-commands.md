@@ -124,14 +124,14 @@ Source actuelle de vérité :
 
 <AccordionGroup>
   <Accordion title="Sessions et exécutions">
-    - `/new [model]` démarre une nouvelle session ; `/reset` est l'alias de réinitialisation.
-    - L'interface de contrôle intercepte la frappe de `/new` pour créer et basculer vers une nouvelle session de tableau de bord, sauf si `session.dmScope: "main"` est configuré et que le parent actuel est la session principale de l'agent ; dans ce cas, `/new` réinitialise la session principale en place. La frappe de `/reset` exécute toujours la réinitialisation en place du Gateway.
-    - `/reset soft [message]` conserve la transcription actuelle, supprime les identifiants de session backend CLI réutilisés et recharge le démarrage/system-prompt en place.
+    - `/new [model]` archive la session actuelle et en lance une nouvelle ; `/reset` efface la session actuelle sur place. Ce ne sont pas des alias.
+    - L'interface de contrôle intercepte la commande `/new` saisie pour créer et basculer vers une nouvelle session de tableau de bord, sauf si `session.dmScope: "main"` est configuré et que le parent actuel est la session principale de l'agent ; dans ce cas, `/new` réinitialise la session principale sur place. La commande `/reset` saisie exécute toujours la réinitialisation sur place du Gateway.
+    - `/reset soft [message]` conserve la transcription actuelle, supprime les identifiants de session backend CLI réutilisés et relance le chargement du démarrage/du système de prompt sur place.
     - `/compact [instructions]` compresse le contexte de la session. Voir [Compression](/fr/concepts/compaction).
-    - `/stop` interrompt l'exécution actuelle.
+    - `/stop` interrompt l'exécution en cours.
     - `/session idle <duration|off>` et `/session max-age <duration|off>` gèrent l'expiration de la liaison de fil de discussion.
     - `/export-session [path]` exporte la session actuelle au format HTML. Alias : `/export`.
-    - `/export-trajectory [path]` demande une approbation d'exécution, puis exporte un [bundle de trajectoire](/fr/tools/trajectory) JSONL pour la session actuelle. Utilisez-le lorsque vous avez besoin de la chronologie du prompt, de l'outil et de la transcription pour une session OpenClaw. Dans les discussions de groupe, l'invite d'approbation et le résultat de l'exportation sont envoyés en privé au propriétaire. Alias : `/trajectory`.
+    - `/export-trajectory [path]` demande une approbation d'exécution, puis exporte un [bundle de trajectoires](/fr/tools/trajectory) JSONL pour la session actuelle. Utilisez-le lorsque vous avez besoin de la chronologie des invites, des outils et des transcriptions pour une session OpenClaw. Dans les discussions de groupe, l'invite d'approbation et le résultat de l'exportation sont envoyés en privé au propriétaire. Alias : `/trajectory`.
 
   </Accordion>
   <Accordion title="Model and run controls">

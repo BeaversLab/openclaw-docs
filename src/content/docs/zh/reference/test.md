@@ -5,7 +5,7 @@ read_when:
 title: "测试"
 ---
 
-- 完整测试套件（套件、实时、Docker）：[测试](/zh/help/testing)
+- 完整测试套件（套件、实时、Docker）：[测试](Docker/en/help/testing)
 - 更新和插件包验证：[测试更新和插件](/zh/help/testing-updates-plugins)
 
 - `pnpm test:force`：终止任何占用默认控制端口的残留网关进程，然后使用隔离的网关端口运行完整的 Vitest 套件，以免服务器测试与运行中的实例发生冲突。当之前的网关运行导致端口 18789 被占用时，请使用此命令。
@@ -124,21 +124,106 @@ title: "测试"
 - 使用 `pnpm test:startup:bench:update` 刷新
 - 使用 `pnpm test:startup:bench:check` 将当前结果与固件进行比较
 
+## Gateway(网关) 启动基准测试
+
+脚本：[`scripts/bench-gateway-startup.ts`](https://github.com/openclaw/openclaw/blob/main/scripts/bench-gateway-startup.ts)
+
+该基准测试默认使用位于 CLI`dist/entry.js` 的已构建 CLI 入口；在使用 package-script 命令之前请先运行
+`pnpm build`。若要改为测量源码运行器，请传递 `--entry scripts/run-node.mjs` 并将这些结果
+与已构建入口的基线分开记录。
+
+用法：
+
+- `pnpm test:startup:gateway -- --runs 5 --warmup 1`
+- `pnpm test:startup:gateway -- --case default --runs 10 --warmup 1`
+- `pnpm test:startup:gateway -- --case skipChannels --case fiftyPlugins --runs 5`
+- `node --import tsx scripts/bench-gateway-startup.ts --case default --runs 5 --output .artifacts/gateway-startup.json`
+- `node --import tsx scripts/bench-gateway-startup.ts --case default --runs 3 --cpu-prof-dir .artifacts/gateway-startup-cpu`
+
+用例 ID：
+
+- `default`Gateway(网关)：正常的 Gateway(网关) 启动。
+- `skipChannels`Gateway(网关)：跳过渠道启动的 Gateway(网关) 启动。
+- `oneInternalHook`：一个配置的内部钩子。
+- `allInternalHooks`：所有内部钩子。
+- `fiftyPlugins`：50 个清单插件。
+- `fiftyStartupLazyPlugins`：50 个启动延迟清单插件。
+
+输出包括首次进程输出、`/healthz`、`/readyz`Gateway(网关)、HTTP 监听日志时间、
+Gateway(网关) 就绪日志时间、CPU 时间、CPU 核心比率、最大 RSS、堆、启动跟踪
+指标、事件循环延迟以及插件查找表详细指标。该脚本
+在子 Gateway(网关) 环境中启用了 `OPENCLAW_GATEWAY_STARTUP_TRACE=1`Gateway(网关)。
+
+将 `/healthz` 理解为存活：HTTP 服务器可以响应。将 `/readyz`Gateway(网关)Gateway(网关) 理解为
+可用就绪：启动插件 sidecar、通道以及就绪关键的附加后工作已稳定。Gateway(网关) 启动钩子是异步
+分发的，不属于就绪保证的一部分。就绪日志时间是
+Gateway(网关) 的内部就绪日志时间戳；它对于进程侧
+归因很有用，但不能替代外部 `/readyz` 探针。
+
+在比较更改时，请使用 JSON 输出或 `--output`。仅当跟踪输出
+指向无法仅通过阶段时序解释的导入、编译或 CPU 密集型工作时，才使用 `--cpu-prof-dir`。
+不要将 source-runner 结果与内置
+`dist/entry.js` 结果作为同一基线进行比较。
+
+## Gateway(网关) 重启基准测试
+
+脚本：[`scripts/bench-gateway-restart.ts`](https://github.com/openclaw/openclaw/blob/main/scripts/bench-gateway-restart.ts)
+
+重启基准测试仅在 macOS 和 Linux 上受支持。它使用 SIGUSR1 进行
+进程内重启，并在 Windows 上立即失败。
+
+该基准测试默认使用位于 CLI`dist/entry.js` 的内置 CLI 入口；在使用 package-script 命令前请先
+运行 `pnpm build`。如果要改为测量 source
+runner，请传递 `--entry scripts/run-node.mjs` 并将那些结果
+与内置入口基线分开保存。
+
+用法：
+
+- `pnpm test:restart:gateway -- --case skipChannels --runs 1 --restarts 5`
+- `pnpm test:restart:gateway -- --case default --runs 3 --restarts 3 --warmup 1`
+- `pnpm test:restart:gateway -- --case skipChannelsAcpxProbe --case skipChannelsNoAcpxProbe --runs 1 --restarts 5`
+- `node --import tsx scripts/bench-gateway-restart.ts --case fiftyPlugins --runs 1 --restarts 5 --output .artifacts/gateway-restart.json`
+- `node --import tsx scripts/bench-gateway-restart.ts --json`
+
+Case ids（用例 ID）：
+
+- `skipChannels`: 跳过通道的重启。
+- `skipChannelsAcpxProbe`: 跳过通道并开启 ACPX 启动探针的重启。
+- `skipChannelsNoAcpxProbe`: 跳过通道并关闭 ACPX 启动探针的重启。
+- `default`: 正常重启。
+- `fiftyPlugins`: 带有 50 个清单插件的重启。
+
+输出包括 next `/healthz`、next `/readyz`、停机时间、重启就绪时间、
+替换进程的 CPU、RSS、启动跟踪指标，以及信号处理、
+活跃工作排空、关闭阶段、下次启动、就绪时间和内存快照的
+重启跟踪指标。该脚本在
+子 Gateway(网关) 环境中启用
+`OPENCLAW_GATEWAY_STARTUP_TRACE=1` 和 `OPENCLAW_GATEWAY_RESTART_TRACE=1`Gateway(网关)。
+
+当变更涉及重启信号、关闭处理程序、
+重启后启动、Sidecar 关闭、服务切换或重启后
+就绪时，请使用此基准测试。当将 Gateway(网关) 机制与渠道
+启动隔离时，请从 `skipChannels`Gateway(网关) 开始。仅在特定用例解释了
+重启路径之后，才使用 `default` 或插件繁重的场景。
+
+跟踪指标是归因提示，而非结论。应从多个样本、匹配的所有者 Span、`/healthz` 和 `/readyz`
+行为以及用户可见的重启契约来判断重启变更。
+
 ## 新手引导 E2E (Docker)
 
-Docker 是可选的；这仅用于容器化的新手引导冒烟测试。
+Docker 是可选的；仅容器化的新手引导冒烟测试需要它。
 
-在干净的 Linux 容器中进行完整的冷启动流程：
+在干净的 Linux 容器中完整的冷启动流程：
 
 ```bash
 scripts/e2e/onboard-docker.sh
 ```
 
-此脚本通过伪终端驱动交互式向导，验证配置/工作区/会话文件，然后启动网关并运行 `openclaw health`。
+此脚本通过伪终端驱动交互式向导，验证配置/工作区/会话文件，然后启动 gateway 并运行 `openclaw health`。
 
 ## QR 导入冒烟测试 (Docker)
 
-确保维护的 QR 运行时助手在受支持的 Docker Node 运行时（Node 24 默认，Node 22 兼容）下加载：
+确保维护的 QR 运行时辅助程序在支持的 Docker Node 运行时（默认 Node 24，兼容 Node 22）下加载：
 
 ```bash
 pnpm test:docker:qr

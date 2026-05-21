@@ -276,9 +276,9 @@ Active a través de `channels.mattermost.streaming`:
 
   </Accordion>
   <Accordion title="Notas sobre el comportamiento de la transmisión">
-    - Si la transmisión no puede finalizarse en su lugar (por ejemplo, si la publicación se eliminó a mitad de la transmisión), OpenClaw recurre al envío de una publicación final nueva para que la respuesta nunca se pierda.
-    - Las cargas útiles de solo razonamiento se suprimen de las publicaciones del canal, incluido el texto que llega como una cita `> Reasoning:`. Establezca `/reasoning on` para ver el pensamiento en otras superficies; la publicación final de Mattermost mantiene solo la respuesta.
-    - Consulte [Transmisión](/es/concepts/streaming#preview-streaming-modes) para obtener la matriz de asignación de canales.
+    - Si la transmisión no puede finalizarse en su lugar (por ejemplo, si la publicación se eliminó a mitad de la transmisión), OpenClaw recurre al envío de una nueva publicación final para que la respuesta nunca se pierda.
+    - Las cargas útiles que solo contienen pensamientos se suprimen de las publicaciones del canal, incluido el texto que llega como un `> Thinking` blockquote. Establezca `/reasoning on` para ver el pensamiento en otras superficies; la publicación final de Mattermost mantiene solo la respuesta.
+    - Consulte [Streaming](/es/concepts/streaming#preview-streaming-modes) para ver la matriz de asignación de canales.
 
   </Accordion>
 </AccordionGroup>

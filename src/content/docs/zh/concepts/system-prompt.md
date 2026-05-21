@@ -114,7 +114,8 @@ PR 中。
 
 ## 工作区引导注入
 
-引导文件会被修剪并附加在 **Project Context**（项目上下文）下，以便模型无需显式读取即可看到身份和配置文件上下文：
+Bootstrap 文件从当前工作区解析，然后路由到与其生命周期匹配的
+提示表面：
 
 - `AGENTS.md`
 - `SOUL.md`
@@ -125,31 +126,54 @@ PR 中。
 - `BOOTSTRAP.md` （仅限全新的工作空间）
 - 如果存在 `MEMORY.md`
 
-除非有特定文件的限制条件，否则所有这些文件在每次轮次中都会被**注入到上下文窗口**。当为默认代理禁用心跳或
-`agents.defaults.heartbeat.includeSystemPromptSection` 为 false 时，`HEARTBEAT.md` 会在常规运行中被省略。请保持注入文件的简洁，尤其是 `MEMORY.md`。`MEMORY.md` 旨在保持为精心策划的长期摘要；详细的日常笔记应归属于 `memory/*.md`，以便 `memory_search` 和 `memory_get` 按需检索。过大的 `MEMORY.md` 文件会增加提示词使用量，并且由于下方的启动文件限制，可能会被部分注入。
+在原生 Codex 挂载中，OpenClaw 避免在每次用户轮次中重复稳定的工作区文件。
+Codex 通过其自己的项目文档发现加载 OpenClaw`AGENTS.md`。`SOUL.md`、`IDENTITY.md`、`TOOLS.md` 和 `USER.md` 作为
+Codex 开发者指令被转发。`HEARTBEAT.md` 内容不会被注入；当该文件存在且非空时，
+心跳轮次会收到一条指向该文件的协作模式说明。`MEMORY.md` 和活动的 `BOOTSTRAP.md` 内容目前保持
+正常的轮次上下文角色。
 
-当会话在本机 Codex harness 上运行时，Codex 通过其自己的项目文档发现加载 `AGENTS.md`OpenClaw。OpenClaw 仍然解析剩余的引导文件并将它们作为 Codex 配置指令转发，因此 `SOUL.md`、`TOOLS.md`、`IDENTITY.md`、`USER.md`、`HEARTBEAT.md`、`BOOTSTRAP.md` 和 `MEMORY.md` 保持相同的工作区上下文角色，而无需复制 `AGENTS.md`。
+在非 Codex 挂载上，引导文件继续根据其现有的门控被组合到
+OpenClaw 提示中。当默认代理的心跳被禁用或
+`agents.defaults.heartbeat.includeSystemPromptSection` 为 false 时，OpenClaw`HEARTBEAT.md` 在正常运行中被省略。
+保持注入文件的简洁，尤其是 `MEMORY.md`。`MEMORY.md` 旨在保持
+精选的长期摘要；详细的每日笔记应放在 `memory/*.md` 中，以便 `memory_search` 和 `memory_get` 按需检索它们。
+过大的 `MEMORY.md` 文件会增加提示使用量，并且由于以下引导文件限制，可能会被部分注入。
 
-<Note>`memory/*.md` 每日文件**不**属于常规引导项目上下文的一部分。在普通轮次中，它们会通过 `memory_search` 和 `memory_get` 工具按需访问，因此除非模型明确读取它们，否则它们不计入上下文窗口。纯粹的 `/new` 和 `/reset` 轮次是例外：运行时可以将最近的每日记忆作为一次性启动上下文块预置到该第一轮中。</Note>
+<Note>`memory/*.md` 每日文件**不是**正常引导项目上下文的一部分。在普通轮次中，它们通过 `memory_search` 和 `memory_get` 工具按需访问，因此除非模型显式读取它们，否则它们不会计入上下文窗口。 纯 `/new` 和 `/reset` 轮次是例外：运行时可以将最近的每日记忆作为针对该第一轮的一次性启动上下文块前置。</Note>
 
-大文件会被截断并带有标记。每个文件的最大大小由 `agents.defaults.bootstrapMaxChars` 控制（默认：12000）。跨文件注入的引导内容总数受 `agents.defaults.bootstrapTotalMaxChars`OpenClaw 限制（默认：60000）。缺失的文件会注入一个简短的缺失文件标记。发生截断时，OpenClaw 可以插入一个简明的系统提示警告通知；通过 `agents.defaults.bootstrapPromptTruncationWarning`（`off`、`once`、`always`；默认：`always`）进行控制。详细的原始/注入计数保留在 `/context`、`/status`、doctor 和日志等诊断信息中。
+大文件会被截断并标记。每个文件的最大大小由
+`agents.defaults.bootstrapMaxChars` 控制（默认：12000）。所有文件注入的引导
+内容总和受 `agents.defaults.bootstrapTotalMaxChars`OpenClaw 限制
+（默认：60000）。缺失的文件会注入一个简短的缺失文件标记。当发生截断
+时，OpenClaw 可以注入一个简洁的系统提示警告通知；通过
+`agents.defaults.bootstrapPromptTruncationWarning` 控制此行为（`off`、`once`、`always`；
+默认：`always`）。详细的原始/注入计数保留在诊断信息中，例如
+`/context`、`/status`、doctor 和日志中。
 
-对于内存文件，截断并不代表数据丢失：文件在磁盘上保持完整，但在模型直接读取或搜索内存之前，它只能看到缩短后的注入副本。如果 `MEMORY.md` 被反复截断，请将其提炼为更简短的持久化摘要，并将详细历史记录移至 `memory/*.md`，或者有意提高引导限制。
+对于内存文件，截断并不意味着数据丢失：文件在磁盘上保持完整，
+但在模型直接读取或搜索
+内存之前，它只能看到缩短后的注入副本。如果 `MEMORY.md` 反复被截断，请将其提炼为
+更简短的持久摘要，并将详细历史记录移动到 `memory/*.md` 中，或者
+有意提高引导限制。
 
-子代理会话仅注入 `AGENTS.md` 和 `TOOLS.md`（其他引导文件会被过滤掉，以保持子代理上下文较小）。
+子代理会话仅注入 `AGENTS.md` 和 `TOOLS.md`（其他引导文件
+会被过滤掉，以保持子代理上下文精简）。
 
-内部钩子可以通过 `agent:bootstrap` 拦截此步骤，以修改或替换注入的引导文件（例如，将 `SOUL.md` 替换为备用角色设定）。
+内部钩子可以通过 `agent:bootstrap` 拦截此步骤，以修改或替换
+注入的引导文件（例如，将 `SOUL.md` 交换为备用角色设定）。
 
-如果您想让代理听起来不那么大众化，请从
-[SOUL.md Personality Guide](/zh/concepts/soul) 开始。
+如果您想让代理听起来不那么通用，请从
+[SOUL.md 个性指南](/zh/concepts/soul) 开始。
 
-要检查每个注入文件的贡献（原始内容 vs 注入内容、截断以及工具模式开销），请使用 `/context list` 或 `/context detail`。请参阅 [Context](/zh/concepts/context)。
+要检查每个注入文件的贡献量（原始内容与注入内容、截断情况以及工具架构开销），请使用 `/context list` 或 `/context detail`。参见 [上下文](/zh/concepts/context)。
 
 ## 时间处理
 
 当用户时区已知时，系统提示词包含一个专门的 **当前日期和时间** 部分。为了保持提示词缓存稳定，现在仅包含 **时区**（不包含动态时钟或时间格式）。
 
-当代理需要当前时间时，请使用 `session_status`；状态卡包含一个时间戳行。同一个工具可以选择性地设置每个会话的模型覆盖（`model=default` 清除它）。
+当代理需要当前时间时，请使用 `session_status`；状态卡片
+包含一个时间戳行。同一个工具可以选择性地设置逐会话的模型
+覆盖（`model=default` 可清除它）。
 
 配置如下：
 
@@ -160,13 +184,14 @@ PR 中。
 
 ## Skills
 
-当存在符合资格的 Skills 时，OpenClaw 会注入一个紧凑的**可用 Skills 列表**
-(OpenClaw`formatSkillsForPrompt`)，其中包含每个 Skill 的**文件路径**。
-该提示词指示模型使用 `read` 加载所列位置（工作区、托管或捆绑）的 SKILL.md。
-如果没有符合资格的 Skills，则会省略 Skills 部分。
+当存在符合条件的 Skills 时，OpenClaw 会注入一个简洁的 **可用 Skills 列表**
+(OpenClaw`formatSkillsForPrompt`)，其中包含每个 Skill 的 **文件路径**。
+系统提示指示模型使用 `read` 在列出的位置
+（工作区、受管理或捆绑包）加载 SKILL.md。如果没有符合条件的 Skills，
+则省略 Skills 部分。
 
-资格判定包括 Skill 元数据门控、运行时环境/配置检查，以及在配置
-`agents.defaults.skills` 或
+资格条件包括 Skill 元数据门控、运行时环境/配置检查，
+以及在配置了 `agents.defaults.skills` 或
 `agents.list[].skills` 时的有效代理 Skill 允许列表。
 
 插件捆绑的 Skills 仅在其所属插件启用时才符合资格。
@@ -188,23 +213,27 @@ PR 中。
 技能列表的预算由技能子系统拥有：
 
 - 全局默认值：`skills.limits.maxSkillsPromptChars`
-- 按代理覆盖：`agents.list[].skillsLimits.maxSkillsPromptChars`
+- 每个代理的覆盖：`agents.list[].skillsLimits.maxSkillsPromptChars`
 
 通用的有界运行时摘录使用不同的表面：
 
 - `agents.defaults.contextLimits.*`
 - `agents.list[].contextLimits.*`
 
-这种分离将技能大小的控制与运行时读取/注入大小（例如 `memory_get`、实时工具结果以及压缩后的 AGENTS.md 刷新）区分开来。
+这种分离将 Skills 大小与运行时读取/注入大小（例如
+`memory_get`、实时工具结果和压缩后的 AGENTS.md 刷新）区分开来。
 
 ## 文档
 
-系统提示词包含一个 **文档 (Documentation)** 部分。当本地文档可用时，它会指向本地 OpenClaw 文档目录（在 Git 检出中为 `docs/` 或随附的 npm 包文档）。如果本地文档不可用，则会回退到 [https://docs.openclaw.ai](https://docs.openclaw.ai)。
+系统提示包含一个 **文档** 部分。当本地文档可用时，它
+指向本地 OpenClaw 文档目录（Git 检出中的 OpenClaw`docs/`npm 或捆绑的 npm
+包文档）。如果本地文档不可用，它将回退到
+[https://docs.openclaw.ai](https://docs.openclaw.ai)。
 
-同一部分还包括 OpenClaw 源代码位置。Git 签出会公开本地源代码根目录，以便代理可以直接检查代码。包安装包括 GitHub 源代码 URL，并告诉代理在文档不完整或陈旧时去那里查看源代码。提示词还注明了公共文档镜像、社区 Discord 和 ClawHub ([https://clawhub.ai](https://clawhub.ai))，用于技能发现。它告诉模型对于 OpenClaw 的行为、命令、配置或架构，首先要查阅文档，并尽可能自行运行 `openclaw status`（仅在无法访问时询问用户）。对于配置，它特别指引代理查看 `gateway` 工具操作 `config.schema.lookup` 以获取精确的字段级文档和约束，然后查看 `docs/gateway/configuration.md` 和 `docs/gateway/configuration-reference.md` 以获取更广泛的指导。
+同一部分还包括 OpenClaw 源代码位置。Git 检出会暴露本地源代码根目录，以便代理可以直接检查代码。软件包安装包括 GitHub 源代码 URL，并告知代理在文档不完整或陈旧时去那里查看源代码。提示还指出了公共文档镜像、社区 Discord 和 ClawHub（([https://clawhub.ai](https://clawhub.ai))），用于发现技能。它告诉模型首先查阅文档以了解 OpenClaw 行为、命令、配置或架构，并尽可能自行运行 `openclaw status`（仅在缺乏访问权限时询问用户）。特别是对于配置，它将代理指向 `gateway` 工具操作 `config.schema.lookup` 以获取精确的字段级文档和约束，然后指向 `docs/gateway/configuration.md` 和 `docs/gateway/configuration-reference.md` 以获取更广泛的指导。
 
 ## 相关
 
-- [Agent runtime](/zh/concepts/agent)
-- [Agent workspace](/zh/concepts/agent-workspace)
-- [Context engine](/zh/concepts/context-engine)
+- [Agent 运行时](/zh/concepts/agent)
+- [Agent 工作区](/zh/concepts/agent-workspace)
+- [上下文引擎](/zh/concepts/context-engine)

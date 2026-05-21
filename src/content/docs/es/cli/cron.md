@@ -10,7 +10,7 @@ title: "Cron"
 
 Administra trabajos de cron para el programador del Gateway.
 
-<Tip>Ejecute `openclaw cron --help` para ver la superficie de comandos completa. Consulte [Cron jobs](/es/automation/cron-jobs) para obtener la guía conceptual.</Tip>
+<Tip>Ejecute `openclaw cron --help` para ver la superficie completa de comandos. Consulte [Cron jobs](/es/automation/cron-jobs) para la guía conceptual.</Tip>
 
 ## Sesiones
 
@@ -151,7 +151,9 @@ Si una ejecución aislada de cron devuelve solo el token silencioso (`NO_REPLY` 
 
 ### Denegaciones estructuradas
 
-Las ejecuciones aisladas de cron prefieren los metadatos estructurados de denegación de ejecución de la ejecución incrustada y luego recurren a marcadores de denegación conocidos en la salida final, como `SYSTEM_RUN_DENIED`, `INVALID_REQUEST` y frases de rechazo de enlace de aprobación.
+Las ejecuciones aisladas de cron utilizan metadatos estructurados de denegación de ejecución de la ejecución incrustada como la señal de denegación autorizada. También respetan los contenedores `UNAVAILABLE` del nodo host cuando el mensaje de error estructurado anidado comienza con `SYSTEM_RUN_DENIED` o `INVALID_REQUEST`.
+
+Cron no clasifica la prosa de salida final ni las frases de rechazo que parecen aprobación como denegaciones, a menos que la ejecución incrustada también proporcione metadatos de denegación estructurada, por lo que el texto ordinario del asistente no se trata como un comando bloqueado.
 
 `cron list` y el historial de ejecuciones muestran el motivo de la denegación en lugar de informar un comando bloqueado como `ok`.
 
@@ -165,7 +167,7 @@ La retención y la poda se controlan en la configuración:
 ## Migración de trabajos antiguos
 
 <Note>
-  Si tienes trabajos de cron de antes del formato actual de entrega y almacenamiento, ejecuta `openclaw doctor --fix`. Doctor normaliza los campos de cron heredados (`jobId`, `schedule.cron`, campos de entrega de nivel superior incluyendo `threadId` heredado, alias de entrega de carga útil `provider`) y migra los trabajos simples de webhook de respaldo `notify: true` a entrega explícita de webhook
+  Si tiene trabajos de cron de antes del formato actual de entrega y almacenamiento, ejecute `openclaw doctor --fix`. Doctor normaliza los campos de cron heredados (`jobId`, `schedule.cron`, campos de entrega de nivel superior incluyendo `threadId` heredado, alias de entrega de carga útil `provider`) y migra trabajos simples de webhook alternativo `notify: true` a una entrega de webhook explícita
   cuando `cron.webhook` está configurado.
 </Note>
 
@@ -177,25 +179,25 @@ Actualizar la configuración de entrega sin cambiar el mensaje:
 openclaw cron edit <job-id> --announce --channel telegram --to "123456789"
 ```
 
-Desactivar la entrega para un trabajo aislado:
+Deshabilitar la entrega para un trabajo aislado:
 
 ```bash
 openclaw cron edit <job-id> --no-deliver
 ```
 
-Activar el contexto de arranque ligero para un trabajo aislado:
+Habilitar el contexto de arranque ligero para un trabajo aislado:
 
 ```bash
 openclaw cron edit <job-id> --light-context
 ```
 
-Anunciar a un canal específico:
+Anunciar en un canal específico:
 
 ```bash
 openclaw cron edit <job-id> --announce --channel slack --to "channel:C1234567890"
 ```
 
-Anunciar a un tema de foro de Telegram:
+Anunciar en un tema de foro de Telegram:
 
 ```bash
 openclaw cron edit <job-id> --announce --channel telegram --to "-1001234567890" --thread-id 42
@@ -213,7 +215,7 @@ openclaw cron add \
   --no-deliver
 ```
 
-`--light-context` se aplica solo a trabajos aislados de turno de agente. Para ejecuciones de cron, el modo ligero mantiene el contexto de arranque vacío en lugar de inyectar el conjunto completo de arranque del espacio de trabajo.
+`--light-context` se aplica solo a trabajos aislados de turno de agente. Para las ejecuciones de cron, el modo ligero mantiene el contexto de arranque vacío en lugar de inyectar el conjunto de arranque completo del espacio de trabajo.
 
 ## Comandos comunes de administración
 
@@ -232,13 +234,13 @@ openclaw cron runs --id <job-id> --limit 50
 openclaw cron runs --id <job-id> --run-id <run-id>
 ```
 
-`openclaw cron list` muestra todos los trabajos coincidentes de forma predeterminada. Pase `--agent <id>` para mostrar solo los trabajos cuyo id de agente normalizado efectivo coincida; los trabajos sin un id de agente almacenado cuentan como el agente predeterminado configurado.
+`openclaw cron list` muestra todos los trabajos coincidentes de manera predeterminada. Pase `--agent <id>` para mostrar solo los trabajos cuyo ID de agente normalizado efectivo coincida; los trabajos sin un ID de agente almacenado cuentan como el agente predeterminado configurado.
 
 `openclaw cron get <job-id>` devuelve el JSON del trabajo almacenado directamente. Use `cron show <job-id>` cuando desee la vista legible por humanos con la vista previa de la ruta de entrega.
 
 `cron list --json` y `cron show <job-id> --json` incluyen un campo `status` de nivel superior en cada trabajo, calculado a partir de `enabled`, `state.runningAtMs` y `state.lastRunStatus`. Valores: `disabled`, `running`, `ok`, `error`, `skipped` o `idle`. Esto refleja la columna de estado legible por humanos para que las herramientas externas puedan leer el estado del trabajo sin volver a derivarlo.
 
-Las entradas `cron runs` incluyen diagnósticos de entrega con el objetivo cron previsto, el objetivo resuelto, los envíos de herramientas de mensajes, el uso de alternativas y el estado de entrega.
+Las entradas `cron runs` incluyen diagnósticos de entrega con el objetivo cron previsto, el objetivo resuelto, los envíos de la herramienta de mensajes, el uso de reserva y el estado de entrega.
 
 Redirección de agente y sesión:
 
@@ -249,7 +251,7 @@ openclaw cron edit <job-id> --session current
 openclaw cron edit <job-id> --session "session:daily-brief"
 ```
 
-`openclaw cron add` advierte cuando `--agent` se omite en los trabajos de turno de agente y vuelve al agente predeterminado (`main`). Pase `--agent <id>` en el momento de creación para fijar un agente específico.
+`openclaw cron add` advierte cuando `--agent` se omite en los trabajos de turno de agente y vuelve al agente predeterminado (`main`). Pase `--agent <id>` en el momento de la creación para fijar un agente específico.
 
 Ajustes de entrega:
 
@@ -262,5 +264,5 @@ openclaw cron edit <job-id> --no-deliver
 
 ## Relacionado
 
-- [Referencia de CLI](/es/cli)
+- [Referencia de la CLI](/es/cli)
 - [Tareas programadas](/es/automation/cron-jobs)

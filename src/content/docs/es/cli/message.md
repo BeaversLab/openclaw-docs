@@ -70,7 +70,7 @@ Búsqueda de nombres:
   - Canales: WhatsApp/Telegram/Discord/Google Chat/Slack/Mattermost (plugin)/Signal/iMessage/Matrix/Microsoft Teams
   - Obligatorio: `--target`, más `--message`, `--media` o `--presentation`
   - Opcional: `--media`, `--presentation`, `--delivery`, `--pin`, `--reply-to`, `--thread-id`, `--gif-playback`, `--force-document`, `--silent`
-  - Payloads de presentación compartida: `--presentation` envía bloques semánticos (`text`, `context`, `divider`, `buttons`, `select`) que el núcleo procesa a través de las capacidades declaradas del canal seleccionado. Consulte [Message Presentation](/es/plugins/message-presentation).
+  - Cargas útiles de presentación compartidas: `--presentation` envía bloques semánticos (`text`, `context`, `divider`, `buttons`, `select`) que el núcleo representa a través de las capacidades declaradas del canal seleccionado. Consulte [Presentación de mensajes](/es/plugins/message-presentation).
   - Preferencias de entrega genéricas: `--delivery` acepta sugerencias de entrega como `{ "pin": true }`; `--pin` es una abreviatura para la entrega fijada cuando el canal lo admite.
   - Telegram + WhatsApp: `--force-document` (envíe imágenes, GIF y videos como documentos para evitar la compresión del canal)
   - Solo Telegram: `--thread-id` (id del tema del foro)
@@ -86,12 +86,13 @@ Búsqueda de nombres:
   - Solo para Telegram: `--poll-duration-seconds` (5-600), `--silent`, `--poll-anonymous` / `--poll-public`, `--thread-id`
 
 - `react`
-  - Canales: Discord/Google Chat/Slack/Telegram/WhatsApp/Signal/Matrix
+  - Canales: Discord/Google Chat/Matrix/Nextcloud Talk/Signal/Slack/Telegram/WhatsApp
   - Obligatorio: `--message-id`, `--target`
   - Opcional: `--emoji`, `--remove`, `--participant`, `--from-me`, `--target-author`, `--target-author-uuid`
   - Nota: `--remove` requiere `--emoji` (omitir `--emoji` para borrar las propias reacciones donde esté soportado; ver /tools/reactions)
   - Solo para WhatsApp: `--participant`, `--from-me`
   - Reacciones de grupo de Signal: se requiere `--target-author` o `--target-author-uuid`
+  - Nextcloud Talk: solo agregar reacciones; `--remove` se rechaza con un error claro (consulte /tools/reactions)
 
 - `reactions`
   - Canales: Discord/Google Chat/Slack/Matrix
@@ -102,8 +103,8 @@ Búsqueda de nombres:
   - Canales: Discord/Slack/Matrix
   - Obligatorio: `--target`
   - Opcional: `--limit`, `--message-id`, `--before`, `--after`
-  - Solo para Slack: `--message-id` lee una marca de tiempo de mensaje específica de Slack; combinar con `--thread-id` para leer una respuesta exacta de un hilo.
-  - Solo para Discord: `--around`
+  - Solo Slack: `--message-id` lee una marca de tiempo específica del mensaje de Slack; combínelo con `--thread-id` para leer una respuesta de hilo exacta.
+  - Solo Discord: `--around`
 
 - `edit`
   - Canales: Discord/Slack/Matrix
@@ -124,7 +125,7 @@ Búsqueda de nombres:
 - `permissions`
   - Canales: Discord/Matrix
   - Obligatorio: `--target`
-  - Solo para Matrix: disponible cuando el cifrado de Matrix está habilitado y se permiten las acciones de verificación
+  - Solo Matrix: disponible cuando el cifrado de Matrix está habilitado y se permiten las acciones de verificación
 
 - `search`
   - Canales: Discord
@@ -187,7 +188,7 @@ Búsqueda de nombres:
 
 ### Moderación (Discord)
 
-- `timeout`: `--guild-id`, `--user-id` (opcional `--duration-min` o `--until`; omitir ambos para eliminar el tiempo de espera)
+- `timeout`: `--guild-id`, `--user-id` (opcional `--duration-min` o `--until`; omita ambos para eliminar el tiempo de espera)
 - `kick`: `--guild-id`, `--user-id` (+ `--reason`)
 - `ban`: `--guild-id`, `--user-id` (+ `--delete-days`, `--reason`)
   - `timeout` también admite `--reason`
@@ -196,7 +197,7 @@ Búsqueda de nombres:
 
 - `broadcast`
   - Canales: cualquier canal configurado; use `--channel all` para apuntar a todos los proveedores
-  - Obligatorio: `--targets <target...>`
+  - Requerido: `--targets <target...>`
   - Opcional: `--message`, `--media`, `--dry-run`
 
 ## Ejemplos
@@ -216,7 +217,7 @@ openclaw message send --channel discord \
   --presentation '{"blocks":[{"type":"buttons","buttons":[{"label":"Approve","value":"approve","style":"success"},{"label":"Decline","value":"decline","style":"danger"}]}]}'
 ```
 
-Core representa el mismo payload `presentation` en componentes de Discord, bloques de Slack, botones en línea de Telegram, props de Mattermost o tarjetas de Teams/Feishu dependiendo de la capacidad del canal. Consulte [Message Presentation](/es/plugins/message-presentation) para ver el contrato completo y las reglas de reserva.
+Core renderiza el mismo payload `presentation` en componentes de Discord, bloques de Slack, botones en línea de Telegram, props de Mattermost o tarjetas de Teams/Feishu dependiendo de la capacidad del canal. Consulte [Message Presentation](/es/plugins/message-presentation) para ver el contrato completo y las reglas de reserva.
 
 Enviar un payload de presentación más rico:
 
@@ -277,25 +278,23 @@ openclaw message react --channel signal \
   --emoji "✅" --target-author-uuid 123e4567-e89b-12d3-a456-426614174000
 ```
 
-Enviar botones en línea de Telegram a través de una presentación genérica:
+Enviar botones en línea de Telegram mediante presentación genérica:
 
 ```
 openclaw message send --channel telegram --target @mychat --message "Choose:" \
   --presentation '{"blocks":[{"type":"buttons","buttons":[{"label":"Yes","value":"cmd:yes"},{"label":"No","value":"cmd:no"}]}]}'
 ```
 
-Enviar un botón de Telegram Mini App a través de la presentación genérica:
+Enviar un botón de Mini App de Telegram mediante presentación genérica:
 
 ```
 openclaw message send --channel telegram --target 123456789 --message "Open app:" \
   --presentation '{"blocks":[{"type":"buttons","buttons":[{"label":"Launch","webApp":{"url":"https://example.com/app"}}]}]}'
 ```
 
-Los botones de las aplicaciones web de Telegram solo son compatibles en chats privados entre un usuario y
-el bot. Los payloads JSON antiguos que utilizan `web_app` todavía se analizan, pero `webApp` es el
-campo de presentación canónico.
+Los botones de aplicación web de Telegram solo son compatibles con chats privados entre un usuario y el bot. Las cargas JSON antiguas que usan `web_app` todavía se analizan, pero `webApp` es el campo de presentación canónico.
 
-Enviar una tarjeta de Teams a través de la presentación genérica:
+Enviar una tarjeta de Teams mediante presentación genérica:
 
 ```bash
 openclaw message send --channel msteams \
@@ -303,7 +302,7 @@ openclaw message send --channel msteams \
   --presentation '{"title":"Status update","blocks":[{"type":"text","text":"Build completed"}]}'
 ```
 
-Enviar una imagen de Telegram o WhatsApp como un documento para evitar la compresión:
+Enviar una imagen de Telegram o WhatsApp como documento para evitar la compresión:
 
 ```bash
 openclaw message send --channel telegram --target @mychat \
@@ -312,5 +311,5 @@ openclaw message send --channel telegram --target @mychat \
 
 ## Relacionado
 
-- [Referencia de CLI](/es/cli)
+- [Referencia de la CLI](/es/cli)
 - [Envío de agente](/es/tools/agent-send)

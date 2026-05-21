@@ -19,7 +19,7 @@ Contexte de sécurité : [Sécurité](/fr/gateway/security)
 
 Lorsqu'un channel est configuré avec la politique de DM `pairing`, les expéditeurs inconnus reçoivent un code court et leur message n'est **pas traité** tant que vous n'avez pas approuvé.
 
-Les stratégies de DM par défaut sont documentées dans : [Sécurité](/fr/gateway/security)
+Les stratégies DM par défaut sont documentées dans : [Sécurité](/fr/gateway/security)
 
 `dmPolicy: "open"` n'est public que lorsque la liste d'autorisation DM effective inclut `"*"`.
 La configuration et la validation nécessitent ce caractère générique pour les configurations publiques ouvertes. Si l'état
@@ -119,19 +119,22 @@ Le code de configuration est une charge utile JSON encodée en base64 qui contie
 
 Ce jeton d'amorçage porte le profil d'amorçage de jumelage intégré :
 
-- le profil de configuration intégré n'autorise que le rôle `node`
-- après approbation, le `node` transféré reste `scopes: []`
-- le flux de code de configuration intégré ne transfère pas de `operator`
-- l'accès opérateur nécessite un appairage opérateur approuvé distinct ou un flux de jeton
+- le profil de configuration intégré n'autorise que la ligne de base QR/code de configuration vierge :
+  `node` plus un transfert `operator` limité
+- le jeton `node` transféré reste `scopes: []`
+- le jeton `operator` transféré est limité à `operator.approvals`,
+  `operator.read`, et `operator.write`
+- `operator.admin` et `operator.pairing` ne sont pas accordés par le démarrage
+  via QR/code de configuration ; ils nécessitent un appairement d'opérateur approuvé distinct ou un flux de jetons
 - la rotation/la révocation ultérieure des jetons reste limitée à la fois par le contrat de rôle approuvé de l'appareil et les portées opérateur de la session de l'appelant
 
 Traitez le code de configuration comme un mot de passe tant qu'il est valide.
 
-Pour Tailscale, public ou autre appairage mobile distant, utilisez Tailscale Serve/Funnel
-ou une autre URL Gateway `wss://`. Les codes de configuration en texte clair `ws://` sont acceptés uniquement
-pour le bouclage, les adresses LAN privées, les hôtes Bonjour `.local` et l'hôte de l'émulateur Android.
-Les adresses CGNAT Tailnet, les noms `.ts.net` et les hôtes publics échouent toujours
-de manière sécurisée avant l'émission du QR/du code de configuration.
+Pour l'appairage mobile distant via Tailscale, public ou autre, utilisez Tailscale Serve/Funnel
+ou une autre URL de passerelle `wss://` Gateway. Les codes de configuration en texte clair `ws://` ne sont acceptés que
+pour le bouclage, les adresses LAN privées, les hôtes Bonjour `.local` et l'hôte de
+l'émulateur Android. Les adresses CGNAT de Tailnet, les noms `.ts.net` et les hôtes publics
+échouent toujours (fermeture) avant l'émission de QR/code de configuration.
 
 ### Approuver un appareil nœud
 
@@ -141,18 +144,19 @@ openclaw devices approve <requestId>
 openclaw devices reject <requestId>
 ```
 
-Lorsqu'une approbation explicite est refusée parce que la session de l'appareil approuvé approuvant
-a été ouverte avec une portée d'appairage uniquement, la CLI réessaie la même requête avec
-`operator.admin`. Cela permet à un appareil approuvé capable d'administration existant de récupérer un nouvel
-appairage Control UI/navigateur sans modifier `devices/paired.json` à la main. Le
-Gateway valide toujours la connexion retentée ; les jetons qui ne peuvent pas s'authentifier
+Lorsqu'une approbation explicite est refusée parce que la session de l'appareil approué d'appairage
+a été ouverte avec une portée d'appairage uniquement, la CLI réessaie la même demande avec
+`operator.admin`. Cela permet à un appareil appairé existant avec des capacités d'administrateur de récupérer un nouvel
+appairage d'interface de contrôle/navigateur sans modifier `devices/paired.json` à la main. La
+Gateway valide toujours la connexion réessayée ; les jetons qui ne peuvent pas s'authentifier
 avec `operator.admin` restent bloqués.
 
-Si le même appareil réessaie avec des détails d'authentification différents (par exemple un rôle/portées/clé public différent),
-la demande en attente précédente est remplacée et un nouveau `requestId` est créé.
+Si le même appareil réessaie avec des détails d'authentification différents (par exemple un rôle,
+une portée ou une clé publique différent), la demande en attente précédente est remplacée et un nouveau
+`requestId` est créé.
 
 <Note>
-  Un appareil déjà appairé n'obtient pas silencieusement un accès plus large. S'il se reconnecte en demandant davantage de portées ou un rôle plus large, OpenClaw conserve l'approbation existante telle quelle et crée une nouvelle demande de mise à niveau en attente. Utilisez `openclaw devices list` pour comparer l'accès actuellement approuvé avec le nouvel accès demandé avant d'approuver.
+  Un appareil déjà apparié n'obtient pas silencieusement un accès plus large. S'il se reconnecte en demandant davantage de portées ou un rôle plus large, OpenClaw conserve l'approbation existante telle quelle et crée une nouvelle demande de mise à niveau en attente. Utilisez OpenClaw`openclaw devices list` pour comparer l'accès actuellement approuvé avec le nouvel accès demandé avant d'approuver.
 </Note>
 
 ### Approbation automatique optionnelle des nœuds de CIDR de confiance
@@ -172,22 +176,21 @@ vous pouvez opter pour l'approbation automatique des nœuds lors de la première
 }
 ```
 
-Cela s'applique uniquement aux nouvelles demandes d'appairage `role: node` sans portée
-(« scopes ») demandée. Les clients Opérateur, navigateur, Control UI et WebChat nécessitent toujours une approbation
-manuelle. Les modifications de rôle, de portée, de métadonnées et de clé publique nécessitent toujours une approbation
-manuelle.
+Cela s'applique uniquement aux nouvelles demandes d'appariement `role: node`WebChat sans portée demandée.
+Les clients Opérateur, navigateur, Control UI et WebChat nécessitent toujours une approbation
+manuelle. Les modifications de rôle, de portée, de métadonnées et de clé publique nécessitent toujours une approbation manuelle.
 
 ### Stockage de l'état d'appairage des nœuds
 
 Stocké sous `~/.openclaw/devices/` :
 
-- `pending.json` (à courte durée de vie ; les demandes en attente expirent)
-- `paired.json` (appareils appairés + jetons)
+- `pending.json` (court terme ; les demandes en attente expirent)
+- `paired.json` (appareils appariés + jetons)
 
 ### Notes
 
-- L'API héritée `node.pair.*` (CLI : `openclaw nodes pending|approve|reject|remove|rename`) est un
-  stockage d'appairage distinct appartenant à la passerelle. Les nœuds WS nécessitent toujours un appairage d'appareil.
+- L'API `node.pair.*`APICLI héritée (CLI : `openclaw nodes pending|approve|reject|remove|rename`) est un
+  magasin d'appariement distinct détenu par la passerelle. Les nœuds WS nécessitent toujours l'appariement des appareils.
 - L'enregistrement d'appairage est la source durable de vérité pour les rôles approuvés. Les
   jetons d'appareil actifs restent liés à cet ensemble de rôles approuvés ; une entrée de jeton errante
   en dehors des rôles approuvés ne crée pas de nouvel accès.
@@ -197,9 +200,9 @@ Stocké sous `~/.openclaw/devices/` :
 - Modèle de sécurité + injection de prompt : [Sécurité](/fr/gateway/security)
 - Mise à jour en toute sécurité (exécuter doctor) : [Mise à jour](/fr/install/updating)
 - Configurations de canal :
-  - Telegram : [Telegram](/fr/channels/telegram)
-  - WhatsApp : [WhatsApp](/fr/channels/whatsapp)
-  - Signal : [Signal](/fr/channels/signal)
-  - iMessage : [iMessage](/fr/channels/imessage)
-  - Discord : [Discord](/fr/channels/discord)
+  - Telegram : [Telegram](TelegramTelegram/en/channels/telegram)
+  - WhatsApp : [WhatsApp](WhatsAppWhatsApp/en/channels/whatsapp)
+  - Signal : [Signal](SignalSignal/en/channels/signal)
+  - iMessage : [iMessage](iMessageiMessage/en/channels/imessage)
+  - Discord : [Discord](DiscordDiscord/en/channels/discord)
   - Slack : [Slack](SlackSlack/en/channels/slack)

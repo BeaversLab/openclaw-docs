@@ -7,9 +7,9 @@ read_when:
 title: "瀏覽器控制 API"
 ---
 
-如需設定、設定組和疑難排解，請參閱 [Browser](/zh-Hant/tools/browser)。
+如需設定、組態和疑難排解，請參閱 [Browser](/zh-Hant/tools/browser)。
 本頁面是本機控制 HTTP API、`openclaw browser`
-CLI 以及腳本模式（快照、refs、waits、除錯流程）的參考資料。
+CLI 以及腳本模式（快照、refs、waits、除錯流程）的參考指南。
 
 ## 控制 API（可選）
 
@@ -110,10 +110,10 @@ docker compose run --rm openclaw-cli \
   node /app/node_modules/playwright-core/cli.js install chromium
 ```
 
-若要保留瀏覽器下載內容，請設定 `PLAYWRIGHT_BROWSERS_PATH` (例如，
-`/home/node/.cache/ms-playwright`) 並確保 `/home/node` 透過
-`OPENCLAW_HOME_VOLUME` 或 bind mount 進行保留。OpenClaw 會自動偵測 Linux 上已
-保留的 Chromium。請參閱 [Docker](/zh-Hant/install/docker)。
+若要保存瀏覽器下載內容，請設定 `PLAYWRIGHT_BROWSERS_PATH` (例如，
+`/home/node/.cache/ms-playwright`) 並確保 `/home/node` 已透過
+`OPENCLAW_HOME_VOLUME` 或繫結掛載 (bind mount) 加以保存。OpenClaw 會在 Linux 上自動偵測已保存的
+Chromium。請參閱 [Docker](/zh-Hant/install/docker)。
 
 ## 運作原理（內部機制）
 
@@ -190,6 +190,7 @@ openclaw browser dialog --dismiss --dialog-id d1
 openclaw browser wait --text "Done"
 openclaw browser wait "#main" --url "**/dash" --load networkidle --fn "window.ready===true"
 openclaw browser evaluate --fn '(el) => el.textContent' --ref 7
+openclaw browser evaluate --timeout-ms 30000 --fn 'async () => { await window.ready; return true; }'
 openclaw browser highlight e12
 openclaw browser trace start
 openclaw browser trace stop
@@ -234,7 +235,7 @@ openclaw browser set device "iPhone 14"
 
 - `--format ai` (Playwright 的預設值)：帶有數值參照 (`aria-ref="<n>"`) 的 AI 快照。
 - `--format aria`：具有 `axN` 引用的無障礙樹。當 Playwright 可用時，OpenClaw 會將引用與後端 DOM ID 繫結到即時頁面，以便後續操作可以使用它們；否則將輸出視為僅供檢查。
-- `--efficient`（或 `--mode efficient`）：緊湊的角色快照預設。設定 `browser.snapshotDefaults.mode: "efficient"` 以將此設為預設值（請參閱 [Gateway configuration](/zh-Hant/gateway/configuration-reference#browser)）。
+- `--efficient` (或 `--mode efficient`)：精簡角色快照預設集。設定 `browser.snapshotDefaults.mode: "efficient"` 以將其設為預設值 (請參閱 [Gateway configuration](/zh-Hant/gateway/configuration-reference#browser))。
 - `--interactive`、`--compact`、`--depth`、`--selector` 會強制使用 `ref=e12` 引用進行角色快照。`--frame "<iframe>"` 會將角色快照的範圍限定在 iframe。
 - `--labels` 會新增僅限視口的螢幕截圖，並覆蓋引用標籤（列印 `MEDIA:<path>`）。
 - `--urls` 會將探索到的連結目的地附加到 AI 快照。
@@ -344,11 +345,13 @@ JSON 中的角色快照包含 `refs` 以及一個小型的 `stats` 區塊（行/
 - `browser act kind=evaluate` / `openclaw browser evaluate` 和 `wait --fn`
   會在頁面上下文中執行任意的 JavaScript。提示注入可以操縱
   此行為。如果您不需要此功能，請使用 `browser.evaluateEnabled=false` 將其停用。
-- For logins and anti-bot notes (X/Twitter, etc.), see [Browser login + X/Twitter posting](/zh-Hant/tools/browser-login).
-- 請將 Gateway/節點主機保持私密（僅限 loopback 或 tailnet）。
-- 遠端 CDP 端點功能強大；請透過通道傳輸並保護它們。
+- 當頁面端函式
+  可能需要比預設評估逾時更長的時間時，請使用 `openclaw browser evaluate --timeout-ms <ms>`。
+- 如需登入和防機器人人機驗證的相關說明 (X/Twitter 等)，請參閱 [Browser login + X/Twitter posting](/zh-Hant/tools/browser-login)。
+- 請將 Gateway/節點主機保持私密 (僅限回送 loopback 或 tailnet)。
+- 遠端 CDP 端點功能強大；請透過通道傳輸並加以保護。
 
-嚴格模式範例（預設封鎖私人/內部目的地）：
+嚴格模式範例 (預設封鎖私人/內部目的地)：
 
 ```json5
 {
@@ -362,9 +365,9 @@ JSON 中的角色快照包含 `refs` 以及一個小型的 `stats` 區塊（行/
 }
 ```
 
-## 相關
+## 相關連結
 
-- [Browser](/zh-Hant/tools/browser) - 概覽、設定、設定檔、安全性
+- [Browser](/zh-Hant/tools/browser) - 概覽、組態、設定檔、安全性
 - [Browser login](/zh-Hant/tools/browser-login) - 登入網站
 - [Browser Linux troubleshooting](/zh-Hant/tools/browser-linux-troubleshooting)
 - [Browser WSL2 troubleshooting](/zh-Hant/tools/browser-wsl2-windows-remote-cdp-troubleshooting)

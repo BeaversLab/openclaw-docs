@@ -5,7 +5,7 @@ read_when:
 title: "Pruebas"
 ---
 
-- Kit de pruebas completo (suites, en vivo, Docker): [Testing](/es/help/testing)
+- Kit de pruebas completo (suites, live, Docker): [Testing](/es/help/testing)
 - Validación de paquetes de actualizaciones y complementos: [Testing updates and plugins](/es/help/testing-updates-plugins)
 
 - `pnpm test:force`: Mata cualquier proceso de puerta de enlace (gateway) persistente que mantenga el puerto de control predeterminado y luego ejecuta la suite completa de Vitest con un puerto de puerta de enlace aislado para que las pruebas del servidor no colisionen con una instancia en ejecución. Úselo cuando una ejecución previa de la puerta de enlace haya dejado el puerto 18789 ocupado.
@@ -124,9 +124,91 @@ Accesorio confirmado:
 - Actualizar con `pnpm test:startup:bench:update`
 - Comparar los resultados actuales contra el accesorio con `pnpm test:startup:bench:check`
 
+## Benchmark de inicio de Gateway
+
+Script: [`scripts/bench-gateway-startup.ts`](https://github.com/openclaw/openclaw/blob/main/scripts/bench-gateway-startup.ts)
+
+El benchmark utiliza por defecto la entrada CLI compilada en `dist/entry.js`; ejecute
+`pnpm build` antes de usar los comandos de package-script. Para medir en su lugar
+el ejecutor de origen, pase `--entry scripts/run-node.mjs` y mantenga esos resultados
+separados de las líneas base de entrada compilada.
+
+Uso:
+
+- `pnpm test:startup:gateway -- --runs 5 --warmup 1`
+- `pnpm test:startup:gateway -- --case default --runs 10 --warmup 1`
+- `pnpm test:startup:gateway -- --case skipChannels --case fiftyPlugins --runs 5`
+- `node --import tsx scripts/bench-gateway-startup.ts --case default --runs 5 --output .artifacts/gateway-startup.json`
+- `node --import tsx scripts/bench-gateway-startup.ts --case default --runs 3 --cpu-prof-dir .artifacts/gateway-startup-cpu`
+
+Ids de casos:
+
+- `default`: inicio normal de Gateway.
+- `skipChannels`: inicio de Gateway con el inicio del canal omitido.
+- `oneInternalHook`: un gancho interno configurado.
+- `allInternalHooks`: todos los ganchos internos.
+- `fiftyPlugins`: 50 complementos de manifiesto.
+- `fiftyStartupLazyPlugins`: 50 complementos de manifiesto startup-lazy.
+
+La salida incluye la primera salida del proceso, `/healthz`, `/readyz`, la hora del registro de escucha HTTP,
+la hora del registro listo de Gateway, el tiempo de CPU, la relación de núcleos de CPU, RSS máximo, heap, métricas de
+traza de inicio, retraso del bucle de eventos y métricas detalladas de la tabla de búsqueda de complementos. El script
+habilita `OPENCLAW_GATEWAY_STARTUP_TRACE=1` en el entorno secundario de Gateway.
+
+Lea `/healthz` como liveness: el servidor HTTP puede responder. Lea `/readyz` como
+readiness utilizable: los sidecars de complementos de inicio, los canales y el trabajo post-adjunto
+crítico para la disponibilidad se han asentado. Los ganchos de inicio de Gateway se envían
+de forma asíncrona y no forman parte de la garantía de readiness. La hora del registro listo es la
+marca de tiempo del registro listo interno de Gateway; es útil para la atribución
+del lado del proceso, pero no es un sustituto de la sonda externa `/readyz`.
+
+Use JSON output o `--output` al comparar cambios. Use `--cpu-prof-dir` solo
+after el trace output apunta a import, compile, o CPU-bound work que cannot
+be explained from phase timings alone. No compare source-runner results con
+built `dist/entry.js` results as the same baseline.
+
+## Gateway restart bench
+
+Script: [`scripts/bench-gateway-restart.ts`](https://github.com/openclaw/openclaw/blob/main/scripts/bench-gateway-restart.ts)
+
+El benchmark de reinicio es compatible solo con macOS y Linux. Utiliza SIGUSR1 para
+reinicios en proceso y falla inmediatamente en Windows.
+
+El benchmark por defecto usa la entrada CLI construida en `dist/entry.js`; ejecute
+`pnpm build` antes de usar los comandos de package-script. Para medir el source
+runner en su lugar, pase `--entry scripts/run-node.mjs` y mantenga esos resultados
+separados de las líneas base de entrada construida.
+
+Uso:
+
+- `pnpm test:restart:gateway -- --case skipChannels --runs 1 --restarts 5`
+- `pnpm test:restart:gateway -- --case default --runs 3 --restarts 3 --warmup 1`
+- `pnpm test:restart:gateway -- --case skipChannelsAcpxProbe --case skipChannelsNoAcpxProbe --runs 1 --restarts 5`
+- `node --import tsx scripts/bench-gateway-restart.ts --case fiftyPlugins --runs 1 --restarts 5 --output .artifacts/gateway-restart.json`
+- `node --import tsx scripts/bench-gateway-restart.ts --json`
+
+Case ids:
+
+- `skipChannels`: reinicio con canales omitidos.
+- `skipChannelsAcpxProbe`: reinicio con canales omitidos y sonda de inicio ACPX activada.
+- `skipChannelsNoAcpxProbe`: reinicio con canales omitidos y sonda de inicio ACPX desactivada.
+- `default`: reinicio normal.
+- `fiftyPlugins`: reinicio con 50 complementos de manifiesto.
+
+La salida incluye el siguiente `/healthz`, el siguiente `/readyz`, tiempo de inactividad, tiempo de preparación de reinicio,
+CPU, RSS, métricas de traza de inicio para el proceso de reemplazo y métricas de traza de reinicio
+para el manejo de señales, drenaje de trabajo activo, fases de cierre, siguiente inicio, tiempo de
+preparación e instantáneas de memoria. El script habilita
+`OPENCLAW_GATEWAY_STARTUP_TRACE=1` y `OPENCLAW_GATEWAY_RESTART_TRACE=1` en el
+entorno secundario de Gateway.
+
+Utilice este punto de referencia cuando un cambio afecte a las señales de reinicio, a los manejadores de cierre, al inicio tras el reinicio, al apagado del sidecar, a la entrega del servicio o a la disponibilidad tras el reinicio. Comience con `skipChannels` cuando aisle los mecanismos de Gateway del inicio del canal. Utilice `default` o casos con muchos complementos solo después de que el caso estrecho explique la ruta de reinicio.
+
+Las métricas de rastreo son pistas de atribución, no veredictos. Un cambio de reinicio debe juzgarse a partir de varias muestras, del span del propietario coincidente, del comportamiento de `/healthz` y `/readyz`, y del contrato de reinicio visible para el usuario.
+
 ## Onboarding E2E (Docker)
 
-Docker es opcional; solo es necesario para pruebas de humo de incorporación en contenedores.
+Docker es opcional; esto solo se necesita para pruebas de humeo de integración en contenedores.
 
 Flujo completo de inicio en frío en un contenedor Linux limpio:
 
@@ -136,9 +218,9 @@ scripts/e2e/onboard-docker.sh
 
 Este script controla el asistente interactivo a través de un pseudo-tty, verifica los archivos de configuración/espacio de trabajo/sesión y luego inicia el gateway y ejecuta `openclaw health`.
 
-## Prueba de humo de importación QR (Docker)
+## Prueba de humeo de importación QR (Docker)
 
-Asegura que el asistente de ejecución de QR mantenido se cargue bajo los tiempos de ejecución de Docker Node compatibles (Node 24 predeterminado, Node 22 compatible):
+Asegura que el asistente de tiempo de ejecución de QR mantenido se cargue en los tiempos de ejecución de Docker Node compatibles (Node 24 por defecto, Node 22 compatible):
 
 ```bash
 pnpm test:docker:qr
@@ -146,6 +228,6 @@ pnpm test:docker:qr
 
 ## Relacionado
 
-- [Testing](/es/help/testing)
-- [Testing live](/es/help/testing-live)
-- [Testing updates and plugins](/es/help/testing-updates-plugins)
+- [Pruebas](/es/help/testing)
+- [Pruebas en vivo](/es/help/testing-live)
+- [Pruebas de actualizaciones y complementos](/es/help/testing-updates-plugins)

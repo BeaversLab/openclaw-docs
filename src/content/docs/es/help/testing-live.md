@@ -101,7 +101,7 @@ Las pruebas en vivo se dividen en dos capas para que podamos aislar los fallos:
   - Sonda `read`: la prueba escribe un archivo nonce en el espacio de trabajo y pide al agente que `read` y repita el nonce.
   - Sonda `exec+read`: la prueba pide al agente que `exec`-escriba un nonce en un archivo temporal y luego `read` de vuelta.
   - sonda de imagen: la prueba adjunta un PNG generado (gato + código aleatorio) y espera que el modelo devuelva `cat <CODE>`.
-  - Referencia de implementación: `src/gateway/gateway-models.profiles.live.test.ts` y `src/gateway/live-image-probe.ts`.
+  - Referencia de implementación: `src/gateway/gateway-models.profiles.live.test.ts` y `test/helpers/live-image-probe.ts`.
 - Cómo habilitar:
   - `pnpm test:live` (o `OPENCLAW_LIVE_TEST=1` si se invoca Vitest directamente)
 - Cómo seleccionar modelos:
@@ -115,7 +115,7 @@ Las pruebas en vivo se dividen en dos capas para que podamos aislar los fallos:
   - Sonda `read` + sonda `exec+read` (estrés de herramientas)
   - la sonda de imagen se ejecuta cuando el modelo anuncia compatibilidad con la entrada de imagen
   - Flujo (nivel alto):
-    - La prueba genera un PNG diminuto con "CAT" + código aleatorio (`src/gateway/live-image-probe.ts`)
+    - La prueba genera un PNG diminuto con "CAT" + código aleatorio (`test/helpers/live-image-probe.ts`)
     - Lo envía a través de `agent` `attachments: [{ mimeType: "image/png", content: "<base64>" }]`
     - La puerta de enlace analiza los archivos adjuntos en `images[]` (`src/gateway/server-methods/agent.ts` + `src/gateway/chat-attachments.ts`)
     - El agente integrado reenvía un mensaje multimodal de usuario al modelo

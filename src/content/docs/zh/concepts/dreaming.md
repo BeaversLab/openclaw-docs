@@ -103,11 +103,17 @@ Dreaming 还会在 `DREAMS.md` 中保存叙事性的 **Dream Diary**（梦境日
 
 浅睡和 REM 阶段的命中会从 `memory/.dreams/phase-signals.json` 增加少量的时间衰减增益。
 
+## QA 影子试运行报告覆盖率
+
+QA Lab 包含一个仅报告场景，用于探索未来的梦境影子试运行如何在提升前审查候选记忆。该场景要求一个代理对比基准答案与可以使用候选记忆的答案，然后撰写一份包含结论、原因和风险标志的本地报告。
+
+此覆盖范围有意限定于 QA。它验证报告产物保持与 `MEMORY.md` 分离，且代理不声称候选记忆已被提升。它不添加生产环境的影子试运行行为，也不更改深度阶段提升引擎。
+
 ## 调度
 
-启用后，`memory-core` 会自动管理一个 cron 作业以进行完整的梦境扫描。每次扫描按顺序运行各个阶段：浅睡 → REM → 深睡。
+启用后，`memory-core` 自动管理一个 cron 作业以进行完整的梦境扫描。每次扫描按顺序运行各个阶段：light → REM → deep。
 
-扫描范围包括主要运行时工作区和任何已配置的代理工作区，并按路径去重，因此子代理工作区的扇出不会排除主代理的 `DREAMS.md` 和记忆状态。
+扫描包含主要运行时工作区以及所有配置的代理工作区，并按路径去重，因此子代理工作区的扇出不会排除主代理的 `DREAMS.md` 和记忆状态。
 
 默认节奏行为：
 
@@ -119,7 +125,7 @@ Dreaming 还会在 `DREAMS.md` 中保存叙事性的 **Dream Diary**（梦境日
 ## 快速开始
 
 <Tabs>
-  <Tab title="Enable dreaming">
+  <Tab title="启用梦境">
     ```json
     {
       "plugins": {
@@ -136,7 +142,7 @@ Dreaming 还会在 `DREAMS.md` 中保存叙事性的 **Dream Diary**（梦境日
     }
     ```
   </Tab>
-  <Tab title="Custom sweep cadence">
+  <Tab title="自定义扫描节奏">
     ```json
     {
       "plugins": {
@@ -169,7 +175,7 @@ Dreaming 还会在 `DREAMS.md` 中保存叙事性的 **Dream Diary**（梦境日
 ## CLI 工作流
 
 <Tabs>
-  <Tab title="Promotion preview / apply">
+  <Tab title="提升预览 / 应用">
     ```bash
     openclaw memory promote
     openclaw memory promote --apply
@@ -177,11 +183,11 @@ Dreaming 还会在 `DREAMS.md` 中保存叙事性的 **Dream Diary**（梦境日
     openclaw memory status --deep
     ```
 
-    手动 `memory promote` 默认使用深度阶段阈值，除非被 CLI 标志覆盖。
+    手动 `memory promote` 默认使用深度阶段阈值，除非通过 CLI 标志进行覆盖。
 
   </Tab>
-  <Tab title="Explain promotion">
-    解释特定候选项为何会或不会提升：
+  <Tab title="解释提升">
+    解释特定候选记忆为何会或不会提升：
 
     ```bash
     openclaw memory promote-explain "router vlan"
@@ -189,8 +195,8 @@ Dreaming 还会在 `DREAMS.md` 中保存叙事性的 **Dream Diary**（梦境日
     ```
 
   </Tab>
-  <Tab title="REM harness preview">
-    预览 REM 反思、候选真理以及深度提升输出，且不进行任何写入：
+  <Tab title="REM 驱动预览">
+    预览 REM 反思、候选真值和深度提升输出，而不写入任何内容：
 
     ```bash
     openclaw memory rem-harness
@@ -205,37 +211,37 @@ Dreaming 还会在 `DREAMS.md` 中保存叙事性的 **Dream Diary**（梦境日
 所有设置均位于 `plugins.entries.memory-core.config.dreaming` 之下。
 
 <ParamField path="enabled" type="boolean" default="false">
-  启用或禁用 dreaming 扫描。
+  启用或禁用梦境扫描。
 </ParamField>
 <ParamField path="frequency" type="string" default="0 3 * * *">
-  完整 dreaming 扫描的 Cron 频率。
+  完整梦境扫描的 Cron 频率。
 </ParamField>
 <ParamField path="model" type="string">
-  可选的 Dream Diary 子代理模型覆盖。在同时设置子代理 `allowedModels` 白名单时，使用规范的 `provider/model` 值。
+  可选的 Dream Diary 子代理模型覆盖。在设置子代理 `allowedModels` 允许列表时，请使用规范的 `provider/model` 值。
 </ParamField>
 
-<Warning>`dreaming.model` 需要 `plugins.entries.memory-core.subagent.allowModelOverride: true`。若要限制它，还需设置 `plugins.entries.memory-core.subagent.allowedModels`。信任或白名单失败将保持可见，而不是静默回退；重试仅覆盖模型不可用错误。</Warning>
+<Warning>`dreaming.model` 需要 `plugins.entries.memory-core.subagent.allowModelOverride: true`。要对其进行限制，请同时设置 `plugins.entries.memory-core.subagent.allowedModels`。信任或允许列表失败将保持可见，而不是静默回退；重试仅覆盖模型不可用错误。</Warning>
 
-<Note>阶段策略、阈值和存储行为是内部实现细节（非面向用户的配置）。完整键列表请参阅 [Memory configuration reference](/zh/reference/memory-config#dreaming)。</Note>
+<Note>阶段策略、阈值和存储行为是内部实现细节（而非面向用户的配置）。有关完整的密钥列表，请参阅 [Memory configuration reference](/zh/reference/memory-config#dreaming)。</Note>
 
-## Dreams UI
+## 梦境 UI
 
-启用后，Gateway(网关) **Dreams** 标签页将显示：
+启用后，Gateway(网关) **Dreams** 选项卡显示：
 
-- 当前 dreaming 启用状态
-- 阶段级状态和托管扫描的存在情况
-- 短期、落地、信号和今日提升计数
-- 下次计划运行时间
-- 用于暂存历史回放条目的独立落地 Scene 通道
+- 当前梦境启用状态
+- 阶段级别状态和托管扫描状态
+- 短期、基于事实、信号以及今日提升计数
+- 下一次计划的运行时间
+- 用于暂存历史重放条目的独立基于事实 Scene 通道
 - 由 `doctor.memory.dreamDiary` 支持的可扩展 Dream Diary 阅读器
 
-## Dreaming 从未运行：状态显示为受阻
+## Dreaming 永不运行：状态显示已阻止
 
-如果 `openclaw memory status` 报告 `Dreaming status: blocked`，则存在托管 cron 但默认代理心跳未触发。请检查默认代理是否启用心跳，且其目标不是 `none`，然后在下一个心跳间隔后再次运行 `openclaw memory status --deep`。
+如果 `openclaw memory status` 报告 `Dreaming status: blocked`，则存在托管 cron，但默认代理心跳未触发。检查是否为默认代理启用了心跳，并且其目标不是 `none`，然后在下一个心跳间隔后再次运行 `openclaw memory status --deep`。
 
 ## 相关
 
 - [Memory](/zh/concepts/memory)
-- [Memory CLI](/zh/cli/memory)
-- [Memory 配置参考](/zh/reference/memory-config)
-- [Memory 搜索](/zh/concepts/memory-search)
+- [Memory CLI](CLI/en/cli/memory)
+- [Memory configuration reference](/zh/reference/memory-config)
+- [Memory search](/zh/concepts/memory-search)

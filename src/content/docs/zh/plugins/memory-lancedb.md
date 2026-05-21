@@ -117,9 +117,7 @@ embeddings 凭证。对于 OpenAI embeddings，请使用 OpenAI API 密钥身份
 
 ## Ollama embeddings
 
-对于 Ollama embeddings，首选捆绑的 Ollama embedding 提供商。它使用
-原生 Ollama OllamaOllamaOllama`/api/embed`OllamaOllama 端点，并遵循与 [Ollama](/zh/providers/ollama) 文档中
-Ollama 提供商相同的身份验证/基础 URL 规则。
+对于 Ollama 嵌入，首选捆绑的 Ollama 嵌入提供商。它使用原生的 Ollama `/api/embed` 端点，并遵循与 [Ollama](/zh/providers/ollama) 文档中记录的 Ollama 提供商相同的认证/基础 URL 规则。
 
 ```json5
 {
@@ -213,28 +211,27 @@ openclaw ltm search "project preferences"
 openclaw ltm stats
 ```
 
-该插件还扩展了 `openclaw memory`，增加了一个非向量 `query` 子命令，该子命令直接对 LanceDB 表运行：
+`query` 子命令直接对 LanceDB 表运行非向量查询：
 
 ```bash
-openclaw memory query --cols id,text,createdAt --limit 20
-openclaw memory query --filter "category = 'preference'" --order-by createdAt:desc
+openclaw ltm query --cols id,text,createdAt --limit 20
+openclaw ltm query --filter "category = 'preference'" --order-by createdAt:desc
 ```
 
-- `--cols <columns>`：逗号分隔的列允许列表（默认为 `id`、`text`、`importance`、`category`、`createdAt`）。
-- `--filter <condition>`：SQL 风格的 WHERE 子句；限制为 200 个字符，且仅限于字母数字、比较运算符、引号、括号和一小部分安全标点符号。
-- `--limit <n>`：正整数；默认值为 `10`。
-- `--order-by <column>:<asc|desc>`：在筛选后应用的内存排序；排序列会自动包含在投影中。
+- `--cols <columns>`：逗号分隔的列白名单（默认为 `id`、`text`、`importance`、`category`、`createdAt`）。
+- `--filter <condition>`：SQL 风格的 WHERE 子句；最多 200 个字符，并限制为字母数字、比较运算符、引号、括号和一小部分安全标点符号。
+- `--limit <n>`：正整数；默认为 `10`。
+- `--order-by <column>:<asc|desc>`：在过滤器之后应用的内存排序；排序列会自动包含在投影中。
 
 代理还可以从活动的内存插件获取 LanceDB 记忆工具：
 
-- `memory_recall` 用于 LanceDB 支持的召回
-- `memory_store` 用于保存重要事实、偏好、决策和实体
-- `memory_forget` 用于移除匹配的记忆
+- 用于 LanceDB 支持的召回的 `memory_recall`
+- 用于保存重要事实、偏好、决策和实体的 `memory_store`
+- 用于删除匹配记忆的 `memory_forget`
 
 ## 存储
 
-默认情况下，LanceDB 数据存储在 `~/.openclaw/memory/lancedb` 下。使用
-`dbPath` 覆盖路径：
+默认情况下，LanceDB 数据位于 `~/.openclaw/memory/lancedb` 下。使用 `dbPath` 覆盖路径：
 
 ```json5
 {
@@ -255,8 +252,7 @@ openclaw memory query --filter "category = 'preference'" --order-by createdAt:de
 }
 ```
 
-`storageOptions` 接受 LanceDB 存储后端的字符串键/值对，并
-支持 `${ENV_VAR}` 扩展：
+`storageOptions` 接受 LanceDB 存储后端的字符串键/值对，并支持 `${ENV_VAR}` 扩展：
 
 ```json5
 {
@@ -284,17 +280,14 @@ openclaw memory query --filter "category = 'preference'" --order-by createdAt:de
 
 ## 运行时依赖
 
-`memory-lancedb` 依赖于原生的 `@lancedb/lancedb` 包。打包的
-OpenClaw 将该包视为插件包的一部分。Gateway(网关) 启动
-不会修复插件依赖项；如果缺少依赖项，请重新安装或
-更新插件包并重启 Gateway(网关)。
+`memory-lancedb` 依赖于原生的 `@lancedb/lancedb` 包。打包的 OpenClaw 将该包视为插件包的一部分。Gateway(网关) 启动不会修复插件依赖关系；如果缺少依赖项，请重新安装或更新插件包并重新启动 Gateway(网关)。
 
 如果旧版本安装记录了缺少 `dist/package.json` 或缺少
-`@lancedb/lancedb` 的错误，请升级 OpenClaw 并重启
+`@lancedb/lancedb` 的错误，请在插件加载期间升级 OpenClaw 并重启
 Gateway(网关)。
 
-如果插件记录显示 LanceDB 在 `darwin-x64` 上不可用，请在该计算机上使用默认
-内存后端，将 Gateway(网关) 移至受支持的平台，或
+如果插件记录显示 LanceDB 在 `darwin-x64` 上不可用，请使用该机器上的默认
+内存后端，将 Gateway(网关) 移动到受支持的平台，或
 禁用 `memory-lancedb`。
 
 ## 故障排除
@@ -333,9 +326,9 @@ curl http://127.0.0.1:11434/v1/embeddings \
 
 ### 不支持的嵌入模型
 
-如果没有 `dimensions`，则仅已知内置的 OpenAI 嵌入维度。
-对于本地或自定义嵌入模型，请将 `embedding.dimensions` 设置为该模型报告的向量
-大小。
+如果没有 `dimensions`，仅已知内置 OpenAI 嵌入维度。
+对于本地或自定义嵌入模型，请将 `embedding.dimensions` 设置为
+该模型报告的向量大小。
 
 ### 插件已加载但未显示任何记忆
 
@@ -346,14 +339,14 @@ openclaw ltm stats
 openclaw ltm search "recent preference"
 ```
 
-如果 `autoCapture` 被禁用，插件将回显现有记忆，但
-不会自动存储新记忆。如果需要自动捕获，请使用 `memory_store` 工具或启用
-`autoCapture`。
+如果 `autoCapture` 被禁用，插件将检索现有记忆，但
+不会自动存储新记忆。请使用 `memory_store` 工具或启用
+`autoCapture` 如果您想要自动捕获。
 
 ## 相关
 
-- [记忆概述](/zh/concepts/memory)
-- [活跃记忆](/zh/concepts/active-memory)
-- [记忆搜索](/zh/concepts/memory-search)
-- [记忆 Wiki](/zh/plugins/memory-wiki)
+- [Memory overview](/zh/concepts/memory)
+- [Active memory](/zh/concepts/active-memory)
+- [Memory search](/zh/concepts/memory-search)
+- [Memory Wiki](/zh/plugins/memory-wiki)
 - [Ollama](/zh/providers/ollama)

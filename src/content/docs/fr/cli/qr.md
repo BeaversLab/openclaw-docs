@@ -35,17 +35,17 @@ openclaw qr --url wss://gateway.example/ws
 
 - `--token` et `--password` sont mutuellement exclusifs.
 - Le code de configuration lui-même contient désormais un `bootstrapToken` opaque et à courte durée de vie, et non le jeton/mot de passe de la passerelle partagé.
-- L'amorçage du code de configuration intégré est réservé aux nœuds. Après approbation, le jeton du nœud principal atterrit avec `scopes: []`.
-- Le flux de code de configuration intégré ne renvoie pas de jeton d'opérateur transmis ; l'accès opérateur nécessite un appariement d'opérateur approuvé distinct ou un flux de jetons.
-- L'appariement mobile échoue en mode fermé pour les URL de passerelle Tailscale/publiques `ws://`. Les adresses LAN privées et les hôtes `.local` Bonjour restent pris en charge via `ws://`, mais les itinéraires mobiles Tailscale/publics doivent utiliser Tailscale Serve/Funnel ou une URL de passerelle `wss://`.
-- Avec `--remote`, OpenClaw nécessite soit `gateway.remote.url` soit
+- L'amorçage du code de configuration intégré renvoie un jeton `node` principal avec `scopes: []` plus un jeton de transfert `operator` limité pour un onboarding mobile de confiance.
+- Le jeton d'opérateur transféré est limité à `operator.approvals`, `operator.read` et `operator.write` ; `operator.admin`, `operator.pairing` et `operator.talk.secrets` nécessitent un flux distinct d'appariement ou de jeton d'opérateur approuvé.
+- L'appariement mobile échoue en mode fermé pour les URL de passerelle Tailscale/publiques Tailscale`ws://`. Les adresses LAN privées et les hôtes `.local`Bonjour Bonjour restent pris en charge via `ws://`TailscaleTailscale, mais les itinéraires mobiles Tailscale/publics doivent utiliser Tailscale Serve/Funnel ou une URL de passerelle `wss://`.
+- Avec `--remote`OpenClaw, OpenClaw nécessite `gateway.remote.url` ou
   `gateway.tailscale.mode=serve|funnel`.
-- Avec `--remote`, si des informations d'identification à distance effectivement actives sont configurées en tant que SecretRefs et que vous ne transmettez pas `--token` ou `--password`, la commande les résout à partir de l'instantané actif de la passerelle. Si la passerelle n'est pas disponible, la commande échoue rapidement.
-- Sans `--remote`, les SecretRefs d'authentification de la passerelle locale sont résolus lorsqu aucune substitution d'authentification CLI n'est transmise :
+- Avec `--remote`, si des informations d'identification distantes actives effectives sont configurées en tant que SecretRefs et que vous ne transmettez pas `--token` ou `--password`, la commande les résout à partir de l'instantané de la passerelle active. Si la passerelle n'est pas disponible, la commande échoue rapidement.
+- Sans `--remote`CLI, les SecretRefs d'authentification de la passerelle locale sont résolus lorsqu'aucune substitution d'authentification CLI n'est transmise :
   - `gateway.auth.token` se résout lorsque l'authentification par jeton peut l'emporter (`gateway.auth.mode="token"` explicite ou mode inféré où aucune source de mot de passe ne l'emporte).
-  - `gateway.auth.password` se résout lorsque l'authentification par mot de passe peut l'emporter (`gateway.auth.mode="password"` explicite ou mode inféré sans jeton gagnant provenant de auth/env).
+  - `gateway.auth.password` se résout lorsque l'authentification par mot de passe peut l'emporter (`gateway.auth.mode="password"` explicite ou mode inféré sans jeton gagnant à partir de auth/env).
 - Si `gateway.auth.token` et `gateway.auth.password` sont tous deux configurés (y compris les SecretRefs) et que `gateway.auth.mode` n'est pas défini, la résolution du code de configuration échoue jusqu'à ce que le mode soit défini explicitement.
-- Remarque sur la différence de version de la Gateway : ce chemin de commande nécessite une passerelle prenant en charge `secrets.resolve` ; les passerelles plus anciennes renvoient une erreur de méthode inconnue.
+- Remarque sur la différence de version du Gateway : ce chemin de commande nécessite une passerelle qui prend en charge `secrets.resolve` ; les passerelles plus anciennes renvoient une erreur de méthode inconnue.
 - Après le scan, approuvez l'appariement de l'appareil avec :
   - `openclaw devices list`
   - `openclaw devices approve <requestId>`
@@ -53,4 +53,4 @@ openclaw qr --url wss://gateway.example/ws
 ## Connexes
 
 - [Référence CLI](/fr/cli)
-- [Appariement](/fr/cli/pairing)
+- [Jumelage](/fr/cli/pairing)

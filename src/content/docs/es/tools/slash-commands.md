@@ -124,14 +124,14 @@ Fuente de verdad actual:
 
 <AccordionGroup>
   <Accordion title="Sesiones y ejecuciones">
-    - `/new [model]` inicia una nueva sesión; `/reset` es el alias de restablecimiento.
-    - La interfaz de usuario de control intercepta `/new` escrito para crear y cambiar a una sesión nueva del panel, excepto cuando `session.dmScope: "main"` está configurado y el padre actual es la sesión principal del agente; en ese caso, `/new` restablece la sesión principal en su lugar. Al escribir `/reset` aún se ejecuta el restablecimiento in situ del Gateway.
-    - `/reset soft [message]` mantiene la transcripción actual, descarta los ids de sesión de backend de CLI reutilizados y vuelve a ejecutar la carga de inicio/system-prompt en su lugar.
-    - `/compact [instructions]` compacta el contexto de la sesión. Consulte [Compaction](/es/concepts/compaction).
+    - `/new [model]` archiva la sesión actual e inicia una nueva; `/reset` borra la sesión actual en su lugar. No son alias.
+    - La interfaz de usuario de control intercepta el comando `/new` escrito para crear y cambiar a una nueva sesión del panel, excepto cuando `session.dmScope: "main"` está configurado y el padre actual es la sesión principal del agente; en ese caso, `/new` restablece la sesión principal en su lugar. El comando `/reset` escrito todavía ejecuta el restablecimiento in situ de Gateway.
+    - `/reset soft [message]` mantiene la transcripción actual, elimina los ids de sesión del backend de CLI reutilizados y vuelve a ejecutar la carga de inicio/system-prompt en su lugar.
+    - `/compact [instructions]` compacta el contexto de la sesión. Consulte [Compactación](/es/concepts/compaction).
     - `/stop` aborta la ejecución actual.
-    - `/session idle <duration|off>` y `/session max-age <duration|off>` gestionan la caducidad del enlace de hilos.
+    - `/session idle <duration|off>` y `/session max-age <duration|off>` gestionan la caducidad del enlace de hilos (thread-binding).
     - `/export-session [path]` exporta la sesión actual a HTML. Alias: `/export`.
-    - `/export-trajectory [path]` solicita aprobación de ejecución y luego exporta un [trajectory bundle](/es/tools/trajectory) JSONL para la sesión actual. Úselo cuando necesite la línea de tiempo del prompt, la herramienta y la transcripción para una sesión de OpenClaw. En chats grupales, el mensaje de aprobación y el resultado de la exportación se envían al propietario de forma privada. Alias: `/trajectory`.
+    - `/export-trajectory [path]` solicita aprobación de ejecución y, a continuación, exporta un [paquete de trayectoria](/es/tools/trajectory) JSONL para la sesión actual. Úselo cuando necesite la línea de tiempo del mensaje, la herramienta y la transcripción de una sesión de OpenClaw. En chats grupales, la solicitud de aprobación y el resultado de la exportación se envían al propietario de forma privada. Alias: `/trajectory`.
 
   </Accordion>
   <Accordion title="Controles de modelo y ejecución">

@@ -621,17 +621,20 @@ Usa estos como puntos de partida y reemplaza los IDs de los modelos con los nomb
   </Accordion>
 
   <Accordion title="Perfil de modelo local ligero">
-    Algunos modelos locales pueden responder a instrucciones simples pero tienen dificultades con la superficie completa de herramientas del agente. Comience limitando las herramientas y el contexto antes de cambiar la configuración global de tiempo de ejecución.
+    Algunos modelos locales pueden responder instrucciones simples pero luchan con toda la superficie de herramientas del agente. Comience limitando las herramientas y el contexto antes de cambiar la configuración de ejecución global.
 
     ```json5
     {
       agents: {
-        defaults: {
-          experimental: {
-            localModelLean: true,
+        list: [
+          {
+            id: "local",
+            experimental: {
+              localModelLean: true,
+            },
+            model: { primary: "ollama/gemma4" },
           },
-          model: { primary: "ollama/gemma4" },
-        },
+        ],
       },
       models: {
         providers: {
@@ -655,8 +658,8 @@ Usa estos como puntos de partida y reemplaza los IDs de los modelos con los nomb
     }
     ```
 
-    Use `compat.supportsTools: false` solo cuando el modelo o el servidor falle de manera confiable en los esquemas de herramientas. Intercambia la capacidad del agente por estabilidad.
-    `localModelLean` elimina las herramientas de navegador, cron y mensaje de la superficie del agente, pero no cambia el contexto de tiempo de ejecución ni el modo de pensamiento de Ollama. Combínelo con `params.num_ctx` y `params.thinking: false` explícitos para modelos pequeños de pensamiento estilo Qwen que entran en bucles o gastan su presupuesto de respuesta en razonamiento oculto.
+    Use `compat.supportsTools: false` solo cuando el modelo o el servidor fallen de manera confiable en los esquemas de herramientas. Intercambia la capacidad del agente por estabilidad.
+    `localModelLean` elimina las herramientas del navegador, cron y de mensajes de la superficie del agente, pero no cambia el contexto de ejecución de Ollama ni el modo de pensamiento. Combínelo con `params.num_ctx` y `params.thinking: false` explícitos para modelos pequeños de pensamiento estilo Qwen que entran en bucle o gastan su presupuesto de respuesta en razonamiento oculto.
 
   </Accordion>
 </AccordionGroup>

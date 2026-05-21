@@ -281,16 +281,16 @@ sidebarTitle: "子代理"
 ### 允許清單
 
 <ParamField path="agents.list[].subagents.allowAgents" type="string[]">
-  可透過明確的 `agentId` 指定的代理程式 ID 清單（`["*"]` 表示允許任何）。預設值：僅限請求者代理程式。如果您設定了清單，但仍希望請求者透過 `agentId` 自行生成，請將請求者 ID 包含在清單中。
+  可透過顯式 `agentId` 指定的代理程式 ID 列表（`["*"]` 允許任何已設定的目標）。預設值：僅請求者代理程式。如果您設定了列表且仍希望請求者使用 `agentId` 自行生成，請將請求者 ID 包含在列表中。
 </ParamField>
 <ParamField path="agents.defaults.subagents.allowAgents" type="string[]">
   當請求者代理程式未設定其自己的 `subagents.allowAgents` 時使用的預設目標代理程式允許清單。
 </ParamField>
 <ParamField path="agents.defaults.subagents.requireAgentId" type="boolean" default="false">
-  封鎖省略 `agentId` 的 `sessions_spawn` 呼叫（強制明確選擇設定檔）。個別代理程式覆寫：`agents.list[].subagents.requireAgentId`。
+  封鎖遺漏 `agentId` 的 `sessions_spawn` 呼叫（強制顯式選擇設定檔）。個別代理程式覆寫：`agents.list[].subagents.requireAgentId`。
 </ParamField>
 <ParamField path="agents.defaults.subagents.announceTimeoutMs" type="number" default="120000">
-  閘道 `agent` 公告傳遞嘗試的每次呼叫逾時時間。值為正整數毫秒，並會限制在平台安全的計時器最大值內。暫時性重試可能會使總公告等待時間超過一個設定的逾時時間。
+  閘道 `agent` 公告傳遞嘗試的每次呼叫逾時時間。值為正整數毫秒，並會被限制為平台安全計時器最大值。暫時性重試可能會使總公告等待時間超過一個設定的逾時時間。
 </ParamField>
 
 如果請求者會話位於沙箱中，`sessions_spawn` 將拒絕會以非沙箱方式執行的目標。

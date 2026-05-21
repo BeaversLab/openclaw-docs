@@ -546,7 +546,7 @@ Reemplaza todo el prompt del sistema ensamblado por OpenClaw con una cadena fija
 
 ### `agents.defaults.promptOverlays`
 
-Capas superpuestas de prompts independientes del proveedor aplicadas por familia de modelos. Los IDs de modelos de la familia GPT-5 reciben el contrato de comportamiento compartido entre proveedores; `personality` controla solo la capa de estilo de interacción amigable.
+Superposiciones de indicaciones (prompt overlays) independientes del proveedor, aplicadas por familia de modelos en superficies de indicación ensambladas por OpenClaw. Los IDs de modelos de la familia GPT-5 reciben el contrato de comportamiento compartido a través de rutas de PI/proveedor; `personality` solo controla la capa de estilo de interacción amigable. Las rutas nativas del servidor de aplicaciones de Codex mantienen las instrucciones base/modelo/personalidad propiedad de Codex en lugar de esta superposición GPT-5 de OpenClaw.
 
 ```json5
 {
@@ -1072,7 +1072,7 @@ para ver ejemplos de proveedores y precedencia.
 - `runtime`: descriptor de tiempo de ejecución opcional por agente. Use `type: "acp"` con los valores predeterminados de `runtime.acp` (`agent`, `backend`, `mode`, `cwd`) cuando el agente deba usar por defecto sesiones de arnés ACP.
 - `identity.avatar`: ruta relativa al espacio de trabajo, URL de `http(s)` o URI de `data:`.
 - `identity` deriva los valores predeterminados: `ackReaction` de `emoji`, `mentionPatterns` de `name`/`emoji`.
-- `subagents.allowAgents`: lista blanca de IDs de agentes para objetivos `sessions_spawn.agentId` explícitos (`["*"]` = cualquiera; predeterminado: solo el mismo agente). Incluya el ID del solicitante cuando se deben permitir llamadas `agentId` auto-dirigidas.
+- `subagents.allowAgents`: lista de permitidos (allowlist) de IDs de agentes para objetivos `sessions_spawn.agentId` explícitos (`["*"]` = cualquier objetivo configurado; predeterminado: solo el mismo agente). Incluya el ID del solicitante cuando se deban permitir llamadas `agentId` autodirigidas.
 - Guarda de herencia del entorno de prueba (sandbox): si la sesión solicitante está en sandbox, `sessions_spawn` rechaza los objetivos que se ejecutarían sin sandbox.
 - `subagents.requireAgentId`: cuando es verdadero, bloquea las llamadas `sessions_spawn` que omiten `agentId` (fuerza la selección explícita de perfil; predeterminado: false).
 

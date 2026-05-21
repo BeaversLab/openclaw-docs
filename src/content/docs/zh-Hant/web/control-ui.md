@@ -215,7 +215,7 @@ Control UI 附帶一個 `manifest.webmanifest` 和 service worker，因此現代
 
 - `OPENCLAW_VAPID_PUBLIC_KEY`
 - `OPENCLAW_VAPID_PRIVATE_KEY`
-- `OPENCLAW_VAPID_SUBJECT` (預設為 `mailto:openclaw@localhost`)
+- `OPENCLAW_VAPID_SUBJECT`（預設為 `https://openclaw.ai`）
 
 Control UI 使用這些具有範圍限制的 Gateway 方法來註冊和測試瀏覽器訂閱：
 

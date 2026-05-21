@@ -620,7 +620,7 @@ Notes de comportement :
 
   </Accordion>
 
-  <Accordion title="Messages de groupe ignorés de manière inattendue">
+  <Accordion title="Group messages unexpectedly ignored">
     Vérifiez dans cet ordre :
 
     - `groupPolicy`
@@ -628,6 +628,8 @@ Notes de comportement :
     - entrées de la liste d'autorisation `groups`
     - filtrage par mention (`requireMention` + modèles de mention)
     - clés en double dans `openclaw.json` (JSON5) : les entrées ultérieures remplacent les précédentes, donc gardez un seul `groupPolicy` par portée
+
+    Si `channels.whatsapp.groups` est présent, WhatsApp peut toujours observer les messages d'autres groupes, mais OpenClaw les ignore avant le routage de session. Ajoutez le JID du groupe à `channels.whatsapp.groups` ou ajoutez `groups["*"]` pour admettre tous les groupes tout en maintenant l'autorisation de l'expéditeur sous `groupPolicy` et `groupAllowFrom`.
 
   </Accordion>
 
@@ -638,33 +640,33 @@ Notes de comportement :
 
 ## Prompts système
 
-WhatsApp prend en charge les prompts système de style Telegram pour les groupes et les discussions directes via les cartes `groups` et `direct`.
+WhatsApp prend en charge les invites système de style Telegram pour les groupes et les discussions directes via les cartes `groups` et `direct`.
 
 Hiérarchie de résolution pour les messages de groupe :
 
-La carte `groups` effective est déterminée d'abord : si le compte définit sa propre carte `groups`, elle remplace entièrement la carte racine `groups` (pas de fusion profonde). La recherche de prompt s'exécute ensuite sur la carte unique résultante :
+La carte `groups` effective est déterminée en premier : si le compte définit sa propre `groups`, elle remplace entièrement la carte racine `groups` (pas de fusion profonde). La recherche d'invite s'exécute ensuite sur la carte unique résultante :
 
-1. **Prompt système spécifique au groupe** (`groups["<groupId>"].systemPrompt`) : utilisé lorsque l'entrée de groupe spécifique existe dans la carte **et** que sa clé `systemPrompt` est définie. Si `systemPrompt` est une chaîne vide (`""`), le caractère générique est supprimé et aucun prompt système n'est appliqué.
-2. **Prompt système générique de groupe** (`groups["*"].systemPrompt`) : utilisé lorsque l'entrée de groupe spécifique est totalement absente de la carte, ou lorsqu'elle existe mais ne définit aucune clé `systemPrompt`.
+1. **Invite système spécifique au groupe** (`groups["<groupId>"].systemPrompt`) : utilisée lorsque l'entrée de groupe spécifique existe dans la carte **et** que sa clé `systemPrompt` est définie. Si `systemPrompt` est une chaîne vide (`""`), le caractère générique est supprimé et aucune invite système n'est appliquée.
+2. **Invite système générique de groupe** (`groups["*"].systemPrompt`) : utilisée lorsque l'entrée de groupe spécifique est totalement absente de la carte, ou lorsqu'elle existe mais ne définit aucune clé `systemPrompt`.
 
 Hiérarchie de résolution pour les messages directs :
 
-La carte `direct` effective est déterminée d'abord : si le compte définit sa propre carte `direct`, elle remplace entièrement la carte racine `direct` (pas de fusion profonde). La recherche de prompt s'exécute ensuite sur la carte unique résultante :
+La carte `direct` effective est déterminée en premier : si le compte définit sa propre `direct`, elle remplace entièrement la carte racine `direct` (pas de fusion profonde). La recherche d'invite s'exécute ensuite sur la carte unique résultante :
 
-1. **Prompt système spécifique aux directs** (`direct["<peerId>"].systemPrompt`) : utilisé lorsque l'entrée de pair spécifique existe dans la carte **et** que sa clé `systemPrompt` est définie. Si `systemPrompt` est une chaîne vide (`""`), le caractère générique est supprimé et aucun prompt système n'est appliqué.
-2. **Prompt système générique pour les directs** (`direct["*"].systemPrompt`) : utilisé lorsque l'entrée de pair spécifique est totalement absente de la carte, ou lorsqu'elle existe mais ne définit aucune clé `systemPrompt`.
+1. **Invite système direct spécifique** (`direct["<peerId>"].systemPrompt`) : utilisé lorsque l'entrée homologue spécifique existe dans la carte **et** que sa clé `systemPrompt` est définie. Si `systemPrompt` est une chaîne vide (`""`), le caractère générique est supprimé et aucun invite système n'est appliqué.
+2. **Invite système directe avec caractère générique** (`direct["*"].systemPrompt`) : utilisé lorsque l'entrée homologue spécifique est totalement absente de la carte, ou lorsqu'elle existe mais ne définit aucune clé `systemPrompt`.
 
 <Note>
-`dms` reste le compartiment de remplacement d'historique léger par DM (`dms.<id>.historyLimit`). Les remplacements de prompts se trouvent sous `direct`.
+`dms` reste le compartiment de remplacement de l'historique léger par DM (`dms.<id>.historyLimit`). Les remplacements d'invites se trouvent sous `direct`.
 </Note>
 
-**Différence par rapport au comportement multi-compte Telegram :** Dans Telegram, le TelegramTelegram`groups` racine est intentionnellement supprimé pour tous les comptes dans une configuration multi-compte — même les comptes qui ne définissent pas leur propre `groups`WhatsApp — pour empêcher un bot de recevoir des messages de groupe pour les groupes auxquels il n'appartient pas. WhatsApp n'applique pas cette garde : le `groups` racine et le `direct`WhatsApp racine sont toujours hérités par les comptes qui ne définissent pas de substitution au niveau du compte, quel que soit le nombre de comptes configurés. Dans une configuration WhatsApp multi-compte, si vous souhaitez des invites de groupe ou directes par compte, définissez la carte complète sous chaque compte explicitement plutôt que de vous fier aux valeurs par défaut au niveau racine.
+**Différence par rapport au comportement multi-compte de Telegram :** Dans Telegram, le TelegramTelegram`groups` racine est intentionnellement supprimé pour tous les comptes dans une configuration multi-compte — même les comptes qui ne définissent aucun `groups`WhatsApp propre — pour empêcher un bot de recevoir des messages de groupe pour les groupes auxquels il n'appartient pas. WhatsApp n'applique pas cette protection : le `groups` racine et l'`direct`WhatsApp racine sont toujours hérités par les comptes qui ne définissent aucun remplacement au niveau du compte, quel que soit le nombre de comptes configurés. Dans une configuration WhatsApp multi-compte, si vous souhaitez des invites de groupe ou directes par compte, définissez la carte complète sous chaque compte explicitement au lieu de vous fier aux valeurs par défaut au niveau racine.
 
 Comportement important :
 
-- `channels.whatsapp.groups` est à la fois une carte de configuration par groupe et la liste d'autorisation de groupe au niveau de la discussion. À la portée racine ou du compte, `groups["*"]` signifie « tous les groupes sont admis » pour cette portée.
-- N'ajoutez un groupe générique `systemPrompt` que lorsque vous souhaitez déjà que cette portée admette tous les groupes. Si vous souhaitez toujours qu'un ensemble fixe d'ID de groupe soient éligibles, n'utilisez pas `groups["*"]` pour l'invite par défaut. Au lieu de cela, répétez l'invite sur chaque entrée de groupe explicitement autorisée.
-- L'admission de groupe et l'autorisation de l'expéditeur sont des vérifications distinctes. `groups["*"]` élargit l'ensemble des groupes qui peuvent atteindre la gestion de groupe, mais n'autorise pas par lui-même chaque expéditeur dans ces groupes. L'accès de l'expéditeur est toujours contrôlé séparément par `channels.whatsapp.groupPolicy` et `channels.whatsapp.groupAllowFrom`.
+- `channels.whatsapp.groups` est à la fois une carte de configuration par groupe et la liste d'autorisation de groupe au niveau du chat. À la portée racine ou du compte, `groups["*"]` signifie « tous les groupes sont admis » pour cette portée.
+- N'ajoutez un groupe générique `systemPrompt` que lorsque vous souhaitez déjà que cette portée admette tous les groupes. Si vous souhaitez toujours qu'un ensemble fixe d'ID de groupe soit éligible, n'utilisez pas `groups["*"]` pour l'invite par défaut. À la place, répétez l'invite sur chaque entrée de groupe explicitement autorisée.
+- L'admission dans les groupes et l'autorisation de l'expéditeur sont des vérifications distinctes. `groups["*"]` élargit l'ensemble des groupes qui peuvent atteindre la gestion des groupes, mais n'autorise pas par lui-même chaque expéditeur dans ces groupes. L'accès des expéditeurs est toujours contrôlé séparément par `channels.whatsapp.groupPolicy` et `channels.whatsapp.groupAllowFrom`.
 - `channels.whatsapp.direct` n'a pas le même effet secondaire pour les DMs. `direct["*"]` fournit uniquement une configuration de discussion directe par défaut après qu'un DM a déjà été admis par `dmPolicy` plus `allowFrom` ou les règles du magasin d'appariement.
 
 Exemple :
@@ -711,20 +713,20 @@ Exemple :
 
 Référence principale :
 
-- [Référence de configuration - WhatsApp](WhatsApp/en/gateway/config-channels#whatsapp)
+- [Référence de configuration - WhatsApp](/fr/gateway/config-channels#whatsapp)
 
 Champs WhatsApp à signal fort :
 
 - accès : `dmPolicy`, `allowFrom`, `groupPolicy`, `groupAllowFrom`, `groups`
 - livraison : `textChunkLimit`, `chunkMode`, `mediaMaxMb`, `sendReadReceipts`, `ackReaction`, `reactionLevel`
-- multi-compte : `accounts.<id>.enabled`, `accounts.<id>.authDir`, substitutions au niveau du compte
+- multi-compte : `accounts.<id>.enabled`, `accounts.<id>.authDir`, remplacements au niveau du compte
 - opérations : `configWrites`, `debounceMs`, `web.enabled`, `web.heartbeatSeconds`, `web.reconnect.*`, `web.whatsapp.*`
 - comportement de la session : `session.dmScope`, `historyLimit`, `dmHistoryLimit`, `dms.<id>.historyLimit`
 - invites : `groups.<id>.systemPrompt`, `groups["*"].systemPrompt`, `direct.<id>.systemPrompt`, `direct["*"].systemPrompt`
 
 ## Connexes
 
-- [Jumelage](/fr/channels/pairing)
+- [Appariement](/fr/channels/pairing)
 - [Groupes](/fr/channels/groups)
 - [Sécurité](/fr/gateway/security)
 - [Routage de canal](/fr/channels/channel-routing)

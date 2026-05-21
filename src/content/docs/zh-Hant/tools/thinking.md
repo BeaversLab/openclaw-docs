@@ -103,7 +103,7 @@ title: "思考層級"
 
 - 層級：`on|off|stream`。
 - 僅指令訊息會切換是否在回覆中顯示思考區塊。
-- 啟用後，推理將作為單獨的訊息發送，並以前綴 `Reasoning:`。
+- 啟用後，推理會作為以 `Thinking` 為前綴的**單獨訊息**發送。
 - `stream`（僅限 Telegram）：在生成回覆時將推理串流到 Telegram 草稿氣泡中，然後發送不含推理的最終答案。
 - 別名：`/reason`。
 - 發送 `/reasoning`（或 `/reasoning:`）且不帶參數，以查看目前的推理層級。
@@ -118,7 +118,7 @@ title: "思考層級"
 ## 心跳
 
 - 心跳探測主體是已配置的心跳提示（預設：`Read HEARTBEAT.md if it exists (workspace context). Follow it strictly. Do not infer or repeat old tasks from prior chats. If nothing needs attention, reply HEARTBEAT_OK.`）。心跳訊息中的內聯指令照常應用（但避免從心跳更改會話預設值）。
-- 心跳傳送預設僅包含最終 payload。若也要傳送單獨的 `Reasoning:` 訊息（當可用時），請設定 `agents.defaults.heartbeat.includeReasoning: true` 或每個代理的 `agents.list[].heartbeat.includeReasoning: true`。
+- 心跳傳遞預設僅包含最終載荷。若也要傳送單獨的 `Thinking` 訊息（如果有的話），請設定 `agents.defaults.heartbeat.includeReasoning: true` 或個別代理的 `agents.list[].heartbeat.includeReasoning: true`。
 
 ## Web 聊天 UI
 

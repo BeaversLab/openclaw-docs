@@ -5,8 +5,8 @@ read_when:
 title: "Tests"
 ---
 
-- Kit de test complet (suites, en direct, Docker) : [Testing](/fr/help/testing)
-- Validation des packages de mises à jour et de plugins : [Testing updates and plugins](/fr/help/testing-updates-plugins)
+- Kit de test complet (suites, en direct, Docker) : [Tests](Docker/en/help/testing)
+- Validation des packages de mises à jour et de plugins : [Tests des mises à jour et des plugins](/fr/help/testing-updates-plugins)
 
 - `pnpm test:force` : Tue tout processus gateway résiduel utilisant le port de contrôle par défaut, puis exécute la suite complète Vitest avec un port gateway isolé pour éviter que les tests serveur n'entrent en collision avec une instance en cours d'exécution. À utiliser lorsqu'une exécution précédente de la gateway a laissé le port 18789 occupé.
 - `pnpm test:coverage` : Exécute la suite unitaire avec la couverture V8 (via `vitest.unit.config.ts`). Il s'agit d'une barrière de couverture de la voie par défaut des unités (default-unit-lane), et non de la couverture de tous les fichiers du dépôt entier. Les seuils sont de 70 % pour les lignes/fonctions/énoncés et de 55 % pour les branches. Comme `coverage.all` est faux et que les étendues de couverture de la voie par défaut incluent les tests unitaires non rapides avec les fichiers source frères, la barrière mesure le code source possédé par cette voie au lieu de chaque import transitif qu'il se trouve qu'elle charge.
@@ -124,9 +124,85 @@ Fichier de référence validé :
 - Rafraîchir avec `pnpm test:startup:bench:update`
 - Comparer les résultats actuels avec le fichier de référence avec `pnpm test:startup:bench:check`
 
+## Benchmark de démarrage du Gateway
+
+Script : [`scripts/bench-gateway-startup.ts`](https://github.com/openclaw/openclaw/blob/main/scripts/bench-gateway-startup.ts)
+
+Le benchmark utilise par défaut le point d'entrée CLI compilé à CLI`dist/entry.js` ; exécutez
+`pnpm build` avant d'utiliser les commandes de script de package. Pour mesurer le lanceur
+source à la place, passez `--entry scripts/run-node.mjs` et gardez ces résultats
+séparés des lignes de base du point d'entrée compilé.
+
+Utilisation :
+
+- `pnpm test:startup:gateway -- --runs 5 --warmup 1`
+- `pnpm test:startup:gateway -- --case default --runs 10 --warmup 1`
+- `pnpm test:startup:gateway -- --case skipChannels --case fiftyPlugins --runs 5`
+- `node --import tsx scripts/bench-gateway-startup.ts --case default --runs 5 --output .artifacts/gateway-startup.json`
+- `node --import tsx scripts/bench-gateway-startup.ts --case default --runs 3 --cpu-prof-dir .artifacts/gateway-startup-cpu`
+
+IDs de cas :
+
+- `default`Gateway : démarrage normal du Gateway.
+- `skipChannels`Gateway : démarrage du Gateway avec le démarrage du canal ignoré.
+- `oneInternalHook` : un hook interne configuré.
+- `allInternalHooks` : tous les hooks internes.
+- `fiftyPlugins` : 50 plugins de manifeste.
+- `fiftyStartupLazyPlugins` : 50 plugins de manifeste différés au démarrage (startup-lazy).
+
+La sortie inclut la première sortie de processus, `/healthz`, `/readyz`Gateway, l'heure du log d'écoute HTTP,
+l'heure du log de disponibilité du Gateway, le temps CPU, le ratio de cœurs CPU, le RSS max, le heap,
+les métriques de trace de démarrage, le délai de la boucle d'événements, et les métriques détaillées de la table de recherche des plugins. Le script
+active `OPENCLAW_GATEWAY_STARTUP_TRACE=1`Gateway dans lvironment du Gateway enfant.
+
+Lisez `/healthz` comme vivacité (liveness) : le serveur HTTP peut répondre. Lisez `/readyz`GatewayGateway comme disponibilité utilisable (usable readiness) : les sidecars des plugins de démarrage, les canaux et les travaux critiques de post-attach se sont stabilisés. Les hooks de démarrage du Gateway sont distribués de manière asynchrone et ne font pas partie de la garantie de disponibilité. L'heure du journal de disponibilité est l'horodatage interne du journal de disponibilité du Gateway ; elle est utile pour l'attribution côté processus mais ne remplace pas la sonde externe `/readyz`.
+
+Utilisez la sortie JSON ou `--output` lors de la comparaison des modifications. Utilisez `--cpu-prof-dir` uniquement après que la sortie de trace pointe vers un travail d'importation, de compilation ou lié au CPU qui ne peut pas être expliqué par les timings de phase seul. Ne comparez pas les résultats du source-runner avec les résultats `dist/entry.js` construits comme la même base de référence.
+
+## Benchmark de redémarrage du Gateway
+
+Script : [`scripts/bench-gateway-restart.ts`](https://github.com/openclaw/openclaw/blob/main/scripts/bench-gateway-restart.ts)
+
+Le benchmark de redémarrage est pris en charge sur macOS et Linux uniquement. Il utilise SIGUSR1 pour les redémarrages en processus et échoue immédiatement sur Windows.
+
+Le benchmark utilise par défaut l'entrée CLI construite à CLI`dist/entry.js` ; exécutez `pnpm build` avant d'utiliser les commandes de script de package. Pour mesurer le source-runner à la place, passez `--entry scripts/run-node.mjs` et gardez ces résultats séparés des lignes de base d'entrée construites.
+
+Usage :
+
+- `pnpm test:restart:gateway -- --case skipChannels --runs 1 --restarts 5`
+- `pnpm test:restart:gateway -- --case default --runs 3 --restarts 3 --warmup 1`
+- `pnpm test:restart:gateway -- --case skipChannelsAcpxProbe --case skipChannelsNoAcpxProbe --runs 1 --restarts 5`
+- `node --import tsx scripts/bench-gateway-restart.ts --case fiftyPlugins --runs 1 --restarts 5 --output .artifacts/gateway-restart.json`
+- `node --import tsx scripts/bench-gateway-restart.ts --json`
+
+Ids de cas :
+
+- `skipChannels` : redémarrage avec canaux ignorés.
+- `skipChannelsAcpxProbe` : redémarrage avec canaux ignorés et sonde de démarrage ACPX activée.
+- `skipChannelsNoAcpxProbe` : redémarrage avec canaux ignorés et sonde de démarrage ACPX désactivée.
+- `default` : redémarrage normal.
+- `fiftyPlugins` : redémarrage avec 50 plugins de manifeste.
+
+La sortie inclut le prochain `/healthz`, le prochain `/readyz`, le temps d'arrêt, le moment de préparation au redémarrage,
+le processeur, le RSS, les métriques de trace de démarrage pour le processus de remplacement, et les métriques de trace de
+redémarrage pour la gestion des signaux, le drainage du travail actif, les phases de fermeture, le prochain démarrage, le moment de
+préparation et les instantanés de mémoire. Le script active
+`OPENCLAW_GATEWAY_STARTUP_TRACE=1` et `OPENCLAW_GATEWAY_RESTART_TRACE=1` dans
+l'environnement du Gateway enfant.
+
+Utilisez ce benchmark lorsqu'une modification touche à la signalisation de redémarrage, aux gestionnaires de fermeture,
+au démarrage après redémarrage, à l'arrêt du sidecar, à la transmission de service, ou à l'état de préparation après
+redémarrage. Commencez avec `skipChannels` lors de l'isolement des mécanismes du Gateway du démarrage du canal.
+Utilisez `default` ou les cas avec de nombreux plugins uniquement après que le cas étroit a expliqué
+le chemin de redémarrage.
+
+Les métriques de trace sont des indices d'attribution, pas des verdicts. Une modification de redémarrage doit être
+jugée à partir de plusieurs échantillons, de la span de propriétaire correspondante, du comportement `/healthz` et `/readyz`,
+et du contrat de redémarrage visible par l'utilisateur.
+
 ## Onboarding E2E (Docker)
 
-Docker est facultatif ; cela n'est nécessaire que pour les tests de fumée d'onboarding conteneurisés.
+Docker est optionnel ; cela n'est nécessaire que pour les tests de fumée d'onboarding conteneurisés.
 
 Flux complet de démarrage à froid dans un conteneur Linux propre :
 
@@ -134,11 +210,11 @@ Flux complet de démarrage à froid dans un conteneur Linux propre :
 scripts/e2e/onboard-docker.sh
 ```
 
-Ce script pilote l'assistant interactif via un pseudo-tty, vérifie les fichiers de configuration/workspace/session, puis démarre la passerelle et exécute `openclaw health`.
+Ce script pilote l'assistant interactif via un pseudo-tty, vérifie les fichiers de config/workspace/session, puis démarre la passerelle et exécute `openclaw health`.
 
-## Test de fumée d'importation QR (Docker)
+## QR import smoke (Docker)
 
-S'assure que la classe d'aide d'exécution QR maintenue se charge sous les environnements d'exécution Node Docker pris en charge (Node 24 par défaut, Node 22 compatible) :
+S'assure que l'aide d'exécution QR maintenue se charge sous les environnements d'exécution Node Docker pris en charge (Node 24 par défaut, Node 22 compatible) :
 
 ```bash
 pnpm test:docker:qr
@@ -146,6 +222,6 @@ pnpm test:docker:qr
 
 ## Connexes
 
-- [Tests](/fr/help/testing)
-- [Tests en direct](/fr/help/testing-live)
-- [Tests des mises à jour et plugins](/fr/help/testing-updates-plugins)
+- [Testing](/fr/help/testing)
+- [Testing live](/fr/help/testing-live)
+- [Testing updates and plugins](/fr/help/testing-updates-plugins)

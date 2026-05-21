@@ -19,7 +19,7 @@ Contexto de seguridad: [Seguridad](/es/gateway/security)
 
 Cuando un canal está configurado con la política de MD `pairing`, los remitentes desconocidos reciben un código corto y su mensaje **no se procesa** hasta que usted lo apruebe.
 
-Las políticas de DM predeterminadas están documentadas en: [Seguridad](/es/gateway/security)
+Las políticas de MD predeterminadas están documentadas en: [Seguridad](/es/gateway/security)
 
 `dmPolicy: "open"` es público solo cuando la lista de permitidos de MD efectiva incluye `"*"`.
 La configuración y validación requieren ese comodín para configuraciones abiertas al público. Si el estado
@@ -74,7 +74,7 @@ Los grupos estáticos usan `type: "message.senders"` y se referencian con
 }
 ```
 
-Los grupos de acceso están documentados en detalle aquí: [Grupos de acceso](/es/channels/access-groups)
+Los grupos de acceso se documentan en detalle aquí: [Grupos de acceso](/es/channels/access-groups)
 
 ### Dónde se almacena el estado
 
@@ -119,19 +119,22 @@ El código de configuración es una carga útil JSON codificada en base64 que co
 
 Ese token de arranque lleva el perfil de arranque de emparejamiento integrado:
 
-- el perfil de configuración integrado solo permite el rol `node`
-- después de la aprobación, el token `node` entregado se mantiene `scopes: []`
-- el flujo de código de configuración integrado no entrega un token `operator`
-- el acceso de operador requiere un emparejamiento de operador aprobado por separado o un flujo de token
+- el perfil de configuración integrado permite solo la línea base nueva de QR/código de configuración:
+  `node` más un traspaso `operator` limitado
+- el token `node` traspasado se mantiene `scopes: []`
+- el token `operator` traspasado se limita a `operator.approvals`,
+  `operator.read` y `operator.write`
+- `operator.admin` y `operator.pairing` no se otorgan mediante el arranque
+  con QR/código de configuración; requieren un emparejamiento de operador aprobado por separado o un flujo de token
 - la rotación/revocación posterior del token permanece limitada tanto por el contrato de rol aprobado del dispositivo como por los ámbitos de operador de la sesión de quien realiza la llamada
 
 Trate el código de configuración como una contraseña mientras sea válido.
 
-Para el emparejamiento móvil remoto de Tailscale, público u otro, utilice Tailscale Serve/Funnel
-u otra URL de Gateway `wss://`. Los códigos de configuración `ws://` en texto plano se aceptan solo
-para loopback, direcciones LAN privadas, hosts Bonjour `.local` y el host del emulador
-Android. Las direcciones CGNAT de Tailnet, los nombres `.ts.net` y los hosts públicos aún
-fallan de forma segura antes de la emisión de QR/código de configuración.
+Para el emparejamiento móvil remoto de Tailscale, público u otro, use Tailscale Serve/Funnel
+u otra URL de Gateway `wss://`. Los códigos de configuración `ws://` en texto sin formato se aceptan solo
+para direcciones de bucle local, LAN privadas, hosts Bonjour `.local` y el host del
+emulador de Android. Las direcciones CGNAT de Tailnet, nombres `.ts.net` y hosts públicos aún
+fallan de forma cerrada antes de la emisión del QR/código de configuración.
 
 ### Aprobar un dispositivo nodo
 
@@ -142,17 +145,17 @@ openclaw devices reject <requestId>
 ```
 
 Cuando se deniega una aprobación explícita porque la sesión del dispositivo emparejado que aprueba
-se abrió con un ámbito de solo emparejamiento, la CLI reintenta la misma solicitud con
-`operator.admin`. Esto permite que un dispositivo emparejado con capacidades de administración recupere un nuevo
-emparejamiento de Interfaz de Control/navegador sin editar `devices/paired.json` manualmente. El
+se abrió con un alcance solo de emparejamiento, la CLI reintenta la misma solicitud con
+`operator.admin`. Esto permite que un dispositivo emparejado con capacidades de administrador existente recupere un nuevo
+emparejamiento de UI de Control/navegador sin editar `devices/paired.json` manualmente. El
 Gateway sigue validando la conexión reintentada; los tokens que no pueden autenticarse
 con `operator.admin` permanecen bloqueados.
 
-Si el mismo dispositivo reintenta con diferentes detalles de autenticación (por ejemplo, diferentes
-rol/ámbitos/clave pública), la solicitud pendiente anterior es reemplazada y se crea un nuevo
+Si el mismo dispositivo reintenta con diferentes detalles de autenticación (por ejemplo, diferente
+rol/alcances/clave pública), la solicitud pendiente anterior se reemplaza y se crea una nueva
 `requestId`.
 
-<Note>Un dispositivo ya emparejado no obtiene acceso más amplio silenciosamente. Si se vuelve a conectar solicitando más ámbitos o un rol más amplio, OpenClaw mantiene la aprobación existente tal como está y crea una nueva solicitud de actualización pendiente. Use `openclaw devices list` para comparar el acceso aprobado actualmente con el acceso recién solicitado antes de aprobar.</Note>
+<Note>Un dispositivo ya emparejado no obtiene acceso más amplio de forma silenciosa. Si se vuelve a conectar solicitando más alcances o un rol más amplio, OpenClaw mantiene la aprobación existente tal cual y crea una nueva solicitud de actualización pendiente. Use `openclaw devices list` para comparar el acceso aprobado actualmente con el acceso recién solicitado antes de aprobar.</Note>
 
 ### Aprobación automática opcional de nodos de CIDR de confianza
 
@@ -171,8 +174,10 @@ puede optar por la aprobación automática de nodos por primera vez con CIDR exp
 }
 ```
 
-Esto solo se aplica a solicitudes de emparejamiento `role: node` nuevas sin ámbitos solicitados.
-Los clientes de Operador, navegador, Interfaz de usuario de control y WebChat aún requieren aprobación manual. Los cambios de rol, ámbito, metadatos y clave pública aún requieren aprobación manual.
+Esto solo se aplica a solicitudes de emparejamiento `role: node` nuevas sin
+alcances solicitados. Los clientes Operator, browser, Control UI y WebChat aún requieren aprobación
+manual. Los cambios de rol, alcance, metadatos y clave pública aún requieren aprobación
+manual.
 
 ### Almacenamiento del estado de emparejamiento de nodos
 
@@ -184,15 +189,15 @@ Almacenado bajo `~/.openclaw/devices/`:
 ### Notas
 
 - La API heredada `node.pair.*` (CLI: `openclaw nodes pending|approve|reject|remove|rename`) es un
-  almacén de emparejamiento propiedad de la puerta de enlace separado. Los nodos WS aún requieren emparejamiento de dispositivos.
+  almacén de emparejamiento separado propiedad de la puerta de enlace. Los nodos WS aún requieren emparejamiento de dispositivo.
 - El registro de emparejamiento es la fuente duradera de verdad para los roles aprobados. Los tokens
   de dispositivo activos permanecen limitados a ese conjunto de roles aprobados; una entrada de token extraviada
   fuera de los roles aprobados no crea nuevo acceso.
 
 ## Documentos relacionados
 
-- Modelo de seguridad + inyección de avisos: [Seguridad](/es/gateway/security)
-- Actualización segura (ejecutar doctor): [Actualización](/es/install/updating)
+- Modelo de seguridad + inyección de prompt: [Security](/es/gateway/security)
+- Actualización segura (ejecutar doctor): [Updating](/es/install/updating)
 - Configuraciones de canales:
   - Telegram: [Telegram](/es/channels/telegram)
   - WhatsApp: [WhatsApp](/es/channels/whatsapp)

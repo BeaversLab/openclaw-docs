@@ -7,9 +7,9 @@ read_when:
 title: "APIAPI de contrôle de navigateur"
 ---
 
-Pour la configuration, le dépannage, consultez [Browser](/fr/tools/browser).
-Cette page constitue la référence pour l'API`openclaw browser` HTTP de contrôle local, la CLI
-CLI, et les modèles de script (snapshots, refs, waits, debug flows).
+Pour la configuration, le dépannage, consultez [Navigateur](/fr/tools/browserAPI).
+Cette page est la référence pour l'API HTTP de contrôle local, la ligne de commande `openclaw browser`CLI
+CLI, et les modèles de script (instantanés, références, attentes, flux de débogage).
 
 ## API de contrôle (facultatif)
 
@@ -117,7 +117,7 @@ docker compose run --rm openclaw-cli \
 Pour conserver les téléchargements du navigateur, définissez `PLAYWRIGHT_BROWSERS_PATH` (par exemple,
 `/home/node/.cache/ms-playwright`) et assurez-vous que `/home/node` est conservé via
 `OPENCLAW_HOME_VOLUME` ou un montage de liaison. OpenClaw détecte automatiquement le
-Chromium persistant sur Linux. Voir [Docker](/fr/install/docker).
+Chromium conservé sur Linux. Voir [Docker](/fr/install/docker).
 
 ## Fonctionnement (interne)
 
@@ -194,6 +194,7 @@ openclaw browser dialog --dismiss --dialog-id d1
 openclaw browser wait --text "Done"
 openclaw browser wait "#main" --url "**/dash" --load networkidle --fn "window.ready===true"
 openclaw browser evaluate --fn '(el) => el.textContent' --ref 7
+openclaw browser evaluate --timeout-ms 30000 --fn 'async () => { await window.ready; return true; }'
 openclaw browser highlight e12
 openclaw browser trace start
 openclaw browser trace stop
@@ -237,7 +238,7 @@ Aperçu des indicateurs de snapshot :
 
 - `--format ai` (par défaut avec Playwright) : capture instantanée IA avec références numériques (`aria-ref="<n>"`).
 - `--format aria` : arborescence d'accessibilité avec références `axN`. Lorsque Playwright est disponible, OpenClaw lie les références avec les ID DOM du backend à la page active pour que les actions de suivi puissent les utiliser ; sinon, traitez la sortie comme une inspection uniquement.
-- `--efficient` (ou `--mode efficient`) : préréglage de capture instantanée de rôle compact. Définissez `browser.snapshotDefaults.mode: "efficient"` pour en faire la valeur par défaut (voir [configuration du Gateway](/fr/gateway/configuration-reference#browser)).
+- `--efficient` (ou `--mode efficient`) : préréglage d'instantané de rôle compact. Définissez `browser.snapshotDefaults.mode: "efficient"` pour en faire la valeur par défaut (voir [configuration du Gateway](/fr/gateway/configuration-reference#browser)).
 - `--interactive`, `--compact`, `--depth`, `--selector` forcent une capture instantanée de rôle avec des références `ref=e12`. `--frame "<iframe>"` limite la portée des captures instantanées de rôle à une iframe.
 - `--labels` ajoute une capture d'écran de la fenêtre d'affichage uniquement avec des étiquettes de référence superposées (imprime `MEDIA:<path>`).
 - `--urls` ajoute les destinations de lien découvertes aux captures instantanées IA.
@@ -347,11 +348,13 @@ Ceux-ci sont utiles pour les workflows « faire se comporter le site comme X » 
   exécutent du JavaScript arbitraire dans le contexte de la page. L'instruction
   (prompt injection) peut influencer ce comportement. Désactivez-le avec
   `browser.evaluateEnabled=false` si vous n'en avez pas besoin.
-- Pour les notes de connexion et anti-bot (X/Twitter, etc.), consultez [Browser login + X/Twitter posting](/fr/tools/browser-login).
-- Gardez l'hôte du Gateway/nœud privé (bouclage ou tailnet uniquement).
-- Les points de terminaison CDP distants sont puissants ; tunnelez-les et protégez-les.
+- Utilisez `openclaw browser evaluate --timeout-ms <ms>` lorsque la fonction côté page
+  peut avoir besoin de plus de temps que le délai d'évaluation par défaut.
+- Pour les notes de connexion et anti-bot (X/Twitter, etc.), voir [Connexion au navigateur + publication sur X/Twitter](/fr/tools/browser-login).
+- Gardez l'hôte du Gateway/nœud privé (boucle locale ou tailnet uniquement).
+- Les points de terminaison CDP distants sont puissants ; placez-les dans un tunnel et protégez-les.
 
-Exemple en mode strict (bloquer les destinations privées/internes par défaut) :
+Exemple en mode strict (bloquer les destinations privées/internal par défaut) :
 
 ```json5
 {
@@ -367,7 +370,7 @@ Exemple en mode strict (bloquer les destinations privées/internes par défaut) 
 
 ## Connexes
 
-- [Browser](/fr/tools/browser) - vue d'ensemble, configuration, profils, sécurité
-- [Browser login](/fr/tools/browser-login) - connexion aux sites
-- [Browser Linux troubleshooting](Linux/en/tools/browser-linux-troubleshooting)
-- [Browser WSL2 troubleshooting](WSL2/en/tools/browser-wsl2-windows-remote-cdp-troubleshooting)
+- [Navigateur](/fr/tools/browser) - aperçu, configuration, profils, sécurité
+- [Connexion au navigateur](/fr/tools/browser-login) - connexion aux sites
+- [Dépannage du navigateur sur Linux](/fr/tools/browser-linux-troubleshooting)
+- [Dépannage du navigateur sur WSL2](/fr/tools/browser-wsl2-windows-remote-cdp-troubleshooting)

@@ -275,9 +275,9 @@ Activer via `channels.mattermost.streaming` :
     - `off` désactive le streaming de prévisualisation.
 
   </Accordion>
-  <Accordion title="Notes sur le comportement du streaming"OpenClaw>
-    - Si le flux ne peut pas être finalisé en place (par exemple, si le message a été supprimé en cours de flux), OpenClaw se rabat sur l'envoi d'un message final frais afin que la réponse ne soit jamais perdue.
-    - Les charges utiles contenant uniquement du raisonnement sont supprimées des messages de channel, y compris le texte qui arrive sous forme de bloc de citation `> Reasoning:`. Définissez `/reasoning on`Mattermost pour voir la réflexion dans d'autres surfaces ; le message final Mattermost ne conserve que la réponse.
+  <Accordion title="Notes sur le comportement du streaming">
+    - Si le flux ne peut pas être finalisé sur place (par exemple si le message a été supprimé pendant le flux), OpenClaw se rabat sur l'envoi d'un nouveau message final pour que la réponse ne soit jamais perdue.
+    - Les payloads contenant uniquement de la réflexion sont supprimés des messages de channel, y compris le texte qui arrive sous forme de `> Thinking` blockquote. Définissez `/reasoning on` pour voir la réflexion sur d'autres surfaces ; le message final Mattermost ne conserve que la réponse.
     - Voir [Streaming](/fr/concepts/streaming#preview-streaming-modes) pour la matrice de mappage des channels.
 
   </Accordion>

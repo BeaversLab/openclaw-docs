@@ -7,9 +7,7 @@ read_when:
   - You are debugging Codex harness startup, model discovery, or environment isolation
 ---
 
-Cette référence couvre la configuration détaillée pour le plugin `codex`
-inclus. Pour la configuration et les décisions de routage, commencez par
-[Codex harness](/fr/plugins/codex-harness).
+Cette référence couvre la configuration détaillée pour le plugin `codex` fourni. Pour la configuration et les décisions de routage, commencez par [Codex harness](/fr/plugins/codex-harness).
 
 ## Surface de configuration du plugin
 
@@ -38,14 +36,14 @@ Tous les paramètres du harnais Codex se trouvent sous `plugins.entries.codex.co
 
 Champs de niveau supérieur pris en charge :
 
-| Champ                      | Par défaut                       | Signification                                                                                                                                                                             |
-| -------------------------- | -------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `discovery`                | enabled                          | Paramètres de découverte de modèles pour le serveur d'application Codex `model/list`.                                                                                                     |
-| `appServer`                | serveur d'application stdio géré | Paramètres de transport, de commande, d'auth, d'approbation, de sandbox et de délai d'attente.                                                                                            |
-| `codexDynamicToolsLoading` | `"searchable"`                   | Utilisez `"direct"` pour placer les tools dynamiques OpenClaw directement dans le contexte initial des tools Codex.                                                                       |
-| `codexDynamicToolsExclude` | `[]`                             | Noms supplémentaires de tools dynamiques OpenClaw à omettre des tours du serveur d'application Codex.                                                                                     |
-| `codexPlugins`             | disabled                         | Prise en charge native des plugins/applications Codex pour les plugins organisés installés à partir des sources et migrés. Voir [Native Codex plugins](/fr/plugins/codex-native-plugins). |
-| `computerUse`              | disabled                         | Configuration de Codex Computer Use. Voir [Codex Computer Use](/fr/plugins/codex-computer-use).                                                                                           |
+| Champ                      | Par défaut                       | Signification                                                                                                                                                                            |
+| -------------------------- | -------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `discovery`                | enabled                          | Paramètres de découverte de modèles pour le serveur d'application Codex `model/list`.                                                                                                    |
+| `appServer`                | serveur d'application stdio géré | Paramètres de transport, de commande, d'auth, d'approbation, de sandbox et de délai d'attente.                                                                                           |
+| `codexDynamicToolsLoading` | `"searchable"`                   | Utilisez `"direct"` pour placer les tools dynamiques OpenClaw directement dans le contexte initial des tools Codex.                                                                      |
+| `codexDynamicToolsExclude` | `[]`                             | Noms supplémentaires de tools dynamiques OpenClaw à omettre des tours du serveur d'application Codex.                                                                                    |
+| `codexPlugins`             | disabled                         | Prise en charge native des plugins/applications Codex pour les plugins hébergés et migrés installés à partir des sources. Voir [Native Codex plugins](/fr/plugins/codex-native-plugins). |
+| `computerUse`              | disabled                         | Configuration de Codex Computer Use. Voir [Codex Computer Use](/fr/plugins/codex-computer-use).                                                                                          |
 
 ## Transport du serveur d'application
 
@@ -239,29 +237,29 @@ délai d'expiration disponible dans cet ordre :
 
 - Un argument `timeoutMs` positif par appel.
 - Pour `image_generate`, `agents.defaults.imageGenerationModel.timeoutMs`.
-- Pour l'outil `image` de compréhension des médias, `tools.media.image.timeoutSeconds`
-  converti en millisecondes, ou la valeur par défaut de 60 secondes pour les médias.
-- La valeur par défaut de 30 secondes pour l'outil dynamique.
+- Pour `image_generate` sans timeout configuré, la valeur par défaut de 120 secondes pour la génération d'images.
+- Pour le tool `image` de compréhension des médias, `tools.media.image.timeoutSeconds` converti en millisecondes, ou la valeur par défaut de 60 secondes pour les médias.
+- La valeur par défaut de 30 secondes pour le tool dynamique.
 
-Les budgets des outils dynamiques sont plafonnés à 600 000 ms. En cas d'expiration du délai, OpenClaw abandonne le signal de l'outil lorsque cela est pris en charge et renvoie une réponse d'outil dynamique échouée à Codex pour que le tour puisse continuer au lieu de laisser la session en `processing`.
+Les budgets des outils dynamiques sont plafonnés à 600000 ms. En cas de timeout, OpenClaw abandonne le signal de tool lorsque cela est pris en charge et renvoie une réponse d'outil dynamique échouée à Codex afin que le tour puisse continuer au lieu de laisser la session dans `processing`.
 
-Une fois que Codex a accepté un tour et après que OpenClaw a répondu à une demande de serveur d'application limitée au tour, le harnais s'attend à ce que Codex progresse dans le tour en cours et finisse éventuellement le tour natif avec `turn/completed`. Si le serveur d'application reste silencieux pendant `appServer.turnCompletionIdleTimeoutMs`, OpenClaw interrompt de manière optimale le tour Codex, enregistre un délai d'attente de diagnostic et libère le OpenClaw session lane afin que les messages de chat suivants ne soient pas mis en file d'attente derrière un tour natif périmé.
+Après que Codex a accepté un tour, et après que OpenClaw a répondu à une demande app-server limitée au tour, le harness s'attend à ce que Codex réalise des progrès pour le tour en cours et termine finalement le tour natif avec `turn/completed`. Si l'app-server reste silencieux pendant `appServer.turnCompletionIdleTimeoutMs`, OpenClaw interrompt de manière optimale le tour Codex, enregistre un timeout de diagnostic, et libère le voie de session OpenClaw afin que les messages de chat de suivi ne soient pas mis en file d'attente derrière un tour natif obsolète.
 
-La plupart des notifications non terminales pour le même tour désactivent ce chien de garde court car Codex a prouvé que le tour est toujours actif. Les achèvements bruts `custom_tool_call_output` maintiennent le chien de garde court post-outil armé car ils constituent le transfert du résultat de l'outil limité au tour. Les éléments `agentMessage` terminés et les éléments bruts d'assistant pré-outil `rawResponseItem/completed` arment la libération de la sortie de l'assistant : si Codex se tait ensuite sans `turn/completed`, OpenClaw interrompt de manière optimale le tour natif et libère le voie de session. La progression brute de l'assistant post-outil continue d'attendre `turn/completed` ou le chien de garde terminal. Les diagnostics de délai d'attente incluent la dernière méthode de notification du serveur d'application et, pour les éléments de réponse brute de l'assistant, le type d'élément, le rôle, l'identifiant et un aperçu borné du texte de l'assistant.
+La plupart des notifications non terminales pour le même tour désarment ce chien de garde de courte durée car Codex a prouvé que le tour est toujours actif. Les complétions brutes `custom_tool_call_output` maintiennent le chien de garde de courte durée post-outil armé car elles représentent la transmission du résultat de l'outil limitée au tour. Les éléments `agentMessage` terminés et les éléments bruts d'assistant pré-outil `rawResponseItem/completed` arment la libération de la sortie de l'assistant : si Codex cesse ensuite d'émettre des sons sans `turn/completed`OpenClaw, OpenClaw interrompt au mieux le tour natif et libère la voie de session. La progression brute de l'assistant post-outil continue d'attendre `turn/completed` ou le chien de garde terminal. Les diagnostics de délai d'expiration incluent la dernière méthode de notification du serveur d'application et, pour les éléments de réponse brute de l'assistant, le type de l'élément, le rôle, l'identifiant et un aperçu délimité du texte de l'assistant.
 
 ## Découverte de modèle
 
-Par défaut, le plugin Codex demande à l'application serveur les modèles disponibles. La disponibilité des modèles est gérée par l'application serveur Codex, la liste peut donc changer lorsqu'OpenClaw met à jour la version intégrée de `@openai/codex` ou lorsqu'un déploiement pointe `appServer.command` vers un binaire Codex différent. La disponibilité peut également être limitée au compte. Utilisez `/codex models` sur une passerelle en cours d'exécution pour voir le catalogue en direct pour ce harnais et ce compte.
+Par défaut, le plugin Codex demande au serveur d'application les modèles disponibles. La disponibilité des modèles est gérée par le serveur d'application Codex, la liste peut donc changer lorsque OpenClaw met à jour la version groupée `@openai/codex` ou lorsqu'un déploiement pointe `appServer.command` vers un binaire Codex différent. La disponibilité peut également être limitée au compte. Utilisez `/codex models` sur une passerelle en cours d'exécution pour voir le catalogue en direct pour ce harnais et ce compte.
 
-Si la découverte échoue ou expire, OpenClaw utilise un catalogue de repli intégré pour :
+Si la découverte échoue ou expire, OpenClaw utilise un catalogue de repli groupé pour :
 
 - GPT-5.5
 - GPT-5.4 mini
 - GPT-5.2
 
-Le harnais intégré actuel est `@openai/codex` `0.130.0`. Une sonde `model/list` contre cette application serveur intégrée a renvoyé :
+Le harnais groupé actuel est `@openai/codex` `0.130.0`. Une sonde `model/list` contre ce serveur d'application groupé a renvoyé :
 
-| ID de modèle          | Par défaut | Masqué | Modalités d'entrée | Efforts de raisonnement          |
+| Identifiant du modèle | Par défaut | Masqué | Modalités d'entrée | Efforts de raisonnement          |
 | --------------------- | ---------- | ------ | ------------------ | -------------------------------- |
 | `gpt-5.5`             | Oui        | Non    | texte, image       | faible, moyen, élevé, très élevé |
 | `gpt-5.4`             | Non        | Non    | texte, image       | faible, moyen, élevé, très élevé |
@@ -270,7 +268,7 @@ Le harnais intégré actuel est `@openai/codex` `0.130.0`. Une sonde `model/list
 | `gpt-5.3-codex-spark` | Non        | Non    | texte              | faible, moyen, élevé, très élevé |
 | `gpt-5.2`             | Non        | Non    | texte, image       | faible, moyen, élevé, très élevé |
 
-Les modèles masqués peuvent être renvoyés par le catalogue de l'application serveur pour des flux internes ou spécialisés, mais ils ne sont pas des choix normaux du sélecteur de modèles.
+Les modèles masqués peuvent être renvoyés par le catalogue de l'application serveur pour des flux internes ou spécialisés, mais ils ne sont pas des choix normaux du sélecteur de modèle.
 
 Ajustez la découverte sous `plugins.entries.codex.config.discovery` :
 
@@ -292,7 +290,7 @@ Ajustez la découverte sous `plugins.entries.codex.config.discovery` :
 }
 ```
 
-Désactivez la découverte lorsque vous souhaitez que le démarrage évite de sonder Codex et n'utilise que le catalogue de repli :
+Désactivez la découverte lorsque vous souhaitez que le démarrage évite de sonder Codex et utilise uniquement le catalogue de secours :
 
 ```json5
 {
@@ -313,9 +311,9 @@ Désactivez la découverte lorsque vous souhaitez que le démarrage évite de so
 
 ## Fichiers d'amorçage de l'espace de travail
 
-Codex gère `AGENTS.md` lui-même via la découverte native de documents de projet. OpenClaw n'écrit pas de fichiers de documents de projet Codex synthétiques ni ne dépend des noms de fichiers de repli Codex pour les fichiers de persona, car les replis Codex ne s'appliquent que lorsque `AGENTS.md` est manquant.
+Codex gère `AGENTS.md` lui-même via la découverte native de documents de projet. OpenClaw n'écrit pas de fichiers de projet Codex synthétiques ni ne dépend des noms de fichiers de secours Codex pour les fichiers de persona, car les secours Codex ne s'appliquent que lorsque `AGENTS.md` est manquant.
 
-Pour la parité de l'espace de travail OpenClaw, le harnais Codex résout les autres fichiers d'amorçage, y compris `SOUL.md`, `TOOLS.md`, `IDENTITY.md`, `USER.md`, `HEARTBEAT.md`, `BOOTSTRAP.md` et `MEMORY.md` lorsqu'ils sont présents, et les transmet via les instructions développeur Codex sur `thread/start` et `thread/resume`. Cela permet de garder le contexte de persona et de profil de l'espace de travail visible sur la voie native de façonnage du comportement Codex sans dupliquer `AGENTS.md`.
+Pour la parité de l'espace de travail OpenClaw, le harnais Codex résout les autres fichiers d'amorçage. `SOUL.md`, `IDENTITY.md`, `TOOLS.md` et `USER.md` sont transmis en tant qu'instructions de développeur Codex OpenClaw car ils définissent l'agent actif, les conseils d'espace de travail disponibles et le profil utilisateur. Le contenu de `HEARTBEAT.md` n'est pas injecté ; les tours de heartbeat obtiennent un pointeur en mode collaboration pour lire le fichier lorsqu'il existe et n'est pas vide. `BOOTSTRAP.md` et `MEMORY.md`, lorsqu'ils sont présents, sont transmis en tant que contexte de référence d'entrée de tour OpenClaw.
 
 ## Remplacements d'environnement
 
@@ -329,7 +327,7 @@ Les remplacements d'environnement restent disponibles pour les tests locaux :
 
 `OPENCLAW_CODEX_APP_SERVER_BIN` contourne le binaire géré lorsque `appServer.command` n'est pas défini.
 
-`OPENCLAW_CODEX_APP_SERVER_GUARDIAN=1` a été supprimé. Utilisez plutôt `plugins.entries.codex.config.appServer.mode: "guardian"`, ou `OPENCLAW_CODEX_APP_SERVER_MODE=guardian` pour des tests locaux ponctuels. La configuration est préférée pour les déploiements répétables car elle conserve le comportement du plugin dans le même fichier examiné que le reste de la configuration du harnais Codex.
+`OPENCLAW_CODEX_APP_SERVER_GUARDIAN=1` a été supprimé. Utilisez plutôt `plugins.entries.codex.config.appServer.mode: "guardian"`, ou `OPENCLAW_CODEX_APP_SERVER_MODE=guardian` pour des tests locaux ponctuels. La configuration est préférée pour les déploiements reproductibles car elle conserve le comportement du plugin dans le même fichier révisé que le reste de la configuration du harnais Codex.
 
 ## Connexes
 
@@ -337,5 +335,5 @@ Les remplacements d'environnement restent disponibles pour les tests locaux :
 - [Codex harness runtime](/fr/plugins/codex-harness-runtime)
 - [Native Codex plugins](/fr/plugins/codex-native-plugins)
 - [Codex Computer Use](/fr/plugins/codex-computer-use)
-- [OpenAI provider](/fr/providers/openai)
-- [Configuration reference](/fr/gateway/configuration-reference)
+- [provider OpenAI](/fr/providers/openai)
+- [Référence de configuration](/fr/gateway/configuration-reference)

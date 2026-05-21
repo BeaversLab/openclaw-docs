@@ -101,7 +101,7 @@ pnpm openclaw voicecall smoke --to "+15555550123"
   - `read` 探测：测试在工作区中写入一个 nonce 文件，并要求 agent `read` 该文件并将 nonce 回显。
   - `exec+read` 探测：测试要求 agent 将 nonce `exec`-写入临时文件，然后将其 `read` 回来。
   - 图像探测：测试附加一个生成的 PNG（cat + 随机代码），并期望模型返回 `cat <CODE>`。
-  - 实现参考：`src/gateway/gateway-models.profiles.live.test.ts` 和 `src/gateway/live-image-probe.ts`。
+  - 实现参考：`src/gateway/gateway-models.profiles.live.test.ts` 和 `test/helpers/live-image-probe.ts`。
 - 如何启用：
   - `pnpm test:live`（如果直接调用 Vitest，则为 `OPENCLAW_LIVE_TEST=1`）
 - 如何选择模型：
@@ -115,7 +115,7 @@ pnpm openclaw voicecall smoke --to "+15555550123"
   - `read` 探测 + `exec+read` 探测（工具压力测试）
   - 当模型声明支持图像输入时，运行图像探测
   - 流程（高级）：
-    - 测试生成一个带有“CAT”+ 随机代码的微型 PNG（`src/gateway/live-image-probe.ts`）
+    - 测试生成一个带有“CAT”+ 随机代码的微小 PNG (`test/helpers/live-image-probe.ts`)
     - 通过 `agent` `attachments: [{ mimeType: "image/png", content: "<base64>" }]` 发送
     - Gateway(网关) 将附件解析为 Gateway(网关)`images[]`（`src/gateway/server-methods/agent.ts` + `src/gateway/chat-attachments.ts`）
     - 嵌入式代理将多模态用户消息转发给模型

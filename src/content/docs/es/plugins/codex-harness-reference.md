@@ -7,7 +7,7 @@ read_when:
   - You are debugging Codex harness startup, model discovery, or environment isolation
 ---
 
-Esta referencia cubre la configuración detallada del complemento `codex` incluido. Para decisiones de configuración y enrutamiento, comience con [Codex harness](/es/plugins/codex-harness).
+Esta referencia cubre la configuración detallada para el complemento incluido `codex`. Para decisiones de configuración y enrutamiento, comience con [Arnés de Codex](/es/plugins/codex-harness).
 
 ## Superficie de configuración del complemento
 
@@ -36,14 +36,14 @@ Todas las configuraciones del arnés de Codex se encuentran bajo `plugins.entrie
 
 Campos de nivel superior compatibles:
 
-| Campo                      | Predeterminado                              | Significado                                                                                                                                                                                |
-| -------------------------- | ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `discovery`                | habilitado                                  | Configuración de descubrimiento de modelos para el servidor de aplicaciones de Codex `model/list`.                                                                                         |
-| `appServer`                | servidor de aplicaciones stdio administrado | Configuraciones de transporte, comando, autenticación, aprobación, espacio aislado y tiempo de espera.                                                                                     |
-| `codexDynamicToolsLoading` | `"searchable"`                              | Use `"direct"` para colocar las herramientas dinámicas de OpenClaw directamente en el contexto de la herramienta inicial de Codex.                                                         |
-| `codexDynamicToolsExclude` | `[]`                                        | Nombres de herramientas dinámicas adicionales de OpenClaw para omitir en los turnos del servidor de aplicaciones de Codex.                                                                 |
-| `codexPlugins`             | deshabilitado                               | Soporte nativo de complementos/aplicaciones de Codex para complementos curados instalados desde código fuente migrados. Consulte [Native Codex plugins](/es/plugins/codex-native-plugins). |
-| `computerUse`              | deshabilitado                               | Configuración de Codex Computer Use. Consulte [Codex Computer Use](/es/plugins/codex-computer-use).                                                                                        |
+| Campo                      | Predeterminado                              | Significado                                                                                                                                                                                              |
+| -------------------------- | ------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `discovery`                | habilitado                                  | Configuración de descubrimiento de modelos para el servidor de aplicaciones de Codex `model/list`.                                                                                                       |
+| `appServer`                | servidor de aplicaciones stdio administrado | Configuraciones de transporte, comando, autenticación, aprobación, espacio aislado y tiempo de espera.                                                                                                   |
+| `codexDynamicToolsLoading` | `"searchable"`                              | Use `"direct"` para colocar las herramientas dinámicas de OpenClaw directamente en el contexto de la herramienta inicial de Codex.                                                                       |
+| `codexDynamicToolsExclude` | `[]`                                        | Nombres de herramientas dinámicas adicionales de OpenClaw para omitir en los turnos del servidor de aplicaciones de Codex.                                                                               |
+| `codexPlugins`             | deshabilitado                               | Soporte nativo de complementos/aplicaciones de Codex para complementos curados instalados desde el código fuente y migrados. Consulte [Complementos nativos de Codex](/es/plugins/codex-native-plugins). |
+| `computerUse`              | deshabilitado                               | Configuración de uso de computadora de Codex. Consulte [Uso de computadora de Codex](/es/plugins/codex-computer-use).                                                                                    |
 
 ## Transporte del servidor de aplicaciones
 
@@ -245,29 +245,21 @@ tiempo de espera disponible en este orden:
 
 - Un argumento `timeoutMs` positivo por llamada.
 - Para `image_generate`, `agents.defaults.imageGenerationModel.timeoutMs`.
-- Para la herramienta `image` de comprensión de medios, `tools.media.image.timeoutSeconds`
-  convertida a milisegundos, o el valor predeterminado de 60 segundos para medios.
+- Para `image_generate` sin un tiempo de espera configurado, el valor predeterminado de 120 segundos para la generación de imágenes.
+- Para la herramienta de comprensión de medios `image`, `tools.media.image.timeoutSeconds` convertido a milisegundos, o el valor predeterminado de 60 segundos para medios.
 - El valor predeterminado de 30 segundos para herramientas dinámicas.
 
-Los presupuestos de herramientas dinámicas están limitados a 600000 ms. Al agotarse el tiempo de espera, OpenClaw aborta la
-señal de la herramienta cuando es compatible y devuelve una respuesta fallida de herramienta dinámica a Codex
-para que el turno pueda continuar en lugar de dejar la sesión en `processing`.
+Los presupuestos de herramientas dinámicas están limitados a 600000 ms. En caso de tiempo de espera, OpenClaw aborta la señal de la herramienta cuando es compatible y devuelve una respuesta fallida de herramienta dinámica a Codex para que el turno pueda continuar en lugar de dejar la sesión en `processing`.
 
-Después de que Codex acepta un turno, y después de que OpenClaw responde a una solicitud del servidor de aplicaciones
-con alcance de turno, el arnés espera que Codex realice progresos en el turno actual
-y eventualmente finalice el turno nativo con `turn/completed`. Si el servidor de aplicaciones permanece
-en silencio durante `appServer.turnCompletionIdleTimeoutMs`, OpenClaw interrumpe
-el turno de Codex con el mejor esfuerzo, registra un tiempo de espera de diagnóstico y libera el
-carril de sesión de OpenClaw para que los mensajes de chat de seguimiento no se pongan en cola detrás de un turno
-nativo obsoleto.
+Después de que Codex acepta un turno, y después de que OpenClaw responde a una solicitud del servidor de aplicaciones con alcance al turno, el arnés espera que Codex avance en el turno actual y eventualmente finalice el turno nativo con `turn/completed`. Si el servidor de aplicaciones permanece en silencio durante `appServer.turnCompletionIdleTimeoutMs`, OpenClaw interrumpe el turno de Codex con el mejor esfuerzo posible, registra un tiempo de espera de diagnóstico y libera el carril de sesión de OpenClaw para que los mensajes de chat de seguimiento no se pongan en cola detrás de un turno nativo obsoleto.
 
-La mayoría de las notificaciones no terminales para el mismo turno desactivan ese perro guardián corto porque Codex ha demostrado que el turno todavía está vivo. Las finalizaciones `custom_tool_call_output` mantienen activo el perro guardián corto posterior a la herramienta porque son la entrega del resultado de la herramienta con alcance de turno. Los elementos `agentMessage` completados y los elementos `rawResponseItem/completed` del asistente sin formato previos a la herramienta activan la liberación de salida del asistente: si Codex luego se queda en silencio sin `turn/completed`, OpenClaw interrumpe con el mejor esfuerzo el turno nativo y libera el carril de la sesión. El progreso del asistente sin formato posterior a la herramienta sigue esperando `turn/completed` o el perro guardián terminal. Los diagnósticos de tiempo de espera incluyen el último método de notificación del servidor de aplicaciones y, para los elementos de respuesta del asistente sin formato, el tipo de elemento, el rol, el identificador y una vista previa del texto del asistente limitada.
+La mayoría de las notificaciones no terminales para el mismo turno desactivan ese perro guardián corto porque Codex ha demostrado que el turno sigue vivo. Las finalizaciones `custom_tool_call_output` mantienen activado el perro guardián corto posterior a la herramienta porque son la entrega de resultados de herramientas con ámbito de turno. Los elementos `agentMessage` completados y los elementos del asistente `rawResponseItem/completed` brutos previos a la herramienta activan la liberación de salida del asistente: si Codex luego se queda en silencio sin `turn/completed`, OpenClaw interrumpe con el mejor esfuerzo el turno nativo y libera el carril de la sesión. El progreso del asistente `turn/completed` posterior a la herramienta sigue esperando o el perro guardián terminal. Los diagnósticos de tiempo de espera incluyen el último método de notificación del servidor de aplicaciones y, para los elementos de respuesta del asistente `turn/completed`, el tipo de elemento, rol, id y una vista previa delimitada del texto del asistente.
 
 ## Descubrimiento de modelos
 
-De manera predeterminada, el complemento Codex solicita al servidor de aplicaciones los modelos disponibles. La disponibilidad de los modelos es propiedad del servidor de aplicaciones de Codex, por lo que la lista puede cambiar cuando OpenClaw actualiza la versión `@openai/codex` incluida o cuando una implementación apunta `appServer.command` a un binario Codex diferente. La disponibilidad también puede estar limitada a la cuenta. Use `/codex models` en una puerta de enlace en ejecución para ver el catálogo en vivo para ese arnés y cuenta.
+De forma predeterminada, el complemento Codex solicita al servidor de aplicaciones los modelos disponibles. La disponibilidad de modelos es propiedad del servidor de aplicaciones Codex, por lo que la lista puede cambiar cuando OpenClaw actualiza la versión `@openai/codex` incluida o cuando una implementación apunta `appServer.command` a un binario Codex diferente. La disponibilidad también puede tener alcance de cuenta. Use `/codex models` en una puerta de enlace en ejecución para ver el catálogo en vivo para ese arnés y cuenta.
 
-Si el descubrimiento falla o se agota el tiempo, OpenClaw usa un catálogo de respaldo incluido para:
+Si el descubrimiento falla o se agota el tiempo de espera, OpenClaw usa un catálogo de respaldo incluido para:
 
 - GPT-5.5
 - GPT-5.4 mini
@@ -275,7 +267,7 @@ Si el descubrimiento falla o se agota el tiempo, OpenClaw usa un catálogo de re
 
 El arnés incluido actual es `@openai/codex` `0.130.0`. Un sondeo `model/list` contra ese servidor de aplicaciones incluido devolvió:
 
-| Id. de modelo         | Predeterminado | Oculto | Modalidades de entrada | Esfuerzos de razonamiento |
+| ID del modelo         | Predeterminado | Oculto | Modalidades de entrada | Esfuerzos de razonamiento |
 | --------------------- | -------------- | ------ | ---------------------- | ------------------------- |
 | `gpt-5.5`             | Sí             | No     | texto, imagen          | bajo, medio, alto, xalto  |
 | `gpt-5.4`             | No             | No     | texto, imagen          | bajo, medio, alto, xalto  |
@@ -284,7 +276,7 @@ El arnés incluido actual es `@openai/codex` `0.130.0`. Un sondeo `model/list` c
 | `gpt-5.3-codex-spark` | No             | No     | texto                  | bajo, medio, alto, xalto  |
 | `gpt-5.2`             | No             | No     | texto, imagen          | bajo, medio, alto, xalto  |
 
-Los modelos ocultos pueden ser devueltos por el catálogo del servidor de aplicaciones para flujos internos o especializados, pero no son opciones normales del selector de modelos.
+Los modelos ocultos pueden ser devueltos por el catálogo del servidor de la aplicación para flujos internos o especializados, pero no son opciones normales del selector de modelos.
 
 Ajuste el descubrimiento bajo `plugins.entries.codex.config.discovery`:
 
@@ -306,7 +298,7 @@ Ajuste el descubrimiento bajo `plugins.entries.codex.config.discovery`:
 }
 ```
 
-Desactive el descubrimiento cuando desee que el inicio evite sondear Codex y usar solo el catálogo de reserva:
+Deshabilite el descubrimiento cuando desee que el inicio evite sondear Codex y use únicamente el catálogo de reserva (fallback):
 
 ```json5
 {
@@ -327,13 +319,13 @@ Desactive el descubrimiento cuando desee que el inicio evite sondear Codex y usa
 
 ## Archivos de arranque del espacio de trabajo
 
-Codex maneja `AGENTS.md` por sí mismo a través del descubrimiento nativo de documentos del proyecto. OpenClaw no escribe archivos de documentos de proyecto sintéticos de Codex ni depende de los nombres de archivo de reserva de Codex para los archivos de persona, porque las reservas de Codex solo se aplican cuando `AGENTS.md` falta.
+Codex maneja `AGENTS.md` por sí mismo a través del descubrimiento nativo de documentos del proyecto. OpenClaw no escribe archivos de documento del proyecto Codex sintéticos ni depende de los nombres de archivo de reserva de Codex para los archivos de persona, porque las reservas de Codex solo se aplican cuando falta `AGENTS.md`.
 
-Para la paridad del espacio de trabajo de OpenClaw, el arnés de Codex resuelve los otros archivos de arranque, incluyendo `SOUL.md`, `TOOLS.md`, `IDENTITY.md`, `USER.md`, `HEARTBEAT.md`, `BOOTSTRAP.md`, y `MEMORY.md` cuando están presentes, y los reenvía a través de las instrucciones del desarrollador de Codex en `thread/start` y `thread/resume`. Esto mantiene el contexto de persona y perfil del espacio de trabajo visible en el carril nativo de conformación de comportamiento de Codex sin duplicar `AGENTS.md`.
+Para la paridad del espacio de trabajo de OpenClaw, el arnés de Codex resuelve los otros archivos de arranque. `SOUL.md`, `IDENTITY.md`, `TOOLS.md` y `USER.md` se reenvían como instrucciones de desarrollador de OpenClaw Codex porque definen el agente activo, la orientación del espacio de trabajo disponible y el perfil de usuario. El contenido de `HEARTBEAT.md` no se inyecta; los turnos de latido obtienen un puntero en modo de colaboración para leer el archivo cuando existe y no está vacío. `BOOTSTRAP.md` y `MEMORY.md`, cuando están presentes, se reenvían como contexto de referencia de entrada de turno de OpenClaw.
 
-## Invalidaciones de entorno
+## Sobrescrituras de entorno
 
-Las invalidaciones de entorno siguen disponibles para pruebas locales:
+Las sobrescrituras de entorno siguen disponibles para pruebas locales:
 
 - `OPENCLAW_CODEX_APP_SERVER_BIN`
 - `OPENCLAW_CODEX_APP_SERVER_ARGS`
@@ -341,15 +333,18 @@ Las invalidaciones de entorno siguen disponibles para pruebas locales:
 - `OPENCLAW_CODEX_APP_SERVER_APPROVAL_POLICY`
 - `OPENCLAW_CODEX_APP_SERVER_SANDBOX`
 
-`OPENCLAW_CODEX_APP_SERVER_BIN` omite el binario administrado cuando `appServer.command` no está establecido.
+`OPENCLAW_CODEX_APP_SERVER_BIN` omite el binario administrado cuando
+`appServer.command` no está establecido.
 
-`OPENCLAW_CODEX_APP_SERVER_GUARDIAN=1` se eliminó. Use `plugins.entries.codex.config.appServer.mode: "guardian"` en su lugar, o `OPENCLAW_CODEX_APP_SERVER_MODE=guardian` para pruebas locales únicas. Se prefiere la configuración para despliegues repetibles porque mantiene el comportamiento del complemento en el mismo archivo revisado que el resto de la configuración del arnés de Codex.
+`OPENCLAW_CODEX_APP_SERVER_GUARDIAN=1` se eliminó. Use
+`plugins.entries.codex.config.appServer.mode: "guardian"` en su lugar, o
+`OPENCLAW_CODEX_APP_SERVER_MODE=guardian` para pruebas locales puntuales. Se prefiere la configuración para despliegues repetibles porque mantiene el comportamiento del complemento en el mismo archivo revisado que el resto de la configuración del arnés de Codex.
 
 ## Relacionado
 
 - [Arnés de Codex](/es/plugins/codex-harness)
 - [Tiempo de ejecución del arnés de Codex](/es/plugins/codex-harness-runtime)
 - [Complementos nativos de Codex](/es/plugins/codex-native-plugins)
-- [Uso de computadora de Codex](/es/plugins/codex-computer-use)
+- [Uso del ordenador de Codex](/es/plugins/codex-computer-use)
 - [Proveedor OpenAI](/es/providers/openai)
 - [Referencia de configuración](/es/gateway/configuration-reference)

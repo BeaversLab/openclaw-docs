@@ -600,17 +600,20 @@ OPENCLAW_LIVE_TEST=1 OPENCLAW_LIVE_OLLAMA_IMAGE=1 \
   </Accordion>
 
   <Accordion title="精简本地模型配置">
-    一些本地模型可以回答简单的提示词，但在处理完整的代理工具界面时会很吃力。在更改全局运行时设置之前，请先尝试限制工具和上下文。
+    某些本地模型可以回答简单的提示词，但在处理完整的代理工具界面时会遇到困难。首先尝试限制工具和上下文，然后再更改全局运行时设置。
 
     ```json5
     {
       agents: {
-        defaults: {
-          experimental: {
-            localModelLean: true,
+        list: [
+          {
+            id: "local",
+            experimental: {
+              localModelLean: true,
+            },
+            model: { primary: "ollama/gemma4" },
           },
-          model: { primary: "ollama/gemma4" },
-        },
+        ],
       },
       models: {
         providers: {
@@ -634,8 +637,8 @@ OPENCLAW_LIVE_TEST=1 OPENCLAW_LIVE_OLLAMA_IMAGE=1 \
     }
     ```
 
-    仅当模型或服务器在工具架构上稳定失败时才使用 `compat.supportsTools: false`。它以牺牲代理能力为代价来换取稳定性。
-    `localModelLean` 会从代理界面中移除浏览器、cron 和消息工具，但它不会更改 Ollama 的运行时上下文或思考模式。对于容易循环或将其响应预算浪费在隐藏推理上的小型 Qwen 风格思考模型，请将其与显式的 `params.num_ctx` 和 `params.thinking: false` 结合使用。
+    仅当模型或服务器在工具架构上可靠地失败时，才使用 `compat.supportsTools: false`。它以牺牲代理能力为代价换取稳定性。
+    `localModelLean` 会从代理界面中移除浏览器、cron 和消息工具，但它不会更改 Ollama 的运行时上下文或思考模式。对于存在循环或将响应预算用于隐藏推理的小型 Qwen 风格思考模型，请将其与显式的 `params.num_ctx` 和 `params.thinking: false` 搭配使用。
 
   </Accordion>
 </AccordionGroup>

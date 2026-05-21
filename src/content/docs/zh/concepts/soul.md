@@ -99,11 +99,11 @@ Save the new `SOUL.md`. Welcome to having a personality.
 ## 相关
 
 <CardGroup cols={2}>
-  <Card title="代理工作区" href="/zh/concepts/agent-workspace" icon="folder-open">
-    OpenClaw 注入到系统提示中的工作区文件。
+  <Card title="Agent workspace" href="/zh/concepts/agent-workspace" icon="folder-open" OpenClaw>
+    OpenClaw 注入到模型上下文中的工作区文件。
   </Card>
-  <Card title="系统提示" href="/zh/concepts/system-prompt" icon="message-lines">
-    `SOUL.md` 如何组合到每轮系统提示中。
+  <Card title="System prompt" href="/zh/concepts/system-prompt" icon="message-lines">
+    `SOUL.md`OpenClaw 如何组合到 OpenClaw 和 Codex 运行时上下文中。
   </Card>
   <Card title="SOUL.md 模板" href="/zh/reference/templates/SOUL" icon="file-lines">
     个性文件的起始模板。

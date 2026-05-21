@@ -280,16 +280,16 @@ Sub-agents 是从现有 agent 运行中生成的后台 agent 运行。
 ### 允许列表
 
 <ParamField path="agents.list[].subagents.allowAgents" type="string[]">
-  可通过显式 `agentId` 定位的 agent id 列表（`["*"]` 表示允许任意）。默认值：仅请求者 agent。如果您设置了列表，但仍希望请求者通过 `agentId` 生成自身，请将请求者 id 包含在列表中。
+  可通过显式 `agentId` 定位的代理 ID 列表（`["*"]` 允许任何已配置的目标）。默认值：仅限请求者代理。如果您设置了列表并仍希望请求者使用 `agentId` 生成自身，请将请求者 ID 包含在列表中。
 </ParamField>
 <ParamField path="agents.defaults.subagents.allowAgents" type="string[]">
-  当请求者 agent 未设置其自己的 `subagents.allowAgents` 时使用的默认目标 agent 允许列表。
+  当请求者代理未设置其自己的 `subagents.allowAgents` 时使用的默认目标代理允许列表。
 </ParamField>
 <ParamField path="agents.defaults.subagents.requireAgentId" type="boolean" default="false">
-  阻止省略 `agentId` 的 `sessions_spawn` 调用（强制显式配置文件选择）。Per-agent 覆盖：`agents.list[].subagents.requireAgentId`。
+  阻止省略 `agentId` 的 `sessions_spawn` 调用（强制进行显式配置文件选择）。每代理覆盖：`agents.list[].subagents.requireAgentId`。
 </ParamField>
 <ParamField path="agents.defaults.subagents.announceTimeoutMs" type="number" default="120000">
-  网关 `agent` 公告传递尝试的每次调用超时。值为正整数毫秒，并限制为平台安全的计时器最大值。瞬态重试可能会使总公告等待时间比配置的一次超时更长。
+  网关 `agent` 公告传递尝试的每次调用超时。值为正整数毫秒，并会被限制为平台安全计时器的最大值。瞬态重试可能会使总公告等待时间超过一个配置的超时时间。
 </ParamField>
 
 如果请求者会话处于沙箱隔离状态，`sessions_spawn` 将拒绝以非沙箱隔离方式运行的目标。

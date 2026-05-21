@@ -13,7 +13,7 @@ Administra la superficie de control del navegador de OpenClaw y ejecuta acciones
 
 Relacionado:
 
-- Herramienta y API del navegador: [Browser tool](/es/tools/browser)
+- Herramienta de navegador + API: [Herramienta de navegador](/es/tools/browser)
 
 ## Indicadores comunes
 
@@ -48,7 +48,7 @@ openclaw browser --browser-profile openclaw tabs
 openclaw browser --browser-profile openclaw open https://example.com
 ```
 
-Guía detallada: [Browser troubleshooting](/es/tools/browser#cdp-startup-failure-vs-navigation-ssrf-block)
+Guía detallada: [Solución de problemas del navegador](/es/tools/browser#cdp-startup-failure-vs-navigation-ssrf-block)
 
 ## Ciclo de vida
 
@@ -100,7 +100,7 @@ Un bloque raíz explícito `browser`, por ejemplo `browser.enabled=true` o
 `browser.profiles.<name>`, también activa el complemento del navegador incluido bajo una
 lista blanca de complementos restrictiva.
 
-Relacionado: [Browser tool](/es/tools/browser#missing-browser-command-or-tool)
+Relacionado: [Herramienta de navegador](/es/tools/browser#missing-browser-command-or-tool)
 
 ## Perfiles
 
@@ -191,13 +191,17 @@ openclaw browser select <ref> OptionA OptionB
 openclaw browser fill --fields '[{"ref":"1","value":"Ada"}]'
 openclaw browser wait --text "Done"
 openclaw browser evaluate --fn '(el) => el.textContent' --ref <ref>
+openclaw browser evaluate --timeout-ms 30000 --fn 'async () => { await window.ready; return true; }'
 ```
 
-Las respuestas de las acciones devuelven el `targetId` actual sin procesar después del reemplazo de la página
-activado por la acción cuando OpenClaw puede probar la pestaña de reemplazo. Los scripts deben seguir
-almacenando y pasando `suggestedTargetId`/etiquetas para flujos de trabajo de larga duración.
+Use `evaluate --timeout-ms <ms>` cuando la función del lado de la página pueda necesitar más
+tiempo que el tiempo de espera de evaluación predeterminado.
 
-Auxiliares de archivo y cuadros de diálogo:
+Las respuestas de acciones devuelven el `targetId` sin procesar actual después del reemplazo
+de la página activado por la acción cuando OpenClaw puede probar la pestaña de reemplazo.
+Los scripts aún deben almacenar y pasar `suggestedTargetId`/etiquetas para flujos de trabajo de larga duración.
+
+Auxiliares de archivos + diálogos:
 
 ```bash
 openclaw browser upload /tmp/openclaw/uploads/file.pdf --ref <ref>
@@ -207,10 +211,10 @@ openclaw browser dialog --accept
 openclaw browser dialog --dismiss --dialog-id d1
 ```
 
-Los perfiles de Chrome administrados guardan las descargas desencadenadas por clics ordinarios en el directorio
-de descargas de OpenClaw (`/tmp/openclaw/downloads` de forma predeterminada, o la raíz temporal
-configurada). Use `waitfordownload` o `download` cuando el agente necesite esperar un
-archivo específico y devolver su ruta; esos esperadores explícitos son dueños de la siguiente descarga.
+Los perfiles administrados de Chrome guardan las descargas activadas por clics ordinarios en el
+directorio de descargas de OpenClaw (`/tmp/openclaw/downloads` de forma predeterminada, o la raíz
+temporal configurada). Use `waitfordownload` o `download` cuando el agente necesite esperar un
+archivo específico y devolver su ruta; esos esperas explícitas son dueñas de la siguiente descarga.
 Cuando una acción abre un diálogo modal, la respuesta de la acción devuelve
 `blockedByDialog` con `browserState.dialogs.pending`; pase `--dialog-id` para
 responderlo directamente. Los diálogos manejados fuera de OpenClaw aparecen en
@@ -218,7 +222,7 @@ responderlo directamente. Los diálogos manejados fuera de OpenClaw aparecen en
 
 ## Estado y almacenamiento
 
-Ventanilla + emulación:
+Ventana + emulación:
 
 ```bash
 openclaw browser resize 1280 720
@@ -259,7 +263,7 @@ openclaw browser trace stop --out trace.zip
 
 ## Chrome existente a través de MCP
 
-Use el perfil incorporado `user`, o cree su propio perfil `existing-session`:
+Use el perfil integrado `user`, o cree su propio perfil `existing-session`:
 
 ```bash
 openclaw browser --browser-profile user tabs
@@ -274,24 +278,24 @@ Límites actuales de sesión existente:
 
 - las acciones impulsadas por instantáneas usan referencias, no selectores CSS
 - `browser.actionTimeoutMs` establece de forma predeterminada las solicitudes `act` admitidas a 60000 ms cuando
-  los llamadores omiten `timeoutMs`; `timeoutMs` por llamada sigue teniendo prioridad.
+  los que llaman omiten `timeoutMs`; el `timeoutMs` por llamada todavía tiene prioridad.
 - `click` es solo clic izquierdo
 - `type` no admite `slowly=true`
 - `press` no admite `delayMs`
 - `hover`, `scrollintoview`, `drag`, `select`, `fill` y `evaluate` rechazan
   las anulaciones de tiempo de espera por llamada
-- `select` admite un solo valor
+- `select` solo admite un valor
 - `wait --load networkidle` no es compatible
 - las cargas de archivos requieren `--ref` / `--input-ref`, no admiten CSS
   `--element` y actualmente admiten un archivo a la vez
-- los enlaces de diálogo no admiten `--timeout`
+- los ganchos de diálogo no admiten `--timeout`
 - las capturas de pantalla admiten capturas de página y `--ref`, pero no CSS `--element`
-- `responsebody`, la interceptación de descargas, la exportación de PDF y las acciones por lotes aún
+- `responsebody`, la intercepción de descargas, la exportación de PDF y las acciones por lotes aún
   requieren un navegador administrado o un perfil CDP sin procesar
 
 ## Control remoto del navegador (proxy de host de nodo)
 
-Si el Gateway se ejecuta en una máquina diferente a la del navegador, ejecute un **node host** en la máquina que tenga Chrome/Brave/Edge/Chromium. El Gateway será un proxy de las acciones del navegador hacia ese nodo (no se requiere un servidor de control de navegador separado).
+Si Gateway se ejecuta en una máquina diferente a la del navegador, ejecute un **node host** en la máquina que tenga Chrome/Brave/Edge/Chromium. Gateway transmitirá las acciones del navegador a ese nodo (no se requiere un servidor de control de navegador separado).
 
 Use `gateway.nodes.browser.mode` para controlar el enrutamiento automático y `gateway.nodes.browser.node` para fijar un nodo específico si hay varios conectados.
 

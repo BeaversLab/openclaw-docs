@@ -13,7 +13,7 @@ title: "Browser"
 
 相关内容：
 
-- 浏览器工具 + API：[Browser 工具](API/en/tools/browser)
+- Browser 工具 + API：[Browser 工具](API/en/tools/browser)
 
 ## 通用标志
 
@@ -176,10 +176,12 @@ openclaw browser select <ref> OptionA OptionB
 openclaw browser fill --fields '[{"ref":"1","value":"Ada"}]'
 openclaw browser wait --text "Done"
 openclaw browser evaluate --fn '(el) => el.textContent' --ref <ref>
+openclaw browser evaluate --timeout-ms 30000 --fn 'async () => { await window.ready; return true; }'
 ```
 
-当 OpenClaw 能够证明选项卡已被替换时，操作响应会在操作触发的页面替换后返回当前的原始 `targetId`。脚本仍应
-存储并传递 `suggestedTargetId`/labels 用于长期工作流。
+当页面端函数可能需要比默认评估超时更长的时间时，请使用 `evaluate --timeout-ms <ms>`。
+
+当 OpenClaw 能够证明替换标签页时，操作响应会在操作触发的页面替换后返回当前的原始 `targetId`OpenClaw。脚本仍应存储并传递 `suggestedTargetId`/标签以便进行长期运行的工作流。
 
 文件 + 对话框辅助工具：
 
@@ -191,14 +193,7 @@ openclaw browser dialog --accept
 openclaw browser dialog --dismiss --dialog-id d1
 ```
 
-托管的 Chrome 配置文件会将普通的点击触发的下载保存到 OpenClaw
-下载目录中（默认为 OpenClaw`/tmp/openclaw/downloads`，或配置的临时
-根目录）。当代理需要等待
-特定文件并返回其路径时，请使用 `waitfordownload` 或 `download`；这些显式的等待器拥有下一个下载。
-当操作打开模态对话框时，操作响应将返回
-带有 `browserState.dialogs.pending` 的 `blockedByDialog`；传递 `--dialog-id`OpenClaw 以
-直接回答它。在 OpenClaw 之外处理的对话框显示在
-`browserState.dialogs.recent` 下。
+托管的 Chrome 配置文件会将普通的点击触发下载保存到 OpenClaw 下载目录中（默认为 OpenClaw`/tmp/openclaw/downloads`，或配置的临时根目录）。当代理需要等待特定文件并返回其路径时，请使用 `waitfordownload` 或 `download`；这些显式的等待程序拥有下一次下载。当操作打开模态对话框时，操作响应会返回带有 `browserState.dialogs.pending` 的 `blockedByDialog`；请传递 `--dialog-id`OpenClaw 以直接回答。在 OpenClaw 之外处理的对话框显示在 `browserState.dialogs.recent` 下。
 
 ## 状态和存储
 
@@ -241,7 +236,7 @@ openclaw browser trace start
 openclaw browser trace stop --out trace.zip
 ```
 
-## 通过 MCP 连接现有的 Chrome
+## 通过 MCP 连接现有 Chrome
 
 使用内置的 `user` 配置文件，或创建您自己的 `existing-session` 配置文件：
 
@@ -252,35 +247,30 @@ openclaw browser create-profile --name brave-live --driver existing-session --us
 openclaw browser --browser-profile chrome-live tabs
 ```
 
-此路径仅限主机使用。对于 Docker、无头服务器、Browserless 或其他远程设置，请改用 CDP 配置文件。
+此路径仅限主机。对于 Docker、无头服务器、Browserless 或其他远程设置，请改用 CDP 配置文件。
 
 当前现有会话的限制：
 
 - 快照驱动的操作使用引用，而不是 CSS 选择器
-- 当调用方省略 `timeoutMs` 时，
-  `browser.actionTimeoutMs` 默认将支持的 `act` 请求设为 60000 毫秒；
-  每次调用的 `timeoutMs` 仍然优先。
-- `click` 仅支持左键单击
+- 当调用者省略 `timeoutMs` 时，`browser.actionTimeoutMs` 默认将支持的 `act` 请求限制为 60000 毫秒；每次调用的 `timeoutMs` 仍然优先。
+- `click` 仅支持左键点击
 - `type` 不支持 `slowly=true`
 - `press` 不支持 `delayMs`
-- `hover`、`scrollintoview`、`drag`、`select`、`fill` 和 `evaluate` 拒绝
-  每次调用的超时覆盖
+- `hover`、`scrollintoview`、`drag`、`select`、`fill` 和 `evaluate` 拒绝每次调用的超时覆盖
 - `select` 仅支持一个值
 - 不支持 `wait --load networkidle`
-- 文件上传需要 `--ref` / `--input-ref`，不支持 CSS
-  `--element`，并且目前一次支持一个文件
-- 对话框挂钩不支持 `--timeout`
+- 文件上传需要 `--ref` / `--input-ref`，不支持 CSS `--element`，并且目前一次仅支持一个文件
+- 对话框钩子不支持 `--timeout`
 - 屏幕截图支持页面捕获和 `--ref`，但不支持 CSS `--element`
-- `responsebody`、下载拦截、PDF 导出和批量操作仍然
-  需要托管浏览器或原始 CDP 配置文件
+- `responsebody`、下载拦截、PDF 导出和批量操作仍然需要托管浏览器或原始 CDP 配置文件
 
 ## 远程浏览器控制（节点主机代理）
 
-如果 Gateway(网关) 与浏览器在不同的机器上运行，请在安装了 Chrome/Brave/Edge/Chromium 的机器上运行 **节点主机**。Gateway(网关) 将把浏览器操作代理到该节点（不需要单独的浏览器控制服务器）。
+如果 Gateway(网关) 与浏览器运行在不同的机器上，请在安装了 Chrome/Brave/Edge/Chromium 的机器上运行 **node host**。Gateway(网关) 将把浏览器操作代理到该节点（不需要单独的浏览器控制服务器）。
 
-如果连接了多个节点，请使用 `gateway.nodes.browser.mode` 控制自动路由，并使用 `gateway.nodes.browser.node` 固定特定节点。
+使用 `gateway.nodes.browser.mode` 控制自动路由，并在连接了多个节点时使用 `gateway.nodes.browser.node` 固定特定节点。
 
-安全性和远程设置：[浏览器工具](/zh/tools/browser)、[远程访问](/zh/gateway/remoteTailscale)、[Tailscale](/zh/gateway/tailscale)、[安全性](/zh/gateway/security)
+安全 + 远程设置：[Browser 工具](/zh/tools/browser/en/gateway/security/en/gateway/tailscaleTailscale/en/gateway/remote)、[Remote access](%%PH:LINK_TARGET:121:4cbf6956%)、[Tailscale](%%PH:LINK_TARGET:122:b66c7fa6%)、[Security](%%PH:LINK_TARGET:123:8107b70f%)
 
 ## 相关
 

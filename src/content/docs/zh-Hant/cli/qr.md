@@ -35,17 +35,17 @@ openclaw qr --url wss://gateway.example/ws
 
 - `--token` 和 `--password` 互斥。
 - 設定碼本身現在攜帶的是不透明的短期 `bootstrapToken`，而非共用的 Gateway 權杖/密碼。
-- 內建 setup-code 引導程序僅適用於節點。批准後，主要節點令牌會放置於 `scopes: []`。
-- 內建的 setup-code 流程不會返回移交的操作員令牌；操作員存取需要單獨的已批准操作員配對或令牌流程。
-- 對於 Tailscale/公開 `ws://` 閘道 URL，行動裝置配對會因安全限制而失敗。透過 `ws://` 仍支援私人 LAN 位址和 `.local` Bonjour 主機，但 Tailscale/公開行動路由應使用 Tailscale Serve/Funnel 或 `wss://` 閘道 URL。
+- 內建的 setup-code 啟動程式會傳回主要 `node` token，其中包含 `scopes: []` 加上一個受信任的移動裝置入職用有限 `operator` 移交 token。
+- 移交的操作員 token 僅限於 `operator.approvals`、`operator.read` 和 `operator.write`；`operator.admin`、`operator.pairing` 和 `operator.talk.secrets` 需要單獨的已核准操作員配對或 token 流程。
+- 針對 Tailscale/公用 `ws://` gateway URL，移動裝置配對會以封閉式失敗。私用 LAN 位址和 `.local` Bonjour 主機在 `ws://` 上仍受支援，但 Tailscale/公用移動路由應使用 Tailscale Serve/Funnel 或 `wss://` gateway URL。
 - 使用 `--remote` 時，OpenClaw 需要 `gateway.remote.url` 或
   `gateway.tailscale.mode=serve|funnel`。
-- 使用 `--remote` 時，如果有效啟用的遠端憑證被設定為 SecretRefs 且您未傳遞 `--token` 或 `--password`，該指令會從啟用的閘道快照中解析它們。如果閘道無法使用，該指令會快速失敗。
-- 若未使用 `--remote`，當未傳遞 CLI 驗證覆寫時，會解析本地閘道驗證 SecretRefs：
-  - 當令牌驗證可以勝出時（明確的 `gateway.auth.mode="token"` 或推斷模式，即沒有密碼來源勝出），會解析 `gateway.auth.token`。
-  - 當密碼驗證可以勝出時（明確的 `gateway.auth.mode="password"` 或推斷模式，且來自 auth/env 的令牌未勝出），會解析 `gateway.auth.password`。
-- 如果同時設定了 `gateway.auth.token` 和 `gateway.auth.password`（包括 SecretRefs）且未設定 `gateway.auth.mode`，則 setup-code 解析將會失敗，直到明確設定模式為止。
-- 閘道版本差異說明：此指令路徑需要支援 `secrets.resolve` 的閘道；較舊的閘道會返回 unknown-method 錯誤。
+- 使用 `--remote` 時，如果有效作用中的遠端憑證設定為 SecretRefs 且您未傳遞 `--token` 或 `--password`，指令會從作用中的 gateway 快照解析它們。如果 gateway 無法使用，指令會快速失敗。
+- 若未使用 `--remote`，當未傳遞 CLI 認證覆寫時，會解析本機 gateway 認證 SecretRefs：
+  - 當 token 認證可以勝出時（明確的 `gateway.auth.mode="token"` 或沒有密碼來源勝出的推斷模式），會解析 `gateway.auth.token`。
+  - 當密碼認證可以勝出時（明確的 `gateway.auth.mode="password"` 或沒有來自 auth/env 的勝出 token 的推斷模式），會解析 `gateway.auth.password`。
+- 如果同時設定了 `gateway.auth.token` 和 `gateway.auth.password`（包括 SecretRefs）且未設定 `gateway.auth.mode`，則 setup-code 解析會失敗，直到明確設定模式為止。
+- Gateway 版本差異說明：此指令路徑需要支援 `secrets.resolve` 的 gateway；較舊的 gateway 會傳回 unknown-method 錯誤。
 - 掃描後，使用以下方式批准裝置配對：
   - `openclaw devices list`
   - `openclaw devices approve <requestId>`

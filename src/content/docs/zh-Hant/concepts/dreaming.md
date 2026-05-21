@@ -103,23 +103,29 @@ Dreaming 還會在 `DREAMS.md` 中保留敘事性的 **Dream Diary**（夢境日
 
 輕度和快速動眼期（REM）階段的命中會從 `memory/.dreams/phase-signals.json` 增加一個小幅的、隨時間遞減的加成。
 
+## QA 影子試行報告覆蓋範圍
+
+QA Lab 包含一個僅報告的場景，用於探索未來的夢境影子試行如何在提升候選記憶之前對其進行審查。該場景要求代理比較基準答案與可以使用候選記憶的答案，然後撰寫包含裁決、理由和風險標誌的本地報告。
+
+此覆蓋範圍僅限於 QA。它驗證報告工件與 `MEMORY.md` 保持分離，並且代理不聲稱候選者已被提升。它不添加生產影子試行行為或更改深層階段提升引擎。
+
 ## 排程
 
-啟用後，`memory-core` 會自動管理一個 cron 任務以執行完整的夢境檢視。每次檢視會按順序執行各階段：輕度 → REM → 深度。
+啟用後，`memory-core` 會自動管理一個 cron 任務以執行完整的夢境掃描。每次掃描按順序運行各階段：light → REM → deep。
 
-掃描範圍包括主要執行時期工作區和任何已配置的代理工作區，並根據路徑去重，因此子代理工作區的擴散不會排除主要代理的 `DREAMS.md` 和記憶狀態。
+掃描包括主要運行時工作區和任何已配置的代理工作區，按路徑去重，因此子代理工作區擴展不會排除主代理的 `DREAMS.md` 和記憶狀態。
 
-預設頻率行為：
+預設節奏行為：
 
 | 設定                 | 預設值      |
 | -------------------- | ----------- |
 | `dreaming.frequency` | `0 3 * * *` |
 | `dreaming.model`     | 預設模型    |
 
-## 快速開始
+## 快速入門
 
 <Tabs>
-  <Tab title="啟用 dreaming">
+  <Tab title="啟用夢境">
     ```json
     {
       "plugins": {
@@ -169,7 +175,7 @@ Dreaming 還會在 `DREAMS.md` 中保留敘事性的 **Dream Diary**（夢境日
 ## CLI 工作流程
 
 <Tabs>
-  <Tab title="升級預覽 / 套用">
+  <Tab title="提升預覽 / 套用">
     ```bash
     openclaw memory promote
     openclaw memory promote --apply
@@ -177,11 +183,11 @@ Dreaming 還會在 `DREAMS.md` 中保留敘事性的 **Dream Diary**（夢境日
     openclaw memory status --deep
     ```
 
-    手動 `memory promote` 預設使用深層階段的閾值，除非使用 CLI 旗標覆寫。
+    手動 `memory promote` 預設使用深層階段閾值，除非使用 CLI 旗標覆寫。
 
   </Tab>
-  <Tab title="解釋升級">
-    解釋為什麼特定候選會或不會升級：
+  <Tab title="解釋提升">
+    解釋為什麼特定候選者會或不會被提升：
 
     ```bash
     openclaw memory promote-explain "router vlan"
@@ -189,8 +195,8 @@ Dreaming 還會在 `DREAMS.md` 中保留敘事性的 **Dream Diary**（夢境日
     ```
 
   </Tab>
-  <Tab title="REM 馬具預覽">
-    預覽 REM 反思、候選事實和深度提升輸出，無需寫入任何內容：
+  <Tab title="REM 管線預覽">
+    預覽 REM 反思、候選事實和深層提升輸出，而不寫入任何內容：
 
     ```bash
     openclaw memory rem-harness
@@ -208,30 +214,30 @@ Dreaming 還會在 `DREAMS.md` 中保留敘事性的 **Dream Diary**（夢境日
   啟用或停用 dreaming 掃描。
 </ParamField>
 <ParamField path="frequency" type="string" default="0 3 * * *">
-  完整 dreaming 掃描的 Cron 排程頻率。
+  完整 dreaming 掃描的 Cron 頻率。
 </ParamField>
 <ParamField path="model" type="string">
-  可選的 Dream Diary 子代理模型覆寫。當同時設定子代理 `allowedModels` 允許清單時，請使用標準的 `provider/model` 值。
+  選用的 Dream Diary 子代理模型覆寫。當同時設定子代理 `allowedModels` 允許清單時，請使用標準 `provider/model` 值。
 </ParamField>
 
-<Warning>`dreaming.model` 需要 `plugins.entries.memory-core.subagent.allowModelOverride: true`。若要限制它，請同時設定 `plugins.entries.memory-core.subagent.allowedModels`。信任或允許清單失敗會保持可見狀態，而不是靜默回退；重試僅涵蓋模型不可用的錯誤。</Warning>
+<Warning>`dreaming.model` 需要 `plugins.entries.memory-core.subagent.allowModelOverride: true`。若要限制它，請同時設定 `plugins.entries.memory-core.subagent.allowedModels`。信任或允許清單失敗會保持可見，而不是靜默回退；重試僅涵蓋模型不可用的錯誤。</Warning>
 
-<Note>階段策略、閾值和儲存行為是內部實作細節（非面向使用者的設定）。如需完整的金鑰列表，請參閱 [Memory configuration reference](/zh-Hant/reference/memory-config#dreaming)。</Note>
+<Note>階段策略、閾值和儲存行為是內部實作細節（非使用者面向的設定）。請參閱 [記憶體設定參考](/zh-Hant/reference/memory-config#dreaming) 以取得完整的金鑰清單。</Note>
 
 ## Dreams UI
 
-啟用後，Gateway 的 **Dreams** 分頁會顯示：
+啟用時，Gateway 的 **Dreams** 分頁會顯示：
 
 - 目前的 dreaming 啟用狀態
-- 階段層級的狀態和受管理掃描的存在
-- 短期、扎根、訊號和今日提升的計數
-- 下次排程執行的時間
-- 用於暫存歷史重播項目的專屬扎根 Scene 通道
+- 階段層級的狀態和受控掃描的存在情況
+- 短期、落地、訊號以及今日升級的計數
+- 下一次排程執行的時間
+- 專用於暫存歷史重播項目的落地 Scene 通道
 - 由 `doctor.memory.dreamDiary` 支援的可展開 Dream Diary 閱讀器
 
-## Dreaming 永不執行：狀態顯示為封鎖
+## Dreaming 永遠不會執行：狀態顯示已封鎖
 
-如果 `openclaw memory status` 回報 `Dreaming status: blocked`，表示受管理的 cron 存在，但預設代理的心跳並未觸發。請檢查預設代理已啟用心跳，且其目標不是 `none`，然後在下一個心跳間隔後再次執行 `openclaw memory status --deep`。
+如果 `openclaw memory status` 回報 `Dreaming status: blocked`，表示受控 cron 存在但預設代理程式心跳未觸發。請檢查預設代理程式是否已啟用心跳，且其目標不是 `none`，然後在下一個心跳間隔後再次執行 `openclaw memory status --deep`。
 
 ## 相關
 

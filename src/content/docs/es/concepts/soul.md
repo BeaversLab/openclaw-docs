@@ -105,10 +105,10 @@ Ser directo es bueno. Ser molesto no.
 
 <CardGroup cols={2}>
   <Card title="Espacio de trabajo del agente" href="/es/concepts/agent-workspace" icon="folder-open">
-    Archivos del espacio de trabajo que OpenClaw inyecta en el prompt del sistema.
+    Archivos del espacio de trabajo que OpenClaw inyecta en el contexto del modelo.
   </Card>
   <Card title="Prompt del sistema" href="/es/concepts/system-prompt" icon="message-lines">
-    Cómo se compone `SOUL.md` en el prompt del sistema por turno.
+    Cómo se compone `SOUL.md` en el contexto de ejecución de OpenClaw y Codex.
   </Card>
   <Card title="Plantilla SOUL.md" href="/es/reference/templates/SOUL" icon="file-lines">
     Plantilla de inicio para un archivo de personalidad.

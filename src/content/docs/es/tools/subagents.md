@@ -297,13 +297,13 @@ Consulte [Referencia de configuración](/es/gateway/configuration-reference) y
 ### Lista de permitidos
 
 <ParamField path="agents.list[].subagents.allowAgents" type="string[]">
-  Lista de ids de agentes que pueden ser objetivo mediante `agentId` explícito (`["*"]` permite cualquiera). Predeterminado: solo el agente solicitante. Si estableces una lista y aún quieres que el solicitante se genere a sí mismo con `agentId`, incluye el id del solicitante en la lista.
+  Lista de IDs de agentes que pueden ser objetivo mediante `agentId` explícito (`["*"]` permite cualquier objetivo configurado). Predeterminado: solo el agente solicitante. Si estableces una lista y aún deseas que el solicitante se genere a sí mismo con `agentId`, incluye el ID del solicitante en la lista.
 </ParamField>
 <ParamField path="agents.defaults.subagents.allowAgents" type="string[]">
-  Lista blanca de agente objetivo predeterminada que se usa cuando el agente solicitante no establece su propio `subagents.allowAgents`.
+  Lista blanca de agentes objetivo predeterminada que se utiliza cuando el agente solicitante no establece su propia `subagents.allowAgents`.
 </ParamField>
 <ParamField path="agents.defaults.subagents.requireAgentId" type="boolean" default="false">
-  Bloquea llamadas a `sessions_spawn` que omiten `agentId` (fuerza la selección explícita de perfil). Sobrescritura por agente: `agents.list[].subagents.requireAgentId`.
+  Bloquea las llamadas a `sessions_spawn` que omiten `agentId` (fuerza la selección explícita de perfil). Anulación por agente: `agents.list[].subagents.requireAgentId`.
 </ParamField>
 <ParamField path="agents.defaults.subagents.announceTimeoutMs" type="number" default="120000">
   Tiempo de espera por llamada para los intentos de entrega de anuncios de `agent` de la puerta de enlace. Los valores son milisegundos enteros positivos y se limitan al máximo seguro del temporizador de la plataforma. Los reintentos transitorios pueden hacer que la espera total del anuncio sea mayor que un tiempo de espera configurado.

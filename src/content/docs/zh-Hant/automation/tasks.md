@@ -97,8 +97,8 @@ sidebarTitle: "背景任務"
     由會話支援的 `image_generate`、`music_generate` 和 `video_generate` 執行也使用 `silent` 通知原則。它們仍會建立工作記錄，但完成狀態會作為內部喚醒交還給原始代理程式會話，以便代理程式能夠撰寫後續訊息並自行附加完成的媒體。產生媒體的完成事件需要訊息工具傳遞：代理程式必須使用 `message` 工具傳送完成的媒體，然後回覆 `NO_REPLY`。如果完成代理程式僅撰寫私有的最終回覆或遺漏媒體附件，OpenClaw 會將完成交接標記為失敗；它不會自動發布產生的媒體作為後備方案。
 
   </Accordion>
-  <Accordion title="並行媒體產生防護機制">
-    當由會話支援的媒體產生工作仍處於活動狀態時，該工具也會充當防護機制：在相同會話中重複呼叫 `image_generate`、`music_generate` 或 `video_generate` 將會傳回活動工作狀態，而不是啟動第二次並行產生。當您想從代理程式端明確查詢進度或狀態時，請使用 `action: "status"`。
+  <Accordion title="並行媒體生成防護機制">
+    當由會話支援的媒體生成任務仍處於活躍狀態時，媒體工具也充當防止意外重試的防護機制。針對相同提示詞重複呼叫 `image_generate` 會傳回相符的活躍任務狀態，而不同的圖片提示詞則可以啟動其自身的任務。`music_generate` 和 `video_generate` 的呼叫仍然會傳回該會話的活躍任務狀態，而不是啟動第二次並行生成。當您想要從代理程式端進行明確的進度/狀態查詢時，請使用 `action: "status"`。
   </Accordion>
   <Accordion title="什麼情況不會建立工作">
     - Heartbeat 週期——主會話；請參閱 [Heartbeat](/zh-Hant/gateway/heartbeat)

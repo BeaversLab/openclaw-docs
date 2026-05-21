@@ -13,7 +13,7 @@ title: "配對"
 1. **DM 配對**（誰被允許與機器人交談）
 2. **節點配對**（哪些設備/節點被允許加入閘道網路）
 
-安全背景：[Security](/zh-Hant/gateway/security)
+安全上下文：[Security](/zh-Hant/gateway/security)
 
 ## 1) DM 配對（入站聊天存取）
 
@@ -108,15 +108,22 @@ openclaw pairing approve telegram <CODE>
 
 該引導令牌攜帶內建的配對引導配置檔案：
 
-- 內建的設定檔僅允許 `node` 角色
-- 批准後，移交的 `node` token 保持 `scopes: []`
-- 內建的 setup-code 流程不會移交 `operator` token
-- 操作員存取需要單獨的已批准操作員配對或 token 流程
+- 內建設定檔僅允許全新的 QR/設定碼基準：
+  `node` 加上有界的 `operator` 移交
+- 移交的 `node` token 保持 `scopes: []`
+- 移交的 `operator` token 僅限於 `operator.approvals`、
+  `operator.read` 和 `operator.write`
+- `operator.admin` 和 `operator.pairing` 不會透過 QR/設定碼
+  引導授予；它們需要單獨的已核准操作員配對或 token 流程
 - 後續的 token 輪換/撤銷仍受設備的批准角色合約和呼叫者會話的操作員範圍限制
 
 在設定代碼有效時，請將其視為密碼處理。
 
-對於 Tailscale、公開或其他遠端行動裝置配對，請使用 Tailscale Serve/Funnel 或另一個 `wss://` Gateway URL。僅接受純文字 `ws://` 設定代碼用於回送、私有 LAN 位址、`.local` Bonjour 主機和 Android 模擬器主機。Tailnet CGNAT 位址、`.ts.net` 名稱和公開主機在發出 QR/設定代碼之前仍會失敗關閉。
+對於 Tailscale、公開或其他遠端行動裝置配對，請使用 Tailscale Serve/Funnel
+或其他 `wss://` Gateway URL。純文字 `ws://` 設定碼僅接受
+來自 loopback、私人 LAN 位址、`.local` Bonjour 主機和 Android
+模擬器主機。Tailnet CGNAT 位址、`.ts.net` 名稱和公開主機仍
+會在發行 QR/設定碼之前封閉失敗。
 
 ### 批准節點設備
 
@@ -126,11 +133,15 @@ openclaw devices approve <requestId>
 openclaw devices reject <requestId>
 ```
 
-當明確批准被拒絕時，因為批准的配對設備會話是以僅配對範圍開啟的，CLI 會使用 `operator.admin` 重試相同的請求。這允許現有的具有管理員能力的配對設備恢復新的 Control UI/瀏覽器配對，而無需手動編輯 `devices/paired.json`。閘道仍會驗證重試的連線；無法使用 `operator.admin` 進行驗證的 token 仍會被阻止。
+當明確核准被拒絕，因為核准的配對裝置會話是以僅配對範圍開啟時，CLI 會使用
+`operator.admin` 重試相同的請求。這讓現有的具備管理員能力的配對裝置可以在不需手動
+編輯 `devices/paired.json` 的情況下恢復新的 Control UI/瀏覽器配對。Gateway
+仍會驗證重試的連線；無法以 `operator.admin` 進行驗證的 token 仍會被封鎖。
 
-如果同一設備使用不同的驗證詳細資訊（例如不同的角色/範圍/公鑰）重試，則先前的待處理請求將被取代，並建立新的 `requestId`。
+如果同一裝置使用不同的驗證詳細資料（例如不同的角色/範圍/公開金鑰）重試，先前待處理的請求會被取代，並建立一個新的
+`requestId`。
 
-<Note>已配對的裝置不會在無聲無息中獲得更廣泛的存取權限。如果它重新連接並請求更多範圍或更廣泛的角色，OpenClaw 將保持現有的批准不變，並建立一個新的待處理升級請求。在您批准之前，請使用 `openclaw devices list` 比較目前批准的存取權限與新請求的存取權限。</Note>
+<Note>已配對的裝置不會靜默獲得更廣泛的存取權限。如果它重新連接並請求更多範圍或更廣泛的角色，OpenClaw 將保持現有的批准不變，並建立一個新的待處理升級請求。在您批准之前，請使用 `openclaw devices list` 比較目前批准的存取權限與新請求的存取權限。</Note>
 
 ### 選用的信任 CIDR 節點自動批准
 
@@ -149,30 +160,27 @@ openclaw devices reject <requestId>
 }
 ```
 
-這僅適用於沒有請求
-範圍的全新 `role: node` 配對請求。操作員、瀏覽器、Control UI 和 WebChat 用戶端仍需手動
-批准。角色、範圍、中繼資料和公鑰變更仍需手動
-批准。
+這僅適用於沒有請求範圍的全新 `role: node` 配對請求。操作員、瀏覽器、控制 UI 和 WebChat 用戶端仍需手動批准。角色、範圍、中繼資料和公開金鑰變更仍需手動批准。
 
 ### 節點配對狀態儲存
 
 儲存在 `~/.openclaw/devices/` 下：
 
-- `pending.json` （短期有效；待處理的請求會過期）
-- `paired.json` （已配對的裝置 + 權杖）
+- `pending.json`（短期；待處理請求會過期）
+- `paired.json`（已配對裝置 + 權杖）
 
 ### 備註
 
-- 舊版 `node.pair.*` API （CLI：`openclaw nodes pending|approve|reject|remove|rename`） 是一個
-  獨立的閘道擁有的配對儲存。WS 節點仍需要裝置配對。
+- 舊版 `node.pair.*` API（CLI：`openclaw nodes pending|approve|reject|remove|rename`) 是
+  一個獨立的閘道擁有的配對儲存庫。WS 節點仍需要裝置配對。
 - 配對記錄是已批准角色的持久性真實來源。作用中
   的裝置權杖保持綁定到該批准的角色集；在已批准角色之外的孤立權杖條目
   不會建立新的存取權限。
 
 ## 相關文件
 
-- 安全性模型 + 提示注入：[安全性](/zh-Hant/gateway/security)
-- 安全更新（執行 doctor）：[更新](/zh-Hant/install/updating)
+- 安全模型 + 提示詞注入：[Security](/zh-Hant/gateway/security)
+- 安全更新（執行 doctor）：[Updating](/zh-Hant/install/updating)
 - 頻道設定：
   - Telegram：[Telegram](/zh-Hant/channels/telegram)
   - WhatsApp：[WhatsApp](/zh-Hant/channels/whatsapp)
