@@ -121,7 +121,7 @@ Anthropic's current public docs:
     `anthropic/*` and put the execution backend in provider/model runtime policy.
 
     <Tip>
-    If you want the clearest billing path, use an Anthropic API key instead. OpenClaw also supports subscription-style options from [OpenAI Codex](/en/providers/openai), [Qwen Cloud](/en/providers/qwen), [MiniMax](/en/providers/minimax), and [Z.AI / GLM](/en/providers/glm).
+    If you want the clearest billing path, use an Anthropic API key instead. OpenClaw also supports subscription-style options from [OpenAI Codex](/en/providers/openai), [Qwen Cloud](/en/providers/qwen), [MiniMax](/en/providers/minimax), and [Z.AI / GLM](/en/providers/zai).
     </Tip>
 
   </Tab>

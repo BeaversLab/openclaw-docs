@@ -32,7 +32,6 @@ model as `provider/model`.
 - [DeepInfra](/en/providers/deepinfra)
 - [fal](/en/providers/fal)
 - [Fireworks](/en/providers/fireworks)
-- [GLM models](/en/providers/glm)
 - [MiniMax](/en/providers/minimax)
 - [Mistral](/en/providers/mistral)
 - [Moonshot AI (Kimi + Kimi Coding)](/en/providers/moonshot)
@@ -47,7 +46,7 @@ model as `provider/model`.
 - [Vercel AI Gateway](/en/providers/vercel-ai-gateway)
 - [Venice (Venice AI)](/en/providers/venice)
 - [xAI](/en/providers/xai)
-- [Z.AI](/en/providers/zai)
+- [Z.AI (GLM)](/en/providers/zai)
 
 ## Additional provider variants
 

@@ -534,7 +534,7 @@ and troubleshooting see the main [FAQ](/en/help/faq).
 
     Docs: [Anthropic](/en/providers/anthropic), [OpenAI](/en/providers/openai),
     [Qwen Cloud](/en/providers/qwen),
-    [MiniMax](/en/providers/minimax), [GLM Models](/en/providers/glm),
+    [MiniMax](/en/providers/minimax), [Z.AI (GLM)](/en/providers/zai),
     [Local models](/en/gateway/local-models), [Models](/en/concepts/models).
 
   </Accordion>
@@ -561,7 +561,7 @@ and troubleshooting see the main [FAQ](/en/help/faq).
     safer, more predictable choice. If you want other subscription-style hosted
     options in OpenClaw, see [OpenAI](/en/providers/openai), [Qwen / Model
     Cloud](/en/providers/qwen), [MiniMax](/en/providers/minimax), and [GLM
-    Models](/en/providers/glm).
+    Models](/en/providers/zai).
 
   </Accordion>
 

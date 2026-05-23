@@ -41,7 +41,6 @@ Looking for chat channel docs (WhatsApp/Telegram/Discord/Slack/Mattermost (plugi
 - [fal](/en/providers/fal)
 - [Fireworks](/en/providers/fireworks)
 - [GitHub Copilot](/en/providers/github-copilot)
-- [GLM models](/en/providers/glm)
 - [Google (Gemini)](/en/providers/google)
 - [Gradium](/en/providers/gradium)
 - [Groq (LPU inference)](/en/providers/groq)
@@ -76,7 +75,7 @@ Looking for chat channel docs (WhatsApp/Telegram/Discord/Slack/Mattermost (plugi
 - [Vydra](/en/providers/vydra)
 - [xAI](/en/providers/xai)
 - [Xiaomi](/en/providers/xiaomi)
-- [Z.AI](/en/providers/zai)
+- [Z.AI (GLM)](/en/providers/zai)
 
 ## Shared overview pages
 
