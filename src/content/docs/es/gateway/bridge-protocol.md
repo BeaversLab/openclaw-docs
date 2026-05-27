@@ -7,7 +7,7 @@ read_when:
 title: "Puente de protocolo"
 ---
 
-<Warning>El puente TCP ha sido **eliminado**. Las compilaciones actuales de OpenClaw no incluyen el listener del puente y las claves de configuración `bridge.*` ya no están en el esquema. Esta página se conserva solo como referencia histórica. Utilice el [Gateway Protocol](/es/gateway/protocol) para todos los clientes de nodo/operador.</Warning>
+<Warning>El puente TCP ha sido **eliminado**. Las compilaciones actuales de OpenClaw no incluyen el listener del puente y las claves de configuración `bridge.*` ya no están en el esquema. Esta página se mantiene solo como referencia histórica. Utilice el [Protocolo de puerta de enlace](/es/gateway/protocol) para todos los clientes de nodo/operador.</Warning>
 
 ## Por qué existía
 
@@ -60,16 +60,19 @@ La aplicación heredada de la lista de permitidos (allowlist) vivía en `src/gat
 
 ## Eventos del ciclo de vida de exec
 
-Los nodos pueden emitir eventos `exec.finished` o `exec.denied` para exponer la actividad de system.run.
+Los nodos pueden emitir eventos `exec.finished` para mostrar la actividad `system.run` completada.
 Estos se asignan a eventos del sistema en la puerta de enlace. (Los nodos heredados aún pueden emitir `exec.started`.)
+Los nodos pueden emitir `exec.denied` para intentos `system.run` denegados; la puerta de enlace acepta
+el evento como una denegación terminal y no pone en cola un evento del sistema ni activa el trabajo del agente.
 
 Campos de carga útil (todos opcionales, a menos que se indique lo contrario):
 
-- `sessionKey` (obligatorio): sesión del agente para recibir el evento del sistema.
-- `runId`: id de exec único para agrupación.
-- `command`: cadena de comando sin formato o formateada.
-- `exitCode`, `timedOut`, `success`, `output`: detalles de finalización (solo finalizado).
-- `reason`: motivo de denegación (solo denegado).
+- `sessionKey` (obligatorio): sesión del agente para la correlación de eventos y, para
+  `exec.finished`, entrega de eventos del sistema.
+- `runId`: ID de ejecución único para agrupar.
+- `command`: cadena de comando sin formato o con formato.
+- `exitCode`, `timedOut`, `success`, `output`: detalles de finalización (solo finalizados).
+- `reason`: motivo de la denegación (solo denegados).
 
 ## Uso histórico de tailnet
 
@@ -81,11 +84,11 @@ Campos de carga útil (todos opcionales, a menos que se indique lo contrario):
 
 ## Versionado
 
-El puente era **v1 implícita** (sin negociación min/max). Esta sección es
-solo de referencia histórica; los clientes de nodo/operador actuales usan el WebSocket
-[Gateway Protocol](/es/gateway/protocol).
+El puente era **v1 implícito** (sin negociación mín/máx). Esta sección es
+solo de referencia histórica; los clientes actuales de nodo/operador utilizan el WebSocket
+[Protocolo de puerta de enlace](/es/gateway/protocol).
 
 ## Relacionado
 
-- [Gateway protocol](/es/gateway/protocol)
-- [Nodes](/es/nodes)
+- [Protocolo de puerta de enlace](/es/gateway/protocol)
+- [Nodos](/es/nodes)

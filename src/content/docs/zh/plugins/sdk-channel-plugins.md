@@ -62,7 +62,9 @@ read_when:
 
 如果您的平台在对话 ID 内存储了额外的作用域，请使用 `messaging.resolveSessionConversation(...)` 在插件中保留该解析逻辑。这是将 `rawId` 映射到基础对话 ID、可选线程 ID、显式 `baseConversationId` 以及任何 `parentConversationCandidates` 的规范挂钩。当您返回 `parentConversationCandidates` 时，请按从最窄的父级到最宽/基础对话的顺序排列它们。
 
-当插件代码需要规范化类路由字段、比较子线程与其父路由，或从 `{ channel, to, accountId, threadId }` 构建稳定的去重键时，请使用 `openclaw/plugin-sdk/channel-route`。该辅助程序以与核心相同的方式规范化数字线程 ID，因此插件应优先使用它，而不是临时的 `String(threadId)` 比较。具有特定于提供商的目标语法的插件可以将其解析器注入 `resolveChannelRouteTargetWithParser(...)`，并且仍然获得核心使用的相同路由目标形状和线程回退语义。
+当插件代码需要规范化类似路由的字段、比较子线程与其父路由，或从 `{ channel, to, accountId, threadId }` 构建稳定的去重键时，请使用 `openclaw/plugin-sdk/channel-route`。该辅助函数以与核心相同的方式规范化数字线程 ID，因此插件应优先使用它，而不是临时的 `String(threadId)` 比较。
+
+具有提供商特定目标语法的插件应公开 `messaging.resolveOutboundSessionRoute(...)`，以便核心无需使用解析器垫片即可获取提供商原生的会话和线程身份。
 
 在渠道注册表启动之前需要相同解析的捆绑插件也可以暴露一个顶级 `session-key-api.ts` 文件，并带有匹配的 `resolveSessionConversation(...)` 导出。核心仅在运行时插件注册表尚不可用时才使用该引导安全表面。
 
@@ -160,7 +162,7 @@ read_when:
 - `openclaw/plugin-sdk/inbound-envelope` 和
   `openclaw/plugin-sdk/inbound-reply-dispatch` 用于入站路由/信封
   以及记录和分发连接
-- `openclaw/plugin-sdk/messaging-targets` 用于目标解析/匹配
+- 用于目标解析辅助函数的 `openclaw/plugin-sdk/channel-targets`
 - `openclaw/plugin-sdk/outbound-media` 和
   `openclaw/plugin-sdk/outbound-runtime` 用于媒体加载以及出站
   身份/发送委托和负载规划

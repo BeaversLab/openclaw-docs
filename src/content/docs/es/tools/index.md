@@ -110,10 +110,7 @@ Las herramientas comunes proporcionadas por complementos incluyen:
 
 ## Configurar el acceso y las aprobaciones
 
-La política de herramientas se aplica antes de la llamada al modelo. Si la política elimina una herramienta, el
-modelo no recibe el esquema de esa herramienta para el turno. Una ejecución puede perder herramientas
-devido a la configuración global, la configuración por agente, la política del canal, las restricciones del
-proveedor, las reglas del sandbox, el control de solo propietario o la disponibilidad del complemento.
+La política de herramientas se aplica antes de la llamada al modelo. Si la política elimina una herramienta, el modelo no recibe el esquema de esa herramienta para el turno. Una ejecución puede perder herramientas debido a la configuración global, la configuración por agente, la política del canal, las restricciones del proveedor, las reglas del entorno sandbox, la política del canal/tiempo de ejecución o la disponibilidad de complementos.
 
 - [Herramientas y proveedores personalizados](/es/gateway/config-tools) documenta los perfiles de herramientas,
   listas de permitidos/denegados, restricciones específicas del proveedor, detección de bucles y

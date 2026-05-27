@@ -26,7 +26,7 @@ OpenClaw 可以透過 pi-ai 的 **Bedrock Converse** 串流提供者來使用 **
     <Steps>
       <Step title="在 Gateway 主機上設定 AWS 憑證">
         ```bash
-        export AWS_ACCESS_KEY_ID="AKIA..."
+        export AWS_ACCESS_KEY_ID="EXAMPLE_AWS_ACCESS_KEY_ID"
         export AWS_SECRET_ACCESS_KEY="..."
         export AWS_REGION="us-east-1"
         # Optional:
@@ -36,7 +36,7 @@ OpenClaw 可以透過 pi-ai 的 **Bedrock Converse** 串流提供者來使用 **
         export AWS_BEARER_TOKEN_BEDROCK="..."
         ```
       </Step>
-      <Step title="將 Bedrock 提供者和模型新增至您的設定檔">
+      <Step title="將 Bedrock 提供者和模型加入您的設定">
         不需要 `apiKey`。請使用 `auth: "aws-sdk"` 設定提供者：
 
         ```json5
@@ -77,7 +77,7 @@ OpenClaw 可以透過 pi-ai 的 **Bedrock Converse** 串流提供者來使用 **
     </Steps>
 
     <Tip>
-    使用環境標記驗證 (`AWS_ACCESS_KEY_ID`、`AWS_PROFILE` 或 `AWS_BEARER_TOKEN_BEDROCK`)，OpenClaw 會自動啟用隱含的 Bedrock 提供者以進行模型探索，無需額外設定。
+    使用環境標記驗證 (`AWS_ACCESS_KEY_ID`、`AWS_PROFILE` 或 `AWS_BEARER_TOKEN_BEDROCK`) 時，OpenClaw 會自動啟用隱含的 Bedrock 提供者以進行模型探索，無需額外設定。
     </Tip>
 
   </Tab>

@@ -41,7 +41,9 @@ title: "Command queue"
 - `collect`：不进行引导。在静默窗口之后，将队列中的消息合并为**单个**后续轮次。如果消息针对不同的渠道/线程，它们将单独排出以保留路由。
 - `interrupt`：中止该会话的活动运行，然后运行最新消息。
 
-有关特定于运行时的时序和依赖行为，请参阅[引导队列](/zh/concepts/queue-steering)。有关显式的 `/steer <message>` 命令，请参阅[引导](/zh/tools/steer)。
+有关运行时特定的计时和依赖行为，请参阅
+[Steering queue](/zh/concepts/queue-steering)。有关显式 `/steer <message>`
+命令，请参阅 [Steer](/zh/tools/steer)。
 
 通过 `messages.queue` 全局配置或按渠道配置：
 
@@ -71,41 +73,58 @@ title: "Command queue"
 
 默认值：`debounceMs: 500`、`cap: 20`、`drop: summarize`。
 
+## Steer 和流式传输
+
+当渠道流式传输为 `partial` 或 `block` 时，在活动运行达到运行时边界时，Steering 可能看起来像几条
+简短的可见回复：
+
+- `partial`：预览可能会提前完成，然后在
+  接受 steering 后开始新的预览。
+- `block`：草稿大小的块可能会产生相同的顺序外观。
+- 如果没有流式传输，当运行时
+  无法接受同轮 steering 时，steering 将回退到活动运行后的后续跟进。
+
+`steer` 不会中止正在进行的工具。当最新
+消息应中止当前运行时，请使用 `/queue interrupt`。
+
 ## 优先级
 
-对于模式选择，OpenClaw 按以下顺序解析：
+对于模式选择，OpenClaw 解析：
 
-1. 内联或存储的每个会话 `/queue` 覆盖设置。
+1. 内联或存储的每个会话 `/queue` 覆盖。
 2. `messages.queue.byChannel.<channel>`。
 3. `messages.queue.mode`。
 4. 默认 `steer`。
 
-对于选项，内联或存储的 `/queue` 选项优先于配置。随后应用特定渠道的防抖（`messages.queue.debounceMsByChannel`）、插件防抖默认值、全局 `messages.queue` 选项以及内置默认值。`cap` 和 `drop` 是全局/会话选项，不是每个渠道的配置键。
+对于选项，内联或存储的 `/queue` 选项优先于配置。然后
+应用特定渠道的去抖动 (`messages.queue.debounceMsByChannel`)、插件
+去抖动默认值、全局 `messages.queue` 选项和内置默认值。`cap` 和 `drop` 是全局/会话选项，而非每个渠道的配置
+键。
 
-## 每个会话的覆盖设置
+## 每个会话的覆盖
 
 - 发送 `/queue <steer|followup|collect|interrupt>` 作为独立命令，以存储当前会话的队列模式。
-- 选项可以组合使用：`/queue collect debounce:0.5s cap:25 drop:summarize`
-- `/queue default` 或 `/queue reset` 将清除会话覆盖设置。
+- 选项可以组合：`/queue collect debounce:0.5s cap:25 drop:summarize`
+- `/queue default` 或 `/queue reset` 清除会话覆盖。
 
 ## 范围和保证
 
-- 适用于所有使用网关回复管道（WhatsApp web、Telegram、Slack、Discord、Signal、iMessage、webchat 等）的入站渠道的自动回复代理运行。
-- 默认通道（`main`）是针对入站 + 主心跳的全进程范围；设置 `agents.defaults.maxConcurrent` 以允许并行多个会话。
-- 可能存在额外的通道（例如 `cron`、`cron-nested`、`nested`、`subagent`），以便后台作业可以并行运行而不会阻塞入站回复。隔离的 cron 代理轮次占用一个 `cron` 插槽，而其内部代理执行使用 `cron-nested`；两者都使用 `cron.maxConcurrentRuns`。共享的非 cron `nested` 流程保持其自己的通道行为。这些分离的运行被跟踪为[后台任务](/zh/automation/tasks)。
-- 每个会话的通道保证一次只有一个代理运行接触给定的会话。
-- 没有外部依赖或后台工作线程；纯 TypeScript + promises。
+- 适用于使用网关回复管道的所有入站渠道的自动回复代理运行（WhatsApp web、Telegram、Slack、Discord、Signal、iMessage、webchat 等）。
+- 默认通道（`main`）针对入站 + 主心跳是进程范围的；设置 `agents.defaults.maxConcurrent` 以允许多个会话并行运行。
+- 可能存在额外的通道（例如 `cron`、`cron-nested`、`nested`、`subagent`），以便后台作业可以并行运行而不会阻塞入站回复。隔离的 cron agent 轮次持有一个 `cron` 插槽，而其内部 agent 执行使用 `cron-nested`；两者都使用 `cron.maxConcurrentRuns`。共享的非 cron `nested` 流保持其各自的通道行为。这些分离的运行被跟踪为 [background tasks](/zh/automation/tasks)。
+- 逐会话通道保证一次只有一个 agent 运行触及给定的会话。
+- 无外部依赖或后台工作线程；纯 TypeScript + promises。
 
 ## 故障排除
 
-- 如果命令似乎卡住了，请启用详细日志并查找“queued for ...ms”行以确认队列正在排空。
+- 如果命令似乎卡住了，请启用详细日志并查找 "queued for ...ms" 行以确认队列正在排空。
 - 如果您需要队列深度，请启用详细日志并观察队列计时行。
-- 接受轮次然后停止发出进度的 Codex 应用服务器运行会被 Codex 适配器中断，以便活动会话通道可以释放，而不是等待外部运行超时。
-- 启用诊断后，在 `diagnostics.stuckSessionWarnMs` 之后仍处于 `processing` 且未观察到回复、工具、状态、块或 ACP 进度的会话将按当前活动进行分类。活动工作记录为 `session.long_running`；没有最近进度的活动工作记录为 `session.stalled`；`session.stuck` 保留用于没有活动工作的过时会话簿记，并且只有该路径可以释放受影响的会话通道，以便排队的工作排空。当会话保持不变时，重复的 `session.stuck` 诊断会退避。
+- 接受轮次然后停止发出进度的 Codex app-server 运行会被 Codex 适配器中断，以便活动会话通道可以释放，而不是等待外部运行超时。
+- 启用诊断后，如果在 `diagnostics.stuckSessionWarnMs` 之后仍处于 `processing` 且未观察到回复、工具、状态、block 或 ACP 进度的会话，将按当前活动进行分类。活动工作记录为 `session.long_running`；没有近期进度的活动工作记录为 `session.stalled`；`session.stuck` 保留用于没有活动工作的陈旧会话簿记，并且只有该路径可以释放受影响的会话通道，以便排队的工作排空。当会话保持不变时，重复的 `session.stuck` 诊断会退避。
 
 ## 相关
 
 - [会话管理](/zh/concepts/session)
-- [引导队列](/zh/concepts/queue-steering)
+- [队列引导](/zh/concepts/queue-steering)
 - [引导](/zh/tools/steer)
 - [重试策略](/zh/concepts/retry)

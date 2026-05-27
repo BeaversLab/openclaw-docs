@@ -93,7 +93,7 @@ GitHub Copilot 提供者驗證選擇。如果省略該旗標，入門流程會
     裝置登入流程需要一個互動式 TTY。請直接在終端機中執行，而不是在非互動式腳本或 CI 管線中執行。
   </Accordion>
 
-<Accordion title="模型可用性取決於您的方案">Copilot 模型的可用性取決於您的 GitHub 方案。如果模型被拒絕，請嘗試另一個 ID（例如 `github-copilot/gpt-4.1`）。</Accordion>
+<Accordion title="模型可用性取決於您的方案">Copilot 模型的可用性取決於您的 GitHub 方案。如果模型被拒絕，請嘗試另一個 ID（例如 `github-copilot/gpt-5.5`）。請參閱 GitHub 的 [每個 Copilot 方案支援的模型](https://docs.github.com/en/copilot/reference/ai-models/supported-models#supported-ai-models-per-copilot-plan) 以取得最新的模型清單。</Accordion>
 
   <Accordion title="從 Copilot API 即時更新目錄">
     一旦裝置登入（或環境變數）驗證路徑解析了 GitHub 權杖，

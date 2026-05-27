@@ -33,11 +33,11 @@ Les profils d'authentification sont **par agent**. Chaque agent lit à partir de
   connectez-vous depuis cet agent ; si vous copiez les identifiants manuellement, ne copiez que des profils statiques portables `api_key` ou `token`.
 </Warning>
 
-Les Skills sont chargées depuis l'espace de travail de chaque agent ainsi que depuis les racines partagées telles que `~/.openclaw/skills`, puis filtrées par la liste d'autorisation des Skills de l'agent effectif lorsqu'elle est configurée. Utilisez `agents.defaults.skills` pour une base partagée et `agents.list[].skills` pour un remplacement spécifique à l'agent. Voir [Skills : par agent vs partagées](/fr/tools/skills#per-agent-vs-shared-skills) et [Skills : listes d'autorisation des Skills de l'agent](/fr/tools/skills#agent-skill-allowlists).
+Les Skills sont chargées depuis l'espace de travail de chaque agent ainsi que depuis les racines partagées telles que `~/.openclaw/skills`, puis filtrées par la liste d'autorisation des skills de l'agent effectif lorsqu'elle est configurée. Utilisez `agents.defaults.skills` pour une base commune et `agents.list[].skills` pour un remplacement spécifique à l'agent. Voir [Skills : par agent vs partagées](/fr/tools/skills#per-agent-vs-shared-skills) et [Skills : listes d'autorisation des skills de l'agent](/fr/tools/skills#agent-skill-allowlists).
 
 Le Gateway peut héberger **un agent** (par défaut) ou **plusieurs agents** côte à côte.
 
-<Note>**Note sur l'espace de travail :** l'espace de travail de chaque agent est le **cwd par défaut**, et non un bac à sable (sandbox) strict. Les chemins relatifs sont résolus à l'intérieur de l'espace de travail, mais les chemins absolus peuvent atteindre d'autres emplacements de l'hôte sauf si le sandboxing est activé. Voir [Sandboxing](/fr/gateway/sandboxing).</Note>
+<Note>**Remarque sur l'espace de travail :** l'espace de travail de chaque agent est le **cwd par défaut**, et non un bac à sable (sandbox) strict. Les chemins relatifs sont résolus à l'intérieur de l'espace de travail, mais les chemins absolus peuvent atteindre d'autres emplacements de l'hôte à moins que le sandboxing ne soit activé. Voir [Sandboxing](/fr/gateway/sandboxing).</Note>
 
 ## Chemins (carte rapide)
 
@@ -86,8 +86,8 @@ openclaw agents list --bindings
     Chaque agent dispose de son propre espace de travail avec `SOUL.md`, `AGENTS.md` et `USER.md` en option, ainsi qu'un `agentDir` dédié et un stockage de sessions sous `~/.openclaw/agents/<agentId>`.
 
   </Step>
-  <Step title="Créer des comptes de canal">
-    Créez un compte par agent sur les canaux de votre choix :
+  <Step title="Créer les comptes de canal">
+    Créez un compte par agent sur vos canaux préférés :
 
     - Discord : un bot par agent, activez l'intention de contenu de message (Message Content Intent), copiez chaque jeton.
     - Telegram : un bot par agent via BotFather, copiez chaque jeton.
@@ -221,18 +221,19 @@ Les liaisons sont **déterministes** et **le plus spécifique l'emporte** :
 
   </Accordion>
   <Accordion title="Détail de la portée du compte">
-    - Une liaison qui omet `accountId` ne correspond qu'au compte par défaut.
-    - Utilisez `accountId: "*"` pour un repli à l'échelle du channel sur tous les comptes.
-    - Si vous ajoutez ultérieurement la même liaison pour le même agent avec un ID de compte explicite, OpenClaw met à niveau la liaison existante limitée au channel pour qu'elle soit limitée au compte, au lieu de la dupliquer.
+    - Une liaison qui omet `accountId` correspond uniquement au compte par défaut. Elle ne correspond pas à tous les comptes.
+    - Utilisez `accountId: "*"` pour un repli à l'échelle du canal sur tous les comptes.
+    - Utilisez `accountId: "<name>"` pour correspondre à un compte.
+    - Si vous ajoutez plus tard la même liaison pour le même agent avec un identifiant de compte explicite, OpenClaw met à niveau la liaison existante limitée au canal en une liaison limitée au compte au lieu de la dupliquer.
 
   </Accordion>
 </AccordionGroup>
 
 ## Plusieurs comptes / numéros de téléphone
 
-Les channels qui prennent en charge **plusieurs comptes** (par exemple WhatsApp) utilisent `accountId` pour identifier chaque connexion. Chaque `accountId` peut être acheminé vers un agent différent, afin qu'un seul serveur puisse héberger plusieurs numéros de téléphone sans mélanger les sessions.
+Les channels qui prennent en charge **plusieurs comptes** (par ex. WhatsApp) utilisent `accountId` pour identifier chaque connexion. Chaque `accountId` peut être routé vers un agent différent, ce qui permet à un seul serveur d'héberger plusieurs numéros de téléphone sans mélanger les sessions.
 
-Si vous souhaitez un compte par défaut à l'échelle du channel lorsque `accountId` est omis, définissez `channels.<channel>.defaultAccount` (facultatif). Lorsqu'il n'est pas défini, OpenClaw revient à `default` s'il est présent, sinon au premier ID de compte configuré (trié).
+Si vous souhaitez définir un compte par défaut pour l'ensemble du channel lorsque `accountId` est omis, définissez `channels.<channel>.defaultAccount` (facultatif). Lorsqu'il n'est pas défini, OpenClaw utilise par défaut `default` s'il est présent, sinon le premier ID de compte configuré (trié).
 
 Les channels courants prenant en charge ce modèle incluent :
 
@@ -242,16 +243,16 @@ Les channels courants prenant en charge ce modèle incluent :
 
 ## Concepts
 
-- `agentId` : un « cerveau » (espace de travail, authentification par agent, stockage de session par agent).
-- `accountId` : une instance de compte de channel (par exemple, compte WhatsApp `"personal"` contre `"biz"`).
-- `binding` : achemine les messages entrants vers un `agentId` par `(channel, accountId, peer)` et facultativement par les IDs de guilde/équipe.
-- Les chats directs sont réduits à `agent:<agentId>:<mainKey>` (principal par agent ; `session.mainKey`).
+- `agentId` : un « cerveau » (espace de travail, authentification par agent, magasin de sessions par agent).
+- `accountId` : une instance de compte de channel (par exemple, le compte WhatsApp `"personal"` contre `"biz"`).
+- `binding` : achemine les messages entrants vers un `agentId` par `(channel, accountId, peer)` et facultativement par les identifiants de guilde/d'équipe.
+- Les discussions directes s'effondrent dans `agent:<agentId>:<mainKey>` ( « principal » par agent ; `session.mainKey`).
 
 ## Exemples de plateformes
 
 <AccordionGroup>
   <Accordion title="Bots Discord par agent">
-    Chaque compte bot Discord correspond à un `accountId` unique. Liez chaque compte à un agent et gardez des listes d'autorisation par bot.
+    Chaque compte bot Discord correspond à un `accountId` unique. Liez chaque compte à un agent et conservez les listes d'autorisation par bot.
 
     ```json5
     {
@@ -295,11 +296,11 @@ Les channels courants prenant en charge ce modèle incluent :
     }
     ```
 
-    - Invitez chaque bot sur la guilde et activez l'intention de contenu de message (Message Content Intent).
+    - Invitez chaque bot sur la guilde et activez l'intention de contenu de message.
     - Les jetons résident dans `channels.discord.accounts.<id>.token` (le compte par défaut peut utiliser `DISCORD_BOT_TOKEN`).
 
   </Accordion>
-  <Accordion title="TelegramBots Telegram par agent">
+  <Accordion title="Bots Telegram par agent">
     ```json5
     {
       agents: {
@@ -332,6 +333,11 @@ Les channels courants prenant en charge ce modèle incluent :
 
     - Créez un bot par agent avec BotFather et copiez chaque jeton.
     - Les jetons résident dans `channels.telegram.accounts.<id>.botToken` (le compte par défaut peut utiliser `TELEGRAM_BOT_TOKEN`).
+    - Pour plusieurs bots dans le même groupe Telegram, invitez chaque bot et mentionnez celui qui doit répondre.
+    - Désactivez le Mode de confidentialité de BotFather pour chaque bot de groupe, puis ajoutez à nouveau le bot pour que Telegram applique le paramètre.
+    - Autorisez les groupes avec `channels.telegram.groups`, ou utilisez `groupPolicy: "open"` uniquement pour les déploiements de groupes de confiance.
+    - Placez les ID d'utilisateur des expéditeurs dans `groupAllowFrom`. Les ID de groupe et de supergroupe appartiennent à `channels.telegram.groups`, et non à `groupAllowFrom`.
+    - Liez par `accountId` afin que chaque bot route vers son propre agent.
 
   </Accordion>
   <Accordion title="WhatsAppNuméros WhatsApp par agent">
@@ -411,8 +417,8 @@ Les channels courants prenant en charge ce modèle incluent :
 ## Modèles courants
 
 <Tabs>
-  <Tab title="WhatsAppTelegramQuotidien WhatsApp + travail approfondi Telegram"WhatsAppTelegram>
-    Divisez par channel : routez WhatsApp vers un agent rapide du quotidien et Telegram vers un agent Opus.
+  <Tab title="WhatsAppTelegramQuotidien WhatsApp + travail profond Telegram"WhatsAppTelegram>
+    Diviser par channel : acheminez WhatsApp vers un agent rapide pour le quotidien et Telegram vers un agent Opus.
 
     ```json5
     {
@@ -433,20 +439,20 @@ Les channels courants prenant en charge ce modèle incluent :
         ],
       },
       bindings: [
-        { agentId: "chat", match: { channel: "whatsapp" } },
-        { agentId: "opus", match: { channel: "telegram" } },
+        { agentId: "chat", match: { channel: "whatsapp", accountId: "*" } },
+        { agentId: "opus", match: { channel: "telegram", accountId: "*" } },
       ],
     }
     ```
 
     Notes :
 
-    - Si vous avez plusieurs comptes pour un channel, ajoutez `accountId` à la liaison (par exemple `{ channel: "whatsapp", accountId: "personal" }`).
-    - Pour router un DM/groupe unique vers Opus tout en gardant le reste sur chat, ajoutez une liaison `match.peer` pour ce pair ; les correspondances de pair l'emportent toujours sur les règles à l'échelle du channel.
+    - Ces exemples utilisent `accountId: "*"` afin que les bindings continuent de fonctionner si vous ajoutez des comptes plus tard.
+    - Pour acheminer un seul DM/groupe vers Opus tout en gardant le reste en chat, ajoutez un binding `match.peer` pour ce pair ; les correspondances de pair l'emportent toujours sur les règles à l'échelle du channel.
 
   </Tab>
   <Tab title="Même channel, un pair vers Opus"WhatsApp>
-    Gardez WhatsApp sur l'agent rapide, mais routez un DM vers Opus :
+    Gardez WhatsApp sur l'agent rapide, mais acheminez un DM vers Opus :
 
     ```json5
     {
@@ -469,18 +475,18 @@ Les channels courants prenant en charge ce modèle incluent :
       bindings: [
         {
           agentId: "opus",
-          match: { channel: "whatsapp", peer: { kind: "direct", id: "+15551234567" } },
+          match: { channel: "whatsapp", accountId: "*", peer: { kind: "direct", id: "+15551234567" } },
         },
-        { agentId: "chat", match: { channel: "whatsapp" } },
+        { agentId: "chat", match: { channel: "whatsapp", accountId: "*" } },
       ],
     }
     ```
 
-    Les liaisons de pair l'emportent toujours, donc gardez-les au-dessus de la règle à l'échelle du channel.
+    Les bindings de pair l'emportent toujours, gardez-les donc au-dessus de la règle à l'échelle du channel.
 
   </Tab>
   <Tab title="WhatsAppAgent famille lié à un groupe WhatsApp"WhatsApp>
-    Liez un agent famille dédié à un groupe WhatsApp unique, avec un filtrage par mention et une politique de tool plus stricte :
+    Liez un agent famille dédié à un seul groupe WhatsApp, avec un filtrage par mention et une politique de tool plus stricte :
 
     ```json5
     {
@@ -527,7 +533,7 @@ Les channels courants prenant en charge ce modèle incluent :
 
     Notes :
 
-    - Les listes de permission/refus de tool sont des **tools**, pas des compétences. Si une compétence doit exécuter un binaire, assurez-vous que `exec` est autorisé et que le binaire existe dans le bac à sable.
+    - Les listes de permission/refus de tool sont des **tools**, et non des compétences. Si une compétence doit exécuter un binaire, assurez-vous que `exec` est autorisé et que le binaire existe dans le bac à sable.
     - Pour un filtrage plus strict, définissez `agents.list[].groupChat.mentionPatterns` et gardez les listes blanches de groupe activées pour le channel.
 
   </Tab>
@@ -570,7 +576,7 @@ Chaque agent peut avoir son propre bac à sable et ses propres restrictions de t
 }
 ```
 
-<Note>`setupCommand` réside sous `sandbox.docker` et s'exécute une fois lors de la création du conteneur. Les substitutions `sandbox.docker.*` par agent sont ignorées lorsque la portée résolue est `"shared"`.</Note>
+<Note>`setupCommand` se trouve sous `sandbox.docker` et s'exécute une fois lors de la création du conteneur. Les redéfinitions `sandbox.docker.*` par agent sont ignorées lorsque la portée résolue est `"shared"`.</Note>
 
 **Avantages :**
 
@@ -580,12 +586,12 @@ Chaque agent peut avoir son propre bac à sable et ses propres restrictions de t
 
 <Note>`tools.elevated` est **global** et basé sur l'expéditeur ; il n'est pas configurable par agent. Si vous avez besoin de limites par agent, utilisez `agents.list[].tools` pour refuser `exec`. Pour le ciblage de groupe, utilisez `agents.list[].groupChat.mentionPatterns` afin que les @mentions correspondent proprement à l'agent prévu.</Note>
 
-Voir [Multi-agent sandbox and tools](/fr/tools/multi-agent-sandbox-tools) pour des exemples détaillés.
+Consultez [Multi-agent sandbox and tools](/fr/tools/multi-agent-sandbox-tools) pour des exemples détaillés.
 
 ## Connexes
 
 - [ACP agents](/fr/tools/acp-agents) — exécution de harnais de codage externes
-- [Channel routing](/fr/channels/channel-routing) — acheminement des messages vers les agents
+- [Channel routing](/fr/channels/channel-routing) — routage des messages vers les agents
 - [Presence](/fr/concepts/presence) — présence et disponibilité des agents
-- [Session](/fr/concepts/session) — isolation et routage de session
+- [Session](/fr/concepts/session) — isolation et routage des sessions
 - [Sub-agents](/fr/tools/subagents) — lancement d'exécutions d'agents en arrière-plan

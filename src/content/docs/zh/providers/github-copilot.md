@@ -90,7 +90,7 @@ openclaw onboard --non-interactive --accept-risk \
     设备登录流程需要一个交互式 TTY。请直接在终端中运行，不要在非交互式脚本或 CI 流水线中运行。
   </Accordion>
 
-<Accordion title="模型可用性取决于您的计划">Copilot 模型的可用性取决于您的 GitHub 计划。如果某个模型被拒绝，请尝试另一个 ID（例如 `github-copilot/gpt-4.1`）。</Accordion>
+<Accordion title="Model availability depends on your plan">Copilot 模型的可用性取决于您的 GitHub 计划。如果某个模型被拒绝，请尝试另一个 ID（例如 `github-copilot/gpt-5.5`）。请参阅 GitHub 的 [supported models per Copilot plan](https://docs.github.com/en/copilot/reference/ai-models/supported-models#supported-ai-models-per-copilot-plan) 以获取当前模型列表。</Accordion>
 
   <Accordion title="从 Copilot API 实时刷新目录">
     一旦设备登录（或环境变量）身份验证路径解析了 GitHub 令牌，OpenClaw 就会按需从 `${baseUrl}/models`（VS Code Copilot 使用的同一端点）刷新模型目录，以便运行时跟踪每账户的权利和准确的上下文窗口，而无需清单变动。新发布的 Copilot 模型无需升级 OpenClaw 即可变得可见，并且上下文窗口会反映真实的每模型限制（例如 gpt-5.x 系列为 400k，内部 `claude-opus-*-1m` 变体为 1M）。

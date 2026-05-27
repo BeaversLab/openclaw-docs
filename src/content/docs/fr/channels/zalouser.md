@@ -163,13 +163,31 @@ Les comptes correspondent aux profils `zalouser` dans l'état de OpenClaw. Exemp
 }
 ```
 
-## Indication de frappe, réactions et accusés de réception
+## Variables d'environnement
 
-- OpenClaw envoie un événement de frappe avant d'envoyer une réponse (meilleur effort).
-- L'action de réaction de message `react` est prise en charge pour `zalouser` dans les actions de canal.
+Le plugin personnel Zalo peut également lire la sélection du profil depuis les variables d'environnement :
+
+- `ZALOUSER_PROFILE` : nom du profil à utiliser lorsqu'aucun `profile` n'est défini dans la configuration du canal ou du compte.
+- `ZCA_PROFILE` : nom de profil de secours hérité, utilisé uniquement lorsque `ZALOUSER_PROFILE` n'est pas défini.
+
+Les noms de profil sélectionnent les identifiants de connexion Zalo enregistrés dans l'état de OpenClaw. L'ordre de résolution est :
+
+1. `profile` explicite dans la configuration.
+2. `ZALOUSER_PROFILE`.
+3. `ZCA_PROFILE`.
+4. L'identifiant du compte pour les comptes non par défaut, ou `default` pour le compte par défaut.
+
+Pour les configurations multi-comptes, privilégiez le réglage de `profile` sur chaque compte dans la configuration pour qu'une
+variable d'environnement ne fasse pas partager la même session de
+connexion par plusieurs comptes.
+
+## Indicateur de frappe, réactions et accusés de réception
+
+- OpenClaw envoie un événement de frappe avant d'envoyer une réponse (au mieux effort).
+- L'action de réaction au message `react` est prise en charge pour `zalouser` dans les actions de canal.
   - Utilisez `remove: true` pour supprimer un emoji de réaction spécifique d'un message.
   - Sémantique des réactions : [Réactions](/fr/tools/reactions)
-- Pour les messages entrants incluant des métadonnées d'événement, OpenClaw envoie des accusés de réception et de lecture (best-effort).
+- Pour les messages entrants incluant des métadonnées d'événement, OpenClaw envoie des accusés de réception de livraison + lus (au mieux effort).
 
 ## Dépannage
 
@@ -178,19 +196,19 @@ Les comptes correspondent aux profils `zalouser` dans l'état de OpenClaw. Exemp
 - `openclaw channels status --probe`
 - Reconnexion : `openclaw channels logout --channel zalouser && openclaw channels login --channel zalouser`
 
-**La liste blanche/nom de groupe n'a pas été résolu :**
+**La liste d'autorisation/nom de groupe n'a pas pu être résolu :**
 
-- Utilisez des IDs numériques dans `allowFrom`/`groupAllowFrom` et des IDs de groupe stables dans `groups`. Si vous avez besoin intentionnellement de noms exacts d'amis/groupes, activez `channels.zalouser.dangerouslyAllowNameMatching: true`.
+- Utilisez des identifiants numériques dans `allowFrom`/`groupAllowFrom` et des identifiants de groupe stables dans `groups`. Si vous avez intentionnellement besoin des noms exacts d'amis/groupes, activez `channels.zalouser.dangerouslyAllowNameMatching: true`.
 
 **Mise à niveau depuis l'ancienne configuration basée sur CLI :**
 
-- Supprimez toute hypothèse ancienne concernant le processus externe `zca`.
-- Le canal s'exécute désormais entièrement dans OpenClaw sans binaires externes CLI.
+- Supprimez toutes les anciennes hypothèses de processus externe `zca`.
+- Le canal s'exécute désormais entièrement dans OpenClaw sans binaires CLI externes.
 
 ## Connexes
 
 - [Vue d'ensemble des canaux](/fr/channels) — tous les canaux pris en charge
-- [Appairage](/fr/channels/pairing) — authentification DM et flux d'appairage
-- [Groupes](/fr/channels/groups) — comportement des discussions de groupe et filtrage des mentions
+- [Appairage](/fr/channels/pairing) — flux d'authentification et d'appairage par DM
+- [Groupes](/fr/channels/groups) — comportement des discussions de groupe et filtrage par mention
 - [Routage de canal](/fr/channels/channel-routing) — routage de session pour les messages
 - [Sécurité](/fr/gateway/security) — modèle d'accès et durcissement

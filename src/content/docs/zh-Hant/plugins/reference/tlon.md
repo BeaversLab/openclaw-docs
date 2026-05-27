@@ -16,7 +16,7 @@ title: "Tlon 外掛程式"
 
 ## 介面
 
-channels：tlon；contracts：tools；skills
+頻道：tlon；技能
 
 ## 相關文件
 

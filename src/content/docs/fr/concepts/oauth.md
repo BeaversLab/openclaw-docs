@@ -76,18 +76,18 @@ agent lorsqu'il a besoin d'un compte indépendant.
 ## Compatibilité des jetons hérités Anthropic
 
 <Warning>
-La documentation publique de Anthropic indique que l'utilisation directe de Claude Code reste dans les limites de l'abonnement Claude, et le personnel de Anthropic nous a indiqué que l'utilisation du OpenClaw Claude de type CLI est à nouveau autorisée. OpenClaw traite donc la réutilisation du CLI Claude et l'utilisation de `claude -p` comme étant autorisées pour cette intégration, sauf si Anthropic publie une nouvelle politique.
+Les documents publics de Anthropic concernant Claude Code indiquent que l'utilisation directe de Claude Code reste dans les limites de l'abonnement Claude, et le personnel de Anthropic nous a informés que l'utilisation de Claude OpenClaw de type CLI est à nouveau autorisée. OpenClaw considère donc la réutilisation de Claude CLI et l'utilisation de `claude -p` comme étant autorisées pour cette intégration, à moins que Anthropic ne publie une nouvelle politique.
 
-Pour la documentation actuelle de Anthropic sur le plan direct-Claude-Code, voir [Using Claude Code
-with your Pro or Max
-plan](https://support.claude.com/en/articles/11145838-using-claude-code-with-your-pro-or-max-plan)
-et [Using Claude Code with your Team or Enterprise
-plan](https://support.anthropic.com/en/articles/11845131-using-claude-code-with-your-team-or-enterprise-plan/).
+Pour les documents actuels de Anthropic concernant les plans d'accès direct à Claude Code, consultez [Utiliser Claude Code
+avec votre formule Pro ou Max
+](https://support.claude.com/en/articles/11145838-using-claude-code-with-your-pro-or-max-plan)
+et [Utiliser Claude Code avec votre formule Team ou Enterprise
+](https://support.anthropic.com/en/articles/11845131-using-claude-code-with-your-team-or-enterprise-plan/).
 
-Si vous souhaitez d'autres options de style abonnement dans OpenClaw, voir [OpenAI
-Codex](/fr/providers/openai), [Plan de codage cloud Qwen
-](/fr/providers/qwen), [Plan de codage MiniMax](/fr/providers/minimax),
-et [Plan de codage Z.AI / GLM](/fr/providers/glm).
+Si vous souhaitez d'autres options de type abonnement dans OpenClaw, consultez [OpenAI
+Codex](/fr/providers/openai), [Forfait de codage cloud Qwen
+](/fr/providers/qwen), [Forfait de codage MiniMax](/fr/providers/minimax),
+et [Forfait de codage Z.AI / GLM](/fr/providers/zai).
 
 </Warning>
 

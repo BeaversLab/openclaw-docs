@@ -147,26 +147,20 @@ Your App → claude-max-api-proxy → Claude Code CLI → Anthropic (via subscri
   </Accordion>
 </AccordionGroup>
 
-## 链接
+## 注意事项
 
-- **npm：** [https://www.npmjs.com/package/claude-max-api-proxy](https://www.npmjs.com/package/claude-max-api-proxy)
-- **GitHub：** [https://github.com/atalovesyou/claude-max-api-proxy](https://github.com/atalovesyou/claude-max-api-proxy)
-- **问题：** [https://github.com/atalovesyou/claude-max-api-proxy/issues](https://github.com/atalovesyou/claude-max-api-proxy/issues)
-
-## 说明
-
-- 这是一个 **社区工具**，未获得 Anthropic 或 OpenClaw 的官方支持
-- 需要一个有效的 Claude Max/Pro 订阅，并且 Claude Code CLI 已认证
-- 代理在本地运行，不会将数据发送到任何第三方服务器
+- 这是一个社区工具，不获得 Anthropic 或 OpenClaw 的官方支持
+- 需要有效的 Claude Max/Pro 订阅，并已完成 Claude Code CLI 身份验证
+- 该代理在本地运行，不会将数据发送到任何第三方服务器
 - 完全支持流式响应
 
-<Note>有关通过 Claude Anthropic 或 CLI 密钥进行的原生 API 集成，请参阅 [Anthropic 提供商](/zh/providers/anthropic)。有关 OpenAI/Codex 订阅，请参阅 [OpenAI 提供商](/zh/providers/openai)。</Note>
+<Note>如需通过 Claude Anthropic 或 CLI 进行原生 API 集成，请参阅 [Anthropic 提供商](/zh/providers/anthropic)。如需 OpenAI/Codex 订阅，请参阅 [OpenAI 提供商](/zh/providers/openai)。</Note>
 
-## 相关
+## 相关内容
 
 <CardGroup cols={2}>
   <Card title="Anthropic 提供商" href="/zh/providers/anthropic" icon="bolt">
-    通过 Claude OpenClaw 或 CLI 密钥进行的原生 API 集成。
+    通过 Claude OpenClaw 或 CLI 进行原生 API 集成。
   </Card>
   <Card title="OpenAI 提供商" href="/zh/providers/openai" icon="robot">
     适用于 OpenAI/Codex 订阅。
@@ -175,6 +169,6 @@ Your App → claude-max-api-proxy → Claude Code CLI → Anthropic (via subscri
     所有提供商、模型引用和故障转移行为的概述。
   </Card>
   <Card title="Configuration" href="/zh/gateway/configuration" icon="gear">
-    完整的配置参考。
+    完整配置参考。
   </Card>
 </CardGroup>

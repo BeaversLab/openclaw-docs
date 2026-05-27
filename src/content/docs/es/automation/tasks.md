@@ -94,9 +94,9 @@ Las tareas **no** reemplazan a las sesiones, trabajos cron o heartbeats: son el 
 
 <AccordionGroup>
   <Accordion title="Valores predeterminados de notificación para cron y medios">
-    Las tareas cron de sesión principal utilizan la política de notificación `silent` de forma predeterminada: crean registros para seguimiento pero no generan notificaciones. Las tareas cron aisladas también utilizan de forma predeterminada `silent` pero son más visibles porque se ejecutan en su propia sesión.
+    Las tareas de cron de sesión principal utilizan `silent` política de notificación de manera predeterminada: crean registros para seguimiento pero no generan notificaciones. Las tareas de cron aisladas también tienen `silent` como valor predeterminado, pero son más visibles porque se ejecutan en su propia sesión.
 
-    Las ejecuciones `image_generate`, `music_generate` y `video_generate` con respaldo de sesión también utilizan la política de notificación `silent`. Aún crean registros de tareas, pero la finalización se devuelve a la sesión del agente original como un reactivador interno para que el agente pueda escribir el mensaje de seguimiento y adjuntar el medio finalizado por sí mismo. Los eventos de finalización de medios generados requieren entrega mediante herramienta de mensaje: el agente debe enviar el medio finalizado con la herramienta `message` y luego responder `NO_REPLY`. Si el agente de finalización solo escribe una respuesta final privada u omite el archivo adjunto del medio, OpenClaw marca la transferencia de finalización como fallida; no publica automáticamente el medio generado como alternativa.
+    Las ejecuciones de `image_generate`, `music_generate` y `video_generate` con respaldo de sesión también utilizan `silent` política de notificación. Aún crean registros de tareas, pero la finalización se devuelve a la sesión del agente original como un despertar interno para que el agente pueda escribir el mensaje de seguimiento y adjuntar el medio terminado él mismo. Los eventos de finalización de medios generados requieren entrega mediante herramienta de mensaje: el agente debe enviar el medio terminado con la herramienta `message` y luego responder `NO_REPLY`. Si la sesión solicitante ya no está activa y el agente de finalización no recibe algunos o todos los medios generados, OpenClaw envía una alternativa directa idempotente solo con los medios faltantes al objetivo del canal original.
 
   </Accordion>
   <Accordion title="Concurrent media-generation guardrail">
@@ -230,24 +230,24 @@ openclaw tasks notify <lookup> state_changes
     openclaw tasks maintenance --apply [--json]
     ```
 
-    Use esto para previsualizar o aplicar conciliación, limpieza de estampado y poda para tareas, el estado de Task Flow y filas obsoletas del registro de sesión de ejecución cron.
+    Úselo para previsualizar o aplicar la conciliación, la limpieza de estampación y la poda para tareas, el estado de Task Flow y las filas obsoletas del registro de sesiones de ejecución de cron.
 
     La conciliación es consciente del tiempo de ejecución:
 
     - Las tareas de ACP/subagente verifican su sesión secundaria de respaldo.
     - Las tareas de subagente cuya sesión secundaria tiene una lápida de reinicio-recuperación se marcan como perdidas en lugar de ser tratadas como sesiones de respaldo recuperables.
-    - Las tareas cron verifican si el tiempo de ejecución cron todavía posee el trabajo, luego recuperan el estado terminal de los registros de ejecución cron/estado del trabajo persistido antes de recurrir a `lost`. Solo el proceso Gateway es autoritario para el conjunto de trabajos activos cron en memoria; la auditoría de CLI sin conexión utiliza el historial duradero pero no marca una tarea cron como perdida solo porque ese conjunto local esté vacío.
-    - Las tareas de CLI con identidad de ejecución verifican el contexto de ejecución en vivo propietario, no solo las filas de sesión secundaria o sesión de chat.
+    - Las tareas de cron verifican si el tiempo de ejecución de cron todavía posee el trabajo, luego recuperan el estado terminal de los registros de ejecución de cron persistentes/estado del trabajo antes de recurrir a `lost`. Solo el proceso Gateway es autoritario para el conjunto de trabajos activos de cron en memoria; la auditoría de CLI fuera de línea utiliza el historial duradero pero no marca una tarea de cron como perdida solo porque ese conjunto local esté vacío.
+    - Las tareas de CLI con identidad de ejecución verifican el contexto de ejecución en vivo propietario, no solo las filas de sesión secundaria o de chat.
 
-    La limpieza al completar también es consciente del tiempo de ejecución:
+    La limpieza al finalizar también es consciente del tiempo de ejecución:
 
-    - La finalización del subagente cierra con el mejor esfuerzo las pestañas/procesos del navegador rastreados para la sesión secundaria antes de que continúe la limpieza del anuncio.
-    - La finalización del cron aislado cierra con el mejor esfuerzo las pestañas/procesos del navegador rastreados para la sesión cron antes de que la ejecución se desarme por completo.
-    - La entrega del cron aislado espera el seguimiento del subagente descendente cuando es necesario y suprime el texto de reconocimiento principal obsoleto en lugar de anunciarlo.
-    - La entrega de finalización del subagente prefiere el texto visible más reciente del asistente; si está vacío, recurre al texto de herramienta/toolResult más reciente saneado, y las ejecuciones de llamadas a herramienta solo por tiempo de espera pueden colapsarse en un breve resumen de progreso parcial. Las ejecuciones fallidas terminales anuncian el estado de falla sin reproducir el texto de respuesta capturado.
-    - Los fallos de limpieza no enmascaran el resultado real de la tarea.
+    - La finalización del subagente cierra, con el mejor esfuerzo posible, las pestañas/procesos del navegador rastreados para la sesión secundaria antes de que continúe la limpieza del anuncio.
+    - La finalización de cron aislado cierra, con el mejor esfuerzo posible, las pestañas/procesos del navegador rastreados para la sesión de cron antes de que la ejecución se cierre por completo.
+    - La entrega de cron aislado espera el seguimiento del subagente descendente cuando es necesario y suprime el texto de reconocimiento principal obsoleto en lugar de anunciarlo.
+    - La entrega de finalización del subagente usa solo el último texto de asistente visible del secundario. La salida de herramienta/toolResult no se promueve al texto de resultado secundario. Las ejecuciones fallidas terminales anuncian el estado de falla sin reproducir el texto de respuesta capturado.
+    - Los fallos de limpieza no ocultan el resultado real de la tarea.
 
-    Al aplicar el mantenimiento, OpenClaw también elimina filas obsoletas del registro de sesión `cron:<jobId>:run:<uuid>` de más de 7 días, mientras preserva las filas para los trabajos cron que se están ejecutando actualmente y deja las filas de sesión no cron intactas.
+    Al aplicar el mantenimiento, OpenClaw también elimina filas obsoletas del registro de sesiones de `cron:<jobId>:run:<uuid>` de más de 7 días, preservando las filas de los trabajos de cron que se están ejecutando actualmente y dejando las filas de sesiones que no son de cron sin tocar.
 
   </Accordion>
   <Accordion title="tasks flow list | show | cancel">

@@ -16,7 +16,7 @@ title: "DiscordDiscord 插件"
 
 ## Surface
 
-channels: discord
+channels: discord; contracts: meetingNotesSourceProviders
 
 ## 相关文档
 

@@ -163,34 +163,51 @@ openclaw directory groups list --channel zalouser --query "work"
 }
 ```
 
-## 正在输入、反应和送达回执
+## 环境变量
+
+Zalo 个人版插件还可以从环境变量中读取配置文件选择：
+
+- `ZALOUSER_PROFILE`：当渠道或账号配置中未设置 `profile` 时使用的配置文件名称。
+- `ZCA_PROFILE`：旧版后备配置文件名称，仅在未设置 `ZALOUSER_PROFILE` 时使用。
+
+配置文件名称用于选择 OpenClaw 状态中保存的 ZaloOpenClaw 登录凭据。解析顺序为：
+
+1. 配置中显式设置的 `profile`。
+2. `ZALOUSER_PROFILE`。
+3. `ZCA_PROFILE`。
+4. 对于非默认账号为账号 ID，对于默认账号则为 `default`。
+
+对于多账号设置，建议在配置中的每个账号上设置 `profile`，
+以免单个环境变量导致多个账号共享同一个登录会话。
+
+## 正在输入、回应和送达回执
 
 - OpenClaw 会在发送回复之前发送正在输入事件（尽力而为）。
-- 在渠道操作中，支持针对 `zalouser` 的消息反应操作 `react`。
-  - 使用 `remove: true` 从消息中移除特定的反应表情符号。
-  - 反应语义：[反应](/zh/tools/reactions)
-- 对于包含事件元数据的入站消息，OpenClaw 会发送已送达 + 已读回执（尽力而为）。
+- 渠道动作中的 `zalouser` 支持消息回应操作 `react`。
+  - 使用 `remove: true` 从消息中移除特定的回应表情符号。
+  - 回应语义：[回应](/zh/tools/reactions)
+- 对于包含事件元数据的入站消息，OpenClaw 会发送已送达和已读回执（尽力而为）。
 
 ## 故障排除
 
 **登录无法保持：**
 
 - `openclaw channels status --probe`
-- 重新登录： `openclaw channels logout --channel zalouser && openclaw channels login --channel zalouser`
+- 重新登录：`openclaw channels logout --channel zalouser && openclaw channels login --channel zalouser`
 
-**允许列表/群组名称未解析：**
+**白名单/群组名称未解析：**
 
 - 在 `allowFrom`/`groupAllowFrom` 中使用数字 ID，并在 `groups` 中使用稳定的群组 ID。如果您确实需要确切的好友/群组名称，请启用 `channels.zalouser.dangerouslyAllowNameMatching: true`。
 
 **从旧的基于 CLI 的设置升级：**
 
-- 移除任何旧的外部 `zca` 进程假设。
-- 该渠道现在完全在 OpenClaw 中运行，无需外部 CLI 二进制文件。
+- 移除任何关于旧的外部 `zca` 进程的假设。
+- 该渠道现在完全在 OpenClaw 中运行，无需外部 OpenClawCLI 二进制文件。
 
 ## 相关
 
 - [渠道概述](/zh/channels) — 所有支持的渠道
 - [配对](/zh/channels/pairing) — 私信认证和配对流程
 - [群组](/zh/channels/groups) — 群聊行为和提及限制
-- [Channel Routing](/zh/channels/channel-routing) — 消息的会话路由
-- [Security](/zh/gateway/security) — 访问模型和加固
+- [渠道路由](/zh/channels/channel-routing) — 消息的会话路由
+- [安全性](/zh/gateway/security) — 访问模型和加固

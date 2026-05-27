@@ -7,17 +7,17 @@ title: "Providers de modèles"
 sidebarTitle: "Providers de modèles"
 ---
 
-Référence pour les **fournisseurs de modèle/LLM** (et non les canaux de chat comme WhatsApp/Telegram). Pour les règles de sélection de modèle, consultez [Modèles](LLMWhatsAppTelegram/en/concepts/models).
+Référence pour les **providers de modèles/LLM** (pas les canaux de chat comme WhatsApp/Telegram). Pour les règles de sélection de modèles, voir [Modèles](LLMWhatsAppTelegram/en/concepts/models).
 
 ## Règles rapides
 
 <AccordionGroup>
-  <Accordion title="CLIRéférences de modèle et assistants CLI">
-    - Les références de modèle utilisent `provider/model` (exemple : `opencode/claude-opus-4-6`).
-    - `agents.defaults.models`CLI agit comme une liste d'autorisation (allowlist) lorsqu'il est défini.
+  <Accordion title="CLIRéférences de modèles et assistants CLI">
+    - Les références de modèles utilisent `provider/model` (exemple : `opencode/claude-opus-4-6`).
+    - `agents.defaults.models`CLI agit comme une liste d'autorisation lorsqu'il est défini.
     - Assistants CLI : `openclaw onboard`, `openclaw models list`, `openclaw models set <provider/model>`.
-    - `models.providers.*.contextWindow` / `contextTokens` / `maxTokens` définissent les valeurs par défaut au niveau du fournisseur ; `models.providers.*.models[].contextWindow` / `contextTokens` / `maxTokens` les remplacent pour chaque modèle.
-    - Règles de repli, sondages de cooldown et persistance des remplacements de session : [Basculement de modèle](/fr/concepts/model-failover).
+    - `models.providers.*.contextWindow` / `contextTokens` / `maxTokens` définissent les valeurs par défaut au niveau du provider ; `models.providers.*.models[].contextWindow` / `contextTokens` / `maxTokens` les remplacent pour chaque modèle.
+    - Règles de secours, sondages de refroidissement et persistance des remplacements de session : [Basculement de modèle](/fr/concepts/model-failover).
 
   </Accordion>
   <Accordion title="Ajouter l'authentification du provider ne change pas votre modèle principal">
@@ -29,15 +29,15 @@ Référence pour les **fournisseurs de modèle/LLM** (et non les canaux de chat 
   <Accordion title="OpenAIDivision fournisseur/runtime OpenAI"OpenAI>
     Les routes de la famille OpenAI sont spécifiques au préfixe :
 
-    - `openai/<model>` utilise le harnais natif du serveur d'application Codex pour les tours d'agent par défaut. Il s'agit de la configuration d'abonnement ChatGPT/Codex habituelle.
-    - `openai-codex/<model>` est une configuration héritée que le docteur réécrit en `openai/<model>`.
-    - `openai/<model>` avec fournisseur/modèle `agentRuntime.id: "pi"`APIOpenAI utilise PI pour les routes de clé API explicite ou de compatibilité.
+    - `openai/<model>` utilise le harnais de serveur d'application Codex natif pour les tours d'agent par défaut. Il s'agit de la configuration d'abonnement ChatGPT/Codex habituelle.
+    - `openai-codex/<model>` est une configuration legacy que le docteur réécrit en `openai/<model>`.
+    - `openai/<model>` plus fournisseur/modèle `agentRuntime.id: "pi"` utilise PI pour les routes de clé APIOpenAI explicite ou de compatibilité.
 
-    Voir [OpenAI](/fr/providers/openai) et [Harnais Codex](/fr/plugins/codex-harness). Si la division fournisseur/runtime est déroutante, lisez d'abord [Runtimes d'agent](/fr/concepts/agent-runtimes).
+    Voir [OpenAI](/fr/providers/openai) et [harnais Codex](/fr/plugins/codex-harness). Si la division fournisseur/runtime est confuse, lisez d'abord [Runtimes d'agent](/fr/concepts/agent-runtimes).
 
-    L'activation automatique des plugins suit la même limite : les références d'agent `openai/*` activent le plugin Codex pour la route par défaut, et les références explicites de fournisseur/modèle `agentRuntime.id: "codex"` ou héritées `codex/<model>` le nécessitent également.
+    L'activation automatique du plugin suit la même frontière : les références d'agent `openai/*` activent le plugin Codex pour la route par défaut, et les références explicites de fournisseur/modèle `agentRuntime.id: "codex"` ou legacy `codex/<model>` le nécessitent également.
 
-    GPT-5.5 est disponible via le harnais natif du serveur d'application Codex par défaut sur `openai/gpt-5.5`, et via PI uniquement lorsque la stratégie d'exécution fournisseur/modèle sélectionne explicitement `pi`.
+    GPT-5.5 est disponible via le harnais de serveur d'application Codex natif par défaut sur `openai/gpt-5.5`, et via PI uniquement lorsque la stratégie d'exécution fournisseur/modèle sélectionne explicitement `pi`.
 
   </Accordion>
   <Accordion title="Runtimes CLI">
@@ -52,7 +52,7 @@ Référence pour les **fournisseurs de modèle/LLM** (et non les canaux de chat 
 
 La plupart des logiques spécifiques aux providers résident dans les plugins de provider (`registerProvider(...)`OpenClawOAuth) tandis qu'OpenClaw conserve la boucle d'inférence générique. Les plugins gèrent l'onboarding, les catalogues de modèles, le mappage des variables d'environnement d'authentification, la normalisation du transport/de la configuration, le nettoyage des schémas d'outils, la classification du basculement, le rafraîchissement OAuth, le rapport d'utilisation, les profils de réflexion/raisonnement, et plus encore.
 
-La liste complète des hooks SDK de fournisseur et les exemples de plugins groupés se trouve dans [Plugins de fournisseur](/fr/plugins/sdk-provider-plugins). Un fournisseur qui a besoin d'un exécuteur de requête totalement personnalisé est une surface d'extension distincte et plus approfondie.
+La liste complète des hooks du SDK de fournisseur et des exemples de plugins groupés se trouve dans [Plugins de fournisseur](/fr/plugins/sdk-provider-plugins). Un fournisseur qui a besoin d'un exécuteur de requêtes totalement personnalisé est une surface d'extension distincte et plus approfondie.
 
 <Note>Le comportement du runner détenu par le provider réside sur des hooks de provider explicites tels que la stratégie de relecture, la normalisation du schéma d'outils, l'encapsulation du flux et les assistants de transport/requête. l'ancien sac statique `ProviderPlugin.capabilities` n'est réservé qu'à la compatibilité et n'est plus lu par la logique du runner partagé.</Note>
 
@@ -132,7 +132,7 @@ OpenClaw est livré avec le catalogue pi-ai. Ces fournisseurs ne nécessitent **
 - Auth : OAuth (ChatGPT)
 - Référence de modèle PI obsolète : `openai-codex/gpt-5.5`
 - Référence de harnais app-server Codex natif : `openai/gpt-5.5`
-- Documentation du harnais natif du serveur d'application Codex : [Harnais Codex](/fr/plugins/codex-harness)
+- Documentation du harnais de serveur d'application Codex natif : [harnais Codex](/fr/plugins/codex-harness)
 - Références de modèle héritées : `codex/gpt-*`
 - Limite du plugin : `openai-codex/*` charge le plugin OpenAI ; le plugin natif de serveur d'application Codex n'est sélectionné que par le runtime du harnais Codex ou les références héritées `codex/*`.
 - CLI : `openclaw onboard --auth-choice openai-codex` ou `openclaw models auth login --provider openai-codex`
@@ -173,8 +173,8 @@ OpenClaw est livré avec le catalogue pi-ai. Ces fournisseurs ne nécessitent **
 ### Autres options hébergées par abonnement
 
 <CardGroup cols={3}>
-  <Card title="Modèles GLM" href="/fr/providers/glm">
-    Plan de codage Z.AI ou points de terminaison API généraux.
+  <Card title="Z.AI (GLM)" href="/fr/providers/zai">
+    Z.AI Coding Plan ou points de terminaison API généraux.
   </Card>
   <Card title="MiniMax" href="/fr/providers/minimax">
     Plan de codage MiniMax OAuth ou accès par clé API.
@@ -280,7 +280,7 @@ Les réponses JSON du CLI Gemini sont analysées à partir de `response` ; l'uti
 - Le catalogue de repli statique fournit `kilocode/kilo/auto` ; la découverte en direct `https://api.kilo.ai/api/gateway/models` peut étendre davantage le catalogue d'exécution.
 - Le routage exact en amont derrière `kilocode/kilo/auto` est géré par Kilo Gateway, et n'est pas codé en dur dans OpenClaw.
 
-Voir [/providers/kilocode](/fr/providers/kilocode) pour les détails de configuration.
+Voir [/providers/kilocode](/fr/providers/kilocode) pour les détails de la configuration.
 
 ### Autres plugins de provider groupés
 
@@ -327,31 +327,31 @@ Voir [/providers/kilocode](/fr/providers/kilocode) pour les détails de configur
     Les ID de modèle utilisent un espace de noms `nvidia/<vendor>/<model>` (par exemple `nvidia/nvidia/nemotron-...` avec `nvidia/moonshotai/kimi-k2.5`) ; les sélecteurs préservent la composition littérale `<provider>/<model-id>` tandis que la clé canonique envoyée à l'API reste avec un préfixe unique.
   </Accordion>
   <Accordion title="xAI"OAuthAPI>
-    Utilise le chemin de réponses xAI. Le chemin recommandé est SuperGrok/X Premium OAuth ; les clés API fonctionnent toujours via `XAI_API_KEY` ou la configuration du plugin. `grok-4.3` est le modèle de chat par défaut inclus. `/fast` ou `params.fastMode: true` réécrit `grok-3`, `grok-3-mini`, `grok-4` et `grok-4-0709` vers leurs variantes `*-fast`. `tool_stream` est activé par défaut ; désactivez-le via `agents.defaults.models["xai/<model>"].params.tool_stream=false`.
+    Utilise le chemin de réponses xAI. Le chemin recommandé est SuperGrok/X Premium OAuth ; les clés API fonctionnent toujours via `XAI_API_KEY` ou la configuration du plugin, et Grok `web_search`API réutilise le même profil d'authentification avant le repli sur la clé API. `grok-4.3` est le modèle de chat par défaut inclus, et `grok-build-0.1` est sélectionnable pour un travail axé sur le build/le codage. `/fast` ou `params.fastMode: true` réécrit `grok-3`, `grok-3-mini`, `grok-4`, et `grok-4-0709` vers leurs variantes `*-fast`. `tool_stream` est activé par défaut ; désactivez-le via `agents.defaults.models["xai/<model>"].params.tool_stream=false`.
   </Accordion>
   <Accordion title="Cerebras">
     Fourni en tant que plugin de fournisseur `cerebras`GLM inclus. GLM utilise `zai-glm-4.7`OpenAI ; l'URL de base compatible OpenAI est `https://api.cerebras.ai/v1`.
   </Accordion>
 </AccordionGroup>
 
-## Fournisseurs via `models.providers` (URL de base personnalisée)
+## Providers via `models.providers` (custom/base URL)
 
-Utilisez `models.providers` (ou `models.json`OpenAIAnthropic) pour ajouter des fournisseurs **personnalisés** ou des proxys compatibles OpenAI/Anthropic.
+Use `models.providers` (or `models.json`) to add **custom** providers or OpenAI/Anthropic-compatible proxies.
 
-Nombre des plugins de fournisseur inclus ci-dessous publient déjà un catalogue par défaut. Utilisez des entrées `models.providers.<id>` explicites uniquement lorsque vous souhaitez remplacer l'URL de base par défaut, les en-têtes ou la liste des modèles.
+Many of the bundled provider plugins below already publish a default catalog. Use explicit `models.providers.<id>` entries only when you want to override the default base URL, headers, or model list.
 
-Les vérifications de capacité de modèle Gateway lisent également les métadonnées Gateway`models.providers.<id>.models[]` explicites. Si un modèle personnalisé ou proxy accepte les images, définissez `input: ["text", "image"]`WebChat sur ce modèle afin que les chemins de pièces jointes WebChat et d'origine nœud transmettent les images en tant qu'entrées natives du modèle au lieu de références média texte uniquement.
+Gateway model capability checks also read explicit `models.providers.<id>.models[]` metadata. If a custom or proxy model accepts images, set `input: ["text", "image"]` on that model so WebChat and node-origin attachment paths pass images as native model inputs instead of text-only media refs.
 
-`agents.defaults.models["provider/model"]` contrôle uniquement la visibilité des modèles, les alias et les métadonnées par modèle pour les agents. Il n'enregistre pas par lui-même un nouveau modèle d'exécution. Pour les modèles de fournisseur personnalisés, ajoutez également `models.providers.<provider>.models[]` avec au moins le `id` correspondant.
+`agents.defaults.models["provider/model"]` contrôle uniquement la visibilité des modèles, les alias et les métadonnées par modèle pour les agents. Il n'enregistre pas par lui-même un nouveau modèle d'exécution. Pour les modèles de fournisseurs personnalisés, ajoutez également `models.providers.<provider>.models[]` avec au moins le `id` correspondant.
 
 ### Moonshot AI (Kimi)
 
-Moonshot est fourni sous forme de plugin de provider groupé. Utilisez le provider intégré par défaut, et ajoutez une entrée explicite Moonshot`models.providers.moonshot` uniquement lorsque vous devez remplacer l'URL de base ou les métadonnées du modèle :
+Moonshot est fourni en tant que plugin de fournisseur groupé. Utilisez le fournisseur intégré par défaut, et ajoutez une entrée `models.providers.moonshot` explicite uniquement lorsque vous devez remplacer l'URL de base ou les métadonnées du modèle :
 
-- Provider : `moonshot`
+- Fournisseur : `moonshot`
 - Auth : `MOONSHOT_API_KEY`
 - Exemple de modèle : `moonshot/kimi-k2.6`
-- CLI : CLI`openclaw onboard --auth-choice moonshot-api-key` ou `openclaw onboard --auth-choice moonshot-api-key-cn`
+- CLI : `openclaw onboard --auth-choice moonshot-api-key` ou `openclaw onboard --auth-choice moonshot-api-key-cn`
 
 IDs de modèle Kimi K2 :
 
@@ -388,7 +388,7 @@ IDs de modèle Kimi K2 :
 
 Kimi Coding utilise le point de terminaison compatible Anthropic de Moonshot AI :
 
-- Provider : `kimi`
+- Fournisseur : `kimi`
 - Auth : `KIMI_API_KEY`
 - Exemple de modèle : `kimi/kimi-for-coding`
 
@@ -401,16 +401,16 @@ Kimi Coding utilise le point de terminaison compatible Anthropic de Moonshot AI 
 }
 ```
 
-L'ancien `kimi/kimi-code` et `kimi/k2p5`API restent acceptés comme identifiants de modèle de compatibilité et sont normalisés vers l'identifiant de modèle API stable de Kimi.
+Les anciens `kimi/kimi-code` et `kimi/k2p5`API restent acceptés en tant qu'identifiants de modèle de compatibilité et sont normalisés vers l'identifiant de modèle API stable de Kimi.
 
 ### Volcano Engine (Doubao)
 
 Volcano Engine (火山引擎) donne accès à Doubao et d'autres modèles en Chine.
 
-- Provider : `volcengine` (codage : `volcengine-plan`)
+- Fournisseur : `volcengine` (codage : `volcengine-plan`)
 - Auth : `VOLCANO_ENGINE_API_KEY`
 - Exemple de modèle : `volcengine-plan/ark-code-latest`
-- CLI : CLI`openclaw onboard --auth-choice volcengine-api-key`
+- CLI : `openclaw onboard --auth-choice volcengine-api-key`
 
 ```json5
 {
@@ -420,9 +420,9 @@ Volcano Engine (火山引擎) donne accès à Doubao et d'autres modèles en Chi
 }
 ```
 
-L'intégration par défaut se fait sur la surface de codage, mais le catalogue général `volcengine/*` est enregistré en même temps.
+L'onboarding s'effectue par défaut sur l'interface de codage, mais le catalogue général `volcengine/*` est enregistré en même temps.
 
-Dans les sélecteurs de modèle d'intégration/configuration, le choix d'authentification Volcengine préfère à la fois les lignes `volcengine/*` et `volcengine-plan/*`OpenClaw. Si ces modèles ne sont pas encore chargés, OpenClaw revient au catalogue non filtré au lieu d'afficher un sélecteur vide limité au provider.
+Dans les sélecteurs de modèles d'onboarding/configuration, le choix d'authentification Volcengine privilégie à la fois les lignes `volcengine/*` et `volcengine-plan/*`. Si ces modèles ne sont pas encore chargés, OpenClaw revient au catalogue non filtré au lieu d'afficher un sélecteur délimité au fournisseur vide.
 
 <Tabs>
   <Tab title="Standard models">
@@ -433,7 +433,7 @@ Dans les sélecteurs de modèle d'intégration/configuration, le choix d'authent
     - `volcengine/deepseek-v3-2-251201` (DeepSeek V3.2 128K)
 
   </Tab>
-  <Tab title="Modèles de codage (volcengine-plan)">
+  <Tab title="Coding models (volcengine-plan)">
     - `volcengine-plan/ark-code-latest`
     - `volcengine-plan/doubao-seed-code`
     - `volcengine-plan/kimi-k2.5`
@@ -449,7 +449,7 @@ BytePlus ARK donne accès aux mêmes modèles que Volcano Engine pour les utilis
 
 - Provider : `byteplus` (codage : `byteplus-plan`)
 - Auth : `BYTEPLUS_API_KEY`
-- Modèle exemple : `byteplus-plan/ark-code-latest`
+- Exemple de model : `byteplus-plan/ark-code-latest`
 - CLI : CLI`openclaw onboard --auth-choice byteplus-api-key`
 
 ```json5
@@ -460,18 +460,18 @@ BytePlus ARK donne accès aux mêmes modèles que Volcano Engine pour les utilis
 }
 ```
 
-L'intégration est définie par défaut sur l'interface de codage, mais le catalogue `byteplus/*` général est enregistré en même temps.
+L'intégration par défaut s'effectue sur l'interface de codage, mais le catalogue général `byteplus/*` est enregistré en même temps.
 
-Dans les sélecteurs de modèles d'intégration/de configuration, le choix d'authentification BytePlus préfère les lignes `byteplus/*` et `byteplus-plan/*`OpenClaw. Si ces modèles ne sont pas encore chargés, OpenClaw revient au catalogue non filtré au lieu d'afficher un sélecteur limité au provider vide.
+Dans les sélecteurs de modèles d'intégration/de configuration, le choix d'authentification BytePlus privilégie à la fois les lignes `byteplus/*` et `byteplus-plan/*`OpenClaw. Si ces modèles ne sont pas encore chargés, OpenClaw revient au catalogue non filtré au lieu d'afficher un sélecteur limité au fournisseur vide.
 
 <Tabs>
-  <Tab title="Modèles standard">
+  <Tab title="Standard models">
     - `byteplus/seed-1-8-251228` (Seed 1.8)
     - `byteplus/kimi-k2-5-260127` (Kimi K2.5)
     - `byteplus/glm-4-7-251222`GLM (GLM 4.7)
 
   </Tab>
-  <Tab title="Modèles de codage (byteplus-plan)">
+  <Tab title="Coding models (byteplus-plan)">
     - `byteplus-plan/ark-code-latest`
     - `byteplus-plan/doubao-seed-code`
     - `byteplus-plan/kimi-k2.5`
@@ -483,11 +483,11 @@ Dans les sélecteurs de modèles d'intégration/de configuration, le choix d'aut
 
 ### Synthetic
 
-Synthetic fournit des modèles compatibles Anthropic derrière le provider Anthropic`synthetic` :
+Synthetic fournit des modèles compatibles avec Anthropic via le provider Anthropic`synthetic` :
 
 - Provider : `synthetic`
 - Auth : `SYNTHETIC_API_KEY`
-- Modèle exemple : `synthetic/hf:MiniMaxAI/MiniMax-M2.5`
+- Exemple de model : `synthetic/hf:MiniMaxAI/MiniMax-M2.5`
 - CLI : CLI`openclaw onboard --auth-choice synthetic-api-key`
 
 ```json5
@@ -515,26 +515,26 @@ MiniMax est configuré via MiniMax`models.providers` car il utilise des points d
 
 - MiniMax OAuth (Global) : MiniMaxOAuth`--auth-choice minimax-global-oauth`
 - MiniMax OAuth (CN) : MiniMaxOAuth`--auth-choice minimax-cn-oauth`
-- Clé API MiniMax (Global) : MiniMaxAPI`--auth-choice minimax-global-api`
-- Clé API MiniMax (CN) : MiniMaxAPI`--auth-choice minimax-cn-api`
+- MiniMax API key (Global) : MiniMaxAPI`--auth-choice minimax-global-api`
+- MiniMax API key (CN) : MiniMaxAPI`--auth-choice minimax-cn-api`
 - Auth : `MINIMAX_API_KEY` pour `minimax` ; `MINIMAX_OAUTH_TOKEN` ou `MINIMAX_API_KEY` pour `minimax-portal`
 
-Voir [/providers/minimax](/fr/providers/minimax) pour les détails de configuration, les options de modèle et les extraits de configuration.
+Consultez [/providers/minimax](/fr/providers/minimax) pour les détails de configuration, les options de modèle et les extraits de configuration.
 
 <Note>Sur le chemin de streaming compatible Anthropic de MiniMax, OpenClaw désactive la réflexion par défaut sauf si vous la définissez explicitement, et MiniMaxAnthropicOpenClaw`/fast on` réécrit `MiniMax-M2.7` en `MiniMax-M2.7-highspeed`.</Note>
 
 Répartition des capacités détenues par le plugin :
 
-- Les valeurs par défaut de texte/chat restent sur `minimax/MiniMax-M2.7`
+- Les valeurs par défaut de texte/discours restent sur `minimax/MiniMax-M2.7`
 - La génération d'images est `minimax/image-01` ou `minimax-portal/image-01`
-- La compréhension d'images est un modèle `MiniMax-VL-01`MiniMax appartenant au plugin sur les deux chemins d'authentification MiniMax
+- La compréhension d'images est un `MiniMax-VL-01`MiniMax appartenant au plugin sur les deux chemins d'authentification MiniMax
 - La recherche web reste sur l'id de fournisseur `minimax`
 
 ### LM Studio
 
 LM Studio est fourni en tant que plugin de fournisseur groupé qui utilise l'API native :
 
-- Fournisseur : `lmstudio`
+- Provider : `lmstudio`
 - Auth : `LM_API_TOKEN`
 - URL de base d'inférence par défaut : `http://localhost:1234/v1`
 
@@ -548,15 +548,15 @@ Définissez ensuite un modèle (remplacez par l'un des ID renvoyés par `http://
 }
 ```
 
-OpenClaw utilise le OpenClaw`/api/v1/models` natif et le `/api/v1/models/load` de LM Studio pour la découverte + le chargement automatique, avec `/v1/chat/completions` pour l'inférence par défaut. Si vous souhaitez que le chargement JIT, le TTL et l'expulsion automatique de LM Studio gèrent le cycle de vie du modèle, définissez `models.providers.lmstudio.params.preload: false`. Voir [/providers/lmstudio](/fr/providers/lmstudio) pour la configuration et le dépannage.
+OpenClaw utilise les OpenClaw`/api/v1/models` et `/api/v1/models/load` natifs de LM Studio pour la découverte + le chargement automatique, avec `/v1/chat/completions` pour l'inférence par défaut. Si vous souhaitez que le chargement JIT, le TTL et l'expulsion automatique de LM Studio gèrent le cycle de vie du modèle, définissez `models.providers.lmstudio.params.preload: false`. Consultez [/providers/lmstudio](/fr/providers/lmstudio) pour la configuration et le dépannage.
 
 ### Ollama
 
 Ollama est fourni en tant que plugin de fournisseur groupé et utilise l'Ollama native de API :
 
-- Fournisseur : `ollama`
+- Provider : `ollama`
 - Auth : Aucune requise (serveur local)
-- Exemple de modèle : `ollama/llama3.3`
+- Exemple de model : `ollama/llama3.3`
 - Installation : [https://ollama.com/download](https://ollama.com/download)
 
 ```bash
@@ -572,7 +572,7 @@ ollama pull llama3.3
 }
 ```
 
-Ollama est détecté localement à Ollama`http://127.0.0.1:11434` lorsque vous activez l'option avec `OLLAMA_API_KEY`Ollama, et le plugin provider inclus ajoute directement Ollama à `openclaw onboard` et au sélecteur de modèles. Consultez [/providers/ollama](/fr/providers/ollama) pour la procédure d'onboarding, le mode cloud/local et la configuration personnalisée.
+Ollama est détecté localement à Ollama`http://127.0.0.1:11434` lorsque vous activez l'option avec `OLLAMA_API_KEY`Ollama, et le plugin provider inclus ajoute directement Ollama à `openclaw onboard` et au sélecteur de model. Consultez [/providers/ollama](/fr/providers/ollama) pour l'onboarding, le mode cloud/local et la configuration personnalisée.
 
 ### vLLM
 
@@ -588,7 +588,7 @@ Pour activer la découverte automatique localement (n'importe quelle valeur fonc
 export VLLM_API_KEY="vllm-local"
 ```
 
-Définissez ensuite un modèle (remplacez par l'un des ID renvoyés par `/v1/models`) :
+Ensuite, définissez un model (remplacez par l'un des ID renvoyés par `/v1/models`) :
 
 ```json5
 {
@@ -614,7 +614,7 @@ Pour activer la découverte automatique localement (n'importe quelle valeur fonc
 export SGLANG_API_KEY="sglang-local"
 ```
 
-Définissez ensuite un modèle (remplacez par l'un des ID renvoyés par `/v1/models`) :
+Ensuite, définissez un model (remplacez par l'un des ID renvoyés par `/v1/models`) :
 
 ```json5
 {
@@ -672,19 +672,19 @@ Exemple (compatible OpenAI) :
     - `contextWindow: 200000`
     - `maxTokens: 8192`
 
-    Recommandé : définissez des valeurs explicites correspondant aux limites de votre proxy/modèle.
+    Recommandé : définissez des valeurs explicites correspondant aux limites de votre proxy/model.
 
   </Accordion>
-  <Accordion title="Règles de façonnage des routes proxy">
-    - Pour `api: "openai-completions"` sur des points de terminaison non natifs (toute `baseUrl` non vide dont l'hôte n'est pas `api.openai.com`), OpenClaw force `compat.supportsDeveloperRole: false` pour éviter les erreurs 400 du provider pour les rôles `developer` non pris en charge.
-    - Les routes compatibles OpenAI de style proxy ignorent également le façonnage des requêtes natif uniquement pour OpenAI : pas de `service_tier`, pas de Responses `store`, pas de Completions `store`, pas d'indices de cache de prompt, pas de façonnage de payload compatible avec le raisonnement OpenAI et pas d'en-têtes d'attribution cachés de OpenClaw.
-    - Pour les proxies Completions compatibles OpenAI qui nécessitent des champs spécifiques au fournisseur, définissez `agents.defaults.models["provider/model"].params.extra_body` (ou `extraBody`) pour fusionner du JSON supplémentaire dans le corps de la requête sortante.
-    - Pour les contrôles de modèle de conversation vLLM, définissez `agents.defaults.models["provider/model"].params.chat_template_kwargs`. Le plugin vLLM inclus envoie automatiquement `enable_thinking: false` et `force_nonempty_content: true` pour `vllm/nemotron-3-*` lorsque le niveau de réflexion de la session est désactivé.
-    - Pour les modèles locaux lents ou les hôtes distants LAN/tailnet, définissez `models.providers.<id>.timeoutSeconds`. Cela étend la gestion des requêtes HTTP du modèle de provider, y compris la connexion, les en-têtes, le streaming du corps et l'abandon de la récupération gardée totale, sans augmenter le délai d'exécution global de l'agent. Si `agents.defaults.timeoutSeconds` ou un délai d'exécution spécifique est plus faible, augmentez également cette limite ; les délais d'expiration du provider ne peuvent pas étendre l'exécution complète.
-    - Les appels HTTP du provider de modèles autorisent les réponses DNS fake-IP de Surge, Clash et sing-box dans `198.18.0.0/15` et `fc00::/7` uniquement pour le nom d'hôte du provider `baseUrl` configuré. Les points de terminaison du provider personnalisé/local font également confiance à cette origine `scheme://host:port` configurée exacte pour les requêtes de modèles gardées, y compris le bouclage, le LAN et les hôtes tailnet. Ce n'est pas une nouvelle option de configuration ; la `baseUrl` que vous configurez étend la politique de requête uniquement pour cette origine. L'autorisation du nom d'hôte fake-IP et la confiance de l'origine exacte sont des mécanismes indépendants. Les autres destinations privées, de bouclage, de liaison locale, de métadonnées et les différents ports nécessitent toujours une approbation explicite `models.providers.<id>.request.allowPrivateNetwork: true`. Définissez `models.providers.<id>.request.allowPrivateNetwork: false` pour refuser la confiance de l'origine exacte.
-    - Si `baseUrl` est vide/omis, OpenClaw conserve le comportement par défaut de OpenAI (qui se résout en `api.openai.com`).
+  <Accordion title="Proxy-route shaping rules">
+    - Pour `api: "openai-completions"` sur les points de terminaison non natifs (tout `baseUrl` non vide dont l'hôte n'est pas `api.openai.com`), OpenClaw force `compat.supportsDeveloperRole: false` pour éviter les erreurs 400 du provider pour les rôles `developer` non pris en charge.
+    - Les routes compatibles OpenAI de style proxy ignorent également la mise en forme des requêtes native uniquement OpenAI : pas de `service_tier`, pas de `store` Réponses, pas de `store` Complétions, pas d'indices de cache de prompt, pas de mise en forme de payload compatible raisonnement OpenAI, et pas d'en-têtes d'attribution OpenClaw masqués.
+    - Pour les proxies de Complétions compatibles OpenAI qui nécessitent des champs spécifiques au fournisseur, définissez `agents.defaults.models["provider/model"].params.extra_body` (ou `extraBody`) pour fusionner du JSON supplémentaire dans le corps de la demande sortante.
+    - Pour les contrôles de modèle de discussion vLLM, définissez `agents.defaults.models["provider/model"].params.chat_template_kwargs`. Le plugin vLLM groupé envoie automatiquement `enable_thinking: false` et `force_nonempty_content: true` pour `vllm/nemotron-3-*` lorsque le niveau de réflexion de la session est désactivé.
+    - Pour les modèles locaux lents ou les hôtes LAN/tailnet distants, définissez `models.providers.<id>.timeoutSeconds`. Cela étend la gestion des requêtes HTTP du modèle de provider, y compris la connexion, les en-têtes, le streaming du corps et l'abandon total de la récupération gardée, sans augmenter le délai d'exécution global de l'agent. Si `agents.defaults.timeoutSeconds` ou un délai spécifique à l'exécution est inférieur, augmentez également cette limite ; les délais d'attente du provider ne peuvent pas prolonger l'exécution globale.
+    - Les appels HTTP du provider de modèles autorisent les réponses DNS fake-IP de Surge, Clash et sing-box dans `198.18.0.0/15` et `fc00::/7` uniquement pour le nom d'hôte du provider `baseUrl` configuré. Les points de terminaison de provider personnalisés/locaux font également confiance à cette origine `scheme://host:port` configurée exacte pour les demandes de modèle gardées, y compris les hôtes de bouclage, LAN et tailnet. Ce n'est pas une nouvelle option de configuration ; le `baseUrl` que vous configurez étend la politique de requête uniquement pour cette origine. L'autorisation du nom d'hôte fake-IP et la confiance de l'origine exacte sont des mécanismes indépendants. Les autres destinations privées, de bouclage, de liaison locale, de métadonnées et les différents ports nécessitent toujours une approbation explicite `models.providers.<id>.request.allowPrivateNetwork: true`. Définissez `models.providers.<id>.request.allowPrivateNetwork: false` pour refuser la confiance de l'origine exacte.
+    - Si `baseUrl` est vide/omis, OpenClaw conserve le comportement par défaut de OpenAI (qui est résolu en `api.openai.com`).
     - Pour la sécurité, un `compat.supportsDeveloperRole: true` explicite est toujours remplacé sur les points de terminaison `openai-completions` non natifs.
-    - Pour `api: "anthropic-messages"` sur des points de terminaison non directs (tout provider autre que `anthropic` canonique, ou un `models.providers.anthropic.baseUrl` personnalisé dont l'hôte n'est pas un point de terminaison public `api.anthropic.com`), OpenClaw supprime les en-têtes bêta implicites Anthropic tels que `claude-code-20250219`, `interleaved-thinking-2025-05-14` et les marqueurs OAuth, afin que les proxies compatibles personnalisés Anthropic ne rejettent pas les indicateurs bêta non pris en charge. Définissez `models.providers.<id>.headers["anthropic-beta"]` explicitement si votre proxy nécessite des fonctionnalités bêta spécifiques.
+    - Pour `api: "anthropic-messages"` sur les points de terminaison non directs (tout provider autre que `anthropic` canonique, ou un `models.providers.anthropic.baseUrl` personnalisé dont l'hôte n'est pas un point de terminaison public `api.anthropic.com`), OpenClaw supprime les en-têtes bêta implicites Anthropic tels que `claude-code-20250219`, `interleaved-thinking-2025-05-14`, et les marqueurs OAuth, afin que les proxies compatibles Anthropic personnalisés ne rejettent pas les indicateurs bêta non pris en charge. Définissez `models.providers.<id>.headers["anthropic-beta"]` explicitement si votre proxy nécessite des fonctionnalités bêta spécifiques.
 
   </Accordion>
 </AccordionGroup>
@@ -697,11 +697,11 @@ openclaw models set opencode/claude-opus-4-6
 openclaw models list
 ```
 
-Voir aussi : [Configuration](/fr/gateway/configuration) pour des exemples de configuration complets.
+Voir aussi : [Configuration](/fr/gateway/configuration) pour des exemples complets de configuration.
 
 ## Connexes
 
-- Référence de configuration](/fr/gateway/config-agents#agent-defaults) - clés de configuration de modèle
-- Basculement de modèle](/fr/concepts/model-failover) - chaînes de secours et comportement de nouvelle tentative
-- Modèles](/fr/concepts/models) - configuration de modèle et alias
-- Providers](/fr/providers) - guides de configuration par provider
+- [Référence de configuration](/fr/gateway/config-agents#agent-defaults) - clés de configuration du modèle
+- [Basculement de modèle (failover)](/fr/concepts/model-failover) - chaînes de repli et comportement de nouvelle tentative
+- [Modèles](/fr/concepts/models) - configuration et alias des modèles
+- [Providers](/fr/providers) - guides de configuration par provider

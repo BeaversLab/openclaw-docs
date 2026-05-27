@@ -130,7 +130,7 @@ El comportamiento normal de OpenClaw todavía se aplica a las llamadas finales:
 
 - políticas de permiso y denegación de herramientas
 - restricciones de herramientas por agente y por espacio aislado
-- control de acceso exclusivo para el propietario
+- channel/política de herramientas en tiempo de ejecución
 - ganchos de aprobación
 - ganchos de complemento `before_tool_call`
 - identidad de sesión, registros y telemetría

@@ -92,6 +92,6 @@ Gateway WebSocket 客戶端使用以下其中一種角色連線：
 
 ## 共用金鑰驗證
 
-共用 Gateway 權杖/密碼驗證被視為該 Gateway 的信任操作員存取。OpenAI 相容 HTTP 表面和 `/tools/invoke` 會恢復共用金鑰 bearer 驗證的正常完整操作員預設範圍集，即使呼叫者發送了較窄的聲明範圍。
+共享的 gateway token/密碼驗證被視為對該 Gateway 的可信操作員存取權。OpenAI 相容的 HTTP 介面、`/tools/invoke` 以及 HTTP 會話歷史記錄端點會還原正常的完整操作員預設範圍集，適用於共用密碼承載驗證，即使呼叫方發送的宣告範圍較窄。
 
 承載身份的模式，例如信任的代理驗證或私有入口 `none`，仍可遵守明確聲明的範圍。請使用個別的 Gateway 以進行真正的信任邊界隔離。

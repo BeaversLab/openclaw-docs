@@ -85,7 +85,9 @@ Vous pouvez également omettre `--auth-choice` ; le passage de `--github-copilot
     terminal, et non dans un script non interactif ou un pipeline CI.
   </Accordion>
 
-<Accordion title="La disponibilité des modèles dépend de votre plan">La disponibilité des modèles Copilot dépend de votre plan GitHub. Si un modèle est rejeté, essayez un autre ID (par exemple `github-copilot/gpt-4.1`).</Accordion>
+<Accordion title="Model availability depends on your plan">
+  La disponibilité des modèles Copilot dépend de votre plan GitHub. Si un modèle est rejeté, essayez un autre ID (par exemple `github-copilot/gpt-5.5`). Consultez la page sur les [modèles pris en charge par plan Copilot](https://docs.github.com/en/copilot/reference/ai-models/supported-models#supported-ai-models-per-copilot-plan) de GitHub pour obtenir la liste actuelle des modèles.
+</Accordion>
 
   <Accordion title="Actualisation du catalogue en direct depuis l'API Copilot">
     Une fois que le chemin d'authentification par connexion (ou variable d'environnement) a résolu un jeton GitHub,

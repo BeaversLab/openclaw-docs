@@ -25,7 +25,7 @@ Los controles clave residen en la configuración:
 - `agents.defaults.*` para la transmisión en bloque y los valores predeterminados de fragmentación.
 - Anulaciones de canal (`channels.whatsapp.*`, `channels.telegram.*`, etc.) para límites e interruptores de transmisión.
 
-Consulte [Configuración](/es/gateway/configuration) para obtener el esquema completo.
+Consulte [Configuración](/es/gateway/configuration) para ver el esquema completo.
 
 ## Deduplicación de entrada
 
@@ -139,7 +139,7 @@ Configuración clave:
 - `agents.defaults.humanDelay` (pausa similar a la humana entre respuestas de bloques)
 - anulaciones de canal: `*.blockStreaming` y `*.blockStreamingCoalesce` (los canales que no sean Telegram requieren `*.blockStreaming: true` explícito)
 
-Detalles: [Streaming + chunking](/es/concepts/streaming).
+Detalles: [Transmisión + fragmentación](/es/concepts/streaming).
 
 ## Visibilidad del razonamiento y tokens
 
@@ -149,7 +149,7 @@ OpenClaw puede exponer u ocultar el razonamiento del modelo:
 - El contenido del razonamiento aún cuenta hacia el uso de tokens cuando es producido por el modelo.
 - Telegram admite el flujo de razonamiento en una burbuja de borrador transitorio que se elimina después de la entrega final; use `/reasoning on` para una salida de razonamiento persistente.
 
-Detalles: [Thinking + reasoning directives](/es/tools/thinking) y [Token use](/es/reference/token-use).
+Detalles: [Directivas de pensamiento + razonamiento](/es/tools/thinking) y [Uso de tokens](/es/reference/token-use).
 
 ## Prefijos, hilos y respuestas
 
@@ -158,7 +158,7 @@ El formato de los mensajes salientes está centralizado en `messages`:
 - `messages.responsePrefix`, `channels.<channel>.responsePrefix` y `channels.<channel>.accounts.<id>.responsePrefix` (cascada de prefijos salientes), más `channels.whatsapp.messagePrefix` (prefijo entrante de WhatsApp)
 - Hilos de respuesta mediante `replyToMode` y valores predeterminados por canal
 
-Detalles: [Configuration](/es/gateway/config-agents#messages) y documentación de canales.
+Detalles: [Configuración](/es/gateway/config-agents#messages) y documentación de canales.
 
 ## Respuestas silenciosas
 
@@ -172,21 +172,17 @@ OpenClaw resuelve ese comportamiento por tipo de conversación:
   `message(action=send)`.
 - La orquestación interna permite el silencio de forma predeterminada.
 
-OpenClaw también utiliza respuestas silenciosas para fallos internos del runner que ocurren
-antes de cualquier respuesta del asistente en chats no directos, por lo que los grupos/canales no ven
-el texto estándar de error de la puerta de enlace. Los chats directos muestran un texto de fallo compacto de forma predeterminada;
-los detalles del runner sin procesar solo se muestran cuando `/verbose` es `on` o `full`.
+OpenClaw también usa respuestas silenciosas para fallos internos del ejecutor que ocurren antes de cualquier respuesta del asistente en chats no directos, para que los grupos/canales no vean el texto estándar de error de puerta de enlace. Los chats directos muestran un texto de fallo compacto de forma predeterminada; los detalles del ejecutor sin procesar solo se muestran cuando `/verbose full` está habilitado.
 
-Los valores predeterminados se encuentran en `agents.defaults.silentReply`; `surfaces.<id>.silentReply`
-puede anular la política de grupo/interna por superficie.
+Los valores predeterminados se encuentran en `agents.defaults.silentReply`; `surfaces.<id>.silentReply` puede anular la política de grupo/interna por superficie.
 
 Las respuestas silenciosas simples se descartan en todas las superficies, por lo que las sesiones principales se mantienen en silencio
 en lugar de reescribir el texto centinela en una conversación alternativa.
 
 ## Relacionado
 
-- [Refactorización del ciclo de vida del mensaje](/es/concepts/message-lifecycle-refactor) - diseño de envío y recepción duraderos objetivo
-- [Streaming](/es/concepts/streaming) — entrega de mensajes en tiempo real
+- [Refactorización del ciclo de vida de los mensajes](/es/concepts/message-lifecycle-refactor) - diseño objetivo de envío y recepción duraderos
+- [Transmisión](/es/concepts/streaming) — entrega de mensajes en tiempo real
 - [Reintento](/es/concepts/retry) — comportamiento de reintento de entrega de mensajes
 - [Cola](/es/concepts/queue) — cola de procesamiento de mensajes
 - [Canales](/es/channels) — integraciones de plataformas de mensajería

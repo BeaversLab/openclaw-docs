@@ -390,7 +390,7 @@ read_when:
 
 | 金鑰               | 類型      | 預設值  | 描述                     |
 | ------------------ | --------- | ------- | ------------------------ |
-| `cache.enabled`    | `boolean` | `false` | 在 SQLite 中快取區塊嵌入 |
+| `cache.enabled`    | `boolean` | `true`  | 在 SQLite 中快取區塊嵌入 |
 | `cache.maxEntries` | `number`  | `50000` | 最大快取嵌入數           |
 
 防止在重新索引或轉錄更新時對未變更的文字進行重新嵌入。

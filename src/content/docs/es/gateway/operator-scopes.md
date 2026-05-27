@@ -97,6 +97,6 @@ El emparejamiento de nodos establece la identidad y la confianza. No reemplaza l
 
 ## Autenticación de secreto compartido
 
-La autenticación mediante token/contraseña compartida del Gateway se trata como acceso de operador de confianza para ese Gateway. Las superficies HTTP compatibles con OpenAI y `/tools/invoke` restauran el conjunto normal de alcances predeterminados completo del operador para la autenticación de portador de secreto compartido, incluso si un llamador envía alcances declarados más limitados.
+La autenticación mediante token/contraseña de puerta de enlace compartida se trata como acceso de operador de confianza para esa puerta de enlace. Las superficies HTTP compatibles con OpenAI, `/tools/invoke`, y los puntos finales del historial de sesiones HTTP restauran el conjunto de ámbitos predeterminados de operador completo normal para la autenticación de portador mediante secreto compartido, incluso si un remitente envía ámbitos declarados más estrechos.
 
 Los modos con identidad, como la autenticación de proxy de confianza o `none` de ingreso privado, aún pueden respetar los alcances declarados explícitos. Utilice Gateways separados para una separación real de los límites de confianza.

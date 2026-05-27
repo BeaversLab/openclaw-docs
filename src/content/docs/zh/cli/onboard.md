@@ -47,25 +47,21 @@ openclaw onboard --mode remote --remote-url wss://gateway-host:18789
 `--modern` 启动 Crestodian 对话式新手引导预览。如果没有
 `--modern`，`openclaw onboard` 将保留经典的新手引导流程。
 
-对于回环、私有 IP 字面量、`.local` 和
-Tailnet `*.ts.net` 网关 URL，接受 `ws://`。对于其他受信任的私有 DNS 名称，请在
-引导流程环境中设置 `OPENCLAW_ALLOW_INSECURE_PRIVATE_WS=1`。
+在全新安装中，如果活动配置文件缺失或没有已配置的设置（为空或仅包含元数据），单独运行 `openclaw` 也会启动经典的新手引导流程。一旦配置文件包含已配置的设置，单独运行 `openclaw` 将改为打开 Crestodian。
+
+对于环回、私有 IP 字面量、`.local` 和 Tailnet `*.ts.net` 网关 URL，接受纯文本 `ws://`。对于其他受信任的私有 DNS 名称，请在引导流程环境中设置 `OPENCLAW_ALLOW_INSECURE_PRIVATE_WS=1`。
 
 ## 区域设置
 
-交互式引导使用 CLI 向导区域设置来显示固定的设置文本。解析
-顺序为：
+交互式引导使用 CLI 向导的区域设置作为固定设置文本。解析顺序为：
 
 1. `OPENCLAW_LOCALE`
 2. `LC_ALL`
 3. `LC_MESSAGES`
 4. `LANG`
-5. 英语后备
+5. 英语回退
 
-支持的向导区域设置为 `en`、`zh-CN` 和 `zh-TW`。区域设置值可以使用
-下划线或 POSIX 后缀形式，例如 `zh_CN.UTF-8`。产品名称、命令
-名称、配置键、URL、提供商 ID、模型 ID 以及插件/渠道标签
-保持原样。
+支持的向导区域设置为 `en`、`zh-CN` 和 `zh-TW`。区域设置值可以使用下划线或 POSIX 后缀形式，例如 `zh_CN.UTF-8`。产品名称、命令名称、配置键、URL、提供商 ID、模型 ID 以及插件/渠道标签保持原样不变。
 
 示例：
 
@@ -86,10 +82,9 @@ openclaw onboard --non-interactive \
   --custom-image-input
 ```
 
-`--custom-api-key` 在非交互模式下是可选的。如果省略，引导将检查 `CUSTOM_API_KEY`。
-OpenClaw 会自动将常见的视觉模型 ID 标记为支持图像。为未知的自定义视觉 ID 传递 `--custom-image-input`，或传递 `--custom-text-input` 以强制使用仅文本元数据。
+`--custom-api-key` 在非交互式模式下是可选的。如果省略，引导流程将检查 `CUSTOM_API_KEY`OpenClaw。OpenClaw 会自动将常见的视觉模型 ID 标记为具备图像能力。对于未知的自定义视觉 ID，请传递 `--custom-image-input`；若要强制使用仅文本元数据，请传递 `--custom-text-input`。
 
-LM Studio 在非交互模式下也支持特定于提供商的密钥标志：
+LM Studio 还支持非交互式模式下的特定于提供商的密钥标志：
 
 ```bash
 openclaw onboard --non-interactive \
@@ -110,9 +105,9 @@ openclaw onboard --non-interactive \
   --accept-risk
 ```
 
-`--custom-base-url` 默认为 `http://127.0.0.1:11434`。`--custom-model-id` 是可选的；如果省略，引导将使用 Ollama 建议的默认值。云模型 ID（例如 `kimi-k2.5:cloud`）也可以在此处使用。
+`--custom-base-url` 默认为 `http://127.0.0.1:11434`。`--custom-model-id` 是可选的；如果省略，引导流程将使用 Ollama 建议的默认值。云模型 ID（例如 `kimi-k2.5:cloud`）在此处也可以使用。
 
-将提供商密钥作为引用而非明文存储：
+将提供商密钥作为引用而不是纯文本存储：
 
 ```bash
 openclaw onboard --non-interactive \
@@ -121,28 +116,27 @@ openclaw onboard --non-interactive \
   --accept-risk
 ```
 
-使用 `--secret-input-mode ref` 时，引导会写入由环境支持的引用，而不是明文密钥值。
-对于由身份验证配置文件支持的提供商，这会写入 `keyRef` 条目；对于自定义提供商，这会将 `models.providers.<id>.apiKey` 作为环境引用写入（例如 `{ source: "env", provider: "default", id: "CUSTOM_API_KEY" }`）。
+使用 `--secret-input-mode ref` 时，新手引导会写入环境变量支持的引用，而不是明文键值。对于基于身份验证配置文件的提供商，这会写入 `keyRef` 条目；对于自定义提供商，这会将 `models.providers.<id>.apiKey` 作为环境变量引用写入（例如 `{ source: "env", provider: "default", id: "CUSTOM_API_KEY" }`）。
 
-非交互式 `ref` 模式协定：
+非交互式 `ref` 模式约定：
 
 - 在新手引导流程环境中设置提供商环境变量（例如 `OPENAI_API_KEY`）。
-- 除非也设置了相应的环境变量，否则不要传递内联密钥标志（例如 `--openai-api-key`）。
-- 如果在没有所需环境变量的情况下传递了内联密钥标志，新手引导将快速失败并提供指导。
+- 除非该环境变量也已设置，否则不要传递内联键标志（例如 `--openai-api-key`）。
+- 如果在没有所需环境变量的情况下传递了内联键标志，新手引导将快速失败并提供指导。
 
-Gateway(网关)令牌在非交互模式下的选项：
+非交互模式下的 Gateway(网关) 令牌选项：
 
 - `--gateway-auth token --gateway-token <token>` 存储明文令牌。
 - `--gateway-auth token --gateway-token-ref-env <name>` 将 `gateway.auth.token` 存储为环境变量 SecretRef。
 - `--gateway-token` 和 `--gateway-token-ref-env` 互斥。
-- `--gateway-token-ref-env` 要求新手引导流程环境中有一个非空的环境变量。
-- 使用 `--install-daemon` 时，当令牌身份验证需要令牌时，将验证由 SecretRef 管理的 Gateway 令牌，但不会在主管服务环境元数据中将其作为已解析的明文进行持久化。
+- `--gateway-token-ref-env` 要求新手引导流程环境中存在非空的环境变量。
+- 使用 `--install-daemon` 时，当令牌身份验证需要令牌时，将验证由 SecretRef 管理的网关令牌，但不会将其作为解析后的明文持久化到监督服务环境元数据中。
 - 使用 `--install-daemon` 时，如果令牌模式需要令牌且配置的令牌 SecretRef 未解析，新手引导将以封闭方式失败并提供修复指导。
-- 使用 `--install-daemon` 时，如果配置了 `gateway.auth.token` 和 `gateway.auth.password` 但未设置 `gateway.auth.mode`，新手引导将阻止安装，直到显式设置模式。
+- 使用 `--install-daemon` 时，如果同时配置了 `gateway.auth.token` 和 `gateway.auth.password` 且未设置 `gateway.auth.mode`，则新手引导将阻止安装，直到显式设置模式。
 - 本地新手引导会将 `gateway.mode="local"` 写入配置。如果后续的配置文件缺少 `gateway.mode`，请将其视为配置损坏或不完整的手动编辑，而不是有效的本地模式快捷方式。
-- 当所选的设置路径需要时，本地新手引导会安装所选的可下载插件。
-- 远程新手引导仅写入远程 Gateway(网关) 的连接信息，不会安装本地插件包。
-- `--allow-unconfigured` 是一个单独的 Gateway 运行时应急手段。这并不意味着新手引导可以省略 `gateway.mode`。
+- 当所选设置路径需要时，本地新手引导会安装选定的可下载插件。
+- 远程新手引导仅写入远程 Gateway(网关) 的连接信息，不安装本地插件包。
+- `--allow-unconfigured` 是一个单独的网关运行时应急手段。这并不意味着新手引导可以省略 `gateway.mode`。
 
 示例：
 
@@ -156,26 +150,26 @@ openclaw onboard --non-interactive \
   --accept-risk
 ```
 
-非交互式本地 Gateway 健康检查：
+非交互式本地网关健康检查：
 
-- 除非您传递 `--skip-health`，否则新手引导将等待本地 Gateway 可达，然后才会成功退出。
-- `--install-daemon` 首先启动托管网关安装路径。如果不使用它，您必须已经有一个本地网关正在运行，例如 `openclaw gateway run`。
-- 如果您只想在自动化中进行配置/工作区/引导写入，请使用 `--skip-health`。
+- 除非您传递 `--skip-health`，否则新手引导在成功退出之前会等待本地网关可达。
+- `--install-daemon` 首先启动托管网关安装路径。如果没有它，您必须已经有一个本地网关在运行，例如 `openclaw gateway run`。
+- 如果您只想在自动化中进行配置/工作区/引导程序写入，请使用 `--skip-health`。
 - 如果您自己管理工作区文件，请传递 `--skip-bootstrap` 来设置 `agents.defaults.skipBootstrap: true` 并跳过创建 `AGENTS.md`、`SOUL.md`、`TOOLS.md`、`IDENTITY.md`、`USER.md`、`HEARTBEAT.md` 和 `BOOTSTRAP.md`。
 - 在原生 Windows 上，`--install-daemon` 首先尝试计划任务，如果任务创建被拒绝，则回退到每用户启动文件夹登录项。
 
-使用引用模式的交互式新手引导行为：
+参考模式下的交互式新手引导行为：
 
-- 收到提示时选择 **使用机密引用 (Use secret reference)**。
+- 当被提示时，选择 **Use secret reference**（使用密钥引用）。
 - 然后选择以下任一项：
   - 环境变量
-  - 配置的机密提供商（`file` 或 `exec`）
-- 新手引导在保存引用之前会执行快速预检查验证。
+  - 配置的密钥提供商（`file` 或 `exec`）
+- 新手引导在保存引用之前会执行快速预检验证。
   - 如果验证失败，新手引导会显示错误并允许您重试。
 
 ### 非交互式 Z.AI 端点选择
 
-<Note>`--auth-choice zai-api-key` 会自动为您的密钥检测最佳 Z.AI 端点（首选带有 `zai/glm-5.1` 的通用 API）。如果您特别想要 GLM Coding Plan 端点，请选择 `zai-coding-global` 或 `zai-coding-cn`。</Note>
+<Note>`--auth-choice zai-api-key` 会自动为您的密钥检测最佳的 Z.AI 端点（首选带有 `zai/glm-5.1` 的通用 API）。如果您特别想要 GLM Coding Plan 端点，请选择 `zai-coding-global` 或 `zai-coding-cn`。</Note>
 
 ```bash
 # Promptless endpoint selection
@@ -200,30 +194,30 @@ openclaw onboard --non-interactive \
 ## 流程说明
 
 <AccordionGroup>
-  <Accordion title="流程类型">
-    - `quickstart`：最少提示，自动生成网关令牌。
-    - `manual`：端口、绑定和身份验证的完整提示（`advanced` 的别名）。
-    - `import`：运行检测到的迁移提供商，预览计划，然后在确认后应用。
+  <Accordion title="Flow types">
+    - `quickstart`: 最少提示，自动生成网关令牌。
+    - `manual`: 针对端口、绑定和身份验证的完整提示（`advanced` 的别名）。
+    - `import`: 运行检测到的迁移提供商，预览计划，然后在确认后应用。
 
   </Accordion>
   <Accordion title="Provider prefiltering">
-    当认证选项隐含首选提供商时，新手引导会将默认模型和允许列表选择器预先筛选为该提供商。对于 Volcengine 和 BytePlus，这还会匹配编码计划变体（`volcengine-plan/*`、`byteplus-plan/*`）。
+    当身份验证选择暗示了首选提供商时，新手引导会将默认模型和允许列表选择器预过滤为该提供商。对于 Volcengine 和 BytePlus，这也会匹配编码计划变体（`volcengine-plan/*`、`byteplus-plan/*`）。
 
-    如果首选提供商筛选器尚未产生已加载的模型，新手引导将回退到未筛选的目录，而不是让选择器保持空白。
+    如果首选提供商过滤尚未产生任何已加载的模型，新手引导将回退到未过滤的目录，而不是让选择器保持为空。
 
   </Accordion>
   <Accordion title="Web-search follow-ups">
     某些网络搜索提供商会触发特定于提供商的后续提示：
 
-    - **Grok** 可以提供可选的 `x_search` 设置，使用相同的 `XAI_API_KEY` 和 `x_search`Moonshot 模型选择。
+    - **Grok** 可以提供可选的 `x_search` 设置，使用相同的 xAI OAuth 配置文件或 API 密钥以及 `x_search` 模型选择。
     - **Kimi** 可以询问 Moonshot API 区域（`api.moonshot.ai` 对比 `api.moonshot.cn`）以及默认的 Kimi 网络搜索模型。
 
   </Accordion>
   <Accordion title="Other behaviors">
     - 本地新手引导私信范围行为：[CLI 设置参考](/zh/start/wizard-cli-reference#outputs-and-internals)。
-    - 最快首次聊天：`openclaw dashboard`（控制 UI，无需渠道设置）。
-    - 自定义提供商：连接任何 OpenAI 或 Anthropic 兼容的终端，包括未列出的托管提供商。使用 Unknown 进行自动检测。
-    - 如果检测到 Hermes 状态，新手引导将提供迁移流程。使用 [Migrate](/zh/cli/migrate) 进行试运行计划、覆盖模式、报告和精确映射。
+    - 最快的首次聊天：`openclaw dashboard`（控制 UI，无需渠道设置）。
+    - 自定义提供商：连接任何 OpenAI 或 Anthropic 兼容的端点，包括未列出的托管提供商。使用 Unknown 进行自动检测。
+    - 如果检测到 Hermes 状态，新手引导会提供迁移流程。使用 [Migrate](/zh/cli/migrate) 进行试运行计划、覆盖模式、报告和精确映射。
 
   </Accordion>
 </AccordionGroup>
@@ -236,6 +230,6 @@ openclaw configure
 openclaw agents add <name>
 ```
 
-当您只需要基线配置/工作区时，请改用 `openclaw setup`。稍后使用 `openclaw configure` 进行针对性更改，使用 `openclaw channels add` 进行仅渠道设置。
+如果只需要基准配置/工作区，请改用 `openclaw setup`。稍后请使用 `openclaw configure` 进行针对性更改，并使用 `openclaw channels add` 进行仅渠道设置。
 
-<Note>`--json` 并不意味着非交互模式。请使用 `--non-interactive` 进行脚本操作。</Note>
+<Note>`--json` 并不意味着非交互模式。脚本请使用 `--non-interactive`。</Note>

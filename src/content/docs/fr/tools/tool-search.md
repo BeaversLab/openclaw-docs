@@ -115,7 +115,7 @@ Le comportement normal de OpenClaw s'applique toujours aux appels finaux :
 
 - stratégies d'autorisation et de refus de tool
 - restrictions de tool par agent et par bac à sable
-- filtrage propriétaire uniquement
+- stratégie d'outil de runtime du canal
 - hooks d'approbation
 - hooks de plugin `before_tool_call`
 - identité de session, journaux et télémétrie

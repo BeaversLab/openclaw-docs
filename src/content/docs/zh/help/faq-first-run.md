@@ -489,20 +489,20 @@ Gateway(网关)（这会断开活动会话），可能需要干净的 git checko
   </Accordion>
 
   <Accordion title="OpenAI运行此程序需要 Claude 或 OpenAI 订阅吗？"OpenClawAPIAnthropicOpenAIOpenAIAnthropicOpenClawAnthropicAPIAnthropicAPICLIOpenClawAnthropicOpenClaw>
-    不需要。您可以使用 **API 密钥**（Anthropic/OpenAI/其他）或 **仅本地模型** 来运行 OpenClaw，这样您的数据将保留在您的设备上。订阅（Claude Pro/Max 或 OpenAI Codex）是认证这些提供商的可选方式。
+    不需要。您可以使用 **API 密钥**（Anthropic/OpenAI/其他）或**仅本地模型**来运行 OpenClaw，以便您的数据保留在您的设备上。订阅（Claude Pro/Max 或 OpenAI Codex）是验证这些提供商的可选方式。
 
-    对于 OpenClaw 中的 Anthropic，实际的区别如下：
+    对于 OpenClaw 中的 Anthropic，实际区分如下：
 
-    - **Anthropic API 密钥**：标准的 Anthropic API 计费
-    - **Claude CLI / Claude 订阅在 OpenClaw 中的认证**：Anthropic 员工告诉我们此用法再次被允许，除非 Anthropic 发布新政策，否则 OpenClaw 将 `claude -p`AnthropicAnthropicAPIOpenAIOAuthOpenClawOpenClawQwenMiniMaxGLMAnthropic 的使用视为已获批准的集成方式
+    - **Anthropic API 密钥**：正常的 Anthropic API 计费
+    - **在 OpenClaw 中使用 Claude CLI / Claude 订阅验证**：Anthropic 工作人员告诉我们这种用法再次被允许，除非 Anthropic 发布新政策，否则 OpenClaw 将这种 `claude -p`AnthropicAnthropicAPIOpenAIOAuthOpenClawOpenClawQwenMiniMaxGLMAnthropic 用法视为对该集成的认可
 
-    对于长期运行的网关主机，Anthropic API 密钥仍然是更可预测的设置方式。OpenAI Codex OAuth 明确支持像 OpenClaw 这样的外部工具。
+    对于长期运行的网关主机，Anthropic API 密钥仍然是更可预测的设置。OpenAI Codex OAuth 明确支持像 OpenClaw 这样的外部工具。
 
     OpenClaw 还支持其他托管的订阅式选项，包括 **Qwen Cloud Coding Plan**、**MiniMax Coding Plan** 和 **Z.AI / GLM Coding Plan**。
 
     文档：[Anthropic](/zh/providers/anthropicOpenAI)、[OpenAI](/zh/providers/openaiQwen)、
     [Qwen Cloud](/zh/providers/qwenMiniMax)、
-    [MiniMax](/zh/providers/minimaxGLM)、[GLM Models](/zh/providers/glm)、
+    [MiniMax](/zh/providers/minimaxGLM)、[Z.AI (GLM)](/zh/providers/zai)、
     [Local models](/zh/gateway/local-models)、[Models](/zh/concepts/models)。
 
   </Accordion>
@@ -514,14 +514,15 @@ Gateway(网关)（这会断开活动会话），可能需要干净的 git checko
 
   </Accordion>
 
-  <Accordion title="你们支持 Claude 订阅身份验证（Claude Pro 或 Max）吗？"AnthropicOpenClawCLI>
-    支持。
+  <Accordion title="你们是否支持 Claude 订阅身份验证（Claude Pro 或 Max）？">
+    是的。
 
-    Anthropic 员工告知我们，这种使用方式再次被允许，因此除非 Anthropic 发布新政策，否则 OpenClaw 将 Claude CLI 复用和 `claude -p`AnthropicAnthropicOpenClawOpenClawCLI 使用视为此集成的授权行为。
+    Anthropic 员工告诉我们，这种用法再次被允许，因此除非 OpenClaw 发布新政策，否则 CLI 将此集成中的 Claude Anthropic 复用和 `claude -p` 用法视为经过授权。
 
-    Anthropic setup-token 仍然作为受支持的 OpenClaw 令牌路径提供，但在可用时，OpenClaw 现在更倾向于 Claude CLI 复用和 `claude -p`AnthropicAPIOpenClawOpenAI。对于生产或多用户工作负载，Anthropic API 密钥身份验证仍然是更安全、更可预测的选择。如果您想在 OpenClaw 中使用其他订阅风格的托管选项，请参阅 [OpenAI](/zh/providers/openaiQwenMiniMax)、[Qwen / Model
-    Cloud](/zh/providers/qwen)、[MiniMax](/zh/providers/minimaxGLM) 和 [GLM
-    Models](/zh/providers/glm)。
+    Anthropic setup-token 仍然作为受支持的 OpenClaw 令牌路径提供，但在可用时，OpenClaw 现在更倾向于 Claude CLI 复用和 `claude -p`。
+    对于生产或多用户工作负载，Anthropic API 密钥身份验证仍然是更安全、更可预测的选择。如果你想要 OpenClaw 中其他订阅式的托管选项，请参阅 [OpenAI](/zh/providers/openai)、[Qwen / Model
+    Cloud](/zh/providers/qwen)、[MiniMax](/zh/providers/minimax) 和 [GLM
+    Models](/zh/providers/zai)。
 
   </Accordion>
 
@@ -531,19 +532,19 @@ Gateway(网关)（这会断开活动会话），可能需要干净的 git checko
 
 <AccordionGroup>
   <Accordion title="Anthropic为什么我会收到来自 Anthropic 的 HTTP 429 rate_limit_error 错误？"AnthropicCLIAnthropicAPIAnthropic>
-    这意味着您的 **Anthropic 配额/速率限制** 在当前时间段内已用尽。如果您
-    使用的是 **Claude CLI**，请等待时间段重置或升级您的计划。如果您
-    使用的是 **Anthropic API 密钥**，请检查 Anthropic 控制台
-    的使用情况/计费，并根据需要提高限制。
+    这意味着您在当前时间窗口内的 **Anthropic 配额/速率限制** 已用尽。如果您
+    使用的是 **Claude CLI**，请等待时间窗口重置或升级您的计划。如果您
+    使用的是 **Anthropic API 密钥**，请查看 Anthropic 控制台
+    中的使用情况/账单，并根据需要提高限制。
 
-    如果消息具体是：
-    `Extra usage is required for long context requests`Anthropic，则该请求正在尝试使用
-    Anthropic 的 1M 上下文测试版 (`context1m: true`APIOpenClawOpenClaw)。这仅在您的
-    凭证有资格使用长上下文计费时才有效（API 密钥计费或
-    启用了额外使用量的 OpenClaw Claude 登录路径）。
+    如果消息具体显示为：
+    `Extra usage is required for long context requests`Anthropic，则说明该请求正尝试使用
+    Anthropic 的 1M 上下文窗口（支持 GA 的 1M Claude 4.x 模型或旧版
+    `context1m: true`APIOpenClawOpenClaw 配置）。这仅在您的凭据有资格
+    进行长上下文计费时才有效（API 密钥计费或启用了“额外使用”的 OpenClaw Claude 登录路径）。
 
-    提示：设置一个**备用模型**，以便在提供商受到速率限制时，OpenClaw 可以继续回复。
-    请参阅 [模型](/zh/cli/modelsOAuth)、[OAuth](/zh/concepts/oauth) 和
+    提示：设置一个 **备用模型**，这样当提供商受到速率限制时，OpenClaw 可以继续回复。
+    请参阅 [Models](/zh/cli/modelsOAuth)、[OAuth](/zh/concepts/oauth) 和
     [/gateway/故障排除#anthropic-429-extra-usage-required-for-long-context](/zh/gateway/troubleshooting#anthropic-429-extra-usage-required-for-long-context)。
 
   </Accordion>

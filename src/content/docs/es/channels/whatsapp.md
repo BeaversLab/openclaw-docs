@@ -10,12 +10,12 @@ Estado: listo para producción a través de WhatsApp Web (Baileys). La puerta de
 ## Instalación (bajo demanda)
 
 - Incorporación (`openclaw onboard`) y `openclaw channels add --channel whatsapp`
-  solicitan instalar el complemento de WhatsApp la primera vez que lo seleccionas.
+  solicitan instalar el complemento de WhatsApp la primera vez que lo seleccione.
 - `openclaw channels login --channel whatsapp` también ofrece el flujo de instalación cuando
   el complemento aún no está presente.
 - Canal de desarrollo + git checkout: predeterminado a la ruta local del complemento.
-- Estable/Beta: instala el complemento oficial `@openclaw/whatsapp` de ClawHub
-  primero, con npm como alternativa.
+- Estable/Beta: instala primero el complemento oficial `@openclaw/whatsapp` desde ClawHub
+  con npm como alternativa.
 - El tiempo de ejecución de WhatsApp se distribuye fuera del paquete npm principal de OpenClaw para que
   las dependencias de tiempo de ejecución específicas de WhatsApp se mantengan con el complemento externo.
 
@@ -25,17 +25,17 @@ La instalación manual sigue disponible:
 openclaw plugins install clawhub:@openclaw/whatsapp
 ```
 
-Use el paquete npm básico (`@openclaw/whatsapp`) solo cuando necesite el registro
-alternativo. Fije una versión exacta solo cuando necesite una instalación reproducible.
+Use el paquete npm básico (`@openclaw/whatsapp`) solo cuando necesite la alternativa
+del registro. Fije una versión exacta solo cuando necesite una instalación reproducible.
 
 <CardGroup cols={3}>
   <Card title="Emparejamiento" icon="link" href="/es/channels/pairing">
-    La política de MD predeterminada es el emparejamiento para remitentes desconocidos.
+    La política predeterminada de MD es emparejamiento para remitentes desconocidos.
   </Card>
   <Card title="Solución de problemas del canal" icon="wrench" href="/es/channels/troubleshooting">
-    Manuales de diagnóstico y reparación multicanal.
+    Manuales de diagnóstico y reparación entre canales.
   </Card>
-  <Card title="Configuración del puerta de enlace" icon="settings" href="/es/gateway/configuration">
+  <Card title="Configuración de la puerta de enlace" icon="settings" href="/es/gateway/configuration">
     Patrones y ejemplos completos de configuración del canal.
   </Card>
 </CardGroup>
@@ -66,6 +66,10 @@ alternativo. Fije una versión exacta solo cuando necesite una instalación repr
 openclaw channels login --channel whatsapp
 ```
 
+    El inicio de sesión actual se basa en QR. En entornos remotos o sin interfaz gráfica, asegúrese de
+    tener una ruta confiable para entregar el código QR en vivo al teléfono que lo
+    escaneará antes de iniciar el sesión.
+
     Para una cuenta específica:
 
 ```bash
@@ -81,7 +85,7 @@ openclaw channels login --channel whatsapp --account work
 
   </Step>
 
-  <Step title="Iniciar el puerta de enlace">
+  <Step title="Iniciar la puerta de enlace">
 
 ```bash
 openclaw gateway
@@ -89,7 +93,7 @@ openclaw gateway
 
   </Step>
 
-  <Step title="Aprobar la primera solicitud de emparejamiento (si usa el modo de emparejamiento)">
+  <Step title="Aprobar la primera solicitud de emparejamiento (si se usa el modo de emparejamiento)">
 
 ```bash
 openclaw pairing list whatsapp
@@ -103,15 +107,19 @@ openclaw pairing approve whatsapp <CODE>
 
 <Note>OpenClaw recomienda ejecutar WhatsApp en un número separado cuando sea posible. (Los metadatos del canal y el flujo de configuración están optimizados para esa configuración, pero las configuraciones con número personal también son compatibles.)</Note>
 
-## Patrones de despliegue
+<Warning>
+  El flujo de configuración actual de WhatsApp es solo mediante QR. Los códigos QR renderizados en la terminal, capturas de pantalla, PDFs o archivos adjuntos de chat pueden caducar o volverse ilegibles mientras se retransmiten desde una máquina remota. Para hosts remotos/sin cabeza (headless), prefiera una ruta de entrega directa de imagen QR en lugar de la captura manual de terminal.
+</Warning>
+
+## Patrones de implementación
 
 <AccordionGroup>
   <Accordion title="Número dedicado (recomendado)">
     Este es el modo operativo más limpio:
 
     - identidad de WhatsApp separada para OpenClaw
-    - listas permitidas de MD y límites de enrutamiento más claros
-    - menor probabilidad de confusión en el chat propio
+    - listas de permitidos de MD y límites de enrutamiento más claros
+    - menor probabilidad de confusión de autochat
 
     Patrón de política mínima:
 
@@ -128,46 +136,78 @@ openclaw pairing approve whatsapp <CODE>
 
   </Accordion>
 
-  <Accordion title="Respaldo con número personal">
-    La integración admite el modo de número personal y escribe una línea base compatible con el autoservicio:
+  <Accordion title="Alternativa de número personal">
+    El embarque (onboarding) admite el modo de número personal y escribe una línea base amigable para el autochat:
 
     - `dmPolicy: "allowlist"`
     - `allowFrom` incluye su número personal
     - `selfChatMode: true`
 
-    En tiempo de ejecución, las protecciones de autoservicio se basan en el número propio vinculado y `allowFrom`.
+    En tiempo de ejecución, las protecciones de autochat se basan en el número propio vinculado y `allowFrom`.
 
   </Accordion>
 
-  <Accordion title="Ámbito del canal solo para WhatsApp Web">
-    El canal de la plataforma de mensajería se basa en WhatsApp Web (`Baileys`) en la arquitectura actual del canal de OpenClaw.
+  <Accordion title="Ámbito de canal solo para WhatsApp Web">
+    El canal de la plataforma de mensajería se basa en WhatsApp Web (`Baileys`) en la arquitectura actual de canales de OpenClaw.
 
-    No hay un canal de mensajería Twilio WhatsApp separado en el registro de canales de chat integrado.
+    No hay un canal de mensajería Twilio WhatsApp separado en el registro de canales de chat incorporado.
 
   </Accordion>
 </AccordionGroup>
 
 ## Modelo de tiempo de ejecución
 
-- El Gateway posee el socket de WhatsApp y el bucle de reconexión.
-- El perro guardián de reconexión utiliza la actividad de transporte de WhatsApp Web, no solo el volumen de mensajes de aplicación entrantes, por lo que una sesión de dispositivo vinculado silenciosa no se reinicia únicamente porque nadie haya enviado un mensaje recientemente. Un límite más largo de silencio de la aplicación aún fuerza una reconexión si siguen llegando tramas de transporte pero no se manejan mensajes de aplicación durante la ventana del perro guardián; después de una reconexión transitoria para una sesión activa recientemente, esa verificación de silencio de la aplicación utiliza el tiempo de espera normal del mensaje para la primera ventana de recuperación.
-- Los tiempos del socket Baileys son explícitos bajo `web.whatsapp.*`: `keepAliveIntervalMs` controla los pings de la aplicación WhatsApp Web, `connectTimeoutMs` controla el tiempo de espera del apretón de manos de apertura y `defaultQueryTimeoutMs` controla los tiempos de espera de las consultas Baileys.
+- La puerta de enlace (Gateway) posee el socket de WhatsApp y el bucle de reconexión.
+- El perro guardián de reconexión utiliza la actividad de transporte de WhatsApp Web, no solo el volumen de mensajes de entrada de la aplicación, por lo que una sesión de dispositivo vinculado silenciosa no se reinicia únicamente porque nadie ha enviado un mensaje recientemente. Un límite de silencio de la aplicación más largo aún fuerza una reconexión si siguen llegando tramas de transporte pero no se manejan mensajes de la aplicación para la ventana del perro guardián; después de una reconexión transitoria para una sesión activa recientemente, esa verificación de silencio de la aplicación utiliza el tiempo de espera normal del mensaje para la primera ventana de recuperación.
+- Los tiempos del socket de Baileys son explícitos bajo `web.whatsapp.*`: `keepAliveIntervalMs` controla los pings de la aplicación de WhatsApp Web, `connectTimeoutMs` controla el tiempo de espera del handshake de apertura y `defaultQueryTimeoutMs` controla los tiempos de espera de las consultas de Baileys.
 - Los envíos salientes requieren un escucha de WhatsApp activo para la cuenta de destino.
-- Los envíos grupales adjuntan metadatos de mención nativa para los tokens `@+<digits>` y `@<digits>` en el texto y los subtítulos de medios cuando el token coincide con los metadatos del participante actual de WhatsApp, incluidos los grupos respaldados por LID.
-- Los chats de estado y de difusión se ignoran (`@status`, `@broadcast`).
-- El perro guardián de reconexión sigue la actividad del transporte de WhatsApp Web, no solo el volumen de mensajes entrantes de la aplicación: las sesiones de dispositivo vinculado silenciosas se mantienen activas mientras continúan los marcos de transporte, pero un estancamiento del transporte fuerza la reconexión mucho antes de la ruta posterior de desconexión remota.
-- Los chats directos utilizan reglas de sesión de DM (`session.dmScope`; el valor predeterminado `main` contrae los DM a la sesión principal del agente).
+- Los envíos a grupos adjuntan metadatos de mención nativos para los tokens `@+<digits>` y `@<digits>` en el texto y los pies de foto de medios cuando el token coincide con los metadatos del participante actual de WhatsApp, incluidos los grupos respaldados por LID.
+- Los chats de estado y difusión se ignoran (`@status`, `@broadcast`).
+- El perro guardián de reconexión sigue la actividad del transporte de WhatsApp Web, no solo el volumen de mensajes entrantes de la aplicación: las sesiones de dispositivos vinculados silenciosos se mantienen activas mientras continúan los marcos de transporte, pero una detención del transporte fuerza la reconexión mucho antes que la ruta posterior de desconexión remota.
+- Los chats directos usan reglas de sesión de DM (`session.dmScope`; por defecto `main` colapsa los DMs en la sesión principal del agente).
 - Las sesiones de grupo están aisladas (`agent:<agentId>:whatsapp:group:<jid>`).
-- Los Canales/Boletines de WhatsApp pueden ser objetivos de salida explícitos con su JID nativo `@newsletter`. Los envíos de boletines de salida utilizan metadatos de sesión del canal (`agent:<agentId>:whatsapp:channel:<jid>`) en lugar de semánticas de sesión de DM.
+- Los Canales/Boletines de WhatsApp pueden ser objetivos salientes explícitos con su JID nativo `@newsletter`. Los envíos de boletines salientes utilizan metadatos de sesión de canal (`agent:<agentId>:whatsapp:channel:<jid>`) en lugar de la semántica de sesión de DM.
 - El transporte de WhatsApp Web respeta las variables de entorno de proxy estándar en el host de la puerta de enlace (`HTTPS_PROXY`, `HTTP_PROXY`, `NO_PROXY` / variantes en minúsculas). Se prefiere la configuración de proxy a nivel de host sobre la configuración de proxy específica de WhatsApp del canal.
-- Cuando `messages.removeAckAfterReply` está habilitado, OpenClaw borra la reacción de reconocimiento de WhatsApp después de que se entrega una respuesta visible.
+- Cuando `messages.removeAckAfterReply` está habilitado, OpenClaw borra la reacción de acuse de recibo de WhatsApp después de que se entrega una respuesta visible.
 
-## Ganchos del plugin y privacidad
+## Prompts de aprobación
 
-Los mensajes entrantes de WhatsApp pueden contener contenido de mensajes personales, números de teléfono,
+WhatsApp puede representar los prompts de aprobación de ejecución y complementos con reacciones `👍` / `👎`. La entrega está
+controlada por la configuración de reenvío de aprobaciones de nivel superior:
+
+```json5
+{
+  approvals: {
+    exec: {
+      enabled: true,
+      mode: "session",
+    },
+    plugin: {
+      enabled: true,
+      mode: "targets",
+      targets: [{ channel: "whatsapp", to: "+15551234567" }],
+    },
+  },
+}
+```
+
+`approvals.exec` y `approvals.plugin` son independientes. Habilitar WhatsApp como canal solo vincula
+el transporte; no envía solicitudes de aprobación a menos que la familia de aprobación coincidente esté habilitada
+y se enrute a WhatsApp. El modo de sesión entrega aprobaciones nativas de emoji solo para aprobaciones que
+se originan de WhatsApp. El modo de destino utiliza la canalización de reenvío compartida para objetivos de WhatsApp
+explícitos y no crea una distribución de DM separada para aprobadores.
+
+Las reacciones de aprobación de WhatsApp requieren aprobadores explícitos de WhatsApp de `allowFrom` o `"*"`.
+`defaultTo` controla los objetivos de mensaje predeterminados ordinarios; no es un aprobador de aprobación. Las órdenes manuales
+`/approve` aún pasan por la ruta de autorización del remitente normal de WhatsApp antes
+de la resolución de la aprobación.
+
+## Ganchos de complementos y privacidad
+
+Los mensajes entrantes de WhatsApp pueden contenido contenido de mensajes personales, números de teléfono,
 identificadores de grupo, nombres de remitentes y campos de correlación de sesión. Por esa razón,
-WhatsApp no difunde cargas útiles de hook entrantes `message_received` a los complementos
-a menos que usted acepte explícitamente:
+WhatsApp no difunde las cargas útiles del gancho `message_received` entrantes a los complementos
+a menos que acepte explícitamente:
 
 ```json5
 {
@@ -199,7 +239,8 @@ Puede limitar la participación a una sola cuenta:
 }
 ```
 
-Habilite esto solo para complementos en los que confíe para recibir contenido e identificadores de mensajes entrantes de WhatsApp.
+Solo habilite esto para complementos en los que confía para recibir contenido
+e identificadores de mensajes entrantes de WhatsApp.
 
 ## Control de acceso y activación
 
@@ -212,56 +253,56 @@ Habilite esto solo para complementos en los que confíe para recibir contenido e
     - `open` (requiere que `allowFrom` incluya `"*"`)
     - `disabled`
 
-    `allowFrom` acepta números con estilo E.164 (normalizados internamente).
+    `allowFrom` acepta números en formato E.164 (normalizados internamente).
 
-    `allowFrom` es una lista de control de acceso de remitentes de MD. No regula los envíos de salida explícitos a JIDs de grupos de WhatsApp o JIDs de canales `@newsletter`.
+    `allowFrom` es una lista de control de acceso de remitentes de MD. No limita los envíos de salida explícitos a JIDs de grupos de WhatsApp o JIDs de canales `@newsletter`.
 
     Anulación multicuenta: `channels.whatsapp.accounts.<id>.dmPolicy` (y `allowFrom`) tienen prioridad sobre los valores predeterminados de nivel de canal para esa cuenta.
 
-    Detalles del comportamiento de tiempo de ejecución:
+    Detalles del comportamiento en tiempo de ejecución:
 
-    - los emparejamientos se persisten en el almacén de permitidos del canal y se fusionan con `allowFrom` configurado
-    - la automatización programada y la alternativa de destinatario de latido utilizan objetivos de entrega explícitos o `allowFrom` configurado; las aprobaciones de emparejamiento de MD no son destinatarios implícitos de cron o latido
-    - si no se configura ninguna lista de permitidos, el número propio vinculado se permite de forma predeterminada
-    - OpenClaw nunca empareja automáticamente los MD `fromMe` de salida (mensajes que te envías a ti mismo desde el dispositivo vinculado)
+    - los emparejamientos se guardan en el almacén de permisos del canal y se fusionan con los `allowFrom` configurados
+    - la automatización programada y el destinatario de reserva de los latidos usan objetivos de entrega explícitos o `allowFrom` configurados; las aprobaciones de emparejamiento de MD no son destinatarios implícitos de cron ni de latidos
+    - si no se configura una lista de permitidos, el propio número vinculado se permite de forma predeterminada
+    - OpenClaw nunca empareja automáticamente los MD `fromMe` salientes (mensajes que te envías a ti mismo desde el dispositivo vinculado)
 
   </Tab>
 
   <Tab title="Group policy + allowlists">
-    El acceso al grupo tiene dos capas:
+    El acceso a grupos tiene dos capas:
 
-    1. **Lista de permitidos de membresía del grupo** (`channels.whatsapp.groups`)
-       - si `groups` se omite, todos los grupos son elegibles
-       - si `groups` está presente, actúa como una lista de permitidos del grupo (`"*"` permitidos)
+    1. **Lista de permitidos de pertenencia al grupo** (`channels.whatsapp.groups`)
+       - si se omite `groups`, todos los grupos son elegibles
+       - si `groups` está presente, actúa como una lista de permitidos de grupos (`"*"` permitidos)
 
-    2. **Política de remitente del grupo** (`channels.whatsapp.groupPolicy` + `groupAllowFrom`)
-       - `open`: lista de permitidos de remitentes omitida
+    2. **Política de remitente de grupo** (`channels.whatsapp.groupPolicy` + `groupAllowFrom`)
+       - `open`: se omite la lista de permitidos de remitentes
        - `allowlist`: el remitente debe coincidir con `groupAllowFrom` (o `*`)
-       - `disabled`: bloquear toda la entrada del grupo
+       - `disabled`: bloquear todo el entrante del grupo
 
     Respaldo de la lista de permitidos de remitentes:
 
     - si `groupAllowFrom` no está configurado, el tiempo de ejecución recurre a `allowFrom` cuando esté disponible
     - las listas de permitidos de remitentes se evalúan antes de la activación de mención/respuesta
 
-    Nota: si no existe ningún bloque `channels.whatsapp` en absoluto, el respaldo de la política de grupo del tiempo de ejecución es `allowlist` (con un registro de advertencia), incluso si `channels.defaults.groupPolicy` está configurado.
+    Nota: si no existe ningún bloque `channels.whatsapp` en absoluto, el respaldo de la política de grupo en tiempo de ejecución es `allowlist` (con un registro de advertencia), incluso si `channels.defaults.groupPolicy` está configurado.
 
   </Tab>
 
   <Tab title="Mentions + /activation">
-    Las respuestas del grupo requieren mención de forma predeterminada.
+    De forma predeterminada, las respuestas de grupo requieren mención.
 
     La detección de menciones incluye:
 
     - menciones explícitas de WhatsApp de la identidad del bot
     - patrones de regex de mención configurados (`agents.list[].groupChat.mentionPatterns`, respaldo `messages.groupChat.mentionPatterns`)
-    - transcripciones de notas de voz entrantes para mensajes de grupo autorizados
+    - transcripciones de notas de voz entrantes para mensajes de grupos autorizados
     - detección implícita de respuesta al bot (el remitente de la respuesta coincide con la identidad del bot)
 
     Nota de seguridad:
 
-    - citar/responder solo satisface el filtro de mención; **no** otorga autorización al remitente
-    - con `groupPolicy: "allowlist"`, los remitentes no incluidos en la lista de permitidos todavía se bloquean incluso si responden al mensaje de un usuario permitido
+    - citar/responder solo satisface el filtrado de mención; **no** otorga autorización al remitente
+    - con `groupPolicy: "allowlist"`, los remitentes no incluidos en la lista de permitidos aún se bloquean incluso si responden al mensaje de un usuario incluido en la lista de permitidos
 
     Comando de activación a nivel de sesión:
 
@@ -273,13 +314,13 @@ Habilite esto solo para complementos en los que confíe para recibir contenido e
   </Tab>
 </Tabs>
 
-## Comportamiento del número personal y del chat propio
+## Comportamiento del número personal y del autchat
 
-Cuando el número propio vinculado también está presente en `allowFrom`, se activan las salvaguardas de autocomunicación de WhatsApp:
+Cuando el número propio vinculado también está presente en `allowFrom`, se activan las salvaguardas de autchat de WhatsApp:
 
-- omitir confirmaciones de lectura para los turnos de chat propio
-- ignorar el comportamiento de activación automática de mention-JID que de otro modo te notificaría a ti mismo
-- si `messages.responsePrefix` no está establecido, las respuestas de chat propio usan por defecto `[{identity.name}]` o `[openclaw]`
+- omitir confirmaciones de lectura para los turnos de autchat
+- ignorar el comportamiento de activación automática por mencionar JID que de otro modo te haría ping a ti mismo
+- si `messages.responsePrefix` no está configurado, las respuestas de autochat predeterminan a `[{identity.name}]` o `[openclaw]`
 
 ## Normalización de mensajes y contexto
 
@@ -287,7 +328,7 @@ Cuando el número propio vinculado también está presente en `allowFrom`, se ac
   <Accordion title="Sobre entrante + contexto de respuesta">
     Los mensajes entrantes de WhatsApp se envuelven en el sobre entrante compartido.
 
-    Si existe una respuesta citada, el contexto se añade de esta forma:
+    Si existe una respuesta citada, el contexto se anexa de esta forma:
 
     ```text
     [Replying to <sender> id:<stanzaId>]
@@ -295,16 +336,16 @@ Cuando el número propio vinculado también está presente en `allowFrom`, se ac
     [/Replying]
     ```
 
-    Los campos de metadatos de respuesta también se rellenan cuando están disponibles (`ReplyToId`, `ReplyToBody`, `ReplyToSender`, remitente JID/E.164).
-    Cuando el objetivo de la respuesta citada es medios descargables, OpenClaw los guarda a través del
-    almacén normal de medios entrantes y los expone como `MediaPath`/`MediaType` para que
+    Los campos de metadatos de respuesta también se completan cuando están disponibles (`ReplyToId`, `ReplyToBody`, `ReplyToSender`, JID del remitente/E.164).
+    Cuando el objetivo de la respuesta citada es multimedia descargable, OpenClaw lo guarda a través del
+    almacén multimedia entrante normal y lo expone como `MediaPath`/`MediaType` para que
     el agente pueda inspeccionar la imagen referenciada en lugar de solo ver
     `<media:image>`.
 
   </Accordion>
 
-  <Accordion title="Marcadores de posición de medios y extracción de ubicación/contacto">
-    Los mensajes entrantes de solo medios se normalizan con marcadores de posición como:
+  <Accordion title="Marcadores de posición multimedia y extracción de ubicación/contacto">
+    Los mensajes entrantes solo multimedia se normalizan con marcadores de posición como:
 
     - `<media:image>`
     - `<media:video>`
@@ -317,17 +358,17 @@ Cuando el número propio vinculado también está presente en `allowFrom`, se ac
     activar la respuesta. Si la transcripción aún no menciona al bot, la
     transcripción se mantiene en el historial pendiente del grupo en lugar del marcador de posición sin procesar.
 
-    Los cuerpos de ubicación usan texto de coordenadas breve. Las etiquetas/comentarios de ubicación y los detalles de contacto/vCard se renderizan como metadatos no confinados cercados, no como texto de solicitud en línea.
+    Los cuerpos de ubicación usan texto de coordenadas conciso. Las etiquetas/comentarios de ubicación y los detalles de contacto/vCard se representan como metadatos no confinados de seguridad, no como texto de solicitud en línea.
 
   </Accordion>
 
-  <Accordion title="Inyección de historial pendiente de grupos">
-    Para grupos, los mensajes no procesados pueden almacenarse en el búfer e inyectarse como contexto cuando el bot finalmente se activa.
+  <Accordion title="Inyección de historial de grupos pendiente">
+    Para los grupos, los mensajes no procesados pueden ser almacenados en búfer e inyectados como contexto cuando el bot finalmente se active.
 
     - límite predeterminado: `50`
     - configuración: `channels.whatsapp.historyLimit`
     - alternativa: `messages.groupChat.historyLimit`
-    - `0` deshabilita
+    - `0` desactiva
 
     Marcadores de inyección:
 
@@ -337,7 +378,7 @@ Cuando el número propio vinculado también está presente en `allowFrom`, se ac
   </Accordion>
 
   <Accordion title="Confirmaciones de lectura">
-    Las confirmaciones de lectura están habilitadas por defecto para los mensajes entrantes de WhatsApp aceptados.
+    Las confirmaciones de lectura están habilitadas de forma predeterminada para los mensajes entrantes de WhatsApp aceptados.
 
     Deshabilitar globalmente:
 
@@ -367,7 +408,7 @@ Cuando el número propio vinculado también está presente en `allowFrom`, se ac
     }
     ```
 
-    El chat propio omite las confirmaciones de lectura incluso cuando están habilitadas globalmente.
+    Los turnos de chat propio omiten las confirmaciones de lectura incluso cuando están habilitadas globalmente.
 
   </Accordion>
 </AccordionGroup>
@@ -375,23 +416,23 @@ Cuando el número propio vinculado también está presente en `allowFrom`, se ac
 ## Entrega, fragmentación y medios
 
 <AccordionGroup>
-  <Accordion title="Segmentación de texto">
-    - límite de segmentación predeterminado: `channels.whatsapp.textChunkLimit = 4000`
+  <Accordion title="Fragmentación de texto">
+    - límite de fragmentación predeterminado: `channels.whatsapp.textChunkLimit = 4000`
     - `channels.whatsapp.chunkMode = "length" | "newline"`
-    - el modo `newline` prefiere los límites de párrafo (líneas en blanco), y luego recurre a una segmentación segura en longitud
+    - el modo `newline` prefiere los límites de párrafo (líneas en blanco), luego recurre a una fragmentación segura por longitud
 
   </Accordion>
 
-  <Accordion title="Comportamiento de medios salientes">
-    - soporta cargas útiles de imagen, video, audio (nota de voz PTT) y documentos
-    - los medios de audio se envían a través de la carga útil `audio` de Baileys con `ptt: true`, por lo que los clientes de WhatsApp lo reproducen como una nota de voz de pulsar para hablar
-    - las cargas útiles de respuesta preservan `audioAsVoice`; la salida de nota de voz TTS para WhatsApp se mantiene en esta ruta PTT incluso cuando el proveedor devuelve MP3 o WebM
-    - el audio nativo Ogg/Opus se envía como `audio/ogg; codecs=opus` para la compatibilidad con notas de voz
-    - el audio no Ogg, incluida la salida MP3/WebM de Microsoft Edge TTS, se transcodifica con `ffmpeg` a Ogg/Opus mono de 48 kHz antes de la entrega PTT
-    - `/tts latest` envía la última respuesta del asistente como una sola nota de voz y suprime los envíos repetidos para la misma respuesta; `/tts chat on|off|default` controla el TTS automático para el chat actual de WhatsApp
-    - la reproducción de GIF animados es compatible a través de `gifPlayback: true` en envíos de video
-    - `forceDocument` / `asDocument` envía imágenes, GIF y videos salientes a través de la carga útil de documento de Baileys para evitar la compresión de medios de WhatsApp mientras se preserva el nombre de archivo resuelto y el tipo MIME
-    - los subtítulos se aplican al primer elemento multimedia al enviar cargas útiles de respuesta multimedia, excepto que las notas de voz PTT envían primero el audio y el texto visible por separado porque los clientes de WhatsApp no reproducen los subtítulos de notas de voz de manera consistente
+  <Accordion title="Comportamiento de los medios salientes">
+    - admite cargas útiles de imagen, video, audio (nota de voz PTT) y documento
+    - los medios de audio se envían a través de la carga útil `audio` de Baileys con `ptt: true`, por lo que los clientes de WhatsApp lo representan como una nota de voz de pulsar para hablar
+    - las cargas útiles de respuesta preservan `audioAsVoice`; la salida de notas de voz de TTS para WhatsApp se mantiene en esta ruta PTT incluso cuando el proveedor devuelve MP3 o WebM
+    - el audio nativo Ogg/Opus se envía como `audio/ogg; codecs=opus` para la compatibilidad de notas de voz
+    - el audio no Ogg, incluida la salida MP3/WebM de TTS de Microsoft Edge, se transcodifica con `ffmpeg` a Ogg/Opus mono de 48 kHz antes de la entrega PTT
+    - `/tts latest` envía la última respuesta del asistente como una nota de voz y suprime los envíos repetidos de la misma respuesta; `/tts chat on|off|default` controla el TTS automático para el chat actual de WhatsApp
+    - la reproducción de GIF animados es compatible a través de `gifPlayback: true` en el envío de videos
+    - `forceDocument` / `asDocument` envía imágenes, GIF y videos salientes a través de la carga útil de documento de Baileys para evitar la compresión de medios de WhatsApp y preservar el nombre de archivo resuelto y el tipo MIME
+    - los subtítulos se aplican al primer elemento multimedia al enviar cargas útiles de respuesta multimedia, excepto que las notas de voz PTT envían el audio primero y el texto visible por separado porque los clientes de WhatsApp no representan los subtítulos de las notas de voz de manera consistente
     - la fuente multimedia puede ser HTTP(S), `file://` o rutas locales
 
   </Accordion>
@@ -400,15 +441,15 @@ Cuando el número propio vinculado también está presente en `allowFrom`, se ac
     - límite de guardado de medios entrantes: `channels.whatsapp.mediaMaxMb` (predeterminado `50`)
     - límite de envío de medios salientes: `channels.whatsapp.mediaMaxMb` (predeterminado `50`)
     - las anulaciones por cuenta usan `channels.whatsapp.accounts.<accountId>.mediaMaxMb`
-    - las imágenes se optimizan automáticamente (redimensionamiento/barrido de calidad) para ajustarse a los límites a menos que `forceDocument` / `asDocument` solicite la entrega como documento
-    - ante un fallo en el envío de medios, la alternativa del primer elemento envía una advertencia de texto en lugar de eliminar silenciosamente la respuesta
+    - las imágenes se optimizan automáticamente (redimensionamiento/barrido de calidad) para ajustarse a los límites, a menos que `forceDocument` / `asDocument` solicite la entrega como documento
+    - ante el fallo de envío de medios, la reserva del primer elemento envía una advertencia de texto en lugar de descartar la respuesta silenciosamente
 
   </Accordion>
 </AccordionGroup>
 
-## Citar respuesta
+## Cita de respuesta
 
-WhatsApp admite las citas de respuesta nativas, donde las respuestas salientes citan visiblemente el mensaje entrante. Controle esto con `channels.whatsapp.replyToMode`.
+WhatsApp admite citas de respuesta nativas, donde las respuestas salientes citan visiblemente el mensaje entrante. Controle esto con `channels.whatsapp.replyToMode`.
 
 | Valor       | Comportamiento                                                                 |
 | ----------- | ------------------------------------------------------------------------------ |
@@ -431,14 +472,14 @@ El valor predeterminado es `"off"`. Las anulaciones por cuenta usan `channels.wh
 
 ## Nivel de reacción
 
-`channels.whatsapp.reactionLevel` controla la amplitud con la que el agente usa reacciones con emojis en WhatsApp:
+`channels.whatsapp.reactionLevel` controla con qué amplitud usa el agente reacciones de emoji en WhatsApp:
 
-| Nivel         | Reacciones de acuse de recibo | Reacciones iniciadas por el agente | Descripción                                                                |
-| ------------- | ----------------------------- | ---------------------------------- | -------------------------------------------------------------------------- |
-| `"off"`       | No                            | No                                 | Sin reacciones en absoluto                                                 |
-| `"ack"`       | Sí                            | No                                 | Solo reacciones de acuse de recibo (acuse de recibo previo a la respuesta) |
-| `"minimal"`   | Sí                            | Sí (conservador)                   | Reacciones de acuse de recibo + del agente con orientación conservadora    |
-| `"extensive"` | Sí                            | Sí (animado)                       | Reacciones de acuse de recibo + del agente con orientación animada         |
+| Nivel         | Reacciones de ack | Reacciones iniciadas por el agente | Descripción                                                 |
+| ------------- | ----------------- | ---------------------------------- | ----------------------------------------------------------- |
+| `"off"`       | No                | No                                 | Sin reacciones en absoluto                                  |
+| `"ack"`       | Sí                | No                                 | Solo reacciones de ack (confirmación previa a la respuesta) |
+| `"minimal"`   | Sí                | Sí (conservador)                   | Reacciones de ack + agente con orientación conservadora     |
+| `"extensive"` | Sí                | Sí (animado)                       | Reacciones de ack + agente con orientación animada          |
 
 Predeterminado: `"minimal"`.
 
@@ -454,10 +495,10 @@ Las anulaciones por cuenta usan `channels.whatsapp.accounts.<id>.reactionLevel`.
 }
 ```
 
-## Reacciones de acuse de recibo
+## Reacciones de reconocimiento
 
-WhatsApp admite reacciones de reconocimiento inmediatas en la recepción entrante a través de `channels.whatsapp.ackReaction`.
-Las reacciones de reconocimiento están controladas por `reactionLevel`; se suprimen cuando `reactionLevel` es `"off"`.
+WhatsApp admite reacciones de ack inmediatas en la recepción entrante a través de `channels.whatsapp.ackReaction`.
+Las reacciones de ack están controladas por `reactionLevel`: se suprimen cuando `reactionLevel` es `"off"`.
 
 ```json5
 {
@@ -473,16 +514,16 @@ Las reacciones de reconocimiento están controladas por `reactionLevel`; se supr
 }
 ```
 
-Notas de comportamiento:
+Notas sobre el comportamiento:
 
-- enviadas inmediatamente después de que se acepta el mensaje entrante (previo a la respuesta)
-- los fallos se registran pero no bloquean la entrega de respuestas normales
-- el modo de grupo `mentions` reacciona en los turnos activados por menciones; la activación de grupo `always` actúa como omisión para esta verificación
-- WhatsApp usa `channels.whatsapp.ackReaction` (el `messages.ackReaction` heredado no se usa aquí)
+- enviado inmediatamente después de que se acepte el mensaje entrante (previo a la respuesta)
+- los fallos se registran pero no bloquean la entrega normal de la respuesta
+- el modo de grupo `mentions` reacciona en turnos activados por mención; la activación de grupo `always` actúa como bypass para esta verificación
+- WhatsApp utiliza `channels.whatsapp.ackReaction` (el `messages.ackReaction` heredado no se usa aquí)
 
 ## Reacciones de estado del ciclo de vida
 
-Establezca `messages.statusReactions.enabled: true` para permitir que WhatsApp reemplace la reacción de ack durante un turno en lugar de dejar un emoji de recibo estático. Cuando está habilitado, OpenClaw usa la misma ranura de reacción de mensaje entrante para estados del ciclo de vida como en cola, pensando, actividad de herramientas, compactación, hecho y error.
+Configure `messages.statusReactions.enabled: true` para permitir que WhatsApp reemplace la reacción de acuse de recibo durante un turno en lugar de dejar un emoji de recibo estático. Cuando está habilitado, OpenClaw usa la misma ranura de reacción de mensaje entrante para estados del ciclo de vida como en cola, pensando, actividad de herramientas, compactación, listo y error.
 
 ```json5
 {
@@ -503,8 +544,8 @@ Notas sobre el comportamiento:
 
 - `channels.whatsapp.ackReaction` todavía controla si las reacciones de estado son elegibles para mensajes directos y grupos.
 - WhatsApp tiene una ranura de reacción de bot por mensaje, por lo que las actualizaciones del ciclo de vida reemplazan la reacción actual en su lugar.
-- `messages.removeAckAfterReply: true` borra la reacción de estado final después de la espera de hecho/error configurada.
-- Las categorías de emoji de herramientas incluyen `tool`, `coding`, `web`, `deploy`, `build` y `concierge`.
+- `messages.removeAckAfterReply: true` borra la reacción de estado final después de la retención configurada de listo/error.
+- Las categorías de emojis de herramientas incluyen `tool`, `coding`, `web`, `deploy`, `build` y `concierge`.
 
 ## Multicuenta y credenciales
 
@@ -516,19 +557,19 @@ Notas sobre el comportamiento:
 
   </Accordion>
 
-  <Accordion title="Rutas de credenciales y compatibilidad con versiones anteriores">
+  <Accordion title="Rutas de credenciales y compatibilidad heredada">
     - ruta de autenticación actual: `~/.openclaw/credentials/whatsapp/<accountId>/creds.json`
     - archivo de respaldo: `creds.json.bak`
-    - autenticación predeterminada heredada en `~/.openclaw/credentials/` todavía se reconoce/migra para flujos de cuenta predeterminada
+    - la autenticación predeterminada heredada en `~/.openclaw/credentials/` todavía se reconoce/migra para flujos de cuenta predeterminada
 
   </Accordion>
 
   <Accordion title="Comportamiento de cierre de sesión">
     `openclaw channels logout --channel whatsapp [--account <id>]` borra el estado de autenticación de WhatsApp para esa cuenta.
 
-    Cuando un Gateway es accesible, el cierre de sesión primero detiene el escucha de WhatsApp en vivo para la cuenta seleccionada para que la sesión vinculada no siga recibiendo mensajes hasta el próximo reinicio. `openclaw channels remove --channel whatsapp` también detiene el escucha en vivo antes de deshabilitar o eliminar la configuración de la cuenta.
+    Cuando un Gateway es accesible, el cierre de sesión primero detiene el oyente en vivo de WhatsApp para la cuenta seleccionada para que la sesión vinculada no siga recibiendo mensajes hasta el próximo reinicio. `openclaw channels remove --channel whatsapp` también detiene el oyente en vivo antes de deshabilitar o eliminar la configuración de la cuenta.
 
-    En directorios de autenticación heredados, `oauth.json` se conserva mientras se eliminan los archivos de autenticación de Baileys.
+    En los directorios de autenticación heredados, `oauth.json` se conserva mientras se eliminan los archivos de autenticación de Baileys.
 
   </Accordion>
 </AccordionGroup>
@@ -536,10 +577,10 @@ Notas sobre el comportamiento:
 ## Herramientas, acciones y escrituras de configuración
 
 - El soporte de herramientas del agente incluye la acción de reacción de WhatsApp (`react`).
-- Condicionales de acción:
+- Barreras de acción:
   - `channels.whatsapp.actions.reactions`
   - `channels.whatsapp.actions.polls`
-- Las escrituras de configuración iniciadas por el canal están habilitadas de forma predeterminada (desactívelas mediante `channels.whatsapp.configWrites=false`).
+- Las escrituras de configuración iniciadas por el canal están habilitadas de forma predeterminada (desactivar mediante `channels.whatsapp.configWrites=false`).
 
 ## Solución de problemas
 
@@ -559,12 +600,12 @@ Notas sobre el comportamiento:
   <Accordion title="Vinculado pero desconectado / bucle de reconexión">
     Síntoma: cuenta vinculada con desconexiones repetidas o intentos de reconexión.
 
-    Las cuentas silenciosas pueden permanecer conectadas más allá del tiempo de espera normal del mensaje; el perro guardián
-    se reinicia cuando se detiene la actividad de transporte de WhatsApp Web, se cierra el socket o
+    Las cuentas inactivas pueden permanecer conectadas más allá del tiempo de espera normal del mensaje; el perro guardián
+    se reinicia cuando se detiene la actividad de transporte de WhatsApp Web, se cierra el socket, o
     la actividad a nivel de aplicación permanece en silencio más allá de la ventana de seguridad más larga.
 
     Si los registros muestran `status=408 Request Time-out Connection was lost` repetidos, ajuste
-    los tiempos del socket Baileys en `web.whatsapp`. Comience acortando
+    los tiempos del socket Baileys bajo `web.whatsapp`. Comience acortando
     `keepAliveIntervalMs` por debajo del tiempo de espera de inactividad de su red y aumentando
     `connectTimeoutMs` en enlaces lentos o con pérdidas:
 
@@ -583,33 +624,45 @@ Notas sobre el comportamiento:
     Solución:
 
     ```bash
+    openclaw channels status --probe
     openclaw doctor
     openclaw logs --follow
+    openclaw gateway status
+    ```
+
+    Si el bucle persiste después de corregir la conectividad del host y los tiempos, haga una copia de seguridad
+    del directorio de autenticación de la cuenta y vuelva a vincular esa cuenta:
+
+    ```bash
+    cp -a ~/.openclaw/credentials/whatsapp/<accountId> \
+      ~/.openclaw/credentials/whatsapp/<accountId>.bak
+    openclaw channels logout --channel whatsapp --account <accountId>
+    openclaw channels login --channel whatsapp --account <accountId>
     ```
 
     Si `~/.openclaw/logs/whatsapp-health.log` dice `Gateway inactive` pero
     `openclaw gateway status` y `openclaw channels status --probe` muestran que
-    la puerta de enlace y WhatsApp están sanos, ejecute `openclaw doctor`. En Linux, el doctor
+    la pasarela y WhatsApp están saludables, ejecute `openclaw doctor`. En Linux, el doctor
     advierte sobre entradas de crontab heredadas que todavía invocan
     `~/.openclaw/bin/ensure-whatsapp.sh`; elimine esas entradas obsoletas con
     `crontab -e` porque cron puede carecer del entorno de bus de usuario de systemd y
-    hacer que ese script antiguo informe incorrectamente el estado de la puerta de enlace.
+    hacer que ese script antiguo informe incorrectamente el estado de la pasarela.
 
     Si es necesario, vuelva a vincular con `channels login`.
 
   </Accordion>
 
-  <Accordion title="El inicio de sesión con QR agota el tiempo de espera detrás de un proxy">
+  <Accordion title="El inicio de sesión con QR se agota detrás de un proxy">
     Síntoma: `openclaw channels login --channel whatsapp` falla antes de mostrar un código QR utilizable con `status=408 Request Time-out` o una desconexión del socket TLS.
 
-    El inicio de sesión de WhatsApp Web utiliza el entorno de proxy estándar del host de la puerta de enlace (`HTTPS_PROXY`, `HTTP_PROXY`, variantes en minúsculas y `NO_PROXY`). Verifique que el proceso de la puerta de enlace herede el entorno de proxy y que `NO_PROXY` no coincida con `mmg.whatsapp.net`.
+    El inicio de sesión de WhatsApp Web utiliza el entorno de proxy estándar del host de la pasarela (`HTTPS_PROXY`, `HTTP_PROXY`, variantes en minúsculas y `NO_PROXY`). Verifique que el proceso de la pasarela herede el entorno de proxy y que `NO_PROXY` no coincida con `mmg.whatsapp.net`.
 
   </Accordion>
 
-  <Accordion title="No hay ningún escucha activo al enviar">
-    Los envíos salientes fallan rápidamente cuando no existe ningún escucha activo de puerta de enlace para la cuenta de destino.
+  <Accordion title="Sin oyente activo al enviar">
+    Los envíos salientes fallan rápidamente cuando no existe un oyente de puerta de enlace activo para la cuenta de destino.
 
-    Asegúrese de que la puerta de enlace se esté ejecutando y de que la cuenta esté vinculada.
+    Asegúrese de que la puerta de enlace esté ejecutándose y de que la cuenta esté vinculada.
 
   </Accordion>
 
@@ -618,25 +671,25 @@ Notas sobre el comportamiento:
 
     Las reacciones de reconocimiento son recibos previos independientes a la respuesta. Una reacción exitosa no prueba que la respuesta de texto o medio posterior haya sido aceptada por WhatsApp.
 
-    Verifique los registros de la puerta de enlace para `auto-reply delivery failed` o `auto-reply was not accepted by WhatsApp provider`.
+    Compruebe los registros de la puerta de enlace para `auto-reply delivery failed` o `auto-reply was not accepted by WhatsApp provider`.
 
   </Accordion>
 
   <Accordion title="Mensajes de grupo ignorados inesperadamente">
-    Comprueba en este orden:
+    Compruebe en este orden:
 
     - `groupPolicy`
     - `groupAllowFrom` / `allowFrom`
-    - entradas de la lista de permitidos de `groups`
+    - entradas de lista de permitidos de `groups`
     - filtrado de menciones (`requireMention` + patrones de mención)
-    - claves duplicadas en `openclaw.json` (JSON5): las entradas posteriores sobrescriben a las anteriores, así que mantén un solo `groupPolicy` por ámbito
+    - claves duplicadas en `openclaw.json` (JSON5): las entradas posteriores anulan las anteriores, así que mantenga un solo `groupPolicy` por ámbito
 
-    Si `channels.whatsapp.groups` está presente, WhatsApp aún puede observar mensajes de otros grupos, pero OpenClaw los descarta antes del enrutamiento de sesión. Añade el JID del grupo a `channels.whatsapp.groups` o añade `groups["*"]` para admitir todos los grupos mientras se mantiene la autorización del remitente bajo `groupPolicy` y `groupAllowFrom`.
+    Si está presente `channels.whatsapp.groups`, WhatsApp aún puede observar mensajes de otros grupos, pero OpenClaw los descarta antes del enrutamiento de sesión. Agregue el JID del grupo a `channels.whatsapp.groups` o agregue `groups["*"]` para admitir todos los grupos mientras mantiene la autorización del remitente bajo `groupPolicy` y `groupAllowFrom`.
 
   </Accordion>
 
-  <Accordion title="Advertencia del tiempo de ejecución de Bun">
-    El tiempo de ejecución de la puerta de enlace de WhatsApp debe usar Node. Bun está marcado como incompatible para la operación estable de la puerta de enlace de WhatsApp/Telegram.
+  <Accordion title="Advertencia de tiempo de ejecución de Bun">
+    El tiempo de ejecución de la puerta de enlace de WhatsApp debe usar Node. Bun está marcado como incompatible para el funcionamiento estable de la puerta de enlace de WhatsApp/Telegram.
   </Accordion>
 </AccordionGroup>
 
@@ -646,30 +699,30 @@ WhatsApp admite prompts del sistema estilo Telegram para grupos y chats directos
 
 Jerarquía de resolución para mensajes de grupo:
 
-Primero se determina el mapa `groups` efectivo: si la cuenta define su propio `groups`, reemplaza completamente el mapa raíz `groups` (sin fusión profunda). La búsqueda del prompt se ejecuta entonces en el mapa único resultante:
+Primero se determina el mapa `groups` efectivo: si la cuenta define su propio `groups`, este reemplaza completamente el mapa `groups` raíz (sin fusión profunda). Luego, la búsqueda de prompt se ejecuta en el mapa único resultante:
 
-1. **Prompt del sistema específico del grupo** (`groups["<groupId>"].systemPrompt`): se usa cuando la entrada específica del grupo existe en el mapa **y** su clave `systemPrompt` está definida. Si `systemPrompt` es una cadena vacía (`""`), se suprime el comodín y no se aplica ningún prompt del sistema.
-2. **Prompt del sistema con comodín de grupo** (`groups["*"].systemPrompt`): se usa cuando la entrada específica del grupo está totalmente ausente del mapa, o cuando existe pero no define ninguna clave `systemPrompt`.
+1. **System prompt específico del grupo** (`groups["<groupId>"].systemPrompt`): se utiliza cuando existe la entrada específica del grupo en el mapa **y** su clave `systemPrompt` está definida. Si `systemPrompt` es una cadena vacía (`""`), se suprime el comodín y no se aplica ningún system prompt.
+2. **System prompt comodín de grupo** (`groups["*"].systemPrompt`): se utiliza cuando la entrada específica del grupo está completamente ausente del mapa, o cuando existe pero no define ninguna clave `systemPrompt`.
 
 Jerarquía de resolución para mensajes directos:
 
-Primero se determina el mapa `direct` efectivo: si la cuenta define su propio `direct`, reemplaza completamente el mapa raíz `direct` (sin fusión profunda). La búsqueda del prompt se ejecuta entonces en el mapa único resultante:
+Primero se determina el mapa `direct` efectivo: si la cuenta define su propio `direct`, este reemplaza completamente el mapa `direct` raíz (sin fusión profunda). Luego, la búsqueda de prompt se ejecuta en el mapa único resultante:
 
-1. **Prompt del sistema específico de directo** (`direct["<peerId>"].systemPrompt`): se utiliza cuando la entrada del par específico existe en el mapa **y** su clave `systemPrompt` está definida. Si `systemPrompt` es una cadena vacía (`""`), se suprime el comodín y no se aplica ningún prompt del sistema.
-2. **Prompt del sistema comodín de directo** (`direct["*"].systemPrompt`): se utiliza cuando la entrada del par específico está ausente totalmente del mapa, o cuando existe pero no define ninguna clave `systemPrompt`.
+1. **System prompt específico directo** (`direct["<peerId>"].systemPrompt`): se utiliza cuando existe la entrada específica del par en el mapa **y** su clave `systemPrompt` está definida. Si `systemPrompt` es una cadena vacía (`""`), se suprime el comodín y no se aplica ningún system prompt.
+2. **System prompt comodín directo** (`direct["*"].systemPrompt`): se utiliza cuando la entrada específica del par está completamente ausente del mapa, o cuando existe pero no define ninguna clave `systemPrompt`.
 
 <Note>
-`dms` sigue siendo el depósito de anulación del historial por MD ligero (`dms.<id>.historyLimit`). Las anulaciones de prompts residen en `direct`.
+`dms` sigue siendo el depósito de anulación ligero del historial por mensaje directo (`dms.<id>.historyLimit`). Las anulaciones de prompts residen bajo `direct`.
 </Note>
 
-**Diferencia con el comportamiento multicuenta de Telegram:** En Telegram, el `groups` raíz se suprime intencionalmente para todas las cuentas en una configuración multicuenta, incluso para las cuentas que no definen su propio `groups`, para evitar que un bot reciba mensajes de grupos a los que no pertenece. WhatsApp no aplica esta protección: el `groups` raíz y el `direct` raíz siempre se heredan en las cuentas que no definen una anulación a nivel de cuenta, independientemente de cuántas cuentas estén configuradas. En una configuración multicuenta de WhatsApp, si desea prompts de grupo o directo por cuenta, defina el mapa completo en cada cuenta explícitamente en lugar de confiar en los valores predeterminados de nivel raíz.
+**Diferencia con el comportamiento de multicuenta de Telegram:** En Telegram, el `groups` raíz se suprime intencionalmente para todas las cuentas en una configuración de multicuenta, incluso para las cuentas que no definen ningún `groups` propio, para evitar que un bot reciba mensajes de grupos a los que no pertenece. WhatsApp no aplica esta protección: el `groups` raíz y el `direct` raíz siempre se heredan por las cuentas que no definen una invalidación a nivel de cuenta, independientemente de cuántas cuentas estén configuradas. En una configuración de multicuenta de WhatsApp, si desea avisos por grupo o por cuenta, defina el mapa completo en cada cuenta explícitamente en lugar de confiar en los valores predeterminados de nivel raíz.
 
 Comportamiento importante:
 
-- `channels.whatsapp.groups` es tanto un mapa de configuración por grupo como la lista de permitidos de grupos a nivel de chat. En el ámbito raíz o de cuenta, `groups["*"]` significa "se admiten todos los grupos" para ese ámbito.
-- Solo añada un grupo comodín `systemPrompt` cuando ya quiera que ese ámbito admita todos los grupos. Si todavía solo quiere que un conjunto fijo de ID de grupos sean elegibles, no use `groups["*"]` para el valor predeterminado del prompt. En su lugar, repita el prompt en cada entrada de grupo permitida explícitamente.
-- La admisión en grupos y la autorización de remitentes son verificaciones separadas. `groups["*"]` amplía el conjunto de grupos que pueden alcanzar el manejo de grupos, pero por sí solo no autoriza a todos los remitentes en esos grupos. El acceso del remitente aún se controla por separado mediante `channels.whatsapp.groupPolicy` y `channels.whatsapp.groupAllowFrom`.
-- `channels.whatsapp.direct` no tiene el mismo efecto secundario para los MD. `direct["*"]` solo proporciona una configuración de chat directo predeterminada después de que un MD ya haya sido admitido por `dmPolicy` más `allowFrom` o las reglas del almacén de emparejamiento.
+- `channels.whatsapp.groups` es tanto un mapa de configuración por grupo como la lista de permitidos de grupos a nivel de chat. Tanto en el ámbito raíz como en el de cuenta, `groups["*"]` significa "se admiten todos los grupos" para ese ámbito.
+- Solo agregue un grupo comodín `systemPrompt` cuando ya desee que ese ámbito admita todos los grupos. Si aún desea que solo un conjunto fijo de IDs de grupos sean elegibles, no use `groups["*"]` como valor predeterminado del aviso. En su lugar, repita el aviso en cada entrada de grupo permitida explícitamente.
+- La admisión de grupos y la autorización del remitente son verificaciones separadas. `groups["*"]` amplía el conjunto de grupos que pueden alcanzar el manejo de grupos, pero por sí solo no autoriza a todos los remitentes en esos grupos. El acceso del remitente todavía se controla por separado mediante `channels.whatsapp.groupPolicy` y `channels.whatsapp.groupAllowFrom`.
+- `channels.whatsapp.direct` no tiene el mismo efecto secundario para los MD. `direct["*"]` solo proporciona una configuración predeterminada de chat directo después de que un MD ya haya sido admitido por `dmPolicy` más `allowFrom` o las reglas del almacenamiento de emparejamiento.
 
 Ejemplo:
 
@@ -723,8 +776,8 @@ Campos de WhatsApp de alta señal:
 - entrega: `textChunkLimit`, `chunkMode`, `mediaMaxMb`, `sendReadReceipts`, `ackReaction`, `reactionLevel`
 - multicuenta: `accounts.<id>.enabled`, `accounts.<id>.authDir`, anulaciones a nivel de cuenta
 - operaciones: `configWrites`, `debounceMs`, `web.enabled`, `web.heartbeatSeconds`, `web.reconnect.*`, `web.whatsapp.*`
-- comportamiento de sesión: `session.dmScope`, `historyLimit`, `dmHistoryLimit`, `dms.<id>.historyLimit`
-- prompts: `groups.<id>.systemPrompt`, `groups["*"].systemPrompt`, `direct.<id>.systemPrompt`, `direct["*"].systemPrompt`
+- comportamiento de la sesión: `session.dmScope`, `historyLimit`, `dmHistoryLimit`, `dms.<id>.historyLimit`
+- indicaciones: `groups.<id>.systemPrompt`, `groups["*"].systemPrompt`, `direct.<id>.systemPrompt`, `direct["*"].systemPrompt`
 
 ## Relacionado
 

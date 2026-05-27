@@ -398,59 +398,61 @@ Cela met en scène les candidats durables ancrés dans le magasin de rêve à co
     - **Permissions du fichier de configuration** : avertit si `~/.openclaw/openclaw.json` est lisible par le groupe/le monde et propose de resserrer à `600`.
 
   </Accordion>
-  <Accordion title="OAuth5. Intégrité de l'authentification du modèle (expiration OAuth)"OAuthAnthropicOAuthAnthropicAPIAnthropic>
-    Doctor inspecte les profils OAuth dans le magasin d'authentification, avertit lorsque les jetons sont sur le point d'expirer ou expirés, et peut les actualiser lorsque cela est sûr. Si le profil OAuth/jeton Anthropic est obsolète, il suggère une clé API Anthropic ou le chemin du jeton de configuration (setup-token) Anthropic. Les invites d'actualisation n'apparaissent que lors d'une exécution interactive (TTY) ; `--non-interactive`OAuth ignore les tentatives d'actualisation.
+  <Accordion title="OAuth5. Modèle de santé d'authentification (expiration OAuth)"OAuthAnthropicOAuthAnthropicAPIAnthropic>
+    Doctor inspecte les profils OAuth dans le magasin d'authentification, avertit lorsque les jetons expirent/sont expirés, et peut les actualiser en toute sécurité. Si le profil OAuth/jeton Anthropic est périmé, il suggère une clé API Anthropic ou le chemin du jeton de configuration Anthropic. Les invites d'actualisation n'apparaissent que lors d'une exécution interactive (TTY) ; `--non-interactive`OAuth ignore les tentatives d'actualisation.
 
-    Lorsqu'une actualisation OAuth échoue de manière permanente (par exemple `refresh_token_reused`, `invalid_grant`, ou un fournisseur vous demandant de vous reconnecter), doctor signale qu'une réauthentification est requise et imprime la commande exacte `openclaw models auth login --provider ...` à exécuter.
+    Lorsqu'une actualisation OAuth échoue définitivement (par exemple `refresh_token_reused`, `invalid_grant`, ou un fournisseur vous demandant de vous reconnecter), doctor signale qu'une ré-authentification est requise et imprime la commande exacte `openclaw models auth login --provider ...`OAuthmacOS à exécuter.
 
     Doctor signale également les profils d'authentification temporairement inutilisables en raison de :
 
-    - courts refroidissements (limites de délai/dépassements de délai/échecs d'authentification)
+    - courts temps d'attente (limites de délai/délais d'attente/échecs d'authentification)
     - désactivations plus longues (échecs de facturation/crédit)
 
+    Les profils OAuth Codex hérités dont les jetons résident dans le trousseau macOS (ancien onboarding avant la mise en page sidecar basée sur les fichiers) ne sont pas détectés par le chemin d'exécution intégré — ce chemin s'exécute avec `allowKeychainPrompt: false` et ne peut pas déclencher d'invite de trousseau. Exécutez `openclaw doctor --fix` une fois pour migrer les jetons hérités sauvegardés par le trousseau en ligne vers `auth-profiles.json`TelegramOAuth ; après cela, les tours intégrés (Telegram, cron, envoi de sous-agent) les résolvent comme n'importe quel autre profil OAuth en ligne.
+
   </Accordion>
-  <Accordion title="6. Validation du modèle de Hooks">
-    Si `hooks.gmail.model` est défini, doctor valide la référence du modèle par rapport au catalogue et à la liste d'autorisation (allowlist) et avertit lorsqu'elle ne sera pas résolue ou n'est pas autorisée.
+  <Accordion title="6. Validation du modèle de hooks">
+    Si `hooks.gmail.model` est défini, doctor valide la référence du modèle par rapport au catalogue et à la liste autorisée et avertit lorsqu'elle ne peut pas être résolue ou est interdite.
   </Accordion>
   <Accordion title="7. Réparation de l'image Sandbox"Docker>
     Lorsque la mise en bac à sable (sandboxing) est activée, doctor vérifie les images Docker et propose de les construire ou de passer aux noms hérités si l'image actuelle est manquante.
   </Accordion>
   <Accordion title="7b. Nettoyage de l'installation des plugins">
-    Doctor supprime l'état de mise en zone de préparation des dépendances de plugins hérité généré par OpenClaw en mode `openclaw doctor --fix` / `openclaw doctor --repair`. Cela couvre les racines de dépendances générées obsolètes, les anciens répertoires d'étape d'installation, les débris locaux de package provenant de l'ancien code de réparation des dépendances des plugins groupés, et les copies gérées de npm de plugins groupés `@openclaw/*` orphelines ou récupérées qui peuvent masquer le manifeste groupé actuel. Doctor relie également le package hôte `openclaw` aux plugins gérés npm qui déclarent `peerDependencies.openclaw`, afin que les importations d'exécution locales de package telles que `openclaw/plugin-sdk/*` continuent à être résolues après les mises à jour ou les réparations npm.
+    Doctor supprime l'état de mise en zone de préparation des dépendances de plugins hérité généré par OpenClaw en mode `openclaw doctor --fix` / `openclaw doctor --repair`. Cela couvre les racines de dépendances générées obsolètes, les anciens répertoires de phase d'installation, les débris locaux de package provenant de l'ancien code de réparation des dépendances des plugins groupés, et les copies gérées de npm orphelines ou récupérées de plugins groupés `@openclaw/*` qui peuvent masquer le manifeste groupé actuel. Doctor relie également le package hôte `openclaw` aux plugins gérés par npm qui déclarent `peerDependencies.openclaw`, afin que les importations d'exécution locales de package telles que `openclaw/plugin-sdk/*` continuent d'être résolues après les mises à jour ou les réparations npm.
 
-    Doctor peut également réinstaller les plugins téléchargeables manquants lorsque la configuration y fait référence mais que le registre local de plugins ne peut pas les trouver. Des exemples incluent le matériel `plugins.entries`, les paramètres configurés de canal/fournisseur/recherche et les environnements d'exécution d'agent configurés. Lors des mises à jour de package, doctor évite d'exécuter la réparation de plugin de gestionnaire de package pendant que le package principal est en cours d'échange ; exécutez à nouveau `openclaw doctor --fix` après la mise à jour si un plugin configuré a toujours besoin de récupération. Le démarrage de Gateway et le rechargement de la configuration n'exécutent pas les gestionnaires de package ; les installations de plugins restent un travail explicite de doctor/install/update.
-
-  </Accordion>
-  <Accordion title="Gateway8. Migration et nettoyage des services Gateway"OpenClawOpenClawLinuxOpenClaw>
-    Doctor détecte les services Gateway hérités (launchd/systemd/schtasks) et propose de les supprimer et d'installer le service OpenClaw en utilisant le port Gateway actuel. Il peut également rechercher des services similaires supplémentaires et imprimer des conseils de nettoyage. Les services Gateway OpenClaw nommés par profil sont considérés comme de première classe et ne sont pas signalés comme « supplémentaires ».
-
-    Sur Linux, si le service Gateway au niveau de l'utilisateur est manquant mais qu'un service Gateway OpenClaw au niveau du système existe, doctor n'installe pas automatiquement un deuxième service au niveau de l'utilisateur. Inspectez avec `openclaw gateway status --deep` ou `openclaw doctor --deep`, puis supprimez le doublon ou définissez `OPENCLAW_SERVICE_REPAIR_POLICY=external` lorsqu'un superviseur système possède le cycle de vie de la gateway.
+    Doctor peut également réinstaller les plugins téléchargeables manquants lorsque la configuration les référence mais que le registre local de plugins ne parvient pas à les trouver. Des exemples incluent les matériaux `plugins.entries`, les paramètres de canal/fournisseur/recherche configurés et les runtimes d'agent configurés. Lors des mises à jour de package, doctor évite d'exécuter la réparation des plugins du gestionnaire de packages pendant que le package principal est en cours d'échange ; exécutez à nouveau `openclaw doctor --fix` après la mise à jour si un plugin configuré a toujours besoin de récupération. Le démarrage et le rechargement de la configuration du Gateway n'exécutent pas les gestionnaires de packages ; les installations de plugins restent un travail explicite de doctor/install/update.
 
   </Accordion>
-  <Accordion title="Matrix8b. Migration de Matrix au démarrage"Matrix>
-    Lorsqu'un compte de channel Matrix a une migration d'état héritée en attente ou actionable, doctor (en mode `--fix` / `--repair`Matrix) crée un instantané de pré-migration puis exécute les étapes de migration de mieux effort : migration d'état hérité Matrix et préparation de l'état chiffré hérité. Ces deux étapes ne sont pas fatales ; les erreurs sont consignées et le démarrage continue. En mode lecture seule (`openclaw doctor` sans `--fix`), cette vérification est entièrement ignorée.
+  <Accordion title="Gateway8. Gateway service migrations and cleanup hints"OpenClawOpenClawLinuxOpenClaw>
+    Doctor détecte les services de passerelle hérités (launchd/systemd/schtasks) et propose de les supprimer et d'installer le service OpenClaw en utilisant le port de passerelle actuel. Il peut également rechercher des services similaires supplémentaires et imprimer des conseils de nettoyage. Les services de passerelle OpenClaw nommés par profil sont considérés comme de première classe et ne sont pas signalés comme « supplémentaires ».
+
+    Sur Linux, si le service de passerelle au niveau utilisateur est manquant mais qu'un service de passerelle OpenClaw au niveau système existe, doctor n'installe pas automatiquement un deuxième service au niveau utilisateur. Inspectez avec `openclaw gateway status --deep` ou `openclaw doctor --deep`, puis supprimez le doublon ou définissez `OPENCLAW_SERVICE_REPAIR_POLICY=external` lorsqu'un superviseur système possède le cycle de vie de la passerelle.
+
   </Accordion>
-  <Accordion title="8c. Appareillage des périphériques et dérive de l'authentification">
-    Doctor inspecte désormais l'état de l'appareillage des périphériques dans le cadre de la vérification de santé normale.
+  <Accordion title="Matrix8b. Startup Matrix migration"Matrix>
+    Lorsqu'un compte de channel Matrix a une migration d'état héritée en attente ou actionnable, doctor (en mode `--fix` / `--repair`Matrix) crée un instantané pré-migration puis exécute les étapes de migration de meilleur effort : migration d'état Matrix hérité et préparation d'état chiffré hérité. Ces deux étapes ne sont pas fatales ; les erreurs sont consignées et le démarrage continue. En mode lecture seule (`openclaw doctor` sans `--fix`), cette vérification est entièrement ignorée.
+  </Accordion>
+  <Accordion title="8c. Appareil jumelé et dérive d'authentification">
+    Doctor inspecte désormais l'état du jumelage d'appareil dans le cadre de la vérification de santé normale.
 
     Ce qu'il signale :
 
-    - demandes d'appareillage initial en attente
-    - mises à niveau de rôle en attente pour les périphériques déjà appariés
-    - mises à niveau de portée en attente pour les périphériques déjà appariés
-    - réparations de discordance de clé publique où l'ID du périphérique correspond toujours mais l'identité du périphérique ne correspond plus à l'enregistrement approuvé
-    - enregistrements appariés manquant un jeton actif pour un rôle approuvé
-    - jetons appariés dont les portées dérivent en dehors de la base de référence d'appareillage approuvée
-    - entrées locales en cache de jetons de périphérique pour la machine actuelle qui précèdent une rotation de jeton côté passerelle ou transportent des métadonnées de portée obsolètes
+    - demandes de premier jumelage en attente
+    - mises à niveau de rôle en attente pour les appareils déjà jumelés
+    - mises à niveau de portée (scope) en attente pour les appareils déjà jumelés
+    - réparations de non-concordance de clé publique où l'identifiant de l'appareil correspond toujours mais l'identité de l'appareil ne correspond plus à l'enregistrement approuvé
+    - enregistrements jumelés manquant un jeton actif pour un rôle approuvé
+    - jetons jumelés dont les portées dérivent en dehors de la base de référence de jumelage approuvée
+    - entrées de jeton d'appareil mises en cache localement pour la machine actuelle qui précèdent une rotation de jeton côté passerelle ou contiennent des métadonnées de portée obsolètes
 
-    Doctor n'approuve pas automatiquement les demandes d'appareillage ni ne fait pivoter automatiquement les jetons de périphérique. Il imprime plutôt les étapes exactes suivantes :
+    Doctor n'approuve pas automatiquement les demandes de jumelage et ne fait pas tourner automatiquement les jetons d'appareil. Il imprime plutôt les étapes exactes à suivre :
 
     - inspecter les demandes en attente avec `openclaw devices list`
     - approuver la demande exacte avec `openclaw devices approve <requestId>`
-    - faire pivoter un nouveau jeton avec `openclaw devices rotate --device <deviceId> --role <role>`
+    - faire tourner un nouveau jeton avec `openclaw devices rotate --device <deviceId> --role <role>`
     - supprimer et réapprouver un enregistrement obsolète avec `openclaw devices remove <deviceId>`
 
-    Cela comble le problème courant « déjà apparié mais nécessitant toujours un appareillage » : doctor distingue désormais l'appareillage initial des mises à niveau de rôle/portée en attente et de la dérive de jeton/identité de périphérique obsolète.
+    Cela comble le problème courant du « déjà jumelé mais nécessitant toujours un jumelage » : doctor distingue désormais le premier jumelage des mises à niveau de rôle/portée en attente et de la dérive des jetons/identité d'appareil obsolètes.
 
   </Accordion>
   <Accordion title="9. Avertissements de sécurité">
@@ -459,46 +461,46 @@ Cela met en scène les candidats durables ancrés dans le magasin de rêve à co
   <Accordion title="Linux10. persistance systemd (Linux)">
     S'il s'exécute en tant que service utilisateur systemd, doctor s'assure que la persistance est activée afin que la passerelle reste active après la déconnexion.
   </Accordion>
-  <Accordion title="11. Workspace status (skills, plugins, and legacy dirs)">
-    Doctor affiche un résumé de l'état de l'espace de travail pour l'agent par défaut :
+  <Accordion title="11. Statut de l'espace de travail (compétences, plugins et répertoires hérités)">
+    Doctor imprime un résumé de l'état de l'espace de travail pour l'agent par défaut :
 
-    - **Skills status** : compte les compétences éligibles, celles dont les prérequis sont manquants et celles bloquées par la liste d'autorisation.
-    - **Legacy workspace dirs** : avertit lorsque `~/openclaw` ou d'autres répertoires d'espace de travail hérités existent aux côtés de l'espace de travail actuel.
-    - **Plugin status** : compte les plugins activés/désactivés/en erreur ; répertorie les identifiants des plugins pour toute erreur ; signale les capacités des plugins groupés.
-    - **Plugin compatibility warnings** : signale les plugins qui présentent des problèmes de compatibilité avec l'exécution actuelle.
-    - **Plugin diagnostics** : met en évidence les avertissements ou erreurs de chargement émis par le registre de plugins.
+    - **Statut des compétences** : compte les compétences éligibles, celles dont les prérequis manquent et celles bloquées par la liste blanche.
+    - **Répertoires d'espace de travail hérités** : avertit lorsque `~/openclaw` ou d'autres répertoires d'espace de travail hérités existent à côté de l'espace de travail actuel.
+    - **Statut des plugins** : compte les plugins activés/désactivés/en erreur ; liste les ID des plugins pour toute erreur ; signale les capacités des plugins groupés.
+    - **Avertissements de compatibilité des plugins** : signale les plugins qui ont des problèmes de compatibilité avec l'exécution actuelle.
+    - **Diagnostics des plugins** : met en évidence les avertissements ou erreurs de chargement émis par le registre des plugins.
 
   </Accordion>
-  <Accordion title="11b. Bootstrap file size">
-    Doctor vérifie si les fichiers d'amorçage de l'espace de travail (par exemple `AGENTS.md`, `CLAUDE.md`, ou d'autres fichiers de contexte injectés) sont proches ou dépassent le budget de caractères configuré. Il signale le nombre brut de caractères par rapport au nombre injecté par fichier, le pourcentage de troncation, la cause de la troncation (`max/file` ou `max/total`) et le nombre total de caractères injectés en fraction du budget total. Lorsque les fichiers sont tronqués ou proches de la limite, doctor affiche des conseils pour régler `agents.defaults.bootstrapMaxChars` et `agents.defaults.bootstrapTotalMaxChars`.
+  <Accordion title="11b. Taille du fichier d'amorçage">
+    Doctor vérifie si les fichiers d'amorçage de l'espace de travail (par exemple `AGENTS.md`, `CLAUDE.md` ou d'autres fichiers de contexte injectés) sont proches ou dépassent le budget de caractères configuré. Il signale les comptes de caractères bruts par rapport aux caractères injectés par fichier, le pourcentage de troncation, la cause de la troncation (`max/file` ou `max/total`) et le nombre total de caractères injectés en fraction du budget total. Lorsque les fichiers sont tronqués ou proches de la limite, doctor affiche des conseils pour régler `agents.defaults.bootstrapMaxChars` et `agents.defaults.bootstrapTotalMaxChars`.
   </Accordion>
-  <Accordion title="11d. Stale channel plugin cleanup">
-    Lorsque `openclaw doctor --fix` supprime un plugin de canal manquant, il supprime également la configuration délimitée au canal en suspens qui référençait ce plugin : entrées `channels.<id>`, cibles de heartbeat nommant le canal et remplacements `agents.*.models["<channel>/*"]`. Cela empêche les boucles de démarrage de Gateway où l'exécution du canal a disparu mais où la configuration demande toujours à la passerelle de s'y lier.
+  <Accordion title="11d. Nettoyage des plugins de channel obsolètes">
+    Lorsque `openclaw doctor --fix` supprime un plugin de channel manquant, il supprime également la configuration de portée de channel en suspens qui référençait ce plugin : entrées `channels.<id>`, cibles de heartbeat nommant le channel et remplacements `agents.*.models["<channel>/*"]`Gateway. Cela empêche les boucles de démarrage de Gateway où le runtime du channel a disparu mais la configuration demande toujours au gateway de s'y lier.
   </Accordion>
-  <Accordion title="11c. Complétion du shell">
-    Doctor vérifie si la complétion par tabulation est installée pour le shell actuel (zsh, bash, fish ou PowerShell) :
+  <Accordion title="11c. Completion du shell">
+    Doctor vérifie si la completion par tabulation est installée pour le shell actuel (zsh, bash, fish ou PowerShell) :
 
-    - Si le profil du shell utilise un modèle de complétion dynamique lent (`source <(openclaw completion ...)`), doctor le met à niveau vers la variante de fichier en cache plus rapide.
-    - Si la complétion est configurée dans le profil mais que le fichier cache est manquant, doctor régénère le cache automatiquement.
-    - Si aucune complétion n'est configurée du tout, doctor propose de l'installer (mode interactif uniquement ; ignoré avec `--non-interactive`).
+    - Si le profil du shell utilise un modèle de completion dynamique lent (`source <(openclaw completion ...)`), doctor le met à niveau vers la variante de fichier en cache plus rapide.
+    - Si la completion est configurée dans le profil mais que le fichier cache est manquant, doctor régénère le cache automatiquement.
+    - Si aucune completion n'est configurée du tout, doctor invite à l'installer (mode interactif uniquement ; ignoré avec `--non-interactive`).
 
     Exécutez `openclaw completion --write-state` pour régénérer le cache manuellement.
 
   </Accordion>
-  <Accordion title="Gateway12. Vérifications d'authentification du Gateway (jeton local)">
-    Doctor vérifie la disponibilité de l'authentification par jeton du Gateway local.
+  <Accordion title="Gateway12. Vérifications d'authentification de la passerelle (jeton local)">
+    Doctor vérifie la préparation de l'authentification par jeton de passerelle locale.
 
-    - Si le mode de jeton nécessite un jeton et qu'aucune source de jeton n'existe, doctor propose d'en générer un.
-    - Si `gateway.auth.token` est géré par SecretRef mais indisponible, doctor avertit et ne l'écrase pas en clair.
-    - `openclaw doctor --generate-gateway-token` force la génération uniquement lorsqu'aucun SecretRef de jeton n'est configuré.
+    - Si le mode jeton nécessite un jeton et qu'aucune source de jeton n'existe, Doctor propose d'en générer un.
+    - Si `gateway.auth.token` est géré par SecretRef mais indisponible, Doctor avertit et ne l'écrase pas en texte brut.
+    - `openclaw doctor --generate-gateway-token` force la génération uniquement lorsqu'aucune SecretRef de jeton n'est configurée.
 
   </Accordion>
-  <Accordion title="12b. Réparations compatibles SecretRef en lecture seule">
-    Certains flux de réparation doivent inspecter les identifiants configurés sans affaiblir le comportement d'échec rapide (fail-fast) à l'exécution.
+  <Accordion title="12b. Réparations sensibles aux SecretRef en lecture seule">
+    Certains flux de réparation doivent inspecter les informations d'identification configurées sans affaiblir le comportement d'échec rapide à l'exécution.
 
-    - `openclaw doctor --fix`Telegram utilise désormais le même modèle de résumé SecretRef en lecture seule que les commandes de la famille status pour les réparations de configuration ciblées.
-    - Exemple : la réparation Telegram `allowFrom` / `groupAllowFrom` `@username`Telegram essaie d'utiliser les identifiants de bot configurés lorsqu'ils sont disponibles.
-    - Si le jeton du bot Telegram est configuré via SecretRef mais indisponible dans le chemin de commande actuel, doctor signale que l'identifiant est configuré mais indisponible et ignore la résolution automatique au lieu de planter ou de signaler incorrectement le jeton comme manquant.
+    - `openclaw doctor --fix` utilise désormais le même modèle de résumé SecretRef en lecture seule que les commandes de la famille status pour les réparations de configuration ciblées.
+    - Exemple : la réparation Telegram `allowFrom` / `groupAllowFrom` `@username` tente d'utiliser les informations d'identification du bot configurées si elles sont disponibles.
+    - Si le jeton du bot Telegram est configuré via SecretRef mais indisponible dans le chemin de commande actuel, Doctor signale que les informations d'identification sont configurées mais indisponibles et ignore la résolution automatique au lieu de planter ou de signaler incorrectement le jeton comme manquant.
 
   </Accordion>
   <Accordion title="Gateway13. Vérification de l'état du Gateway + redémarrage">
@@ -507,61 +509,61 @@ Cela met en scène les candidats durables ancrés dans le magasin de rêve à co
   <Accordion title="13b. Préparation de la recherche mémoire">
     Doctor vérifie si le fournisseur d'embeddings de recherche mémoire configuré est prêt pour l'agent par défaut. Le comportement dépend du backend et du fournisseur configurés :
 
-    - **Backend QMD** : sonde si le binaire `qmd` est disponible et démarrable. Si ce n'est pas le cas, il imprime des instructions de réparation, y compris le package npm et une option de chemin binaire manuel.
-    - **Fournisseur local explicite** : vérifie la présence d'un fichier de modèle local ou d'une URL de modèle distante/reconnaissable et téléchargeable. S'il est manquant, il suggère de passer à un fournisseur distant.
-    - **Fournisseur distant explicite** (`openai`, `voyage`, etc.) : vérifie qu'une clé API est présente dans l'environnement ou le stockage d'authentification. Imprime des indices de réparation exploitables si elle est manquante.
+    - **Backend QMD** : sonde si le binaire `qmd` est disponible et démarrable. Sinon, imprime des conseils de réparation, notamment le package npm et une option de chemin binaire manuel.
+    - **Fournisseur local explicite** : vérifie la présence d'un fichier de modèle local ou d'une URL de modèle distante/téléchargeable reconnue. Si absent, suggère de passer à un fournisseur distant.
+    - **Fournisseur distant explicite** (`openai`, `voyage`, etc.) : vérifie qu'une clé API est présente dans l'environnement ou le stockage d'auth. Imprime des conseils de réparation exploitables si absente.
     - **Fournisseur automatique** : vérifie d'abord la disponibilité du modèle local, puis essaie chaque fournisseur distant dans l'ordre de sélection automatique.
 
-    Lorsqu'un résultat de sonde de passerelle mis en cache est disponible (la passerelle était en bonne santé au moment de la vérification), Doctor recoupe ce résultat avec la configuration visible CLI et note toute divergence. Doctor ne lance pas de nouveau ping d'embeddings sur le chemin par défaut ; utilisez la commande de statut de mémoire approfondie lorsque vous souhaitez une vérification en direct du fournisseur.
+    Lorsqu'un résultat de sonde de passerelle mis en cache est disponible (la passerelle était saine au moment de la vérification), Doctor recoupe son résultat avec la configuration visible par la CLI et note toute divergence. Doctor ne lance pas de nouveau ping d'embeddings sur le chemin par défaut ; utilisez la commande de statut de mémoire profonde lorsque vous souhaitez une vérification en direct du fournisseur.
 
-    Utilisez `openclaw memory status --deep` pour vérifier la préparation des embeddings à l'exécution.
+    Utilisez `openclaw memory status --deep` pour vérifier la préparation des embeddings lors de l'exécution.
 
   </Accordion>
   <Accordion title="14. Avertissements de statut de channel">
     Si la passerelle est en bonne santé, Doctor exécute une sonde de statut de channel et signale des avertissements avec des corrections suggérées.
   </Accordion>
   <Accordion title="15. Audit et réparation de la configuration du superviseur">
-    Doctor vérifie la configuration du superviseur installée (launchd/systemd/schtasks) pour détecter les valeurs par défaut manquantes ou obsolètes (par exemple, les dépendances réseau systemd et le délai de redémarrage). Lorsqu'il détecte une inadéquation, il recommande une mise à jour et peut réécrire le fichier de service/tâche avec les valeurs par défaut actuelles.
+    Doctor vérifie la configuration du superviseur installée (launchd/systemd/schtasks) pour détecter les valeurs par défaut manquantes ou obsolètes (par exemple, les dépendances systemd network-online et le délai de redémarrage). Lorsqu'il détecte une incohérence, il recommande une mise à jour et peut réécrire le fichier de service/tâche avec les valeurs par défaut actuelles.
 
     Notes :
 
-    - `openclaw doctor` demande une confirmation avant de réécrire la configuration du superviseur.
+    - `openclaw doctor` demande confirmation avant de réécrire la configuration du superviseur.
     - `openclaw doctor --yes` accepte les invites de réparation par défaut.
-    - `openclaw doctor --fix` applique les corrections recommandées sans invite (`--repair` est un alias).
+    - `openclaw doctor --fix` applique les corrections recommandées sans demande de confirmation (`--repair` est un alias).
     - `openclaw doctor --fix --force` écrase les configurations personnalisées du superviseur.
-    - `OPENCLAW_SERVICE_REPAIR_POLICY=external` maintient doctor en lecture seule pour le cycle de vie du service Gateway. Il signale toujours l'état de santé du service et exécute les réparations non liées aux services, mais ignore l'installation, le démarrage, le redémarrage, l'amorçage du service, la réécriture de la configuration du superviseur et le nettoyage des services obsolètes, car un superviseur externe est propriétaire de ce cycle de vie.
-    - Sur Linux, doctor ne réécrit pas les métadonnées de commande/point d'entrée tant que l'unité systemd Gateway correspondante est active. Il ignore également les unités supplémentaires inactives de type Gateway non obsolètes lors de l'analyse des services en double, afin que les fichiers de services compagnons ne créent pas de bruit de nettoyage.
+    - `OPENCLAW_SERVICE_REPAIR_POLICY=external` maintient doctor en lecture seule pour le cycle de vie du service gateway. Il signale toujours l'état de santé du service et exécute les réparations non liées aux services, mais ignore l'installation, le démarrage, le redémarrage, l'amorçage du service, la réécriture de la configuration du superviseur et le nettoyage des services hérités car un superviseur externe possède ce cycle de vie.
+    - Sur Linux, doctor ne réécrit pas les métadonnées de commande/point d'entrée lorsque l'unité systemd gateway correspondante est active. Il ignore également les unités supplémentaires inactives de type gateway non héritées lors de l'analyse des services en double afin que les fichiers de service compagnons ne créent pas de bruit de nettoyage.
     - Si l'authentification par jeton nécessite un jeton et que `gateway.auth.token` est géré par SecretRef, l'installation/réparation du service doctor valide le SecretRef mais ne persiste pas les valeurs de jeton en texte brut résolues dans les métadonnées d'environnement du service superviseur.
-    - Doctor détecte les valeurs d'environnement de service gérées `.env`/SecretRef que les anciennes installations LaunchAgent, systemd ou Tâche planifiée Windows avaient intégrées en ligne, et réécrit les métadonnées du service pour que ces valeurs soient chargées depuis la source d'exécution plutôt que depuis la définition du superviseur.
-    - Doctor détecte lorsque la commande du service épingle encore un ancien `--port` après des modifications de `gateway.port` et réécrit les métadonnées du service vers le port actuel.
-    - Si l'authentification par jeton nécessite un jeton et que le SecretRef du jeton configuré est non résolu, doctor bloque le chemin d'installation/réparation avec des directives exploitables.
+    - Doctor détecte les valeurs d'environnement de service gérées `.env`/prises en charge par SecretRef que les anciennes installations LaunchAgent, systemd ou Windows Scheduled Task ont intégrées en ligne et réécrit les métadonnées du service pour que ces valeurs soient chargées depuis la source d'exécution au lieu de la définition du superviseur.
+    - Doctor détecte lorsque la commande de service épingle encore un ancien `--port` après des changements `gateway.port` et réécrit les métadonnées du service vers le port actuel.
+    - Si l'authentification par jeton nécessite un jeton et que le SecretRef de jeton configuré est non résolu, doctor bloque le chemin d'installation/réparation avec des conseils actionnables.
     - Si `gateway.auth.token` et `gateway.auth.password` sont tous deux configurés et que `gateway.auth.mode` n'est pas défini, doctor bloque l'installation/réparation jusqu'à ce que le mode soit défini explicitement.
     - Pour les unités utilisateur-systemd Linux, les vérifications de dérive de jeton de doctor incluent désormais les sources `Environment=` et `EnvironmentFile=` lors de la comparaison des métadonnées d'authentification du service.
-    - Les réparations de service doctor refusent de réécrire, d'arrêter ou de redémarrer un service Gateway provenant d'un binaire OpenClaw plus ancien lorsque la configuration a été écrite pour la dernière fois par une version plus récente. Voir [Dépannage Gateway](/fr/gateway/troubleshooting#split-brain-installs-and-newer-config-guard).
+    - Les réparations de service doctor refusent de réécrire, d'arrêter ou de redémarrer un service gateway provenant d'un binaire OpenClaw plus ancien lorsque la configuration a été écrite pour la dernière fois par une version plus récente. Voir [Gateway troubleshooting](/fr/gateway/troubleshooting#split-brain-installs-and-newer-config-guard).
     - Vous pouvez toujours forcer une réécriture complète via `openclaw gateway install --force`.
 
   </Accordion>
-  <Accordion title="16. Diagnostic d'exécution et de port du Gateway">
-    Doctor inspecte le runtime du service (PID, dernier état de sortie) et avertit lorsque le service est installé mais pas réellement en cours d'exécution. Il vérifie également les collisions de port sur le port de la passerelle (par défaut `18789`) et signale les causes probables (passerelle déjà en cours d'exécution, tunnel SSH).
+  <Accordion title="Gateway16. Diagnostics de l'exécution et du port Gateway">
+    Doctor inspecte l'exécution du service (PID, dernier statut de sortie) et avertit lorsque le service est installé mais pas réellement en cours d'exécution. Il vérifie également les conflits de ports sur le port de la passerelle (par défaut `18789`) et signale les causes probables (passerelle déjà en cours d'exécution, tunnel SSH).
   </Accordion>
-  <Accordion title="17. Bonnes pratiques d'exécution du Gateway">
-    Doctor avertit lorsque le service de passerelle s'exécute sur Bun ou un chemin Node géré par version (`nvm`, `fnm`, `volta`, `asdf`, etc.). Les canaux WhatsApp + Telegram nécessitent Node, et les chemins des gestionnaires de versions peuvent casser après les mises à niveau car le service ne charge pas votre initialisation de shell. Doctor propose de migrer vers une installation système de Node si elle est disponible (Homebrew/apt/choco).
+  <Accordion title="Gateway17. Bonnes pratiques d'exécution du Gateway"Bun>
+    Doctor avertit lorsque le service Gateway s'exécute sur Bun ou sur un chemin Node géré par une version (`nvm`, `fnm`, `volta`, `asdf`WhatsAppTelegrammacOS, etc.). Les canaux WhatsApp + Telegram nécessitent Node, et les chemins des gestionnaires de versions peuvent se briser après les mises à niveau car le service ne charge pas votre init de shell. Doctor propose de migrer vers une installation système de Node si elle est disponible (Homebrew/apt/choco).
 
-    Les LaunchAgents nouvellement installés ou réparés sur macOS utilisent un PATH système canonique (`/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin`) au lieu de copier le PATH du shell interactif, de sorte que les binaires système gérés par Homebrew restent disponibles tandis que les répertoires de gestionnaires de versions comme Volta, asdf, fnm, pnpm et autres ne modifient pas la résolution des processus enfants Node. Les services Linux conservent toujours des racines d'environnement explicites (`NVM_DIR`, `FNM_DIR`, `VOLTA_HOME`, `ASDF_DATA_DIR`, `BUN_INSTALL`, `PNPM_HOME`) et des répertoires bin-utilisateurs stables, mais les répertoires de repli de gestionnaires de versions devinés ne sont écrits dans le PATH du service que lorsque ces répertoires existent sur le disque.
+    Les LaunchAgents macOS nouvellement installés ou réparés utilisent un PATH système canonique (`/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin`Linux) au lieu de copier le PATH du shell interactif, de sorte que les binaires système gérés par Homebrew restent disponibles tandis que les répertoires Volta, asdf, fnm, pnpm et autres gestionnaires de versions ne modifient pas la résolution des processus enfants Node. Les services Linux conservent toujours des racines d'environnement explicites (`NVM_DIR`, `FNM_DIR`, `VOLTA_HOME`, `ASDF_DATA_DIR`, `BUN_INSTALL`, `PNPM_HOME`) et des répertoires utilisateur-bin stables, mais les répertoires de secours des gestionnaires de versions déduits ne sont écrits dans le PATH du service que lorsque ces répertoires existent sur le disque.
 
   </Accordion>
   <Accordion title="18. Écriture de configuration + métadonnées de l'assistant">
     Doctor persiste toutes les modifications de configuration et applique les métadonnées de l'assistant pour enregistrer l'exécution de doctor.
   </Accordion>
-  <Accordion title="19. Conseils d'espace de travail (sauvegarde + système de mémoire)">
-    Doctor suggère un système de mémoire pour l'espace de travail lorsqu'il est manquant et affiche un conseil de sauvegarde si l'espace de travail n'est pas déjà sous git.
+  <Accordion title="19. Conseils pour l'espace de travail (sauvegarde + système de mémoire)">
+    Doctor suggère un système de mémoire pour l'espace de travail s'il est manquant et affiche un conseil de sauvegarde si l'espace de travail n'est pas déjà sous git.
 
-    Voir [/concepts/agent-workspace](/fr/concepts/agent-workspaceGitHub) pour un guide complet sur la structure de l'espace de travail et la sauvegarde git (GitHub ou GitLab privé recommandé).
+    Consultez [/concepts/agent-workspace](/fr/concepts/agent-workspace) pour un guide complet sur la structure de l'espace de travail et la sauvegarde git (GitHub ou GitLab privés recommandés).
 
   </Accordion>
 </AccordionGroup>
 
 ## Connexes
 
-- [Guide de procédures Gateway](Gateway/en/gateway)
-- [Dépannage Gateway](Gateway/en/gateway/troubleshooting)
+- [Gateway runbook](/fr/gateway)
+- [Gateway troubleshooting](/fr/gateway/troubleshooting)

@@ -8,7 +8,7 @@ title: "图像生成"
 sidebarTitle: "图像生成"
 ---
 
-`image_generate` 工具允许代理使用您配置的提供商创建和编辑图像。在聊天会话中，图像生成是异步运行的：OpenClaw 记录后台任务，立即返回任务 ID，并在提供商完成时唤醒代理。完成代理必须通过 `message` 工具发送生成的图像；OpenClaw 不会自动发送私有最终回复作为后备。
+`image_generate` 工具允许代理使用您配置的提供商创建和编辑图像。在聊天会话中，图像生成异步运行：OpenClaw 记录后台任务，立即返回任务 ID，并在提供商完成时唤醒代理。完成代理必须通过 `message` 工具发送生成的图像。如果请求者会话处于非活动状态，且某些生成的图像仍未通过消息工具交付，OpenClaw 将发送一个仅包含缺失图像的幂等直接回退。
 
 <Note>该工具仅在至少有一个图像生成提供商可用时出现。如果您在代理的工具中看不到 `image_generate`，请配置 `agents.defaults.imageGenerationModel`，设置提供商 API 密钥，或使用 OpenAI Codex OAuth 登录。</Note>
 
@@ -190,7 +190,8 @@ OpenClaw 按以下顺序尝试提供商：
     只有当 OpenClaw 实际上可以对该提供商进行身份验证时，该提供商的默认值才会进入候选列表。设置 `agents.defaults.mediaGenerationAutoProviderFallback: false` 以仅使用显式的 `model`、`primary` 和 `fallbacks` 条目。
   </Accordion>
   <Accordion title="Timeouts">
-    为缓慢的图像后端设置 `agents.defaults.imageGenerationModel.timeoutMs`。每次调用的 `timeoutMs` 工具参数会覆盖配置的默认值。Google、OpenRouter 和 xAI 托管的图像提供商使用 180 秒的默认值；Azure OpenAI 图像生成使用 600 秒。Codex 动态工具调用使用 120 秒的 `image_generate` 网桥默认值，并在配置时遵守相同的超时预算，受 OpenClaw 的 600000 毫秒动态工具网桥最大值限制。
+    为慢速图像后端设置 `agents.defaults.imageGenerationModel.timeoutMs`。每次调用的 `timeoutMs` 工具参数会覆盖配置的默认值，配置的默认值会覆盖插件编写的提供商默认值。Google 和 OpenRouter 托管的图像提供商使用 180 秒默认值；xAI 和 Azure OpenAI 图像生成使用 600 秒。Codex 动态工具调用使用 120 秒的 `image_generate` 网桥默认值，并在配置时遵守相同的超时预算，受限于 OpenClaw 的 600000
+    毫秒动态工具网桥最大值。
   </Accordion>
   <Accordion title="Inspect at runtime">使用 `action: "list"` 检查当前注册的提供商、其默认模型和身份验证环境变量提示。</Accordion>
 </AccordionGroup>
@@ -208,28 +209,12 @@ OpenAI、OpenRouter、Google 和 xAI 通过 `images` 参数支持最多 5 张参
 ## 提供程序深入探究
 
 <AccordionGroup>
-  <Accordion title="OpenAIOpenAI gpt-image-2（以及 gpt-image-1.5）"OpenAI>
-    OpenAI 图像生成默认为 `openai/gpt-image-2`。如果配置了
-    `openai-codex`OAuthOpenClawOAuth OAuth 配置文件，OpenClaw 将重用 Codex 订阅聊天模型使用的相同
-    OAuth 配置文件，并通过 Codex Responses 后端发送
-    图像请求。传统的 Codex 基本 URL（例如 `https://chatgpt.com/backend-api`）会被规范化为
-    `https://chatgpt.com/backend-api/codex`OpenClaw 用于图像请求。OpenClaw
-    不会针对该请求自动静默回退到 `OPENAI_API_KEY`OpenAIAPI ——
-    要强制直接使用 OpenAI Images API 路由，请使用 API 密钥、自定义基本 URL
-    或 Azure 端点显式配置 `models.providers.openai`API。
+  <Accordion title="OpenAIOpenAI gpt-image-2 (and gpt-image-1.5)"OpenAI>
+    OpenAI 图像生成默认为 `openai/gpt-image-2`。如果配置了 `openai-codex`OAuthOpenClawOAuth OAuth 个人资料，OpenClaw 将重用与 Codex 订阅聊天模型相同的 OAuth 个人资料，并通过 Codex Responses 后端发送图像请求。传统的 Codex 基础 URL（例如 `https://chatgpt.com/backend-api`）将被规范化为 `https://chatgpt.com/backend-api/codex`OpenClaw 以用于图像请求。对于该请求，OpenClaw **不会**静默回退到 `OPENAI_API_KEY`OpenAIAPI —— 若要强制通过直接 OpenAI Images API 路由，请使用 API 密钥、自定义基础 URL 或 Azure 端点显式配置 `models.providers.openai`API。
 
-    仍然可以显式选择 `openai/gpt-image-1.5`、`openai/gpt-image-1` 和
-    `openai/gpt-image-1-mini` 模型。使用
-    `gpt-image-1.5` 生成透明背景的 PNG/WebP 输出；当前的
-    `gpt-image-2`API API 会拒绝 `background: "transparent"`。
+    仍然可以显式选择 `openai/gpt-image-1.5`、`openai/gpt-image-1` 和 `openai/gpt-image-1-mini` 模型。使用 `gpt-image-1.5` 获取透明背景的 PNG/WebP 输出；当前的 `gpt-image-2`API API 拒绝 `background: "transparent"`。
 
-    `gpt-image-2` 通过同一个 `image_generate`OpenClaw 工具支持文生图生成
-    和参考图像编辑。
-    OpenClaw 会将 `prompt`、`count`、`size`、`quality`、`outputFormat`OpenAIOpenAI
-    和参考图像转发给 OpenAI。OpenAI 不会直接
-    接收 `aspectRatio` 或 `resolution`OpenClaw；如果可能，OpenClaw 会将
-    其映射到支持的 `size`OpenAI，否则该工具会将其报告为
-    已忽略的覆盖参数。
+    `gpt-image-2` 通过同一个 `image_generate`OpenClaw 工具支持文生图生成和参考图像编辑。OpenClaw 将 `prompt`、`count`、`size`、`quality`、`outputFormat`OpenAIOpenAI 和参考图像转发给 OpenAI。OpenAI **不会**直接接收 `aspectRatio` 或 `resolution`OpenClaw；在可能的情况下，OpenClaw 会将其映射为受支持的 `size`OpenAI，否则工具会将其报告为已忽略的覆盖项。
 
     OpenAI 特定选项位于 `openai` 对象下：
 
@@ -246,20 +231,11 @@ OpenAI、OpenRouter、Google 和 xAI 通过 `images` 参数支持最多 5 张参
     }
     ```
 
-    `openai.background` 接受 `transparent`、`opaque` 或 `auto`；
-    透明输出需要 `outputFormat` `png` 或 `webp`OpenAIOpenClaw 以及
-    支持透明的 OpenAI 图像模型。OpenClaw 将默认的
-    `gpt-image-2` 透明背景请求路由到 `gpt-image-1.5`。
-    `openai.outputCompression` 适用于 JPEG/WebP 输出。
+    `openai.background` 接受 `transparent`、`opaque` 或 `auto`；透明输出需要 `outputFormat` `png` 或 `webp`OpenAIOpenClaw 以及支持透明度的 OpenAI 图像模型。OpenClaw 将默认 `gpt-image-2` 透明背景请求路由到 `gpt-image-1.5`。`openai.outputCompression` 适用于 JPEG/WebP 输出，对于 PNG 输出则被忽略。
 
-    顶层 `background`OpenAI 提示是提供商中立的，当选择
-    OpenAI 提供商时，当前映射到相同的 OpenAI
-    `background`OpenAI 请求字段。未声明背景支持的提供商
-    会将其在 `ignoredOverrides`OpenAIOpenAI 中返回，而不是接收不支持的参数。
+    顶层 `background`OpenAI 提示与提供商无关，当选择 OpenAI 提供商时，当前映射到同一个 OpenAI `background`OpenAI 请求字段。未声明背景支持的提供商会在 `ignoredOverrides`OpenAIOpenAI 中返回该提示，而不是接收不支持的参数。
 
-    要通过 Azure OpenAI 部署路由 OpenAI 图像生成
-    而不是 `api.openai.com`OpenAI，请参阅
-    [Azure OpenAI 端点](/zh/providers/openai#azure-openai-endpoints)。
+    若要通过 Azure OpenAI 部署而不是 `api.openai.com`OpenAI 路由 OpenAI 图像生成，请参阅 [Azure OpenAI endpoints](/zh/providers/openai#azure-openai-endpoints)。
 
   </Accordion>
   <Accordion title="OpenRouterOpenRouter 图像模型"OpenRouter>

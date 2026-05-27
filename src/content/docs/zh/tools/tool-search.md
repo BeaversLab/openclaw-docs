@@ -120,7 +120,7 @@ await openclaw.tools.call(calendarCreate.id, {
 
 - 工具允许和拒绝策略
 - 每个代理和每个沙箱的工具限制
-- 仅所有者控制
+- 渠道/运行时工具策略
 - 批准钩子
 - 插件 `before_tool_call` 钩子
 - 会话标识、日志和遥测

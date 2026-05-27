@@ -389,59 +389,61 @@ openclaw memory rem-backfill --path ./memory --stage-short-term
     - **配置文件权限**：如果 `~/.openclaw/openclaw.json` 是组/全局可读的，则发出警告并提供将其收紧为 `600`。
 
   </Accordion>
-  <Accordion title="5. Model auth health (OAuth expiry)">
-    Doctor 会检查 auth store 中的 OAuth 配置文件，在令牌即将过期或已过期时发出警告，并在安全时刷新它们。如果 Anthropic OAuth/令牌配置文件已过时，它会建议使用 Anthropic API 密钥或 Anthropic setup-token 路径。刷新提示仅在交互运行（TTY）时出现；`--non-interactive` 会跳过刷新尝试。
+  <Accordion title="OAuth5. 模型认证健康度 (OAuth 过期)"OAuthAnthropicOAuthAnthropicAPIAnthropic>
+    Doctor 会检查认证存储中的 OAuth 配置文件，在令牌即将过期或已过期时发出警告，并在安全时刷新它们。如果 Anthropic OAuth/令牌配置文件已过期，它会建议使用 Anthropic API 密钥或 Anthropic setup-token 路径。刷新提示仅在交互模式（TTY）下运行时出现；`--non-interactive`OAuth 会跳过刷新尝试。
 
-    当 OAuth 刷新永久失败时（例如 `refresh_token_reused`、`invalid_grant` 或提供商提示您重新登录），doctor 会报告需要重新认证，并打印出确切的 `openclaw models auth login --provider ...` 命令以供运行。
+    当 OAuth 刷新永久失败时（例如 `refresh_token_reused`、`invalid_grant` 或提供商要求您重新登录），doctor 会报告需要重新认证，并打印确切的 `openclaw models auth login --provider ...`OAuthmacOS 命令以供运行。
 
-    Doctor 还会报告因以下原因暂时无法使用的认证配置文件：
+    Doctor 还会报告由于以下原因暂时无法使用的认证配置文件：
 
-    - 短期冷却（速率限制/超时/认证失败）
+    - 短暂冷却（速率限制/超时/认证失败）
     - 长期禁用（计费/信用失败）
 
+    其令牌存储在 macOS 钥匙串中的旧版 Codex OAuth 配置文件（基于文件的 sidecar 布局之前的旧版新手引导）不会被嵌入式运行时路径获取 —— 该路径以 `allowKeychainPrompt: false` 运行，无法触发钥匙串提示。运行一次 `openclaw doctor --fix`，即可将基于钥匙串的旧版令牌内联迁移到 `auth-profiles.json`TelegramOAuth；之后，嵌入式轮次（Telegram、cron、子代理调度）将像解析任何其他内联 OAuth 配置文件一样解析它们。
+
   </Accordion>
-  <Accordion title="6. Hooks 模型 validation">
-    如果设置了 `hooks.gmail.model`，doctor 会根据目录和允许列表验证模型引用，并在模型无法解析或被禁止时发出警告。
+  <Accordion title="6. Hooks 模型验证">
+    如果设置了 `hooks.gmail.model`，doctor 会根据目录和允许列表验证模型引用，并在无法解析或被禁止时发出警告。
   </Accordion>
   <Accordion title="7. 沙箱 image repair">
     当启用 Docker 时，doctor 会检查 Docker 镜像，并在当前镜像缺失时提供构建或切换到旧版名称的选项。
   </Accordion>
-  <Accordion title="7b. 插件安装清理"OpenClaw>
-    Doctor 会移除 `openclaw doctor --fix` / `openclaw doctor --repair`npm 模式下遗留的由 OpenClaw 生成的插件依赖暂存状态。这包括过时的生成的依赖根目录、旧的安装阶段目录、来自先前捆绑插件依赖修复代码的包本地碎片，以及可能覆盖当前捆绑清单的孤立或已恢复的托管 npm 捆绑 `@openclaw/*` 插件副本。Doctor 还会将主机 `openclaw`npm 包重新链接到声明了 `peerDependencies.openclaw` 的托管 npm 插件中，以便诸如 `openclaw/plugin-sdk/*`npm 之类的包本地运行时导入在更新或 npm 修复后继续解析。
+  <Accordion title="7b. Plugin install cleanup"OpenClaw>
+    Doctor 会移除 `openclaw doctor --fix` / `openclaw doctor --repair`npm 模式下遗留的由 OpenClaw 生成的插件依赖暂存状态。这包括过时的生成依赖根目录、旧的安装阶段目录、来自早期捆绑插件依赖修复代码的包级残留物，以及可能掩盖当前捆绑清单的孤立或已恢复的托管 npm 捆绑 `@openclaw/*` 插件副本。Doctor 还会将宿主 `openclaw`npm 包重新链接到声明了 `peerDependencies.openclaw` 的托管 npm 插件中，以便在更新或 npm 修复后，诸如 `openclaw/plugin-sdk/*`npm 之类的包级运行时导入仍能正确解析。
 
-    当配置引用了插件但本地插件注册表找不到它们时，Doctor 也可以重新安装缺失的可下载插件。示例包括素材 `plugins.entries`、配置的渠道/提供商/搜索设置以及配置的代理运行时。在包更新期间，doctor 会避免在交换核心包时运行包管理器插件修复；如果配置的插件仍需要恢复，请在更新后再次运行 `openclaw doctor --fix`Gateway(网关)。Gateway 启动和配置重新加载不会运行包管理器；插件安装仍然是显式的 doctor/install/update 工作。
-
-  </Accordion>
-  <Accordion title="Gateway(网关)8. Gateway(网关)服务迁移和清理提示"OpenClawOpenClawLinuxOpenClaw>
-    Doctor 会检测旧版 Gateway 服务（launchd/systemd/schtasks），并建议将其移除，同时使用当前的 Gateway 端口安装 OpenClaw 服务。它还可以扫描额外的类 Gateway 服务并打印清理提示。以配置文件命名的 OpenClaw Gateway 服务被视为一等服务，不会被标记为“额外”服务。
-
-    在 Linux 上，如果缺少用户级 Gateway 服务但存在系统级 OpenClaw Gateway 服务，doctor 不会自动安装第二个用户级服务。请使用 `openclaw gateway status --deep` 或 `openclaw doctor --deep` 进行检查，然后移除重复项，或者在系统管理器管理 Gateway 生命周期时设置 `OPENCLAW_SERVICE_REPAIR_POLICY=external`。
+    当配置引用了缺失的可下载插件但本地插件注册表找不到它们时，Doctor 也可以重新安装这些插件。示例包括材质 `plugins.entries`、配置的渠道/提供商/搜索设置以及配置的代理运行时。在包更新期间，Doctor 会避免在交换核心包时运行包管理器插件修复；如果配置的插件仍需恢复，请在更新后再次运行 `openclaw doctor --fix`Gateway(网关)。Gateway 启动和配置重新加载不会运行包管理器；插件安装仍然是显式的 doctor/install/update 操作。
 
   </Accordion>
-  <Accordion title="Matrix8b. 启动时 Matrix 迁移"Matrix>
-    当 Matrix 渠道账户具有待处理或可执行的旧版状态迁移时，doctor（在 `--fix` / `--repair`Matrix 模式下）会创建一个迁移前快照，然后运行尽力而为的迁移步骤：旧版 Matrix 状态迁移和旧版加密状态准备。这两个步骤都不是致命的；错误会被记录，启动将继续。在只读模式下（不带 `--fix` 的 `openclaw doctor`），此检查将被完全跳过。
-  </Accordion>
-  <Accordion title="8c. 设备配对和认证漂移">
-    Doctor 现在将检查设备配对状态作为常规健康检查的一部分。
+  <Accordion title="Gateway(网关)8. Gateway(网关) 服务迁移和清理提示"OpenClawOpenClawLinuxOpenClaw>
+    Doctor 会检测旧版 Gateway(网关) 服务（launchd/systemd/schtasks），并建议将其删除，然后使用当前的 Gateway(网关) 端口安装 OpenClaw 服务。它还可以扫描额外的类 Gateway(网关) 服务并打印清理提示。以配置文件命名的 OpenClaw Gateway(网关) 服务被视为一等公民，不会被标记为“额外”服务。
 
-    它报告的内容包括：
+    在 Linux 上，如果缺少用户级 Gateway(网关) 服务但存在系统级 OpenClaw Gateway(网关) 服务，doctor 不会自动安装第二个用户级服务。请使用 `openclaw gateway status --deep` 或 `openclaw doctor --deep` 进行检查，然后在系统监管器控制 Gateway(网关) 生命周期时移除重复项或设置 `OPENCLAW_SERVICE_REPAIR_POLICY=external`。
+
+  </Accordion>
+  <Accordion title="Matrix8b. 启动 Matrix 迁移"Matrix>
+    当 Matrix 渠道帐户有待处理或可执行的旧版状态迁移时，doctor（在 `--fix` / `--repair`Matrix 模式下）会创建预迁移快照，然后运行尽力而为的迁移步骤：旧版 Matrix 状态迁移和旧版加密状态准备。这两个步骤都不是致命的；错误会被记录，启动将继续。在只读模式（`openclaw doctor` 而不带 `--fix`）下，此检查会被完全跳过。
+  </Accordion>
+  <Accordion title="8c. 设备配对与身份验证漂移">
+    Doctor 现在会将设备配对状态作为常规健康检查的一部分进行检查。
+
+    报告内容如下：
 
     - 待处理的首次配对请求
     - 已配对设备的待处理角色升级
     - 已配对设备的待处理范围升级
-    - 公钥不匹配修复，即设备 ID 仍然匹配，但设备身份不再匹配已批准的记录
+    - 公钥不匹配的修复，即设备 ID 仍匹配，但设备身份不再匹配已批准的记录
     - 缺少已批准角色的活动令牌的已配对记录
-    - 范围超出已批准配对基线的已配对令牌
-    - 当前机器的本地缓存设备令牌条目，这些条目早于网关端的令牌轮换或包含过时的范围元数据
+    - 其范围已超出已批准配对基线的已配对令牌
+    - 当前计算机的本地缓存设备令牌条目，其时间早于网关端令牌轮换或包含过时的范围元数据
 
     Doctor 不会自动批准配对请求或自动轮换设备令牌。相反，它会打印确切的后续步骤：
 
     - 使用 `openclaw devices list` 检查待处理的请求
     - 使用 `openclaw devices approve <requestId>` 批准确切的请求
-    - 使用 `openclaw devices rotate --device <deviceId> --role <role>` 轮换一个新令牌
-    - 使用 `openclaw devices remove <deviceId>` 移除并重新批准过时的记录
+    - 使用 `openclaw devices rotate --device <deviceId> --role <role>` 轮换新的令牌
+    - 使用 `openclaw devices remove <deviceId>` 删除并重新批准过时的记录
 
-    这填补了常见的“已配对但仍提示需要配对”的漏洞：Doctor 现在区分了首次配对、待处理的角色/范围升级以及过时令牌/设备身份漂移。
+    这解决了常见的“已配对但仍需要配对”的问题：Doctor 现在可以区分首次配对、待处理的角色/范围升级以及过时的令牌/设备身份漂移。
 
   </Accordion>
   <Accordion title="9. 安全警告">
@@ -453,101 +455,101 @@ openclaw memory rem-backfill --path ./memory --stage-short-term
   <Accordion title="11. 工作区状态（Skills、插件和旧版目录）">
     Doctor 会打印默认代理的工作区状态摘要：
 
-    - **Skills 状态**：统计符合条件的、缺少依赖的以及被允许列表阻止的 Skills。
+    - **Skills 状态**：统计符合条件的、缺少要求的和被允许列表阻止的 Skills。
     - **旧版工作区目录**：当 `~/openclaw` 或其他旧版工作区目录与当前工作区并存时发出警告。
-    - **插件状态**：统计已启用/已禁用/已出错的插件；列出任何出错的插件 ID；报告捆绑插件的功能。
+    - **插件状态**：统计已启用/已禁用/错误的插件；列出任何错误的插件 ID；报告捆绑插件的功能。
     - **插件兼容性警告**：标记与当前运行时存在兼容性问题的插件。
     - **插件诊断**：显示插件注册器发出的任何加载时警告或错误。
 
   </Accordion>
-  <Accordion title="11b. 引导文件大小">
-    Doctor 会检查工作区引导文件（例如 `AGENTS.md`、`CLAUDE.md` 或其他注入的上下文文件）是否接近或超过配置的字符预算。它会报告每个文件的原始字符数与注入字符数对比、截断百分比、截断原因（`max/file` 或 `max/total`），以及作为总预算一部分的总注入字符数。当文件被截断或接近限制时，doctor 会打印调整 `agents.defaults.bootstrapMaxChars` 和 `agents.defaults.bootstrapTotalMaxChars` 的提示。
+  <Accordion title="11b. Bootstrap file size">
+    Doctor 会检查工作区 bootstrap 文件（例如 `AGENTS.md`、`CLAUDE.md` 或其他注入的上下文文件）是否接近或超过配置的字符预算。它会报告每个文件的原始字符数与注入字符数的对比、截断百分比、截断原因（`max/file` 或 `max/total`），以及总注入字符数占总预算的比例。当文件被截断或接近限制时，doctor 会打印出调整 `agents.defaults.bootstrapMaxChars` 和 `agents.defaults.bootstrapTotalMaxChars` 的提示。
   </Accordion>
-  <Accordion title="11d. 过期渠道插件的清理">
-    当 `openclaw doctor --fix` 移除缺失的渠道插件时，它也会移除引用该插件的无用渠道范围配置：`channels.<id>` 条目、命名该渠道的心跳目标以及 `agents.*.models["<channel>/*"]`Gateway(网关) 覆盖项。这可以防止 Gateway 启动循环，即渠道运行时已不存在但配置仍要求网关绑定到它。
+  <Accordion title="11d. Stale 渠道 plugin cleanup">
+    当 `openclaw doctor --fix` 删除缺失的渠道插件时，它也会删除引用该插件的无用渠道范围配置：`channels.<id>` 条目、命名该渠道的心跳目标以及 `agents.*.models["<channel>/*"]`Gateway(网关) 覆盖设置。这可以防止 Gateway(网关) 出现引导循环，即渠道运行时已不存在但配置仍要求网关绑定到该渠道。
   </Accordion>
-  <Accordion title="11c. Shell 补全">
-    Doctor 检查当前 Shell（zsh、bash、fish 或 PowerShell）是否安装了 Tab 补全功能：
+  <Accordion title="11c. Shell completion">
+    Doctor 会检查是否为当前 shell（zsh、bash、fish 或 PowerShell）安装了 Tab 补全功能：
 
-    - 如果 Shell 配置文件使用了缓慢的动态补全模式（`source <(openclaw completion ...)`），doctor 会将其升级为更快的缓存文件变体。
-    - 如果配置文件中配置了补全但缺少缓存文件，doctor 会自动重新生成缓存。
-    - 如果完全没有配置补全，doctor 会提示安装（仅限交互模式；使用 `--non-interactive` 时跳过）。
+    - 如果 shell 配置文件使用了缓慢的动态补全模式（`source <(openclaw completion ...)`），doctor 会将其升级为更快的缓存文件变体。
+    - 如果在配置文件中配置了补全功能但缺少缓存文件，doctor 会自动重新生成缓存。
+    - 如果根本没有配置补全功能，doctor 会提示安装（仅限交互模式；使用 `--non-interactive` 时跳过）。
 
     运行 `openclaw completion --write-state` 以手动重新生成缓存。
 
   </Accordion>
-  <Accordion title="Gateway(网关)12. Gateway(网关) 认证检查（本地令牌）">
-    Doctor 检查本地 Gateway(网关) 令牌认证就绪状态。
+  <Accordion title="Gateway(网关)12. Gateway(网关) auth checks (local token)">
+    Doctor 检查本地 gateway 令牌认证准备情况。
 
-    - 如果令牌模式需要令牌但不存在令牌源，doctor 会提议生成一个。
-    - 如果 `gateway.auth.token` 由 SecretRef 管理但不可用，doctor 会发出警告且不会用纯文本覆盖它。
+    - 如果令牌模式需要令牌但不存在令牌源，doctor 会建议生成一个。
+    - 如果 `gateway.auth.token` 由 SecretRef 管理但不可用，doctor 会警告且不会用明文覆盖它。
     - `openclaw doctor --generate-gateway-token` 仅在未配置令牌 SecretRef 时强制生成。
 
   </Accordion>
-  <Accordion title="12b. 只读 SecretRef 感知修复">
-    某些修复流程需要检查已配置的凭据，而不会削弱运行时的快速失败行为。
+  <Accordion title="12b. Read-only SecretRef-aware repairs">
+    某些修复流程需要检查配置的凭据，而不削弱运行时的快速失败行为。
 
-    - `openclaw doctor --fix`Telegram 现在使用与 status 系列命令相同的只读 SecretRef 摘要模型来进行定向配置修复。
-    - 示例：Telegram `allowFrom` / `groupAllowFrom` `@username`Telegram 修复尝试在可用时使用已配置的机器人凭据。
-    - 如果 Telegram 机器人令牌通过 SecretRef 配置但在当前命令路径中不可用，doctor 会报告该凭据“已配置但不可用”，并跳过自动解析，而不是崩溃或将令牌错误报告为缺失。
+    - `openclaw doctor --fix`Telegram 现在对针对性的配置修复使用与 status 系列命令相同的只读 SecretRef 模型。
+    - 示例：Telegram `allowFrom` / `groupAllowFrom` `@username`Telegram 修复会在可用时尝试使用已配置的 bot 凭据。
+    - 如果 Telegram bot 令牌通过 SecretRef 配置但在当前命令路径中不可用，doctor 会报告凭据已配置但不可用，并跳过自动解析，而不是崩溃或将令牌错误报告为缺失。
 
   </Accordion>
   <Accordion title="Gateway(网关)13. Gateway(网关) 健康检查 + 重启">
     Doctor 运行健康检查，并在 Gateway(网关) 看起来不健康时提议重启它。
   </Accordion>
-  <Accordion title="13b. 内存搜索准备情况">
-    Doctor 会检查为默认代理配置的内存搜索嵌入提供商是否就绪。具体行为取决于配置的后端和提供商：
+  <Accordion title="13b. Memory search readiness">
+    Doctor 会检查为默认代理配置的内存搜索嵌入提供商是否已准备就绪。其行为取决于配置的后端和提供商：
 
-    - **QMD 后端**：探测 `qmd` 二进制文件是否可用且可启动。如果不可用，会打印修复指南，包括 npm 包和手动二进制路径选项。
-    - **显式本地提供商**：检查是否存在本地模型文件或可识别的远程/可下载模型 URL。如果缺失，建议切换到远程提供商。
-    - **显式远程提供商**（`openai`、`voyage` 等）：验证环境或身份验证存储中是否存在 API 密钥。如果缺失，打印可执行的修复提示。
-    - **自动提供商**：首先检查本地模型可用性，然后按自动选择顺序尝试每个远程提供商。
+    - **QMD backend**：探测 `qmd` 二进制文件是否可用且可启动。如果不可用，则输出修复指导，包括 npm 包和手动二进制文件路径选项。
+    - **Explicit local 提供商**：检查是否存在本地模型文件或可识别的远程/可下载模型 URL。如果缺失，建议切换到远程提供商。
+    - **Explicit remote 提供商**（`openai`、`voyage` 等）：验证环境或身份验证存储中是否存在 API 密钥。如果缺失，则输出可执行的修复提示。
+    - **Auto 提供商**：首先检查本地模型可用性，然后按自动选择顺序尝试每个远程提供商。
 
-    当存在缓存的网关探测结果时（检查时网关健康），doctor 会将其结果与 CLI 可见配置进行交叉比对，并记录任何差异。Doctor 不会在默认路径上启动新的嵌入 ping；如果您希望对提供商进行实时检查，请使用深度内存状态命令。
+    当存在缓存的网关探测结果时（网关在检查时运行正常），doctor 会将其结果与 CLI 可见配置进行交叉参考，并记录任何差异。Doctor 不会在默认路径上启动新的嵌入 ping；如果您希望对提供商进行实时检查，请使用深度内存状态命令。
 
-    使用 `openclaw memory status --deep` 在运行时验证嵌入准备情况。
+    使用 `openclaw memory status --deep` 在运行时验证嵌入就绪状态。
 
   </Accordion>
   <Accordion title="14. 渠道状态警告">
     如果网关健康，doctor 会运行渠道状态探测并报告带有建议修复方案的警告。
   </Accordion>
-  <Accordion title="15. Supervisor 配置审核 + 修复">
-    Doctor 会检查已安装的 supervisor 配置（launchd/systemd/schtasks）中是否有缺失或过时的默认值（例如 systemd network-online 依赖项和重启延迟）。当发现不匹配时，它会建议更新，并可以将服务文件/任务重写为当前的默认值。
+  <Accordion title="15. 监管者配置审计与修复">
+    Doctor 会检查已安装的监管者配置（launchd/systemd/schtasks）中是否有缺失或过时的默认值（例如，systemd 的 network-online 依赖项和重启延迟）。当发现不匹配时，它会推荐更新，并可以将服务文件/任务重写为当前的默认值。
 
     注意事项：
 
-    - `openclaw doctor` 会在重写 supervisor 配置之前提示确认。
+    - `openclaw doctor` 会在重写监管者配置之前提示。
     - `openclaw doctor --yes` 接受默认的修复提示。
-    - `openclaw doctor --fix` 应用建议的修复而不提示（`--repair` 是别名）。
-    - `openclaw doctor --fix --force` 会覆盖自定义 supervisor 配置。
-    - `OPENCLAW_SERVICE_REPAIR_POLICY=external` 使 doctor 对 Gateway 服务生命周期保持只读。它仍然报告服务健康状况并运行非服务修复，但会跳过服务安装/启动/重启/引导、supervisor 配置重写和旧版服务清理，因为外部 supervisor 拥有该生命周期。
-    - 在 Linux 上，当匹配的 systemd gateway 单元处于活动状态时，doctor 不会重写命令/入口点元数据。它在重复服务扫描期间还会忽略处于非活动状态的非旧版额外类 gateway 单元，以免伴随服务文件产生清理干扰。
-    - 如果令牌身份验证需要令牌且 `gateway.auth.token` 由 SecretRef 管理，doctor 服务安装/修复会验证 SecretRef，但不会将解析后的纯文本令牌值持久保存到 supervisor 服务环境元数据中。
-    - Doctor 检测到较旧的 LaunchAgent、systemd 或 Windows 计划任务安装内嵌的受管 `.env`/SecretRef 支持的服务环境值，并重写服务元数据，以便这些值从运行时源而非 supervisor 定义加载。
-    - Doctor 检测到在 `gateway.port` 更改后服务命令仍固定使用旧的 `--port` 时，会将服务元数据重写为当前端口。
-    - 如果令牌身份验证需要令牌且配置的令牌 SecretRef 未解析，doctor 会通过可操作的指导阻止安装/修复路径。
-    - 如果同时配置了 `gateway.auth.token` 和 `gateway.auth.password` 且未设置 `gateway.auth.mode`，doctor 将阻止安装/修复，直到明确设置模式。
-    - 对于 Linux 用户 systemd 单元，doctor 令牌漂移检查现在在比较服务身份验证元数据时包括 `Environment=` 和 `EnvironmentFile=` 源。
-    - 当配置最后由较新版本写入时，Doctor 服务修复将拒绝重写、停止或重启来自较旧 OpenClawGateway(网关) 二进制文件的 Gateway 服务。请参阅 [Gateway 故障排除](/zh/gateway/troubleshooting#split-brain-installs-and-newer-config-guard)。
-    - 您始终可以通过 `openclaw gateway install --force` 强制进行完整重写。
+    - `openclaw doctor --fix` 应用推荐的修复而不进行提示（`--repair` 是别名）。
+    - `openclaw doctor --fix --force` 会覆盖自定义监管者配置。
+    - `OPENCLAW_SERVICE_REPAIR_POLICY=external` 使 doctor 对 Gateway 服务生命周期保持只读。它仍报告服务健康状况并运行非服务修复，但跳过服务安装/启动/重启/引导、监管者配置重写和旧版服务清理，因为外部监管者拥有该生命周期。
+    - 在 Linux 上，当匹配的 systemd gateway unit 处于活动状态时，doctor 不会重写命令/入口点元数据。它在重复服务扫描期间还会忽略非活动的非旧版额外类 gateway unit，以避免伴随服务文件产生清理干扰。
+    - 如果令牌认证需要令牌且 `gateway.auth.token` 由 SecretRef 管理，则 doctor 服务安装/修复会验证 SecretRef，但不会将解析后的纯文本令牌值持久化到监管者服务环境元数据中。
+    - Doctor 会检测到由较旧的 LaunchAgent、systemd 或 Windows 计划任务安装内嵌的受管 `.env`/SecretRef 支持的服务环境值，并重写服务元数据，以便这些值从运行时源而不是监管者定义中加载。
+    - Doctor 会检测到在 `gateway.port` 更改后服务命令仍固定使用旧 `--port` 的情况，并将服务元数据重写为当前端口。
+    - 如果令牌认证需要令牌且配置的令牌 SecretRef 未解析，doctor 会提供可操作的指导并阻止安装/修复路径。
+    - 如果同时配置了 `gateway.auth.token` 和 `gateway.auth.password` 但未设置 `gateway.auth.mode`，doctor 会阻止安装/修复，直到显式设置模式。
+    - 对于 Linux user-systemd unit，doctor 令牌偏差检查现在在比较服务身份验证元数据时会同时包含 `Environment=` 和 `EnvironmentFile=` 源。
+    - 当配置最后一次由较新版本写入时，Doctor 服务修复会拒绝重写、停止或重启来自较旧 OpenClaw 二进制文件的 gateway 服务。请参阅 [Gateway(网关) 故障排除](/zh/gateway/troubleshooting#split-brain-installs-and-newer-config-guard)。
+    - 您始终可以通过 `openclaw gateway install --force` 强制完全重写。
 
   </Accordion>
   <Accordion title="Gateway(网关)16. Gateway(网关) 运行时 + 端口诊断">
-    Doctor 会检查服务运行时（PID、上次退出状态），并在服务已安装但未实际运行时发出警告。它还会检查 Gateway(网关) 端口（默认 `18789`）上的端口冲突，并报告可能的原因（Gateway(网关) 已在运行、SSH 隧道）。
+    Doctor 会检查服务运行时（PID、上次退出状态），并在服务已安装但未实际运行时发出警告。它还会检查 gateway(网关) 端口上的端口冲突（默认 `18789`）并报告可能的原因（gateway(网关) 已在运行、SSH 隧道）。
   </Accordion>
   <Accordion title="Gateway(网关)17. Gateway(网关) 运行时最佳实践"Bun>
-    当 Gateway(网关) 服务运行在 Bun 或受版本管理的 Node 路径（`nvm`、`fnm`、`volta`、`asdf`WhatsAppTelegrammacOS 等）上时，Doctor 会发出警告。WhatsApp + Telegram 频道需要 Node，且由于服务不会加载您的 shell 初始化文件，版本管理器路径在升级后可能会失效。当系统提供系统级 Node 安装（Homebrew/apt/choco）时，Doctor 会建议迁移到该安装。
+    当 gateway(网关) 服务在 Bun 上运行或使用版本管理的 Node 路径（`nvm`、`fnm`、`volta`、`asdf`WhatsAppTelegrammacOS 等）时，Doctor 会发出警告。WhatsApp + Telegram 渠道需要 Node，而版本管理器路径在升级后可能会失效，因为服务不会加载您的 shell 初始化配置。当系统上安装了系统级 Node 时，Doctor 会提供迁移选项（Homebrew/apt/choco）。
 
-    新安装或修复后的 macOS LaunchAgents 使用规范系统 PATH（`/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin`Linux），而不是复制交互式 shell PATH，因此 Homebrew 管理的系统二进制文件保持可用，而 Volta、asdf、fnm、pnpm 和其他版本管理器目录不会影响 Node 子进程解析的路径。Linux 服务仍保留显式环境根目录（`NVM_DIR`、`FNM_DIR`、`VOLTA_HOME`、`ASDF_DATA_DIR`、`BUN_INSTALL`、`PNPM_HOME`）和稳定的用户 bin 目录，但推测的版本管理器回退目录只有在磁盘上存在这些目录时才会被写入服务 PATH。
+    新安装或修复的 macOS LaunchAgents 使用规范的系统 PATH（`/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin`Linux），而不是复制交互式 shell 的 PATH，因此 Homebrew 管理的系统二进制文件仍然可用，而 Volta、asdf、fnm、pnpm 和其他版本管理器目录不会影响 Node 子进程解析的路径。Linux 服务仍然保留显式的环境根路径（`NVM_DIR`、`FNM_DIR`、`VOLTA_HOME`、`ASDF_DATA_DIR`、`BUN_INSTALL`、`PNPM_HOME`）和稳定的用户 bin 目录，但推测的版本管理器回退目录只有在该目录存在于磁盘上时才会写入到服务 PATH 中。
 
   </Accordion>
   <Accordion title="18. 配置写入 + 向导元数据">
     Doctor 会保存所有配置更改，并标记向导元数据以记录此次 doctor 运行。
   </Accordion>
   <Accordion title="19. 工作区提示（备份 + 记忆系统）">
-    Doctor 会在缺少工作区记忆系统时提示建议，如果工作区尚未受 git 管理，则会打印备份提示。
+    Doctor 在缺少工作区记忆系统时会建议使用一个，并且如果工作区尚未处于 git 管理下，它会打印一条备份提示。
 
-    请参阅 [/concepts/agent-workspace](/zh/concepts/agent-workspace) 以获取有关工作区结构和 git 备份的完整指南（推荐使用私有的 GitHub 或 GitLab）。
+    请参阅 [/concepts/agent-workspace](/zh/concepts/agent-workspace) 以获取有关工作区结构和 git 备份（推荐使用私有 GitHub 或 GitLab）的完整指南。
 
   </Accordion>
 </AccordionGroup>

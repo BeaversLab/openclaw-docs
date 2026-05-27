@@ -30,12 +30,13 @@ Les Companion apps natives pour Windows sont également prévues ; le Gateway es
 - GCP (Compute Engine) : [GCP](/fr/install/gcp)
 - Azure (VM Linux) : [Azure](/fr/install/azure)
 - exe.dev (VM + proxy HTTPS) : [exe.dev](/fr/install/exe-dev)
+- EasyRunner (Podman + Caddy) : [EasyRunner](/fr/platforms/easyrunner)
 
-## Liens communs
+## Liens courants
 
 - Guide d'installation : [Getting Started](/fr/start/getting-started)
-- Runbook du Gateway : [Gateway](/fr/gateway)
-- Configuration du Gateway : [Configuration](/fr/gateway/configuration)
+- Manuel du Gateway : [Gateway](GatewayGateway/en/gateway)
+- Configuration du Gateway : [Configuration](Gateway/en/gateway/configuration)
 - État du service : `openclaw gateway status`
 
 ## Installation du service Gateway (CLI)
@@ -44,17 +45,17 @@ Utilisez l'une de ces options (toutes prises en charge) :
 
 - Assistant (recommandé) : `openclaw onboard --install-daemon`
 - Direct : `openclaw gateway install`
-- Flux de configuration : `openclaw configure` → sélectionner **service Gateway**
-- Réparer/migrer : `openclaw doctor` (propose d'installer ou de réparer le service)
+- Flux de configuration : `openclaw configure` → sélectionnez **service Gateway**
+- Réparation/migration : `openclaw doctor` (propose d'installer ou de réparer le service)
 
 La cible du service dépend du système d'exploitation :
 
-- macOS : LaunchAgent (`ai.openclaw.gateway` ou `ai.openclaw.<profile>` ; macOS `com.openclaw.*`)
+- macOS : LaunchAgent (`ai.openclaw.gateway` ou `ai.openclaw.<profile>` ; ancien `com.openclaw.*`)
 - Linux/WSL2 : service utilisateur systemd (`openclaw-gateway[-<profile>].service`)
-- Windows natif : Tâche planifiée (`OpenClaw Gateway` ou `OpenClaw Gateway (<profile>)`), avec un élément de connexion de dossier de démarrage par utilisateur en repli si la création de la tâche est refusée
+- Windows natif : Tâche planifiée (`OpenClaw Gateway` ou `OpenClaw Gateway (<profile>)`), avec une alternative de connexion via le dossier Démarrage par utilisateur si la création de la tâche est refusée
 
 ## Connexes
 
-- [Aperçu de l'installation](/fr/install)
-- [Application macOS](/fr/platforms/macos)
-- [Application iOS](/fr/platforms/ios)
+- [Vue d'ensemble de l'installation](/fr/install)
+- [Application macOS](macOS/en/platforms/macos)
+- [Application iOS](iOS/en/platforms/ios)

@@ -500,30 +500,30 @@ Q&A sur le démarrage rapide et la première exécution. Pour les opérations qu
 
   </Accordion>
 
-  <Accordion title="Do I need a Claude or OpenAI subscription to run this?">
+  <Accordion title="Ai-je besoin d'un abonnement Claude ou OpenAI pour exécuter cela ?">
     Non. Vous pouvez exécuter OpenClaw avec des **clés d'API** (Anthropic/OpenAI/autres) ou avec
-    des **modèles uniquement locaux** afin que vos données restent sur votre appareil. Les abonnements (Claude
-    Pro/Max ou OpenAI Codex) sont des méthodes facultatives pour authentifier ces fournisseurs.
+    **des modèles exclusivement locaux** afin que vos données restent sur votre appareil. Les abonnements (Claude
+    Pro/Max ou OpenAI Codex) sont des moyens facultatifs d'authentifier ces fournisseurs.
 
     Pour Anthropic dans OpenClaw, la distinction pratique est la suivante :
 
     - **Clé d'Anthropic API** : facturation normale de l'Anthropic API
     - **CLI Claude / authentification par abonnement Claude dans OpenClaw** : le personnel de Anthropic
-      nous a indiqué que cet usage était à nouveau autorisé, et OpenClaw considère l'utilisation de `claude -p`
-      comme approuvée pour cette intégration, à moins que Anthropic ne publie une nouvelle
+      nous a informés que cet usage est à nouveau autorisé, et OpenClaw considère l'usage de `claude -p`
+      comme approuvé pour cette intégration, sauf si Anthropic publie une nouvelle
       politique
 
     Pour les hôtes de passerelle à longue durée de vie, les clés d'Anthropic API restent la configuration
     la plus prévisible. L'OpenAI OAuth Codex est explicitement pris en charge pour les outils
     externes tels que OpenClaw.
 
-    OpenClaw prend également en charge d'autres options d'abonnement hébergées, notamment
-    le **forfait de codage cloud Qwen**, le **forfait de codage MiniMax** et
-    le **forfait de codage Z.AI / GLM**.
+    OpenClaw prend également en charge d'autres options d'abonnement hébergés, notamment
+    **le forfait de codage Qwen Cloud**, **le forfait de codage MiniMax**, et
+    **le forfait de codage Z.AI / GLM**.
 
     Documentation : [Anthropic](/fr/providers/anthropic), [OpenAI](/fr/providers/openai),
     [Qwen Cloud](/fr/providers/qwen),
-    [MiniMax](/fr/providers/minimax), [Modèles GLM](/fr/providers/glm),
+    [MiniMax](/fr/providers/minimax), [Z.AI (GLM)](/fr/providers/zai),
     [Modèles locaux](/fr/gateway/local-models), [Modèles](/fr/concepts/models).
 
   </Accordion>
@@ -538,12 +538,16 @@ Q&A sur le démarrage rapide et la première exécution. Pour les opérations qu
   <Accordion title="Prenez-vous en charge l'authentification par abonnement Claude (Claude Pro ou Max) ?">
     Oui.
 
-    Le personnel de Anthropic nous a informé que cette utilisation est à nouveau autorisée, donc OpenClaw considère la réutilisation de la CLI Claude et l'utilisation de `claude -p` comme sanctionnées pour cette intégration, sauf si Anthropic publie une nouvelle politique.
+    Le personnel d'Anthropic nous a informés que cette utilisation est à nouveau autorisée, donc OpenClaw considère
+    la réutilisation de la CLI Claude et l'utilisation de `claude -p` comme étant approuvées pour cette intégration
+    à moins qu'Anthropic ne publie une nouvelle politique.
 
-    Le setup-token de Anthropic est toujours disponible en tant que chemin de jeton pris en charge par OpenClaw, mais OpenClaw privilégie désormais la réutilisation de la CLI Claude et `claude -p` lorsqu'elles sont disponibles.
-    Pour les charges de travail de production ou multi-utilisateurs, l'authentification par clé d'Anthropic de API reste le choix le plus sûr et le plus prévisible. Si vous souhaitez d'autres options hébergées de type abonnement dans OpenClaw, consultez [OpenAI](/fr/providers/openai), [Qwen / Cloud
-    Modèle](/fr/providers/qwen), [MiniMax](/fr/providers/minimax) et [Modèles GLM
-    ](/fr/providers/glm).
+    Le setup-token d'Anthropic est toujours disponible en tant que chemin de jeton pris en charge par OpenClaw, mais OpenClaw préfère désormais la réutilisation de la CLI Claude et `claude -p` lorsqu'elles sont disponibles.
+    Pour les charges de travail de production ou multi-utilisateurs, l'authentification par clé Anthropic de l'API reste le
+    choix le plus sûr et le plus prévisible. Si vous souhaitez d'autres options d'hébergement par abonnement
+    dans OpenClaw, consultez [OpenAI](/fr/providers/openai), [Qwen / Model
+    Cloud](/fr/providers/qwen), [MiniMax](/fr/providers/minimax) et [GLM
+    Models](/fr/providers/zai).
 
   </Accordion>
 
@@ -552,15 +556,21 @@ Q&A sur le démarrage rapide et la première exécution. Pour les opérations qu
 <a id="why-am-i-seeing-http-429-ratelimiterror-from-anthropic"></a>
 
 <AccordionGroup>
-  <Accordion title="AnthropicPourquoi vois-je l'erreur HTTP 429 rate_limit_error de la part d'Anthropic ?"AnthropicCLIAnthropicAPIAnthropic>
-    Cela signifie que votre **quota/limite de débit Anthropic** est épuisé pour la fenêtre actuelle. Si vous utilisez le **Claude CLI**, attendez que la fenêtre se réinitialise ou passez à un plan supérieur. Si vous utilisez une **clé API Anthropic**, vérifiez la console Anthropic concernant l'utilisation/facturation et augmentez les limites si nécessaire.
+  <Accordion title="Pourquoi vois-je l'erreur HTTP 429 rate_limit_error de Anthropic ?">
+    Cela signifie que votre **quota/limite de débit Anthropic** est épuisé pour la fenêtre actuelle. Si vous
+    utilisez le **CLI Claude**, attendez que la fenêtre se réinitialise ou améliorez votre forfait. Si vous
+    utilisez une **clé Anthropic API**, vérifiez la console Anthropic
+    pour l'utilisation/billing et augmentez les limites si nécessaire.
 
     Si le message est spécifiquement :
-    `Extra usage is required for long context requests`Anthropic, la requessaie essaie d'utiliser
-    la version bêta 1M context d'Anthropic (`context1m: true`APIOpenClawOpenClaw). Cela ne fonctionne que lorsque vos identifiants sont éligibles à la facturation longue contexte (facturation par clé API ou le chemin de connexion Claude OpenClaw avec Extra Usage activé).
+    `Extra usage is required for long context requests`, la demande tente d'utiliser
+    la fenêtre de contexte de 1M de Anthropic (un modèle Claude 4.x 1M compatible GA ou une configuration
+    `context1m: true` héritée). Cela ne fonctionne que lorsque vos identifiants sont éligibles
+    pour la facturation à long contexte (facturation par clé API ou le chemin de connexion Claude OpenClaw
+    avec Extra Usage activé).
 
-    Astuce : définissez un **modèle de repli** afin qu'OpenClaw puisse continuer à répondre pendant qu'un fournisseur est limité par le débit.
-    Voir [Modèles](/fr/cli/modelsOAuth), [OAuth](/fr/concepts/oauth), et
+    Conseil : définissez un **modèle de secours** afin que OpenClaw puisse continuer à répondre lorsqu'un fournisseur est limité par le débit.
+    Voir [Modèles](/fr/cli/models), [OAuth](/fr/concepts/oauth) et
     [/gateway/troubleshooting#anthropic-429-extra-usage-required-for-long-context](/fr/gateway/troubleshooting#anthropic-429-extra-usage-required-for-long-context).
 
   </Accordion>

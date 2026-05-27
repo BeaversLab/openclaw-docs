@@ -114,10 +114,10 @@ openclaw onboard --install-daemon
 
 或者跳過連結並直接從 repo 內部使用 `pnpm openclaw ...`。如需完整的開發工作流程，請參閱 [設定](/zh-Hant/start/setup)。
 
-### 從 GitHub main 安裝
+### 從 GitHub 主要分支安裝
 
 ```bash
-npm install -g github:openclaw/openclaw#main
+curl -fsSL --proto '=https' --tlsv1.2 https://openclaw.ai/install.sh | bash -s -- --install-method git --version main
 ```
 
 ### 容器與套件管理器

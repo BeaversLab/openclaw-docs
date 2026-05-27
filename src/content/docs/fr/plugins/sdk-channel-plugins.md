@@ -106,14 +106,8 @@ au `baseConversationId` explicite, et à tout `parentConversationCandidates`.
 Lorsque vous renvoyez `parentConversationCandidates`, gardez-les ordonnés du
 parent le plus étroit vers la conversation la plus large/de base.
 
-Utilisez `openclaw/plugin-sdk/channel-route` lorsque le code du plugin doit normaliser
-les champs de type route, comparer un fil de discussion enfant avec sa route parente, ou construire une
-clé de déduplication stable à partir de `{ channel, to, accountId, threadId }`. L'assistant
-normalise les identifiants de fil numériques de la même manière que le cœur, donc les plugins devraient le préférer
-aux comparaisons `String(threadId)` ad hoc.
-Les plugins avec une grammaire cible spécifique au fournisseur peuvent injecter leur analyseur dans
-`resolveChannelRouteTargetWithParser(...)` et obtenir ainsi la même forme de cible de route
-et la même sémantique de repli de fil que celles utilisées par le cœur.
+Utilisez `openclaw/plugin-sdk/channel-route` lorsque le code du plugin doit normaliser des champs de type route, comparer un fil de discussion enfant avec sa route parente, ou construire une clé de déduplication stable à partir de `{ channel, to, accountId, threadId }`. L'assistant normalise les identifiants numériques de fil de discussion de la même manière que le cœur, les plugins devraient donc l'utiliser de préférence aux comparaisons `String(threadId)` ad hoc.
+Les plugins avec une syntaxe cible spécifique au fournisseur doivent exposer `messaging.resolveOutboundSessionRoute(...)` afin que le cœur obtienne l'identité de session et de fil native du fournisseur sans utiliser de shims d'analyse.
 
 Les plugins groupés qui ont besoin du même analyseur avant le démarrage du registre de canaux
 peuvent également exposer un fichier `session-key-api.ts` de niveau supérieur avec un export `resolveSessionConversation(...)` correspondant.
@@ -223,7 +217,7 @@ Pour les autres chemins critiques du canal, préférez les assistants étroits a
 - `openclaw/plugin-sdk/inbound-envelope` et
   `openclaw/plugin-sdk/inbound-reply-dispatch` pour le câblage de routage/enveloppe entrant
   et d'enregistrement-et-répartition
-- `openclaw/plugin-sdk/messaging-targets` pour l'analyse/la correspondance des cibles
+- `openclaw/plugin-sdk/channel-targets` pour les assistants d'analyse de cible
 - `openclaw/plugin-sdk/outbound-media` et
   `openclaw/plugin-sdk/outbound-runtime` pour le chargement des médias ainsi que les délégués
   d'identité/envoi sortant et la planification des charges utiles

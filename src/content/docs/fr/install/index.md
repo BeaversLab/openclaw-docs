@@ -115,10 +115,10 @@ openclaw onboard --install-daemon
 
 Ou ignorez le lien et utilisez `pnpm openclaw ...` depuis l'intérieur du dépôt. Voir [Configuration](/fr/start/setup) pour les flux de travail complets de développement.
 
-### Installer depuis la branche main de GitHub
+### Installer à partir de la branche principale GitHub
 
 ```bash
-npm install -g github:openclaw/openclaw#main
+curl -fsSL --proto '=https' --tlsv1.2 https://openclaw.ai/install.sh | bash -s -- --install-method git --version main
 ```
 
 ### Conteneurs et gestionnaires de paquets

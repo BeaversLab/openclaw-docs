@@ -10,7 +10,7 @@ sidebarTitle: "更新與外掛測試"
 
 這是專用於更新與外掛驗證的檢查清單。目標很簡單：證明可安裝的套件能夠更新真實的使用者狀態，透過 `doctor` 修復過時的舊版狀態，並且仍然能從支援的來源安裝、載入、更新及解除安裝外掛。
 
-若要查看更廣泛的測試執行器地圖，請參閱 [測試](/zh-Hant/help/testing)。若要查看即時提供者金鑰和涉及網路的測試套件，請參閱 [即時測試](/zh-Hant/help/testing-live)。
+如需更廣泛的測試執行器地圖，請參閱 [Testing](/zh-Hant/help/testing)。若要取得即時提供者金鑰和涉及網路的測試套件，請參閱 [Testing live](/zh-Hant/help/testing-live)。
 
 ## 我們保護的內容
 
@@ -120,21 +120,28 @@ gh workflow run update-migration.yml \
 - `source=npm`：驗證 `openclaw@beta`、`openclaw@latest` 或精確的
   已發布版本。
 - `source=ref`：使用選定的目前 harness 打包受信任的分支、標籤或提交。
-- `source=url`：驗證具有所需 `package_sha256` 的 HTTPS tarball。
+- `source=url`：驗證具有所需 `package_sha256` 的公開 HTTPS tarball。
+  此路徑會拒絕 URL 憑證、非預設 HTTPS 連接埠、私有/內部
+  主機名稱或 DNS/IP 結果、特殊用途 IP 空間和不安全的重新導向。
+- `source=trusted-url`：根據 `.github/package-trusted-sources.json` 中維護者擁有的原則，
+  驗證具有所需 `package_sha256` 和 `trusted_source_id` 的 HTTPS tarball。
+  請對企業/私有鏡像使用此功能，而不是透過輸入層級的 allow-private
+  開關來降低 `source=url` 的強度。當由原則配置時，Bearer 認證會使用固定的
+  `OPENCLAW_TRUSTED_PACKAGE_TOKEN` 金鑰。
 - `source=artifact`：重複使用由另一個 Actions 執行上傳的 tarball。
 
-完整發行驗證預設使用 `source=artifact`，它是從解析的發行 SHA 建構的。
-若要進行發布後證明，請傳遞
-`package_acceptance_package_spec=openclaw@YYYY.M.D`，讓相同的升級矩陣
-改為鎖定已發布的 npm 套件。
+完整發布驗證預設使用 `source=artifact`，它是根據
+解析的發布 SHA 建構的。若要進行發布後的驗證，請傳遞
+`package_acceptance_package_spec=openclaw@YYYY.M.D`，以便相同的升級矩陣
+以已發布的 npm 套件為目標，而不是其他物件。
 
-版本檢查會使用 package/update/restart/plugin 設定來呼叫 Package Acceptance（套件驗收）：
+發布檢查會使用 package/update/restart/plugin 集合呼叫 Package Acceptance：
 
 ```text
 doctor-switch update-channel-switch update-corrupt-plugin upgrade-survivor published-upgrade-survivor update-restart-auth plugins-offline plugin-update
 ```
 
-當啟用發布浸泡（release soak）時，它們還會傳入：
+當啟用發布 soak 時，它們也會傳遞：
 
 ```text
 published_upgrade_survivor_baselines=last-stable-4 2026.4.23 2026.5.2 2026.4.15
@@ -142,11 +149,14 @@ published_upgrade_survivor_scenarios=reported-issues
 telegram_mode=mock-openai
 ```
 
-這能讓套件遷移、更新通道切換、損壞的受管理外掛程式容忍度、過時的外掛程式相依性清理、離線外掛程式覆蓋率、外掛程式更新行為以及 Telegram 套件 QA 都在同一個解析出的構件上進行，而不必讓預設的發布套件閘門遍歷每個已發布的版本。
+這能將套件遷移、更新通道切換、損壞的受管理插件
+容錯、過時的插件依賴清理、離線插件覆蓋率、插件
+更新行為以及 Telegram 套件 QA 保持在相同的解析構件上，而無需
+讓預設的發布套件閘道遍歷每個已發布的版本。
 
-`last-stable-4` 會解析為四個最新的穩定版 npm 發布 OpenClaw 版本。發布套件驗收會將 `2026.4.23` 固定為第一個外掛程式更新相容性邊界，`2026.5.2` 固定為外掛程式架構變動邊界，並將 `2026.4.15` 固定為較舊的 2026.4.1x 已發布更新基準；解析器會重複移除已經在最新四個版本中的固定項。若要進行完整的已發布更新遷移覆蓋，請在個別的 Update Migration 工作流程中使用 `all-since-2026.4.23`，而不是完整發布 CI。當您同時需要舊版日期錨點時，`release-history` 仍可用於手動更廣泛的採樣。
+`last-stable-4` 會解析為四個最新的穩定 npm 發布版 OpenClaw 版本。發布套件驗收將 `2026.4.23` 指定為第一個外掛更新相容性邊界，`2026.5.2` 指定為外掛架構變動邊界，並將 `2026.4.15` 指定為較舊的 2026.4.1x 發布更新基準；解析器會對已經在最新四個版本中的釘選進行去重。若要進行窮盡的發布更新遷移覆蓋，請在個別的 Update Migration 工作流程中使用 `all-since-2026.4.23`，而不是 Full Release CI。當您也需要舊版前置日期錨點時，`release-history` 仍然可用於手動的更廣泛抽樣。
 
-當選擇多個已發布升級存活者基準時，可重複使用的 Docker 工作流程會將每個基準分片到其自己的目標執行器工作中。每個基準分片仍然會執行選定的情境集，但日誌和構件會保持每個基準獨立，並且牆上時間會受限於最慢的分片，而不是一個大型序列工作。
+當選取多個發布升級倖存者基準時，可重複使用的 Docker 工作流程會將每個基準分片到各自的目標執行器工作中。每個基準分片仍然會執行選取的情境集，但日誌和構件會保持每個基準獨立，並且總耗時會受限於最慢的分片，而不是一個大型序列工作。
 
 在發布前驗證候選版本時，請手動執行套件設定檔：
 
@@ -162,51 +172,67 @@ gh workflow run package-acceptance.yml \
   -f telegram_mode=mock-openai
 ```
 
-當發布問題包含 MCP 通道、cron/subagent 清理、OpenAI 網頁搜尋或 OpenWebUI 時，請使用 `suite_profile=product`。僅在您需要完整的 Docker 發布路徑覆蓋率時才使用 `suite_profile=full`。
+當發布問題包含 MCP 頻道、cron/subagent 清理、OpenAI 網路搜尋或 OpenWebUI 時，請使用 `suite_profile=product`。僅當您需要完整的 Docker 發布路徑覆蓋時，才使用 `suite_profile=full`。
 
 ## 發布預設
 
 對於發布候選版本，預設的驗證堆疊為：
 
-1. `pnpm check:changed` 和 `pnpm test:changed` 用於原始碼層級的回歸測試。
-2. `pnpm release:check` 用於套件構件完整性。
-3. Package Acceptance `package` 設定檔或 release-check 自訂套件通道，用於安裝/更新/重新啟動/外掛程式合約。
-4. 跨作業系統發布檢查，用於特定作業系統的安裝程式、上線和平台行為。
-5. 僅當變更範圍涉及提供者或託管服務行為時，才執行 Live suites。
+1. 針對原始碼層級的回歸使用 `pnpm check:changed` 和 `pnpm test:changed`。
+2. 針對套件構件完整性使用 `pnpm release:check`。
+3. 針對安裝/更新/重新啟動/外掛合約，使用 Package Acceptance `package` 設定檔或 release-check 自訂套件通道。
+4. 針對特定 OS 的安裝程式、上手和平台行為進行跨 OS 發布檢查。
+5. 僅當變更的範圍涉及提供者或託管服務行為時，才使用 Live suites。
 
-在維護者的機器上，廣泛的閘道和 Docker/套件產品驗證應在 Testbox 中執行，除非明確進行本地驗證。
+在維護者的機器上，廣泛的閘道和 Docker/套件產品驗證應在 Testbox 中執行，除非明確進行本機驗證。
 
 ## 舊版相容性
 
-相容性寬容度很窄且有時間限制：
+相容性寬容度狹窄且設有時間限制：
 
-- 透過 `2026.4.25` 的套件（包括 `2026.4.25-beta.*`）在套件驗收中可能會容忍已發佈的套件元資料缺口。
-- 已發佈的 `2026.4.26` 套件可能會針對已發佈的本地建置元資料戳記檔案發出警告。
-- 後續的套件必須滿足現代合約。相同的缺口將導致失敗，而不是警告或跳過。
+- 透過 `2026.4.25` 的套件（包括 `2026.4.25-beta.*`）在套件驗收期間可能
+  容忍已發布套件的元數據缺口。
+- 已發布的 `2026.4.26` 套件可能會針對已發布的本機建置元數據戳記
+  檔案發出警告。
+- 後續的套件必須符合現代契約。同樣的缺口將會導致失敗，而非
+  警告或跳過。
 
-請勿為這些舊格式新增啟動遷移。新增或擴充 doctor 修復，然後當更新指令擁有重啟權時，使用 `upgrade-survivor`、`published-upgrade-survivor` 或 `update-restart-auth` 進行驗證。
+請勿為這些舊格式新增啟動遷移。新增或擴充 doctor 修復程式，
+然後在更新指令擁有重啟權限時，使用 `upgrade-survivor`、`published-upgrade-survivor` 或
+`update-restart-auth` 來證明。
 
-## 新增覆蓋率
+## 新增覆蓋範圍
 
-變更更新或外掛行為時，在可能因正確原因而失敗的最低層級新增覆蓋率：
+當變更更新或外掛行為時，請在能因正確理由而失敗的最低層級
+新增覆蓋範圍：
 
-- 純路徑或元資料邏輯：在原始碼旁新增單元測試。
-- 套件清單或打包檔案行為：`package-dist-inventory` 或 tarball 檢查器測試。
+- 純路徑或元數據邏輯：在原始碼旁新增單元測試。
+- 套件清單或打包檔案行為：`package-dist-inventory` 或 tarball
+  檢查器測試。
 - CLI 安裝/更新行為：Docker lane 斷言或 fixture。
-- 已發佈版本的遷移行為：`published-upgrade-survivor` 情境。
+- 已發布版本的遷移行為：`published-upgrade-survivor` 情境。
 - 更新擁有的重啟行為：`update-restart-auth`。
-- 註冊表/套件來源行為：`test:docker:plugins` fixture 或 ClawHub fixture 伺服器。
-- 相依性佈局或清理行為：同時斷言執行時期執行和檔案系統邊界。npm 相依性可能會被提升至受管理的 npm 根目錄下，因此測試應證明掃描/清理的是根目錄，而不是假設套件本地的 `node_modules` 樹狀結構。
+- Registry/套件來源行為：`test:docker:plugins` fixture 或 ClawHub
+  fixture 伺服器。
+- 相依性配置或清理行為：同時斷言執行時期執行與
+  檔案系統邊界。npm 相依性可能會被提升至受管理的 npm
+  根目錄下，因此測試應證明根目錄已被掃描/清理，而非假設
+  套件本地的 `node_modules` 樹狀結構。
 
-預設情況下，保持新的 Docker fixtures 為隔離狀態。使用本地 fixture 註冊表和虛假套件，除非測試的目的是即時註冊表行為。
+預設將新的 Docker fixture 保持為隔離狀態。使用本機 fixture registry
+與假套件，除非測試的重點即為 live registry 行為。
 
-## 故障分診
+## 失敗分診
 
-從成品身分開始：
+從產制品識別資訊開始：
 
-- 套件驗收 `resolve_package` 摘要：來源、版本、SHA-256 和成品名稱。
-- Docker 成品：`.artifacts/docker-tests/**/summary.json`、
+- 套件驗收 `resolve_package` 摘要：來源、版本、SHA-256 和
+  產制品名稱。
+- Docker 產制品：`.artifacts/docker-tests/**/summary.json`、
   `failures.json`、lane 日誌和重新執行指令。
-- 升級存活者摘要：`.artifacts/upgrade-survivor/summary.json`，包括基線版本、候選版本、場景、階段計時和配方步驟。
+- 升級倖存者摘要：`.artifacts/upgrade-survivor/summary.json`，
+  包括基準版本、候選版本、情境、階段時間和
+  配方步驟。
 
-優先使用相同的軟體包成品重新執行失敗的確切通道，而不是重新執行整個發行大綱。
+優先使用相同的套件產制品重新執行失敗的特定 lane，
+而非重新執行整個發行 umbrella。

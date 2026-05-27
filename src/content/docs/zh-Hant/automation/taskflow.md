@@ -1,5 +1,5 @@
 ---
-summary: "Task Flow 是位於背景任務之上的流程編排層"
+summary: "位於背景任務之上的 Task Flow 編排層"
 read_when:
   - You want to understand how Task Flow relates to background tasks
   - You encounter Task Flow or openclaw tasks flow in release notes or docs

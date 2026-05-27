@@ -9,11 +9,12 @@ sidebarTitle: "Añadir capacidades"
 ---
 
 <Info>
-  Esta es una **guía de colaboradores** para los desarrolladores principales de OpenClaw. Si estás construyendo un complemento externo, consulta [Construcción de complementos](/es/plugins/building-plugins) en su lugar. Para obtener la referencia profunda de la arquitectura (modelo de capacidad, propiedad, canalización de carga, asistentes de tiempo de ejecución), consulta [Elementos internos del
+  Esta es una **guía para contribuidores** para desarrolladores principales de OpenClaw. Si está construyendo un complemento externo, consulte [Construcción de complementos](/es/plugins/building-plugins) en su lugar. Para la referencia de arquitectura profunda (modelo de capacidad, propiedad, canalización de carga, asistentes de tiempo de ejecución), consulte [Internos del
   complemento](/es/plugins/architecture).
 </Info>
 
-Úsalo cuando OpenClaw necesite un nuevo dominio compartido, como la generación de imágenes, la generación de video o alguna área de características futura respaldada por un proveedor.
+Use esto cuando OpenClaw necesite un dominio compartido nuevo como incrustaciones, generación
+de imágenes, generación de video, o alguna área de características futura respaldada por un proveedor.
 
 La regla:
 
@@ -111,21 +112,34 @@ La clave de configuración se separa intencionalmente del enrutamiento de análi
 
 Mantenga esos elementos separados para que la reserva y la política sigan siendo explícitas.
 
+## Proveedores de incrustaciones
+
+Use `embeddingProviders` para proveedores reutilizables de incrustaciones de vectores. Este contrato
+es intencionalmente más amplio que la memoria: herramientas, búsqueda, recuperación, importadores, o
+complementos de características futuras pueden consumir incrustaciones sin depender del motor
+de memoria.
+
+Para adaptadores específicos del motor de memoria, siga usando `memoryEmbeddingProviders`.
+Esos adaptadores son dueños de los detalles de indexación de memoria como la división consulta/documento,
+metadatos de tiempo de ejecución y configuración local del motor de memoria. No haga que un proveedor
+genérico de incrustaciones dependa de módulos propiedad de la memoria a menos que el proveedor sea solo
+utilizable por la memoria.
+
 ## Lista de verificación de revisión
 
 Antes de lanzar una nueva capacidad, verifique:
 
 - Ningún canal/herramienta importa código de proveedor directamente.
-- La asistente de tiempo de ejecución es la ruta compartida.
-- Al menos una prueba de contrato afirma la propiedad agrupada.
+- El asistente de tiempo de ejecución es la ruta compartida.
+- Al menos una prueba de contrato afirme la propiedad agrupada.
 - Los documentos de configuración nombran la nueva clave de modelo/configuración.
 - Los documentos del complemento explican el límite de propiedad.
 
-Si un PR omite la capa de capacidad y codifica el comportamiento del proveedor en un canal/herramienta, devuélvalo y defina primero el contrato.
+Si un PR se salta la capa de capacidad y codifica el comportamiento del proveedor en un canal/herramienta, devuélvalo y defina el contrato primero.
 
 ## Relacionado
 
-- [Plugin internals](/es/plugins/architecture) — modelo de capacidad, propiedad, canalización de carga, asistentes de tiempo de ejecución.
-- [Building plugins](/es/plugins/building-plugins) — tutorial del primer complemento.
-- [SDK overview](/es/plugins/sdk-overview) — referencia del mapa de importación y la API de registro.
-- [Creating skills](/es/tools/creating-skills) — superficie de colaborador complementaria.
+- [Internos del complemento](/es/plugins/architecture) — modelo de capacidad, propiedad, canalización de carga, asistentes de tiempo de ejecución.
+- [Construcción de complementos](/es/plugins/building-plugins) — tutorial del primer complemento.
+- [Resumen del SDK](/es/plugins/sdk-overview) — referencia de mapa de importación y API de registro.
+- [Creación de habilidades](/es/tools/creating-skills) — superficie de contribuidor complementaria.

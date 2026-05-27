@@ -92,27 +92,27 @@ read_when:
 
   </Step>
 
-  <Step title="設定密鑰">
+  <Step title="設定金鑰">
     ```bash
     # Required: Gateway token (for non-loopback binding)
     fly secrets set OPENCLAW_GATEWAY_TOKEN=$(openssl rand -hex 32)
 
     # Model provider API keys
-    fly secrets set ANTHROPIC_API_KEY=sk-ant-...
+    fly secrets set ANTHROPIC_API_KEY=example-anthropic-key-not-real
 
     # Optional: Other providers
-    fly secrets set OPENAI_API_KEY=sk-...
+    fly secrets set OPENAI_API_KEY=example-openai-key-not-real
     fly secrets set GOOGLE_API_KEY=...
 
     # Channel tokens
-    fly secrets set DISCORD_BOT_TOKEN=MTQ...
+    fly secrets set DISCORD_BOT_TOKEN=example-discord-bot-token
     ```
 
-    **注意事項：**
+    **備註：**
 
-    - 非回環綁定（`--bind lan`）需要一個有效的閘道驗證路徑。此 Fly.io 範例使用 `OPENCLAW_GATEWAY_TOKEN`，但 `gateway.auth.password` 或正確設定的非回環 `trusted-proxy` 部署也符合要求。
-    - 請將這些令牌視為密碼處理。
-    - **對於所有 API 金鑰和令牌，優先使用環境變數而非設定檔**。這可以確保機密不會出現在 `openclaw.json` 中，以免意外洩露或被記錄。
+    - 非迴路綁定 (`--bind lan`) 需要有效的 Gateway Auth Path。此 Fly.io 範例使用 `OPENCLAW_GATEWAY_TOKEN`，但 `gateway.auth.password` 或正確設定的非迴路 `trusted-proxy` 部署也符合需求。
+    - 請將這些權杖視為密碼處理。
+    - 針對所有 API 金鑰與權杖，**優先使用環境變數而非設定檔**。這能將金鑰保持在 `openclaw.json` 之外，避免意外外洩或被記錄。
 
   </Step>
 

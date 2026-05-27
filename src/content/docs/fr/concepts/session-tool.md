@@ -3,7 +3,7 @@ summary: "Outils d'agent pour le statut inter-session, la récupération, la mes
 read_when:
   - You want to understand what session tools the agent has
   - You want to configure cross-session access or sub-agent spawning
-  - You want to inspect status or control spawned sub-agents
+  - You want to inspect spawned sub-agent status
 title: "Outils de session"
 ---
 
@@ -18,7 +18,7 @@ OpenClaw fournit aux agents des outils pour travailler sur plusieurs sessions, i
 | `sessions_send`    | Envoyer un message à une autre session et attendre optionnellement                                      |
 | `sessions_spawn`   | Générer une session de sous-agent isolée pour le travail en arrière-plan                                |
 | `sessions_yield`   | Terminer le tour actuel et attendre les résultats de suivi du sous-agent                                |
-| `subagents`        | Lister, orienter ou tuer les sous-agents générés pour cette session                                     |
+| `subagents`        | Lister l'état des sous-agents générés pour cette session                                                |
 | `session_status`   | Afficher une carte de style `/status` et définir optionnellement une substitution de modèle par session |
 
 Ces outils sont toujours soumis au profil d'outil actif et à la politique d'autorisation/refus. `tools.profile: "coding"` inclut l'ensemble complet d'orchestration de session, y compris `sessions_spawn`, `sessions_yield`, et `subagents`.
@@ -104,41 +104,34 @@ l'événement de suivi que vous attendez. Utilisez-le après avoir généré des
 vous voulez que les résultats d'achèvement arrivent comme le message suivant au lieu de construire
 des boucles de sondage.
 
-`subagents` est l'assistant du plan de contrôle pour les sous-agents OpenClaw
-déjà générés. Il prend en charge :
-
-- `action: "list"` pour inspecter les exécutions actives/récentes
-- `action: "steer"` pour envoyer des instructions de suivi à un enfant en cours d'exécution
-- `action: "kill"` pour arrêter un enfant ou `all`
+`subagents` est l'assistant de visibilité pour les sous-agents OpenClaw déjà générés. Il prend en charge `action: "list"` pour inspecter les exécutions actives/récentes.
 
 ## Génération de sous-agents
 
-`sessions_spawn` crée une session isolée pour une tâche d'arrière-plan par défaut.
-Il est toujours non bloquant -- il retourne immédiatement un `runId` et
-`childSessionKey`. Les exécutions natives de sous-agents reçoivent la tâche déléguée dans
-le premier message `[Subagent Task]` visible de la session enfant, tandis que le
-prompt système ne contient que les règles d'exécution du sous-agent et le contexte de routage.
+`sessions_spawn` crée une session isolée pour une tâche d'arrière-plan par défaut. Il est toujours non bloquant -- il retourne immédiatement un `runId` et un `childSessionKey`. Les exécutions natives de sous-agents reçoivent la tâche déléguée dans le premier message visible `[Subagent Task]` de la session enfant, tandis que le prompt système ne contient que les règles d'exécution du sous-agent et le contexte de routage.
 
 Options clés :
 
-- `runtime: "subagent"` (par défaut) ou `"acp"` pour les agents de harnais externes.
-- `model` et `thinking` remplacements pour la session enfant.
-- `thread: true` pour lier le spawn à un fil de discussion (Discord, Slack, etc.).
-- `sandbox: "require"` pour imposer le sandboxing sur l'enfant.
+- `runtime: "subagent"` (par défaut) ou `"acp"` pour les agents de harnais externe.
+- `model` et remplacements `thinking` pour la session enfant.
+- `thread: true` pour lier le génération à un fil de discussion (Discord, Slack, etc.).
+- `sandbox: "require"` pour appliquer le sandboxing sur l'enfant.
 - `context: "fork"` pour les sous-agents natifs lorsque l'enfant a besoin de la
   transcription du demandeur actuel ; omettez-le ou utilisez `context: "isolated"` pour un enfant propre.
-  Les sous-agents natifs liés à un fil sont par défaut sur `context: "fork"` à moins
-  que `threadBindings.defaultSpawnContext` n'en dise autrement.
+  Les sous-agents natifs liés à un fil par défaut à `context: "fork"` sauf si
+  `threadBindings.defaultSpawnContext` indique le contraire.
 
-Les sous-agents feuilles par défaut ne reçoivent pas d'outils de session. Lorsque
+Les sous-agents feuilles par défaut n'obtiennent pas d'outils de session. Lorsque
 `maxSpawnDepth >= 2`, les sous-agents orchestrateurs de profondeur 1 reçoivent en outre
-`sessions_spawn`, `subagents`, `sessions_list`, et `sessions_history` afin qu'ils
-puissent gérer leurs propres enfants. Les exécutions feuilles ne reçoivent toujours pas d'outils d'orchestration récursifs.
+`sessions_spawn`, `subagents`, `sessions_list` et `sessions_history` afin qu'ils
+puissent gérer leurs propres enfants. Les exécutions feuilles n'obtiennent toujours pas d'outils d'orchestration
+récursifs.
 
-Après achèvement, une étape d'annonce publie le résultat dans le canal du demandeur.
-La livraison de l'achèvement préserve le routage du fil/sujet lié lorsqu'il est disponible, et si
-l'origine de l'achèvement n'identifie qu'un canal, OpenClaw peut toujours réutiliser
-la route stockée de la session du demandeur (`lastChannel` / `lastTo`) pour une livraison directe.
+Après achèvement, une étape d'annonce publie le résultat sur le channel du demandeur.
+La livraison de l'achèvement préserve le routage de fil/sujet lié lorsqu'il est disponible, et si
+l'origine de l'achèvement n'identifie qu'un channel, OpenClaw peut toujours réutiliser
+la route stockée de la session du demandeur (`lastChannel` / `lastTo`) pour une livraison
+directe.
 
 Pour un comportement spécifique à l'ACP, voir [ACP Agents](/fr/tools/acp-agents).
 
@@ -146,21 +139,21 @@ Pour un comportement spécifique à l'ACP, voir [ACP Agents](/fr/tools/acp-agent
 
 Les outils de session sont délimités pour limiter ce que l'agent peut voir :
 
-| Niveau  | Portée                                         |
-| ------- | ---------------------------------------------- |
-| `self`  | Seulement la session actuelle                  |
-| `tree`  | Session actuelle + sous-agents spawnés         |
-| `agent` | Toutes les sessions pour cet agent             |
-| `all`   | Toutes les sessions (inter-agent si configuré) |
+| Niveau  | Portée                                          |
+| ------- | ----------------------------------------------- |
+| `self`  | Uniquement la session actuelle                  |
+| `tree`  | Session actuelle + sous-agents générés          |
+| `agent` | Toutes les sessions pour cet agent              |
+| `all`   | Toutes les sessions (inter-agents si configuré) |
 
 La valeur par défaut est `tree`. Les sessions sandboxed sont limitées à `tree` quelle que soit la configuration.
 
 ## Pour aller plus loin
 
 - [Gestion de session](/fr/concepts/session) -- routage, cycle de vie, maintenance
-- [Agents ACP](/fr/tools/acp-agents) -- génération de harnais externes
+- [Agents ACP](/fr/tools/acp-agents) -- génération de harnais externe
 - [Multi-agent](/fr/concepts/multi-agent) -- architecture multi-agent
-- [Configuration Gateway](Gateway/en/gateway/configuration) -- paramètres de configuration de l'outil de session
+- [Configuration du Gateway](/fr/gateway/configuration) -- paramètres de configuration des outils de session
 
 ## Connexes
 

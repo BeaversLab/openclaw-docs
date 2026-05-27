@@ -2,6 +2,7 @@
 summary: "Persistencia de permisos de macOS (TCC) y requisitos de firma"
 read_when:
   - Debugging missing or stuck macOS permission prompts
+  - Deciding whether to grant Accessibility to node or a CLI runtime
   - Packaging or signing the macOS app
   - Changing bundle IDs or app install paths
 title: "Permisos de macOS"
@@ -22,9 +23,30 @@ macOS trata la aplicación como nueva y puede eliminar u ocultar los avisos.
 Las firmas ad-hoc generan una nueva identidad en cada compilación. macOS olvidará las
 concesiones anteriores, y los avisos pueden desaparecer por completo hasta que se borren las entradas obsoletas.
 
-## Lista de verificación de recuperación cuando los avisos desaparecen
+## Concesiones de Accesibilidad para Node y tiempos de ejecución de CLI
 
-1. Cierre la aplicación.
+Es preferible otorgar Accesibilidad a OpenClaw.app, Peekaboo.app u otro asistente
+firmado con su propio identificador de paquete en lugar de a un binario
+`node` genérico.
+
+macOS TCC otorga Accesibilidad a la identidad del código del proceso que ve. Si un
+flujo de trabajo de Homebrew, nvm, pnpm o npm hace que un ejecutable `node`
+compartido reciba Accesibilidad, cualquier paquete de JavaScript iniciado a través
+de ese mismo ejecutable puede heredar privilegios de automatización de la GUI.
+
+Trate una entrada `node` en Configuración del Sistema como un permiso amplio
+para ese tiempo de ejecución de Node, no como un permiso para un solo paquete npm.
+Evite otorgar Accesibilidad a `node` a menos que confíe en todos los
+scripts y paquetes iniciados a través de esa instalación exacta de Node.
+
+Si otorgó Accesibilidad accidentalmente a `node`, elimine esa entrada de
+Configuración del Sistema -> Privacidad y seguridad -> Accesibilidad. Luego,
+otorgue el permiso a la aplicación o asistente firmado que debe ser el propietario
+de la automatización de la interfaz de usuario.
+
+## Lista de verificación de recuperación cuando desaparecen los avisos
+
+1. Cierra la aplicación.
 2. Elimine la entrada de la aplicación en Configuración del Sistema -> Privacidad y seguridad.
 3. Vuelva a iniciar la aplicación desde la misma ruta y vuelva a otorgar los permisos.
 4. Si el aviso aún no aparece, restablezca las entradas de TCC con `tccutil` e inténtelo de nuevo.
@@ -40,14 +62,15 @@ sudo tccutil reset AppleEvents
 
 ## Permisos de archivos y carpetas (Escritorio/Documentos/Descargas)
 
-macOS también puede restringir el acceso a Escritorio, Documentos y Descargas para procesos en segundo plano/de terminal. Si las lecturas de archivos o las listas de directorios se bloquean, otorgue acceso al mismo contexto de proceso que realiza las operaciones de archivo (por ejemplo, Terminal/iTerm, aplicación iniciada por LaunchAgent o proceso SSH).
+macOS también puede restringir el acceso a Escritorio, Documentos y Descargas para procesos de terminal/en segundo plano. Si las lecturas de archivos o las listados de directorios se bloquean, otorgue acceso al mismo contexto de proceso que realiza las operaciones de archivos (por ejemplo, Terminal/iTerm, aplicación iniciada por LaunchAgent o proceso SSH).
 
 Solución alternativa: mueva los archivos al espacio de trabajo de OpenClaw (`~/.openclaw/workspace`) si desea evitar concesiones por carpeta.
 
 Si está probando permisos, firme siempre con un certificado real. Las compilaciones
-ad-hoc solo son aceptables para ejecuciones locales rápidas donde los permisos no importan.
+ad-hoc solo son aceptables para ejecuciones locales rápidas donde los permisos
+no importan.
 
 ## Relacionado
 
-- [macOS app](/es/platforms/macos)
-- [macOS signing](/es/platforms/mac/signing)
+- [app de macOS](/es/platforms/macos)
+- [firma de macOS](/es/platforms/mac/signing)

@@ -12,14 +12,7 @@ La herramienta `music_generate` permite al agente crear música o audio a travé
 capacidad compartida de generación de música con proveedores configurados — ComfyUI,
 fal, Google, MiniMax y OpenRouter hoy en día.
 
-Para ejecuciones de agente con respaldo de sesión, OpenClaw inicia la generación de música como una
-tarea en segundo plano, la rastrea en el libro de tareas y luego despierta al agente nuevamente
-cuando la pista está lista para que el agente pueda informar al usuario y adjuntar el
-audio terminado. Las finalizaciones de medios generados son entregadas por el agente a través de
-la herramienta de mensaje; OpenClaw no publica automáticamente el archivo como respaldo si el
-agente de finalización escribe solo una respuesta final privada. El despertar de finalización
-advierte explícitamente al agente que las respuestas finales normales son privadas para esta
-ruta.
+Para ejecuciones de agente con respaldo de sesión, OpenClaw inicia la generación de música como una tarea en segundo plano, la rastrea en el libro mayor de tareas y luego despierta al agente nuevamente cuando la pista está lista para que el agente pueda informar al usuario y adjuntar el audio finalizado. Las finalizaciones de medios generados son entregadas por el agente a través de la herramienta de mensaje. Si la sesión solicitante está inactiva y falta algo de audio generado en la entrega de la herramienta de mensaje, OpenClaw envía una alternativa directa idempotente con solo el audio faltante. El despertar de finalización advierte explícitamente al agente que las respuestas finales normales son privadas para esta ruta.
 
 <Note>La herramienta compartida integrada solo aparece cuando al menos un proveedor de generación de música está disponible. Si no ves `music_generate` en las herramientas de tu agente, configura `agents.defaults.musicGenerationModel` o configura una clave de API del proveedor.</Note>
 
@@ -89,34 +82,33 @@ Generate an energetic chiptune loop about launching a rocket at sunrise.
 
 ## Proveedores compatibles
 
-| Proveedor  | Modelo predeterminado        | Entradas de referencia | Controles compatibles                                     | Autenticación                          |
-| ---------- | ---------------------------- | ---------------------- | --------------------------------------------------------- | -------------------------------------- |
-| ComfyUI    | `workflow`                   | Hasta 1 imagen         | Música o audio definido por el flujo de trabajo           | `COMFY_API_KEY`, `COMFY_CLOUD_API_KEY` |
-| fal        | `fal-ai/minimax-music/v2.6`  | Ninguno                | `lyrics`, `instrumental`, `durationSeconds`, `format`     | `FAL_KEY` o `FAL_API_KEY`              |
-| Google     | `lyria-3-clip-preview`       | Hasta 10 imágenes      | `lyrics`, `instrumental`, `format`                        | `GEMINI_API_KEY`, `GOOGLE_API_KEY`     |
-| MiniMax    | `music-2.6`                  | Ninguno                | `lyrics`, `instrumental`, `durationSeconds`, `format=mp3` | `MINIMAX_API_KEY` u OAuth de MiniMax   |
-| OpenRouter | `google/lyria-3-pro-preview` | Hasta 1 imagen         | `lyrics`, `instrumental`, `durationSeconds`, `format`     | `OPENROUTER_API_KEY`                   |
+| Proveedor  | Modelo predeterminado        | Entradas de referencia | Controles compatibles                                 | Autenticación                          |
+| ---------- | ---------------------------- | ---------------------- | ----------------------------------------------------- | -------------------------------------- |
+| ComfyUI    | `workflow`                   | Hasta 1 imagen         | Música o audio definido por el flujo de trabajo       | `COMFY_API_KEY`, `COMFY_CLOUD_API_KEY` |
+| fal        | `fal-ai/minimax-music/v2.6`  | Ninguno                | `lyrics`, `instrumental`, `durationSeconds`, `format` | `FAL_KEY` o `FAL_API_KEY`              |
+| Google     | `lyria-3-clip-preview`       | Hasta 10 imágenes      | `lyrics`, `instrumental`, `format`                    | `GEMINI_API_KEY`, `GOOGLE_API_KEY`     |
+| MiniMax    | `music-2.6`                  | Ninguno                | `lyrics`, `instrumental`, `format=mp3`                | `MINIMAX_API_KEY` o MiniMax OAuth      |
+| OpenRouter | `google/lyria-3-pro-preview` | Hasta 1 imagen         | `lyrics`, `instrumental`, `durationSeconds`, `format` | `OPENROUTER_API_KEY`                   |
 
 ### Matriz de capacidades
 
-El contrato de modo explícito utilizado por `music_generate`, pruebas de contrato y el
-barrido compartido en vivo:
+El contrato de modo explícito utilizado por `music_generate`, pruebas de contrato y el barrido en vivo compartido:
 
-| Proveedor  | `generate` | `edit` | Límite de edición | Carriles compartidos en vivo                                                    |
-| ---------- | :--------: | :----: | ----------------- | ------------------------------------------------------------------------------- |
-| ComfyUI    |     ✓      |   ✓    | 1 imagen          | No en el barrido compartido; cubierto por `extensions/comfy/comfy.live.test.ts` |
-| fal        |     ✓      |   —    | Ninguno           | `generate`                                                                      |
-| Google     |     ✓      |   ✓    | 10 imágenes       | `generate`, `edit`                                                              |
-| MiniMax    |     ✓      |   —    | Ninguno           | `generate`                                                                      |
-| OpenRouter |     ✓      |   ✓    | 1 imagen          | `generate`, `edit`                                                              |
+| Proveedor  | `generate` | `edit` | Límite de edición | Carriles compartidos en vivo                                                         |
+| ---------- | :--------: | :----: | ----------------- | ------------------------------------------------------------------------------------ |
+| ComfyUI    |     ✓      |   ✓    | 1 imagen          | No está en el barrido compartido; cubierto por `extensions/comfy/comfy.live.test.ts` |
+| fal        |     ✓      |   —    | Ninguno           | `generate`                                                                           |
+| Google     |     ✓      |   ✓    | 10 imágenes       | `generate`, `edit`                                                                   |
+| MiniMax    |     ✓      |   —    | Ninguno           | `generate`                                                                           |
+| OpenRouter |     ✓      |   ✓    | 1 imagen          | `generate`, `edit`                                                                   |
 
-Use `action: "list"` para inspeccionar los proveedores compartidos y modelos disponibles en tiempo de ejecución:
+Use `action: "list"` para inspeccionar los proveedores y modelos compartidos disponibles en tiempo de ejecución:
 
 ```text
 /tool music_generate action=list
 ```
 
-Use `action: "status"` para inspeccionar la tarea de música activa respaldada por sesión:
+Use `action: "status"` para inspeccionar la tarea de música activa con respaldo de sesión:
 
 ```text
 /tool music_generate action=status
@@ -137,7 +129,7 @@ Ejemplo de generación directa:
   `"status"` devuelve la tarea de la sesión actual; `"list"` inspecciona los proveedores.
 </ParamField>
 <ParamField path="model" type="string">
-  Invalidación de proveedor/modelo (p. ej. `google/lyria-3-pro-preview`, `comfy/workflow`).
+  Sobrescritura de proveedor/modelo (p. ej., `google/lyria-3-pro-preview`, `comfy/workflow`).
 </ParamField>
 <ParamField path="lyrics" type="string">
   Letra opcional cuando el proveedor admite la entrada explícita de letras.
@@ -146,7 +138,7 @@ Ejemplo de generación directa:
   Solicitar salida solo instrumental cuando el proveedor lo admite.
 </ParamField>
 <ParamField path="image" type="string">
-  Ruta o URL de una única imagen de referencia.
+  Ruta o URL de una sola imagen de referencia.
 </ParamField>
 <ParamField path="images" type="string[]">
   Múltiples imágenes de referencia (hasta 10 en proveedores compatibles).
@@ -162,32 +154,32 @@ Ejemplo de generación directa:
 </ParamField>
 
 <Note>
-  No todos los proveedores admiten todos los parámetros. OpenClaw aún valida los límites estrictos, como los recuentos de entrada, antes del envío. Cuando un proveedor admite la duración pero usa un máximo más corto que el valor solicitado, OpenClaw se ajusta a la duración admitida más cercana. Las sugerencias opcionales no admitidas realmente se ignoran con una advertencia cuando el proveedor o
-  modelo seleccionado no puede cumplirlas. Los resultados de la herramienta reportan la configuración aplicada; `details.normalization` captura cualquier asignación de solicitado a aplicado.
+  No todos los proveedores admiten todos los parámetros. OpenClaw todavía valida los límites estrictos, como los recuentos de entradas, antes del envío. Cuando un proveedor admite la duración pero usa un máximo más corto que el valor solicitado, OpenClaw ajusta a la duración admitida más cercana. Las sugerencias opcionales no admitidas realmente se ignoran con una advertencia cuando el proveedor o
+  modelo seleccionado no puede cumplirlas. Los resultados de la herramienta informan la configuración aplicada; `details.normalization` captura cualquier asignación de solicitado a aplicado.
 </Note>
 
-Los tiempos de espera de las solicitudes del proveedor son solo configuración del operador.
-OpenClaw usa `agents.defaults.musicGenerationModel.timeoutMs` cuando está configurado, eleva los valores
-por debajo de 120000ms a 120000ms y, de lo contrario, establece de forma predeterminada
-las solicitudes del proveedor a 300000ms.
+Los tiempos de espera de las solicitudes del proveedor son exclusivamente configuración del operador. OpenClaw usa
+`agents.defaults.musicGenerationModel.timeoutMs` cuando está configurado, eleva los valores
+inferiores a 120000ms a 120000ms y, de lo contrario, establece por defecto las solicitudes del proveedor en
+300000ms.
 
 ## Comportamiento asíncrono
 
 La generación de música con respaldo de sesión se ejecuta como una tarea en segundo plano:
 
 - **Tarea en segundo plano:** `music_generate` crea una tarea en segundo plano, devuelve una
-  respuesta de tarea iniciada de inmediato y publica la pista terminada más adelante
+  respuesta started/task inmediatamente y publica la pista finalizada más tarde
   en un mensaje de seguimiento del agente.
-- **Prevención de duplicados:** mientras una tarea está `queued` o `running`, las llamadas
-  posteriores a `music_generate` en la misma sesión devuelven el estado de la tarea en lugar de
+- **Prevención de duplicados:** mientras una tarea está `queued` o `running`, las siguientes
+  llamadas `music_generate` en la misma sesión devuelven el estado de la tarea en lugar de
   iniciar otra generación. Use `action: "status"` para verificar explícitamente.
 - **Consulta de estado:** `openclaw tasks list` o `openclaw tasks show <taskId>`
   inspeccionan el estado en cola, en ejecución y terminal.
 - **Activación de finalización:** OpenClaw inyecta un evento de finalización interno de nuevo
   en la misma sesión para que el modelo pueda escribir él mismo el seguimiento orientado al usuario.
 - **Sugerencia de prompt:** los turnos posteriores del usuario/manual en la misma sesión reciben una pequeña
-  sugerencia en tiempo de ejecución cuando una tarea de música ya está en curso, para que el modelo
-  no llame ciegamente a `music_generate` nuevamente.
+  sugerencia en tiempo de ejecución cuando una tarea de música ya está en curso, para que el modelo no
+  llame ciegamente a `music_generate` de nuevo.
 - **Alternativa sin sesión:** los contextos directos locales sin una sesión de agente
   real se ejecutan en línea y devuelven el resultado de audio final en el mismo turno.
 
@@ -245,11 +237,11 @@ entradas explícitas `model`, `primary` y `fallbacks`.
 ## Notas del proveedor
 
 <AccordionGroup>
-  <Accordion title="ComfyUI">Basado en flujos de trabajo y depende del gráfico configurado más la asignación de nodos para los campos de entrada/salida. El complemento `comfy` incluido se conecta a la herramienta compartida `music_generate` a través del registro de proveedores de generación de música.</Accordion>
-  <Accordion title="fal">Utiliza endpoints de modelos fal a través de la ruta de autenticación de proveedores compartida. El proveedor incluido usa por defecto `fal-ai/minimax-music/v2.6` y también expone `fal-ai/ace-step/prompt-to-audio` y `fal-ai/stable-audio-25/text-to-audio` para solicitudes de prompt a audio.</Accordion>
+  <Accordion title="ComfyUI">Basado en flujos de trabajo y depende del grafo configurado más la asignación de nodos para los campos de prompt/salida. El complemento `comfy` incluido se conecta a la herramienta compartida `music_generate` a través del registro del proveedor de generación de música.</Accordion>
+  <Accordion title="fal">Utiliza los puntos finales del modelo fal a través de la ruta de autenticación del proveedor compartido. El proveedor incluido tiene por defecto `fal-ai/minimax-music/v2.6` y también expone `fal-ai/ace-step/prompt-to-audio` y `fal-ai/stable-audio-25/text-to-audio` para solicitudes de prompt-to-audio.</Accordion>
   <Accordion title="Google (Lyria 3)">Utiliza la generación por lotes de Lyria 3. El flujo incluido actual admite prompt, texto de letra opcional e imágenes de referencia opcionales.</Accordion>
-  <Accordion title="MiniMax">Utiliza el endpoint por lotes `music_generation`. Admite prompt, letra opcional, modo instrumental, control de duración y salida mp3 a través de autenticación con clave de API `minimax` u OAuth `minimax-portal`.</Accordion>
-  <Accordion title="OpenRouter">Utiliza la salida de audio de las finalizaciones de chat de OpenRouter con transmisión habilitada. El proveedor incluido por defecto es `google/lyria-3-pro-preview` y también expone `openrouter/google/lyria-3-clip-preview`.</Accordion>
+  <Accordion title="MiniMax">Usa el endpoint por lotes `music_generation`. Soporta indicaciones (prompt), letras opcionales, modo instrumental y salida mp3 a través de la autenticación `minimax` con clave de API o `minimax-portal` OAuth.</Accordion>
+  <Accordion title="OpenRouter">Usa la salida de audio de finalizaciones de chat de OpenRouter con transmisión (streaming) habilitada. El proveedor integrado tiene por defecto `google/lyria-3-pro-preview` y también expone `openrouter/google/lyria-3-clip-preview`.</Accordion>
 </AccordionGroup>
 
 ## Elegir la ruta adecuada
@@ -259,16 +251,16 @@ entradas explícitas `model`, `primary` y `fallbacks`.
 - **Ruta de complemento (ComfyUI)** cuando necesites un gráfico de flujo de trabajo personalizado o un
   proveedor que no sea parte de la capacidad de música compartida incluida.
 
-Si estás depurando un comportamiento específico de ComfyUI, consulta
-[ComfyUI](/es/providers/comfy). Si estás depurando el comportamiento del proveedor
-compartido, comienza con [fal](/es/providers/fal), [Google (Gemini)](/es/providers/google),
+Si está depurando un comportamiento específico de ComfyUI, consulte
+[ComfyUI](/es/providers/comfy). Si está depurando el comportamiento compartido del
+proveedor, comience con [fal](/es/providers/fal), [Google (Gemini)](/es/providers/google),
 [MiniMax](/es/providers/minimax) u [OpenRouter](/es/providers/openrouter).
 
 ## Modos de capacidad del proveedor
 
 El contrato de generación de música compartida admite declaraciones de modo explícitas:
 
-- `generate` para la generación solo con mensaje (prompt).
+- `generate` para la generación solo con indicación (prompt).
 - `edit` cuando la solicitud incluye una o más imágenes de referencia.
 
 Las nuevas implementaciones de proveedores deben preferir bloques de modo explícitos:
@@ -290,9 +282,9 @@ capabilities: {
 ```
 
 Los campos planos heredados como `maxInputImages`, `supportsLyrics` y
-`supportsFormat` **no** son suficientes para anunciar soporte de edición. Los proveedores
-deben declarar `generate` y `edit` explícitamente para que las pruebas en vivo, pruebas de contrato
-y la herramienta compartida `music_generate` puedan validar el soporte de modo
+`supportsFormat` **no** son suficientes para anunciar la compatibilidad con edición. Los proveedores
+deben declarar `generate` y `edit` explícitamente para que las pruebas en vivo, las pruebas de contrato
+y la herramienta compartida `music_generate` puedan validar la compatibilidad con el modo
 de manera determinista.
 
 ## Pruebas en vivo
@@ -309,15 +301,15 @@ Contenedor del repositorio:
 pnpm test:live:media music
 ```
 
-Este archivo en vivo utiliza las variables de entorno del proveedor ya exportadas por delante de los perfiles de autenticación
-almacenados de forma predeterminada, y ejecuta tanto `generate` como la cobertura declarada `edit` cuando
+Este archivo en vivo usa por defecto las variables de entorno del proveedor ya exportadas antes que los perfiles de autenticación
+almacenados, y ejecuta tanto la cobertura `generate` como la `edit` declarada cuando
 el proveedor habilita el modo de edición. Cobertura actual:
 
 - `google`: `generate` más `edit`
 - `fal`: solo `generate`
 - `minimax`: solo `generate`
 - `openrouter`: `generate` más `edit`
-- `comfy`: cobertura en vivo separada de Comfy, no el barrido compartido del proveedor
+- `comfy`: cobertura separada de Comfy en vivo, no el barrido compartido del proveedor
 
 Cobertura en vivo opcional para la ruta de música de ComfyUI incluida:
 
@@ -330,10 +322,10 @@ secciones están configuradas.
 
 ## Relacionado
 
-- [Tareas en segundo plano](/es/automation/tasks) — seguimiento de tareas para ejecuciones `music_generate` desacopladas
+- [Tareas en segundo plano](/es/automation/tasks) — seguimiento de tareas para ejecuciones separadas de `music_generate`
 - [ComfyUI](/es/providers/comfy)
-- [Referencia de configuración](/es/gateway/config-agents#agent-defaults) — configuración `musicGenerationModel`
+- [Referencia de configuración](/es/gateway/config-agents#agent-defaults) — configuración de `musicGenerationModel`
 - [Google (Gemini)](/es/providers/google)
 - [MiniMax](/es/providers/minimax)
 - [Modelos](/es/concepts/models) — configuración y conmutación por error de modelos
-- [Descripción general de herramientas](/es/tools)
+- [Resumen de herramientas](/es/tools)

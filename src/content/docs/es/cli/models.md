@@ -14,7 +14,7 @@ Relacionado:
 
 - Proveedores + modelos: [Modelos](/es/providers/models)
 - Conceptos de selección de modelo + comando de barra `/models`: [Concepto de modelos](/es/concepts/models)
-- Configuración de autenticación del proveedor: [Cómo comenzar](/es/start/getting-started)
+- Configuración de autenticación del proveedor: [Primeros pasos](/es/start/getting-started)
 
 ## Comandos comunes
 
@@ -25,15 +25,15 @@ openclaw models set <model-or-alias>
 openclaw models scan
 ```
 
-`openclaw models status` muestra los valores predeterminados/reservas de respaldo (fallbacks) resueltos más un resumen de autenticación.
+`openclaw models status` muestra los valores predeterminados/resueltos más un resumen de autenticación.
 Cuando están disponibles las instantáneas de uso del proveedor, la sección de estado de OAuth/API-key incluye
 ventanas de uso del proveedor e instantáneas de cuota.
 Proveedores de ventana de uso actuales: Anthropic, GitHub Copilot, Gemini CLI, OpenAI
 Codex, MiniMax, Xiaomi y z.ai. La autenticación de uso proviene de enlaces específicos del proveedor
-cuando están disponibles; de lo contrario, OpenClaw recurre a coincidir con las credenciales
-OAuth/API-key de perfiles de autenticación, variables de entorno o configuración.
+cuando está disponible; de lo contrario, OpenClaw recurre a coincidir con las credenciales OAuth/API-key
+de perfiles de autenticación, variables de entorno o configuración.
 En la salida de `--json`, `auth.providers` es el resumen del proveedor consciente del entorno/configuración/almacenamiento,
-mientras que `auth.oauth` es solo el estado de salud del perfil de almacenamiento de autenticación.
+mientras que `auth.oauth` es solo el estado de salud del perfil del almacén de autenticación.
 Añada `--probe` para ejecutar sondas de autenticación en vivo contra cada perfil de proveedor configurado.
 Las sondas son solicitudes reales (pueden consumir tokens y activar límites de velocidad).
 Use `--agent <id>` para inspeccionar el estado de modelo/autenticación de un agente configurado. Cuando se omite,
@@ -134,6 +134,8 @@ openclaw models fallbacks list
 openclaw models auth add
 openclaw models auth list [--provider <id>] [--json]
 openclaw models auth login --provider <id>
+openclaw models auth login --provider openai --profile-id openai:work
+openclaw models auth paste-api-key --provider <id>
 openclaw models auth setup-token --provider <id>
 openclaw models auth paste-token
 ```
@@ -142,41 +144,52 @@ openclaw models auth paste-token
 
 `models auth list` enumera los perfiles de autenticación guardados para el agente seleccionado sin imprimir el token, la clave de API ni los materiales secretos de OAuth. Use `--provider <id>` para filtrar a un proveedor, como `openai-codex`, y `--json` para secuencias de comandos.
 
-`models auth login` ejecuta el flujo de autenticación (OAuth/API key) del complemento del proveedor. Use
+`models auth login` ejecuta el flujo de autenticación (OAuth/clave API) de un complemento de proveedor. Use
 `openclaw plugins list` para ver qué proveedores están instalados.
 Use `openclaw models auth --agent <id> <subcommand>` para escribir los resultados de autenticación en un
-agente configurado específico. La bandera principal `--agent` es respetada por
-`add`, `list`, `login`, `setup-token`, `paste-token` y
+agente configurado específico. El indicador principal `--agent` es respetado por
+`add`, `list`, `login`, `paste-api-key`, `setup-token`, `paste-token`, y
 `login-github-copilot`.
 
-Para modelos de OpenAI, `--provider openai` usa por defecto el inicio de sesión de cuenta ChatGPT/Codex.
+Para los modelos de OpenAI, `--provider openai` predetermina el inicio de sesión de la cuenta ChatGPT/Codex.
 Use `--method api-key` solo cuando desee agregar un perfil de clave API de OpenAI,
-generalmente como respaldo para los límites de suscripción de Codex. La ortografía
-heredada `--provider openai-codex` todavía funciona para scripts existentes.
+generalmente como respaldo para los límites de suscripción de Codex. La ortografía heredada
+`--provider openai-codex` todavía funciona para los scripts existentes.
 
 Ejemplos:
 
 ```bash
 openclaw models auth login --provider openai --set-default
 openclaw models auth login --provider openai --method api-key
+openclaw models auth paste-api-key --provider openai-codex
 openclaw models auth list --provider openai
 ```
 
 Notas:
 
-- `setup-token` y `paste-token` siguen siendo comandos genéricos de token para proveedores
+- `login` acepta `--profile-id <id>` para proveedores que admiten perfiles
+  con nombre durante el inicio de sesión. Use esto para mantener múltiples inicios de sesión para el mismo
+  proveedor separados.
+- `paste-api-key` acepta claves API generadas en otro lugar, solicita el valor
+  de la clave y la escribe en el id de perfil predeterminado `<provider>:manual` a menos que
+  pase `--profile-id`. En automatización, envíe la clave a través de stdin, por ejemplo
+  `printf "%s\n" "$OPENAI_API_KEY" | openclaw models auth paste-api-key --provider openai-codex`.
+- `setup-token` y `paste-token` siguen siendo comandos de token genéricos para proveedores
   que exponen métodos de autenticación de token.
-- `setup-token` requiere un TTY interactivo y ejecuta el método de autenticación
-  de token del proveedor (predeterminado al método `setup-token` de ese proveedor cuando expone
+- `setup-token` requiere un TTY interactivo y ejecuta el método de autenticación de token
+  del proveedor (predeterminado al método `setup-token` de ese proveedor cuando expone
   uno).
 - `paste-token` acepta una cadena de token generada en otro lugar o desde la automatización.
-- `paste-token` requiere `--provider`, solicita el valor del token y lo escribe
-  en el id de perfil predeterminado `<provider>:manual` a menos que pases
+- `paste-token` requiere `--provider`, solicita el valor del token y escribe
+  en el id de perfil predeterminado `<provider>:manual` a menos que pase
   `--profile-id`.
-- `paste-token --expires-in <duration>` almacena una expiración absoluta del token a partir de
-  una duración relativa como `365d` o `12h`.
-- Nota de Anthropic: El personal de Anthropic nos indicó que el uso de la CLI de Claude estilo OpenClaw está permitido nuevamente, por lo que OpenClaw trata la reutilización de la CLI de Claude y el uso de `claude -p` como sancionados para esta integración a menos que Anthropic publique una nueva política.
-- `setup-token` / `paste-token` de Anthropic siguen disponibles como una ruta de token de OpenClaw admitida, pero OpenClaw ahora prefiere la reutilización de la CLI de Claude y `claude -p` cuando están disponibles.
+- `paste-token --expires-in <duration>` almacena una caducidad absoluta del token a partir de una
+  duración relativa como `365d` o `12h`.
+- Para `openai-codex`, las claves de API de OpenAI y el material de token de ChatGPT/OAuth son
+  formas de autenticación diferentes. Use `paste-api-key` para `sk-...` claves de API de OpenAI y
+  `paste-token` solo para material de autenticación de token.
+- Nota de Anthropic: El personal de Anthropic nos informó que el uso de la CLI de Claude estilo OpenClaw está permitido nuevamente, por lo que OpenClaw trata el reuso de la CLI de Claude y el uso de `claude -p` como sancionados para esta integración a menos que Anthropic publique una nueva política.
+- Anthropic `setup-token` / `paste-token` permanecen disponibles como una ruta de token de OpenClaw compatible, pero OpenClaw ahora prefiere el reuso de la CLI de Claude y `claude -p` cuando están disponibles.
 
 ## Relacionado
 

@@ -7,7 +7,7 @@ title: "Référence de la configuration CLI"
 sidebarTitle: "CLI reference"
 ---
 
-Cette page constitue la référence complète pour `openclaw onboard`.
+Cette page est la référence complète pour `openclaw onboard`.
 Pour le guide court, consultez [Onboarding (CLI)](/fr/start/wizard).
 
 ## Action de l'assistant
@@ -45,8 +45,8 @@ Il n'installe ni ne modifie quoi que ce soit sur l'hôte distant.
   </Step>
   <Step title="Espace de travail">
     - `~/.openclaw/workspace` par défaut (configurable).
-    - Initialise les fichiers de l'espace de travail nécessaires pour le rituel de bootstrap de la première exécution.
-    - Disposition de l'espace de travail : [Agent workspace](/fr/concepts/agent-workspace).
+    - Initialise les fichiers de l'espace de travail nécessaires pour le rituel de démarrage initial.
+    - Structure de l'espace de travail : [Agent workspace](/fr/concepts/agent-workspace).
 
   </Step>
   <Step title="Gateway">
@@ -63,15 +63,15 @@ Il n'installe ni ne modifie quoi que ce soit sur l'hôte distant.
     - Les liaisons non bouclage local nécessitent toujours une authentification.
 
   </Step>
-  <Step title="Canaux"WhatsApp>
-    - [WhatsApp](/fr/channels/whatsappTelegram) : connexion QR facultative
-    - [Telegram](/fr/channels/telegramDiscord) : jeton de bot
-    - [Discord](/en/channels/discordGoogle Chat) : jeton de bot
-    - [Google Chat](/fr/channels/googlechatMattermost) : JSON de compte de service + audience webhook
-    - [Mattermost](/fr/channels/mattermostSignal) : jeton de bot + URL de base
-    - [Signal](/fr/channels/signal) : installation facultative de `signal-cli`iMessage + configuration du compte
-    - [iMessage](/fr/channels/imessage) : chemin du `imsg` CLI + accès à la base de données Messages ; utilisez un wrapper SSH lorsque le Gateway s'exécute hors-Mac
-    - Sécurité DM : la valeur par défaut est le jumelage. Le premier DM envoie un code ; approuvez via
+  <Step title="Canaux">
+    - [WhatsApp](/fr/channels/whatsapp) : connexion QR facultative
+    - [Telegram](/fr/channels/telegram) : jeton de bot
+    - [Discord](/fr/channels/discord) : jeton de bot
+    - [Google Chat](/fr/channels/googlechat) : compte de service JSON + audience webhook
+    - [Mattermost](/fr/channels/mattermost) : jeton de bot + URL de base
+    - [Signal](/fr/channels/signal) : installation facultative de `signal-cli` + configuration du compte
+    - [iMessage](/fr/channels/imessage) : chemin de la CLI `imsg` + accès à la base de données Messages ; utilisez un wrapper SSH lorsque le Gateway s'exécute hors Mac
+    - Sécurité des MD : le mode par défaut est l'appariement. Le premier MD envoie un code ; approuvez-le via
       `openclaw pairing approve <channel> <code>` ou utilisez des listes d'autorisation.
   </Step>
   <Step title="Installation du démon">
@@ -148,18 +148,18 @@ Ce que vous définissez :
     Définit `agents.defaults.model` sur `openai/gpt-5.5` lorsque le model n'est pas défini, `openai/*`, ou `openai-codex/*`.
 
   </Accordion>
-  <Accordion title="OAuthxAI (Grok) OAuth"OpenClaw>
-    Connexion via navigateur pour les comptes SuperGrok ou X Premium éligibles. C'est la
- méthode recommandée pour la plupart des utilisateurs xAI. OpenClaw stocke le profil d'authentification
- résultant pour les models Grok, `x_search`, et `code_execution`.
+  <Accordion title="OAuthOAuth xAI (Grok)">
+    Connexion par navigateur pour les comptes SuperGrok ou X Premium éligibles. C'est la
+    méthode xAI recommandée pour la plupart des utilisateurs. OpenClaw stocke le profil d'authentification
+    résultant pour les modèles Grok, Grok `web_search`, `x_search` et `code_execution`.
   </Accordion>
   <Accordion title="Code d'appareil xAI (Grok)"Docker>
     Connexion via navigateur adaptée aux accès distants avec un code court au lieu d'un rappel
  localhost. Utilisez ceci depuis SSH, Docker, ou des hôtes VPS.
   </Accordion>
   <Accordion title="APIClé API xAI (Grok)">
-    Demande `XAI_API_KEY`APIOAuth et configure xAI en tant que provider de model. Utilisez ceci
- lorsque vous souhaitez une clé de console API xAI au lieu d'un abonnement OAuth.
+    Demande `XAI_API_KEY`API et configure xAI en tant que fournisseur de modèle. Utilisez cette option
+    lorsque vous souhaitez une clé de console API xAI au lieu d'un OAuth par abonnement.
   </Accordion>
   <Accordion title="OpenCode">
     Demande `OPENCODE_API_KEY` (ou `OPENCODE_ZEN_API_KEY`) et vous permet de choisir le catalogue Zen ou Go.
@@ -168,8 +168,8 @@ Ce que vous définissez :
   <Accordion title="APIClé API (générique)">
     Stocke la clé pour vous.
   </Accordion>
-  <Accordion title="VercelGatewayVercel AI Gateway">
-    Demande `AI_GATEWAY_API_KEY`VercelGateway.
+  <Accordion title="Vercel AI Gateway">
+    Demande `AI_GATEWAY_API_KEY`.
     Plus de détails : [Vercel AI Gateway](/fr/providers/vercel-ai-gateway).
   </Accordion>
   <Accordion title="Cloudflare AI Gateway">
@@ -177,36 +177,36 @@ Ce que vous définissez :
     Plus de détails : [Cloudflare AI Gateway](/fr/providers/cloudflare-ai-gateway).
   </Accordion>
   <Accordion title="MiniMax">
-    La configuration est écrite automatiquement. L'hébergement par défaut est `MiniMax-M2.7` ; la configuration de la clé API utilise
+    La configuration est écrite automatiquement. L'hébergement par défaut est `MiniMax-M2.7` ; la configuration par clé API utilise
     `minimax/...`, et la configuration OAuth utilise `minimax-portal/...`.
     Plus de détails : [MiniMax](/fr/providers/minimax).
   </Accordion>
   <Accordion title="StepFun">
-    La configuration est écrite automatiquement pour StepFun standard ou Step Plan sur les points de terminaison Chine ou mondiaux.
+    La configuration est écrite automatiquement pour StepFun standard ou Step Plan sur les points de terminaison chinois ou mondiaux.
     Standard inclut actuellement `step-3.5-flash`, et Step Plan inclut également `step-3.5-flash-2603`.
     Plus de détails : [StepFun](/fr/providers/stepfun).
   </Accordion>
-  <Accordion title="Synthétique (compatible Anthropic)">
+  <Accordion title="Synthetic (compatible avec Anthropic)">
     Demande `SYNTHETIC_API_KEY`.
-    Plus de détails : [Synthétique](/fr/providers/synthetic).
+    Plus de détails : [Synthetic](/fr/providers/synthetic).
   </Accordion>
   <Accordion title="Ollama (Cloud and local open models)">
-    Demande d'abord `Cloud + Local`, `Cloud only` ou `Local only`.
+    Demande `Cloud + Local`, `Cloud only` ou `Local only` d'abord.
     `Cloud only` utilise `OLLAMA_API_KEY` avec `https://ollama.com`.
-    Les modes pris en charge par l'hôte demandent l'URL de base (par défaut `http://127.0.0.1:11434`), découvrent les modèles disponibles et suggèrent des valeurs par défaut.
-    `Cloud + Local` vérifie également si cet hôte Ollama est connecté pour l'accès cloud.
+    Les modes basés sur l'hôte demandent l'URL de base (par défaut `http://127.0.0.1:11434`), découvrent les modèles disponibles et suggèrent des valeurs par défaut.
+    `Cloud + Local` vérifie également si cet hôte Ollama est connecté pour l'accès au cloud.
     Plus de détails : [Ollama](/fr/providers/ollama).
   </Accordion>
-  <Accordion title="MoonshotMoonshot et Kimi Coding"MoonshotMoonshot>
+  <Accordion title="Moonshot et Kimi Coding">
     Les configs Moonshot (Kimi K2) et Kimi Coding sont écrites automatiquement.
     Plus de détails : [Moonshot AI (Kimi + Kimi Coding)](/fr/providers/moonshot).
   </Accordion>
-  <Accordion title="Fournisseur personnalisé"OpenAIAnthropicAPIAPIAPI>
+  <Accordion title="Custom provider"OpenAIAnthropicAPIAPIAPI>
     Fonctionne avec les points de terminaison compatibles OpenAI et Anthropic.
 
-    L'onboarding interactif prend en charge les mêmes options de stockage de clé API que les autres flux de clés API de fournisseur :
+    L'onboarding interactif prend en charge les mêmes options de stockage de clés API que les autres flux de clés API de fournisseur :
     - **Coller la clé API maintenant** (en texte clair)
-    - **Utiliser une référence secrète** (réf env ou réf de fournisseur configurée, avec validation préalable)
+    - **Utiliser une référence secrète** (réf d'env var ou réf de fournisseur configuré, avec validation préalable)
 
     Indicateurs non interactifs :
     - `--auth-choice custom-api-key`
@@ -215,7 +215,7 @@ Ce que vous définissez :
     - `--custom-api-key` (facultatif ; revient à `CUSTOM_API_KEY`)
     - `--custom-provider-id` (facultatif)
     - `--custom-compatibility <openai|anthropic>` (facultatif ; par défaut `openai`)
-    - `--custom-image-input` / `--custom-text-input` (facultatif ; remplace la capacité d'entrée du modèle déduite)
+    - `--custom-image-input` / `--custom-text-input` (facultatif ; remplace les capacités d'entrée du modèle déduites)
 
   </Accordion>
   <Accordion title="Ignorer">
@@ -227,9 +227,7 @@ Comportement du modèle :
 
 - Choisissez le modèle par défaut parmi les options détectées, ou saisissez le fournisseur et le modèle manuellement.
 - L'onboarding du fournisseur personnalisé déduit la prise en charge des images pour les ID de modèle courants et ne demande que lorsque le nom du modèle est inconnu.
-- Lorsque l'onboarding démarre à partir d'un choix d'auth de fournisseur, le sélecteur de modèle privilégie
-  automatiquement ce fournisseur. Pour Volcengine et BytePlus, la même préférence
-  correspond également à leurs variantes de plan de codage (`volcengine-plan/*`,
+- Lorsque l'onboarding démarre à partir d'un choix d'authentification de fournisseur, le sélecteur de modèle privilégie automatiquement ce fournisseur. Pour Volcengine et BytePlus, la même préférence correspond également à leurs variantes de plan de codage (`volcengine-plan/*`,
   `byteplus-plan/*`).
 - Si ce filtre de fournisseur préféré devait être vide, le sélecteur revient au
   catalogue complet au lieu de n'afficher aucun modèle.
@@ -237,25 +235,25 @@ Comportement du modèle :
 
 Chemins des identifiants et des profils :
 
-- Profils d'authentification (clés d'API + OAuth) : `~/.openclaw/agents/<agentId>/agent/auth-profiles.json`
-- Importation héritée OAuth : `~/.openclaw/credentials/oauth.json`
+- Profils d'authentification (clés API + OAuth) : APIOAuth`~/.openclaw/agents/<agentId>/agent/auth-profiles.json`
+- Importation OAuth héritée : OAuth`~/.openclaw/credentials/oauth.json`
 
 Mode de stockage des identifiants :
 
 - Le comportement d'intégration par défaut conserve les clés API en tant que valeurs en texte brut dans les profils d'authentification.
-- `--secret-input-mode ref` active le mode de référence au lieu du stockage de clé en texte brut.
+- `--secret-input-mode ref` active le mode de référence au lieu du stockage de clé en texte clair.
   Dans la configuration interactive, vous pouvez choisir :
-  - réf. de variable d'environnement (par exemple `keyRef: { source: "env", provider: "default", id: "OPENAI_API_KEY" }`)
-  - réf. de provider configuré (`file` ou `exec`) avec l'alias + l'ID du provider
+  - référence de variable d'environnement (par exemple `keyRef: { source: "env", provider: "default", id: "OPENAI_API_KEY" }`)
+  - référence de fournisseur configurée (`file` ou `exec`) avec l'alias et l'ID du fournisseur
 - Le mode référence interactif exécute une validation préliminaire rapide avant l'enregistrement.
   - Références d'env : valide le nom de la variable + la valeur non vide dans l'environnement d'intégration actuel.
   - Références de provider : valide la configuration du provider et résout l'ID demandé.
   - Si la validation préliminaire échoue, l'intégration affiche l'erreur et vous permet de réessayer.
 - En mode non interactif, `--secret-input-mode ref` est basé uniquement sur les variables d'environnement.
   - Définissez la variable d'environnement du provider dans l'environnement du processus d'intégration.
-  - Les indicateurs de clé en ligne (par exemple `--openai-api-key`) exigent que cette variable d'environnement soit définie ; sinon, l'intégration échoue rapidement.
-  - Pour les providers personnalisés, le mode non interactif `ref` stocke `models.providers.<id>.apiKey` en tant que `{ source: "env", provider: "default", id: "CUSTOM_API_KEY" }`.
-  - Dans ce cas de provider personnalisé, `--custom-api-key` exige que `CUSTOM_API_KEY` soit défini ; sinon, l'intégration échoue rapidement.
+  - Les indicateurs de clé en ligne (par exemple `--openai-api-key`) nécessitent que cette variable d'environnement soit définie ; sinon, l'onboarding échoue rapidement.
+  - Pour les fournisseurs personnalisés, le mode non interactif `ref` stocke `models.providers.<id>.apiKey` en tant que `{ source: "env", provider: "default", id: "CUSTOM_API_KEY" }`.
+  - Dans ce cas de fournisseur personnalisé, `--custom-api-key` exige que `CUSTOM_API_KEY` soit défini ; sinon, l'onboarding échoue rapidement.
 - Les identifiants d'authentification Gateway prennent en charge les choix de texte brut et SecretRef dans la configuration interactive :
   - Mode Jeton : **Générer/stocker le jeton en texte brut** (par défaut) ou **Utiliser SecretRef**.
   - Mode Mot de passe : texte brut ou SecretRef.
@@ -263,10 +261,10 @@ Mode de stockage des identifiants :
 - Les configurations existantes en texte brut continuent de fonctionner sans modification.
 
 <Note>
-Astuce pour les serveurs et sans interface (headless) : complétez OAuth sur une machine disposant d'un navigateur, puis copiez
+Astuce pour mode headless et serveur : terminez OAuth sur une machine dotée d'un navigateur, puis copiez
 le `auth-profiles.json` de cet agent (par exemple
-`~/.openclaw/agents/<agentId>/agent/auth-profiles.json`, ou le chemin correspondant
-`$OPENCLAW_STATE_DIR/...`) vers l'hôte de la passerelle. `credentials/oauth.json`
+`~/.openclaw/agents/<agentId>/agent/auth-profiles.json`, ou le chemin
+`$OPENCLAW_STATE_DIR/...` correspondant) vers l'hôte de la passerelle. `credentials/oauth.json`
 n'est qu'une source d'importation héritée.
 </Note>
 
@@ -279,11 +277,11 @@ Champs typiques dans `~/.openclaw/openclaw.json` :
 - `agents.defaults.model` / `models.providers` (si Minimax est choisi)
 - `tools.profile` (l'onboarding local définit `"coding"` par défaut s'il n'est pas défini ; les valeurs explicites existantes sont conservées)
 - `gateway.*` (mode, bind, auth, tailscale)
-- `session.dmScope` (l'onboarding local définit ceci à `per-channel-peer` par défaut s'il n'est pas défini ; les valeurs explicites existantes sont conservées)
+- `session.dmScope` (l'onboarding local définit `per-channel-peer` par défaut s'il n'est pas défini ; les valeurs explicites existantes sont conservées)
 - `channels.telegram.botToken`, `channels.discord.token`, `channels.matrix.*`, `channels.signal.*`, `channels.imessage.*`
 - Listes de canaux autorisés (Slack, Discord, Matrix, Microsoft Teams) lorsque vous acceptez lors des invites (les noms sont résolus en ID si possible)
 - `skills.install.nodeManager`
-  - L'option `setup --node-manager` accepte `npm`, `pnpm` ou `bun`.
+  - Le drapeau `setup --node-manager` accepte `npm`, `pnpm` ou `bun`.
   - La configuration manuelle peut toujours définir `skills.install.nodeManager: "yarn"` ultérieurement.
 - `wizard.lastRunAt`
 - `wizard.lastRunVersion`
@@ -291,7 +289,7 @@ Champs typiques dans `~/.openclaw/openclaw.json` :
 - `wizard.lastRunCommand`
 - `wizard.lastRunMode`
 
-`openclaw agents add` écrit `agents.list[]` et l'optionnel `bindings`.
+`openclaw agents add` écrit `agents.list[]` et `bindings` facultatif.
 
 Les identifiants WhatsApp sont placés sous `~/.openclaw/credentials/whatsapp/<accountId>/`.
 Les sessions sont stockées sous `~/.openclaw/agents/<agentId>/sessions/`.
@@ -318,6 +316,6 @@ Comportement de la configuration Signal :
 
 ## Documentation connexe
 
-- Hub d'onboarding : [Onboarding (CLI)](/fr/start/wizard)
-- Automatisation et scripts : [Automatisation CLI](/fr/start/wizard-cli-automation)
+- Hub d'Onboarding : [Onboarding (CLI)](/fr/start/wizard)
+- Automatisation et scripts : [CLI Automation](/fr/start/wizard-cli-automation)
 - Référence des commandes : [`openclaw onboard`](/fr/cli/onboard)

@@ -56,7 +56,7 @@ title: "思考層級"
 ## 由代理程式應用
 
 - **嵌入式 Pi**：解析出的等級會傳遞給程序內的 Pi 代理程式執行時。
-- **Claude CLI 後端**：當使用 `claude-cli` 時，非關閉等級會作為 `--effort` 傳遞給 Claude Code；請參閱 [CLI backends](/zh-Hant/gateway/cli-backends)。
+- **Claude CLI 後端**：使用 `claude-cli` 時，非關閉層級會作為 `--effort` 傳遞給 Claude Code；請參閱 [CLI 後端](/zh-Hant/gateway/cli-backends)。
 
 ## 快速模式 (/fast)
 
@@ -84,57 +84,57 @@ title: "思考層級"
 - 內聯指令僅影響該訊息；否則會套用會話/全域預設值。
 - 傳送 `/verbose` (或 `/verbose:`) 且不帶參數，以查看目前的詳細層級。
 - 當啟用詳細模式時，發出結構化工具結果的代理程式 (Pi、其他 JSON 代理程式) 會將每個工具呼叫作為其自己的僅包含中繼資料的訊息傳回，並在可用時加上 `<emoji> <tool-name>: <arg>` 前綴。這些工具摘要會在每個工具啟動時立即傳送 (獨立氣泡)，而不是作為串流增量傳送。
-- 工具失敗摘要在正常模式下保持可見，但除非詳細層級為 `on` 或 `full`，否則會隱藏原始錯誤詳細資訊後綴。
-- 當 verbose 為 `full` 時，工具輸出也會在完成後轉發（單獨的氣泡，截斷為安全長度）。如果您在執行過程中切換 `/verbose on|full|off`，隨後的工具氣泡將遵循新設定。
-- `agents.defaults.toolProgressDetail` 控制著 `/verbose` 工具摘要和進度草稿工具行的形狀。使用 `"explain"`（預設）以獲得緊湊的標籤，例如 `🛠️ Exec: checking JS syntax`；當您也想要附加原始指令/細節以進行除錯時，請使用 `"raw"`。每個代理程式的 `agents.list[].toolProgressDetail` 會覆寫預設值。
+- 工具失敗摘要在正常模式下仍然可見，但除非 verbose 為 `full`，否則會隱藏原始錯誤詳細資訊後綴。
+- 當 verbose 為 `full` 時，工具輸出也會在完成後轉發（單獨的氣泡，截斷至安全長度）。如果您在執行過程中切換 `/verbose on|full|off`，隨後的工具氣泡將採用新設定。
+- `agents.defaults.toolProgressDetail` 控制著 `/verbose` 工具摘要和進度草稿工具行的形式。使用 `"explain"`（預設）以獲得緊湊的人類可讀標籤，例如 `🛠️ Exec: checking JS syntax`；當您還希望附加原始指令/詳細資訊以進行偵錯時，請使用 `"raw"`。針對每個代理的 `agents.list[].toolProgressDetail` 會覆寫預設值。
   - `explain`：`🛠️ Exec: check JS syntax for /tmp/app.js`
   - `raw`：`🛠️ Exec: check JS syntax for /tmp/app.js, node --check /tmp/app.js`
 
 ## 外掛程式追蹤指令 (/trace)
 
 - 層級：`on` | `off`（預設）。
-- 僅指令訊息會切換工作階段外掛程式追蹤輸出並回覆 `Plugin trace enabled.` / `Plugin trace disabled.`。
+- 僅包含指令的訊息會切換作業階段外掛程式追蹤輸出，並回覆 `Plugin trace enabled.` / `Plugin trace disabled.`。
 - 內聯指令僅影響該訊息；否則適用工作階段/全域預設值。
-- 發送 `/trace`（或 `/trace:`）且不帶參數，以查看目前的追蹤層級。
-- `/trace` 比 `/verbose` 更狹窄：它僅公開外掛程式擁有的追蹤/除錯行，例如 Active Memory 除錯摘要。
-- 追蹤行可以出現在 `/status` 中，並作為正常助理回覆之後的後續診斷訊息。
+- 發送不帶參數的 `/trace`（或 `/trace:`）以查看當前追蹤層級。
+- `/trace` 比 `/verbose` 範圍更窄：它僅顯示外掛程式擁有的追蹤/除錯行，例如 Active Memory 除錯摘要。
+- 追蹤行可以出現在 `/status` 中，以及作為正常助理回覆後的後續診斷訊息出現。
 
 ## 推理可見性 (/reasoning)
 
 - 層級：`on|off|stream`。
 - 僅指令訊息會切換是否在回覆中顯示思考區塊。
-- 啟用後，推理會作為以 `Thinking` 為前綴的**單獨訊息**發送。
-- `stream`（僅限 Telegram）：在生成回覆時將推理串流到 Telegram 草稿氣泡中，然後發送不含推理的最終答案。
+- 啟用後，推理會作為一條帶有 `Thinking` 前綴的**單獨訊息**發送。
+- `stream`（僅限 Telegram）：在生成回覆時將推理串流到 Telegram 草稿氣泡中，然後發送不包含推理的最終答案。
 - 別名：`/reason`。
-- 發送 `/reasoning`（或 `/reasoning:`）且不帶參數，以查看目前的推理層級。
-- 解析順序：內聯指令，然後是會話覆蓋，接著是每個代理的預設值（`agents.list[].reasoningDefault`），然後是全域預設值（`agents.defaults.reasoningDefault`），最後是後備值（`off`）。
+- 傳送 `/reasoning`（或 `/reasoning:`） 且不帶參數，以查看當前的推理層級。
+- 解析順序：行內指令 > 會話覆寫 > 每個代理的預設（`agents.list[].reasoningDefault`） > 全域預設（`agents.defaults.reasoningDefault`） > 後備（`off`）。
 
-格式錯誤的本地模型推理標籤會被保守地處理。已封閉的 `<think>...</think>` 區塊在正常回覆中保持隱藏，且在已可見文字之後未封閉的推理也會被隱藏。如果回覆完全被單一未封閉的開頭標籤包圍，且原本會傳送為空文字，OpenClaw 會移除格式錯誤的開頭標籤並傳送剩餘的文字。
+格式錯誤的本地模型推理標籤會以保守方式處理。已封閉的 `<think>...</think>` 區塊在一般回覆中保持隱藏，且在已顯示文字之後未封閉的推理內容也會被隱藏。如果回覆完全被單一未封閉的開啟標籤包裹，且原本會傳遞為空文字，OpenClaw 會移除該格式錯誤的開啟標籤並傳遞剩餘的文字。
 
 ## 相關
 
-- 提升模式文件位於 [Elevated mode](/zh-Hant/tools/elevated)。
+- 提升模式相關文件位於 [Elevated mode](/zh-Hant/tools/elevated)。
 
 ## 心跳
 
-- 心跳探測主體是已配置的心跳提示（預設：`Read HEARTBEAT.md if it exists (workspace context). Follow it strictly. Do not infer or repeat old tasks from prior chats. If nothing needs attention, reply HEARTBEAT_OK.`）。心跳訊息中的內聯指令照常應用（但避免從心跳更改會話預設值）。
-- 心跳傳遞預設僅包含最終載荷。若也要傳送單獨的 `Thinking` 訊息（如果有的話），請設定 `agents.defaults.heartbeat.includeReasoning: true` 或個別代理的 `agents.list[].heartbeat.includeReasoning: true`。
+- 心跳探測主體是設定的心跳提示（預設：`Read HEARTBEAT.md if it exists (workspace context). Follow it strictly. Do not infer or repeat old tasks from prior chats. If nothing needs attention, reply HEARTBEAT_OK.`）。心跳訊息中的行內指令照常生效（但請避免透過心跳變更會話預設值）。
+- 心跳傳遞預設僅包含最終的承載資料。若要同時傳送獨立的 `Thinking` 訊息（當有可用時），請設定 `agents.defaults.heartbeat.includeReasoning: true` 或每個代理的 `agents.list[].heartbeat.includeReasoning: true`。
 
 ## Web 聊天 UI
 
 - 當頁面載入時，Web 聊天的思考選擇器會反映來自傳入會話儲存/配置的會話已儲存層級。
-- 選擇另一個層級會透過 `sessions.patch` 立即寫入會話覆蓋；它不會等待下一次傳送，也不是一次性 `thinkingOnce` 覆蓋。
-- 第一個選項始終是清除覆蓋的選擇。當會話繼承非關閉的有效預設值時，它會顯示 `Inherited: <resolved level>`；當繼承的思考被停用時，則顯示 `Off`。
-- 明確的選擇器選項會標記為覆蓋，同時在存在時保留提供者標籤（例如，對於具有提供者標籤的 `max` 選項，顯示 `Override: maximum`）。
-- 選擇器使用閘道會話列/預設值傳回的 `thinkingLevels`，並將 `thinkingOptions` 保留為舊版標籤清單。瀏覽器 UI 不會維護自己的提供者正則表達式清單；外掛程式擁有特定模型的層級集。
-- `/think:<level>` 仍然有效並更新相同的儲存會話層級，因此聊天指令和選擇器保持同步。
+- 選擇另一個層級會透過 `sessions.patch` 立即寫入會話覆寫；它不會等待下一次傳送，也不是一次性的 `thinkingOnce` 覆寫。
+- 第一個選項永遠是清除覆寫的選項。它會顯示 `Inherited: <resolved level>`，當繼承的推理被停用時則包含 `Inherited: Off`。
+- 明確的選擇器選項使用其直接的層級標籤，同時在存在時保留提供者標籤（例如，針對由提供者標記的 `max` 選項顯示 `Maximum`）。
+- 選擇器使用閘道會話列/預設傳回的 `thinkingLevels`，並將 `thinkingOptions` 保留為傳統標籤清單。瀏覽器 UI 不維護自己的提供者正規表示式清單；外掛程式擁有特定模型的層級集合。
+- `/think:<level>` 仍然有效並更新相同的已儲存會話層級，因此聊天指令與選擇器保持同步。
 
 ## 提供者設定檔
 
-- 提供者外掛程式可以公開 `resolveThinkingProfile(ctx)` 來定義模型支援的層級和預設值。
-- 代理 Claude 模型的提供者外掛程式應重複使用 `openclaw/plugin-sdk/provider-model-shared` 中的 `resolveClaudeThinkingProfile(modelId)`，以便直接 Anthropic 和代理目錄保持一致。
-- 每個設定檔層級都有一個儲存的標準 `id`（`off`、`minimal`、`low`、`medium`、`high`、`xhigh`、`adaptive` 或 `max`），並且可能包含顯示 `label`。二元提供者使用 `{ id: "low", label: "on" }`。
-- 需要驗證明確思考覆寫的工具外掛程式應使用 `api.runtime.agent.resolveThinkingPolicy({ provider, model })` 加上 `api.runtime.agent.normalizeThinkingLevel(...)`；它們不應保留自己的提供者/模型層級清單。
-- 可以存取已設定自訂模型元資料的工具外掛程式可以將 `catalog` 傳遞到 `resolveThinkingPolicy` 中，以便 `compat.supportedReasoningEfforts` 的選擇加入反映在外掛程式端的驗證中。
-- 已發佈的舊版掛勾（`supportsXHighThinking`、`isBinaryThinking` 和 `resolveDefaultThinkingLevel`）保留為相容性轉接器，但新的自訂層級集應使用 `resolveThinkingProfile`。
-- Gateway 列/預設值公開 `thinkingLevels`、`thinkingOptions` 和 `thinkingDefault`，以便 ACP/聊天用戶端呈現與執行時期驗證使用的相同設定檔 ID 和標籤。
+- 提供者外掛程式可以公開 `resolveThinkingProfile(ctx)` 以定義模型支援的等級和預設值。
+- 代理 Claude 模型的提供者外掛程式應重複使用來自 `openclaw/plugin-sdk/provider-model-shared` 的 `resolveClaudeThinkingProfile(modelId)`，以便直接 Anthropic 和代理目錄保持一致。
+- 每個設定檔等級都有一個儲存的標準 `id`（`off`、`minimal`、`low`、`medium`、`high`、`xhigh`、`adaptive` 或 `max`），並且可能包含顯示 `label`。二元提供者使用 `{ id: "low", label: "on" }`。
+- 需要驗證明確思考覆寫的工具外掛程式應該使用 `api.runtime.agent.resolveThinkingPolicy({ provider, model })` 加上 `api.runtime.agent.normalizeThinkingLevel(...)`；它們不應保留自己的提供者/模型等級清單。
+- 可以存取已設定自訂模型中繼資料的工具外掛程式可以將 `catalog` 傳遞到 `resolveThinkingPolicy` 中，以便 `compat.supportedReasoningEfforts` 選用項反映在外掛程式端驗證中。
+- 已發佈的舊版掛鉤（`supportsXHighThinking`、`isBinaryThinking` 和 `resolveDefaultThinkingLevel`）保留為相容性配接器，但新的自訂等級集應該使用 `resolveThinkingProfile`。
+- Gateway 資料列/預設值公開 `thinkingLevels`、`thinkingOptions` 和 `thinkingDefault`，以便 ACP/聊天用戶端呈現與執行時期驗證使用的相同設定檔 ID 和標籤。

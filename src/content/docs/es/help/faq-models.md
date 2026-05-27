@@ -286,7 +286,7 @@ Preguntas y respuestas sobre modelos y perfiles de autenticación. Para la confi
 
   </Accordion>
 
-  <Accordion title="¿Cómo defino/sobrescribo los accesos directos de los modelos (alias)?">
+  <Accordion title="¿Cómo defino/anulo los accesos directos de modelo (alias)?">
     Los alias provienen de `agents.defaults.models.<modelId>.alias`. Ejemplo:
 
     ```json5
@@ -297,14 +297,13 @@ Preguntas y respuestas sobre modelos y perfiles de autenticación. Para la confi
           models: {
             "anthropic/claude-opus-4-6": { alias: "opus" },
             "anthropic/claude-sonnet-4-6": { alias: "sonnet" },
-            "anthropic/claude-haiku-4-5": { alias: "haiku" },
           },
         },
       },
     }
     ```
 
-    Entonces `/model sonnet` (o `/<alias>` cuando sea compatible) se resuelve en ese ID de modelo.
+    Entonces, `/model sonnet` (o `/<alias>` cuando sea compatible) se resuelve en ese ID de modelo.
 
   </Accordion>
 

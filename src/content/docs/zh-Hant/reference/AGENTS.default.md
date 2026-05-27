@@ -42,42 +42,44 @@ cp docs/reference/AGENTS.default.md ~/.openclaw/workspace/AGENTS.md
 
 - 不要將目錄或機密傾倒到聊天中。
 - 除非明確要求，否則不要執行破壞性指令。
-- 不要將部分/串流回覆發送到外部訊息表面（僅發送最終回覆）。
+- 在更改配置或排程器（例如 crontab、systemd 單元、nginx 配置或 shell rc 檔案）之前，請先檢查現有狀態，並預設保留/合併。
+- 不要將部分/串流回覆傳送到外部訊息表面（僅傳送最終回覆）。
 
-## 會話開始（必需）
+## Session start (required)
 
-- 閱讀 `SOUL.md`、`USER.md` 以及 `memory/` 中的今天和昨天。
-- 當存在時，閱讀 `MEMORY.md`。
-- 在回應之前執行此操作。
+- Read `SOUL.md`, `USER.md`, and today+yesterday in `memory/`.
+- Read `MEMORY.md` when present.
+- Do it before responding.
 
-## 靈魂（必需）
+## Soul (required)
 
-- `SOUL.md` 定義了身份、語氣和邊界。請保持其為最新狀態。
-- 如果您變更了 `SOUL.md`，請告知使用者。
-- 您在每個會話中都是一個全新的實例；連續性存在於這些檔案中。
+- `SOUL.md` defines identity, tone, and boundaries. Keep it current.
+- If you change `SOUL.md`, tell the user.
+- You are a fresh instance each session; continuity lives in these files.
 
-## 共享空間（推薦）
+## Shared spaces (recommended)
 
-- 您不是使用者的聲音；在群組聊天或公開頻道中請小心。
-- 不要分享私人資料、聯絡資訊或內部備註。
+- You're not the user's voice; be careful in group chats or public channels.
+- Don't share private data, contact info, or internal notes.
 
-## 記憶系統（推薦）
+## Memory system (recommended)
 
-- 每日日誌：`memory/YYYY-MM-DD.md`（如果需要，建立 `memory/`）。
-- 長期記憶：`MEMORY.md` 用於持久的事實、偏好和決策。
-- 小寫 `memory.md` 僅用於舊版修復輸入；請勿故意同時保留這兩個根檔案。
-- 會話開始時，閱讀今天 + 昨天 + 存在時的 `MEMORY.md`。
-- 擷取：決策、偏好、約束、未結事項。
-- 除非明確要求，否則避免記錄機密。
+- Daily log: `memory/YYYY-MM-DD.md` (create `memory/` if needed).
+- Long-term memory: `MEMORY.md` for durable facts, preferences, and decisions.
+- Lowercase `memory.md` is legacy repair input only; do not keep both root files on purpose.
+- On session start, read today + yesterday + `MEMORY.md` when present.
+- Before writing memory files, read them first; write only concrete updates, never empty placeholders.
+- Capture: decisions, preferences, constraints, open loops.
+- Avoid secrets unless explicitly requested.
 
-## 工具和技能
+## Tools and skills
 
-- 工具存在於技能中；當您需要時，請遵循每個技能的 `SKILL.md`。
-- 將特定於環境的筆記保留在 `TOOLS.md`（技能筆記）中。
+- Tools live in skills; follow each skill's `SKILL.md` when you need it.
+- Keep environment-specific notes in `TOOLS.md` (Notes for Skills).
 
-## 備份提示（推薦）
+## Backup tip (recommended)
 
-如果您將此工作區視為 Clawd 的「記憶」，請將其設為 git 儲存庫（最好為私有的），以便 `AGENTS.md` 和您的記憶檔案都能備份。
+If you treat this workspace as Clawd's "memory", make it a git repo (ideally private) so `AGENTS.md` and your memory files are backed up.
 
 ```bash
 cd ~/.openclaw/workspace
@@ -87,41 +89,41 @@ git commit -m "Add Clawd workspace"
 # Optional: add a private remote + push
 ```
 
-## OpenClaw 的功能
+## What OpenClaw does
 
-- 執行 WhatsApp 閘道 + Pi 編碼代理程式，讓助理可以讀取/寫入聊天記錄、擷取上下文，並透過主機 Mac 執行技能。
-- macOS 應用程式管理權限（螢幕錄製、通知、麥克風），並透過其內建的二進位檔公開 `openclaw` CLI。
-- 直接聊天預設會合併到代理程式的 `main` 工作階段中；群組則保持隔離為 `agent:<agentId>:<channel>:group:<id>` (房間/頻道：`agent:<agentId>:<channel>:channel:<id>`)；心跳訊號讓背景任務保持運作。
+- Runs WhatsApp gateway + Pi coding agent so the assistant can read/write chats, fetch context, and run skills via the host Mac.
+- macOS app manages permissions (screen recording, notifications, microphone) and exposes the `openclaw` CLI via its bundled binary.
+- 預設情況下，直接聊天會折疊至代理的 `main` 會話中；群組則保持隔離狀態，即 `agent:<agentId>:<channel>:group:<id>` (房間/頻道: `agent:<agentId>:<channel>:channel:<id>`)；心跳訊號可讓背景任務保持運作。
 
-## 核心技能（在 Settings → Skills 中啟用）
+## 核心技能 (在設定 → 技能中啟用)
 
 - **mcporter** - 用於管理外部技能後端的工具伺服器執行環境/CLI。
-- **Peekaboo** - 快速的 macOS 螢幕截圖，並可選擇進行 AI 視覺分析。
-- **camsnap** - 從 RTSP/ONVIF 監控攝影機擷取影格、片段或動作警報。
-- **oracle** - 準備好與 OpenAI 搭配使用的代理程式 CLI，具有工作階段重播和瀏覽器控制功能。
+- **Peekaboo** - 快速擷取 macOS 畫面，並可選擇進行 AI 視覺分析。
+- **camsnap** - 從 RTSP/ONVIF 監控攝影機擷取畫格、片段或動作警示。
+- **oracle** - 準備好用於 OpenAI 的代理 CLI，具備會話重播與瀏覽器控制功能。
 - **eightctl** - 從終端機控制您的睡眠。
-- **imsg** - 傳送、讀取、串流 iMessage 和 SMS。
+- **imsg** - 傳送、讀取、串流 iMessage 與 SMS。
 - **wacli** - WhatsApp CLI：同步、搜尋、傳送。
-- **discord** - Discord 操作：回應、貼圖、投票。使用 `user:<id>` 或 `channel:<id>` 目標（純數字 ID 會有歧義）。
+- **discord** - Discord 操作：回應、貼圖、投票。請使用 `user:<id>` 或 `channel:<id>` 目標 (純數字 ID 易生歧義)。
 - **gog** - Google Suite CLI：Gmail、日曆、雲端硬碟、聯絡人。
-- **spotify-player** - 終端機 Spotify 用戶端，用於搜尋/加入佇列/控制播放。
-- **sag** - ElevenLabs 語音，具備 mac 風格的 say UX；預設串流到喇叭。
-- **Sonos CLI** - 從腳本控制 Sonos 喇叭（探索/狀態/播放/音量/群組）。
-- **blucli** - 從腳本播放、分組和自動化 BluOS 播放器。
-- **OpenHue CLI** - Philips Hue 燈光控制，用於場景和自動化。
-- **OpenAI Whisper** - 本地語音轉文字，用於快速聽寫和語音信箱逐字稿。
-- **Gemini CLI** - 從終端機使用 Google Gemini 模型進行快速問答。
-- **agent-tools** - 用於自動化和輔助腳本的實用工具組。
+- **spotify-player** - 終端機 Spotify 客戶端，用於搜尋/加入佇列/控制播放。
+- **sag** - 具備 Mac 風格 say UX 的 ElevenLabs 語音功能；預設串流至揚聲器。
+- **Sonos CLI** - 從腳本控制 Sonos 揚聲器 (探索/狀態/播放/音量/分組)。
+- **blucli** - 從腳本播放、分組並自動化 BluOS 播放器。
+- **OpenHue CLI** - Philips Hue 燈光控制，適用於場景與自動化。
+- **OpenAI Whisper** - 本地語音轉文字，用於快速聽寫與語音信箱逐字稿。
+- **Gemini CLI** - 從終端機存取 Google Gemini 模型以進行快速問答。
+- **agent-tools** - 用於自動化與輔助腳本的實用工具組。
 
 ## 使用說明
 
-- 撰寫腳本時建議使用 `openclaw` CLI；mac 應用程式會處理權限。
-- 從 Skills 分頁執行安裝；如果二進位檔已存在，它會隱藏按鈕。
-- 保持啟用心跳，以便助理能夠排程提醒、監控收件匣並觸發相機擷取。
-- Canvas UI 以全螢幕模式運行並搭配原生覆蓋層。請避免在左上角/右上角/底部邊緣放置關鍵控制項；在佈局中加入明確的間距，並且不要依賴安全區域內插距。
-- 對於瀏覽器驅動的驗證，請使用 `openclaw browser` (分頁/狀態/擷圖) 並搭配 OpenClaw 管理的 Chrome 設定檔。
-- 對於 DOM 檢查，請使用 `openclaw browser eval|query|dom|snapshot` (當您需要機器輸出時，則使用 `--json`/`--out`)。
-- 對於互動操作，請使用 `openclaw browser click|type|hover|drag|select|upload|press|wait|navigate|back|evaluate|run` (點擊/輸入需要快照參照；針對 CSS 選擇器請使用 `evaluate`)。
+- 撰寫腳本時建議優先使用 `openclaw` CLI；Mac 應用程式會負責處理權限。
+- 請從「技能」分頁執行安裝；如果二進位檔案已存在，該按鈕將會隱藏。
+- 請保持啟用心跳訊號，以便助理能排程提醒、監控收件匣並觸發相機擷取。
+- Canvas UI 以全螢幕搭配原生覆蓋層執行。請避免將關鍵控制項放置在左上/右上/底部邊緣；請在版面配置中加入明確的間距，且勿依賴安全區域內縮。
+- 若需瀏覽器驅動的驗證，請搭配 OpenClaw 管理的 Chrome 設定檔使用 `openclaw browser` (分頁/狀態/截圖)。
+- 對於 DOM 檢查，請使用 `openclaw browser eval|query|dom|snapshot`（當您需要機器輸出時，請使用 `--json`/`--out`）。
+- 對於互動，請使用 `openclaw browser click|type|hover|drag|select|upload|press|wait|navigate|back|evaluate|run`（點擊/輸入需要快照引用；對於 CSS 選擇器，請使用 `evaluate`）。
 
 ## 相關
 

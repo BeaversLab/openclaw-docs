@@ -15,8 +15,8 @@ livraison programmatique.
 <Steps>
   <Step title="Exécuter un tour d'agent simple">
     ```bash
-    openclaw agent --message "What is the weather today?"
-    ```
+    openclaw agent --agent main --message "What is the weather today?"
+    ```Gateway
 
     Cela envoie le message via le Gateway et imprime la réponse.
 
@@ -32,6 +32,9 @@ livraison programmatique.
 
     # Reuse an existing session
     openclaw agent --session-id abc123 --message "Continue the task"
+
+    # Target an exact session key
+    openclaw agent --session-key agent:ops:incident-42 --message "Summarize status"
     ```
 
   </Step>
@@ -55,7 +58,8 @@ livraison programmatique.
 | ----------------------------- | ---------------------------------------------------------------------- |
 | `--message \<text\>`          | Message à envoyer (requis)                                             |
 | `--to \<dest\>`               | Dériver la clé de session à partir d'une cible (téléphone, id de chat) |
-| `--agent \<id\>`              | Ciblez un agent configuré (utilise sa session `main`)                  |
+| `--session-key \<key\>`       | Utiliser une clé de session explicite                                  |
+| `--agent \<id\>`              | Cibler un agent configuré (utilise sa session `main`)                  |
 | `--session-id \<id\>`         | Réutiliser une session existante par id                                |
 | `--local`                     | Forcer l'exécution locale intégrée (ignorer le Gateway)                |
 | `--deliver`                   | Envoyer la réponse à un channel de chat                                |
@@ -63,22 +67,31 @@ livraison programmatique.
 | `--reply-to \<target\>`       | Remplacement de la cible de livraison                                  |
 | `--reply-channel \<name\>`    | Remplacement du channel de livraison                                   |
 | `--reply-account \<id\>`      | Remplacement de l'id de compte de livraison                            |
-| `--thinking \<level\>`        | Définir le niveau de réflexion pour le profil de model sélectionné     |
-| `--verbose \<on\|full\|off\>` | Définir le niveau verbosité                                            |
+| `--thinking \<level\>`        | Définir le niveau de réflexion pour le profil de modèle sélectionné    |
+| `--verbose \<on\|full\|off\>` | Définir le niveau de verbosité                                         |
 | `--timeout \<seconds\>`       | Remplacer le délai d'expiration de l'agent                             |
 | `--json`                      | Sortie JSON structurée                                                 |
 
 ## Comportement
 
-- Par défaut, la CLI passe **par le Gateway**. Ajoutez `--local` pour forcer
-  le runtime embarqué sur la machine actuelle.
-- Si le Gateway est inaccessible, la CLI **revient** à l'exécution locale intégrée.
+- Par défaut, le CLI passe **par le Gateway**. Ajoutez CLIGateway`--local` pour forcer
+  l'exécution intégrée sur la machine actuelle.
+- Si le Gateway est inaccessible, le CLI **revient** à l'exécution locale intégrée.
 - Sélection de session : `--to` dérive la clé de session (les cibles de groupe/channel
-  préservent l'isolement ; les chats directs se réduisent à `main`).
-- Les flags de réflexion et de verbosité sont conservés dans le magasin de session.
-- Sortie : texte brut par défaut, ou `--json` pour une charge utile structurée + métadonnées.
-- Avec `--json --deliver`, le JSON inclut le statut de livraison pour les envois effectués, supprimés, partiels et échoués. Consultez
-  [JSON delivery status](/fr/cli/agent#json-delivery-status).
+  préservent l'isolement ; les chats directs s'effondrent vers `main`).
+- `--session-key` sélectionne une clé explicite. Les clés préfixées par agent doivent utiliser
+  `agent:<agent-id>:<session-key>`, et `--agent` doit correspondre à cet ID d'agent lorsque
+  les deux sont fournis. Les clés nues non-sentinelles sont limitées à `--agent` lorsque
+  fournies ; par exemple, `--agent ops --session-key incident-42` achemine vers
+  `agent:ops:incident-42`. Sans `--agent`, les clés nues non-sentinelles sont limitées
+  à l'agent par défaut configuré. Les chaînes littérales `global` et `unknown` restent
+  non limitées uniquement lorsqu'aucun `--agent` n'est fourni ; dans ce cas, le repli intégré
+  et la propriété du magasin utilisent l'agent par défaut configuré.
+- Les indicateurs de réflexion (thinking) et de mode verbeux (verbose) sont conservés dans le magasin de session.
+- Sortie : texte brut par défaut, ou `--json` pour la charge utile structurée + métadonnées.
+- Avec `--json --deliver`, le JSON inclut le statut de livraison pour les envois
+  envoyés, supprimés, partiels et échoués. Voir
+  [Statut de livraison JSON](/fr/cli/agent#json-delivery-status).
 
 ## Exemples
 
@@ -88,6 +101,12 @@ openclaw agent --to +15555550123 --message "Trace logs" --verbose on --json
 
 # Turn with thinking level
 openclaw agent --session-id 1234 --message "Summarize inbox" --thinking medium
+
+# Exact session key
+openclaw agent --session-key agent:ops:incident-42 --message "Summarize status"
+
+# Legacy key scoped to an agent
+openclaw agent --agent ops --session-key incident-42 --message "Summarize status"
 
 # Deliver to a different channel than the session
 openclaw agent --agent ops --message "Alert" --deliver --reply-channel telegram --reply-to "@admin"
@@ -106,6 +125,6 @@ openclaw agent --agent ops --message "Alert" --deliver --reply-channel telegram 
     Fonctionnement des clés de session et résolution de celles-ci par `--to`, `--agent` et `--session-id`.
   </Card>
   <Card title="Commandes slash" href="/fr/tools/slash-commands" icon="slash">
-    Catalogue de commandes natif utilisé dans les sessions d'agent.
+    Catalogue de commandes natives utilisé dans les sessions d'agent.
   </Card>
 </CardGroup>

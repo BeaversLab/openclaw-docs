@@ -8,12 +8,7 @@ title: "Generación de imágenes"
 sidebarTitle: "Generación de imágenes"
 ---
 
-La herramienta `image_generate` permite al agente crear y editar imágenes utilizando sus
-proveedores configurados. En las sesiones de chat, la generación de imágenes se ejecuta de forma asíncrona:
-OpenClaw registra una tarea en segundo plano, devuelve el id. de tarea inmediatamente y despierta
-al agente cuando el proveedor termina. El agente de finalización debe enviar las imágenes
-generadas a través de la herramienta `message`; OpenClaw no publica automáticamente una respuesta final
-privada como alternativa.
+La herramienta `image_generate` permite al agente crear y editar imágenes utilizando sus proveedores configurados. En las sesiones de chat, la generación de imágenes se ejecuta de forma asíncrona: OpenClaw registra una tarea en segundo plano, devuelve el id de la tarea inmediatamente y despierta al agente cuando el proveedor finaliza. El agente de finalización debe enviar las imágenes generadas a través de la herramienta `message`. Si la sesión solicitante está inactiva y aún faltan algunas imágenes generadas de la entrega de herramientas de mensajes, OpenClaw envía una reserva directa idempotente solo con las imágenes faltantes.
 
 <Note>La herramienta solo aparece cuando hay al menos un proveedor de generación de imágenes disponible. Si no ve `image_generate` en las herramientas de su agente, configure `agents.defaults.imageGenerationModel`, configure una clave de API del proveedor, o inicie sesión con OpenAI Codex OAuth.</Note>
 
@@ -208,8 +203,8 @@ de cada intento.
   <Accordion title="Las anulaciones de modelo por llamada son exactas">Una anulación de `model` por llamada intenta solo ese proveedor/modelo y no continúa con los proveedores primarios/de respaldo configurados o detectados automáticamente.</Accordion>
   <Accordion title="La detección automática es consciente de la autenticación">Un proveedor predeterminado solo entra en la lista de candidatos cuando OpenClaw puede autenticar realmente ese proveedor. Establezca `agents.defaults.mediaGenerationAutoProviderFallback: false` para usar solo entradas explícitas de `model`, `primary` y `fallbacks`.</Accordion>
   <Accordion title="Tiempos de espera">
-    Establezca `agents.defaults.imageGenerationModel.timeoutMs` para backends de imágenes lentos. Un parámetro de herramienta `timeoutMs` por llamada anula el predeterminado configurado. Los proveedores de imágenes alojados de Google, OpenRouter y xAI usan tiempos de espera predeterminados de 180 segundos; la generación de imágenes de Azure OpenAI usa 600 segundos. Las llamadas de herramientas
-    dinámicas de Codex usan un puente `image_generate` predeterminado de 120 segundos y respetan el mismo presupuesto de tiempo de espera cuando se configura, limitado por el máximo de 600000 ms del puente de herramientas dinámicas de OpenClaw.
+    Establezca `agents.defaults.imageGenerationModel.timeoutMs` para los backends de imágenes lentos. Un parámetro de herramienta `timeoutMs` por llamada anula el valor predeterminado configurado, y los valores predeterminados configurados anulan los valores predeterminados del proveedor creados por el complemento. Los proveedores de imágenes alojados de Google y OpenRouter usan valores
+    predeterminados de 180 segundos; la generación de imágenes de xAI y Azure OpenAI usa 600 segundos. Las llamadas a herramientas dinámicas de Codex usan un puente `image_generate` predeterminado de 120 segundos y respetan el mismo presupuesto de tiempo de espera cuando están configuradas, limitado por el máximo de puente de herramientas dinámicas de OpenClaw de 600000 ms.
   </Accordion>
   <Accordion title="Inspeccionar en tiempo de ejecución">Use `action: "list"` para inspeccionar los proveedores registrados actualmente, sus modelos predeterminados y sugerencias de variables de entorno de autenticación.</Accordion>
 </AccordionGroup>
@@ -232,31 +227,13 @@ ComfyUI admiten 1.
 
 <AccordionGroup>
   <Accordion title="OpenAI gpt-image-2 (y gpt-image-1.5)">
-    La generación de imágenes de OpenAI tiene como valor predeterminado `openai/gpt-image-2`. Si
-    se ha configurado un perfil OAuth de `openai-codex`, OpenClaw reutiliza el mismo
-    perfil OAuth utilizado por los modelos de chat de suscripción Codex y envía la
-    solicitud de imagen a través del backend de Codex Responses. Las URL base
-    heredadas de Codex, como `https://chatgpt.com/backend-api`, se canonizan a
-    `https://chatgpt.com/backend-api/codex` para las solicitudes de imagen. OpenClaw
-    **no** realiza una reserva silenciosa a `OPENAI_API_KEY` para esa solicitud -
-    para forzar el enrutamiento directo a la API de OpenAI Images, configure
-    `models.providers.openai` explícitamente con una clave de API, URL base personalizada
-    o punto de conexión de Azure.
+    La generación de imágenes de OpenAI tiene como valor predeterminado `openai/gpt-image-2`. Si se ha configurado un perfil OAuth de `openai-codex`, OpenClaw reutiliza el mismo perfil OAuth que utilizan los modelos de chat de suscripción Codex y envía la solicitud de imagen a través del backend de Respuestas Codex. Las URL base heredadas de Codex, como `https://chatgpt.com/backend-api`, se canonalizan a `https://chatgpt.com/backend-api/codex` para las solicitudes de imagen. OpenClaw **no** devuelve silenciosamente a `OPENAI_API_KEY` para esa solicitud; para forzar el enrutamiento directo a la API de Images de OpenAI, configure `models.providers.openai` explícitamente con una clave de API, una URL base personalizada o un punto final de Azure.
 
-    Los modelos `openai/gpt-image-1.5`, `openai/gpt-image-1` y
-    `openai/gpt-image-1-mini` todavía se pueden seleccionar explícitamente. Use
-    `gpt-image-1.5` para obtener una salida PNG/WebP con fondo transparente; la
-    API actual de `gpt-image-2` rechaza `background: "transparent"`.
+    Los modelos `openai/gpt-image-1.5`, `openai/gpt-image-1` y `openai/gpt-image-1-mini` todavía se pueden seleccionar explícitamente. Use `gpt-image-1.5` para obtener resultados PNG/WebP con fondo transparente; la API actual de `gpt-image-2` rechaza `background: "transparent"`.
 
-    `gpt-image-2` admite tanto la generación de texto a imagen como la
-    edición de imágenes de referencia a través de la misma herramienta `image_generate`.
-    OpenClaw reenvía `prompt`, `count`, `size`, `quality`, `outputFormat`
-    e imágenes de referencia a OpenAI. OpenAI **no** recibe
-    `aspectRatio` o `resolution` directamente; cuando es posible, OpenClaw las
-    asigna a un `size` admitido; de lo contrario, la herramienta las informa como
-    anulaciones ignoradas.
+    `gpt-image-2` admite tanto la generación de texto a imagen como la edición de imágenes de referencia a través de la misma herramienta `image_generate`. OpenClaw reenvía `prompt`, `count`, `size`, `quality`, `outputFormat` e imágenes de referencia a OpenAI. OpenAI **no** recibe `aspectRatio` o `resolution` directamente; cuando es posible, OpenClaw los mapea a un `size` admitido; de lo contrario, la herramienta los informa como anulaciones ignoradas.
 
-    Las opciones específicas de OpenAI se encuentran bajo el objeto `openai`:
+    Las opciones específicas de OpenAI se encuentran en el objeto `openai`:
 
     ```json
     {
@@ -271,20 +248,11 @@ ComfyUI admiten 1.
     }
     ```
 
-    `openai.background` acepta `transparent`, `opaque` o `auto`;
-    las salidas transparentes requieren `outputFormat` `png` o `webp` y un
-    modelo de imagen OpenAI con capacidad de transparencia. OpenClaw enruta las
-    solicitudes predeterminadas de fondo transparente de `gpt-image-2` a `gpt-image-1.5`.
-    `openai.outputCompression` se aplica a las salidas JPEG/WebP.
+    `openai.background` acepta `transparent`, `opaque` o `auto`; las salidas transparentes requieren `outputFormat` `png` o `webp` y un modelo de imagen de OpenAI con capacidad de transparencia. OpenClaw enruta las solicitudes de fondo transparente predeterminadas de `gpt-image-2` a `gpt-image-1.5`. `openai.outputCompression` se aplica a las salidas JPEG/WebP y se ignora para las salidas PNG.
 
-    La sugerencia `background` de nivel superior es neutral para el proveedor y actualmente se asigna
-    al mismo campo de solicitud `background` de OpenAI cuando se selecciona el proveedor OpenAI.
-    Los proveedores que no declaran compatibilidad con el fondo lo devuelven en
-    `ignoredOverrides` en lugar de recibir el parámetro no admitido.
+    La sugerencia `background` de nivel superior es neutral para el proveedor y actualmente se asigna al mismo campo de solicitud `background` de OpenAI cuando se selecciona el proveedor de OpenAI. Los proveedores que no declaran compatibilidad con el fondo lo devuelven en `ignoredOverrides` en lugar de recibir el parámetro no admitido.
 
-    Para enrutar la generación de imágenes de OpenAI a través de una implementación de
-    Azure OpenAI en lugar de `api.openai.com`, consulte
-    [Puntos de conexión de Azure OpenAI](/es/providers/openai#azure-openai-endpoints).
+    Para enrutar la generación de imágenes de OpenAI a través de una implementación de Azure OpenAI en lugar de `api.openai.com`, consulte [Puntos finales de Azure OpenAI](/es/providers/openai#azure-openai-endpoints).
 
   </Accordion>
   <Accordion title="Modelos de imagen de OpenRouter">

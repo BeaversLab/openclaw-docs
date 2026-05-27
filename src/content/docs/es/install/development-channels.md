@@ -40,15 +40,17 @@ método de instalación:
 - **`stable`** (instalaciones de git): verifica la última etiqueta git estable.
 - **`beta`** (instalaciones de git): prefiere la última etiqueta git beta, pero recurre a
   la última etiqueta git estable cuando beta falta o es anterior.
-- **`dev`**: asegura una copia de trabajo de git (por defecto `~/openclaw`, anular con
-  `OPENCLAW_GIT_DIR`), cambia a `main`, hace rebase en upstream, compila e
-  instala la CLI global desde esa copia.
+- **`dev`**: asegura una clonación de git (por defecto `~/openclaw`, o
+  `$OPENCLAW_HOME/openclaw` cuando se establece `OPENCLAW_HOME`; anular con
+  `OPENCLAW_GIT_DIR`), cambia a `main`, hace rebase sobre upstream, compila e
+  instala la CLI global desde esa clonación.
 
 <Tip>Si desea tener estable y dev en paralelo, mantenga dos clones y apunte su gateway al estable.</Tip>
 
 ## Targeting de versión o etiqueta única
 
-Use `--tag` para apuntar a un dist-tag, versión o especificación de paquete específico para una única actualización **sin** cambiar su canal persistente:
+Use `--tag` para apuntar a un dist-tag, versión o especificación de paquete específico para una única
+actualización **sin** cambiar su canal persistente:
 
 ```bash
 # Install a specific version
@@ -57,19 +59,30 @@ openclaw update --tag 2026.4.1-beta.1
 # Install from the beta dist-tag (one-off, does not persist)
 openclaw update --tag beta
 
-# Install from GitHub main branch (npm tarball)
-openclaw update --tag main
+# Switch to the moving GitHub main checkout
+openclaw update --channel dev
 
 # Install a specific npm package spec
 openclaw update --tag openclaw@2026.4.1-beta.1
+
+# Install from GitHub main once without persisting the channel
+openclaw update --tag main
 ```
 
 Notas:
 
-- `--tag` se aplica **solo a instalaciones de paquetes (npm)**. Las instalaciones de Git lo ignoran.
-- La etiqueta no se mantiene. Su próximo `openclaw update` usará su canal configurado como de costumbre.
-- Protección de degradación: si la versión de destino es anterior a su versión actual, OpenClaw solicita confirmación (omítala con `--yes`).
-- `--channel beta` es diferente de `--tag beta`: el flujo del canal puede volver a estable/último cuando falta o es antigua la beta, mientras que `--tag beta` apunta al dist-tag `beta` sin procesar para esa única ejecución.
+- `--tag` se aplica **solo a instalaciones de paquetes (npm)**. Las instalaciones de git lo ignoran.
+- La etiqueta no se persiste. Su próximo `openclaw update` usa su
+  canal configurado como de costumbre.
+- Para instalaciones de paquetes, OpenClaw preempaqueta las especificaciones de fuente de GitHub/git en un
+  archivo tar temporal antes de la instalación por etapas de npm. Use `--channel dev` o
+  `--install-method git --version main` cuando quiera la clonación `main`
+  en movimiento como su instalación persistente.
+- Protección de downgrade: si la versión objetivo es anterior a su versión actual,
+  OpenClaw solicita confirmación (omita con `--yes`).
+- `--channel beta` es diferente de `--tag beta`: el flujo del canal puede retroceder
+  a stable/latest cuando beta falta o es antiguo, mientras que `--tag beta` apunta al
+  dist-tag `beta` original para esa ejecución única.
 
 ## Ejecución en seco
 
@@ -82,13 +95,15 @@ openclaw update --tag 2026.4.1-beta.1 --dry-run
 openclaw update --dry-run --json
 ```
 
-La ejecución en seco muestra el canal efectivo, la versión de destino, las acciones planificadas y si se requeriría una confirmación de degradación.
+La ejecución en seco muestra el canal efectivo, la versión objetivo, las acciones planificadas y
+si se requeriría una confirmación de downgrade.
 
 ## Complementos y canales
 
-Cuando cambia de canal con `openclaw update`, OpenClaw también sincroniza las fuentes de los complementos:
+Cuando cambia de canal con `openclaw update`, OpenClaw también sincroniza las fuentes de los
+complementos:
 
-- `dev` prefiere complementos integrados desde la comprobación de git.
+- `dev` prefiere los complementos empaquetados de la clonación de git.
 - `stable` y `beta` restauran los paquetes de complementos instalados por npm.
 - Los complementos instalados por npm se actualizan después de que se completa la actualización del núcleo.
 
@@ -98,27 +113,28 @@ Cuando cambia de canal con `openclaw update`, OpenClaw también sincroniza las f
 openclaw update status
 ```
 
-Muestra el canal activo, el tipo de instalación (git o paquete), la versión actual y la fuente (config, etiqueta git, rama git o predeterminado).
+Muestra el canal activo, el tipo de instalación (git o paquete), la versión actual y
+la fuente (config, git tag, git branch o predeterminado).
 
-## Mejores prácticas de etiquetado
+## Buenas prácticas de etiquetado
 
-- Etiquete las versiones que desea que lleguen a las comprobaciones de git (`vYYYY.M.D` para estable, `vYYYY.M.D-beta.N` para beta).
+- Etiquete las versiones (releases) en las que desea que las extracciones de git se asienten (`vYYYY.M.D` para stable, `vYYYY.M.D-beta.N` para beta).
 - `vYYYY.M.D.beta.N` también se reconoce por compatibilidad, pero se prefiere `-beta.N`.
 - Las etiquetas `vYYYY.M.D-<patch>` heredadas aún se reconocen como estables (no beta).
 - Mantenga las etiquetas inmutables: nunca mueva ni reutilice una etiqueta.
-- Los dist-tags de npm siguen siendo la fuente de verdad para las instalaciones de npm:
+- Las dist-tags de npm siguen siendo la fuente de verdad para las instalaciones de npm:
   - `latest` -> estable
-  - `beta` -> compilación candidata o compilación estable con prioridad beta
-  - `dev` -> instantánea principal (opcional)
+  - `beta` -> compilación candidata o compilación estable beta-first
+  - `dev` -> instantánea de main (opcional)
 
-## Disponibilidad de la app macOS
+## Disponibilidad de la aplicación macOS
 
-Las compilaciones beta y dev pueden **no** incluir una versión de la aplicación de macOS. Eso está bien:
+Las compilaciones beta y dev pueden **no** incluir una versión de la aplicación macOS. Esto está bien:
 
-- La etiqueta de git y la etiqueta de distribución de npm aún se pueden publicar.
-- Indique "no hay compilación de macOS para esta beta" en las notas de la versión o el registro de cambios.
+- La etiqueta de git y la dist-tag de npm aún se pueden publicar.
+- Indique "no macOS build for this beta" en las notas de la versión o el registro de cambios.
 
 ## Relacionado
 
 - [Actualización](/es/install/updating)
-- [Aspectos internos del instalador](/es/install/installer)
+- [Interno del instalador](/es/install/installer)

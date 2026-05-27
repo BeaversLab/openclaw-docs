@@ -51,7 +51,7 @@ OpenClaw 將影片生成視為三種執行時模式：
 1. OpenClaw 會將請求提交給提供者，並立即傳回任務 ID。
 2. 提供者會在背景處理工作（通常為 30 秒到數分鐘，視提供者和解析度而定；緩慢的佇列支援提供者可能執行到設定的逾時時間）。
 3. 當影片準備好時，OpenClaw 會透過內部完成事件喚醒同一個工作階段。
-4. 代理會通知使用者並透過訊息工具附加完成的影片。如果完成代理僅撰寫私人最終回覆，OpenClaw 將不會自動發布影片作為後備方案。
+4. 代理會告知使用者並透過訊息工具附加已完成的影片。如果請求者會話處於非活動狀態，且部分生成的影片仍透過訊息工具傳遞時遺失，OpenClaw 會傳送一個等冪的直接回退，其中僅包含遺失的影片。
 
 當工作正在進行時，同一工作階段中重複的 `video_generate` 呼叫會傳回目前的任務狀態，而不是開始另一個生成作業。請使用 `openclaw tasks list` 或 `openclaw tasks show <taskId>` 從 CLI 檢查進度。
 
@@ -107,22 +107,22 @@ openclaw tasks cancel <taskId>
 
 由 `video_generate`、合約測試和共用即時掃描使用的顯式模式合約：
 
-| 供應商     | `generate` | `imageToVideo` | `videoToVideo` | 目前的共用即時通道                                                                                          |
-| ---------- | :--------: | :------------: | :------------: | ----------------------------------------------------------------------------------------------------------- |
-| Alibaba    |     ✓      |       ✓        |       ✓        | `generate`、`imageToVideo`；已跳過 `videoToVideo`，因為此供應商需要遠端 `http(s)` 影片 URL                  |
-| BytePlus   |     ✓      |       ✓        |       -        | `generate`、`imageToVideo`                                                                                  |
-| ComfyUI    |     ✓      |       ✓        |       -        | 不在共用掃描中；特定工作流程的覆蓋範圍位於 Comfy 測試中                                                     |
-| DeepInfra  |     ✓      |       -        |       -        | `generate`；原生 DeepInfra 影片架構在綑綁合約中為文字生成影片                                               |
-| fal        |     ✓      |       ✓        |       ✓        | `generate`、`imageToVideo`；僅在使用 Seedance 參考生成影片時 `videoToVideo`                                 |
-| Google     |     ✓      |       ✓        |       ✓        | `generate`、`imageToVideo`；已跳過共用 `videoToVideo`，因為目前的緩衝區支援 Gemini/Veo 掃描不接受該輸入     |
-| MiniMax    |     ✓      |       ✓        |       -        | `generate`、`imageToVideo`                                                                                  |
-| OpenAI     |     ✓      |       ✓        |       ✓        | `generate`、`imageToVideo`；已跳過共用 `videoToVideo`，因為此組織/輸入路徑目前需要供應商端的重繪/混音存取權 |
-| OpenRouter |     ✓      |       ✓        |       -        | `generate`, `imageToVideo`                                                                                  |
-| Qwen       |     ✓      |       ✓        |       ✓        | `generate`, `imageToVideo`；由於此供應商需要遠端 `http(s)` 影片 URL，因此跳過 `videoToVideo`                |
-| Runway     |     ✓      |       ✓        |       ✓        | `generate`, `imageToVideo`；`videoToVideo` 僅在選取的模型為 `runway/gen4_aleph` 時執行                      |
-| Together   |     ✓      |       ✓        |       -        | `generate`, `imageToVideo`                                                                                  |
-| Vydra      |     ✓      |       ✓        |       -        | `generate`；由於套件的 `veo3` 僅支援文字且套件的 `kling` 需要遠端圖片 URL，因此跳過共用的 `imageToVideo`    |
-| xAI        |     ✓      |       ✓        |       ✓        | `generate`, `imageToVideo`；由於此供應商目前需要遠端 MP4 URL，因此跳過 `videoToVideo`                       |
+| 供應商     | `generate` | `imageToVideo` | `videoToVideo` | 目前的共用即時通道                                                                                       |
+| ---------- | :--------: | :------------: | :------------: | -------------------------------------------------------------------------------------------------------- |
+| Alibaba    |     ✓      |       ✓        |       ✓        | `generate`、`imageToVideo`；已跳過 `videoToVideo`，因為此供應商需要遠端 `http(s)` 影片 URL               |
+| BytePlus   |     ✓      |       ✓        |       -        | `generate`、`imageToVideo`                                                                               |
+| ComfyUI    |     ✓      |       ✓        |       -        | 不在共用掃描中；特定工作流程的覆蓋範圍位於 Comfy 測試中                                                  |
+| DeepInfra  |     ✓      |       -        |       -        | `generate`；原生 DeepInfra 影片架構在綑綁合約中為文字生成影片                                            |
+| fal        |     ✓      |       ✓        |       ✓        | `generate`、`imageToVideo`；僅在使用 Seedance 參考生成影片時 `videoToVideo`                              |
+| Google     |     ✓      |       ✓        |       ✓        | `generate`、`imageToVideo`；已跳過共用 `videoToVideo`，因為目前的緩衝區支援 Gemini/Veo 掃描不接受該輸入  |
+| MiniMax    |     ✓      |       ✓        |       -        | `generate`、`imageToVideo`                                                                               |
+| OpenAI     |     ✓      |       ✓        |       ✓        | `generate`、`imageToVideo`；已跳過共用 `videoToVideo`，因為此組織/輸入路徑目前需要提供者端影片編輯權限   |
+| OpenRouter |     ✓      |       ✓        |       -        | `generate`, `imageToVideo`                                                                               |
+| Qwen       |     ✓      |       ✓        |       ✓        | `generate`, `imageToVideo`；由於此供應商需要遠端 `http(s)` 影片 URL，因此跳過 `videoToVideo`             |
+| Runway     |     ✓      |       ✓        |       ✓        | `generate`, `imageToVideo`；`videoToVideo` 僅在選取的模型為 `runway/gen4_aleph` 時執行                   |
+| Together   |     ✓      |       ✓        |       -        | `generate`, `imageToVideo`                                                                               |
+| Vydra      |     ✓      |       ✓        |       -        | `generate`；由於套件的 `veo3` 僅支援文字且套件的 `kling` 需要遠端圖片 URL，因此跳過共用的 `imageToVideo` |
+| xAI        |     ✓      |       ✓        |       ✓        | `generate`, `imageToVideo`；由於此供應商目前需要遠端 MP4 URL，因此跳過 `videoToVideo`                    |
 
 ## Tool parameters
 
@@ -190,14 +190,14 @@ openclaw tasks cancel <taskId>
 ### 進階
 
 <ParamField path="action" type='"generate" | "status" | "list"' default="generate">
-  `"status"` 傳回目前的工作階段任務；`"list"` 檢查供應商。
+  `"status"` 會傳回目前的工作階段任務；`"list"` 則會檢視提供者。
 </ParamField>
-<ParamField path="model" type="string">供應商/模型覆寫（例如 `runway/gen4.5`）。</ParamField>
+<ParamField path="model" type="string">提供者/模型覆寫（例如 `runway/gen4.5`）。</ParamField>
 <ParamField path="filename" type="string">輸出檔名提示。</ParamField>
-<ParamField path="timeoutMs" type="number">選用的供應商操作逾時（毫秒）。若省略，OpenClaw 會在已設定時使用 `agents.defaults.videoGenerationModel.timeoutMs`。</ParamField>
+<ParamField path="timeoutMs" type="number">選用的提供者操作逾時時間（以毫秒為單位）。若省略，OpenClaw 會使用已設定的 `agents.defaults.videoGenerationModel.timeoutMs`，否則使用外掛作者編寫的提供者預設值（如果存在）。</ParamField>
 <ParamField path="providerOptions" type="object">
-  供應商專屬選項，以 JSON 物件形式呈現（例如 `{"seed": 42, "draft": true}`）。
-  宣告類型 Schema 的供應商會驗證金鑰和類型；未知的金鑰或類型不符會在後援時跳過該候選項。未宣告 Schema 的供應商會按原樣接收選項。執行 `video_generate action=list` 以查看各供應商接受的項目。
+  以 JSON 物件表示的提供者特定選項（例如 `{"seed": 42, "draft": true}`）。
+  宣告類型架構的提供者會驗證金鑰和類型；在回退期間，未知的金鑰或類型不符將跳過候選項。未宣告架構的提供者會按原樣接收選項。執行 `video_generate action=list` 以查看每個提供者接受的內容。
 </ParamField>
 
 <Note>並非所有供應商都支援所有參數。OpenClaw 會將持續時間正規化為最接近供應商支援的數值，並在後援供應商暴露不同的控制介面時重新映射轉譯後的幾何提示（例如尺寸與長寬比）。真正不支援的覆寫會盡力忽略，並在工具結果中回報為警告。硬體能力限制（例如過多的參考輸入）會在提交前失敗。工具結果會回報套用的設定；`details.normalization` 會擷取任何從請求到套用的轉譯。</Note>

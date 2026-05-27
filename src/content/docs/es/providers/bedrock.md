@@ -21,12 +21,12 @@ Elija su método de autenticación preferido y siga los pasos de configuración.
 
 <Tabs>
   <Tab title="Claves de acceso / variables de entorno">
-    **Lo mejor para:** máquinas de desarrolladores, CI, o hosts donde gestiona las credenciales de AWS directamente.
+    **Ideal para:** máquinas de desarrolladores, CI o hosts donde gestionas las credenciales de AWS directamente.
 
     <Steps>
-      <Step title="Establezca las credenciales de AWS en el host de la puerta de enlace">
+      <Step title="Establecer las credenciales de AWS en el host de la pasarela">
         ```bash
-        export AWS_ACCESS_KEY_ID="AKIA..."
+        export AWS_ACCESS_KEY_ID="EXAMPLE_AWS_ACCESS_KEY_ID"
         export AWS_SECRET_ACCESS_KEY="..."
         export AWS_REGION="us-east-1"
         # Optional:
@@ -36,8 +36,8 @@ Elija su método de autenticación preferido y siga los pasos de configuración.
         export AWS_BEARER_TOKEN_BEDROCK="..."
         ```
       </Step>
-      <Step title="Añada un proveedor Bedrock y un modelo a su configuración">
-        No se requiere `apiKey`. Configure el proveedor con `auth: "aws-sdk"`:
+      <Step title="Añadir un proveedor y modelo de Bedrock a tu configuración">
+        No se requiere `apiKey`. Configura el proveedor con `auth: "aws-sdk"`:
 
         ```json5
         {
@@ -69,7 +69,7 @@ Elija su método de autenticación preferido y siga los pasos de configuración.
         }
         ```
       </Step>
-      <Step title="Verifique que los modelos estén disponibles">
+      <Step title="Verificar que los modelos están disponibles">
         ```bash
         openclaw models list
         ```
@@ -77,7 +77,7 @@ Elija su método de autenticación preferido y siga los pasos de configuración.
     </Steps>
 
     <Tip>
-    Con autenticación de marcadores de entorno (`AWS_ACCESS_KEY_ID`, `AWS_PROFILE`, o `AWS_BEARER_TOKEN_BEDROCK`), OpenClaw habilita automáticamente el proveedor implícito de Bedrock para el descubrimiento de modelos sin configuración adicional.
+    Con la autenticación mediante marcadores de entorno (`AWS_ACCESS_KEY_ID`, `AWS_PROFILE` o `AWS_BEARER_TOKEN_BEDROCK`), OpenClaw habilita automáticamente el proveedor implícito de Bedrock para el descubrimiento de modelos sin configuración adicional.
     </Tip>
 
   </Tab>

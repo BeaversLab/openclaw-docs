@@ -26,15 +26,14 @@ Para la búsqueda web, `openclaw configure --section web` le permite elegir un p
 y configurar sus credenciales. Algunos proveedores también muestran
 preguntas de seguimiento específicas del proveedor:
 
-- **Grok** puede ofrecer una configuración opcional de `x_search` con el mismo `XAI_API_KEY` y
-  permitirle elegir un modelo `x_search`.
+- **Grok** puede ofrecer una configuración opcional de `x_search` con el mismo perfil OAuth de xAI o clave de API y te permite elegir un modelo `x_search`.
 - **Kimi** puede solicitar la región de la API de Moonshot (`api.moonshot.ai` vs
   `api.moonshot.cn`) y el modelo de búsqueda web predeterminado de Kimi.
 
 Relacionado:
 
 - Referencia de configuración de Gateway: [Configuration](/es/gateway/configuration)
-- CLI de configuración: [Config](/es/cli/config)
+- CLI de Config: [Config](/es/cli/config)
 
 ## Opciones
 
@@ -54,10 +53,10 @@ Secciones disponibles:
 
 Notas:
 
-- El asistente completo y las secciones relacionadas con el gateway preguntan dónde se ejecuta el Gateway y actualizan `gateway.mode`. Los filtros de sección que no incluyen `gateway`, `daemon` o `health` van directamente a la configuración solicitada.
+- El asistente completo y las secciones relacionadas con el preguntan dónde se ejecuta el Gateway y actualizan `gateway.mode`. Los filtros de sección que no incluyen `gateway`, `daemon` o `health` van directamente a la configuración solicitada.
 - Después de escribir la configuración local, configure instala los complementos descargables seleccionados cuando la ruta de configuración elegida los requiere. La configuración remota del Gateway no instala paquetes de complementos locales.
 - Los servicios orientados a canales (Slack/Discord/Matrix/Microsoft Teams) solicitan listas de permitidos (allowlists) de canales/salas durante la configuración. Puede ingresar nombres o ID; el asistente resuelve los nombres a ID cuando es posible.
-- Si ejecuta el paso de instalación del demonio, la autenticación de token requiere un token, y si `gateway.auth.token` está gestionado por SecretRef, configure valida el SecretRef pero no persiste los valores de token en texto sin formato resueltos en los metadatos del entorno del servicio supervisor.
+- Si ejecutas el paso de instalación del demonio, la autenticación por token requiere un token y, si `gateway.auth.token` está gestionado por SecretRef, configure valida el SecretRef pero no persiste los valores de token en texto plano resueltos en los metadatos del entorno del servicio supervisor.
 - Si la autenticación por token requiere un token y el SecretRef del token configurado no está resuelto, configure bloquea la instalación del demonio con una guía de remediation accionable.
 - Si tanto `gateway.auth.token` como `gateway.auth.password` están configurados y `gateway.auth.mode` no está establecido, configure bloquea la instalación del demonio hasta que el modo se establezca explícitamente.
 
@@ -72,5 +71,5 @@ openclaw configure --section gateway --section daemon
 
 ## Relacionado
 
-- [Referencia de CLI](/es/cli)
+- [CLI reference](/es/cli)
 - [Configuration](/es/gateway/configuration)

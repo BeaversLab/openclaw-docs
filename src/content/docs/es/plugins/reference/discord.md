@@ -16,7 +16,7 @@ Añade la superficie del canal de Discord para enviar y recibir mensajes de Open
 
 ## Superficie
 
-canales: discord
+canales: discord; contratos: meetingNotesSourceProviders
 
 ## Documentos relacionados
 

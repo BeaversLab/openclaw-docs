@@ -7,7 +7,7 @@ read_when:
 title: "橋接協議"
 ---
 
-<Warning>TCP 橋接器已被**移除**。目前的 OpenClaw 建置版本不包含橋接器監聽器，且 `bridge.*` 設定金鑰已不在架構中。此頁面僅供歷史參考。對於所有節點/操作員客戶端，請使用 [Gateway Protocol](/zh-Hant/gateway/protocol)。</Warning>
+<Warning>TCP 橋接已被**移除**。目前的 OpenClaw 建置版本不隨附橋接監聽器，且 `bridge.*` 設定金鑰已不再架構中。此頁面僅供歷史參考。請針對所有節點/操作員客戶端使用 [Gateway Protocol](/zh-Hant/gateway/protocol)。</Warning>
 
 ## 為何存在
 
@@ -58,27 +58,31 @@ Gateway → 客戶端：
 
 ## Exec 生命週期事件
 
-節點可以發出 `exec.finished` 或 `exec.denied` 事件以呈現 system.run 活動。
-這些會被對應到閘道中的系統事件。(舊版節點可能仍會發出 `exec.started`。)
+節點可以發出 `exec.finished` 事件，以呈現已完成的 `system.run` 活動。
+這些會對應至閘道中的系統事件。（舊版節點可能仍會發出 `exec.started`。）
+對於遭拒的 `system.run` 嘗試，節點可能會發出 `exec.denied`；閘道會
+將此事件接受為終止拒絕，且不會將系統事件加入佇列或喚醒代理程式工作。
 
 Payload 欄位（除非另有說明，皆為選填）：
 
-- `sessionKey` (必要)：接收系統事件的代理會話。
+- `sessionKey` (必要)：用於事件關聯的代理程式階段，且對於
+  `exec.finished`，則用於系統事件傳遞。
 - `runId`：用於分組的唯一執行 ID。
-- `command`：原始或格式化的指令字串。
+- `command`：原始或格式化的命令字串。
 - `exitCode`、`timedOut`、`success`、`output`：完成細節 (僅限已完成)。
-- `reason`：拒絕原因 (僅限已拒絕)。
+- `reason`：拒絕原因 (僅限遭拒)。
 
 ## 歷史 tailnet 使用方式
 
-- 將橋接綁定到 tailnet IP：`bridge.bind: "tailnet"` 於
-  `~/.openclaw/openclaw.json` 中（僅供歷史參考；`bridge.*` 已不再有效）。
+- 將橋接繫結至 tailnet IP：`bridge.bind: "tailnet"` 於
+  `~/.openclaw/openclaw.json` 中 (僅供歷史參考；`bridge.*` 已不再有效)。
 - 用戶端透過 MagicDNS 名稱或 tailnet IP 進行連線。
 - Bonjour **不會**跨越網路；必要時請使用手動主機/埠或廣域 DNS-SD。
 
 ## 版本控制
 
-該橋接為 **隱式 v1**（無最小/最大版本協商）。本節僅供歷史參考；目前的節點/操作員客戶端使用 WebSocket
+該橋接為**隱式 v1** (無最小/最大協商)。本節僅供
+歷史參考；目前的節點/操作員客戶端使用 WebSocket
 [Gateway Protocol](/zh-Hant/gateway/protocol)。
 
 ## 相關內容

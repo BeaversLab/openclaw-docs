@@ -365,47 +365,47 @@ Le cycle de vie d'exécution est présenté sous forme de messages système :
 
 - `Exec running` (uniquement si la commande dépasse le seuil d'avertissement d'exécution).
 - `Exec finished`.
-- `Exec denied`.
 
-Ceux-ci sont publiés dans la session de l'agent après que le nœud a signalé l'événement.
-Les approbations d'exécution hébergées sur la Gateway émettent les mêmes événements de cycle de vie lorsque la commande se termine (et éventuellement lorsqu'elle s'exécute plus longtemps que le seuil).
+Ces éléments sont publiés dans la session de l'agent après que le nœud a signalé l'événement.
+Les approbations d'exécution refusées sont finales : OpenClaw peut signaler le refus à l'opérateur ou via la route de discussion directe, mais il ne publie pas `Exec denied` dans la session de l'agent ni ne réveille le travail de l'agent.
+Les approbations d'exécution hébergées sur Gateway émettent les mêmes événements de cycle de vie lorsque la commande se termine (et éventuellement lorsqu'elle s'exécute plus longtemps que le seuil).
 Les exécutions soumises à approbation réutilisent l'identifiant d'approbation comme `runId` dans ces messages pour faciliter la corrélation.
 
-## Comportement en cas d'approbation refusée
+## Comportement en cas de refus d'approbation
 
-Lorsqu'une approbation d'exécution asynchrone est refusée, OpenClaw empêche l'agent de réutiliser la sortie de toute exécution antérieure de la même commande dans la session.
-Le motif du refus est transmis avec une directive explicite indiquant qu'aucune sortie de commande n'est disponible, ce qui empêche l'agent de prétendre qu'il y a une nouvelle sortie ou de répéter la commande refusée avec des résultats obsolètes d'une exécution réussie antérieure.
+Lorsqu'une approbation d'exécution asynchrone est refusée, OpenClaw traite la demande comme finale.
+Il peut afficher un refus concis à l'opérateur ou via la route de discussion directe, mais il n'envoie pas de directive de refus par le biais de la session de l'agent. Cela empêche une commande refusée de devenir un autre tour de model et empêche l'agent de réutiliser la sortie d'une exécution antérieure de la même commande.
 
 ## Implications
 
-- **`full`** est puissant ; privilégiez les listes d'autorisation lorsque cela est possible.
-- **`ask`** vous tient informé tout en permettant des approbations rapides.
+- **`full`** est puissant ; privilégiez les listes d'autorisation (allowlists) lorsque cela est possible.
+- **`ask`** vous maintient informé tout en permettant des approbations rapides.
 - Les listes d'autorisation par agent empêchent les approbations d'un agent de fuir vers d'autres.
-- Les approbations ne s'appliquent qu'aux requêtes d'exécution d'hôte provenant d'**expéditeurs autorisés**. Les expéditeurs non autorisés ne peuvent pas émettre `/exec`.
-- `/exec security=full` est une commodité au niveau de la session pour les opérateurs autorisés et ignore les approbations par conception. Pour bloquer fermement l'exécution sur l'hôte, définissez la sécurité des approbations sur `deny` ou refusez l'outil `exec` via la stratégie d'outil.
+- Les approbations ne s'appliquent qu'aux requêtes d'exécution sur l'hôte provenant d'**expéditeurs autorisés**. Les expéditeurs non autorisés ne peuvent pas émettre de `/exec`.
+- `/exec security=full` est une commodité au niveau de la session pour les opérateurs autorisés et ignore les approbations par conception. Pour bloquer fermement l'exécution sur l'hôte, définissez la sécurité des approbations sur `deny` ou refusez l'outil `exec` via la stratégie d'outils (tool policy).
 
 ## Connexes
 
 <CardGroup cols={2}>
-  <Card title="Exec approvals - avancé" href="/fr/tools/exec-approvals-advanced" icon="gear">
-    Bins sûrs, liaison d'interpréteur et transfert d'approbation vers le chat.
+  <Card title="Approbations d'exécution - avancé" href="/fr/tools/exec-approvals-advanced" icon="gear">
+    Bacs sûrs (safe bins), liaison de l'interpréteur et transfert des approbations vers la discussion.
   </Card>
-  <Card title="Exec tool" href="/fr/tools/exec" icon="terminal">
+  <Card title="Outil d'exécution" href="/fr/tools/exec" icon="terminal">
     Outil d'exécution de commandes shell.
   </Card>
-  <Card title="Elevated mode" href="/fr/tools/elevated" icon="shield-exclamation">
-    Chemin de rupture de vitre qui ignore également les approbations.
+  <Card title="Mode élevé" href="/fr/tools/elevated" icon="shield-exclamation">
+    Chemin de rupture qui contourne également les approbations.
   </Card>
   <Card title="Sandboxing" href="/fr/gateway/sandboxing" icon="box">
-    Modes de Sandbox et accès à l'espace de travail.
+    Modes de bac à sable et accès à l'espace de travail.
   </Card>
   <Card title="Sécurité" href="/fr/gateway/security" icon="lock">
     Modèle de sécurité et durcissement.
   </Card>
-  <Card title="Sandbox vs stratégie d'outil vs elevated" href="/fr/gateway/sandbox-vs-tool-policy-vs-elevated" icon="sliders">
+  <Card title="Bac à sable vs stratégie de tool vs élevé" href="/fr/gateway/sandbox-vs-tool-policy-vs-elevated" icon="sliders">
     Quand utiliser chaque contrôle.
   </Card>
   <Card title="Skills" href="/fr/tools/skills" icon="sparkles">
-    Comportement d'autorisation automatique basé sur les Skills.
+    Comportement d'autorisation automatique soutenu par des Skills.
   </Card>
 </CardGroup>

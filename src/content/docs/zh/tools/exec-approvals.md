@@ -356,42 +356,52 @@ CLI：CLI`openclaw approvals` 支持网关或节点编辑 - 请参阅 [Approvals
 
 - `Exec running`（仅当命令超过运行通知阈值时）。
 - `Exec finished`。
-- `Exec denied`。
 
-这些事件会在节点报告事件后发布到代理的会话中。当命令完成时（以及可选地，当运行时间超过阈值时），Gateway(网关)托管的 exec 审批会发出相同的生命周期事件。受审批限制的 exec 会在这些消息中复用审批 ID 作为 Gateway(网关)`runId` 以便于关联。
+这些内容会在节点报告事件后发布到代理的会话中。
+被拒绝的执行审批是终结性的：OpenClaw 可以将拒绝情况报告给
+操作员或直接聊天路由，但它不会将 OpenClaw`Exec denied`Gateway(网关) 发布回
+代理会话或唤醒代理工作。
+Gateway 托管的执行审批在命令完成时（以及可选地在运行时间超过阈值时）
+会发出相同的生命周期事件。
+受审批限制的执行会在这些消息中复用审批 id 作为 `runId`，
+以便轻松关联。
 
 ## 拒绝审批的行为
 
-当异步执行批准被拒绝时，OpenClaw 会阻止代理重用会话中同一命令的任何早期运行的输出。拒绝原因会附带明确指导，指示没有可用的命令输出，从而阻止代理声称有新输出或使用先前成功运行的陈旧结果重复被拒绝的命令。
+当异步执行审批被拒绝时，OpenClaw 将该请求视为终结性的。
+它可以向操作员或直接聊天路由显示简明的拒绝信息，但它
+不会通过代理会话发回拒绝指引。这样可以防止被拒绝的
+命令变成另一次模型轮次，并阻止代理复用
+同一命令早期运行的输出。
 
 ## 影响
 
-- **`full`** 功能强大；尽可能首选允许列表（allowlists）。
-- **`ask`** 让您保持知情，同时仍允许快速审批。
-- 针对每个代理的允许列表可防止一个代理的审批泄漏到其他代理。
-- 审批仅适用于来自**授权发送者**的主机执行请求。未经授权的发送者无法发出 `/exec`。
-- `/exec security=full` 是专为授权操作员提供的会话级便利功能，设计上会跳过审批。若要彻底阻止主机执行，请将审批安全性设置为 `deny` 或通过工具策略拒绝 `exec` 工具。
+- **`full`** 功能强大；如果可能，请优先使用允许列表。
+- **`ask`** 让您随时了解情况，同时仍然允许快速审批。
+- 每个代理的允许列表可以防止一个代理的审批泄露到其他代理。
+- 审批仅适用于来自**授权发送者**的主机执行请求。未经授权的发送者无法发布 `/exec`。
+- `/exec security=full` 是为授权操作员提供的会话级便利功能，设计上会跳过审批。若要彻底阻止主机执行，请将审批安全性设置为 `deny` 或通过工具策略拒绝 `exec` 工具。
 
-## 相关
+## 相关内容
 
 <CardGroup cols={2}>
   <Card title="Exec approvals - advanced" href="/zh/tools/exec-approvals-advanced" icon="gear">
-    安全二进制、解释器绑定以及将审批转发至聊天。
+    安全二进制文件、解释器绑定以及将审批转发到聊天。
   </Card>
   <Card title="Exec 工具" href="/zh/tools/exec" icon="terminal">
     Shell 命令执行工具。
   </Card>
-  <Card title="Elevated mode" href="/zh/tools/elevated" icon="shield-exclamation">
-    也会跳过审批的应急路径。
+  <Card title="提升模式" href="/zh/tools/elevated" icon="shield-exclamation">
+    紧急备用路径，同时跳过审批。
   </Card>
   <Card title="沙箱隔离" href="/zh/gateway/sandboxing" icon="box">
     沙箱模式和工作区访问。
   </Card>
-  <Card title="Security" href="/zh/gateway/security" icon="lock">
+  <Card title="安全" href="/zh/gateway/security" icon="lock">
     安全模型和加固。
   </Card>
-  <Card title="沙箱与工具策略与提升权限" href="/zh/gateway/sandbox-vs-tool-policy-vs-elevated" icon="sliders">
-    何时使用每种控制。
+  <Card title="沙箱 vs 工具策略 vs 提升" href="/zh/gateway/sandbox-vs-tool-policy-vs-elevated" icon="sliders">
+    何时使用每种控制手段。
   </Card>
   <Card title="Skills" href="/zh/tools/skills" icon="sparkles">
     基于 Skills 的自动允许行为。

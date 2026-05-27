@@ -68,22 +68,16 @@ OAuth 提供商通常会在登录/刷新期间生成一个**新的刷新令牌**
 ## Anthropic 旧版令牌兼容性
 
 <Warning>
-Anthropic 的公开 Claude Code 文档称，直接使用 Claude Code 仍保持在
-Claude 订阅限制内，且 Anthropic 员工告知我们 OpenClaw 风格的 Claude
-CLI 使用再次被允许。因此，除非 OpenClaw
-发布新政策，CLI 将 Claude Anthropic 复用和
-`claude -p` 使用视为经此集成许可的行为。
+Anthropic 的公开 Claude Code 文档表明，直接使用 Claude Code 仍保持在 Claude 订阅限额内，且 Anthropic 工作人员告诉我们，OpenClaw 风格的 Claude CLI 使用已获准许。因此，除非 OpenClaw 发布新政策，否则 CLI 将 Claude Anthropic 的重用和 `claude -p` 使用视为针对此集成已获批准。
 
-关于 Anthropic 当前的直接 Claude Code 计划文档，请参阅 [Using Claude Code
-with your Pro or Max
-plan](https://support.claude.com/en/articles/11145838-using-claude-code-with-your-pro-or-max-plan)
-和 [Using Claude Code with your Team or Enterprise
-plan](https://support.anthropic.com/en/articles/11845131-using-claude-code-with-your-team-or-enterprise-plan/)。
+关于 Anthropic 当前的直接 Claude Code 计划文档，请参阅 [使用 Pro 或 Max
+计划使用 Claude Code](https://support.claude.com/en/articles/11145838-using-claude-code-with-your-pro-or-max-plan)
+和 [使用 Team 或 Enterprise 计划使用 Claude Code](https://support.anthropic.com/en/articles/11845131-using-claude-code-with-your-team-or-enterprise-plan/)。
 
-如果您希望获得 OpenClaw 中的其他订阅式选项，请参阅 [OpenAI
+如果您希望在 OpenClaw 中使用其他订阅式选项，请参阅 [OpenAI
 Codex](/zh/providers/openai)、[Qwen Cloud Coding
 Plan](/zh/providers/qwen)、[MiniMax Coding Plan](/zh/providers/minimax)
-和 [Z.AI / GLM Coding Plan](/zh/providers/glm)。
+和 [Z.AI / GLM Coding Plan](/zh/providers/zai)。
 
 </Warning>
 

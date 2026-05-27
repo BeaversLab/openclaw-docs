@@ -52,7 +52,7 @@ OpenAI GPT-5 系列叠加层保持了核心执行规则的精简，并添加了
 - **安全性**：简短的护栏提醒，以避免寻求权力行为或绕过监督。
 - **Skills**（如果可用）：告知模型如何按需加载技能指令。
 - **OpenClaw 控制**：指示模型在配置/重启工作中优先使用 `gateway` 工具，并避免编造 CLI 命令。
-- **OpenClaw 自更新**：如何使用 `config.schema.lookup` 安全检查配置，使用 `config.patch` 修补配置，使用 `config.apply` 替换完整配置，以及仅在明确请求用户时运行 `update.run`。仅限所有者使用的 `gateway` 工具也会拒绝重写 `tools.exec.ask` / `tools.exec.security`，包括规范化为这些受保护执行路径的旧版 `tools.bash.*` 别名。
+- **OpenClaw 自更新**：如何使用 OpenClaw`config.schema.lookup` 安全地检查配置，使用 `config.patch` 修补配置，使用 `config.apply` 替换完整配置，并仅在明确用户请求时运行 `update.run`。面向代理的 `gateway` 工具也拒绝重写 `tools.exec.ask` / `tools.exec.security`，包括解析为这些受保护执行路径的旧版 `tools.bash.*` 别名。
 - **工作区**：工作目录 (`agents.defaults.workspace`)。
 - **文档**：OpenClaw 文档/源的本地路径以及何时读取它们。
 - **工作区文件（已注入）**：表示引导文件已包含在下方。

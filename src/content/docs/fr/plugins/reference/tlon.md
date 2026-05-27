@@ -16,7 +16,7 @@ Ajoute la surface du canal Tlon pour l'envoi et la réception de messages OpenCl
 
 ## Surface
 
-canaux : tlon ; contrats : outils ; compétences
+chaînes : tlon ; compétences
 
 ## Documentation connexe
 

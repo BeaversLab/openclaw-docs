@@ -64,16 +64,17 @@ export PEEKABOO_BRIDGE_SOCKET=/path/to/bridge.sock
 ## Sécurité et autorisations
 
 - Le pont valide les **signatures de code de l'appelant** ; une liste d'autorisation de TeamIDs est appliquée (TeamID de l'hôte Peekaboo + TeamID de l'application OpenClaw).
+- Privilégiez l'identité de pont/application signée par rapport à un runtime `node` générique pour l'Accessibilité. Accorder l'Accessibilité à `node` permet à tout package lancé par cet exécutable Node d'hériter de l'accès à l'automatisation de l'interface graphique ; voir [autorisations macOS](/fr/platforms/mac/permissions#accessibility-grants-for-node-and-cli-runtimes).
 - Les demandes expirent après environ 10 secondes.
-- Si des autorisations requises sont manquantes, le pont renvoie un message d'erreur clair au lieu de lancer les Réglages Système.
+- Si les autorisations requises sont manquantes, le pont renvoie un message d'erreur clair plutôt que de lancer les Réglages Système.
 
 ## Comportement des instantanés (automatisation)
 
-Les instantanés sont stockés en mémoire et expirent automatiquement après une courte période. Si vous avez besoin d'une rétention plus longue, capturez-les à nouveau depuis le client.
+Les instantanés sont stockés en mémoire et expirent automatiquement après une courte période. Si vous avez besoin d'une rétention plus longue, recapturez depuis le client.
 
 ## Dépannage
 
-- Si `peekaboo` signale que le « client du pont n'est pas autorisé », assurez-vous que le client est correctement signé ou exécutez l'hôte avec `PEEKABOO_ALLOW_UNSIGNED_SOCKET_CLIENTS=1` en mode **debug** uniquement.
+- Si `peekaboo` indique « bridge client is not authorized », assurez-vous que le client est correctement signé ou exécutez l'hôte avec `PEEKABOO_ALLOW_UNSIGNED_SOCKET_CLIENTS=1` uniquement en mode **debug**.
 - Si aucun hôte n'est trouvé, ouvrez l'une des applications hôtes (Peekaboo.app ou OpenClaw.app) et confirmez que les autorisations sont accordées.
 
 ## Connexes

@@ -476,23 +476,24 @@ Le Gateway conserve une copie de confiance du dernier état connu après chaque 
     ```
 
     - **Fichier unique** : remplace l'objet conteneur
-    - **Tableau de fichiers** : fusionné en profondeur dans l'ordre (le dernier gagne)
+    - **Tableau de fichiers** : fusionné en profondeur dans l'ordre (le dernier prime)
     - **Clés frères** : fusionnées après les inclusions (remplacent les valeurs incluses)
     - **Inclusions imbriquées** : prises en charge jusqu'à 10 niveaux de profondeur
-    - **Chemins relatifs** : résolus par rapport au fichier inclus
-    - **Écritures propriétaires d'OpenClaw** : lorsqu'une écriture ne modifie qu'une seule section de niveau supérieur
-      prise en charge par une inclusion de fichier unique telle que `plugins: { $include: "./plugins.json5" }`,
+    - **Chemins relatifs** : résolus par rapport au fichier d'inclusion
+    - **Format de chemin** : les chemins d'inclusion ne doivent pas contenir d'octets nuls et doivent être strictement plus courts que 4096 caractères avant et après résolution
+    - **Écritures détenues par OpenClaw** : lorsqu'une écriture ne modifie qu'une seule section de premier niveau
+      soutenue par une inclusion de fichier unique telle que `plugins: { $include: "./plugins.json5" }`,
       OpenClaw met à jour ce fichier inclus et laisse `openclaw.json` intact
-    - **Write-through non pris en charge** : les inclusions racines, les tableaux d'inclusions et les inclusions
-      avec des remplacements frères échouent de manière fermée pour les écritures propriétaires d'OpenClaw au lieu de
-      lisser la configuration
+    - **Écriture transparente non prise en charge** : les inclusions racines, les tableaux d'inclusions et les inclusions
+      avec des remplacements par des clés frères échouent en mode fermé pour les écritures détenues par OpenClaw au lieu de
+      aplatir la configuration
     - **Confinement** : les chemins `$include` doivent être résolus sous le répertoire contenant
       `openclaw.json`. Pour partager une arborescence entre plusieurs machines ou utilisateurs, définissez
       `OPENCLAW_INCLUDE_ROOTS` sur une liste de chemins (`:` sur POSIX, `;` sur Windows) de
       répertoires supplémentaires que les inclusions peuvent référencer. Les liens symboliques sont résolus
       et vérifiés à nouveau, un chemin qui vit lexicalement dans un répertoire de configuration mais dont
-      la cible réelle échappe à toutes les racines autorisées est donc toujours rejeté.
-    - **Gestion des erreurs** : erreurs claires pour les fichiers manquants, les erreurs d'analyse et les inclusions circulaires
+      la cible réelle s'échappe de chaque racine autorisée est donc toujours rejeté.
+    - **Gestion des erreurs** : erreurs claires pour les fichiers manquants, les erreurs d'analyse, les inclusions circulaires, le format de chemin invalide et la longueur excessive
 
   </Accordion>
 </AccordionGroup>

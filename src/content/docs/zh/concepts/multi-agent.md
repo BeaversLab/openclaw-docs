@@ -30,11 +30,11 @@ status: active
 
 <Warning>切勿跨代理重用 `agentDir`OpenClawOAuthOAuth（这会导致身份验证/会话冲突）。当代理 没有本地配置文件时，它们可以读取默认/主代理的身份验证配置文件，但 OpenClaw 不会将 OAuth 刷新令牌克隆到 辅助代理存储中。如果您需要独立的 OAuth 账户，请从该代理登录； 如果您手动复制凭据，请仅复制可移植的静态 `api_key` 或 `token` 配置文件。</Warning>
 
-Skills 会从每个代理的工作区以及 `~/.openclaw/skills` 等共享根目录加载，然后在配置时根据有效的代理 Skills 允许列表进行过滤。使用 `agents.defaults.skills` 作为共享基线，使用 `agents.list[].skills` 进行每个代理的替换。请参阅 [Skills: per-agent vs shared](/zh/tools/skills#per-agent-vs-shared-skills) 和 [Skills: agent skill allowlists](/zh/tools/skills#agent-skill-allowlists)。
+Skills 会从每个 agent 的工作区以及共享根目录（例如 `~/.openclaw/skills`）加载，然后在配置时根据有效的 agent Skills 允许列表进行过滤。使用 `agents.defaults.skills` 作为共享基线，使用 `agents.list[].skills` 进行每个 agent 的替换。请参阅 [Skills: per-agent vs shared](/zh/tools/skills#per-agent-vs-shared-skills) 和 [Skills: agent skill allowlists](/zh/tools/skills#agent-skill-allowlists)。
 
 Gateway 可以并排托管**一个代理**（默认）或**多个代理**。
 
-<Note>**工作区说明：** 每个代理的工作区是**默认 cwd**，而不是硬沙箱。相对路径在工作区内解析，但除非启用了沙箱隔离，否则绝对路径可以到达其他主机位置。请参阅 [沙箱隔离](/zh/gateway/sandboxing)。</Note>
+<Note>**Workspace note:** 每个 agent 的工作区是**默认 cwd**，而不是硬性沙箱。相对路径在工作区内解析，但绝对路径可以到达其他主机位置，除非启用了沙箱隔离（沙箱隔离）。请参阅 [沙箱隔离](/zh/gateway/sandboxing)。</Note>
 
 ## 路径（快速地图）
 
@@ -83,18 +83,18 @@ openclaw agents list --bindings
     每个代理都有自己的工作区，包含 `SOUL.md`、`AGENTS.md` 和可选的 `USER.md`，以及位于 `~/.openclaw/agents/<agentId>` 下的专用 `agentDir` 和会话存储。
 
   </Step>
-  <Step title="创建渠道账号">
-    在您偏好的渠道上为每个代理创建一个账号：
+  <Step title="创建渠道账号"DiscordTelegramWhatsApp>
+    在您偏好的渠道上为每个 agent 创建一个账号：
 
-    - Discord：每个代理一个机器人，启用消息内容意图（Message Content Intent），复制每个令牌（token）。
-    - Telegram：通过 BotFather 为每个代理创建一个机器人，复制每个令牌。
-    - WhatsApp：为每个账号关联每个电话号码。
+    - Discord：每个 agent 一个 bot，启用 Message Content Intent，复制每个 token。
+    - Telegram：通过 BotFather 为每个 agent 创建一个 bot，复制每个 token。
+    - WhatsApp：将每个电话号码链接到一个账号。
 
     ```bash
     openclaw channels login --channel whatsapp --account work
-    ```
+    ```Discord
 
-    请参阅渠道指南：[Discord](/zh/channels/discord)、[Telegram](/zh/channels/telegram)、[WhatsApp](/zh/channels/whatsapp)。
+    请参阅渠道指南：[Discord](/en/channels/discordTelegram)、[Telegram](/en/channels/telegramWhatsApp)、[WhatsApp](/en/channels/whatsapp)。
 
   </Step>
   <Step title="添加代理、账号和绑定">
@@ -194,7 +194,7 @@ openclaw agents list --bindings
 注意事项：
 
 - 私信访问控制是**每个 WhatsApp 账户的全局设置**（配对/允许列表），而不是针对每个代理的。
-- 对于共享群组，将群组绑定到一个代理或使用[广播群组](/zh/channels/broadcast-groups)。
+- 对于共享群组，请将群组绑定到一个 agent，或使用 [Broadcast groups](/zh/channels/broadcast-groups)。
 
 ## 路由规则（消息如何选择代理）
 
@@ -223,38 +223,39 @@ openclaw agents list --bindings
     - 如果一个绑定设置了多个匹配字段（例如 `peer` + `guildId`），则所有指定的字段都是必需的（`AND` 语义）。
 
   </Accordion>
-  <Accordion title="账号范围详情">
-    - 省略 `accountId` 的绑定仅匹配默认账号。
-    - 使用 `accountId: "*"`OpenClaw 作为跨所有账号的渠道范围回退。
-    - 如果您稍后为同一个代理添加了带有显式账号 ID 的相同绑定，OpenClaw 会将现有的仅渠道绑定升级为账号范围绑定，而不是复制它。
+  <Accordion title="Account-scope detail">
+    - 省略 `accountId` 的绑定仅匹配默认账号，不匹配所有账号。
+    - 使用 `accountId: "*"` 作为跨所有账号的渠道范围回退。
+    - 使用 `accountId: "<name>"`OpenClaw 来匹配特定账号。
+    - 如果您稍后使用显式账号 id 为同一 agent 添加相同的绑定，OpenClaw 会将现有的仅渠道绑定升级为账号范围绑定，而不是复制它。
 
   </Accordion>
 </AccordionGroup>
 
 ## 多个账号 / 电话号码
 
-支持 **多个账号** 的渠道（如 WhatsApp）使用 WhatsApp`accountId` 来标识每个登录。每个 `accountId` 可以路由到不同的代理，因此一台服务器可以承载多个电话号码而不会混淆会话。
+支持**多个账户**的渠道（例如 WhatsApp）使用 `accountId` 来标识每次登录。每个 `accountId` 都可以路由到不同的代理，因此一台服务器可以托管多个电话号码而不会混淆会话。
 
-如果希望在省略 `accountId` 时拥有渠道范围的默认账号，请设置 `channels.<channel>.defaultAccount`OpenClaw（可选）。如果未设置，OpenClaw 将回退到 `default`（如果存在），否则回退到第一个配置的账号 ID（已排序）。
+如果您希望在省略 `accountId` 时有一个全渠道的默认账户，请设置 `channels.<channel>.defaultAccount`（可选）。如果未设置，OpenClaw 将回退到 `default`（如果存在），否则回退到第一个配置的账户 id（已排序）。
 
 支持此模式的常见渠道包括：
 
-- `whatsapp`、`telegram`、`discord`、`slack`、`signal`、`imessage`
-- `irc`、`line`、`googlechat`、`mattermost`、`matrix`、`nextcloud-talk`
-- `zalo`、`zalouser`、`nostr`、`feishu`
+- `whatsapp`，`telegram`，`discord`，`slack`，`signal`，`imessage`
+- `irc`，`line`，`googlechat`，`mattermost`，`matrix`，`nextcloud-talk`
+- `zalo`，`zalouser`，`nostr`，`feishu`
 
 ## 概念
 
-- `agentId`：一个“大脑”（工作区、每代理身份认证、每代理会话存储）。
-- `accountId`WhatsApp：一个渠道账户实例（例如 WhatsApp 账户 `"personal"` 对比 `"biz"`）。
-- `binding`：通过 `(channel, accountId, peer)` 以及可选的公会/团队 ID 将传入消息路由到 `agentId`。
-- 直接聊天会折叠到 `agent:<agentId>:<mainKey>`（每代理的“主”会话；`session.mainKey`）。
+- `agentId`：一个“大脑”（工作区、每个代理的身份验证、每个代理的会话存储）。
+- `accountId`：一个渠道账户实例（例如 WhatsApp 账户 `"personal"` 对比 `"biz"`）。
+- `binding`：根据 `(channel, accountId, peer)` 以及可选的公会/团队 ID 将传入消息路由到 `agentId`。
+- 直接聊天会合并为 `agent:<agentId>:<mainKey>`（每个代理的“主”通道；`session.mainKey`）。
 
 ## 平台示例
 
 <AccordionGroup>
-  <Accordion title="Discord每个代理的 Discord 机器人"Discord>
-    每个 Discord 机器人账户映射到一个唯一的 `accountId`。将每个账户绑定到一个代理，并保持每个机器人的允许列表。
+  <Accordion title="每个代理的 Discord 机器人">
+    每个 Discord 机器人账户都映射到一个唯一的 `accountId`。将每个账户绑定到一个代理，并为每个机器人维护允许列表。
 
     ```json5
     {
@@ -302,7 +303,7 @@ openclaw agents list --bindings
     - 令牌位于 `channels.discord.accounts.<id>.token` 中（默认账户可以使用 `DISCORD_BOT_TOKEN`）。
 
   </Accordion>
-  <Accordion title="Telegram每个代理的 Telegram 机器人">
+  <Accordion title="每个 agent 的 Telegram 机器人">
     ```json5
     {
       agents: {
@@ -333,11 +334,16 @@ openclaw agents list --bindings
     }
     ```
 
-    - 使用 BotFather 为每个代理创建一个机器人并复制每个令牌。
-    - 令牌位于 `channels.telegram.accounts.<id>.botToken` 中（默认账户可以使用 `TELEGRAM_BOT_TOKEN`）。
+    - 使用 BotFather 为每个 agent 创建一个机器人，并复制每个 token。
+    - Token 存放在 `channels.telegram.accounts.<id>.botToken` 中（默认账户可以使用 `TELEGRAM_BOT_TOKEN`）。
+    - 对于同一个 Telegram 群组中的多个机器人，请邀请每个机器人并 @提及应该回答的机器人。
+    - 为每个群组机器人禁用 BotFather 的隐私模式，然后重新添加机器人，以便 Telegram 应用该设置。
+    - 允许使用 `channels.telegram.groups` 的群组，或者仅将 `groupPolicy: "open"` 用于受信任的群组部署。
+    - 将发送者用户 ID 放入 `groupAllowFrom` 中。群组和超级群组 ID 属于 `channels.telegram.groups`，而不属于 `groupAllowFrom`。
+    - 通过 `accountId` 进行绑定，以便每个机器人路由到其自己的 agent。
 
   </Accordion>
-  <Accordion title="WhatsApp每个代理的 WhatsApp 号码">
+  <Accordion title="每个 agent 的 WhatsApp 号码">
     在启动网关之前链接每个账户：
 
     ```bash
@@ -414,8 +420,8 @@ openclaw agents list --bindings
 ## 常见模式
 
 <Tabs>
-  <Tab title="WhatsAppTelegramWhatsApp 日常 + Telegram 深度工作"WhatsAppTelegram>
-    按渠道拆分：将 WhatsApp 路由到一个快速的日常代理，将 Telegram 路由到一个 Opus 代理。
+  <Tab title="WhatsApp 日常 + Telegram 深度工作">
+    按渠道拆分：将 WhatsApp 路由到一个快速的日常 agent，将 Telegram 路由到一个 Opus agent。
 
     ```json5
     {
@@ -436,20 +442,20 @@ openclaw agents list --bindings
         ],
       },
       bindings: [
-        { agentId: "chat", match: { channel: "whatsapp" } },
-        { agentId: "opus", match: { channel: "telegram" } },
+        { agentId: "chat", match: { channel: "whatsapp", accountId: "*" } },
+        { agentId: "opus", match: { channel: "telegram", accountId: "*" } },
       ],
     }
     ```
 
-    注意事项：
+    说明：
 
-    - 如果您在一个渠道下有多个账户，请在绑定中添加 `accountId`（例如 `{ channel: "whatsapp", accountId: "personal" }`）。
-    - 要在将其他对话保留在 chat 上的同时，将单个私信/组路由到 Opus，请为该对等方添加 `match.peer` 绑定；对等方匹配始终优先于全渠道规则。
+    - 这些示例使用 `accountId: "*"`，因此如果您稍后添加账户，绑定仍将有效。
+    - 要将单个 私信/群组路由到 Opus，同时将其余部分保留在聊天上，请为该对等方添加 `match.peer` 绑定；对等方匹配始终优先于全渠道规则。
 
   </Tab>
-  <Tab title="同一渠道，单个对等方使用 Opus"WhatsApp>
-    将 WhatsApp 保留在快速代理上，但将一个私信路由到 Opus：
+  <Tab title="相同渠道，一个对等方到 Opus">
+    将 WhatsApp 保留在快速 agent 上，但将一个 私信 路由到 Opus：
 
     ```json5
     {
@@ -472,18 +478,18 @@ openclaw agents list --bindings
       bindings: [
         {
           agentId: "opus",
-          match: { channel: "whatsapp", peer: { kind: "direct", id: "+15551234567" } },
+          match: { channel: "whatsapp", accountId: "*", peer: { kind: "direct", id: "+15551234567" } },
         },
-        { agentId: "chat", match: { channel: "whatsapp" } },
+        { agentId: "chat", match: { channel: "whatsapp", accountId: "*" } },
       ],
     }
     ```
 
-    对等方绑定始终优先，因此请将它们置于全渠道规则之上。
+    对等方绑定始终优先，因此请将它们放在全渠道规则之上。
 
   </Tab>
-  <Tab title="WhatsApp绑定到 WhatsApp 群组的家庭代理"WhatsApp>
-    将一个专用的家庭代理绑定到单个 WhatsApp 群组，并配置提及门控和更严格的工具策略：
+  <Tab title="绑定到 WhatsApp 群组的家庭代理">
+    将专用的家庭代理绑定到单个 WhatsApp 群组，并设置提及门控和更严格的工具策略：
 
     ```json5
     {
@@ -530,8 +536,8 @@ openclaw agents list --bindings
 
     注意事项：
 
-    - 工具允许/拒绝列表是 **tools**（工具），而不是 skills（技能）。如果技能需要运行二进制文件，请确保允许 `exec` 并且该二进制文件存在于沙箱中。
-    - 若要实施更严格的门控，请设置 `agents.list[].groupChat.mentionPatterns` 并为该渠道启用群组允许列表。
+    - 工具允许/拒绝列表指的是**工具**，而非技能。如果某个技能需要运行二进制文件，请确保允许 `exec` 并且该二进制文件存在于沙箱中。
+    - 为了进行更严格的门控，请设置 `agents.list[].groupChat.mentionPatterns` 并为渠道保持群组允许列表的启用状态。
 
   </Tab>
 </Tabs>
@@ -573,7 +579,7 @@ openclaw agents list --bindings
 }
 ```
 
-<Note>`setupCommand` 位于 `sandbox.docker` 之下，并在容器创建时运行一次。当解析范围为 `"shared"` 时，将忽略每个代理的 `sandbox.docker.*` 覆盖设置。</Note>
+<Note>`setupCommand` 位于 `sandbox.docker` 之下，并在容器创建时运行一次。当解析的作用域为 `"shared"` 时，将忽略每个代理的 `sandbox.docker.*` 覆盖设置。</Note>
 
 **优势：**
 
@@ -581,14 +587,14 @@ openclaw agents list --bindings
 - **资源控制**：将特定代理置于沙箱中，同时将其他代理保留在宿主机上。
 - **灵活策略**：每个代理拥有不同的权限。
 
-<Note>`tools.elevated` 是**全局的**且基于发送者的；无法按代理进行配置。如果您需要按代理的边界，请使用 `agents.list[].tools` 来拒绝 `exec`。对于群组定位，请使用 `agents.list[].groupChat.mentionPatterns`，以便 @mentions 能够清晰地映射到目标代理。</Note>
+<Note>`tools.elevated` 是**全局的**且基于发送者；它不能针对每个代理进行配置。如果您需要针对每个代理的边界，请使用 `agents.list[].tools` 来拒绝 `exec`。对于群组定位，请使用 `agents.list[].groupChat.mentionPatterns`，以便 @mentions 能清晰地映射到目标代理。</Note>
 
-有关详细示例，请参阅 [Multi-agent sandbox and tools](/zh/tools/multi-agent-sandbox-tools)。
+有关详细示例，请参阅[多代理沙箱和工具](/zh/tools/multi-agent-sandbox-tools)。
 
 ## 相关内容
 
-- [ACP agents](/zh/tools/acp-agents) — 运行外部编码工具
-- [Channel routing](/zh/channels/channel-routing) — 消息如何路由到代理
-- [Presence](/zh/concepts/presence) — 代理的状态和可用性
-- [Session](/zh/concepts/session) — 会话隔离和路由
-- [Sub-agents](/zh/tools/subagents) — 生成后台代理运行
+- [ACP 代理](/zh/tools/acp-agents) — 运行外部编码工具
+- [渠道路由](/zh/channels/channel-routing) — 消息如何路由到代理
+- [在线状态](/zh/concepts/presence) — 代理的在线状态和可用性
+- [会话](/zh/concepts/session) — 会话隔离和路由
+- [子代理](/zh/tools/subagents) — 生成后台代理运行

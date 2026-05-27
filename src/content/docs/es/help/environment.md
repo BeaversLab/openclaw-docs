@@ -64,9 +64,9 @@ lo admita:
 }
 ```
 
-Consulte [Gestión de secretos](/es/gateway/secrets) y la
-[superficie de credencial SecretRef](/es/reference/secretref-credential-surface) para obtener los
-campos admitidos.
+Consulte [Secrets Management](/es/gateway/secrets) y la
+[superficie de credenciales SecretRef](/es/reference/secretref-credential-surface) para
+los campos admitidos.
 
 ## Importación de entorno de Shell
 
@@ -96,19 +96,20 @@ OpenClaw también inyecta marcadores de contexto en los procesos secundarios gen
 - `OPENCLAW_SHELL=acp`: se establece para las generaciones de procesos de backend del runtime ACP (por ejemplo, `acpx`).
 - `OPENCLAW_SHELL=acp-client`: se establece para `openclaw acp client` cuando genera el proceso del puente ACP.
 - `OPENCLAW_SHELL=tui-local`: establecido para comandos de shell `!` de TUI local.
+- `OPENCLAW_CLI=1`: establecido para los procesos secundarios generados por el punto de entrada de la CLI.
 
-Estos son marcadores de tiempo de ejecución (no configuración de usuario requerida). Pueden usarse en la lógica de shell/perfil
+Estos son marcadores de tiempo de ejecución (no configuración de usuario requerida). Se pueden utilizar en la lógica de shell/perfil
 para aplicar reglas específicas del contexto.
 
-## Variables de entorno de la UI
+## Variables de entorno de la interfaz de usuario
 
-- `OPENCLAW_THEME=light`: fuerza la paleta de TUI clara cuando tu terminal tiene un fondo claro.
-- `OPENCLAW_THEME=dark`: fuerza la paleta de TUI oscura.
-- `COLORFGBG`: si tu terminal la exporta, OpenClaw usa la pista del color de fondo para elegir automáticamente la paleta de TUI.
+- `OPENCLAW_THEME=light`: fuerza la paleta TUI clara cuando su terminal tiene un fondo claro.
+- `OPENCLAW_THEME=dark`: fuerza la paleta TUI oscura.
+- `COLORFGBG`: si su terminal la exporta, OpenClaw utiliza la sugerencia de color de fondo para elegir automáticamente la paleta TUI.
 
 ## Sustitución de variables de entorno en la configuración
 
-Puedes referenciar variables de entorno directamente en los valores de cadena de configuración usando la sintaxis `${VAR_NAME}`:
+Puede hacer referencia a variables de entorno directamente en los valores de cadena de configuración utilizando la sintaxis `${VAR_NAME}`:
 
 ```json5
 {
@@ -122,42 +123,42 @@ Puedes referenciar variables de entorno directamente en los valores de cadena de
 }
 ```
 
-Consulta [Configuración: Sustitución de variables de entorno](/es/gateway/configuration-reference#env-var-substitution) para obtener todos los detalles.
+Consulte [Configuración: Sustitución de variables de entorno](/es/gateway/configuration-reference#env-var-substitution) para obtener detalles completos.
 
-## Referencias a secretos vs cadenas `${ENV}`
+## Referencias secretas vs cadenas `${ENV}`
 
-OpenClaw admite dos patrones basados en entorno:
+OpenClaw admite dos patrones controlados por variables de entorno:
 
-- Sustitución de cadenas `${VAR}` en valores de configuración.
+- Sustitución de cadenas `${VAR}` en los valores de configuración.
 - Objetos SecretRef (`{ source: "env", provider: "default", id: "VAR" }`) para campos que admiten referencias a secretos.
 
-Ambos se resuelven desde el entorno del proceso en el momento de la activación. Los detalles de SecretRef están documentados en [Gestión de secretos](/es/gateway/secrets).
-El bloque de configuración `env` en sí mismo no resuelve SecretRefs ni valores abreviados `file:...`.
+Ambos se resuelven a partir del entorno del proceso en el momento de la activación. Los detalles de SecretRef están documentados en [Secrets Management](/es/gateway/secrets).
+El bloque de configuración `env` en sí no resuelve SecretRefs ni valores abreviados `file:...`.
 
-## Variables de entorno relacionadas con rutas
+## Variables de entorno relacionadas con la ruta
 
-| Variable                 | Propósito                                                                                                                                                                                                                      |
-| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `OPENCLAW_HOME`          | Anula el directorio de inicio utilizado para toda la resolución de rutas interna (`~/.openclaw/`, directorios de agentes, sesiones, credenciales). Útil al ejecutar OpenClaw como un usuario de servicio dedicado.             |
-| `OPENCLAW_STATE_DIR`     | Anula el directorio de estado (por defecto `~/.openclaw`).                                                                                                                                                                     |
-| `OPENCLAW_CONFIG_PATH`   | Anula la ruta del archivo de configuración (por defecto `~/.openclaw/openclaw.json`).                                                                                                                                          |
-| `OPENCLAW_INCLUDE_ROOTS` | Lista de rutas de directorios donde las directivas `$include` pueden resolver archivos fuera del directorio de configuración (por defecto: ninguno — `$include` está confinado al directorio de configuración). Expande tilde. |
+| Variable                 | Propósito                                                                                                                                                                                                                                                                                                         |
+| ------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `OPENCLAW_HOME`          | Anula el directorio de inicio utilizado para los valores predeterminados de ruta interna de OpenClaw (`~/.openclaw/`, directorios de agentes, sesiones, credenciales, incorporación del instalador y la desprotección de desarrollo predeterminada). Útil al ejecutar OpenClaw como usuario de servicio dedicado. |
+| `OPENCLAW_STATE_DIR`     | Anula el directorio de estado (predeterminado `~/.openclaw`).                                                                                                                                                                                                                                                     |
+| `OPENCLAW_CONFIG_PATH`   | Anula la ruta del archivo de configuración (predeterminado `~/.openclaw/openclaw.json`).                                                                                                                                                                                                                          |
+| `OPENCLAW_INCLUDE_ROOTS` | Lista de rutas de directorios donde las directivas `$include` pueden resolver archivos fuera del directorio de configuración (predeterminado: ninguno — `$include` está limitado al directorio de configuración). Se expande el tilde.                                                                            |
 
-## Registro
+## Registro (Logging)
 
 | Variable                         | Propósito                                                                                                                                                                                                                              |
 | -------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `OPENCLAW_LOG_LEVEL`             | Anula el nivel de registro tanto para archivo como para consola (p. ej., `debug`, `trace`). Tiene prioridad sobre `logging.level` y `logging.consoleLevel` en la configuración. Los valores no válidos se ignoran con una advertencia. |
-| `OPENCLAW_DEBUG_MODEL_TRANSPORT` | Emite diagnósticos de sincronización de solicitud/respuesta del modelo específicos en el nivel `info` sin habilitar los registros de depuración globales.                                                                              |
-| `OPENCLAW_DEBUG_MODEL_PAYLOAD`   | Diagnósticos de carga útil del modelo: `summary`, `tools` o `full-redacted`. `full-redacted` está limitado y redactado, pero puede incluir texto de aviso/mensaje.                                                                     |
-| `OPENCLAW_DEBUG_SSE`             | Diagnósticos de transmisión: `events` para la sincronización de inicio/finalización, `peek` para incluir los primeros cinco eventos SSE redactados.                                                                                    |
-| `OPENCLAW_DEBUG_CODE_MODE`       | Diagnósticos de superficie del modelo en modo de código, que incluyen la ocultación de herramientas del proveedor y el cumplimiento de solo ejecución/espera.                                                                          |
+| `OPENCLAW_DEBUG_MODEL_TRANSPORT` | Emite diagnósticos de tiempo de solicitud/respuesta del modelo específicos en el nivel `info` sin habilitar los registros de depuración globales.                                                                                      |
+| `OPENCLAW_DEBUG_MODEL_PAYLOAD`   | Diagnósticos de carga útil del modelo: `summary`, `tools` o `full-redacted`. `full-redacted` está limitado y redactado, pero puede incluir texto de solicitud/mensaje.                                                                 |
+| `OPENCLAW_DEBUG_SSE`             | Diagnósticos de streaming: `events` para el tiempo de inicio/finalización, `peek` para incluir los primeros cinco eventos SSE redactados.                                                                                              |
+| `OPENCLAW_DEBUG_CODE_MODE`       | Diagnósticos de superficie del modelo en modo de código, incluida la ocultación de herramientas del proveedor y la aplicación exclusiva de ejecución/espera.                                                                           |
 
 ### `OPENCLAW_HOME`
 
-Cuando se establece, `OPENCLAW_HOME` reemplaza el directorio de inicio del sistema (`$HOME` / `os.homedir()`) para toda la resolución de rutas internas. Esto habilita el aislamiento completo del sistema de archivos para cuentas de servicio sin interfaz.
+Cuando se establece, `OPENCLAW_HOME` reemplaza el directorio de inicio del sistema (`$HOME` / `os.homedir()`) para las rutas predeterminadas internas de OpenClaw. Esto incluye el directorio de estado predeterminado, la ruta de configuración, los directorios de agentes, las credenciales, el espacio de trabajo de incorporación del instalador y la descarga de desarrollo predeterminada utilizada por `openclaw update --channel dev`.
 
-**Precedencia:** `OPENCLAW_HOME` > `$HOME` > `USERPROFILE` > `os.homedir()`
+**Precedencia:** `OPENCLAW_HOME` > `$HOME` > `USERPROFILE` > Respaldo de inicio de Termux `PREFIX` en Android > `os.homedir()`
 
 **Ejemplo** (macOS LaunchDaemon):
 
@@ -169,20 +170,22 @@ Cuando se establece, `OPENCLAW_HOME` reemplaza el directorio de inicio del siste
 </dict>
 ```
 
-`OPENCLAW_HOME` también se puede establecer en una ruta de tilde (p. ej., `~/svc`), que se expande usando `$HOME` antes de su uso.
+`OPENCLAW_HOME` también se puede establecer en una ruta con tilde (p. ej., `~/svc`), que se expande utilizando la misma cadena de respaldo de inicio del sistema operativo antes de su uso.
 
-## Usuarios de nvm: fallos de TLS en web_fetch
+Las variables de ruta explícitas como `OPENCLAW_STATE_DIR`, `OPENCLAW_CONFIG_PATH` y `OPENCLAW_GIT_DIR` todavía tienen prioridad. Las tareas de la cuenta del sistema operativo, como la detección de archivos de inicio de shell, la configuración del administrador de paquetes y la expansión del host `~` todavía pueden usar el directorio home real del sistema.
 
-Si Node.js se instaló mediante **nvm** (no el gestor de paquetes del sistema), el `fetch()` integrado usa
+## usuarios de nvm: fallos TLS de web_fetch
+
+Si Node.js se instaló a través de **nvm** (no el administrador de paquetes del sistema), el `fetch()` integrado usa
 el almacén de CA incluido en nvm, que puede carecer de CA raíz modernas (ISRG Root X1/X2 para Let's Encrypt,
 DigiCert Global Root G2, etc.). Esto hace que `web_fetch` falle con `"fetch failed"` en la mayoría de los sitios HTTPS.
 
-En Linux, OpenClaw detecta automáticamente nvm y aplica la solución en el entorno de inicio real:
+En Linux, OpenClaw detecta automáticamente nvm y aplica la corrección en el entorno de inicio real:
 
 - `openclaw gateway install` escribe `NODE_EXTRA_CA_CERTS` en el entorno del servicio systemd
-- el punto de entrada de la CLI `openclaw` se vuelve a ejecutar a sí mismo con `NODE_EXTRA_CA_CERTS` establecido antes del inicio de Node
+- el punto de entrada de la CLI de `openclaw` se vuelve a ejecutar con `NODE_EXTRA_CA_CERTS` establecido antes del inicio de Node
 
-**Solución manual (para versiones anteriores o inicios directos de `node ...`):**
+**Corrección manual (para versiones anteriores o lanzamientos directos de `node ...`):**
 
 Exporte la variable antes de iniciar OpenClaw:
 
@@ -192,7 +195,7 @@ openclaw gateway run
 ```
 
 No confíe en escribir solo en `~/.openclaw/.env` para esta variable; Node lee
-`NODE_EXTRA_CA_CERTS` al iniciar el proceso.
+`NODE_EXTRA_CA_CERTS` al inicio del proceso.
 
 ## Variables de entorno heredadas
 
@@ -200,9 +203,9 @@ OpenClaw solo lee variables de entorno `OPENCLAW_*`. Los prefijos heredados
 `CLAWDBOT_*` y `MOLTBOT_*` de versiones anteriores se ignoran
 silenciosamente.
 
-Si alguna todavía está establecida en el proceso Gateway al inicio, OpenClaw emite una
+Si alguno todavía está establecido en el proceso de Gateway al inicio, OpenClaw emite una
 sola advertencia de obsolescencia de Node (`OPENCLAW_LEGACY_ENV_VARS`) que lista los
-prefijos detectados y el conteo total. Cambie el nombre de cada valor reemplazando el
+prefijos detectados y el recuento total. Cambie el nombre de cada valor reemplazando el
 prefijo heredado con `OPENCLAW_` (por ejemplo `CLAWDBOT_GATEWAY_TOKEN` →
 `OPENCLAW_GATEWAY_TOKEN`); los nombres antiguos no tienen ningún efecto.
 

@@ -390,7 +390,7 @@ Formatos admitidos: `.jpg`, `.jpeg`, `.png`, `.webp`, `.gif`, `.heic`, `.heif` (
 
 | Clave              | Tipo      | Predeterminado | Descripción                                                   |
 | ------------------ | --------- | -------------- | ------------------------------------------------------------- |
-| `cache.enabled`    | `boolean` | `false`        | Almacenar en caché las incrustaciones de fragmentos en SQLite |
+| `cache.enabled`    | `boolean` | `true`         | Almacenar en caché las incrustaciones de fragmentos en SQLite |
 | `cache.maxEntries` | `number`  | `50000`        | Incrustaciones en caché máximas                               |
 
 Evita volver a incrustar texto sin cambios durante la reindexación o actualizaciones de transcripciones.

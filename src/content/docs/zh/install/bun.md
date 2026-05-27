@@ -48,7 +48,7 @@ bun pm trust baileys protobufjs
 
 ## 注意事项
 
-某些脚本仍然硬编码了 pnpm（例如 `docs:build`，`ui:*`，`protocol:check`）。目前请通过 pnpm 运行这些脚本。
+某些脚本仍然硬编码使用 pnpm（例如 `check:docs`、`ui:*`、`protocol:check`）。目前请通过 pnpm 运行这些脚本。
 
 ## 相关
 

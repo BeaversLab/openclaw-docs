@@ -9,7 +9,7 @@ read_when:
 
 OpenClaw exporta diagnósticos a través del complemento oficial `diagnostics-otel`
 utilizando **OTLP/HTTP (protobuf)**. Cualquier recopilador o backend que acepte OTLP/HTTP
-funciona sin cambios en el código. Para los registros de archivos locales y cómo leerlos, consulte
+funciona sin cambios en el código. Para ver los registros de archivos locales y cómo leerlos, consulte
 [Logging](/es/logging).
 
 ## Cómo se integra
@@ -68,11 +68,11 @@ openclaw plugins enable diagnostics-otel
 
 ## Señales exportadas
 
-| Señal         | Qué contiene                                                                                                                                                                                     |
-| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **Métricas**  | Contadores e histogramas para el uso de tokens, costos, duración de la ejecución, flujo de mensajes, eventos Talk, carriles de cola, estado/recuperación de sesión, exec y presión de memoria.   |
-| **Trazas**    | Spans para el uso del modelo, llamadas al modelo, ciclo de vida del arnés, ejecución de herramientas, exec, procesamiento de webhooks/mensajes, ensamblaje de contexto y bucles de herramientas. |
-| **Registros** | Registros `logging.file` estructurados exportados a través de OTLP cuando `diagnostics.otel.logs` está habilitado.                                                                               |
+| Señal         | Qué contiene                                                                                                                                                                                                                                     |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Métricas**  | Contadores e histogramas para el uso de tokens, costos, duración de la ejecución, uso de habilidades, flujo de mensajes, eventos de Talk, carriles de cola, estado/recuperación de sesión, ejecución de herramientas, exec y presión de memoria. |
+| **Trazas**    | Spans para el uso de modelos, llamadas a modelos, ciclo de vida del arnés, uso de habilidades, ejecución de herramientas, exec, procesamiento de webhooks/mensajes, ensamblaje de contexto y bucles de herramientas.                             |
+| **Registros** | Registros `logging.file` estructurados exportados a través de OTLP cuando `diagnostics.otel.logs` está habilitado; los cuerpos de los registros se retienen a menos que la captura de contenido esté explícitamente habilitada.                  |
 
 Alterne `traces`, `metrics` y `logs` de forma independiente. Los tres están activados de forma predeterminada
 cuando `diagnostics.otel.enabled` es verdadero.
@@ -123,12 +123,25 @@ cuando `diagnostics.otel.enabled` es verdadero.
 
 ## Privacidad y captura de contenido
 
-El contenido sin procesar del modelo/herramienta **no** se exporta de forma predeterminada. Los intervalos (spans) contienen identificadores delimitados (canal, proveedor, modelo, categoría de error, ID de solicitud solo con hash) y nunca incluyen texto del prompt, texto de respuesta, entradas de herramientas, salidas de herramientas o claves de sesión.
-Las métricas de conversación exportan solo metadatos de eventos delimitados, como el modo, transporte, proveedor y tipo de evento. No incluyen transcripciones, cargas de audio, ID de sesión, ID de turno, ID de llamada, ID de sala ni tokens de transferencia.
+El contenido de modelos/herramientas sin procesar **no** se exporta de forma predeterminada. Los spans portan identificadores
+delimitados (canal, proveedor, modelo, categoría de error, ids de solicitud solo con hash,
+origen de la herramienta, propietario de la herramienta y nombre/origen de la habilidad) y nunca incluyen texto de solicitud,
+texto de respuesta, entradas de herramientas, salidas de herramientas, rutas de archivos de habilidades o claves de sesión.
+Los registros de registros OTLP mantienen la gravedad, el registrador, la ubicación del código, el contexto de trazado de confianza
+y atributos saneados de forma predeterminada, pero el cuerpo del mensaje de registro sin procesar se exporta
+solo cuando `diagnostics.otel.captureContent` se establece en booleano `true`. Las subclaves
+granulares de `captureContent.*` no habilitan los cuerpos de los registros. Las etiquetas que parecen
+claves de sesión de agente con ámbito se reemplazan con `unknown`.
+Las métricas de Talk exportan solo metadatos de eventos delimitados, como modo, transporte,
+proveedor y tipo de evento. No incluyen transcripciones, cargas de audio,
+ids de sesión, ids de turno, ids de llamada, ids de sala o tokens de transferencia.
 
-Las solicitudes salientes del modelo pueden incluir un encabezado W3C `traceparent`. Ese encabezado se genera solo a partir del contexto de seguimiento de diagnóstico propiedad de OpenClaw para la llamada al modelo activa. Los encabezados `traceparent` proporcionados por el llamante existentes se reemplazan, por lo que los complementos u las opciones personalizadas del proveedor no pueden falsificar el linaje del seguimiento entre servicios.
+Las solicitudes de modelos salientes pueden incluir un encabezado W3C `traceparent`. Ese encabezado se
+genera solo a partir del contexto de trazado de diagnóstico propiedad de OpenClaw para la llamada al modelo
+activa. Los encabezados `traceparent` existentes proporcionados por el llamador se reemplazan, por lo que los complementos o
+las opciones personalizadas del proveedor no pueden falsificar el linaje de trazas entre servicios.
 
-Establezca `diagnostics.otel.captureContent.*` en `true` solo cuando su recopilador y política de retención estén aprobados para texto de prompt, respuesta, herramienta o del sistema. Cada subclave es opcional de forma independiente:
+Establezca `diagnostics.otel.captureContent.*` en `true` solo cuando su recopilador y su política de retención estén aprobados para el texto del prompt, la respuesta, la herramienta o el prompt del sistema. Cada subclave es opt-in de forma independiente:
 
 - `inputMessages` - contenido del prompt del usuario.
 - `outputMessages` - contenido de la respuesta del modelo.
@@ -136,24 +149,21 @@ Establezca `diagnostics.otel.captureContent.*` en `true` solo cuando su recopila
 - `toolOutputs` - cargas útiles de resultados de herramientas.
 - `systemPrompt` - prompt del sistema/desarrollador ensamblado.
 
-Cuando se habilita cualquier subclave, los intervalos de modelo y herramienta obtienen atributos `openclaw.content.*` delimitados y redactados solo para esa clase.
+Cuando se habilita cualquier subclave, los intervalos del modelo y de la herramienta obtienen atributos `openclaw.content.*` delimitados y redactados solo para esa clase. Use el booleano `captureContent: true` solo para capturas de diagnósticos generales donde los cuerpos de mensajes de registro OTLP también estén aprobados para su exportación.
 
 ## Muestreo y vaciado
 
-- **Trazas:** `diagnostics.otel.sampleRate` (solo intervalo raíz, `0.0` descarta todo,
-  `1.0` lo mantiene todo).
+- **Rastros:** `diagnostics.otel.sampleRate` (solo el span raíz, `0.0` descarta todos,
+  `1.0` mantiene todos).
 - **Métricas:** `diagnostics.otel.flushIntervalMs` (mínimo `1000`).
-- **Registros:** Los registros OTLP respetan `logging.level` (nivel de registro de archivo). Utilizan la ruta
-  de redacción de registros de diagnóstico, no el formato de consola. Las instalaciones
-  de alto volumen deben preferir el muestreo/filtrado del recopilador OTLP frente al muestreo local.
-- **Correlación de registros de archivo:** Los registros de archivo JSONL incluyen `traceId`,
-  `spanId`, `parentSpanId` y `traceFlags` de nivel superior cuando la llamada de registro lleva un contexto
-  de seguimiento de diagnóstico válido, lo que permite a los procesadores de registros unir las líneas de registro locales con
-  los intervalos exportados.
-- **Correlación de solicitudes:** Las solicitudes HTTP del Gateway y los tramas WebSocket crean un
-  alcance de seguimiento de solicitud interno. Los registros y eventos de diagnóstico dentro de ese alcance
-  heredan el seguimiento de solicitud de forma predeterminada, mientras que los intervalos de ejecución de agente y llamada de modelo se
-  crean como hijos para que los encabezados `traceparent` del proveedor permanezcan en el mismo seguimiento.
+- **Registros:** Los registros OTLP respetan `logging.level` (nivel de registro de archivo). Utilizan la ruta de
+  redacción de registros de diagnóstico, no el formato de consola. Las instalaciones
+  de alto volumen deben preferir el muestreo/filtrado del recolector OTLP sobre el muestreo local.
+- **Correlación de registros de archivo:** Los registros de archivo JSONL incluyen `traceId` de nivel superior,
+  `spanId`, `parentSpanId` y `traceFlags` cuando la llamada al registro lleva un contexto
+  de rastro de diagnóstico válido, lo que permite a los procesadores de registros unir las líneas de registro locales con
+  los spans exportados.
+- **Correlación de solicitudes:** Las solicitudes HTTP y los marcos WebSocket del Gateway crean un ámbito de rastreo de solicitud interno. Los registros y eventos de diagnóstico dentro de ese ámbito heredan el rastreo de la solicitud de manera predeterminada, mientras que los intervalos (spans) de ejecución del agente y de llamadas al modelo se crean como elementos secundarios, por lo que los encabezados del proveedor `traceparent` permanecen en el mismo rastreo.
 
 ## Métricas exportadas
 
@@ -162,94 +172,93 @@ Cuando se habilita cualquier subclave, los intervalos de modelo y herramienta ob
 - `openclaw.tokens` (contador, attrs: `openclaw.token`, `openclaw.channel`, `openclaw.provider`, `openclaw.model`, `openclaw.agent`)
 - `openclaw.cost.usd` (contador, attrs: `openclaw.channel`, `openclaw.provider`, `openclaw.model`)
 - `openclaw.run.duration_ms` (histograma, attrs: `openclaw.channel`, `openclaw.provider`, `openclaw.model`)
-- `openclaw.context.tokens` (histograma, attrs: `openclaw.context`, `openclaw.channel`, `openclaw.provider`, `openclaw.model`)
-- `gen_ai.client.token.usage` (histogram, métrica de convenciones semánticas GenAI, attrs: `gen_ai.token.type` = `input`/`output`, `gen_ai.provider.name`, `gen_ai.operation.name`, `gen_ai.request.model`)
-- `gen_ai.client.operation.duration` (histogram, segundos, métrica de convenciones semánticas GenAI, attrs: `gen_ai.provider.name`, `gen_ai.operation.name`, `gen_ai.request.model`, opcional `error.type`)
-- `openclaw.model_call.duration_ms` (histogram, attrs: `openclaw.provider`, `openclaw.model`, `openclaw.api`, `openclaw.transport`, además de `openclaw.errorCategory` y `openclaw.failureKind` en errores clasificados)
-- `openclaw.model_call.request_bytes` (histogram, tamaño en bytes UTF-8 de la carga útil final de la solicitud del modelo; sin contenido de la carga útil sin procesar)
+- `openclaw.context.tokens` (histogram, attrs: `openclaw.context`, `openclaw.channel`, `openclaw.provider`, `openclaw.model`)
+- `gen_ai.client.token.usage` (histogram, métrica de convenciones semánticas de GenAI, attrs: `gen_ai.token.type` = `input`/`output`, `gen_ai.provider.name`, `gen_ai.operation.name`, `gen_ai.request.model`)
+- `gen_ai.client.operation.duration` (histogram, segundos, métrica de convenciones semánticas de GenAI, attrs: `gen_ai.provider.name`, `gen_ai.operation.name`, `gen_ai.request.model`, opcional `error.type`)
+- `openclaw.model_call.duration_ms` (histogram, attrs: `openclaw.provider`, `openclaw.model`, `openclaw.api`, `openclaw.transport`, más `openclaw.errorCategory` y `openclaw.failureKind` en errores clasificados)
+- `openclaw.model_call.request_bytes` (histogram, tamaño en bytes UTF-8 del payload final de la solicitud del modelo; sin contenido de payload sin procesar)
 - `openclaw.model_call.response_bytes` (histogram, tamaño en bytes UTF-8 de los eventos de respuesta del modelo transmitidos; sin contenido de respuesta sin procesar)
 - `openclaw.model_call.time_to_first_byte_ms` (histogram, tiempo transcurrido antes del primer evento de respuesta transmitido)
+- `openclaw.skill.used` (contador, attrs: `openclaw.skill.name`, `openclaw.skill.source`, `openclaw.skill.activation`, `openclaw.agent` opcional, `openclaw.toolName` opcional)
 
 ### Flujo de mensajes
 
 - `openclaw.webhook.received` (contador, attrs: `openclaw.channel`, `openclaw.webhook`)
 - `openclaw.webhook.error` (contador, attrs: `openclaw.channel`, `openclaw.webhook`)
-- `openclaw.webhook.duration_ms` (histogram, attrs: `openclaw.channel`, `openclaw.webhook`)
+- `openclaw.webhook.duration_ms` (histograma, attrs: `openclaw.channel`, `openclaw.webhook`)
 - `openclaw.message.queued` (contador, attrs: `openclaw.channel`, `openclaw.source`)
+- `openclaw.message.received` (contador, attrs: `openclaw.channel`, `openclaw.source`)
+- `openclaw.message.dispatch.started` (contador, attrs: `openclaw.channel`, `openclaw.source`)
+- `openclaw.message.dispatch.completed` (contador, attrs: `openclaw.channel`, `openclaw.outcome`, `openclaw.reason`, `openclaw.source`)
+- `openclaw.message.dispatch.duration_ms` (histograma, attrs: `openclaw.channel`, `openclaw.outcome`, `openclaw.reason`, `openclaw.source`)
 - `openclaw.message.processed` (contador, attrs: `openclaw.channel`, `openclaw.outcome`)
-- `openclaw.message.duration_ms` (histogram, attrs: `openclaw.channel`, `openclaw.outcome`)
+- `openclaw.message.duration_ms` (histograma, attrs: `openclaw.channel`, `openclaw.outcome`)
 - `openclaw.message.delivery.started` (contador, attrs: `openclaw.channel`, `openclaw.delivery.kind`)
 - `openclaw.message.delivery.duration_ms` (histogram, attrs: `openclaw.channel`, `openclaw.delivery.kind`, `openclaw.outcome`, `openclaw.errorCategory`)
 
-### Talk
+### Hablar
 
-- `openclaw.talk.event` (contador, attrs: `openclaw.talk.event_type`, `openclaw.talk.mode`, `openclaw.talk.transport`, `openclaw.talk.brain`, `openclaw.talk.provider`)
+- `openclaw.talk.event` (counter, attrs: `openclaw.talk.event_type`, `openclaw.talk.mode`, `openclaw.talk.transport`, `openclaw.talk.brain`, `openclaw.talk.provider`)
 - `openclaw.talk.event.duration_ms` (histogram, attrs: igual que `openclaw.talk.event`; emitido cuando un evento Talk reporta la duración)
-- `openclaw.talk.audio.bytes` (histogram, attrs: igual que `openclaw.talk.event`; emitido para eventos de fotogramas de audio de Talk que reportan la longitud en bytes)
+- `openclaw.talk.audio.bytes` (histogram, attrs: igual que `openclaw.talk.event`; emitido para eventos de fotograma de audio de Talk que reportan la longitud en bytes)
 
 ### Colas y sesiones
 
-- `openclaw.queue.lane.enqueue` (contador, attrs: `openclaw.lane`)
+- `openclaw.queue.lane.enqueue` (counter, attrs: `openclaw.lane`)
 - `openclaw.queue.lane.dequeue` (contador, attrs: `openclaw.lane`)
 - `openclaw.queue.depth` (histogram, attrs: `openclaw.lane` o `openclaw.channel=heartbeat`)
 - `openclaw.queue.wait_ms` (histogram, attrs: `openclaw.lane`)
-- `openclaw.session.state` (contador, attrs: `openclaw.state`, `openclaw.reason`)
-- `openclaw.session.stuck` (contador, attrs: `openclaw.state`; emitido solo para la contabilidad de sesiones obsoletas sin trabajo activo)
-- `openclaw.session.stuck_age_ms` (histogram, attrs: `openclaw.state`; emitido solo para la contabilidad de sesiones obsoletas sin trabajo activo)
-- `openclaw.session.recovery.requested` (contador, attrs: `openclaw.state`, `openclaw.action`, `openclaw.active_work_kind`, `openclaw.reason`)
-- `openclaw.session.recovery.completed` (contador, attrs: `openclaw.state`, `openclaw.action`, `openclaw.status`, `openclaw.active_work_kind`, `openclaw.reason`)
+- `openclaw.session.state` (counter, attrs: `openclaw.state`, `openclaw.reason`)
+- `openclaw.session.stuck` (counter, attrs: `openclaw.state`; emitido solo para el mantenimiento de sesiones obsoletas sin trabajo activo)
+- `openclaw.session.stuck_age_ms` (histogram, attrs: `openclaw.state`; emitido solo para el mantenimiento de sesiones obsoletas sin trabajo activo)
+- `openclaw.session.turn.created` (counter, attrs: `openclaw.agent`, `openclaw.channel`, `openclaw.trigger`)
+- `openclaw.session.recovery.requested` (counter, attrs: `openclaw.state`, `openclaw.action`, `openclaw.active_work_kind`, `openclaw.reason`)
+- `openclaw.session.recovery.completed` (counter, attrs: `openclaw.state`, `openclaw.action`, `openclaw.status`, `openclaw.active_work_kind`, `openclaw.reason`)
 - `openclaw.session.recovery.age_ms` (histogram, attrs: igual que el contador de recuperación coincidente)
-- `openclaw.run.attempt` (contador, attrs: `openclaw.attempt`)
+- `openclaw.run.attempt` (counter, attrs: `openclaw.attempt`)
 
-### Telemetría de actividad de la sesión
+### Telemetría de actividad de sesión
 
-`diagnostics.stuckSessionWarnMs` es el umbral de edad sin progreso para el diagnóstico de
-actividad de la sesión. Una sesión `processing` no envejece hacia este umbral
-mientras OpenClaw observa progreso de respuesta, herramienta, estado, bloque o
-en tiempo de ejecución de ACP. Las señales de mantenimiento de escritura no se
-consideran progreso, por lo que un modelo o arnés silencioso aún puede ser
-detectado.
+`diagnostics.stuckSessionWarnMs` es el umbral de antigüedad sin progreso para el diagnóstico de actividad de sesión. Una sesión `processing` no envejece hacia este umbral mientras OpenClaw observa progreso de respuesta, herramienta, estado, bloque o tiempo de ejecución de ACP. Los keepalives de escritura no se cuentan como progreso, por lo que aún se puede detectar un modelo o arnés silencioso.
 
 OpenClaw clasifica las sesiones según el trabajo que aún puede observar:
 
-- `session.long_running`: el trabajo integrado activo, las llamadas al modelo
-  o las llamadas a herramientas siguen progresando.
-- `session.stalled`: existe trabajo activo, pero la ejecución activa no ha informado de
-  un progreso reciente. Las ejecuciones incrustadas estancadas permanecen primero en modo de solo observación, y luego
-  interrumpen y drenan después de `diagnostics.stuckSessionAbortMs` sin progreso para que los turnos
-  en cola detrás del carril puedan reanudarse. Cuando no se establece, el umbral de interrupción se establece de forma predeterminada en
-  la ventana extendida más segura de al menos 5 minutos y 3x
+- `session.long_running`: el trabajo integrado activo, las llamadas al modelo o las llamadas a herramientas todavía están progresando.
+- `session.stalled`: existe trabajo activo, pero la ejecución activa no ha informado
+  progreso reciente. Las ejecuciones integradas estancadas permanecen primero en modo de solo observación, y luego
+  abortan y drenan después de `diagnostics.stuckSessionAbortMs` sin progreso para que los turnos
+  en cola detrás del carril puedan reanudarse. Si no se establece, el umbral de aborto predeterminado es
+  la ventana extendida más segura de al menos 5 minutos y 3 veces
   `diagnostics.stuckSessionWarnMs`.
-- `session.stuck`: mantenimiento de libro de sesiones obsoletas sin trabajo
-  activo. Esto libera el carril de sesión afectado inmediatamente.
+- `session.stuck`: contabilidad de sesión obsoleta sin trabajo activo. Esto libera
+  el carril de la sesión afectada inmediatamente.
 
 La recuperación emite eventos estructurados `session.recovery.requested` y
-`session.recovery.completed`. El estado de diagnóstico de la sesión se marca como
-inactivo solo después de un resultado de recuperación de mutación (`aborted` o `released`) y solo si la
+`session.recovery.completed`. El estado de diagnóstico de la sesión se marca como inactivo
+solo después de un resultado de recuperación mutante (`aborted` o `released`) y solo si la
 misma generación de procesamiento sigue siendo actual.
 
 Solo `session.stuck` emite el contador `openclaw.session.stuck`, el
-histograma `openclaw.session.stuck_age_ms` y el lapso `openclaw.session.stuck`.
-Los diagnósticos repetidos de `session.stuck` se retroceden mientras la sesión
-permanece sin cambios, por lo que los paneles deben alertar sobre los aumentos
-sostenidos en lugar de en cada tick de latido. Consulte
-[Referencia de configuración](/es/gateway/configuration-reference#diagnostics) para el control de configuración
-y los valores predeterminados.
+histograma `openclaw.session.stuck_age_ms` y el intervalo (span)
+`openclaw.session.stuck`. Los diagnósticos repetidos `session.stuck` se reducen (back off) mientras la sesión permanece
+sin cambios, por lo que los paneles deberían alertar sobre aumentos sostenidos en lugar de en cada
+tic de latido. Para el control de configuración y los valores predeterminados, consulte
+[Referencia de configuración](/es/gateway/configuration-reference#diagnostics).
 
 ### Ciclo de vida del arnés
 
-- `openclaw.harness.duration_ms` (histograma, attrs: `openclaw.harness.id`, `openclaw.harness.plugin`, `openclaw.outcome`, `openclaw.harness.phase` en errores)
+- `openclaw.harness.duration_ms` (histograma, atributos: `openclaw.harness.id`, `openclaw.harness.plugin`, `openclaw.outcome`, `openclaw.harness.phase` en errores)
 
 ### Exec
 
-- `openclaw.exec.duration_ms` (histogram, attrs: `openclaw.exec.target`, `openclaw.exec.mode`, `openclaw.outcome`, `openclaw.failureKind`)
+- `openclaw.exec.duration_ms` (histograma, atributos: `openclaw.exec.target`, `openclaw.exec.mode`, `openclaw.outcome`, `openclaw.failureKind`)
 
-### Internos de diagnóstico (memoria y bucle de herramientas)
+### Aspectos internos de diagnóstico (memoria y bucle de herramientas)
 
-- `openclaw.memory.heap_used_bytes` (histogram, attrs: `openclaw.memory.kind`)
-- `openclaw.memory.rss_bytes` (histogram)
-- `openclaw.memory.pressure` (counter, attrs: `openclaw.memory.level`)
-- `openclaw.tool.loop.iterations` (counter, attrs: `openclaw.toolName`, `openclaw.outcome`)
+- `openclaw.memory.heap_used_bytes` (histograma, atributos: `openclaw.memory.kind`)
+- `openclaw.memory.rss_bytes` (histograma)
+- `openclaw.memory.pressure` (contador, atributos: `openclaw.memory.level`)
+- `openclaw.tool.loop.iterations` (contador, atributos: `openclaw.toolName`, `openclaw.outcome`)
 - `openclaw.tool.loop.duration_ms` (histogram, attrs: `openclaw.toolName`, `openclaw.outcome`)
 
 ## Spans exportados
@@ -257,20 +266,20 @@ y los valores predeterminados.
 - `openclaw.model.usage`
   - `openclaw.channel`, `openclaw.provider`, `openclaw.model`
   - `openclaw.tokens.*` (input/output/cache_read/cache_write/total)
-  - `gen_ai.system` de forma predeterminada, o `gen_ai.provider.name` cuando se aceptan las últimas convenciones semánticas de GenAI
+  - `gen_ai.system` por defecto, o `gen_ai.provider.name` cuando se opta por las últimas convenciones semánticas de GenAI
   - `gen_ai.request.model`, `gen_ai.operation.name`, `gen_ai.usage.*`
 - `openclaw.run`
   - `openclaw.outcome`, `openclaw.channel`, `openclaw.provider`, `openclaw.model`, `openclaw.errorCategory`
 - `openclaw.model.call`
-  - `gen_ai.system` de forma predeterminada, o `gen_ai.provider.name` cuando se aceptan las últimas convenciones semánticas de GenAI
+  - `gen_ai.system` por defecto, o `gen_ai.provider.name` cuando se opta por las últimas convenciones semánticas de GenAI
   - `gen_ai.request.model`, `gen_ai.operation.name`, `openclaw.provider`, `openclaw.model`, `openclaw.api`, `openclaw.transport`
   - `openclaw.errorCategory` y `openclaw.failureKind` opcional en errores
   - `openclaw.model_call.request_bytes`, `openclaw.model_call.response_bytes`, `openclaw.model_call.time_to_first_byte_ms`
-  - `openclaw.provider.request_id_hash` (hash basado en SHA limitado del id de solicitud del proveedor ascendente; los ids brutos no se exportan)
+  - `openclaw.provider.request_id_hash` (hash basado en SHA limitado del id de solicitud del proveedor ascendente; los ids sin procesar no se exportan)
 - `openclaw.harness.run`
   - `openclaw.harness.id`, `openclaw.harness.plugin`, `openclaw.outcome`, `openclaw.provider`, `openclaw.model`, `openclaw.channel`
-  - Al completarse: `openclaw.harness.result_classification`, `openclaw.harness.yield_detected`, `openclaw.harness.items.started`, `openclaw.harness.items.completed`, `openclaw.harness.items.active`
-  - En caso de error: `openclaw.harness.phase`, `openclaw.errorCategory`, opcional `openclaw.harness.cleanup_failed`
+  - Al completar: `openclaw.harness.result_classification`, `openclaw.harness.yield_detected`, `openclaw.harness.items.started`, `openclaw.harness.items.completed`, `openclaw.harness.items.active`
+  - En caso de error: `openclaw.harness.phase`, `openclaw.errorCategory`, `openclaw.harness.cleanup_failed` opcional
 - `openclaw.tool.execution`
   - `gen_ai.tool.name`, `openclaw.toolName`, `openclaw.errorCategory`, `openclaw.tool.params.*`
 - `openclaw.exec`
@@ -296,14 +305,14 @@ Cuando la captura de contenido está explícitamente habilitada, los intervalos 
 
 ## Catálogo de eventos de diagnóstico
 
-Los siguientes eventos respaldan las métricas y los intervalos anteriores. Los complementos también pueden suscribirse a ellos directamente sin exportación OTLP.
+Los eventos a continuación respaldan las métricas e intervalos mencionados anteriormente. Los complementos también pueden suscribirse a ellos directamente sin exportación OTLP.
 
 **Uso del modelo**
 
-- `model.usage` - tokens, costo, duración, contexto, proveedor/modelo/canal,
-  ids de sesión. `usage` es la contabilidad del proveedor/turno para costo y telemetría;
+- `model.usage` - tokens, coste, duración, contexto, proveedor/modelo/canal,
+  ids de sesión. `usage` es la contabilidad del proveedor/turno para coste y telemetría;
   `context.used` es la instantánea actual del prompt/contexto y puede ser menor que
-  el `usage.total` del proveedor cuando están involucradas llamadas de entrada en caché o de bucle de herramientas.
+  el `usage.total` del proveedor cuando estén involucradas entradas en caché o llamadas a bucles de herramientas (tool-loop).
 
 **Flujo de mensajes**
 
@@ -324,19 +333,19 @@ Los siguientes eventos respaldan las métricas y los intervalos anteriores. Los 
   ciclo de vida por ejecución para el arnés del agente. Incluye `harnessId`, opcional
   `pluginId`, proveedor/modelo/canal e id de ejecución. La finalización añade
   `durationMs`, `outcome`, opcional `resultClassification`, `yieldDetected`,
-  y recuentos de `itemLifecycle`. Los errores añaden `phase`
-  (`prepare`/`start`/`send`/`resolve`/`cleanup`), `errorCategory` y
+  y conteos de `itemLifecycle`. Los errores añaden `phase`
+  (`prepare`/`start`/`send`/`resolve`/`cleanup`), `errorCategory`, y
   opcional `cleanupFailed`.
 
 **Exec**
 
-- `exec.process.completed` - resultado terminal, duración, objetivo, modo, código
-  de salida y tipo de fallo. El texto del comando y los directorios de trabajo no están
-  incluidos.
+- `exec.process.completed` - resultado final, duración, objetivo, modo, código
+  de salida y tipo de fallo. El texto del comando y los directorios de trabajo no
+  están incluidos.
 
 ## Sin un exportador
 
-Puede mantener los eventos de diagnóstico disponibles para complementos o receptores personalizados sin
+Puede mantener los eventos de diagnóstico disponibles para complementos o sumideros personalizados sin
 ejecutar `diagnostics-otel`:
 
 ```json5
@@ -345,8 +354,8 @@ ejecutar `diagnostics-otel`:
 }
 ```
 
-Para obtener resultados de depuración específicos sin generar `logging.level`, use indicadores
-de diagnóstico. Los indicadores no distinguen entre mayúsculas y minúsculas y admiten comodines (p. ej., `telegram.*` o
+Para obtener resultados de depuración específicos sin elevar `logging.level`, use indicadores
+de diagnóstico. Los indicadores no distinguen entre mayúsculas y minúsculas y admiten comodines (por ejemplo, `telegram.*` o
 `*`):
 
 ```json5
@@ -355,15 +364,15 @@ de diagnóstico. Los indicadores no distinguen entre mayúsculas y minúsculas y
 }
 ```
 
-O como una anulación de env de una sola vez:
+O como una anulación de entorno única:
 
 ```bash
 OPENCLAW_DIAGNOSTICS=telegram.http,telegram.payload openclaw gateway
 ```
 
-El resultado del indicador va al archivo de registro estándar (`logging.file`) y todavía está
-redactado por `logging.redactSensitive`. Guía completa:
-[Diagnostic flags](/es/diagnostics/flags).
+La salida de los indicadores va al archivo de registro estándar (`logging.file`) y todavía
+se redacta por `logging.redactSensitive`. Guía completa:
+[Indicadores de diagnóstico](/es/diagnostics/flags).
 
 ## Desactivar
 
@@ -373,13 +382,13 @@ redactado por `logging.redactSensitive`. Guía completa:
 }
 ```
 
-También puede omitir `diagnostics-otel` en `plugins.allow` o ejecutar
+También puede omitir `diagnostics-otel` en `plugins.allow`, o ejecutar
 `openclaw plugins disable diagnostics-otel`.
 
 ## Relacionado
 
-- [Logging](/es/logging) - registros de archivos, salida de consola, seguimiento de CLI y la pestaña Logs de Control UI
-- [Gateway logging internals](/es/gateway/logging) - estilos de registro de WS, prefijos de subsistemas y captura de consola
-- [Diagnostics flags](/es/diagnostics/flags) - indicadores de registro de depuración específicos
-- [Diagnostics export](/es/gateway/diagnostics) - herramienta de paquete de soporte para operadores (separada de la exportación OTEL)
+- [Registro (Logging)](/es/logging) - registros de archivos, salida de consola, seguimiento de CLI y la pestaña Registros de la UI de Control
+- [Funciones internas de registro del Gateway](/es/gateway/logging) - estilos de registro de WS, prefijos de subsistema y captura de consola
+- [Indicadores de diagnóstico](/es/diagnostics/flags) - indicadores de registro de depuración específicos
+- [Exportación de diagnósticos](/es/gateway/diagnostics) - herramienta de paquete de soporte del operador (separada de la exportación OTEL)
 - [Referencia de configuración](/es/gateway/configuration-reference#diagnostics) - referencia completa del campo `diagnostics.*`

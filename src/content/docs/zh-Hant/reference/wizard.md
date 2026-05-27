@@ -29,47 +29,47 @@ sidebarTitle: "入門參考"
 
   </Step>
   <Step title="Model/Auth">
-    - **Anthropic API key**: 如果存在則使用 `ANTHROPIC_API_KEY`，否則提示輸入金鑰，然後將其保存供守護程序使用。
+    - **Anthropic API key**: 如果存在則使用 `ANTHROPIC_API_KEY`，否則提示輸入金鑰，然後將其儲存以供 daemon 使用。
     - **Anthropic API key**: 在 onboarding/configure 中首選的 Anthropic 助手選項。
-    - **Anthropic setup-token**: 仍然可在 onboarding/configure 中使用，儘管 OpenClaw 現在在可用時更傾向於重複使用 Claude CLI。
+    - **Anthropic setup-token**: 在 onboarding/configure 中仍然可用，不過 OpenClaw 現在傾向於在可用時重複使用 Claude CLI。
     - **OpenAI Code (Codex) subscription (OAuth)**: 瀏覽器流程；貼上 `code#state`。
-      - 當模型未設定或已是 OpenAI 系列時，透過 Codex 執行時將 `agents.defaults.model` 設定為 `openai/gpt-5.5`。
-    - **OpenAI Code (Codex) subscription (device pairing)**: 使用短期裝置代碼的瀏覽器配對流程。
-      - 當模型未設定或已是 OpenAI 系列時，透過 Codex 執行時將 `agents.defaults.model` 設定為 `openai/gpt-5.5`。
+      - 當模型未設定或已屬於 OpenAI 系列時，透過 Codex runtime 將 `agents.defaults.model` 設定為 `openai/gpt-5.5`。
+    - **OpenAI Code (Codex) subscription (device pairing)**: 具有短期裝置代碼的瀏覽器配對流程。
+      - 當模型未設定或已屬於 OpenAI 系列時，透過 Codex runtime 將 `agents.defaults.model` 設定為 `openai/gpt-5.5`。
     - **OpenAI API key**: 如果存在則使用 `OPENAI_API_KEY`，否則提示輸入金鑰，然後將其儲存在 auth profiles 中。
       - 當模型未設定、`openai/*` 或 `openai-codex/*` 時，將 `agents.defaults.model` 設定為 `openai/gpt-5.5`。
-    - **xAI (Grok) API key**: 提示輸入 `XAI_API_KEY` 並將 xAI 設定為模型提供者。
+    - **xAI (Grok) OAuth / API key**: 選擇時使用 xAI OAuth 登入，或在 API-key 路徑中提示輸入 `XAI_API_KEY`，並將 xAI 配置為模型提供者。
     - **OpenCode**: 提示輸入 `OPENCODE_API_KEY` (或 `OPENCODE_ZEN_API_KEY`，請在 https://opencode.ai/auth 取得)，並讓您選擇 Zen 或 Go 目錄。
-    - **Ollama**: 首先提供 **Cloud + Local**、**Cloud only** 或 **Local only**。`Cloud only` 提示輸入 `OLLAMA_API_KEY` 並使用 `https://ollama.com`；主機託管模式會提示輸入 Ollama 基礎 URL，探索可用模型，並在需要時自動拉取選定的本地模型；`Cloud + Local` 也會檢查該 Ollama 主機是否已登入雲端存取權。
-    - 更多詳情: [Ollama](/zh-Hant/providers/ollama)
+    - **Ollama**: 首先提供 **Cloud + Local**、**Cloud only** 或 **Local only** 選項。`Cloud only` 會提示輸入 `OLLAMA_API_KEY` 並使用 `https://ollama.com`；主機支援的模式會提示輸入 Ollama 基礎 URL、探索可用的模型，並在需要時自動拉取所選的本機模型；`Cloud + Local` 也會檢查該 Ollama 主機是否已登入以進行雲端存取。
+    - 更多詳細資訊：[Ollama](/zh-Hant/providers/ollama)
     - **API key**: 為您儲存金鑰。
     - **Vercel AI Gateway (multi-model proxy)**: 提示輸入 `AI_GATEWAY_API_KEY`。
-    - 更多詳情: [Vercel AI Gateway](/zh-Hant/providers/vercel-ai-gateway)
+    - 更多詳細資訊：[Vercel AI Gateway](/zh-Hant/providers/vercel-ai-gateway)
     - **Cloudflare AI Gateway**: 提示輸入 Account ID、Gateway ID 和 `CLOUDFLARE_AI_GATEWAY_API_KEY`。
-    - 更多詳情: [Cloudflare AI Gateway](/zh-Hant/providers/cloudflare-ai-gateway)
-    - **MiniMax**: 配置會自動寫入；託管預設值為 `MiniMax-M2.7`。
-      API 金鑰設定使用 `minimax/...`，OAuth 設定使用
+    - 更多詳細資訊：[Cloudflare AI Gateway](/zh-Hant/providers/cloudflare-ai-gateway)
+    - **MiniMax**: 配置會自動寫入；託管的預設值為 `MiniMax-M2.7`。
+      API-key 設定使用 `minimax/...`，而 OAuth 設定使用
       `minimax-portal/...`。
-    - 更多詳情: [MiniMax](/zh-Hant/providers/minimax)
-    - **StepFun**: 會針對中國或全球端點上的 StepFun 標準版或 Step Plan 自動寫入配置。
-    - 標準版目前包含 `step-3.5-flash`，Step Plan 也包含 `step-3.5-flash-2603`。
-    - 更多詳情: [StepFun](/zh-Hant/providers/stepfun)
+    - 更多詳細資訊：[MiniMax](/zh-Hant/providers/minimax)
+    - **StepFun**: 針對中國或全球端點上的 StepFun 標準版或 Step Plan 自動寫入配置。
+    - 標準版目前包含 `step-3.5-flash`，而 Step Plan 也包含 `step-3.5-flash-2603`。
+    - 更多詳細資訊：[StepFun](/zh-Hant/providers/stepfun)
     - **Synthetic (Anthropic-compatible)**: 提示輸入 `SYNTHETIC_API_KEY`。
-    - 更多詳情: [Synthetic](/zh-Hant/providers/synthetic)
+    - 更多詳細資訊：[Synthetic](/zh-Hant/providers/synthetic)
     - **Moonshot (Kimi K2)**: 配置會自動寫入。
     - **Kimi Coding**: 配置會自動寫入。
-    - 更多詳情: [Moonshot AI (Kimi + Kimi Coding)](/zh-Hant/providers/moonshot)
-    - **Skip**: 尚未配置身份驗證。
-    - 從偵測到的選項中挑選一個預設模型 (或手動輸入提供者/模型)。為了獲得最佳品質並降低提示注入風險，請選擇您提供者堆疊中可用的最強最新一代模型。
-    - Onboarding 會執行模型檢查，如果設定的模型未知或缺少身份驗證，則會發出警告。
-    - API 金鑰儲存模式預設為純文字 auth-profile 值。使用 `--secret-input-mode ref` 來改為儲存環境變數支援的參照 (例如 `keyRef: { source: "env", provider: "default", id: "OPENAI_API_KEY" }`)。
+    - 更多詳細資訊：[Moonshot AI (Kimi + Kimi Coding)](/zh-Hant/providers/moonshot)
+    - **Skip**: 尚未配置任何驗證。
+    - 從偵測到的選項中挑選預設模型 (或手動輸入提供者/模型)。為了獲得最佳品質並降低提示注入 的風險，請選擇您提供者堆疊中最強大的最新世代模型。
+    - Onboarding 會執行模型檢查，如果配置的模型未知或缺少驗證，則會發出警告。
+    - API 金鑰儲存模式預設為純文字 auth-profile 值。使用 `--secret-input-mode ref` 來改為儲存 env-backed refs (例如 `keyRef: { source: "env", provider: "default", id: "OPENAI_API_KEY" }`)。
     - Auth profiles 儲存在 `~/.openclaw/agents/<agentId>/agent/auth-profiles.json` 中 (API 金鑰 + OAuth)。`~/.openclaw/credentials/oauth.json` 僅供舊版匯入使用。
-    - 更多詳情: [/concepts/oauth](/zh-Hant/concepts/oauth)
+    - 更多詳細資訊：[/concepts/oauth](/zh-Hant/concepts/oauth)
     <Note>
-    Headless/伺服器提示: 在具有瀏覽器的機器上完成 OAuth，然後將
-    該代理程式的 `auth-profiles.json` (例如
-    `~/.openclaw/agents/<agentId>/agent/auth-profiles.json`，或對應的
-    `$OPENCLAW_STATE_DIR/...` 路徑) 複製到閘道主機。`credentials/oauth.json`
+    Headless/server 提示：在具有瀏覽器的機器上完成 OAuth，然後將
+    該 agent 的 `auth-profiles.json` (例如
+    `~/.openclaw/agents/<agentId>/agent/auth-profiles.json`，或相符的
+    `$OPENCLAW_STATE_DIR/...` 路徑) 複製到 gateway 主機。`credentials/oauth.json`
     僅是舊版匯入來源。
     </Note>
   </Step>

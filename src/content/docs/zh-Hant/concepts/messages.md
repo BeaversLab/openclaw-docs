@@ -25,7 +25,7 @@ Inbound message
 - `agents.defaults.*` 用於區塊串流和分塊預設值。
 - 頻道覆寫（`channels.whatsapp.*`、`channels.telegram.*` 等）用於上限和串流切換。
 
-完整架構請參閱 [Configuration](/zh-Hant/gateway/configuration)。
+請參閱[Configuration](/zh-Hant/gateway/configuration)以取得完整架構。
 
 ## 傳入去重
 
@@ -114,7 +114,7 @@ OpenClaw 將 **提示主體** 與 **指令主體** 分開：
 - 預設模式是 `steer`，針對 Codex 導向批次以及後續/收集佇列有 500 毫秒的防動。
 - 模式：`steer`、`followup`、`collect` 和 `interrupt`。
 
-詳細資訊：[指令佇列](/zh-Hant/concepts/queue) 和 [導向佇列](/zh-Hant/concepts/queue-steering)。
+詳情：[Command queue](/zh-Hant/concepts/queue) 與 [Steering queue](/zh-Hant/concepts/queue-steering)。
 
 ## 頻道執行權
 
@@ -137,7 +137,7 @@ OpenClaw 將 **提示主體** 與 **指令主體** 分開：
 - `agents.defaults.humanDelay` (區塊回覆之間類似人類的暫停)
 - 頻道覆寫：`*.blockStreaming` 和 `*.blockStreamingCoalesce` (非 Telegram 頻道需要明確指定 `*.blockStreaming: true`)
 
-詳情：[串流 + 分塊](/zh-Hant/concepts/streaming)。
+詳情：[Streaming + chunking](/zh-Hant/concepts/streaming)。
 
 ## 推理可見性和 Token
 
@@ -147,7 +147,7 @@ OpenClaw 可以顯示或隱藏模型推理：
 - 當推理內容由模型生成時，仍會計入 Token 使用量。
 - Telegram 支援將推理串流到暫時的草稿氣泡中，該氣泡會在最終傳送後刪除；請使用 `/reasoning on` 進行持續性的推理輸出。
 
-詳情：[思考 + 推理指令](/zh-Hant/tools/thinking) 和 [Token 使用](/zh-Hant/reference/token-use)。
+詳情：[Thinking + reasoning directives](/zh-Hant/tools/thinking) 與 [Token use](/zh-Hant/reference/token-use)。
 
 ## 前綴、串接和回覆
 
@@ -156,7 +156,7 @@ OpenClaw 可以顯示或隱藏模型推理：
 - `messages.responsePrefix`、`channels.<channel>.responsePrefix` 和 `channels.<channel>.accounts.<id>.responsePrefix` (傳出前綴級聯)，加上 `channels.whatsapp.messagePrefix` (WhatsApp 傳入前綴)
 - 透過 `replyToMode` 和各頻道預設值進行回覆串接
 
-詳情：[組態](/zh-Hant/gateway/config-agents#messages) 和頻道文件。
+詳情：[Configuration](/zh-Hant/gateway/config-agents#messages) 與頻道文件。
 
 ## 靜默回覆
 
@@ -173,19 +173,18 @@ OpenClaw 會根據對話類型解析該行為：
   `message(action=send)`。
 - 內部協調預設允許靜默。
 
-在非直接聊天中，若在任何助理回覆之前發生內部執行器失敗，OpenClaw 也會使用靜默回覆，因此群組/頻道不會看到閘道錯誤範本。直接聊天預設會顯示簡潔的失敗訊息；
-只有當 `/verbose` 為 `on` 或 `full` 時，才會顯示原始執行器詳細資訊。
+OpenClaw 也會對非直接聊天中任何助理回覆之前發生的內部執行器失敗使用無聲回覆，因此群組/頻道不會看到閘道錯誤的標準文字。直接聊天預設會顯示簡短的失敗文字；只有在啟用 `/verbose full` 時才會顯示原始執行器詳細資訊。
 
-預設值位於 `agents.defaults.silentReply` 之下； `surfaces.<id>.silentReply`
-可以針對每個介面覆寫群組/內部原則。
+預設值位於 `agents.defaults.silentReply` 之下；`surfaces.<id>.silentReply`
+可以針對每個介面覆寫群組/內部策略。
 
 純靜默回覆會在所有介面上被捨棄，因此父階段會保持安靜，
 而不會將標記文字重寫為備用閒聊。
 
 ## 相關
 
-- [訊息生命週期重構](/zh-Hant/concepts/message-lifecycle-refactor) - 目標持續性傳送與接收設計
-- [串流](/zh-Hant/concepts/streaming) — 即時訊息傳遞
-- [重試](/zh-Hant/concepts/retry) — 訊息傳遞重試行為
-- [佇列](/zh-Hant/concepts/queue) — 訊息處理佇列
-- [頻道](/zh-Hant/channels) — 訊息平台整合
+- [Message lifecycle refactor](/zh-Hant/concepts/message-lifecycle-refactor) - 目標的持久化發送與接收設計
+- [Streaming](/zh-Hant/concepts/streaming) — 即時訊息傳遞
+- [Retry](/zh-Hant/concepts/retry) — 訊息傳遞重試行為
+- [Queue](/zh-Hant/concepts/queue) — 訊息處理佇列
+- [Channels](/zh-Hant/channels) — 訊息平台整合

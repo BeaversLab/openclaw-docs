@@ -26,18 +26,19 @@ title: "配置"
 并配置其凭据。某些提供程序还会显示特定于提供程序的
 后续提示：
 
-- **Grok** 可以提供可选的 `x_search` 设置，使用相同的 `XAI_API_KEY` 并
-  让您选择一个 `x_search` 模型。
-- **Kimi** 可以询问 Moonshot API 区域（MoonshotAPI`api.moonshot.ai` 对比 `api.moonshot.cn`）以及默认的 Kimi 网络搜索模型。
+- **Grok** 可以提供可选的 `x_search` 设置，使用相同的 xAI OAuth 档案
+  或 API 密钥，并允许您选择一个 `x_search` 模型。
+- **Kimi** 可以询问 Moonshot API 区域（`api.moonshot.ai` 对比
+  `api.moonshot.cn`）以及默认的 Kimi 网页搜索模型。
 
 相关内容：
 
-- Gateway(网关) 配置参考：[配置](<Gateway(网关)/en/gateway/configuration>)
-- Config CLI：[Config](CLI/en/cli/config)
+- Gateway(网关) 配置参考：[Configuration](/zh/gateway/configuration)
+- 配置 CLI：[Config](/zh/cli/config)
 
 ## 选项
 
-- `--section <section>`：可重复的部分筛选器
+- `--section <section>`：可重复的节筛选器
 
 可用部分：
 
@@ -53,12 +54,12 @@ title: "配置"
 
 注意：
 
-- 完整的向导和与 Gateway(网关) 相关的部分会询问 Gateway 运行的位置并更新 Gateway(网关)`gateway.mode`。不包含 `gateway`、`daemon` 或 `health` 的部分筛选器会直接进入请求的设置。
+- 完整的向导和与 Gateway(网关) 相关的部分会询问 Gateway(网关) 的运行位置并更新 `gateway.mode`。不包含 `gateway`、`daemon` 或 `health` 的节筛选器会直接进入请求的设置。
 - 在写入本地配置后，当所选的设置路径需要时，configure 会安装所选的可下载插件。远程 Gateway(网关) 配置不会安装本地插件包。
 - 面向渠道的服务（Slack/Discord/Matrix/Microsoft Teams）会在设置期间提示输入渠道/房间允许列表。您可以输入名称或 ID；向导会在可能的情况下将名称解析为 ID。
-- 如果您运行守护进程安装步骤，令牌认证需要一个令牌，并且 `gateway.auth.token` 由 SecretRef 管理，configure 会验证 SecretRef 但不会将解析后的明文令牌值持久化到主管服务环境元数据中。
+- 如果您运行守护进程安装步骤，Token 认证需要一个 Token，且 `gateway.auth.token` 由 SecretRef 管理，configure 会验证 SecretRef，但不会将解析出的明文 Token 值持久化到监督服务环境元数据中。
 - 如果令牌认证需要一个令牌，且配置的令牌 SecretRef 未解析，configure 会阻止守护进程安装，并提供可操作的修复指导。
-- 如果配置了 `gateway.auth.token` 和 `gateway.auth.password` 并且未设置 `gateway.auth.mode`，configure 将阻止守护进程安装，直到显式设置模式。
+- 如果同时配置了 `gateway.auth.token` 和 `gateway.auth.password`，并且未设置 `gateway.auth.mode`，configure 将阻止守护进程安装，直到显式设置模式。
 
 ## 示例
 
@@ -71,5 +72,5 @@ openclaw configure --section gateway --section daemon
 
 ## 相关
 
-- [CLI 参考](CLI/en/cli)
-- [配置](/zh/gateway/configuration)
+- [CLI reference](/zh/cli)
+- [Configuration](/zh/gateway/configuration)

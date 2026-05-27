@@ -537,7 +537,7 @@ Esto cubre el análisis de argumentos de la CLI, la resolución de configuració
   - Proveedores `videoToVideo` declarados pero omitidos actualmente en el barrido compartido:
     - `alibaba`, `qwen`, `xai` porque esas rutas actualmente requieren URLs de referencia remotas de `http(s)` / MP4
     - `google` porque el carril compartido actual de Gemini/Veo usa entrada respaldada por búfer local y esa ruta no se acepta en el barrido compartido
-    - `openai` porque el carril compartido actual carece de garantías de acceso específicas de la organización para la reparación/remix de video
+    - `openai` porque el carril compartido actual carece de garantías de acceso de edición de vídeo específicas de la organización
 - Reducción opcional:
   - `OPENCLAW_LIVE_VIDEO_GENERATION_PROVIDERS="deepinfra,google,openai,runway"`
   - `OPENCLAW_LIVE_VIDEO_GENERATION_MODELS="google/veo-3.1-fast-generate-preview,openai/sora-2,runway/gen4_aleph"`

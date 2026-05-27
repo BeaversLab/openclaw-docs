@@ -51,24 +51,20 @@ export PEEKABOO_BRIDGE_SOCKET=/path/to/bridge.sock
 ## Seguridad y permisos
 
 - El puente valida **las firmas de código de la persona que llama**; se aplica una lista de permitidos de TeamIDs (TeamID del anfitrión de Peekaboo + TeamID de la aplicación OpenClaw).
-- Las solicitudes agotan el tiempo de espera después de ~10 segundos.
-- Si faltan los permisos necesarios, el puente devuelve un mensaje de error claro
-  en lugar de abrir Configuración del Sistema.
+- Se prefiere la identidad del puente/aplicación firmada sobre un tiempo de ejecución `node` genérico para Accesibilidad. Conceder Accesibilidad a `node` permite que cualquier paquete iniciado por ese ejecutable de Node herede el acceso a la automatización de la GUI; consulte [permisos de macOS](/es/platforms/mac/permissions#accessibility-grants-for-node-and-cli-runtimes).
+- Las solicitudes caducan después de unos 10 segundos.
+- Si faltan los permisos necesarios, el puente devuelve un mensaje de error claro en lugar de abrir Configuración del Sistema.
 
 ## Comportamiento de las instantáneas (automatización)
 
-Las instantáneas se almacenan en memoria y caducan automáticamente después de un breve período.
-Si necesitas una retención más larga, vuelve a capturarlas desde el cliente.
+Las instantáneas se almacenan en memoria y caducan automáticamente después de un breve período. Si necesita una retención más larga, vuelva a capturarlas desde el cliente.
 
 ## Solución de problemas
 
-- Si `peekaboo` informa "bridge client is not authorized", asegúrate de que el cliente esté
-  firmado correctamente o ejecuta el host con `PEEKABOO_ALLOW_UNSIGNED_SOCKET_CLIENTS=1`
-  solo en modo **debug**.
-- Si no se encuentra ningún host, abre una de las aplicaciones host (Peekaboo.app u OpenClaw.app)
-  y confirma que se hayan otorgado los permisos.
+- Si `peekaboo` informa "bridge client is not authorized" (el cliente del puente no está autorizado), asegúrese de que el cliente esté firmado correctamente o ejecute el host con `PEEKABOO_ALLOW_UNSIGNED_SOCKET_CLIENTS=1` solo en modo **debug**.
+- Si no se encuentran hosts, abra una de las aplicaciones host (Peekaboo.app u OpenClaw.app) y confirme que se hayan otorgado los permisos.
 
 ## Relacionado
 
-- [app de macOS](/es/platforms/macos)
-- [permisos de macOS](/es/platforms/mac/permissions)
+- [macOS app](/es/platforms/macos)
+- [macOS permissions](/es/platforms/mac/permissions)

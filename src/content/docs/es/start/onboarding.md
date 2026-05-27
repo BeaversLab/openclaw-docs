@@ -7,8 +7,8 @@ title: "Incorporación (aplicación macOS)"
 sidebarTitle: "Incorporación: aplicación macOS"
 ---
 
-Este documento describe el flujo de configuración de **primer inicio** **actual**. El objetivo es una experiencia fluida del "día 0": elegir dónde se ejecuta el Gateway, conectar la autenticación, ejecutar el asistente y dejar que el agente se inicie automáticamente.
-Para obtener una descripción general de las rutas de incorporación, consulte [Información general sobre la incorporación](/es/start/onboarding-overview).
+Este documento describe el flujo de configuración de primera ejecución **actual**. El objetivo es una experiencia fluida del "día 0": elegir dónde se ejecuta el Gateway, conectar la autenticación, ejecutar el asistente y dejar que el agente se inicialice por sí mismo.
+Para obtener una descripción general de las rutas de incorporación (onboarding), consulte [Resumen de incorporación (Onboarding Overview)](/es/start/onboarding-overview).
 
 <Steps>
 <Step title="Aprobar advertencia de macOS">
@@ -28,10 +28,10 @@ Para obtener una descripción general de las rutas de incorporación, consulte [
 
 Modelo de confianza de seguridad:
 
-- De forma predeterminada, OpenClaw es un agente personal: un límite de un operador de confianza.
-- Las configuraciones compartidas/multiusuario requieren bloqueo (dividir los límites de confianza, mantener el acceso a las herramientas al mínimo y seguir [Seguridad](/es/gateway/security)).
+- De manera predeterminada, OpenClaw es un agente personal: un límite de un operador de confianza.
+- Las configuraciones compartidas/multiusuario requieren bloqueo (límites de confianza divididos, mantener el acceso a las herramientas al mínimo y seguir [Seguridad](/es/gateway/security)).
 - La incorporación local ahora establece de forma predeterminada las nuevas configuraciones en `tools.profile: "coding"` para que las configuraciones locales nuevas mantengan las herramientas de sistema de archivos/ejecución sin forzar el perfil `full` sin restricciones.
-- Si se habilitan hooks/webhooks u otras fuentes de contenido que no son de confianza, utilice un nivel de modelo moderno y sólido y mantenga una política estricta de herramientas y sandbox.
+- Si se habilitan hooks/webhooks u otras fuentes de contenido que no son de confianza, utilice un nivel de modelo moderno y sólido y mantenga una política/herramientas estrictas y un aislamiento (sandboxing).
 
 </Step>
 <Step title="Local vs. Remoto">
@@ -41,16 +41,16 @@ Modelo de confianza de seguridad:
 
 ¿Dónde se ejecuta el **Gateway**?
 
-- **Esta Mac (solo local):** la incorporación puede configurar la autenticación y escribir las credenciales localmente.
-- **Remoto (a través de SSH/Tailnet):** la incorporación **no** configura la autenticación local; las credenciales deben existir en el host de la puerta de enlace.
-- **Configurar más tarde:** omitir la configuración y dejar la aplicación sin configurar.
+- **Esta Mac (Solo local):** la incorporación puede configurar la autenticación y escribir las credenciales localmente.
+- **Remoto (a través de SSH/Tailnet):** la incorporación **no** configura la autenticación local; las credenciales deben existir en el host de la puerta de enlace (gateway). El campo de token de puerta de enlace remota almacena el token que utiliza la aplicación macOS para conectarse a esa Gateway; los valores `gateway.remote.token` que no sean de texto plano existentes se conservan hasta que los reemplace.
+- **Configurar más tarde:** omita la configuración y deje la aplicación sin configurar.
 
 <Tip>
-**Sugerencia de autenticación del Gateway:**
+**Consejo de autenticación de Gateway:**
 
-- El asistente ahora genera un **token** incluso para el bucle local, por lo que los clientes de WS locales deben autenticarse.
-- Si deshabilita la autenticación, cualquier proceso local puede conectarse; úselo solo en máquinas de total confianza.
-- Use un **token** para el acceso de varias máquinas o enlaces que no sean de bucle local.
+- El asistente ahora genera un **token** incluso para el bucle invertido (loopback), por lo que los clientes WS locales deben autenticarse.
+- Si deshabilita la autenticación, cualquier proceso local puede conectarse; utilícelo solo en máquinas totalmente confiables.
+- Utilice un **token** para acceso de varias máquinas o enlaces que no sean de bucle invertido.
 
 </Tip>
 </Step>
@@ -73,16 +73,19 @@ La incorporación solicita los permisos TCC necesarios para:
 </Step>
 <Step title="CLI">
   <Info>Este paso es opcional</Info>
-  La aplicación puede instalar la `openclaw` CLI global a través de npm, pnpm o bun.
-  Prefiere npm primero, luego pnpm, y luego bun si ese es el único gestor de paquetes detectado.
+  La aplicación puede instalar la CLI global `openclaw` a través de npm, pnpm o bun.
+  Prefiere npm primero, luego pnpm y luego bun si ese es el único gestor de paquetes detectado.
   Para el tiempo de ejecución de Gateway, Node sigue siendo la ruta recomendada.
 </Step>
 <Step title="Chat de incorporación (sesión dedicada)">
-  Después de la configuración, la aplicación abre una sesión de chat de incorporación dedicada para que el agente pueda presentarse y guiar los siguientes pasos. Esto mantiene la guía de primer inicio separada de su conversación normal. Consulte [Inicialización](/es/start/bootstrapping) para ver qué sucede en el host de la puerta de enlace durante la primera ejecución del agente.
+  Después de la configuración, la aplicación abre una sesión de chat de incorporación dedicada para que el agente pueda
+  presentarse y guiar los siguientes pasos. Esto mantiene la guía de primera ejecución separada
+  de su conversación normal. Consulte [Inicialización](/es/start/bootstrapping) para
+  saber qué sucede en el host de la puerta de enlace durante la primera ejecución del agente.
 </Step>
 </Steps>
 
 ## Relacionado
 
 - [Descripción general de la incorporación](/es/start/onboarding-overview)
-- [Primeros pasos](/es/start/getting-started)
+- [Introducción](/es/start/getting-started)

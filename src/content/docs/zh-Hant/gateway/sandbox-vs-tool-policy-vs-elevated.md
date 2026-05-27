@@ -37,7 +37,7 @@ Sandbox 由 `agents.defaults.sandbox.mode` 控制：
 - `"non-main"`：僅非主會話位於沙盒中（群組/通道常見的「意外」情況）。
 - `"all"`：所有內容都會被 sandbox。
 
-請參閱[沙盒化](/zh-Hant/gateway/sandboxing)以了解完整矩陣（範圍、工作區掛載、映像檔）。
+請參閱 [沙盒機制](/zh-Hant/gateway/sandboxing) 以取得完整矩陣（範圍、工作區掛載、映像檔）。
 
 ### Bind mounts（安全性快速檢查）
 
@@ -67,10 +67,11 @@ Sandbox 由 `agents.defaults.sandbox.mode` 控制：
 - 工具原則會依名稱過濾可用工具；它不會檢查 `exec` 內部的副作用。如果允許 `exec`，拒絕 `write`、`edit` 或 `apply_patch` 並不會讓 shell 指令變成唯讀。
 - `/exec` 僅變更經授權發送者的會話預設值；它不會授予工具存取權。
   提供者工具金鑰接受 `provider`（例如 `google-antigravity`）或 `provider/model`（例如 `openai/gpt-5.4`）。
+- 當工具原則步驟移除工具或沙盒工具原則封鎖呼叫時，Gateway 日誌會包含 `agents/tool-policy` 審計項目。請使用 `openclaw logs` 來查看規則標籤、設定金鑰及受影響的工具名稱。
 
 ### 工具群組（簡寫）
 
-工具原則（全域、代理程式、沙盒）支援可展開為多個工具的 `group:*` 項目：
+工具原則（全域、代理程式、沙盒）支援 `group:*` 項目，這些項目可展開為多個工具：
 
 ```json5
 {
@@ -86,56 +87,62 @@ Sandbox 由 `agents.defaults.sandbox.mode` 控制：
 
 可用群組：
 
-- `group:runtime`：`exec`、`process`、`code_execution`（`bash` 被接受作為
+- `group:runtime`：`exec`、`process`、`code_execution`（`bash` 被接受為
   `exec` 的別名）
 - `group:fs`：`read`、`write`、`edit`、`apply_patch`
-  對於唯讀代理程式，請拒絕 `group:runtime` 以及可變更檔案系統的工具，除非沙盒檔案系統原則或獨立的主機邊界強制執行唯讀限制。
+  對於唯讀代理程式，請拒絕 `group:runtime` 以及可變更檔案系統的工具，除非沙盒檔案系統原則或個別的主機邊界強制執行唯讀限制。
 - `group:sessions`：`sessions_list`、`sessions_history`、`sessions_send`、`sessions_spawn`、`sessions_yield`、`subagents`、`session_status`
-- `group:memory`: `memory_search`, `memory_get`
-- `group:web`: `web_search`, `x_search`, `web_fetch`
-- `group:ui`: `browser`, `canvas`
-- `group:automation`: `heartbeat_respond`, `cron`, `gateway`
-- `group:messaging`: `message`
-- `group:nodes`: `nodes`
-- `group:agents`: `agents_list`, `update_plan`
+- `group:memory`：`memory_search`、`memory_get`
+- `group:web`：`web_search`、`x_search`、`web_fetch`
+- `group:ui`：`browser`、`canvas`
+- `group:automation`：`heartbeat_respond`、`cron`、`gateway`
+- `group:messaging`：`message`
+- `group:nodes`：`nodes`
+- `group:agents`：`agents_list`、`update_plan`
 - `group:media`: `image`, `image_generate`, `music_generate`, `video_generate`, `tts`
-- `group:openclaw`: 所有內建 OpenClaw 工具（不包含提供者插件）
+- `group:openclaw`: 所有內建的 OpenClaw 工具（不包括提供者外掛程式）
+- `group:plugins`: 所有已載入的外掛程式擁有的工具，包括透過 `bundle-mcp` 公開的已設定 MCP 伺服器
 
-## 提升權限：僅執行的「在主機上執行」
+對於受沙箱保護的 MCP 伺服器，沙箱工具原則是第二道允許閘門。如果已設定 `mcp.servers`，但受沙箱保護的回合只顯示內建工具，請將 `bundle-mcp`、`group:plugins` 或伺服器前綴的 MCP 工具名稱/萬用字元（例如 `outlook__send_mail` 或 `outlook__*`）新增至 `tools.sandbox.tools.alsoAllow`，然後重新啟動/重新載入閘道並重新擷取工具清單。伺服器萬用字元使用提供者安全的 MCP 伺服器前綴：非 `[A-Za-z0-9_-]` 字元會變成 `-`，不以字母開頭的名稱會取得 `mcp-` 前綴，而過長或重複的前綴可能會被截斷或加上後綴。
 
-Elevated 模式**不會**授予額外工具；它只影響 `exec`。
+`openclaw doctor` 目前會檢查 `mcp.servers` 中 OpenClaw 管理伺服器的此結構。從隨附外掛程式資訊清單或 Claude `.mcp.json` 載入的 MCP 伺服器使用相同的沙箱閘門，但此診斷尚未列舉這些來源；如果它們的工具在受沙箱保護的回合中消失，請使用相同的允許清單項目。
 
-- 如果您在沙盒中，`/elevated on`（或帶有 `elevated: true` 的 `exec`）會在沙盒外執行（仍可能需要審批）。
-- 使用 `/elevated full` 略過該連線階段的 exec 審批。
-- 如果您已經在直接執行，elevated 實際上是無操作（但仍受閘道控管）。
-- 提升權限**並非**以技能為範圍，也**不會**覆寫工具允許/拒絕設定。
-- Elevated 不會授予來自 `host=auto` 的任意跨主機覆寫；它遵循正常的 exec 目標規則，且僅在配置/連線階段目標已是 `node` 時才保留 `node`。
-- `/exec` 與 elevated 分開。它僅調整已授權發送者的連線階段 exec 預設值。
+## 提權：僅執行「在主機上執行」
 
-閘道管制：
+提權**不會**授額外工具；它只會影響 `exec`。
 
-- 啟用方式：`tools.elevated.enabled`（以及選用的 `agents.list[].tools.elevated.enabled`）
-- 發送者允許清單：`tools.elevated.allowFrom.<provider>`（以及選用的 `agents.list[].tools.elevated.allowFrom.<provider>`）
+- 如果您處於沙箱環境中，`/elevated on`（或具有 `elevated: true` 的 `exec`）會在沙箱外部執行（可能仍需要核准）。
+- 使用 `/elevated full` 以跳過此階段的執行核准。
+- 如果您已經在直接執行，提權實際上是不會產生任何效果的空操作（仍受閘門控制）。
+- 提權**不是**以技能為範圍的，並且**不會**覆寫工具允許/拒絕。
+- 提權 並不授予從 `host=auto` 進行任意跨主機覆蓋的權限；它遵循正常的 exec 目標規則，並且僅當配置/會話目標已經是 `node` 時，才會保留 `node`。
+- `/exec` 與提權是分開的。它僅為已授權的發送者調整每次會話的 exec 預設值。
 
-參閱 [Elevated Mode](/zh-Hant/tools/elevated)。
+閘道：
 
-## 常見的「沙箱監獄」修復方法
+- 啟用方式：`tools.elevated.enabled`（以及可選的 `agents.list[].tools.elevated.enabled`）
+- 發送者允許清單：`tools.elevated.allowFrom.<provider>`（以及可選的 `agents.list[].tools.elevated.allowFrom.<provider>`）
 
-### 「工具 X 被沙箱工具政策封鎖」
+參閱 [提權模式](/zh-Hant/tools/elevated)。
+
+## 常見的「沙盒監獄」修復方法
+
+### 「工具 X 被沙盒工具政策封鎖」
 
 修復金鑰（擇一）：
 
-- 停用沙盒：`agents.defaults.sandbox.mode=off`（或每個代理程式的 `agents.list[].sandbox.mode=off`）
-- 在沙箱內允許該工具：
-  - 從 `tools.sandbox.tools.deny` 中移除它（或是針對每個代理程式的 `agents.list[].tools.sandbox.tools.deny`）
-  - 或是將它加入 `tools.sandbox.tools.allow`（或是針對每個代理程式的允許設定）
+- 停用沙盒：`agents.defaults.sandbox.mode=off`（或針對每個 Agent 的 `agents.list[].sandbox.mode=off`）
+- 在沙盒內允許該工具：
+  - 將其從 `tools.sandbox.tools.deny` 中移除（或針對每個 Agent 的 `agents.list[].tools.sandbox.tools.deny`）
+  - 或將其加入 `tools.sandbox.tools.allow`（或針對每個 Agent 的允許清單）
+- 檢查 `openclaw logs` 中的 `agents/tool-policy` 條目。它會記錄沙盒模式以及是允許還是拒絕規則封鎖了該工具。
 
-### 「我以為這是 main，為什麼它被沙箱化了？」
+### 「我以為這是 main，為什麼被沙盒化了？」
 
-在 `"non-main"` 模式下，群組/頻道金鑰*並非*主要金鑰。請使用主要工作階段金鑰（由 `sandbox explain` 顯示）或將模式切換至 `"off"`。
+在 `"non-main"` 模式下，群組/頻道金鑰 _並非_ main。請使用 main 會話金鑰（由 `sandbox explain` 顯示），或將模式切換為 `"off"`。
 
 ## 相關內容
 
-- [沙箱機制](/zh-Hant/gateway/sandboxing) -- 完整的沙箱參考資料（模式、範圍、後端、映像檔）
-- [多代理程式沙箱與工具](/zh-Hant/tools/multi-agent-sandbox-tools) -- 每個代理程式的覆寫與優先順序
+- [沙盒機制](/zh-Hant/gateway/sandboxing) -- 完整的沙盒參考資料（模式、範圍、後端、映像檔）
+- [多 Agent 沙盒與工具](/zh-Hant/tools/multi-agent-sandbox-tools) -- 每個 Agent 的覆蓋與優先順序
 - [提權模式](/zh-Hant/tools/elevated)

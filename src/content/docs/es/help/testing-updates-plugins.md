@@ -13,8 +13,7 @@ simple: demostrar que el paquete instalable puede actualizar el estado real del 
 heredado obsoleto a través de `doctor`, y aún así instalar, cargar, actualizar y desinstalar
 complementos desde las fuentes compatibles.
 
-Para el mapa más amplio del ejecutor de pruebas, consulte [Pruebas](/es/help/testing). Para las claves de
-proveedor en vivo y las suites que tocan la red, consulte [Pruebas en vivo](/es/help/testing-live).
+Para ver el mapa general del ejecutor de pruebas, consulte [Testing](/es/help/testing). Para las claves de proveedores en vivo y las suites que tocan la red, consulte [Testing live](/es/help/testing-live).
 
 ## Lo que protegemos
 
@@ -135,20 +134,28 @@ Fuentes de candidatos:
 - `source=npm`: validar `openclaw@beta`, `openclaw@latest` o una versión
   publicada exacta.
 - `source=ref`: empaquetar una rama, etiqueta o confirmación de confianza con el arnés actual seleccionado.
-- `source=url`: validar un archivo tar HTTPS con `package_sha256` requerida.
-- `source=artifact`: reutilizar un archivo tar cargado por otra ejecución de Actions.
+- `source=url`: valida un archivo tarball HTTPS público con `package_sha256` requerido.
+  Esta ruta rechaza credenciales de URL, puertos HTTPS no predeterminados, nombres de host
+  privados/internos o resultados de DNS/IP, espacio IP de uso especial y redirecciones no seguras.
+- `source=trusted-url`: valida un archivo tarball HTTPS con `package_sha256` y `trusted_source_id` requeridos
+  contra la política propiedad del mantenedor en `.github/package-trusted-sources.json`. Úselo para espejos
+  empresariales/privados en lugar de debilitar `source=url` con un interruptor allow-private
+  a nivel de entrada. La autenticación Bearer, cuando está configurada por política, utiliza el secreto fijo
+  `OPENCLAW_TRUSTED_PACKAGE_TOKEN`.
+- `source=artifact`: reutiliza un archivo tarball cargado por otra ejecución de Actions.
 
-La Validación de Lanzamiento Completo utiliza `source=artifact` por defecto, construido desde el SHA de lanzamiento resuelto. Para la prueba posterior a la publicación, pase
+La validación de lanzamiento completo utiliza `source=artifact` de forma predeterminada, construido a partir del
+SHA de lanzamiento resuelto. Para la prueba posterior a la publicación, pase
 `package_acceptance_package_spec=openclaw@YYYY.M.D` para que la misma matriz de actualización
-apunte al paquete npm enviado en su lugar.
+tenga como objetivo el paquete npm enviado en su lugar.
 
-Las comprobaciones de lanzamiento llaman a Aceptación de Paquetes con el conjunto paquete/actualización/reinicio/complemento:
+Las comprobaciones de lanzamiento llaman a la Aceptación de Paquetes con el conjunto paquete/actualización/reinicio/complemento:
 
 ```text
 doctor-switch update-channel-switch update-corrupt-plugin upgrade-survivor published-upgrade-survivor update-restart-auth plugins-offline plugin-update
 ```
 
-Cuando el periodo de prueba de lanzamiento está habilitado, también pasan:
+Cuando el período de prueba de lanzamiento está habilitado, también pasan:
 
 ```text
 published_upgrade_survivor_baselines=last-stable-4 2026.4.23 2026.5.2 2026.4.15
@@ -156,11 +163,14 @@ published_upgrade_survivor_scenarios=reported-issues
 telegram_mode=mock-openai
 ```
 
-Esto mantiene la migración de paquetes, el cambio de canal de actualización, la tolerancia a complementos administrados corruptos, la limpieza de dependencias de complementos obsoletas, la cobertura de complementos sin conexión, el comportamiento de actualización de complementos y el control de calidad de paquetes de Telegram en el mismo artefacto resuelto sin hacer que la puerta predeterminada del paquete de lanzamiento recorra cada lanzamiento publicado.
+Esto mantiene la migración de paquetes, el cambio de canal de actualización, la tolerancia a complementos administrados corruptos,
+la limpieza de dependencias de complementos obsoletas, la cobertura de complementos sin conexión, el comportamiento
+de actualización de complementos y el control de calidad de paquetes de Telegram en el mismo artefacto resuelto sin
+hacer que el filtro de paquete de lanzamiento predeterminado recorra cada lanzamiento publicado.
 
-`last-stable-4` se resuelve en los cuatro últimos lanzamientos estables de OpenClaw publicados en npm. La aceptación de paquetes de lanzamiento fija `2026.4.23` como el primer límite de compatibilidad de actualización de complementos, `2026.5.2` como un límite de cambios en la arquitectura de complementos y `2026.4.15` como una línea base de actualización publicada anterior de 2026.4.1x; el solucionador deduplica las fijaciones que ya están en los últimos cuatro. Para una cobertura exhaustiva de la migración de actualizaciones publicadas, use `all-since-2026.4.23` en el flujo de trabajo de Migración de Actualizaciones por separado en lugar de en CI de Lanzamiento Completo. `release-history` permanece disponible para un muestreo manual más amplio cuando también desea el ancla de fecha anterior heredada.
+`last-stable-4` se resuelve en las cuatro últimas versiones estables de OpenClaw publicadas en npm. La aceptación del paquete de lanzamiento fija `2026.4.23` como el primer límite de compatibilidad de actualización de complementos, `2026.5.2` como un límite de cambios en la arquitectura de complementos y `2026.4.15` como una línea base de actualización publicada anterior de 2026.4.1x; el resolvedor deduplica las fijaciones que ya están en las cuatro últimas. Para una cobertura exhaustiva de la migración de actualizaciones publicadas, use `all-since-2026.4.23` en el flujo de trabajo separado de Migración de actualizaciones en lugar de la CI de lanzamiento completo. `release-history` permanece disponible para un muestreo manual más amplio cuando también desea el ancla de fecha anterior heredada.
 
-Cuando se seleccionan múltiples líneas base de supervivientes de actualizaciones publicadas, el flujo de trabajo de Docker reutilizable fragmenta cada línea base en su propio trabajo de ejecutor específico. Cada fragmento de línea base aún ejecuta el conjunto de escenarios seleccionado, pero los registros y los artefactos permanecen por línea base y el tiempo de ejecución está limitado por el fragmento más lento en lugar de un trabajo serie grande.
+Cuando se seleccionan múltiples líneas base de supervivientes de actualizaciones publicadas, el flujo de trabajo de Docker reutilizado divide cada línea base en su propio trabajo de ejecutor específico. Cada fragmento de línea base aún ejecuta el conjunto de escenarios seleccionado, pero los registros y artefactos permanecen por línea base y el tiempo de ejecución está limitado por el fragmento más lento en lugar de un trabajo serial grande.
 
 Ejecute un perfil de paquete manualmente al validar un candidato antes del lanzamiento:
 
@@ -182,48 +192,61 @@ Use `suite_profile=product` cuando la pregunta de lanzamiento incluya canales MC
 
 Para los candidatos de lanzamiento, la pila de prueba predeterminada es:
 
-1. `pnpm check:changed` y `pnpm test:changed` para regresiones a nivel de origen.
-2. `pnpm release:check` para la integridad del artefacto del paquete.
-3. Perfil de Aceptación de Paquetes `package` o los carriles personalizados de paquetes de comprobación de lanzamiento para contratos de instalación/actualización/reinicio/complemento.
-4. Comprobaciones de lanzamiento multiSO para el instalador específico del SO, incorporación y comportamiento de la plataforma.
-5. Las suites en vivo solo cuando la superficie modificada toque el comportamiento del proveedor o del servicio hospedado.
+1. `pnpm check:changed` y `pnpm test:changed` para regresiones a nivel de código fuente.
+2. `pnpm release:check` para la integridad de los artefactos del paquete.
+3. Perfil de Aceptación de paquetes `package` o los carriles personalizados de paquete release-check para contratos de instalación/actualización/reinicio/complemento.
+4. Verificaciones de lanzamiento multi-OS para el instalador específico del sistema operativo, la incorporación y el comportamiento de la plataforma.
+5. Suites en vivo solo cuando la superficie modificada toca el comportamiento del proveedor o del servicio alojado.
 
 En las máquinas de los mantenedores, las puertas amplias y la prueba del producto Docker/paquete deben ejecutarse en Testbox a menos que se esté haciendo explícitamente una prueba local.
 
 ## Compatibilidad heredada
 
-La tolerancia de compatibilidad es estrecha y limitada en el tiempo:
+La flexibilidad de compatibilidad es limitada y tiene un tiempo definido:
 
-- Los paquetes a través de `2026.4.25`, incluyendo `2026.4.25-beta.*`, pueden tolerar lagunas de metadatos de paquetes ya enviados en la Aceptación de Paquetes.
-- El paquete publicado `2026.4.26` puede advertir sobre archivos de sello de metadatos de compilación local ya enviados.
-- Los paquetes posteriores deben cumplir con los contratos modernos. Las mismas lagunas fallan en lugar de advertir o saltarse.
+- Los paquetes a través de `2026.4.25`, incluyendo `2026.4.25-beta.*`, pueden tolerar
+  lagunas en los metadatos del paquete ya enviados en Package Acceptance.
+- El paquete publicado `2026.4.26` puede advertir sobre archivos de sello de metadatos de compilación local
+  ya enviados.
+- Los paquetes posteriores deben cumplir con los contratos modernos. Las mismas lagunas fallan en lugar de
+  advertir u omitir.
 
-No agregue nuevas migraciones de inicio para estas formas antiguas. Agregue o extienda una reparación de doctor, luego pruébela con `upgrade-survivor`, `published-upgrade-survivor` o `update-restart-auth` cuando el comando de actualización sea el propietario del reinicio.
+No agregues nuevas migraciones de inicio para estas formas antiguas. Agrega o extiende una reparación de doctor,
+luego demuéstrala con `upgrade-survivor`, `published-upgrade-survivor` o
+`update-restart-auth` cuando el comando de actualización sea responsable del reinicio.
 
 ## Agregar cobertura
 
-Al cambiar el comportamiento de actualización o complemento, agregue cobertura en la capa más baja que pueda fallar por la razón correcta:
+Al cambiar el comportamiento de actualización o de complementos, agrega cobertura en la capa más baja que
+pueda fallar por la razón correcta:
 
-- Lógica de ruta pura o metadatos: prueba unitaria junto al código fuente.
-- Comportamiento de inventario de paquetes o archivos empaquetados: prueba `package-dist-inventory` o verificador de archivos tar.
-- Comportamiento de instalación/actualización de CLI: aserción o accesorio de carril Docker.
+- Lógica pura de ruta o metadatos: prueba unitaria junto al código fuente.
+- Inventario de paquetes o comportamiento de archivos empaquetados: prueba de `package-dist-inventory` o verificador de
+  archivos tar.
+- Comportamiento de instalación/actualización de CLI: aserción o accesorio de Docker lane.
 - Comportamiento de migración de versión publicada: escenario `published-upgrade-survivor`.
 - Comportamiento de reinicio propiedad de la actualización: `update-restart-auth`.
-- Comportamiento de origen de registro/paquete: accesorio `test:docker:plugins` o servidor de accesorios ClawHub.
-- Diseño o limpieza de dependencias: afirmar tanto la ejecución en tiempo de ejecución como el límite del sistema de archivos. Las dependencias de npm pueden ser elevadas bajo la raíz npm administrada, por lo que las pruebas deben demostrar que la raíz se escanea/limpia en lugar de asumir un árbol `node_modules` local al paquete.
+- Comportamiento de origen de registro/paquete: accesorio `test:docker:plugins` o servidor de accesorios
+  ClawHub.
+- Diseño de dependencias o comportamiento de limpieza: afirma tanto la ejecución en tiempo de ejecución como el
+  límite del sistema de archivos. Las dependencias npm pueden ser elevadas bajo la raíz npm administrada,
+  por lo que las pruebas deben demostrar que la raíz se escanea/limpia en lugar de asumir un árbol
+  `node_modules` local al paquete.
 
-Mantenga los nuevos accesorios Docker herméticos de forma predeterminada. Use registros de accesorios locales y paquetes falsos a menos que el punto de la prueba sea el comportamiento del registro en vivo.
+Mantén los nuevos accesorios de Docker herméticos por defecto. Usa registros de accesorios locales y
+paquetes falsos a menos que el punto de la prueba sea el comportamiento del registro en vivo.
 
 ## Triaje de fallos
 
-Comience con la identidad del artefacto:
+Comienza con la identidad del artefacto:
 
-- Resumen de Aceptación de Paquetes `resolve_package`: origen, versión, SHA-256 y nombre del artefacto.
-- Artefactos de Docker: `.artifacts/docker-tests/**/summary.json`,
-  `failures.json`, registros de carril y comandos de reejecución.
-- Resumen del sobreviviente de actualización: `.artifacts/upgrade-survivor/summary.json`,
-  incluyendo la versión de línea base, versión candidata, escenario,
-  tiempos de fase y pasos de la receta.
+- Resumen `resolve_package` de Package Acceptance: origen, versión, SHA-256 y
+  nombre del artefacto.
+- Artefactos Docker: `.artifacts/docker-tests/**/summary.json`,
+  `failures.json`, registros de lane y comandos de repetición.
+- Resumen de superviviente de actualización: `.artifacts/upgrade-survivor/summary.json`,
+  incluyendo versión base, versión candidata, escenario, tiempos de fase y
+  pasos de la receta.
 
-Se prefiere volver a ejecutar el carril fallido exacto con el mismo artefacto de paquete
-antes que volver a ejecutar todo el paraguas de lanzamiento.
+Prefiere volver a ejecutar el lane exacto fallido con el mismo artefacto de paquete sobre
+volver a ejecutar todo el paraguas de lanzamiento.

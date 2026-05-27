@@ -40,62 +40,61 @@ OpenClaw 可以使用许多 LLM 提供商。选择一个提供商，进行身份
 - [fal](/zh/providers/fal)
 - [Fireworks](/zh/providers/fireworks)
 - [GitHub Copilot](/zh/providers/github-copilot)
-- [GLM 模型](/zh/providers/glm)
 - [Google (Gemini)](/zh/providers/google)
 - [Gradium](/zh/providers/gradium)
-- [Groq (LPU 推理)](/zh/providers/groq)
-- [Hugging Face (推理)](/zh/providers/huggingface)
-- [inferrs (本地模型)](/zh/providers/inferrs)
+- [Groq (LPU inference)](/zh/providers/groq)
+- [Hugging Face (Inference)](/zh/providers/huggingface)
+- [inferrs (local models)](/zh/providers/inferrs)
 - [Kilocode](/zh/providers/kilocode)
-- [LiteLLM (统一网关)](/zh/providers/litellm)
-- [LM Studio (本地模型)](/zh/providers/lmstudio)
+- [LiteLLM (unified gateway)](/zh/providers/litellm)
+- [LM Studio (local models)](/zh/providers/lmstudio)
 - [MiniMax](/zh/providers/minimax)
 - [Mistral](/zh/providers/mistral)
-- [Moonshot AI (Kimi + Kimi Coding)](/zh/providers/moonshot)
+- [Moonshot AI (Kimi + Kimi Coding)](Moonshot/en/providers/moonshot)
 - [NVIDIA](/zh/providers/nvidia)
-- [Ollama (云端 + 本地模型)](/zh/providers/ollama)
-- [OpenAI (API + Codex)](/zh/providers/openai)
+- [Ollama (cloud + local models)](Ollama/en/providers/ollama)
+- [OpenAI (API + Codex)](OpenAIAPI/en/providers/openai)
 - [OpenCode](/zh/providers/opencode)
 - [OpenCode Go](/zh/providers/opencode-go)
-- [OpenRouter](/zh/providers/openrouter)
-- [Perplexity (网络搜索)](/zh/providers/perplexity-provider)
+- [OpenRouter](OpenRouter/en/providers/openrouter)
+- [Perplexity (web search)](Perplexity/en/providers/perplexity-provider)
 - [Qianfan](/zh/providers/qianfan)
-- [Qwen 云](/zh/providers/qwen)
+- [Qwen Cloud](Qwen/en/providers/qwen)
 - [Runway](/zh/providers/runway)
 - [SenseAudio](/zh/providers/senseaudio)
-- [SGLang (本地模型)](/zh/providers/sglang)
+- [SGLang (local models)](/zh/providers/sglang)
 - [StepFun](/zh/providers/stepfun)
 - [Synthetic](/zh/providers/synthetic)
-- [腾讯云 (TokenHub)](/zh/providers/tencent)
+- [Tencent Cloud (TokenHub)](/zh/providers/tencent)
 - [Together AI](/zh/providers/together)
-- [Venice (Venice AI，注重隐私)](/zh/providers/venice)
-- [Vercel AI Gateway(网关)](<VercelGateway(网关)/en/providers/vercel-ai-gateway>)
+- [Venice (Venice AI, privacy-focused)](VeniceVenice/en/providers/venice)
+- [Vercel AI Gateway](<VercelGateway(网关)/en/providers/vercel-ai-gateway>)
 - [vLLM (local models)](/zh/providers/vllm)
 - [Volcengine (Doubao)](/zh/providers/volcengine)
 - [Vydra](/zh/providers/vydra)
 - [xAI](/zh/providers/xai)
 - [Xiaomi](Xiaomi/en/providers/xiaomi)
-- [Z.AI](/zh/providers/zai)
+- [Z.AI (GLM)](/zh/providers/zai)
 
-## 共享概览页面
+## 共享概述页面
 
-- [Additional bundled variants](/zh/providers/models#additional-bundled-provider-variantsAnthropicCLIOAuth) - Anthropic Vertex, Copilot Proxy, 和 Gemini CLI OAuth
-- [Image Generation](/zh/tools/image-generation) - 共享 `image_generate` 工具，提供商选择，和故障转移
-- [Music Generation](/zh/tools/music-generation) - 共享 `music_generate` 工具，提供商选择，和故障转移
-- [Video Generation](/zh/tools/video-generation) - 共享 `video_generate` 工具，提供商选择，和故障转移
+- [其他捆绑变体](/zh/providers/models#additional-bundled-provider-variantsAnthropicCLIOAuth) - Anthropic Vertex、Copilot Proxy 和 Gemini CLI OAuth
+- [图像生成](/zh/tools/image-generation) - 共享的 `image_generate` 工具、提供商选择和故障转移
+- [音乐生成](/zh/tools/music-generation) - 共享的 `music_generate` 工具、提供商选择和故障转移
+- [视频生成](/zh/tools/video-generation) - 共享 `video_generate` 工具、提供商选择和故障转移
 
 ## 转录提供商
 
-- [Deepgram (audio transcription)](Deepgram/en/providers/deepgram)
+- [Deepgram (音频转录)](/zh/providers/deepgram)
 - [ElevenLabs](/zh/providers/elevenlabs#speech-to-text)
 - [Mistral](/zh/providers/mistral#audio-transcription-voxtral)
-- [OpenAI](OpenAI/en/providers/openai#speech-to-text)
+- [OpenAI](/zh/providers/openai#speech-to-text)
 - [SenseAudio](/zh/providers/senseaudio)
 - [xAI](/zh/providers/xai#speech-to-text)
 
 ## 社区工具
 
-- [Claude Max API Proxy](API/en/providers/claude-max-api-proxyAnthropic) - Claude 订阅凭据的社区代理（使用前请验证 Anthropic 政策/条款）
+- [Claude Max API 代理](/zh/providers/claude-max-api-proxy) - Claude 订阅凭证的社区代理（使用前请验证 Anthropic 政策/条款）
 
-如需查看完整的提供商目录（xAI、Groq、Mistral 等）和高级配置，
-请参阅 [Model providers](/zh/concepts/model-providers)。
+有关完整的提供商目录（xAI、Groq、Mistral 等）和高级配置，
+请参阅 [模型提供商](/zh/concepts/model-providers)。

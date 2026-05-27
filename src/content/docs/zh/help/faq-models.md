@@ -304,14 +304,13 @@ n 重新运行 `/model`，但**不带** `@profile` 后缀：
           models: {
             "anthropic/claude-opus-4-6": { alias: "opus" },
             "anthropic/claude-sonnet-4-6": { alias: "sonnet" },
-            "anthropic/claude-haiku-4-5": { alias: "haiku" },
           },
         },
       },
     }
     ```
 
-    然后 `/model sonnet`（或在支持时使用 `/<alias>`）将解析为该模型 ID。
+    然后 `/model sonnet`（或在受支持时使用 `/<alias>`）将解析为该模型 ID。
 
   </Accordion>
 

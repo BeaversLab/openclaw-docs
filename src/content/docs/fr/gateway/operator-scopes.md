@@ -91,6 +91,6 @@ L'appariement de nœud établit l'identité et la confiance. Il ne remplace pas 
 
 ## Authentification par secret partagé
 
-L'authentification par jeton/mot de passe partagé du Gateway est traitée comme un accès opérateur de confiance pour ce OpenAI. Les surfaces HTTP compatibles OpenAI et `/tools/invoke` rétablissent l'ensemble normal complet des portées par défaut de l'opérateur pour l'authentification par porteur de secret partagé, même si un appelant envoie des portées déclarées plus étroites.
+L'authentification par jeton/mot de passe de passerelle partagé est traitée comme un accès opérateur de confiance pour ce Gateway. Les surfaces HTTP compatibles OpenAI, `/tools/invoke`, et les points de terminaison de l'historique des sessions HTTP restaurent le jeu normal de portées par défaut complet de l'opérateur pour l'authentification par porteur via secret partagé, même si un appelant envoie des portées déclarées plus restreintes.
 
 Les modes porteurs d'identité, tels que l'authentification par proxy de confiance ou `none` d'entrée privée, peuvent toujours honorer les portées déclarées explicites. Utilisez des Gateways distincts pour une véritable séparation des limites de confiance.

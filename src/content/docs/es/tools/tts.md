@@ -19,9 +19,9 @@ respuesta de voz del asistente.
 ## Inicio rápido
 
 <Steps>
-  <Step title="Elegir un proveedor">
-    OpenAI y ElevenLabs son las opciones alojadas más confiables. Microsoft y
-    Local CLI funcionan sin una clave API. Consulte la [matriz de proveedores](#supported-providers)
+  <Step title="Elija un proveedor">
+    OpenAI y ElevenLabs son las opciones alojadas más fiables. Microsoft y
+    Local CLI funcionan sin una clave de API. Consulte la [matriz de proveedores](#supported-providers)
     para ver la lista completa.
   </Step>
   <Step title="Establecer la clave API">
@@ -403,7 +403,7 @@ Orden de precedencia para respuestas automáticas, `/tts audio`, `/tts status` y
 3. anulación de canal, cuando el canal soporta `channels.<channel>.tts`
 4. anulación de cuenta, cuando el canal pasa `channels.<channel>.accounts.<id>.tts`
 5. preferencias locales de `/tts` para este host
-6. directivas `[[tts:...]]` en línea cuando las anulaciones de [modelo](#model-driven-directives) están habilitadas
+6. directivas `[[tts:...]]` en línea cuando las [anulaciones de modelo](#model-driven-directives) están habilitadas
 
 Las anulaciones de canal y cuenta usan la misma estructura que `messages.tts` y se fusionan profundamente sobre las capas anteriores, por lo que las credenciales compartidas del proveedor pueden permanecer en `messages.tts` mientras un canal o cuenta de bot cambia solo la voz, el modelo, la persona o el modo automático:
 
@@ -760,7 +760,7 @@ Los formatos de salida de OpenAI y ElevenLabs son fijos por canal como se indica
 <AccordionGroup>
   <Accordion title="Top-level messages.tts.*">
     <ParamField path="auto" type='"off" | "always" | "inbound" | "tagged"'>
-      Modo Auto-TTS. `inbound` solo envía audio después de un mensaje de voz entrante; `tagged` solo envía audio cuando la respuesta incluye directivas `[[tts:...]]` o un bloque `[[tts:text]]`.
+      Modo TTS automático. `inbound` solo envía audio después de un mensaje de voz entrante; `tagged` solo envía audio cuando la respuesta incluye directivas `[[tts:...]]` o un bloque `[[tts:text]]`.
     </ParamField>
     <ParamField path="enabled" type="boolean" deprecated>
       Interruptor heredado. `openclaw doctor --fix` migra esto a `auto`.
@@ -769,7 +769,7 @@ Los formatos de salida de OpenAI y ElevenLabs son fijos por canal como se indica
       `"all"` incluye respuestas de herramientas/bloques además de las respuestas finales.
     </ParamField>
     <ParamField path="provider" type="string">
-      ID del proveedor de voz. Si no está configurado, OpenClaw usa el primer proveedor configurado en el orden de selección automática del registro. El `provider: "edge"` heredado se reescribe a `"microsoft"` por `openclaw doctor --fix`.
+      ID del proveedor de voz. Si no está configurado, OpenClaw usa el primer proveedor configurado en el orden de autoselección del registro. El `provider: "edge"` heredado se reescribe a `"microsoft"` por `openclaw doctor --fix`.
     </ParamField>
     <ParamField path="persona" type="string">
       ID de persona activa de `personas`. Normalizado a minúsculas.
@@ -778,16 +778,16 @@ Los formatos de salida de OpenAI y ElevenLabs son fijos por canal como se indica
       Identidad hablada estable. Campos: `label`, `description`, `provider`, `fallbackPolicy`, `prompt`, `providers.<provider>`. Consulte [Personas](#personas).
     </ParamField>
     <ParamField path="summaryModel" type="string">
-      Modelo barato para el resumen automático; por defecto es `agents.defaults.model.primary`. Acepta `provider/model` o un alias de modelo configurado.
+      Modelo barato para auto-resumen; por defecto es `agents.defaults.model.primary`. Acepta `provider/model` o un alias de modelo configurado.
     </ParamField>
     <ParamField path="modelOverrides" type="object">
       Permitir que el modelo emita directivas TTS. `enabled` por defecto es `true`; `allowProvider` por defecto es `false`.
     </ParamField>
     <ParamField path="providers.<id>" type="object">
-      Configuración propiedad del proveedor clave por id del proveedor de voz. Los bloques directos heredados (`messages.tts.openai`, `.elevenlabs`, `.microsoft`, `.edge`) son reescritos por `openclaw doctor --fix`; confirme solo `messages.tts.providers.<id>`.
+      Configuración propiedad del proveedor clave por ID de proveedor de voz. Los bloques directos heredados (`messages.tts.openai`, `.elevenlabs`, `.microsoft`, `.edge`) son reescritos por `openclaw doctor --fix`; confirme solo `messages.tts.providers.<id>`.
     </ParamField>
     <ParamField path="maxTextLength" type="number">
-      Límite estricto para caracteres de entrada TTS. `/tts audio` falla si se excede.
+      Límite estricto para los caracteres de entrada TTS. `/tts audio` falla si se excede.
     </ParamField>
     <ParamField path="timeoutMs" type="number">
       Tiempo de espera de solicitud en milisegundos.
@@ -1085,34 +1085,33 @@ WhatsApp envía audio a través de Baileys como una nota de voz PTT (`audio` con
 `ptt: true`) y envía texto visible **por separado** del audio PTT porque
 los clientes no renderizan consistentemente los subtítulos en las notas de voz.
 
-La herramienta acepta campos opcionales `channel` y `timeoutMs`; `timeoutMs` es un
-tiempo de espera de solicitud por llamada al proveedor en milisegundos.
+La herramienta acepta los campos opcionales `channel` y `timeoutMs`; `timeoutMs` es un tiempo de espera de solicitud de proveedor por llamada en milisegundos. Los valores por llamada anulan `messages.tts.timeoutMs`; los tiempos de espera de TTS configurados anulan cualquier valor predeterminado del proveedor creado por el complemento.
 
 ## RPC de Gateway
 
-| Método            | Propósito                                               |
-| ----------------- | ------------------------------------------------------- |
-| `tts.status`      | Leer el estado actual de TTS y el último intento.       |
-| `tts.enable`      | Establecer la preferencia automática local en `always`. |
-| `tts.disable`     | Establezca la preferencia de auto local en `off`.       |
-| `tts.convert`     | Texto a audio único.                                    |
-| `tts.setProvider` | Establezca la preferencia de proveedor local.           |
-| `tts.setPersona`  | Establezca la preferencia de persona local.             |
-| `tts.providers`   | Listar proveedores configurados y estado.               |
+| Método            | Propósito                                            |
+| ----------------- | ---------------------------------------------------- |
+| `tts.status`      | Leer el estado actual de TTS y el último intento.    |
+| `tts.enable`      | Establezca la preferencia de auto local en `always`. |
+| `tts.disable`     | Establezca la preferencia de auto local en `off`.    |
+| `tts.convert`     | Texto a audio único.                                 |
+| `tts.setProvider` | Establezca la preferencia de proveedor local.        |
+| `tts.setPersona`  | Establezca la preferencia de persona local.          |
+| `tts.providers`   | Listar proveedores configurados y estado.            |
 
 ## Enlaces de servicio
 
 - [Guía de conversión de texto a voz de OpenAI](https://platform.openai.com/docs/guides/text-to-speech)
-- [Referencia de la API de audio de OpenAI](https://platform.openai.com/docs/api-reference/audio)
-- [Conversión de texto a voz REST de Azure Speech](https://learn.microsoft.com/azure/ai-services/speech-service/rest-text-to-speech)
-- [Proveedor Azure Speech](/es/providers/azure-speech)
+- [Referencia de la API de Audio de OpenAI](https://platform.openai.com/docs/api-reference/audio)
+- [Conversión de texto a voz de REST de Azure Speech](https://learn.microsoft.com/azure/ai-services/speech-service/rest-text-to-speech)
+- [Proveedor de Azure Speech](/es/providers/azure-speech)
 - [Conversión de texto a voz de ElevenLabs](https://elevenlabs.io/docs/api-reference/text-to-speech)
 - [Autenticación de ElevenLabs](https://elevenlabs.io/docs/api-reference/authentication)
 - [Gradium](/es/providers/gradium)
 - [API de TTS de Inworld](https://docs.inworld.ai/tts/tts)
 - [API de MiniMax T2A v2](https://platform.minimaxi.com/document/T2A%20V2)
 - [API HTTP de TTS de Volcengine](/es/providers/volcengine#text-to-speech)
-- [Síntesis de voz Xiaomi MiMo](/es/providers/xiaomi#text-to-speech)
+- [Síntesis de voz de Xiaomi MiMo](/es/providers/xiaomi#text-to-speech)
 - [node-edge-tts](https://github.com/SchneeHertz/node-edge-tts)
 - [Formatos de salida de voz de Microsoft](https://learn.microsoft.com/azure/ai-services/speech-service/rest-text-to-speech#audio-outputs)
 - [Conversión de texto a voz de xAI](https://docs.x.ai/developers/rest-api-reference/inference/voice#text-to-speech-rest)

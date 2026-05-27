@@ -8,7 +8,7 @@ read_when:
 
 Les compétences enseignent à l'agent comment et quand utiliser les outils. Chaque compétence est un répertoire contenant un fichier `SKILL.md` avec des en-têtes YAML et des instructions markdown.
 
-Pour savoir comment les compétences sont chargées et priorisées, consultez [Skills](/fr/tools/skills).
+Pour savoir comment les compétences sont chargées et priorisées, consultez [Compétences](/fr/tools/skills).
 
 ## Créer votre première compétence
 
@@ -93,14 +93,35 @@ L'en-tête YAML prend en charge ces champs :
 | `metadata.openclaw.requires.bins`   | Non         | Binaires requis sur le PATH                                                             |
 | `metadata.openclaw.requires.config` | Non         | Clés de configuration requises                                                          |
 
+## Fonctionnalités avancées
+
+Une fois qu'une compétence de base fonctionne, ces champs aident à la rendre fiable et portable :
+
+- **Activation conditionnelle** — utilisez `requires.bins`, `requires.env` ou
+  `requires.config` pour charger la compétence uniquement lorsque les dépendances requises sont
+  disponibles. Consultez [Référence des compétences : verrouillage (gating)](/fr/tools/skills#gating).
+- **Câblage de l'environnement et des clés API** — utilisez `skills.entries.<name>.env` et
+  `skills.entries.<name>.apiKey` pour injecter l'environnement côté hôte pour un tour
+  de compétence. Consultez [Référence des compétences : câblage de la configuration](/fr/tools/skills#config-wiring).
+- **Contrôle de l'invocation** — définissez `user-invocable: false` pour masquer une commande slash,
+  ou `disable-model-invocation: true` pour empêcher qu'une compétence de type commande n'apparaisse dans le
+  prompt du modèle. Consultez [Référence des compétences : frontmatter](/fr/tools/skills#frontmatter).
+- **Répartition directe des commandes** — utilisez `command-dispatch: tool` avec
+  `command-tool` lorsqu'une commande slash doit appeler un outil directement au lieu de
+  passer par le modèle.
+- **Chemins portables** — utilisez `{baseDir}` dans `SKILL.md` lors de référencement à des scripts
+  ou des actifs à l'intérieur du répertoire de la compétence.
+- **Publication** — utilisez la compétence ClawHub lors de la préparation d'une compétence pour publication.
+  Elle documente la forme actuelle de la commande `clawhub publish` et les métadonnées requises.
+
 ## Meilleures pratiques
 
-- **Soyez concis** — indiquez au modèle _quoi_ faire, pas comment être une IA
-- **Sécurité avant tout** — si votre compétence utilise `exec`, assurez-vous que les invites n'autorisent pas l'injection arbitraire de commandes provenant d'une entrée non fiable
-- **Tester localement** — utilisez `openclaw agent --message "..."` pour tester avant de partager
-- **Utiliser ClawHub** — parcourez et contribuez aux compétences sur [ClawHub](ClawHubClawHubhttps://clawhub.ai)
+- **Soyez concis** — instruisez le modèle sur _ce qu'il faut_ faire, et non sur comment être une IA
+- **La sécurité d'abord** — si votre compétence utilise `exec`, assurez-vous que les invites ne permettent pas l'injection de commandes arbitraires depuis une entrée non fiable
+- **Testez localement** — utilisez `openclaw agent --message "..."` pour tester avant de partager
+- **Utilisez ClawHub** — parcourez et contribuez aux compétences sur [ClawHub](https://clawhub.ai)
 
-## Où se trouvent les skills
+## Où se trouvent les compétences
 
 | Emplacement                     | Priorité       | Portée                           |
 | ------------------------------- | -------------- | -------------------------------- |
@@ -109,11 +130,11 @@ L'en-tête YAML prend en charge ces champs :
 | `~/.agents/skills/`             | Moyenne        | Profil d'agent partagé           |
 | `~/.openclaw/skills/`           | Moyenne        | Partagé (tous les agents)        |
 | Groupé (livré avec OpenClaw)    | Faible         | Global                           |
-| `skills.load.extraDirs`         | La plus faible | Dossiers partagés personnalisés  |
+| `skills.load.extraDirs`         | Le plus bas    | Dossiers partagés personnalisés  |
 
 ## Connexes
 
-- [Référence des compétences](/fr/tools/skills) — chargement, priorité et règles de filtrage
-- [Config des compétences](/fr/tools/skills-config) — schéma de config `skills.*`
-- [ClawHub](ClawHub/en/clawhub) — registre public de compétences
-- [Création de plugins](/fr/plugins/building-plugins) — les plugins peuvent livrer des compétences
+- [Référence des Skills](/fr/tools/skills) — chargement, priorité et règles de filtrage
+- [Config des Skills](/fr/tools/skills-config) — schéma de config `skills.*`
+- [ClawHub](/fr/clawhub) — registre public de skills
+- [Création de plugins](/fr/plugins/building-plugins) — les plugins peuvent fournir des skills

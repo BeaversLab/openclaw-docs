@@ -390,7 +390,7 @@ read_when:
 
 | 键                 | 类型      | 默认值  | 描述                     |
 | ------------------ | --------- | ------- | ------------------------ |
-| `cache.enabled`    | `boolean` | `false` | 在 SQLite 中缓存分块嵌入 |
+| `cache.enabled`    | `boolean` | `true`  | 在 SQLite 中缓存分块嵌入 |
 | `cache.maxEntries` | `number`  | `50000` | 最大缓存嵌入数           |
 
 防止在重新索引或转录更新时对未更改的文本进行重新嵌入。

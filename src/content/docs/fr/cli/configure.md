@@ -25,9 +25,8 @@ Lorsque configure démarre à partir d'un choix d'authentification de fournisseu
 Pour la recherche web, `openclaw configure --section web` vous permet de choisir un fournisseur
 et de configurer ses identifiants. Certains fournisseurs affichent également des invites de suivi spécifiques au fournisseur :
 
-- **Grok** peut proposer une configuration `x_search` facultative avec le même `XAI_API_KEY` et
-  vous permettre de choisir un modèle `x_search`.
-- **Kimi** peut demander la région de l'API Moonshot (MoonshotAPI`api.moonshot.ai` ou `api.moonshot.cn`) et le modèle de recherche web par défaut de Kimi.
+- **Grok** peut proposer une configuration facultative de `x_search`OAuthAPI avec le même profil OAuth xAI ou la même clé API et vous permettre de choisir un modèle `x_search`.
+- **Kimi** peut demander la région de l'API Moonshot (MoonshotAPI`api.moonshot.ai` contre `api.moonshot.cn`) et le modèle de recherche web Kimi par défaut.
 
 En relation :
 
@@ -52,12 +51,12 @@ Sections disponibles :
 
 Notes :
 
-- L'assistant complet et les sections relatives au Gateway demandent où le Gateway s'exécute et mettent à jour Gateway`gateway.mode`. Les filtres de section qui n'incluent pas `gateway`, `daemon` ou `health` accèdent directement à la configuration demandée.
+- L'assistant complet et les sections liées au Gateway demandent où le Gateway s'exécute et mettent à jour Gateway`gateway.mode`. Les filtres de section qui n'incluent pas `gateway`, `daemon` ou `health` vont directement à la configuration demandée.
 - Après l'écriture de la configuration locale, configure installe les plugins téléchargeables sélectionnés lorsque le chemin d'installation choisi l'exige. La configuration du Gateway distant n'installe pas les packages de plugins locaux.
 - Les services orientés channel (Slack/Discord/Matrix/Microsoft Teams) demandent les listes d'autorisation de channel/salle lors de la configuration. Vous pouvez entrer des noms ou des ID ; l'assistant résout les noms en ID lorsque cela est possible.
-- Si vous exécutez l'étape d'installation du démon, l'authentification par jeton nécessite un jeton, et si `gateway.auth.token` est géré par SecretRef, configure valide le SecretRef mais ne persiste pas les valeurs de jeton en texte brut résolues dans les métadonnées de l'environnement du service superviseur.
+- Si vous exécutez l'étape d'installation du démon, l'authentification par jeton nécessite un jeton, et `gateway.auth.token` est géré par SecretRef, configure valide le SecretRef mais ne persiste pas les valeurs de jeton en clair résolues dans les métadonnées d'environnement du service de superviseur.
 - Si l'authentification par token nécessite un token et que le SecretRef du token configuré est non résolu, configure bloque l'installation du démon avec des conseils de correction actionnables.
-- Si `gateway.auth.token` et `gateway.auth.password` sont tous deux configurés et que `gateway.auth.mode` n'est pas défini, configure bloque l'installation du démon jusqu'à ce que le mode soit défini explicitement.
+- Si `gateway.auth.token` et `gateway.auth.password` sont tous deux configurés et `gateway.auth.mode` est non défini, configure bloque l'installation du démon jusqu'à ce que le mode soit défini explicitement.
 
 ## Exemples
 

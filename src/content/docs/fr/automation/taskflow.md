@@ -1,5 +1,5 @@
 ---
-summary: "Couche d'orchestration de flux Task Flow au-dessus des tâches d'arrière-plan"
+summary: "Couche d'orchestration de flux de tâches au-dessus des tâches d'arrière-plan"
 read_when:
   - You want to understand how Task Flow relates to background tasks
   - You encounter Task Flow or openclaw tasks flow in release notes or docs

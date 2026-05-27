@@ -1,7 +1,7 @@
 ---
 summary: "Referencia de CLI y modelo de seguridad de Crestodian, el asistente de configuración y reparación seguro sin configuración"
 read_when:
-  - You run openclaw with no command and want to understand Crestodian
+  - You run openclaw with no command after setup and want to understand Crestodian
   - You need a configless-safe way to inspect or repair OpenClaw
   - You are designing or enabling message-channel rescue mode
 title: "Crestodian"
@@ -11,14 +11,11 @@ title: "Crestodian"
 
 Crestodian es el asistente local de configuración, reparación y configuración de OpenClaw. Está diseñado para permanecer accesible cuando la ruta del agente normal está rota.
 
-Ejecutar `openclaw` sin ningún comando inicia Crestodian en una terminal interactiva.
-Ejecutar `openclaw crestodian` inicia el mismo asistente explícitamente.
+Ejecutar `openclaw` sin comando inicia primero la incorporación clásica cuando el archivo de configuración activo falta o no tiene configuraciones creadas (está vacío o solo tiene metadatos). Después de que un archivo de configuración tenga configuraciones creadas, ejecutar `openclaw` sin comando inicia Crestodian en una terminal interactiva. Ejecutar `openclaw crestodian` inicia explícitamente el mismo asistente.
 
 ## Lo que muestra Crestodian
 
-Al iniciarse, el Crestodian interactivo abre el mismo shell de TUI utilizado por
-`openclaw tui`, con un backend de chat de Crestodian. El registro de chat comienza con un breve
-saludo:
+Al iniciarse, Crestodian interactivo abre el mismo shell TUI utilizado por `openclaw tui`, con un backend de chat de Crestodian. El registro de chat comienza con un breve saludo:
 
 - cuándo iniciar Crestodian
 - el modelo o la ruta del planificador determinista que Crestodian está utilizando realmente
@@ -30,10 +27,9 @@ No vuelca secretos ni carga comandos CLI de complementos solo para iniciarse. La
 aún proporciona el encabezado normal, el registro de chat, la línea de estado, el pie de página, el autocompletado
 y los controles del editor.
 
-Use `status` para el inventario detallado con la ruta de configuración, rutas de documentos/fuente,
-sondas locales de CLI, presencia de clave API, agentes, modelo y detalles de Gateway.
+Use `status` para el inventario detallado con la ruta de configuración, rutas de documentos/fuente, sondas locales de CLI, presencia de clave API, agentes, modelo y detalles de Gateway.
 
-Crestodian utiliza el mismo mecanismo de descubrimiento de referencias de OpenClaw que los agentes regulares. En un repositorio Git, apunta a `docs/` local y al árbol de código fuente local. En una instalación de paquete npm, utiliza los documentos del paquete incluidos y enlaces a [https://github.com/openclaw/openclaw](https://github.com/openclaw/openclaw), con orientación explícita para revisar el código fuente siempre que la documentación no sea suficiente.
+Crestodian utiliza el mismo descubrimiento de referencia de OpenClaw que los agentes regulares. En una comprobación de Git, se apunta al `docs/` local y al árbol de fuentes local. En una instalación de paquete npm, utiliza los documentos del paquete incluidos y enlaces a [https://github.com/openclaw/openclaw](https://github.com/openclaw/openclaw), con orientación explícita para revisar la fuente siempre que los documentos no sean suficientes.
 
 ## Ejemplos
 
@@ -86,9 +82,7 @@ La ruta de inicio de Crestodian es deliberadamente pequeña. Puede ejecutarse cu
 - el registro de comandos de complementos no está disponible
 - no se ha configurado ningún agente todavía
 
-`openclaw --help` y `openclaw --version` todavía usan las rutas rápidas normales.
-El `openclaw` no interactivo sale con un mensaje corto en lugar de imprimir la ayuda
-raíz, porque el producto sin comando es Crestodian.
+`openclaw --help` y `openclaw --version` todavía usan las rutas rápidas normales. El `openclaw` desnudo no interactivo sale con un mensaje corto en lugar de imprimir la ayuda raíz. En una instalación nueva, el mensaje apunta a la incorporación no interactiva; después de la configuración, apunta a comandos Crestodian de un solo uso.
 
 ## Operaciones y aprobación
 
@@ -107,11 +101,11 @@ Las operaciones de solo lectura pueden ejecutarse inmediatamente:
 - validar la configuración
 - mostrar la ruta del registro de auditoría
 
-Las operaciones persistentes requieren aprobación conversacional en modo interactivo a menos que pases `--yes` para un comando directo:
+Las operaciones persistentes requieren aprobación conversacional en modo interactivo a menos que pase `--yes` para un comando directo:
 
 - escribir configuración
 - ejecutar `config set`
-- establecer valores de SecretRef admitidos a través de `config set-ref`
+- establecer valores admitidos de SecretRef a través de `config set-ref`
 - ejecutar el arranque de configuración/incorporación
 - cambiar el modelo predeterminado
 - iniciar, detener o reiniciar el Gateway
@@ -128,13 +122,11 @@ Las escrituras aplicadas se registran en:
 
 El descubrimiento no se audita. Solo se registran las operaciones aplicadas y las escrituras.
 
-`openclaw onboard --modern` inicia Crestodian como la vista previa de incorporación moderna.
-El `openclaw onboard` simple aún ejecuta la incorporación clásica.
+`openclaw onboard --modern` inicia Crestodian como vista previa de incorporación moderna. `openclaw onboard` simple todavía ejecuta la incorporación clásica.
 
 ## Arranque de configuración
 
-`setup` es el arranque de incorporación con prioridad en el chat. Escribe solo a través de
-operaciones de configuración tipadas y pide aprobación primero.
+`setup` es la inicialización (bootstrap) de incorporación con prioridad de chat. Escribe solo a través de operaciones de configuración tipificadas y pide aprobación primero.
 
 ```text
 setup
@@ -149,18 +141,16 @@ orden y te indica lo que eligió:
 - `OPENAI_API_KEY` -> `openai/gpt-5.5`
 - `ANTHROPIC_API_KEY` -> `anthropic/claude-opus-4-7`
 - Claude Code CLI -> `claude-cli/claude-opus-4-7`
-- Codex -> `openai/gpt-5.5` a través del harness del servidor de aplicaciones de Codex
+- Codex -> `openai/gpt-5.5` a través del arnés del servidor de aplicaciones Codex
 
-Si ninguno está disponible, la configuración aún escribe el espacio de trabajo predeterminado y deja el
-modelo sin establecer. Instala o inicia sesión en Codex/Claude Code, o expone
-`OPENAI_API_KEY`/`ANTHROPIC_API_KEY`, luego ejecuta la configuración nuevamente.
+Si ninguno está disponible, la configuración aún escribe el espacio de trabajo predeterminado y deja el modelo sin configurar. Instale o inicie sesión en Codex/Claude Code, o exponga `OPENAI_API_KEY`/`ANTHROPIC_API_KEY`, luego ejecute la configuración nuevamente.
 
 ## Planificador asistido por modelo
 
 Crestodian siempre se inicia en modo determinista. Para comandos difusos que el analizador determinista no entiende, el Crestodian local puede realizar un ciclo limitado del planificador a través de las rutas de tiempo de ejecución normales de OpenClaw. Primero utiliza el modelo OpenClaw configurado. Si aún no hay ningún modelo configurado utilizable, puede recurrir a los tiempos de ejecución locales ya presentes en la máquina:
 
 - Claude Code CLI: `claude-cli/claude-opus-4-7`
-- Arnés de app-server de Codex: `openai/gpt-5.5`
+- Arnés del servidor de aplicaciones Codex: `openai/gpt-5.5`
 
 El planificador asistido por modelo no puede mutar la configuración directamente. Debe traducir la solicitud en uno de los comandos tipificados de Crestodian, y luego se aplican las reglas normales de aprobación y auditoría. Crestodian imprime el modelo que utilizó y el comando interpretado antes de ejecutar cualquier cosa. Los turnos del planificador de respaldo sin configuración son temporales, con herramientas deshabilitadas donde el tiempo de ejecución lo admite, y utilizan un espacio de trabajo/sesión temporal.
 
@@ -176,16 +166,17 @@ talk to work agent
 switch to main agent
 ```
 
-`openclaw tui`, `openclaw chat` y `openclaw terminal` aún abren directamente la TUI del agente normal. No inician Crestodian.
+`openclaw tui`, `openclaw chat` y `openclaw terminal` aún abren directamente el TUI del agente normal. No inician Crestodian.
 
-Después de cambiar a la TUI normal, use `/crestodian` para regresar a Crestodian. Puede incluir una solicitud de seguimiento:
+Después de cambiar al TUI normal, use `/crestodian` para volver a Crestodian.
+Puede incluir una solicitud de seguimiento:
 
 ```text
 /crestodian
 /crestodian restart gateway
 ```
 
-Los cambios de agente dentro de la TUI dejan una pista de que `/crestodian` está disponible.
+Los cambios de agente dentro del TUI dejan una pista de que `/crestodian` está disponible.
 
 ## Modo de rescate de mensajes
 
@@ -218,11 +209,13 @@ El modo de rescate remoto es una superficie de administración. Debe tratarse co
 Contrato de seguridad para el rescate remoto:
 
 - Deshabilitado cuando el sandbox está activo. Si un agente/sesión está en sandbox, Crestodian debe rechazar el rescate remoto y explicar que se requiere reparación local de CLI.
-- El estado efectivo predeterminado es `auto`: permitir el rescate remoto solo en la operación YOLO de confianza, donde el tiempo de ejecución ya tiene autoridad local sin sandbox.
+- El estado efectivo predeterminado es `auto`: permitir el rescate remoto solo en la operación YOLO de confianza,
+  donde el tiempo de ejecución ya tiene autoridad local sin sandbox.
 - Requerir una identidad de propietario explícita. El rescate no debe aceptar reglas de remitente comodín, políticas de grupo abierto, webhooks no autenticados o canales anónimos.
 - Solo DMs del propietario de forma predeterminada. El rescate de grupo/canal requiere una participación explícita (opt-in).
 - La búsqueda y lista de complementos son de solo lectura. La instalación de complementos es solo local de forma predeterminada porque descarga código ejecutable. La desinstalación de complementos se puede permitir como una operación de reparación aprobada cuando la política de rescate permite escrituras persistentes.
-- El rescate remoto no puede abrir la interfaz de usuario local (TUI) ni cambiar a una sesión de agente interactiva. Use `openclaw` local para la transferencia de agente.
+- El rescate remoto no puede abrir el TUI local ni cambiar a una sesión de agente
+  interactiva. Use `openclaw` local para la entrega del agente.
 - Las escrituras persistentes aún requieren aprobación, incluso en modo de rescate.
 - Auditar cada operación de rescate aplicada. El rescate del canal de mensajes registra los metadatos del canal, cuenta, remitente y dirección de origen. Las operaciones que mutan la configuración también registran los hashes de configuración antes y después.
 - Nunca repetir (eco) secretos. La inspección de SecretRef debe informar la disponibilidad, no los valores.
@@ -243,11 +236,13 @@ Forma de la configuración:
 
 `enabled` debería aceptar:
 
-- `"auto"`: predeterminado. Permitir solo cuando el tiempo de ejecución efectivo es YOLO y el sandboxing está desactivado.
+- `"auto"`: predeterminado. Permitir solo cuando el tiempo de ejecución efectivo es YOLO y
+  el sandbox está desactivado.
 - `false`: nunca permitir el rescate del canal de mensajes.
-- `true`: permitir explícitamente el rescate cuando pasan las verificaciones de propietario/canal. Esto aún no debe omitir la denegación del sandboxing.
+- `true`: permitir explícitamente el rescate cuando pasan las verificaciones de propietario/canal. Esto
+  aún no debe omitir la denegación del sandbox.
 
-La postura YOLO predeterminada de `"auto"` es:
+La postura YOLO predeterminada `"auto"` es:
 
 - el modo sandbox se resuelve en `off`
 - `tools.exec.security` se resuelve en `full`
@@ -265,19 +260,20 @@ La alternativa de planificador local sin configuración está cubierta por:
 pnpm test:docker:crestodian-planner
 ```
 
-Una verificación de humo (smoke check) de superficie de comandos de canal en vivo con participación opcional verifica `/crestodian status` más un viaje de ida y vuelta de aprobación persistente a través del controlador de rescate:
+Una superficie de comando de canal en vivo opcional realiza pruebas de humo de `/crestodian status` más un
+viaje de aprobación persistente a través del controlador de rescate:
 
 ```bash
 pnpm test:live:crestodian-rescue-channel
 ```
 
-La configuración nueva sin configuración a través de Crestodian está cubierta por:
+La configuración sin configuración a través de comandos explícitos de Crestodian está cubierta por:
 
 ```bash
 pnpm test:docker:crestodian-first-run
 ```
 
-Ese carril comienza con un directorio de estado vacío, enruta `openclaw` básico a Crestodian, establece el modelo predeterminado, crea un agente adicional, configura Discord a través de la habilitación de un complemento más token SecretRef, valida la configuración y verifica el registro de auditoría. QA Lab también tiene un escenario respaldado por repositorio para el mismo flujo de Ring 0:
+Ese carril comienza con un directorio de estado vacío, verifica el punto de entrada moderno de Crestodian, establece el modelo predeterminado, crea un agente adicional, configura Discord a través de la activación de un complemento más el token SecretRef, valida la configuración y verifica el registro de auditoría. QA Lab también tiene un escenario respaldado por repositorio para el mismo flujo del Anillo 0:
 
 ```bash
 pnpm openclaw qa suite --scenario crestodian-ring-zero-setup

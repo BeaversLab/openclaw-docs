@@ -1,5 +1,5 @@
 ---
-summary: "Compréhension entrante de l'image/audio/vidéo (facultatif) avec provider + replis CLI"
+summary: "CLICompréhension entrante des images/audios/vidéos (facultatif) avec replis provider + CLI"
 read_when:
   - Designing or refactoring media understanding
   - Tuning inbound audio/video/image preprocessing
@@ -9,7 +9,7 @@ sidebarTitle: "Compréhension des médias"
 
 OpenClaw peut **résumer les médias entrants** (image/audio/vidéo) avant que le pipeline de réponse ne s'exécute. Il détecte automatiquement lorsque des outils locaux ou des clés de provider sont disponibles, et peut être désactivé ou personnalisé. Si la compréhension est désactivée, les modèles reçoivent toujours les fichiers/URL d'origine comme d'habitude.
 
-Le comportement spécifique aux fournisseurs en matière de médias est enregistré par les plugins fournisseurs, tandis que le cœur de OpenClaw possède la configuration `tools.media` partagée, l'ordre de repli et l'intégration au pipeline de réponse.
+Le comportement spécifique aux fournisseurs pour les médias est enregistré par les plugins fournisseur, tandis que le cœur d'OpenClaw possède la configuration partagée OpenClaw`tools.media`, l'ordre de repli et l'intégration au pipeline de réponse.
 
 ## Objectifs
 
@@ -21,24 +21,24 @@ Le comportement spécifique aux fournisseurs en matière de médias est enregist
 ## Comportement de haut niveau
 
 <Steps>
-  <Step title="Collecter les pièces jointes">
+  <Step title="Collect attachments">
     Collecter les pièces jointes entrantes (`MediaPaths`, `MediaUrls`, `MediaTypes`).
   </Step>
-  <Step title="Sélectionner par capacité">
-    Pour chaque capacité activée (image/audio/vidéo), sélectionner les pièces jointes selon la stratégie (par défaut : **la première**).
+  <Step title="Select per-capability">
+    Pour chaque capacité activée (image/audio/vidéo), sélectionner les pièces jointes par stratégie (par défaut : **première**).
   </Step>
-  <Step title="Choisir le modèle">
+  <Step title="Choose model">
     Choisir la première entrée de modèle éligible (taille + capacité + auth).
   </Step>
-  <Step title="Repli en cas d'échec">
+  <Step title="Fallback on failure">
     Si un modèle échoue ou si le média est trop volumineux, **revenir à l'entrée suivante**.
   </Step>
-  <Step title="Appliquer le bloc de succès">
+  <Step title="Apply success block">
     En cas de succès :
 
     - `Body` devient un bloc `[Image]`, `[Audio]` ou `[Video]`.
-    - L'audio définit `{{Transcript}}` ; l'analyse des commandes utilise le texte des légendes si présent, sinon la transcription.
-    - Les légendes sont conservées sous forme de `User text:` à l'intérieur du bloc.
+    - L'audio définit `{{Transcript}}` ; l'analyse des commandes utilise le texte des sous-titres si présent, sinon la transcription.
+    - Les sous-titres sont conservés sous forme de `User text:` à l'intérieur du bloc.
 
   </Step>
 </Steps>
@@ -47,20 +47,20 @@ Si la compréhension échoue ou est désactivée, **le flux de réponse continue
 
 ## Aperçu de la configuration
 
-`tools.media` prend en charge les **modèles partagés** ainsi que les redéfinitions par capacité :
+`tools.media` prend en charge les **modèles partagés** ainsi que les remplacements par capacité :
 
 <AccordionGroup>
-  <Accordion title="Clés de niveau supérieur">
-    - `tools.media.models` : liste de models partagée (utilisez `capabilities` pour verrouiller).
+  <Accordion title="Top-level keys">
+    - `tools.media.models` : liste de modèles partagés (utilisez `capabilities` pour restreindre).
     - `tools.media.image` / `tools.media.audio` / `tools.media.video` :
       - valeurs par défaut (`prompt`, `maxChars`, `maxBytes`, `timeoutSeconds`, `language`)
-      - substitutions de provider (`baseUrl`, `headers`, `providerOptions`Deepgram)
+      - substitutions de fournisseur (`baseUrl`, `headers`, `providerOptions`Deepgram)
       - options audio Deepgram via `tools.media.audio.providerOptions.deepgram`
-      - contrôles d'écho de transcription audio (`echoTranscript`, par défaut `false` ; `echoFormat`)
-      - **liste `models` par capacité** en option (préférée avant les models partagés)
-      - stratégie `attachments` (`mode`, `maxAttachments`, `prefer`)
-      - `scope` (verrouillage optionnel par clé channel/chatType/session)
-    - `tools.media.concurrency` : nombre maximum d'exécutions simultanées de capacités (par défaut **2**).
+      - contrôles d'écho de transcription audio (`echoTranscript`, défaut `false` ; `echoFormat`)
+      - **liste `models` par capacité** facultative (préférée avant les modèles partagés)
+      - politique `attachments` (`mode`, `maxAttachments`, `prefer`)
+      - `scope` (restriction facultative par clé de channel/chatType/session)
+    - `tools.media.concurrency` : nombre maximum d'exécutions simultanées de capacités (défaut **2**).
 
   </Accordion>
 </AccordionGroup>
@@ -90,10 +90,10 @@ Si la compréhension échoue ou est désactivée, **le flux de réponse continue
 
 ### Entrées de modèle
 
-Chaque entrée `models[]` peut être un **provider** ou une **CLI** :
+Chaque entrée `models[]` peut être de type **provider** ou **CLI** :
 
 <Tabs>
-  <Tab title="Entrée de provider">
+  <Tab title="Provider entry">
     ```json5
     {
       type: "provider", // default if omitted
@@ -109,7 +109,7 @@ Chaque entrée `models[]` peut être un **provider** ou une **CLI** :
     }
     ```
   </Tab>
-  <Tab title="Entrée CLI">
+  <Tab title="CLI entry">
     ```json5
     {
       type: "cli",
@@ -137,6 +137,30 @@ Chaque entrée `models[]` peut être un **provider** ou une **CLI** :
   </Tab>
 </Tabs>
 
+### Identifiants du fournisseur (`apiKey`)
+
+La compréhension des médias par le fournisseur utilise la même résolution d'authentification fournisseur que les appels de modèle normaux : profils d'authentification, variables d'environnement, puis `models.providers.<providerId>.apiKey`.
+
+Les entrées `tools.media.*.models[]` n'acceptent pas de champ `apiKey` en ligne. La
+valeur `provider` dans une entrée de modèle média, telle que `openai` ou `moonshot`, doit
+avoir des identifiants disponibles via l'une des sources d'authentification de provider standard.
+
+Exemple minimal :
+
+```json5
+{
+  models: {
+    providers: {
+      openai: { apiKey: "<OPENAI_API_KEY>" },
+      moonshot: { apiKey: "<MOONSHOT_API_KEY>" },
+    },
+  },
+}
+```
+
+Pour la référence complète de l'authentification du provider, y compris les profils, les variables d'environnement
+et les URL de base personnalisées, consultez [Outils et providers personnalisés](/fr/gateway/config-tools).
+
 ## Valeurs par défaut et limites
 
 Valeurs par défaut recommandées :
@@ -151,46 +175,46 @@ Valeurs par défaut recommandées :
 <AccordionGroup>
   <Accordion title="Règles">
     - Si le média dépasse `maxBytes`CLI, ce modèle est ignoré et le **modèle suivant est essayé**.
-    - Les fichiers audio inférieurs à **1024 octets** sont traités comme vides/corrompus et ignorés avant la transcription par le fournisseur/CLI ; le contexte de réponse entrant reçoit une transcription de substitution déterministe pour que l'agent sache que la note était trop petite.
-    - Si le modèle renvoie plus de `maxChars`, la sortie est tronquée.
-    - `prompt` est par défaut « Décrivez {media}. » plus les directives `maxChars`OpenClaw (image/vidéo uniquement).
-    - Si le modèle d'image principal actif prend déjà en charge la vision nativement, OpenClaw ignore le bloc de résumé `[Image]`GatewayWebChat et transmet l'image originale au modèle à la place.
-    - Si un modèle principal Gateway/WebChat est texte uniquement, les pièces jointes d'image sont conservées en tant que références `media://inbound/*` déchargées afin que les outils image/PDF ou le modèle d'image configuré puissent toujours les inspecter au lieu de perdre la pièce jointe.
-    - Les demandes explicites `openclaw infer image describe --model <provider/model>`Ollama sont différentes : elles exécutent directement ce fournisseur/modèle capable d'image, y compris les références Ollama telles que `ollama/qwen2.5vl:7b`.
-    - Si `<capability>.enabled: true`OpenClaw mais qu'aucun modèle n'est configuré, OpenClaw essaie le **modèle de réponse actif** lorsque son fournisseur prend en charge la capacité.
+    - Les fichiers audio de moins de **1024 octets** sont traités comme vides/corrompus et ignorés avant la transcription par le provider/CLI ; le contexte de réponse entrant reçoit une transcription substitutive déterministe pour que l'agent sache que la note était trop petite.
+    - Si le modèle renvoie plus de `maxChars`, la sortie est réduite.
+    - `prompt` correspond par défaut à « Décrivez le {media}. » plus les directives `maxChars`OpenClaw (image/vidéo uniquement).
+    - Si le modèle d'image principal actif prend déjà en charge la vision nativement, OpenClaw ignore le bloc de résumé `[Image]`GatewayWebChat et transmet l'image originale directement au modèle.
+    - Si le modèle principal d'une passerelle/WebChat est textuel uniquement, les pièces jointes d'image sont conservées sous forme de références `media://inbound/*` déchargées afin que les outils d'image/PDF ou le modèle d'image configuré puissent toujours les inspecter au lieu de perdre la pièce jointe.
+    - Les demandes `openclaw infer image describe --model <provider/model>`Ollama explicites sont différentes : elles exécutent directement ce provider/modèle compatible avec les images, y compris les références Ollama telles que `ollama/qwen2.5vl:7b`.
+    - Si `<capability>.enabled: true`OpenClaw mais qu'aucun modèle n'est configuré, OpenClaw tente d'utiliser le **modèle de réponse actif** si son provider prend en charge cette capacité.
 
   </Accordion>
 </AccordionGroup>
 
 ### Détection automatique de la compréhension des médias (par défaut)
 
-Si `tools.media.<capability>.enabled` n'est **pas** défini sur `false` et que vous n'avez pas configuré de models, OpenClaw détecte automatiquement dans cet ordre et **s'arrête à la première option fonctionnelle** :
+Si `tools.media.<capability>.enabled` n'est **pas** défini sur `false`OpenClaw et que vous n'avez pas configuré de modèles, OpenClaw détecte automatiquement dans cet ordre et **s'arrête à la première option fonctionnelle** :
 
 <Steps>
-  <Step title="Model de réponse actif">
-    Model de réponse actif lorsque son provider prend en charge la fonctionnalité.
+  <Step title="Modèle de réponse actif">
+    Modèle de réponse actif lorsque son provider prend en charge la capacité.
   </Step>
   <Step title="agents.defaults.imageModel">
-    Références `agents.defaults.imageModel` principales/de secours (image uniquement).
-    Préférez les références `provider/model`. Les références nues sont qualifiées à partir des entrées de modèle de fournisseur compatibles avec l'image configurées uniquement lorsque la correspondance est unique.
+    `agents.defaults.imageModel` références primaires/secours (image uniquement).
+    Préférez les références `provider/model`. Les références nues sont qualifiées à partir des entrées de modèle de fournisseur capables d'image configurées uniquement lorsque la correspondance est unique.
   </Step>
-  <Step title="CLIs locaux (audio uniquement)">
-    CLIs locaux (si installés) :
+  <Step title="Local CLIs (audio only)">
+    CLIs locales (si installées) :
 
-    - `sherpa-onnx-offline` (nécessite `SHERPA_ONNX_MODEL_DIR` avec encodeur/décodeur/joineur/tokens)
-    - `whisper-cli` (`whisper-cpp`; utilise `WHISPER_CPP_MODEL` ou le tiny modèle inclus)
-    - `whisper`CLI (CLI Python; télécharge les modèles automatiquement)
+    - `sherpa-onnx-offline` (requiert `SHERPA_ONNX_MODEL_DIR` avec encodeur/décodeur/joiner/jetons)
+    - `whisper-cli` (`whisper-cpp` ; utilise `WHISPER_CPP_MODEL` ou le tiny modèle inclus)
+    - `whisper`CLI (CLI Python ; télécharge les modèles automatiquement)
 
   </Step>
-  <Step title="CLICLI Gemini">
-    `gemini` utilisant `read_many_files`.
+  <Step title="CLIGemini CLI">
+    `gemini` en utilisant `read_many_files`.
   </Step>
-  <Step title="Fournisseur d'authentification">
-    - Les entrées `models.providers.*` configurées qui prennent en charge cette fonctionnalité sont essayées avant l'ordre de repli groupé.
-    - Les fournisseurs de configuration pour images uniquement avec un modèle capable de traiter les images s'inscrivent automatiquement pour la compréhension des médias, même s'ils ne sont pas un plugin fournisseur groupé.
-    - La compréhension d'images par Ollama est disponible lorsqu'elle est sélectionnée explicitement, par exemple via `agents.defaults.imageModel` ou `openclaw infer image describe --model ollama/<vision-model>`.
+  <Step title="Provider auth">
+    - Les entrées `models.providers.*`Ollama configurées qui prennent en charge la fonctionnalité sont essayées avant l'ordre de repli inclus.
+    - Les fournisseurs de configuration image uniquement avec un modèle capable d'image s'enregistrent automatiquement pour la compréhension des médias même s'ils ne sont pas un plugin de fournisseur inclus.
+    - La compréhension d'image Ollama est disponible lorsqu'elle est sélectionnée explicitement, par exemple via `agents.defaults.imageModel` ou `openclaw infer image describe --model ollama/<vision-model>`OpenAIDeepgramOpenRouterOpenAIAnthropicMiniMaxMiniMaxQwenMoonshot.
 
-    Ordre de repli groupé :
+    Ordre de repli inclus :
 
     - Audio : OpenAI → Groq → xAI → Deepgram → OpenRouter → Google → SenseAudio → ElevenLabs → Mistral
     - Image : OpenAI → Anthropic → Google → MiniMax → MiniMax Portal → Z.AI
@@ -213,9 +237,9 @@ Pour désactiver la détection automatique, définissez :
 }
 ```
 
-<Note>La détection de binaire est de type « meilleur effort » sur macOS/Linux/Windows; assurez-vous que la CLI est sur `PATH` (nous développons `~`), ou définissez un modèle CLI explicite avec un chemin de commande complet.</Note>
+<Note>La détection des binaires est « au mieux » (best-effort) sur macOS/Linux/Windows ; assurez-vous que la CLI est sur `PATH` (nous développons `~`), ou définissez un CLI explicite avec un chemin de commande complet.</Note>
 
-### Prise en charge du proxy d'environnement (modèles de fournisseur)
+### Prise en charge du proxy de l'environnement (modèles de fournisseur)
 
 Lorsque la compréhension des médias **audio** et **vidéo** basée sur le fournisseur est activée, OpenClaw respecte les variables d'environnement de proxy sortant standard pour les appels HTTP du fournisseur :
 
@@ -226,7 +250,7 @@ Lorsque la compréhension des médias **audio** et **vidéo** basée sur le four
 - `http_proxy`
 - `all_proxy`
 
-Si aucune variable d'environnement de proxy n'est définie, la compréhension des médias utilise une sortie directe. Si la valeur du proxy est malformée, OpenClaw enregistre un avertissement et revient à une récupération directe.
+Si aucune env vars de proxy n'est définie, la compréhension des médias utilise une sortie directe. Si la valeur du proxy est malformée, OpenClaw enregistre un avertissement et revient à une récupération directe.
 
 ## Capacités (optionnel)
 
@@ -243,37 +267,37 @@ Si vous définissez `capabilities`, l'entrée ne s'exécute que pour ces types d
 - `groq` : **audio**
 - `xai` : **audio**
 - `deepgram` : **audio**
-- Tout catalogue `models.providers.<id>.models[]` avec un modèle capable de traiter les images : **image**
+- Tout catalogue `models.providers.<id>.models[]` avec un modèle compatible avec les images : **image**
 
 Pour les entrées CLI, **définissez `capabilities` explicitement** pour éviter les correspondances inattendues. Si vous omettez `capabilities`, l'entrée est éligible pour la liste dans laquelle elle apparaît.
 
-## Matrice de support des fournisseurs (intégrations OpenClaw)
+## Matrice de prise en charge des fournisseurs (intégrations OpenClaw)
 
-| Capacité | Intégration de fournisseur                                                                                                                           | Notes                                                                                                                                                                                                                                                                                                                                                                         |
-| -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Image    | OpenAI, Codex OpenAI OAuth, serveur d'application Codex, OpenRouter, Anthropic, Google, MiniMax, Moonshot, Qwen, Z.AI, fournisseurs de configuration | Les plugins de fournisseur enregistrent la prise en charge des images ; `openai-codex/*` utilise l'infrastructure du fournisseur OAuth ; `codex/*` utilise un tour de serveur d'application Codex borné ; MiniMax et MiniMax OAuth utilisent tous les deux `MiniMax-VL-01` ; les fournisseurs de configuration capables de traiter les images s'enregistrent automatiquement. |
-| Audio    | OpenAI, Groq, xAI, Deepgram, OpenRouter, Google, SenseAudio, ElevenLabs, Mistral                                                                     | Transcription du fournisseur (Whisper/Groq/xAI/Deepgram/OpenRouter STT/Gemini/SenseAudio/Scribe/Voxtral).                                                                                                                                                                                                                                                                     |
-| Vidéo    | Google, Qwen, Moonshot                                                                                                                               | Compréhension vidéo par le fournisseur via les plugins ; la compréhension vidéo Qwen utilise les points de terminaison DashScope Standard.                                                                                                                                                                                                                                    |
+| Capacité | Intégration du provider                                                                                                      | Notes                                                                                                                                                                                                                                                                                                                          |
+| -------- | ---------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Image    | OpenAI, OpenAI Codex OAuth, Codex app-server, OpenRouter, Anthropic, Google, MiniMax, Moonshot, Qwen, Z.AI, config providers | Les plugins de fournisseur enregistrent la prise en charge des images ; `openai-codex/*` utilise l'infrastructure du provider OAuth ; `codex/*` utilise un tour app-server Codex borné ; MiniMax et MiniMax OAuth utilisent tous deux `MiniMax-VL-01` ; les config providers capables d'images s'enregistrent automatiquement. |
+| Audio    | OpenAI, Groq, xAI, Deepgram, OpenRouter, Google, SenseAudio, ElevenLabs, Mistral                                             | Transcription du provider (Whisper/Groq/xAI/Deepgram/OpenRouter STT/Gemini/SenseAudio/Scribe/Voxtral).                                                                                                                                                                                                                         |
+| Vidéo    | Google, Qwen, Moonshot                                                                                                       | Compréhension vidéo du provider via les plugins de fournisseur ; la compréhension vidéo Qwen utilise les points de terminaison Standard DashScope.                                                                                                                                                                             |
 
 <Note>
-**Note MiniMax**
+**Remarque MiniMax**
 
-- La compréhension d'image `minimax`, `minimax-cn`, `minimax-portal` et `minimax-portal-cn` provient du provider multimédia `MiniMax-VL-01` détenu par le plugin.
-- Le routage automatique des images continue d'utiliser `MiniMax-VL-01`MiniMax même si les métadonnées de chat MiniMax M2.x héritées revendiquent une entrée d'image.
+- La compréhension d'image `minimax`, `minimax-cn`, `minimax-portal` et `minimax-portal-cn` provient du provider média `MiniMax-VL-01` appartenant au plugin.
+- Le routage automatique des images continue d'utiliser `MiniMax-VL-01` même si les métadonnées de chat héritées MiniMax M2.x indiquent une entrée d'image.
 
 </Note>
 
-## Recommandations pour la sélection du model
+## Conseils de sélection de model
 
-- Privilégiez le model de dernière génération le plus performant disponible pour chaque capacité média lorsque la qualité et la sécurité sont importantes.
-- Pour les agents avec tools gérant des entrées non fiables, évitez les models média plus anciens ou moins performants.
-- Conservez au moins une solution de repli par capacité pour la disponibilité (model de qualité + model plus rapide/plus économique).
-- Les solutions de repli CLI (`whisper-cli`, `whisper`, `gemini`) sont utiles lorsque les API du provider ne sont pas disponibles.
-- Note `parakeet-mlx` : avec `--output-dir`, OpenClaw lit `<output-dir>/<media-basename>.txt` lorsque le format de sortie est `txt` (ou non spécifié) ; les formats autres que `txt` reviennent à stdout.
+- Privilégiez le model de dernière génération le plus puissant disponible pour chaque capacité média lorsque la qualité et la sécurité sont importantes.
+- Pour les agents activés par tool gérant des entrées non fiables, évitez les models média plus anciens ou plus faibles.
+- Conservez au moins un repli par capacité pour la disponibilité (model de qualité + model plus rapide/plus économique).
+- Les solutions de repli du CLI (`whisper-cli`, `whisper`, `gemini`) sont utiles lorsque les API des providers sont indisponibles.
+- `parakeet-mlx` note : avec `--output-dir`, OpenClaw lit `<output-dir>/<media-basename>.txt` lorsque le format de sortie est `txt` (ou non spécifié) ; les formats autres que `txt` reviennent à stdout.
 
 ## Politique de pièce jointe
 
-Les contrôles `attachments` par capacité déterminent les pièces jointes traitées :
+Le `attachments` par capacité contrôle quelles pièces jointes sont traitées :
 
 <ParamField path="mode" type='"first" | "all"' default="first">
   S'il faut traiter la première pièce jointe sélectionnée ou toutes.
@@ -289,11 +313,11 @@ Lorsque `mode: "all"`, les sorties sont étiquetées `[Image 1/2]`, `[Audio 2/2]
 
 <AccordionGroup>
   <Accordion title="Comportement d'extraction des fichiers joints">
-    - Le texte extrait du fichier est enveloppé en tant que **contenu externe non approuvé** avant d'être ajouté à l'invite média.
+    - Le texte extrait du fichier est encapsulé en tant que **contenu externe non approuvé** avant d'être ajouté à l'invite média.
     - Le bloc injecté utilise des marqueurs de limite explicites comme `<<<EXTERNAL_UNTRUSTED_CONTENT id="...">>>` / `<<<END_EXTERNAL_UNTRUSTED_CONTENT id="...">>>` et inclut une ligne de métadonnées `Source: External`.
     - Ce chemin d'extraction de pièces jointes omet intentionnellement la longue bannière `SECURITY NOTICE:` pour éviter de surcharger l'invite média ; les marqueurs de limite et les métadonnées restent tout de même.
     - Si un fichier n'a pas de texte extractible, OpenClaw injecte `[No extractable text]`.
-    - Si un PDF revient aux images de page rendues dans ce chemin, l'invite média conserve l'espace réservé `[PDF content rendered to images; images not forwarded to model]` car cette étape d'extraction de pièces jointes transfère des blocs de texte, et non les images PDF rendues.
+    - Si un PDF revient aux images de page rendues dans ce chemin, l'invite média conserve l'espace réservé `[PDF content rendered to images; images not forwarded to model]` car cette étape d'extraction de pièce jointe transmet des blocs de texte, et non les images PDF rendues.
 
   </Accordion>
 </AccordionGroup>
@@ -301,7 +325,7 @@ Lorsque `mode: "all"`, les sorties sont étiquetées `[Image 1/2]`, `[Audio 2/2]
 ## Exemples de configuration
 
 <Tabs>
-  <Tab title="Modèles partagés + substitutions">
+  <Tab title="Modèles partagés + remplacements">
     ```json5
     {
       tools: {
@@ -447,19 +471,19 @@ Lorsque `mode: "all"`, les sorties sont étiquetées `[Image 1/2]`, `[Audio 2/2]
 
 ## Sortie de statut
 
-Lorsque la compréhension média s'exécute, `/status` inclut une courte ligne résumée :
+Lorsque la compréhension des médias s'exécute, `/status` inclut une courte ligne de résumé :
 
 ```
 📎 Media: image ok (openai/gpt-5.4) · audio skipped (maxBytes)
 ```
 
-Cela indique les résultats par capacité et le fournisseur/modèle choisi le cas échéant.
+Cela indique les résultats par capacité et le provider/model choisi le cas échéant.
 
-## Notes
+## Remarques
 
-- La compréhension est **sur la base du meilleur effort**. Les erreurs ne bloquent pas les réponses.
+- La compréhension est effectuée sur la base du **meilleur effort**. Les erreurs ne bloquent pas les réponses.
 - Les pièces jointes sont toujours transmises aux modèles même lorsque la compréhension est désactivée.
-- Utilisez `scope` pour limiter les endroits où la compréhension s'exécute (par exemple, uniquement les DMs).
+- Utilisez `scope` pour limiter l'exécution de la compréhension (par ex. uniquement dans les DMs).
 
 ## Connexes
 

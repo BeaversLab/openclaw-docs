@@ -7,7 +7,10 @@ read_when:
   - You need the exact metric names, span names, or attribute shapes to build dashboards or alerts
 ---
 
-OpenClaw 通过官方 OpenClaw`diagnostics-otel` 插件使用 **OTLP/HTTP (protobuf)** 导出诊断信息。任何接受 OTLP/HTTP 的收集器或后端都可以在无需更改代码的情况下工作。有关本地文件日志及其读取方法，请参阅 [日志记录](/zh/logging)。
+OpenClaw 通过官方 OpenClaw`diagnostics-otel` 插件导出诊断信息
+使用 **OTLP/HTTP (protobuf)**。任何接受 OTLP/HTTP 的
+收集器或后端都无需更改代码即可工作。有关本地文件日志以及如何读取它们，请参阅
+[日志记录](/zh/logging)。
 
 ## 如何协同工作
 
@@ -61,11 +64,11 @@ openclaw plugins enable diagnostics-otel
 
 ## 导出的 Signal
 
-| Signal   | 包含内容                                                                                                             |
-| -------- | -------------------------------------------------------------------------------------------------------------------- |
-| **指标** | 用于 token 使用量、成本、运行持续时间、消息流、Talk 事件、队列通道、会话状态/恢复、exec 和内存压力的计数器和直方图。 |
-| **追踪** | 针对模型使用、模型调用、harness 生命周期、工具执行、exec、webhook/消息处理、上下文组装和工具循环的 span。            |
-| **日志** | 当启用 `diagnostics.otel.logs` 时，通过 OTLP 导出的结构化 `logging.file` 记录。                                      |
+| Signal   | 包含内容                                                                                                                                |
+| -------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| **指标** | 用于令牌使用量、成本、运行持续时间、技能使用量、消息流、Talk 事件、队列通道、会话状态/恢复、工具执行、exec 和内存压力的计数器和直方图。 |
+| **追踪** | 用于模型使用情况、模型调用、harness 生命周期、技能使用、工具执行、exec、webhook/消息处理、上下文组装和工具循环的 Spans。                |
+| **日志** | 当 `diagnostics.otel.logs` 启用时，通过 OTLP 导出的结构化 `logging.file` 记录；除非明确启用了内容捕获，否则保留日志正文。               |
 
 可以独立切换 `traces`、`metrics` 和 `logs`。当 `diagnostics.otel.enabled` 为 true 时，这三者默认都开启。
 
@@ -115,105 +118,121 @@ openclaw plugins enable diagnostics-otel
 
 ## 隐私和内容捕获
 
-默认情况下不导出原始模型/工具内容。跨度携带有界标识符（渠道、提供商、模型、错误类别、仅哈希请求 ID），并且绝不包括提示文本、响应文本、工具输入、工具输出或会话密钥。
-对话指标仅导出有界事件元数据，例如模式、传输、提供商和事件类型。它们不包括转录、音频负载、会话 ID、回合 ID、呼叫 ID、房间 ID 或移交令牌。
+默认情况下**不**导出原始模型/工具内容。Spans 携带受限
+标识符（渠道、提供商、模型、错误类别、仅哈希请求 ID、
+工具来源、工具所有者和技能名称/来源），绝不包括提示文本、
+响应文本、工具输入、工具输出、技能文件路径或会话密钥。
+OTLP 日志记录默认保留严重性、记录器、代码位置、受信任的跟踪上下文
+和清理后的属性，但仅当 `diagnostics.otel.captureContent` 设置为布尔值 `true` 时才会导出
+原始日志消息正文。细粒度的
+`captureContent.*` 子键不会启用日志正文。看起来像
+作用域代理会话密钥的标签将被替换为 `unknown`。
+Talk 指标仅导出受限的事件元数据，例如模式、传输、
+提供商和事件类型。它们不包括转录、音频负载、
+会话 ID、轮次 ID、调用 ID、房间 ID 或移交令牌。
 
-出站模型请求可能包含 W3C `traceparent`OpenClaw 标头。该标头仅根据 OpenClaw 拥有的活动模型调用的诊断跟踪上下文生成。现有的调用方提供的 `traceparent` 标头将被替换，因此插件或自定义提供商选项无法欺骗跨服务跟踪谱系。
+出站模型请求可能包含 W3C `traceparent`OpenClaw 标头。该标头
+仅针对当前模型调用从 OpenClaw 拥有的诊断跟踪上下文生成。
+现有的调用方提供的 `traceparent` 标头将被替换，因此插件或
+自定义提供商选项无法欺骗跨服务跟踪的谱系。
 
-仅当您的收集器和保留策略允许记录提示词、响应、工具或系统提示词文本时，才将 `diagnostics.otel.captureContent.*` 设置为 `true`。每个子项都是独立启用的：
+仅当您的收集器和保留策略获准捕获提示、响应、工具或系统提示文本时，才将 `diagnostics.otel.captureContent.*` 设置为 `true`。每个子键都是独立选择的：
 
-- `inputMessages` - 用户提示词内容。
+- `inputMessages` - 用户提示内容。
 - `outputMessages` - 模型响应内容。
 - `toolInputs` - 工具参数负载。
 - `toolOutputs` - 工具结果负载。
-- `systemPrompt` - 组装好的系统/开发者提示词。
+- `systemPrompt` - 组装后的系统/开发者提示。
 
-当启用任何子项时，模型和工具跨度将仅针对该类别获得受限制的、经过编辑的 `openclaw.content.*` 属性。
+当启用任何子键时，模型和工具 span 将针对该类别获得受限的、经过编辑的 `openclaw.content.*` 属性。请仅在广泛诊断捕获（其中 OTLP 日志消息正文也获准导出）时才使用布尔 `captureContent: true`。
 
 ## 采样和刷新
 
-- **追踪：** `diagnostics.otel.sampleRate`（仅根跨度，`0.0` 丢弃全部，
-  `1.0` 保留全部）。
-- **指标：** `diagnostics.otel.flushIntervalMs`（最小 `1000`）。
-- **日志：** OTLP 日志遵循 `logging.level`（文件日志级别）。它们使用
-  诊断日志记录编辑路径，而不是控制台格式化。高流量
-  安装应优先使用 OTLP 收集器采样/过滤，而非本地采样。
-- **文件日志关联：** 当日志调用携带有效的
-  诊断追踪上下文时，JSONL 文件日志包含顶级 `traceId`、
-  `spanId`、`parentSpanId` 和 `traceFlags`，这使得日志处理器可以将本地日志行与
-  导出的跨度连接起来。
-- **请求关联：** Gateway(网关) HTTP 请求和 WebSocket 帧创建一个
-  内部请求追踪范围。该范围内的日志和诊断事件
-  默认继承请求追踪，而代理运行和模型调用跨度作为子项创建，以便提供商 `traceparent` 标头保持在同一追踪上。
+- **Traces（追踪）：** `diagnostics.otel.sampleRate`（仅 root-span，`0.0` 丢弃所有，`1.0` 保留所有）。
+- **Metrics（指标）：** `diagnostics.otel.flushIntervalMs`（最小 `1000`）。
+- **Logs（日志）：** OTLP 日志遵循 `logging.level`（文件日志级别）。它们使用诊断日志记录编辑路径，而非控制台格式化。高流量部署应优先使用 OTLP 收集器采样/过滤，而非本地采样。
+- **File-log correlation（文件日志关联）：** 当日志调用携带有效的诊断追踪上下文时，JSONL 文件日志将包含顶层 `traceId`、`spanId`、`parentSpanId` 和 `traceFlags`，这使得日志处理器可以将本地日志行与导出的 span 关联起来。
+- **Request correlation（请求关联）：** Gateway(网关) HTTP 请求和 WebSocket 帧会创建一个内部请求追踪范围。该范围内的日志和诊断事件默认继承请求追踪，而代理运行和模型调用 span 则作为子项创建，以便提供商 `traceparent` 标头保持在同一追踪上。
 
 ## 导出的指标
 
 ### 模型使用情况
 
 - `openclaw.tokens`（计数器，属性：`openclaw.token`、`openclaw.channel`、`openclaw.provider`、`openclaw.model`、`openclaw.agent`）
-- `openclaw.cost.usd`（计数器，属性：`openclaw.channel`、`openclaw.provider`、`openclaw.model`）
-- `openclaw.run.duration_ms` (直方图，属性：`openclaw.channel`、`openclaw.provider`、`openclaw.model`)
-- `openclaw.context.tokens` (直方图，属性：`openclaw.context`、`openclaw.channel`、`openclaw.provider`、`openclaw.model`)
-- `gen_ai.client.token.usage` (直方图，GenAI 语义约定指标，属性：`gen_ai.token.type` = `input`/`output`、`gen_ai.provider.name`、`gen_ai.operation.name`、`gen_ai.request.model`)
-- `gen_ai.client.operation.duration` (直方图，秒，GenAI 语义约定指标，属性：`gen_ai.provider.name`、`gen_ai.operation.name`、`gen_ai.request.model`，可选 `error.type`)
-- `openclaw.model_call.duration_ms` (直方图，属性：`openclaw.provider`、`openclaw.model`、`openclaw.api`、`openclaw.transport`，加上分类错误上的 `openclaw.errorCategory` 和 `openclaw.failureKind`)
-- `openclaw.model_call.request_bytes` (直方图，最终模型请求负载的 UTF-8 字节大小；无原始负载内容)
-- `openclaw.model_call.response_bytes` (直方图，流式模型响应事件的 UTF-8 字节大小；无原始响应内容)
-- `openclaw.model_call.time_to_first_byte_ms` (直方图，首个流式响应事件之前的经过时间)
+- `openclaw.cost.usd` (计数器，属性：`openclaw.channel`, `openclaw.provider`, `openclaw.model`)
+- `openclaw.run.duration_ms` (直方图，属性：`openclaw.channel`, `openclaw.provider`, `openclaw.model`)
+- `openclaw.context.tokens` (直方图，属性：`openclaw.context`, `openclaw.channel`, `openclaw.provider`, `openclaw.model`)
+- `gen_ai.client.token.usage` (直方图，GenAI 语义约定指标，属性：`gen_ai.token.type` = `input`/`output`, `gen_ai.provider.name`, `gen_ai.operation.name`, `gen_ai.request.model`)
+- `gen_ai.client.operation.duration` (直方图，秒，GenAI 语义约定指标，属性：`gen_ai.provider.name`, `gen_ai.operation.name`, `gen_ai.request.model`, 可选 `error.type`)
+- `openclaw.model_call.duration_ms` (直方图，属性：`openclaw.provider`, `openclaw.model`, `openclaw.api`, `openclaw.transport`，加上已分类错误上的 `openclaw.errorCategory` 和 `openclaw.failureKind`)
+- `openclaw.model_call.request_bytes` (直方图，最终模型请求负载的 UTF-8 字节大小；不包含原始负载内容)
+- `openclaw.model_call.response_bytes` (直方图，流式模型响应事件的 UTF-8 字节大小；不包含原始响应内容)
+- `openclaw.model_call.time_to_first_byte_ms` (直方图，首次流式响应事件之前的耗时)
+- `openclaw.skill.used` (计数器，属性：`openclaw.skill.name`, `openclaw.skill.source`, `openclaw.skill.activation`, 可选 `openclaw.agent`, 可选 `openclaw.toolName`)
 
 ### 消息流
 
-- `openclaw.webhook.received` (计数器，属性：`openclaw.channel`、`openclaw.webhook`)
-- `openclaw.webhook.error` (计数器，属性：`openclaw.channel`、`openclaw.webhook`)
+- `openclaw.webhook.received` (计数器，属性：`openclaw.channel`, `openclaw.webhook`)
+- `openclaw.webhook.error` (计数器，属性：`openclaw.channel`, `openclaw.webhook`)
 - `openclaw.webhook.duration_ms` (直方图，属性：`openclaw.channel`、`openclaw.webhook`)
 - `openclaw.message.queued` (计数器，属性：`openclaw.channel`、`openclaw.source`)
+- `openclaw.message.received` (计数器，属性：`openclaw.channel`、`openclaw.source`)
+- `openclaw.message.dispatch.started` (计数器，属性：`openclaw.channel`、`openclaw.source`)
+- `openclaw.message.dispatch.completed` (计数器，属性：`openclaw.channel`、`openclaw.outcome`、`openclaw.reason`、`openclaw.source`)
+- `openclaw.message.dispatch.duration_ms` (直方图，属性：`openclaw.channel`、`openclaw.outcome`、`openclaw.reason`、`openclaw.source`)
 - `openclaw.message.processed` (计数器，属性：`openclaw.channel`、`openclaw.outcome`)
-- `openclaw.message.duration_ms` (直方图，属性：`openclaw.channel`, `openclaw.outcome`)
-- `openclaw.message.delivery.started` (计数器，属性：`openclaw.channel`, `openclaw.delivery.kind`)
-- `openclaw.message.delivery.duration_ms` (直方图，属性：`openclaw.channel`, `openclaw.delivery.kind`, `openclaw.outcome`, `openclaw.errorCategory`)
+- `openclaw.message.duration_ms` (直方图，属性：`openclaw.channel`、`openclaw.outcome`)
+- `openclaw.message.delivery.started` (计数器，属性：`openclaw.channel`、`openclaw.delivery.kind`)
+- `openclaw.message.delivery.duration_ms` (直方图，属性：`openclaw.channel`、`openclaw.delivery.kind`、`openclaw.outcome`、`openclaw.errorCategory`)
 
-### Talk
+### 对话
 
-- `openclaw.talk.event` (计数器，属性：`openclaw.talk.event_type`, `openclaw.talk.mode`, `openclaw.talk.transport`, `openclaw.talk.brain`, `openclaw.talk.provider`)
-- `openclaw.talk.event.duration_ms` (直方图，属性：同 `openclaw.talk.event`；当 Talk 事件报告持续时间时发出)
-- `openclaw.talk.audio.bytes` (直方图，属性：同 `openclaw.talk.event`；针对报告字节长度的 Talk 音频帧事件发出)
+- `openclaw.talk.event` (计数器，属性：`openclaw.talk.event_type`、`openclaw.talk.mode`、`openclaw.talk.transport`、`openclaw.talk.brain`、`openclaw.talk.provider`)
+- `openclaw.talk.event.duration_ms` (直方图，属性：与 `openclaw.talk.event` 相同；当对话事件报告持续时间时发出)
+- `openclaw.talk.audio.bytes` (直方图，属性：与 `openclaw.talk.event` 相同；针对报告字节长度的对话音频帧事件发出)
 
 ### 队列和会话
 
 - `openclaw.queue.lane.enqueue` (计数器，属性：`openclaw.lane`)
 - `openclaw.queue.lane.dequeue` (计数器，属性：`openclaw.lane`)
-- `openclaw.queue.depth` (直方图，属性：`openclaw.lane` 或 `openclaw.channel=heartbeat`)
-- `openclaw.queue.wait_ms` (直方图，属性：`openclaw.lane`)
-- `openclaw.session.state` (计数器，属性：`openclaw.state`, `openclaw.reason`)
-- `openclaw.session.stuck` (计数器，属性：`openclaw.state`；仅针对没有活跃工作的过时会话维护发出)
-- `openclaw.session.stuck_age_ms` (直方图，属性：`openclaw.state`；仅针对没有活跃工作的过时会话维护发出)
-- `openclaw.session.recovery.requested` (计数器，属性：`openclaw.state`, `openclaw.action`, `openclaw.active_work_kind`, `openclaw.reason`)
-- `openclaw.session.recovery.completed` (计数器，属性：`openclaw.state`、`openclaw.action`、`openclaw.status`、`openclaw.active_work_kind`、`openclaw.reason`)
-- `openclaw.session.recovery.age_ms` (直方图，属性：与匹配的恢复计数器相同)
-- `openclaw.run.attempt` (计数器，属性：`openclaw.attempt`)
+- `openclaw.queue.depth` (histogram, attrs: `openclaw.lane` 或 `openclaw.channel=heartbeat`)
+- `openclaw.queue.wait_ms` (histogram, attrs: `openclaw.lane`)
+- `openclaw.session.state` (counter, attrs: `openclaw.state`, `openclaw.reason`)
+- `openclaw.session.stuck` (counter, attrs: `openclaw.state`; emitted only for stale 会话 bookkeeping with no active work)
+- `openclaw.session.stuck_age_ms` (histogram, attrs: `openclaw.state`; emitted only for stale 会话 bookkeeping with no active work)
+- `openclaw.session.turn.created` (counter, attrs: `openclaw.agent`, `openclaw.channel`, `openclaw.trigger`)
+- `openclaw.session.recovery.requested` (counter, attrs: `openclaw.state`, `openclaw.action`, `openclaw.active_work_kind`, `openclaw.reason`)
+- `openclaw.session.recovery.completed` (counter, attrs: `openclaw.state`, `openclaw.action`, `openclaw.status`, `openclaw.active_work_kind`, `openclaw.reason`)
+- `openclaw.session.recovery.age_ms` (histogram, attrs: same as the matching recovery counter)
+- `openclaw.run.attempt` (counter, attrs: `openclaw.attempt`)
 
 ### 会话活跃性遥测
 
-`diagnostics.stuckSessionWarnMs` 是会话活跃性诊断的无进展时间阈值。当 OpenClaw 观察到回复、工具、状态、块或 ACP 运行时进度时，`processing` 会话不会老化至该阈值。键入保活信号不算作进展，因此仍可以检测到静默模型或线束。
+`diagnostics.stuckSessionWarnMs` 是会话活跃性诊断的无进度老化阈值。当 OpenClaw 观察到回复、工具、状态、块或 ACP 运行时进度时，`processing` 会话不会向此阈值老化。输入 keepalives 不计为进度，因此仍然可以检测到静默模型或线束。
 
-OpenClaw 根据其仍能观察到的工作对会话进行分类：
+OpenClaw 根据其仍可观察到的工作对会话进行分类：
 
-- `session.long_running`：活动的嵌入式工作、模型调用或工具调用仍在取得进展。
+- `session.long_running`: 活动的嵌入式工作、模型调用或工具调用仍在取得进展。
 - `session.stalled`：存在活动工作，但活动运行未报告
-  最近进度。停滞的嵌入式运行最初保持仅观察状态，然后在
-  `diagnostics.stuckSessionAbortMs` 毫无进度后中止排空，以便队列中
-  滞后的轮次能够恢复。如果未设置，中止阈值默认为
-  更安全的扩展窗口，即至少 5 分钟和 3 倍
-  `diagnostics.stuckSessionWarnMs`。
-- `session.stuck`：过时的会话簿记，没有活动工作。这会立即释放受影响的会话车道。
+  最近进展。停滞的嵌入式运行最初保持仅观察模式，然后在 `diagnostics.stuckSessionAbortMs` 毫秒
+  内无进展后中止排空，以便队列中的轮次在该通道之后恢复。如果未设置，中止阈值默认为
+  至少 5 分钟和 3 倍 `diagnostics.stuckSessionWarnMs` 的更安全扩展窗口。
+- `session.stuck`：没有活动工作的过期会话簿记。这会立即
+  释放受影响的会话通道。
 
-恢复会发出结构化的 `session.recovery.requested` 和 `session.recovery.completed` 事件。诊断会话状态仅在产生变更的恢复结果（`aborted` 或 `released`）之后，并且仅当相同的处理代次仍然当前时，才会被标记为空闲。
+恢复会发出结构化的 `session.recovery.requested` 和
+`session.recovery.completed` 事件。诊断会话状态仅在变更恢复结果（`aborted` 或 `released`）之后
+且仅当相同的处理代次仍然当前时，才会被标记为空闲。
 
-只有 `session.stuck` 会发出 `openclaw.session.stuck` 计数器、`openclaw.session.stuck_age_ms` 直方图和 `openclaw.session.stuck` 跨度。当会话保持不变时，重复的 `session.stuck` 诊断信息会退避，因此仪表板应该针对持续增加的情况发出警报，而不是每次心跳跳动时。有关配置旋钮和默认值，请参阅[配置参考](/zh/gateway/configuration-reference#diagnostics)。
+只有 `session.stuck` 会发出 `openclaw.session.stuck` 计数器、
+`openclaw.session.stuck_age_ms` 直方图和 `openclaw.session.stuck`
+跨度。当会话保持不变时，重复的 `session.stuck` 诊断会退避，因此仪表板应对持续增加发出警报，而不是
+每一次心跳跳变。有关配置旋钮和默认值，请参阅
+[配置参考](/zh/gateway/configuration-reference#diagnostics)。
 
 ### Harness 生命周期
 
-- `openclaw.harness.duration_ms`（直方图，属性：`openclaw.harness.id`、`openclaw.harness.plugin`、`openclaw.outcome`、`openclaw.harness.phase` 错误时）
+- `openclaw.harness.duration_ms`（直方图，属性：`openclaw.harness.id`、`openclaw.harness.plugin`、`openclaw.outcome`、错误时的 `openclaw.harness.phase`）
 
 ### Exec
 
@@ -225,37 +244,37 @@ OpenClaw 根据其仍能观察到的工作对会话进行分类：
 - `openclaw.memory.rss_bytes`（直方图）
 - `openclaw.memory.pressure`（计数器，属性：`openclaw.memory.level`）
 - `openclaw.tool.loop.iterations`（计数器，属性：`openclaw.toolName`、`openclaw.outcome`）
-- `openclaw.tool.loop.duration_ms`（直方图，属性：`openclaw.toolName`、`openclaw.outcome`）
+- `openclaw.tool.loop.duration_ms` (直方图，属性：`openclaw.toolName`, `openclaw.outcome`)
 
-## 导出的跨度
+## 导出的 Span
 
 - `openclaw.model.usage`
-  - `openclaw.channel`、`openclaw.provider`、`openclaw.model`
-  - `openclaw.tokens.*`（input/output/cache_read/cache_write/total）
-  - 默认为 `gen_ai.system`，或者在启用最新 GenAI 语义约定时为 `gen_ai.provider.name`
-  - `gen_ai.request.model`、`gen_ai.operation.name`、`gen_ai.usage.*`
+  - `openclaw.channel`, `openclaw.provider`, `openclaw.model`
+  - `openclaw.tokens.*` (input/output/cache_read/cache_write/total)
+  - 默认为 `gen_ai.system`，或在选择启用最新的 GenAI 语义约定时为 `gen_ai.provider.name`
+  - `gen_ai.request.model`, `gen_ai.operation.name`, `gen_ai.usage.*`
 - `openclaw.run`
-  - `openclaw.outcome`、`openclaw.channel`、`openclaw.provider`、`openclaw.model`、`openclaw.errorCategory`
+  - `openclaw.outcome`, `openclaw.channel`, `openclaw.provider`, `openclaw.model`, `openclaw.errorCategory`
 - `openclaw.model.call`
-  - 默认为 `gen_ai.system`，或在选择加入最新的 GenAI 语义约定时为 `gen_ai.provider.name`
-  - `gen_ai.request.model`、`gen_ai.operation.name`、`openclaw.provider`、`openclaw.model`、`openclaw.api`、`openclaw.transport`
-  - `openclaw.errorCategory` 和错误时的可选 `openclaw.failureKind`
-  - `openclaw.model_call.request_bytes`、`openclaw.model_call.response_bytes`、`openclaw.model_call.time_to_first_byte_ms`
-  - `openclaw.provider.request_id_hash`（上游提供商请求 ID 的基于 SHA 的有界哈希；不导出原始 ID）
+  - 默认为 `gen_ai.system`，或在选择启用最新的 GenAI 语义约定时为 `gen_ai.provider.name`
+  - `gen_ai.request.model`, `gen_ai.operation.name`, `openclaw.provider`, `openclaw.model`, `openclaw.api`, `openclaw.transport`
+  - 错误时包含 `openclaw.errorCategory` 和可选的 `openclaw.failureKind`
+  - `openclaw.model_call.request_bytes`, `openclaw.model_call.response_bytes`, `openclaw.model_call.time_to_first_byte_ms`
+  - `openclaw.provider.request_id_hash` (上游提供商请求 ID 的有界 SHA 哈希值；不导出原始 ID)
 - `openclaw.harness.run`
-  - `openclaw.harness.id`、`openclaw.harness.plugin`、`openclaw.outcome`、`openclaw.provider`、`openclaw.model`、`openclaw.channel`
-  - 完成时：`openclaw.harness.result_classification`、`openclaw.harness.yield_detected`、`openclaw.harness.items.started`、`openclaw.harness.items.completed`、`openclaw.harness.items.active`
-  - 错误时：`openclaw.harness.phase`、`openclaw.errorCategory`、可选 `openclaw.harness.cleanup_failed`
+  - `openclaw.harness.id`, `openclaw.harness.plugin`, `openclaw.outcome`, `openclaw.provider`, `openclaw.model`, `openclaw.channel`
+  - 完成时：`openclaw.harness.result_classification`, `openclaw.harness.yield_detected`, `openclaw.harness.items.started`, `openclaw.harness.items.completed`, `openclaw.harness.items.active`
+  - 错误时：`openclaw.harness.phase`, `openclaw.errorCategory`, 可选的 `openclaw.harness.cleanup_failed`
 - `openclaw.tool.execution`
-  - `gen_ai.tool.name`、`openclaw.toolName`、`openclaw.errorCategory`、`openclaw.tool.params.*`
+  - `gen_ai.tool.name`, `openclaw.toolName`, `openclaw.errorCategory`, `openclaw.tool.params.*`
 - `openclaw.exec`
-  - `openclaw.exec.target`、`openclaw.exec.mode`、`openclaw.outcome`、`openclaw.failureKind`、`openclaw.exec.command_length`、`openclaw.exec.exit_code`、`openclaw.exec.timed_out`
+  - `openclaw.exec.target`, `openclaw.exec.mode`, `openclaw.outcome`, `openclaw.failureKind`, `openclaw.exec.command_length`, `openclaw.exec.exit_code`, `openclaw.exec.timed_out`
 - `openclaw.webhook.processed`
-  - `openclaw.channel`、`openclaw.webhook`
+  - `openclaw.channel`, `openclaw.webhook`
 - `openclaw.webhook.error`
-  - `openclaw.channel`、`openclaw.webhook`、`openclaw.error`
+  - `openclaw.channel`, `openclaw.webhook`, `openclaw.error`
 - `openclaw.message.processed`
-  - `openclaw.channel`、`openclaw.outcome`、`openclaw.reason`
+  - `openclaw.channel`, `openclaw.outcome`, `openclaw.reason`
 - `openclaw.message.delivery`
   - `openclaw.channel`, `openclaw.delivery.kind`, `openclaw.outcome`, `openclaw.errorCategory`, `openclaw.delivery.result_count`
 - `openclaw.session.stuck`
@@ -267,18 +286,18 @@ OpenClaw 根据其仍能观察到的工作对会话进行分类：
 - `openclaw.memory.pressure`
   - `openclaw.memory.level`, `openclaw.memory.heap_used_bytes`, `openclaw.memory.rss_bytes`
 
-当明确启用内容捕获时，模型和工具跨度还可以包含针对您选择启用的特定内容类别的有界、已编辑的 `openclaw.content.*` 属性。
+当显式启用内容捕获时，模型和工具跨度还可以包含您选择加入的特定内容类的、经过脱敏处理的 `openclaw.content.*` 属性。
 
 ## 诊断事件目录
 
-以下事件支持上述指标和跨度。插件也可以在不进行 OTLP 导出的情况下直接订阅这些事件。
+以下事件支持上述指标和跨度。插件也可以直接订阅它们，而无需通过 OTLP 导出。
 
 **模型使用情况**
 
-- `model.usage` - tokens（令牌）、cost（成本）、duration（持续时间）、context（上下文）、提供商/模型/渠道（提供商/模型/渠道）、
-  会话 ids（会话 ID）。`usage` 是用于成本和遥测的提供商/轮次核算；
-  `context.used` 是当前的提示/上下文快照，当涉及缓存输入或工具循环调用时，它可能低于
-  提供商 `usage.total`。
+- `model.usage` - 令牌、成本、持续时间、上下文、提供商/模型/渠道、
+  会话 ID。`usage` 是用于成本和遥测的提供商/轮次计费；
+  `context.used` 是当前的提示/上下文快照，当涉及缓存输入或工具循环调用时，
+  它可能低于提供商 `usage.total`。
 
 **消息流**
 
@@ -291,27 +310,26 @@ OpenClaw 根据其仍能观察到的工作对会话进行分类：
 - `queue.lane.enqueue` / `queue.lane.dequeue`
 - `session.state` / `session.long_running` / `session.stalled` / `session.stuck`
 - `run.attempt` / `run.progress`
-- `diagnostic.heartbeat`（聚合计数器：webhooks/queue/会话）
+- `diagnostic.heartbeat` (聚合计数器：webhooks/queue/会话)
 
 **Harness 生命周期**
 
 - `harness.run.started` / `harness.run.completed` / `harness.run.error` -
-  代理 harness 的单次运行生命周期。包括 `harnessId`、可选的
-  `pluginId`、提供商/模型/渠道（渠道）以及运行 ID。完成时会添加
+  agent harness 的每次运行生命周期。包括 `harnessId`、可选的
+  `pluginId`、提供商/模型/渠道以及运行 ID。完成时会添加
   `durationMs`、`outcome`、可选的 `resultClassification`、`yieldDetected`
   和 `itemLifecycle` 计数。错误会添加 `phase`
-  （`prepare`/`start`/`send`/`resolve`/`cleanup`）、`errorCategory` 和
-  可选的 `cleanupFailed`。
+  (`prepare`/`start`/`send`/`resolve`/`cleanup`)、`errorCategory`
+  和可选的 `cleanupFailed`。
 
 **Exec**
 
-- `exec.process.completed` - 终结结果、持续时间、目标、模式、退出
-  代码和失败类型。不包含命令文本和工作目录。
+- `exec.process.completed` - 最终结果、持续时间、目标、模式、退出代码
+  和失败类型。不包括命令文本和工作目录。
 
 ## 不使用导出器
 
-您可以让诊断事件对插件或自定义接收器可用，而无需
-运行 `diagnostics-otel`：
+您可以在不运行 `diagnostics-otel` 的情况下，使诊断事件可供插件或自定义接收器使用：
 
 ```json5
 {
@@ -319,9 +337,7 @@ OpenClaw 根据其仍能观察到的工作对会话进行分类：
 }
 ```
 
-要获取定向的调试输出而不引发 `logging.level`，请使用诊断
-标志（flags）。标志不区分大小写并支持通配符（例如 `telegram.*` 或
-`*`）：
+若要获取有针对性的调试输出而不引发 `logging.level`，请使用诊断标志。标志不区分大小写并支持通配符（例如 `telegram.*` 或 `*`）：
 
 ```json5
 {
@@ -329,15 +345,13 @@ OpenClaw 根据其仍能观察到的工作对会话进行分类：
 }
 ```
 
-或者作为一次性环境变量覆盖：
+或者作为一次性的环境变量覆盖：
 
 ```bash
 OPENCLAW_DIAGNOSTICS=telegram.http,telegram.payload openclaw gateway
 ```
 
-标志输出会进入标准日志文件（`logging.file`），并且仍
-会由 `logging.redactSensitive` 进行编辑。完整指南：
-[诊断标志](/zh/diagnostics/flags)。
+标志输出会进入标准日志文件 (`logging.file`)，并且仍会被 `logging.redactSensitive` 编辑。完整指南：[Diagnostics flags](/zh/diagnostics/flags)。
 
 ## 禁用
 
@@ -347,13 +361,12 @@ OPENCLAW_DIAGNOSTICS=telegram.http,telegram.payload openclaw gateway
 }
 ```
 
-您也可以将 `diagnostics-otel` 从 `plugins.allow` 中移除，或者运行
-`openclaw plugins disable diagnostics-otel`。
+您也可以不在 `plugins.allow` 中包含 `diagnostics-otel`，或者运行 `openclaw plugins disable diagnostics-otel`。
 
 ## 相关
 
-- [日志记录](/zh/logging) - 文件日志、控制台输出、CLI 跟踪以及控制 UI 日志选项卡
-- [Gateway(网关) 日志记录内部机制](/zh/gateway/logging) - WS 日志样式、子系统前缀和控制台捕获
-- [诊断标志](/zh/diagnostics/flags) - 针对性的调试日志标志
-- [诊断导出](/zh/gateway/diagnostics) - 运维支持包工具（与 OTEL 导出分离）
-- [配置参考](/zh/gateway/configuration-reference#diagnostics) - 完整的 `diagnostics.*` 字段参考
+- [Logging](/zh/logging) - 文件日志、控制台输出、CLI 跟踪以及控制 UI 日志选项卡
+- [Gateway(网关) logging internals](/zh/gateway/logging) - WS 日志样式、子系统前缀和控制台捕获
+- [Diagnostics flags](/zh/diagnostics/flags) - 有针对性的调试日志标志
+- [Diagnostics export](/zh/gateway/diagnostics) - 运维人员支持包工具（与 OTEL 导出分开）
+- [Configuration reference](/zh/gateway/configuration-reference#diagnostics) - 完整的 `diagnostics.*` 字段参考

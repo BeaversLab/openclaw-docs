@@ -75,18 +75,18 @@ agente cuando necesite una cuenta independiente.
 ## Compatibilidad con tokens heredados de Anthropic
 
 <Warning>
-Los documentos públicos de Claude Code de Anthropic indican que el uso directo de Claude Code se mantiene dentro de los límites de la suscripción Claude, y el personal de Anthropic nos informó que el uso de la CLI Claude estilo OpenClaw está permitido nuevamente. Por lo tanto, OpenClaw trata la reutilización de la CLI Claude y el uso de `claude -p` como autorizados para esta integración, a menos que Anthropic publique una nueva política.
+Los documentos públicos de Claude Code de Anthropic indican que el uso directo de Claude Code se mantiene dentro de los límites de suscripción de Claude, y el personal de Anthropic nos informó que el uso de Claude CLI al estilo de OpenClaw está permitido nuevamente. Por lo tanto, OpenClaw considera el uso reutilizado de Claude CLI y el uso de `claude -p` como sancionado para esta integración, a menos que Anthropic publique una nueva política.
 
-Para ver los documentos actuales del plan directo-Claude-Code de Anthropic, consulte [Using Claude Code
+Para ver los documentos actuales del plan directo de Claude Code de Anthropic, consulte [Using Claude Code
 with your Pro or Max
 plan](https://support.claude.com/en/articles/11145838-using-claude-code-with-your-pro-or-max-plan)
 y [Using Claude Code with your Team or Enterprise
 plan](https://support.anthropic.com/en/articles/11845131-using-claude-code-with-your-team-or-enterprise-plan/).
 
-Si desea otras opciones de tipo suscripción en OpenClaw, consulte [OpenAI
+Si desea otras opciones de estilo de suscripción en OpenClaw, consulte [OpenAI
 Codex](/es/providers/openai), [Qwen Cloud Coding
 Plan](/es/providers/qwen), [MiniMax Coding Plan](/es/providers/minimax)
-y [Z.AI / GLM Coding Plan](/es/providers/glm).
+y [Z.AI / GLM Coding Plan](/es/providers/zai).
 
 </Warning>
 

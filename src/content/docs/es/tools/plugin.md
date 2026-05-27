@@ -13,10 +13,10 @@ Los complementos extienden OpenClaw con canales, proveedores de modelos, arneses
 habilidades, voz, transcripción en tiempo real, voz, comprensión de medios, generación,
 recuperación web, búsqueda web y otras capacidades de tiempo de ejecución.
 
-Use esta página cuando desee instalar un complemento, reiniciar el Gateway, verificar
+Utilice esta página cuando desee instalar un complemento, reiniciar el Gateway, verificar
 que el tiempo de ejecución lo haya cargado y solucionar fallos comunes de configuración. Para ver ejemplos
 solo de comandos, consulte [Administrar complementos](/es/plugins/manage-plugins). Para ver el inventario generado
-de complementos integrados, externos oficiales y solo de origen, consulte
+de complementos integrados, externos oficiales y solo de código fuente, consulte
 [Inventario de complementos](/es/plugins/plugin-inventory).
 
 ## Requisitos
@@ -32,17 +32,16 @@ Antes de instalar un complemento, asegúrese de tener:
 ## Inicio rápido
 
 <Steps>
-  <Step title="Busque el complemento">
+  <Step title="Buscar el complemento">
     Busque paquetes de complementos públicos en [ClawHub](/es/clawhub):
 
     ```bash
     openclaw plugins search "calendar"
     ```
 
-    ClawHub es la superficie principal de descubrimiento para complementos de la comunidad. Durante el
-
-corte de lanzamiento, las especificaciones ordinarias de paquetes básicos todavía se instalan desde npm. Use un
-prefijo explícito cuando necesite una fuente.
+    ClawHub es la superficie principal de descubrimiento para complementos de la comunidad. Durante
+    la transición de lanzamiento, las especificaciones de paquetes simples ordinarias todavía se instalan desde npm. Utilice un
+    prefijo explíccito cuando necesite una fuente específica.
 
   </Step>
 
@@ -125,7 +124,13 @@ necesite instalaciones de producción reproducibles.
 | ruta local  | Está desarrollando o probando un complemento en la misma máquina                                      | `openclaw plugins install --link ./my-plugin`                  |
 | marketplace | Está instalando un complemento de marketplace compatible con Claude                                   | `openclaw plugins install <plugin> --marketplace <source>`     |
 
-Las especificaciones de paquetes básicos tienen un comportamiento de compatibilidad especial. Si el nombre básico coincide con un ID de complemento incluido, OpenClaw usa esa fuente incluida. Si coincide con un ID de complemento externo oficial, OpenClaw usa el catálogo de paquetes oficial. Otras especificaciones de paquetes básicos ordinarios se instalan a través de npm durante el transitorio de lanzamiento. Use `clawhub:`, `npm:`, `git:` o `npm-pack:` cuando necesite una selección de fuente determinista. Consulte [`openclaw plugins`](/es/cli/plugins#install) para el contrato completo del comando.
+Las especificaciones de paquetes simples tienen un comportamiento de compatibilidad especial. Si el nombre simple coincide
+con un ID de complemento integrado, OpenClaw utiliza esa fuente integrada. Si coincide con
+un ID de complemento externo oficial, OpenClaw utiliza el catálogo de paquetes oficiales. Otras
+especificaciones de paquetes simples ordinarias se instalan a través de npm durante la transición de lanzamiento. Utilice
+`clawhub:`, `npm:`, `git:` o `npm-pack:` cuando necesite una selección de fuente
+determinista. Consulte [`openclaw plugins`](/es/cli/plugins#install) para obtener el contrato completo de
+comandos.
 
 ### Configurar la política de complementos
 
@@ -172,16 +177,40 @@ OpenClaw reconoce dos formatos de complemento:
 
 Ambos formatos aparecen en `openclaw plugins list`, `openclaw plugins inspect`,
 `openclaw plugins enable` y `openclaw plugins disable`. Consulte
-[Plugin bundles](/es/plugins/bundles) para conocer el límite de compatibilidad del paquete y
-[Building plugins](/es/plugins/building-plugins) para la creación de complementos nativos.
+[Paquetes de complementos](/es/plugins/bundles) para conocer el límite de compatibilidad de paquetes y
+[Compilar complementos](/es/plugins/building-plugins) para la creación de complementos nativos.
+
+## Ganchos de complementos
+
+Los complementos pueden registrar ganchos en tiempo de ejecución, pero existen dos API diferentes con
+diferentes funciones.
+
+- Utilice ganchos tipados a través de `api.on(...)` para los ganchos del ciclo de vida de tiempo de ejecución. Esta es la
+  superficie preferida para middleware, políticas, reescritura de mensajes, configuración de indicaciones
+  y control de herramientas.
+- Use `api.registerHook(...)` solo cuando desee participar en el sistema interno
+  de ganchos descrito en [Ganchos](/es/automation/hooks). Esto es principalmente para efectos secundarios
+  groseros de comandos/ciclo de vida y compatibilidad con la automatización de estilo HOOK
+  existente.
+
+Regla rápida:
+
+- Si el controlador necesita prioridad, semántica de fusión, o comportamiento de bloqueo/cancelación, use
+  hooks de complemento tipados.
+- Si el controlador solo reacciona a `command:new`, `command:reset`, `message:sent`,
+  o eventos gruesos similares, `api.registerHook(...)` es suficiente.
+
+Los hooks internos administrados por complementos aparecen en `openclaw hooks list` con
+`plugin:<id>`. No puede habilitarlos o deshabilitarlos a través de `openclaw hooks`;
+en su lugar, habilite o deshabilite el complemento.
 
 ## Verificar el Gateway activo
 
 `openclaw plugins list` y `openclaw plugins inspect` plano leen la configuración en frío,
-el manifiesto y el estado del registro. No prueban que un Gateway ya en ejecución
+el manifiesto y el estado del registro. No demuestran que un Gateway ya en ejecución
 haya importado el mismo código de complemento.
 
-Cuando un complemento aparece instalado pero el tráfico del chat en vivo no lo utiliza:
+Cuando un complemento aparece instalado pero el tráfico de chat en vivo no lo usa:
 
 ```bash
 openclaw gateway status --deep --require-rpc
@@ -189,71 +218,71 @@ openclaw plugins inspect <plugin-id> --runtime --json
 openclaw gateway restart
 ```
 
-Los Gateways administrados se reinician automáticamente después de cambios de instalación, actualización y desinstalación del complemento que alteran su origen. En instalaciones de VPS o contenedores, asegúrese de que cualquier reinicio manual apunte al hijo `openclaw gateway run` real que
-atiende sus canales, no solo a un contenedor o supervisor.
+Los Gateway administrados se reinician automáticamente después de la instalación, actualización y
+desinstalación de complementos que alteran la fuente del complemento. En instalaciones VPS o de contenedor, asegúrese
+de que cualquier reinicio manual apunte al hijo `openclaw gateway run` real que
+atiende sus canales, no solo a un envoltorio o supervisor.
 
 ## Solución de problemas
 
-| Síntoma                                                                                         | Verificar                                                                                                                                                     | Solución                                                                                                                                |
-| ----------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
-| El complemento aparece en `plugins list` pero los ganchos de tiempo de ejecución no se ejecutan | Use `openclaw plugins inspect <id> --runtime --json` y confirme el Gateway activo con `gateway status --deep --require-rpc`                                   | Reinicie el Gateway en vivo después de cambios de instalación, actualización, configuración o fuente                                    |
-| Aparecen diagnósticos de propiedad duplicada de canal o herramienta                             | Ejecute `openclaw plugins list --enabled --verbose`, inspeccione cada plugin sospechoso con `--runtime --json` y compare la propiedad del canal o herramienta | Deshabilite un propietario, elimine instalaciones obsoletas o use el manifiesto `preferOver` para un reemplazo intencional              |
-| La configuración indica que falta un plugin                                                     | Consulte [Inventario de plugins](/es/plugins/plugin-inventory) para ver si está incluido, es externo oficial o solo de origen                                 | Instale el paquete externo, habilite el plugin incluido o elimine la configuración obsoleta                                             |
-| La configuración no es válida durante la instalación                                            | Lea el mensaje de validación y ejecute `openclaw doctor --fix` cuando indique un estado de plugin obsoleto                                                    | El Doctor puede poner en cuarentena la configuración de plugin no válida deshabilitando la entrada y eliminando la carga útil no válida |
-| La ruta del plugin está bloqueada por propiedad o permisos sospechosos                          | Inspeccione el diagnóstico antes del error de configuración                                                                                                   | Corrija la propiedad/permisos del sistema de archivos y luego ejecute `openclaw plugins registry --refresh`                             |
-| `OPENCLAW_NIX_MODE=1` bloquea los comandos del ciclo de vida                                    | Confirme que la instalación está administrada por Nix                                                                                                         | Cambie la selección de plugins en el origen de Nix en lugar de usar comandos de modificación de plugins                                 |
-| Error de importación de dependencia en tiempo de ejecución                                      | Verifique si el plugin se instaló a través de npm/git/ClawHub o se cargó desde una ruta local                                                                 | Ejecute `openclaw plugins update <id>`, reinstale el origen o instale las dependencias del plugin local usted mismo                     |
+| Síntoma                                                                                       | Verificar                                                                                                                                                        | Solución                                                                                                                                   |
+| --------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| El complemento aparece en `plugins list` pero los hooks de tiempo de ejecución no se ejecutan | Use `openclaw plugins inspect <id> --runtime --json` y confirme el Gateway activo con `gateway status --deep --require-rpc`                                      | Reinicie el Gateway en vivo después de la instalación, actualización, configuración o cambios en la fuente                                 |
+| Aparecen diagnósticos de propiedad duplicados de canal o herramienta                          | Ejecute `openclaw plugins list --enabled --verbose`, inspeccione cada complemento sospechoso con `--runtime --json` y compare la propiedad del canal/herramienta | Deshabilite un propietario, elimine instalaciones obsoletas o use el manifiesto `preferOver` para un reemplazo intencional                 |
+| La configuración indica que falta un complemento                                              | Verifique el [Inventario de complementos](/es/plugins/plugin-inventory) para ver si está incluido, es externo oficial o solo fuente                              | Instale el paquete externo, habilite el complemento incluido o elimine la configuración obsoleta                                           |
+| La configuración no es válida durante la instalación                                          | Lea el mensaje de validación y ejecute `openclaw doctor --fix` cuando apunte a un estado obsoleto del complemento                                                | Doctor puede poner en cuarentena la configuración no válida del complemento deshabilitando la entrada y eliminando la carga útil no válida |
+| La ruta del complemento está bloqueada por propiedad o permisos sospechosos                   | Inspeccione el diagnóstico antes del error de configuración                                                                                                      | Corrija la propiedad/permisos del sistema de archivos y luego ejecute `openclaw plugins registry --refresh`                                |
+| `OPENCLAW_NIX_MODE=1` bloquea los comandos del ciclo de vida                                  | Confirme que la instalación está administrada por Nix                                                                                                            | Cambie la selección de complementos en la fuente de Nix en lugar de usar comandos de modificador de complementos                           |
+| La importación de dependencias falla en tiempo de ejecución                                   | Compruebe si el complemento se instaló a través de npm/git/ClawHub o se cargó desde una ruta local                                                               | Ejecute `openclaw plugins update <id>`, reinstale la fuente o instale las dependencias locales del complemento usted mismo                 |
 
-Cuando la configuración obsoleta del plugin todavía nombra un plugin de canal que ya no es detectable,
-el inicio de Gateway omite ese canal respaldado por el plugin en lugar de bloquear todos los
-demás canales. Ejecute `openclaw doctor --fix` para eliminar las entradas obsoletas del plugin y del canal.
-Las claves de canal desconocidas sin evidencia de plugin obsoleto aún fallan
-la validación para que los errores tipográficos sean visibles.
+Cuando la configuración obsoleta del complemento aún nombra un complemento de canal que ya no es detectable,
+el inicio de Gateway omite ese canal respaldado por complemento en lugar de bloquear todos los
+demás canales. Ejecute `openclaw doctor --fix` para eliminar entradas obsoletas de complementos y canales.
+Las claves de canal desconocidas sin evidencia de complemento obsoleto aún fallan
+la validación para que los errores tipográficos permanezcan visibles.
 
-Para el reemplazo intencional de canal, el plugin preferido debe declarar
-`channelConfigs.<channel-id>.preferOver` con el id del plugin heredado o de menor prioridad.
-Si ambos plugins están explícitamente habilitados, OpenClaw mantiene esa solicitud
-y reporta diagnósticos de canal o herramienta duplicados en lugar de elegir silenciosamente
+Para el reemplazo intencional del canal, el complemento preferido debe declarar
+`channelConfigs.<channel-id>.preferOver` con el id del complemento heredado o de menor prioridad.
+Si ambos complementos están explícitamente habilitados, OpenClaw mantiene esa solicitud
+e informa diagnósticos de canal o herramienta duplicados en lugar de elegir silenciosamente
 un propietario.
 
-Si un paquete instalado informa que `requires compiled runtime output for
-TypeScript entry ...`, el paquete se publicó sin los archivos JavaScript que
-OpenClaw necesita en tiempo de ejecución. Actualice o reinstale después de que el
-editor publique el JavaScript compilado, o deshabilite/desinstale el plugin hasta
-entonces.
+Si un paquete instalado informa que `requiere salida en tiempo de ejecución compilada para
+la entrada de TypeScript ...`, el paquete se publicó sin los archivos JavaScript
+que OpenClaw necesita en tiempo de ejecución. Actualice o reinstale después de que el editor envíe
+JavaScript compilado, o deshabilite/desinstale el complemento hasta entonces.
 
-### Propiedad de la ruta del plugin bloqueada
+### Propiedad de la ruta del complemento bloqueada
 
-Si los diagnósticos del plugin dicen
+Si los diagnósticos del complemento dicen
 `blocked plugin candidate: suspicious ownership (... uid=1000, expected uid=0 or root)`
-y la validación de la configuración continúa con `plugin present but blocked`, OpenClaw encontró
-archivos de plugin propiedad de un usuario de Unix diferente al proceso que los está
-cargando. Mantenga la configuración del plugin en su lugar; repare la propiedad del
-sistema de archivos o ejecute OpenClaw como el mismo usuario que posee el directorio
-de estado.
+y la validación de configuración continúa con `plugin present but blocked`, OpenClaw encontró
+archivos de complemento propiedad de un usuario Unix diferente al proceso que los está cargando.
+Mantenga la configuración del complemento en su lugar; corrija la propiedad del sistema de archivos o ejecute
+OpenClaw como el mismo usuario que posee el directorio de estado.
 
-Para las instalaciones de Docker, la imagen oficial se ejecuta como `node` (uid `1000`), por lo que los directorios de configuración y espacio de trabajo de OpenClaw montados con bind en el host normalmente deberían ser propiedad del uid `1000`:
+Para instalaciones de Docker, la imagen oficial se ejecuta como `node` (uid `1000`), por lo que los directorios de configuración y espacio de trabajo de OpenClaw montados con bind en el host deberían ser propiedad
+normalmente del uid `1000`:
 
 ```bash
 sudo chown -R 1000:1000 /path/to/openclaw-config /path/to/openclaw-workspace
 ```
 
-Si ejecuta intencionalmente OpenClaw como root, repare la raíz del plugin gestionado
-para que sea propiedad de root en su lugar:
+Si ejecuta intencionalmente OpenClaw como root, repare la raíz del complemento administrado para
+que sea propiedad de root en su lugar:
 
 ```bash
 sudo chown -R root:root /path/to/openclaw-config/npm
 ```
 
 Después de corregir la propiedad, vuelva a ejecutar `openclaw doctor --fix` o
-`openclaw plugins registry --refresh` para que el registro persistente del plugin coincida
+`openclaw plugins registry --refresh` para que el registro de plugins persistente coincida
 con los archivos reparados.
 
 ### Configuración lenta de herramientas de plugin
 
-Si los turnos del agente parecen detenerse mientras preparan las herramientas, active
-el registro de seguimiento y busque líneas de tiempo de fábrica de herramientas de
-plugin:
+Si los turnos del agente parecen detenerse mientras se preparan las herramientas, active el registro de seguimiento y
+verifique las líneas de tiempo de la fábrica de herramientas de plugin:
 
 ```bash
 openclaw config set logging.level trace
@@ -266,41 +295,41 @@ Busque:
 [trace:plugin-tools] factory timings ...
 ```
 
-El resumen enumera el tiempo total de fábrica y las fábricas de herramientas de plugin
-más lentas, incluyendo el id del plugin, los nombres de herramientas declarados, la
-forma del resultado y si la herramienta es opcional. Las líneas lentas se promueven a
-advertencias cuando una sola fábrica tarda al menos 1s o la preparación total de la
-fábrica de herramientas del plugin tarda al menos 5s.
+El resumen enumera el tiempo total de fábrica y las fábricas de herramientas de plugin más lentas,
+incluyendo el id del plugin, los nombres de las herramientas declaradas, la forma del resultado y si la herramienta es
+opcional. Las líneas lentas se promueven a advertencias cuando una sola fábrica tarda al
+menos 1s o la preparación total de la fábrica de herramientas de plugin tarda al menos 5s.
 
-OpenClaw almacena en caché los resultados exitosos de la fábrica de herramientas de
-plugin para resoluciones repetidas con el mismo contexto de solicitud efectivo. La
-clave de caché incluye la configuración de tiempo de ejecución efectiva, el espacio de
-trabajo, los ids de agente/sesión, la política de sandbox, la configuración del
-navegador, el contexto de entrega, la identidad del solicitante y el estado de
-propiedad, por lo que las fábricas que dependen de esos campos de confianza se
-vuelven a ejecutar cuando cambia el contexto. Si los tiempos se mantienen altos, es
-posible que el plugin esté realizando un trabajo costoso antes de devolver sus
-definiciones de herramienta.
+OpenClaw almacena en caché los resultados exitosos de la fábrica de herramientas de plugin para resoluciones repetidas
+con el mismo contexto de solicitud efectivo. La clave de caché incluye la configuración
+efectiva de tiempo de ejecución, el espacio de trabajo, los ids de agente/sesión, la política de sandbox, la configuración del navegador,
+el contexto de entrega, la identidad del solicitante y el estado de propiedad, por lo que las fábricas que
+dependen de esos campos confiables se vuelven a ejecutar cuando cambia el contexto. Si los tiempos
+se mantienen altos, es posible que el plugin esté realizando un trabajo costoso antes de devolver sus definiciones
+de herramientas.
 
-Si un plugin domina el tiempo, inspeccione sus registros en tiempo de ejecución:
+Si un plugin domina el tiempo, inspeccione sus registros de tiempo de ejecución:
 
 ```bash
 openclaw plugins inspect <plugin-id> --runtime --json
 ```
 
-Luego actualice, reinstale o deshabilite ese complemento. Los autores de complementos deben mover la carga de dependencias costosas detrás de la ruta de ejecución de la herramienta en lugar de hacerlo dentro de la fábrica de herramientas.
+Luego actualice, reinstale o deshabilite ese plugin. Los autores de plugins deben mover
+la carga costosa de dependencias detrás de la ruta de ejecución de la herramienta en lugar de hacerlo
+dentro de la fábrica de herramientas.
 
-Para conocer las raíces de dependencia, la validación de metadatos de paquetes, los registros del registro, el comportamiento de recarga al inicio y la limpieza heredada, consulte
-[Resolución de dependencias de complementos](/es/plugins/dependency-resolution).
+Para obtener información sobre las raíces de dependencia, la validación de metadatos de paquetes, los registros del registro,
+el comportamiento de recarga al inicio y la limpieza heredada, consulte
+[Plugin dependency resolution](/es/plugins/dependency-resolution).
 
 ## Relacionado
 
-- [Administrar complementos](/es/plugins/manage-plugins) - ejemplos de comandos para listar, instalar, actualizar, desinstalar y publicar
+- [Manage plugins](/es/plugins/manage-plugins) - ejemplos de comandos para listar, instalar, actualizar, desinstalar y publicar
 - [`openclaw plugins`](/es/cli/plugins) - referencia completa de la CLI
-- [Inventario de complementos](/es/plugins/plugin-inventory) - lista generada de complementos integrados y externos
-- [Referencia de complementos](/es/plugins/reference) - páginas de referencia generadas por complemento
-- [Complementos comunitarios](/es/plugins/community) - descubrimiento de ClawHub y política de PR de documentación
-- [Resolución de dependencias de complementos](/es/plugins/dependency-resolution) - raíces de instalación, registros del registro y límites de tiempo de ejecución
-- [Compilación de complementos](/es/plugins/building-plugins) - guía de creación de complementos nativos
-- [Descripción general del SDK de complementos](/es/plugins/sdk-overview) - registro en tiempo de ejecución, enlaces y campos de API
-- [Manifiesto de complementos](/es/plugins/manifest) - manifiesto y metadatos de paquetes
+- [Plugin inventory](/es/plugins/plugin-inventory) - lista generada de plugins empaquetados y externos
+- [Plugin reference](/es/plugins/reference) - páginas de referencia generadas por plugin
+- [Community plugins](/es/plugins/community) - descubrimiento de ClawHub y política de PR de documentación
+- [Plugin dependency resolution](/es/plugins/dependency-resolution) - raíces de instalación, registros del registro y límites de tiempo de ejecución
+- [Building plugins](/es/plugins/building-plugins) - guía de creación de plugins nativos
+- [Descripción general del SDK de complementos](/es/plugins/sdk-overview) - registro en tiempo de ejecución, ganchos y campos de API
+- [Manifiesto del complemento](/es/plugins/manifest) - manifiesto y metadatos del paquete

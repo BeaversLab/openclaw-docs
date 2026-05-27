@@ -66,19 +66,21 @@ export PEEKABOO_BRIDGE_SOCKET=/path/to/bridge.sock
 
 - 橋接器會驗證**呼叫者程式碼簽章**；會強制執行 TeamID 的
   允許清單 (Peekaboo 主機 TeamID + OpenClaw 應用程式 TeamID)。
-- 請求會在大約 10 秒後逾時。
+- 對於輔助功能，比起通用的 `node` 執行環境，更偏好使用已簽署的橋接器/應用程式身分。將輔助功能權限授予 `node` 會讓由該 Node 執行檔啟動的任何套件都繼承 GUI 自動化存取權限；請參閱
+  [macOS 權限](/zh-Hant/platforms/mac/permissions#accessibility-grants-for-node-and-cli-runtimes)。
+- 請求會在約 10 秒後逾時。
 - 如果缺少必要的權限，橋接器會傳回明確的錯誤訊息，而不是啟動系統設定。
 
-## 快照行為 (自動化)
+## 快照行為（自動化）
 
 快照會儲存在記憶體中，並在短時間後自動過期。如果您需要更長的保留時間，請從用戶端重新擷取。
 
 ## 疑難排解
 
 - 如果 `peekaboo` 回報「bridge client is not authorized」，請確保用戶端已正確簽署，或者僅在 **debug** 模式下使用 `PEEKABOO_ALLOW_UNSIGNED_SOCKET_CLIENTS=1` 執行主機。
-- 如果找不到任何主機，請開啟其中一個主機應用程式 (Peekaboo.app 或 OpenClaw.app)，並確認已授與權限。
+- 如果找不到任何主機，請開啟其中一個主機應用程式（Peekaboo.app 或 OpenClaw.app）並確認已授與權限。
 
-## 相關內容
+## 相關
 
-- [macOS 應用程式](/zh-Hant/platforms/macos)
+- [macOS app](/zh-Hant/platforms/macos)
 - [macOS 權限](/zh-Hant/platforms/mac/permissions)

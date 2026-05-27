@@ -54,9 +54,9 @@ OpenClaw process
 ## 相關代理術語
 
 - `proxy.enabled` / `proxy.proxyUrl`：用於 OpenClaw 執行時間出口的輸出正向代理路由。本頁面記錄了該功能。
-- `gateway.auth.mode: "trusted-proxy"`：用於 Gateway 存取的輸入身分感知反向代理驗證。請參閱 [Trusted proxy auth](/zh-Hant/gateway/trusted-proxy-auth)。
-- `openclaw proxy`：用於開發和支援的本機偵錯代理和擷取檢查器。請參閱 [openclaw proxy](/zh-Hant/cli/proxy)。
-- `tools.web.fetch.useTrustedEnvProxy`：`web_fetch` 的選用功能，允許操作員控制的 HTTP(S) 環境代理解析 DNS，同時保持預設的嚴格 DNS 釘選和主機名稱原則。請參閱 [Web fetch](/zh-Hant/tools/web-fetch#trusted-env-proxy)。
+- `gateway.auth.mode: "trusted-proxy"`：用於存取 Gateway 的輸入具備身分感知的反向代理驗證。請參閱[受信任的代理驗證](/zh-Hant/gateway/trusted-proxy-auth)。
+- `openclaw proxy`：用於開發和技術支援的本機偵錯代理和擷取檢查器。請參閱[openclaw proxy](/zh-Hant/cli/proxy)。
+- `tools.web.fetch.useTrustedEnvProxy`：`web_fetch` 的選用功能，允許操作員控制的 HTTP(S) 環境代理解析 DNS，同時保持預設的嚴格 DNS 釘選和主機名稱原則。請參閱[Web 擷取](/zh-Hant/tools/web-fetch#trusted-env-proxy)。
 - 通道或供應商特定的代理設定：特定傳輸的擁有者特定覆寫。如果目標是跨執行時間的集中出口控制，建議優先使用受控網路代理。
 
 ## 組態
@@ -87,7 +87,7 @@ OPENCLAW_PROXY_URL=http://127.0.0.1:3128 openclaw gateway run
 
 ### Gateway 回送模式
 
-Local Gateway 控制平面用戶端通常連接到回送 WebSocket，例如 `ws://127.0.0.1:18789`。請使用 `proxy.loopbackMode` 來選擇當受管理的代理處於啟用狀態時該流量應如何運作：
+本機 Gateway 控制平面用戶端通常會連接到回送 WebSocket，例如 `ws://127.0.0.1:18789`。使用 `proxy.loopbackMode` 來選擇當受控代理處於啟用狀態時，回送受控代理例外的行為方式：
 
 ```yaml
 proxy:
@@ -96,9 +96,9 @@ proxy:
   loopbackMode: gateway-only # gateway-only, proxy, or block
 ```
 
-- `gateway-only` (預設)：OpenClaw 在 Proxyline 的受管理略過策略中註冊 Gateway 回送權限，以便本機 Gateway WebSocket 流量可以直接連線。自訂回送 Gateway 埠可以運作，因為作用中 Gateway URL 的主機和埠已註冊。
-- `proxy`：OpenClaw 不註冊 Gateway 回送略過，因此本機 Gateway 流量會傳送透過受管理的代理。如果代理是遠端的，它必須為 OpenClaw 主機的回送服務提供特殊路由，例如將其對應到可透過代理存取的主機名稱、IP 或通道。標準的遠端代理會從代理主機而非 OpenClaw 主機解析 `127.0.0.1` 和 `localhost`。
-- `block`：OpenClaw 在開啟 socket 之前拒絕回送 Gateway 控制平面連線。
+- `gateway-only` (預設值)：OpenClaw 在 Proxyline 的受控略過原則中註冊 Gateway 回送授權，以便本機 WebSocket 流量可以直接連接。自訂回送 Gateway 連接埠可以運作，因為使用中 Gateway URL 的主機和連接埠已經註冊。隨附的瀏覽器外掛程式也可以為 OpenClaw 啟動的受控瀏覽器註冊確切的本機 CDP 準備度和 DevTools WebSocket 端點，隨附的 Ollama 記憶體嵌入提供者可以針對確切設定好的主機本機回送嵌入來源，使用自己更狹隘且受防護的直接路徑。
+- `proxy`：OpenClaw 不註冊 Gateway 或 Ollama 回送略過，因此回送流量會透過受控代理傳送。如果代理是遠端的，它必須為 OpenClaw 主機的回送服務提供特殊路由，例如將其對應到可透過代理到達的主機名稱、IP 或通道。標準遠端代理會從代理主機解析 `127.0.0.1` 和 `localhost`，而不是從 OpenClaw 主機。
+- `block`：OpenClaw 會在開啟 socket 之前拒絕 Gateway 回送控制平面連線和受防護的 Ollama 主機本機嵌入回送連線。
 
 如果設定了 `enabled=true` 但未設定有效的代理 URL，受保護的指令將無法啟動，而不是退而求其次使用直接網路存取。
 
@@ -249,20 +249,20 @@ proxy:
 ## 限制
 
 - 該代理改善了對程序本機 JavaScript HTTP 和 WebSocket 用戶端的覆蓋範圍，但它不是作業系統層級的網路沙箱。
-- 閘道回送控制平面流量預設為透過 `proxy.loopbackMode: "gateway-only"` 進行直接本機繞過。OpenClaw 通過在 Proxyline 的受控繞過政策中註冊活動的閘道回授權限來實現該繞過。操作員可以設定 `proxy.loopbackMode: "proxy"` 將閘道回送流量透過受控代理發送，或設定 `proxy.loopbackMode: "block"` 拒絕回送閘道連線。關於遠端代理的注意事項，請參閱[閘道回送模式](#gateway-loopback-mode)。
+- Gateway loopback 控制平面流量預設透過 `proxy.loopbackMode: "gateway-only"` 進行直接本地旁路。OpenClaw 通過在 Proxyline 的受管旁路策略中註冊現用的 Gateway loopback 權威來實現該旁路。操作員可以設定 `proxy.loopbackMode: "proxy"` 將 Gateway loopback 流量透過受管代理傳送，或設定 `proxy.loopbackMode: "block"` 拒絕 loopback Gateway 連線。請參閱 [Gateway Loopback Mode](#gateway-loopback-mode) 以了解有關遠端代理的注意事項。
 - 原始 `net`、`tls` 和 `http2` socket、原生附加元件和非 OpenClaw 子程序可能會繞過 Node 層級的代理路由，除非它們繼承並遵守代理環境變數。分叉的 OpenClaw 子 CLI 會繼承受控代理 URL 和 `proxy.loopbackMode` 狀態。
 - IRC 是操作員管理之轉送代理路由之外的原始 TCP/TLS 通道。在要求所有輸出流量都透過該轉送代理的部署中，除非明確批准直接 IRC 輸出，否則請設定 `channels.irc.enabled=false`。
 - 本機除錯代理是診斷工具，當受控代理模式處於活動狀態時，其對代理請求和 CONNECT 隧道的直接上游轉發預設為停用；僅對已批准的本機診斷啟用直接轉發。
-- 如有需要，應在操作員代理原則中將使用者本機 WebUI 和本機模型伺服器加入白名單；OpenClaw 不會為它們公開一般性的本機網路旁路。
-- 閘道控制平面代理旁路有意限制為 `localhost` 和字面迴路 IP URL。請使用 `ws://127.0.0.1:18789`、`ws://[::1]:18789` 或 `ws://localhost:18789` 進行本機直接閘道控制平面連線；其他主機名則像一般基於主機名的流量一樣路由。
+- 如有需要，應在操作員代理策略中將用戶本地 WebUI 和本地模型伺服器加入允許清單；OpenClaw 不會為它們公開一般的本地網路旁路。隨附的 Ollama 記憶體嵌入提供者範圍更窄：它僅能對從設定的 `baseUrl` 衍生的確切主機本地 loopback 嵌入來源使用受保護的直接路徑，因此當受管代理無法連線至主機 loopback 時，主機本地嵌入仍能正常運作。LAN、tailnet、私人網路和公開 Ollama 嵌入主機仍會使用受管代理路徑。`proxy.loopbackMode: "proxy"` 會將此 Ollama loopback 流量透過受管代理傳送，而 `proxy.loopbackMode: "block"` 會在建立連線之前將其拒絕。
+- Gateway 控制平面代理旁路有意侷限於 `localhost` 和字面意義的 loopback IP URL。請使用 `ws://127.0.0.1:18789`、`ws://[::1]:18789` 或 `ws://localhost:18789` 進行本地直接 Gateway 控制平面連線；其他主機名稱則像一般基於主機名稱的流量一樣路由。
 - OpenClaw 不會檢查、測試或認證您的代理原則。
 - 應將代理原則變更視為安全敏感的操作變更。
 
-| 層面                                                      | 受管理代理狀態                                                                    |
-| --------------------------------------------------------- | --------------------------------------------------------------------------------- |
-| `fetch`、`node:http`、`node:https`、常見 WebSocket 用戶端 | 設定時透過受管理代理掛鉤進行路由。                                                |
-| APNs 直接 HTTP/2                                          | 透過 APNs 受管理 CONNECT 協助程式進行路由。                                       |
-| 閘道控制平面迴路                                          | 僅針對已設定的本機迴路閘道 URL 直接連線。                                         |
-| 除錯代理上游轉送                                          | 當受管理代理模式啟用時停用，除非為了本機診斷明確啟用。                            |
-| IRC                                                       | 原始 TCP/TLS；不受受管理 HTTP 代理模式代理。除非已核准直接 IRC 輸出，否則請停用。 |
-| 其他原始 `net`、`tls` 或 `http2` 用戶端呼叫               | 必須在落地前由原始通訊端防護程式進行分類。                                        |
+| 層面                                                        | 受管理代理狀態                                                                    |
+| ----------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| `fetch`、`node:http`、`node:https`、常見的 WebSocket 用戶端 | 設定時透過受管理代理掛鉤進行路由。                                                |
+| APNs 直接 HTTP/2                                            | 透過 APNs 受管理 CONNECT 協助程式進行路由。                                       |
+| 閘道控制平面迴路                                            | 僅針對已設定的本機迴路閘道 URL 直接連線。                                         |
+| 除錯代理上游轉送                                            | 當受管理代理模式啟用時停用，除非為了本機診斷明確啟用。                            |
+| IRC                                                         | 原始 TCP/TLS；不受受管理 HTTP 代理模式代理。除非已核准直接 IRC 輸出，否則請停用。 |
+| 其他原始 `net`、`tls` 或 `http2` 用戶端呼叫                 | 必須在落地前由原始通訊端防護程式進行分類。                                        |

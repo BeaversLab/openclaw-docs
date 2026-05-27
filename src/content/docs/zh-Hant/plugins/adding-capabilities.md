@@ -8,9 +8,10 @@ title: "新增功能（貢獻者指南）"
 sidebarTitle: "新增功能"
 ---
 
-<Info>這是一份適用於 OpenClaw 核心開發者的 **貢獻者指南**。如果您正在 建構外部外掛，請改為參閱 [建構外掛](/zh-Hant/plugins/building-plugins)。 如需深入了解架構參考（功能模型、所有權、載入管線、執行時期輔助程式），請參閱 [外掛內部機制](/zh-Hant/plugins/architecture)。</Info>
+<Info>這是給 OpenClaw 核心開發者的**貢獻者指南**。如果您正在 建構外部外掛，請改閱[建構外掛](/zh-Hant/plugins/building-plugins)。 如需深入架構參考（功能模型、擁有權、載入管線、執行時期輔助函式），請參閱[外掛內部機制](/zh-Hant/plugins/architecture)。</Info>
 
-當 OpenClaw 需要新的共享領域（例如圖像生成、視頻生成或某些未來的供應商支援的功能領域）時，請使用本指南。
+當 OpenClaw 需要一個新的共享領域時使用此指南，例如嵌入、影像
+生成、影片生成，或某些未來由供應商支援的功能區域。
 
 規則：
 
@@ -108,21 +109,33 @@ sidebarTitle: "新增功能"
 
 將這兩者分開，以便容錯和原則保持明確。
 
+## 嵌入提供者
+
+對於可重複使用的向量嵌入提供者，請使用 `embeddingProviders`。此合約
+的範圍故意比記憶體更廣：工具、搜尋、檢索、匯入器，或
+未來的功能外掛都可以消耗嵌入，而不需依賴記憶體
+引擎。
+
+對於記憶體引擎專屬的配接器，請繼續使用 `memoryEmbeddingProviders`。
+這些配接器擁有記憶體索引細節，例如查詢/文件分割、
+執行時期元資料，以及本機記憶體引擎設定。除非該提供者僅
+供記憶體使用，否則不要讓通用的嵌入提供者依賴記憶體擁有的模組。
+
 ## 審查檢查清單
 
 在發布新功能之前，請驗證：
 
-- 沒有任何頻道/工具直接匯入供應商程式碼。
-- 執行時期輔助程式是共享的路徑。
-- 至少有一個合約測試斷言了捆綁的所有權。
-- 配置文件中命名了新的模型/配置鍵。
-- 外掛文件解釋了所有權邊界。
+- 沒有通道/工具直接匯入供應商程式碼。
+- 執行時期輔助函式是共享路徑。
+- 至少有一個合約測試斷言了打包的擁有權。
+- 設定文件命名了新的模型/設定鍵。
+- 外掛文件說明了擁有權邊界。
 
-如果 PR 跳過了能力層並將供應商行為硬編碼到通道/工具中，請將其退回並先定義合約。
+如果 PR 跳過了功能層並將供應商行為硬編碼到通道/工具中，請將其退回並先定義合約。
 
 ## 相關
 
-- [Plugin internals](/zh-Hant/plugins/architecture) — 能力模型、所有權、載入管線、執行時期輔助程式。
-- [Building plugins](/zh-Hant/plugins/building-plugins) — 第一個外掛教學。
-- [SDK overview](/zh-Hant/plugins/sdk-overview) — 匯入映射和註冊 API 參考。
-- [Creating skills](/zh-Hant/tools/creating-skills) — 伴隨的貢獻者介面。
+- [外掛內部機制](/zh-Hant/plugins/architecture) — 功能模型、擁有權、載入管線、執行時期輔助函式。
+- [建構外掛](/zh-Hant/plugins/building-plugins) — 第一個外掛教學。
+- [SDK 概觀](/zh-Hant/plugins/sdk-overview) — 匯入映射與註冊 API 參考。
+- [建立技能](/zh-Hant/tools/creating-skills) — 伴隨的貢獻者介面。

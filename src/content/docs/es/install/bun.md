@@ -48,7 +48,7 @@ bun pm trust baileys protobufjs
 
 ## Advertencias
 
-Algunos scripts aún tienen pnpm codificado de forma rígida (por ejemplo `docs:build`, `ui:*`, `protocol:check`). Ejecuta esos a través de pnpm por ahora.
+Algunos scripts todavía tienen codificado pnpm (por ejemplo `check:docs`, `ui:*`, `protocol:check`). Ejecuta esos a través de pnpm por ahora.
 
 ## Relacionado
 

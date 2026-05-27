@@ -12,8 +12,8 @@ title: "Models"
 
 相关：
 
-- 提供商 + 模型：[模型](/zh/providers/models)
-- 模型选择概念 + `/models` 斜杠命令：[模型概念](/zh/concepts/models)
+- 提供商 + 模型：[Models](/zh/providers/models)
+- 模型选择概念 + `/models` 斜杠命令：[Models concept](/zh/concepts/models)
 - 提供商认证设置：[入门指南](/zh/start/getting-started)
 
 ## 常用命令
@@ -25,26 +25,26 @@ openclaw models set <model-or-alias>
 openclaw models scan
 ```
 
-`openclaw models status`OAuthAPIAnthropicGitHubCLIOpenAIMiniMaxXiaomiOpenClawOAuthAPI 显示已解析的默认/回退以及认证概览。
-当提供商使用快照可用时，OAuth/API 密钥状态部分包含
+`openclaw models status`OAuthAPIAnthropicGitHubCLIOpenAIMiniMaxXiaomiOpenClawOAuthAPI 显示解析出的默认/后备值以及认证概览。
+当提供商使用快照可用时，OAuth/API-key 状态部分包括
 提供商使用窗口和配额快照。
-当前使用窗口的提供商：Anthropic、GitHub Copilot、Gemini CLI、OpenAI
-Codex、MiniMax、Xiaomi 和 z.ai。使用认证在可用时来自特定提供商的钩子；
-否则 OpenClaw 回退到从认证配置文件、环境变量或配置中匹配 OAuth/API 密钥
+当前支持使用窗口的提供商：Anthropic、GitHub Copilot、Gemini CLI、OpenAI
+Codex、MiniMax、Xiaomi 和 z.ai。使用认证来自提供商特定的钩子（如果可用）；
+否则 OpenClaw 将回退到从认证配置文件、env 或 config 中匹配 OAuth/API-key
 凭据。
-在 `--json` 输出中，`auth.providers` 是感知环境/配置/存储的提供商
-概览，而 `auth.oauth` 仅包含认证存储配置文件运行状况。
-添加 `--probe` 以针对每个已配置的提供商配置文件运行实时认证探测。
-探测是真实请求（可能会消耗令牌并触发速率限制）。
+在 `--json` 输出中，`auth.providers` 是感知 env/config/store 的提供商
+概览，而 `auth.oauth` 仅显示认证存储配置文件的运行状况。
+添加 `--probe` 以针对每个配置的提供商配置文件运行实时认证探测。
+探测是真实请求（可能会消耗 token 并触发速率限制）。
 使用 `--agent <id>` 检查已配置代理的模型/认证状态。如果省略，
-该命令使用 `OPENCLAW_AGENT_DIR`/`PI_CODING_AGENT_DIR`（如果已设置），否则使用
-已配置的默认代理。
-探测行可以来自认证配置文件、环境凭据或 `models.json`OAuth。
+该命令将使用 `OPENCLAW_AGENT_DIR`/`PI_CODING_AGENT_DIR`（如果已设置），否则使用
+配置的默认代理。
+探测行可以来自认证配置文件、env 凭据或 `models.json`OAuth。
 对于 Codex OAuth 故障排除，`openclaw models status`、
 `openclaw models auth list --provider openai-codex` 和
-`openclaw config get agents.defaults.model --json` 是确认
-代理是否具有通过原生 Codex 运行时可用于
-`openai/*`OpenAI 的可用 `openai-codex` 认证配置文件的最快方法。请参阅 [OpenAI 提供商设置](/zh/providers/openai#check-and-recover-codex-oauth-routing)。
+`openclaw config get agents.defaults.model --json` 是确认代理是否通过原生 Codex 运行时拥有
+可用于 `openai/*`OpenAI 的可用 `openai-codex` 认证配置文件的
+最快方式。请参阅 [OpenAI 提供商 setup](/zh/providers/openai#check-and-recover-codex-oauth-routing)。
 
 注意：
 
@@ -149,6 +149,8 @@ openclaw models fallbacks list
 openclaw models auth add
 openclaw models auth list [--provider <id>] [--json]
 openclaw models auth login --provider <id>
+openclaw models auth login --provider openai --profile-id openai:work
+openclaw models auth paste-api-key --provider <id>
 openclaw models auth setup-token --provider <id>
 openclaw models auth paste-token
 ```
@@ -157,34 +159,52 @@ openclaw models auth paste-token
 
 `models auth list` 列出所选代理已保存的身份验证配置文件，而不打印令牌、API 密钥或 OAuth 机密材料。使用 `--provider <id>` 过滤到单个提供商（例如 `openai-codex`），并使用 `--json` 进行脚本编写。
 
-`models auth login` 运行提供商插件的身份验证流程（OAuth/API 密钥）。使用 `openclaw plugins list` 查看安装了哪些提供商。使用 `openclaw models auth --agent <id> <subcommand>` 将身份验证结果写入特定配置的代理存储。父级 `--agent` 标志受 `add`、`list`、`login`、`setup-token`、`paste-token` 和 `login-github-copilot` 尊重。
+`models auth login` 运行提供商插件的认证流程（OAuth/API 密钥）。使用
+`openclaw plugins list` 查看已安装的提供商。
+使用 `openclaw models auth --agent <id> <subcommand>` 将认证结果写入
+特定配置的代理存储。父级 `--agent` 标志受
+`add`、`list`、`login`、`paste-api-key`、`setup-token`、`paste-token` 和
+`login-github-copilot` 尊重。
 
 对于 OpenAI 模型，`--provider openai` 默认为 ChatGPT/Codex 账户登录。
-仅当您想添加 OpenAI API 密钥配置文件时才使用 `--method api-key`，
-通常作为 Codex 订阅限制的备份。传统的
-`--provider openai-codex` 拼写方式仍适用于现有脚本。
+仅当您想要添加 OpenAI API 密钥配置文件时才
+使用 `--method api-key`，通常作为 Codex 订阅限制的备份。传统的
+`--provider openai-codex` 拼写方式仍然适用于现有脚本。
 
 示例：
 
 ```bash
 openclaw models auth login --provider openai --set-default
 openclaw models auth login --provider openai --method api-key
+openclaw models auth paste-api-key --provider openai-codex
 openclaw models auth list --provider openai
 ```
 
 注：
 
-- `setup-token` 和 `paste-token` 仍然是提供商的通用令牌命令，
-  用于那些公开了令牌认证方法的提供商。
+- `login` 接受 `--profile-id <id>`，适用于那些在登录期间支持
+  命名配置文件的提供商。使用此功能可将同一提供商的
+  多个登录分开管理。
+- `paste-api-key` 接受在其他地方生成的 API 密钥，提示输入密钥
+  值，并将其写入默认配置文件 ID `<provider>:manual`，除非您
+  传递了 `--profile-id`。在自动化操作中，可以通过 stdin 管道传输密钥，例如
+  `printf "%s\n" "$OPENAI_API_KEY" | openclaw models auth paste-api-key --provider openai-codex`。
+- `setup-token` 和 `paste-token` 仍然是适用于那些
+  公开元认证方法的提供商的通用令牌命令。
 - `setup-token` 需要一个交互式 TTY 并运行提供商的令牌认证
-  方法（当提供商公开该方法时，默认为该提供商的 `setup-token` 方法）。
-- `paste-token` 接受在别处生成或来自自动化的令牌字符串。
+  方法（当提供商公开该方法时，默认为该提供商的
+  `setup-token` 方法）。
+- `paste-token` 接受在其他地方生成或来自自动化的令牌字符串。
 - `paste-token` 需要 `--provider`，提示输入令牌值，并将其
   写入默认配置文件 ID `<provider>:manual`，除非您传递
   `--profile-id`。
-- `paste-token --expires-in <duration>` 根据相对持续时间（例如 `365d` 或 `12h`）存储绝对令牌过期时间。
-- Anthropic 说明：Anthropic 工作人员告诉我们，OpenClaw 风格的 Claude CLI 使用再次被允许，因此除非 Anthropic 发布新政策，否则 OpenClaw 将 Claude CLI 的重用和 AnthropicAnthropicOpenClawCLIOpenClawCLI`claude -p`Anthropic 的使用视为对本集成的认可。
-- Anthropic Anthropic`setup-token` / `paste-token`OpenClawOpenClawCLI 仍然作为受支持的 OpenClaw token 路径可用，但 OpenClaw 现在优先考虑 Claude CLI 重用和 `claude -p`（如果可用）。
+- `paste-token --expires-in <duration>` 存储绝对令牌过期时间，源自
+  相对持续时间，如 `365d` 或 `12h`。
+- 对于 `openai-codex`OpenAIAPIOAuth，OpenAI API 密钥和 ChatGPT/OAuth 令牌材料是
+  不同的身份验证形式。对 `sk-...`OpenAIAPI OpenAI API 密钥使用 `paste-api-key`，并
+  仅对令牌身份验证材料使用 `paste-token`。
+- Anthropic 提示：Anthropic 工作人员告知我们，允许再次使用 OpenClaw 风格的 Claude CLI 用法，因此除非 Anthropic 发布新政策，OpenClaw 将 Claude CLI 重用和 AnthropicAnthropicOpenClawCLIOpenClawCLI`claude -p`Anthropic 用法视为此集成的许可用法。
+- Anthropic Anthropic`setup-token` / `paste-token`OpenClawOpenClawCLI 仍作为受支持的 OpenClaw 令牌路径可用，但当可用时，OpenClaw 现在优先选择 Claude CLI 重用和 `claude -p`。
 
 ## 相关
 

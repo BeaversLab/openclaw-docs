@@ -8,7 +8,7 @@ title: "圖片生成"
 sidebarTitle: "圖片生成"
 ---
 
-`image_generate` 工具讓代理程式能夠使用您設定的提供者建立與編輯圖片。在聊天階段中，圖片生成會非同步執行：OpenClaw 會記錄一個背景工作、立即傳回工作 ID，並在提供者完成時喚醒代理程式。完成代理程式必須透過 `message` 工具傳送已生成的圖片；OpenClaw 不會自動發送私人的最終回覆作為備援方案。
+`image_generate` 工具讓 Agent 能夠使用您設定的供應商來建立和編輯圖片。在聊天會話中，圖片生成是非同步執行的：OpenClaw 會記錄一個背景任務，立即傳回任務 ID，並在供應商完成時喚醒 Agent。完成 Agent 必須透過 `message` 工具傳送已生成的圖片。如果請求者會話處於非活動狀態，且部分生成的圖片仍未透過訊息工具傳遞，OpenClaw 將傳送一個僅包含缺失圖片的等幕直接回退。
 
 <Note>此工具僅在至少有一個圖片生成提供者可用時才會出現。如果您在代理程式的工具中看不到 `image_generate`，請設定 `agents.defaults.imageGenerationModel`、設置提供者 API 金鑰，或使用 OpenAI Codex OAuth 登入。</Note>
 
@@ -190,7 +190,8 @@ OpenClaw 會依照以下順序嘗試提供商：
   <Accordion title="單次呼叫模型覆寫是精確的">單次呼叫 `model` 覆寫僅會嘗試該提供商/模型，且不會繼續嘗試設定的主要/備援或自動偵測的提供商。</Accordion>
   <Accordion title="自動偵測具有驗證感知能力">只有當 OpenClaw 實際上可以驗證該提供商時，該提供商預設才會進入候選清單。設定 `agents.defaults.mediaGenerationAutoProviderFallback: false` 以僅使用 明確的 `model`、`primary` 和 `fallbacks` 項目。</Accordion>
   <Accordion title="Timeouts">
-    針對緩慢的圖片後端設定 `agents.defaults.imageGenerationModel.timeoutMs`。每次呼叫的 `timeoutMs` 工具參數會覆寫設定的預設值。Google、OpenRouter 和 xAI 託管的圖片提供者使用 180 秒的預設值；Azure OpenAI 圖片生成則使用 600 秒。Codex 動態工具呼叫使用 120 秒的 `image_generate` 橋接器預設值，並在設定時遵循相同的逾時預算，且受限於 OpenClaw 的 600000 毫秒動態工具橋接器上限。
+    針對緩慢的圖片後端，請設定 `agents.defaults.imageGenerationModel.timeoutMs`。單次呼叫的 `timeoutMs` 工具參數會覆寫設定的預設值，而設定的預設值會覆寫外掛撰寫的供應商預設值。Google 和 OpenRouter 託管的圖片供應商使用 180 秒的預設值；xAI 和 Azure OpenAI 圖片生成使用 600 秒。Codex 動態工具呼叫使用 120 秒的 `image_generate` 橋接器預設值，並在有設定時遵守相同的逾時預算，以 OpenClaw 的 600000
+    毫秒動態工具橋接器上限為界。
   </Accordion>
   <Accordion title="Inspect at runtime">使用 `action: "list"` 來檢查目前註冊的提供者、其預設模型以及認證環境變數提示。</Accordion>
 </AccordionGroup>
@@ -209,28 +210,29 @@ OpenAI、OpenRouter、Google 和 xAI 透過 `images` 參數支援最多 5 張參
 
 <AccordionGroup>
   <Accordion title="OpenAI gpt-image-2 (以及 gpt-image-1.5)">
-    OpenAI 影像生成預設使用 `openai/gpt-image-2`。如果設定了
-    `openai-codex` OAuth 設定檔，OpenClaw 會重複使用
-    與 Codex 訂閱聊天模型相同的 OAuth 設定檔，並透過 Codex Responses 後端
-    發送影像請求。舊版 Codex 基礎 URL（例如 `https://chatgpt.com/backend-api`）會在影像請求時
-    標準化為 `https://chatgpt.com/backend-api/codex`。OpenClaw **不會** 針對該請求
-    靜默回退到 `OPENAI_API_KEY` —— 若要強制使用直接的 OpenAI Images API 路由，
-    請使用 API 金鑰、自訂基礎 URL 或 Azure 端點明確設定
-    `models.providers.openai`。
+    OpenAI 影像生成預設為 `openai/gpt-image-2`。如果設定了
+    `openai-codex` OAuth 設定檔，OpenClaw 會重複使用 Codex
+    訂閱聊天模型所使用的相同 OAuth 設定檔，並透過 Codex Responses
+    後端傳送影像請求。舊版 Codex 基礎 URL（例如 `https://chatgpt.com/backend-api`）會被正規化為
+    `https://chatgpt.com/backend-api/codex` 以進行影像請求。對於該請求，OpenClaw
+    **不會** 無聲地回退至 `OPENAI_API_KEY` ——
+    若要強制直接路由至 OpenAI Images API，請明確設定
+    `models.providers.openai`，並搭配 API 金鑰、自訂基礎 URL
+    或 Azure 端點。
 
     `openai/gpt-image-1.5`、`openai/gpt-image-1` 和
-    `openai/gpt-image-1-mini` 模型仍然可以明確選取。使用
-    `gpt-image-1.5` 以取得透明背景的 PNG/WebP 輸出；目前的
+    `openai/gpt-image-1-mini` 模型仍可被明確選取。請使用
+    `gpt-image-1.5` 來輸出透明背景的 PNG/WebP；目前的
     `gpt-image-2` API 會拒絕 `background: "transparent"`。
 
-    `gpt-image-2` 透過相同的 `image_generate` 工具支援
-    文字轉影像生成和參考影像編輯。OpenClaw 會將
-    `prompt`、`count`、`size`、`quality`、`outputFormat`
-    和參考影像轉發至 OpenAI。OpenAI **不會** 直接收到
-    `aspectRatio` 或 `resolution`；可能的話，OpenClaw 會將這些
-    對應到支援的 `size`，否則工具會將其回報為已忽略的覆寫。
+    `gpt-image-2` 支援透過相同的 `image_generate` 工具進行文生影生成和
+    參考影像編輯。OpenClaw 會將 `prompt`、`count`、`size`、`quality`、`outputFormat`
+    和參考影像轉發給 OpenAI。OpenAI **不會** 直接接收
+    `aspectRatio` 或 `resolution`；若可能，OpenClaw 會將
+    這些參數對應至支援的 `size`，否則工具會將其回報為
+    已忽略的覆寫。
 
-    OpenAI 特定選項位於 `openai` 物件下：
+    OpenAI 特定選項位於 `openai` 物件之下：
 
     ```json
     {
@@ -247,17 +249,17 @@ OpenAI、OpenRouter、Google 和 xAI 透過 `images` 參數支援最多 5 張參
 
     `openai.background` 接受 `transparent`、`opaque` 或 `auto`；
     透明輸出需要 `outputFormat` `png` 或 `webp` 以及
-    支援透明的 OpenAI 影像模型。OpenClaw 會將預設
-    `gpt-image-2` 的透明背景請求路由至 `gpt-image-1.5`。
-    `openai.outputCompression` 適用於 JPEG/WebP 輸出。
+    一個支援透明的 OpenAI 影像模型。OpenClaw 會將預設的
+    `gpt-image-2` 透明背景請求路由至 `gpt-image-1.5`。
+    `openai.outputCompression` 套用於 JPEG/WebP 輸出，針對 PNG
+    輸出則會被忽略。
 
-    頂層 `background` 提示與提供者無關，且當選取 OpenAI 提供者時，
-    目前會對應到相同的 OpenAI `background` 請求欄位。
-    未宣告背景支援的提供者會在 `ignoredOverrides` 中傳回它，而不是
-    接收不支援的參數。
+    頂層 `background` 提示是與供應商無關的，當選取 OpenAI 供應商時，目前會對應至
+    相同的 OpenAI `background` 請求欄位。未宣告背景支援的供應商
+    會將其包含在 `ignoredOverrides` 中，而不是接收不支援的參數。
 
-    若要透過 Azure OpenAI 部署路由 OpenAI 影像生成
-    而非 `api.openai.com`，請參閱
+    若要透過 Azure OpenAI 部署來路由 OpenAI 影像生成，
+    而非使用 `api.openai.com`，請參閱
     [Azure OpenAI endpoints](/zh-Hant/providers/openai#azure-openai-endpoints)。
 
   </Accordion>

@@ -98,21 +98,21 @@ read_when:
     fly secrets set OPENCLAW_GATEWAY_TOKEN=$(openssl rand -hex 32)
 
     # Model provider API keys
-    fly secrets set ANTHROPIC_API_KEY=sk-ant-...
+    fly secrets set ANTHROPIC_API_KEY=example-anthropic-key-not-real
 
     # Optional: Other providers
-    fly secrets set OPENAI_API_KEY=sk-...
+    fly secrets set OPENAI_API_KEY=example-openai-key-not-real
     fly secrets set GOOGLE_API_KEY=...
 
     # Channel tokens
-    fly secrets set DISCORD_BOT_TOKEN=MTQ...
+    fly secrets set DISCORD_BOT_TOKEN=example-discord-bot-token
     ```
 
     **Notes :**
 
-    - Les liaisons non-boucle (`--bind lan`) nécessitent un chemin d'authentification de passerelle valide. Cet exemple Fly.io utilise `OPENCLAW_GATEWAY_TOKEN`, mais `gateway.auth.password` ou un déploiement `trusted-proxy` non-boucle correctement configuré satisfont également la condition.
+    - Les liaisons non-boucle (`--bind lan`) nécessitent un chemin d'authentification de passerelle valide. Cet exemple Fly.io utilise `OPENCLAW_GATEWAY_TOKEN`, mais `gateway.auth.password` ou un déploiement non-boucle `trusted-proxy` correctement configuré satisfont également à cette exigence.
     - Traitez ces jetons comme des mots de passe.
-    - **Privilégiez les env vars aux fichiers de configuration** pour toutes les clés et jetons API. Cela permet de garder les secrets en dehors de `openclaw.json` où ils pourraient être accidentellement exposés ou enregistrés.
+    - **Privilégiez les env vars aux fichiers de configuration** pour toutes les clés API et les jetons. Cela permet de garder les secrets hors de `openclaw.json` où ils pourraient être accidentellement exposés ou enregistrés.
 
   </Step>
 

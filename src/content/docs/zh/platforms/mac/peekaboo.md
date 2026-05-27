@@ -67,24 +67,20 @@ export PEEKABOO_BRIDGE_SOCKET=/path/to/bridge.sock
 
 - 该网桥会验证 **调用方代码签名**；强制执行 TeamID 白名单
   （Peekaboo 主机 TeamID + OpenClaw 应用 TeamID）。
+- 对于辅助功能，优先使用签名的桥接/应用身份，而不是通用的 `node` 运行时。向 `node` 授予辅助功能权限后，由该 Node 可执行文件启动的任何包都将继承 GUI 自动化访问权限；请参阅 [macOS permissions](/zh/platforms/mac/permissions#accessibility-grants-for-node-and-cli-runtimes)。
 - 请求在大约 10 秒后超时。
-- 如果缺少所需权限，网桥会返回清晰的错误消息，
-  而不是打开系统设置。
+- 如果缺少所需权限，桥接会返回明确的错误消息，而不会打开系统设置。
 
 ## 快照行为（自动化）
 
-快照存储在内存中，并在短时间后自动过期。
-如果您需要更长的保留时间，请从客户端重新捕获。
+快照存储在内存中，并在短时间内自动过期。如果您需要更长的保留时间，请从客户端重新捕获。
 
 ## 故障排除
 
-- 如果 `peekaboo` 报告“网桥客户端未获授权”，请确保客户端
-  已正确签名，或仅在 **调试** 模式下
-  使用 `PEEKABOO_ALLOW_UNSIGNED_SOCKET_CLIENTS=1` 运行主机。
-- 如果未找到主机，请打开其中一个主机应用（Peekaboo.app 或 OpenClaw.app）
-  并确认已授予权限。
+- 如果 `peekaboo` 报告“bridge client is not authorized”（桥接客户端未授权），请确保客户端已正确签名，或仅在 **debug** 模式下运行带有 `PEEKABOO_ALLOW_UNSIGNED_SOCKET_CLIENTS=1` 的主机。
+- 如果未找到主机，请打开其中一个主机应用（Peekaboo.app 或 OpenClaw.app）并确认已授予权限。
 
 ## 相关
 
-- [macOS 应用](/zh/platforms/macos)
-- [macOS 权限](/zh/platforms/mac/permissions)
+- [macOS app](/zh/platforms/macos)
+- [macOS permissions](/zh/platforms/mac/permissions)

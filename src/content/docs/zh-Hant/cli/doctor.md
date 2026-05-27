@@ -199,7 +199,7 @@ openclaw doctor --lint --skip core/doctor/skills-readiness
 - 重複執行 `doctor --fix` 不再會在唯一的差異是物件金鑰順序時回報/套用 Talk 正規化。
 - Doctor 包含記憶體搜尋就緒檢查，並且當缺少嵌入憑證時可以建議 `openclaw configure --section model`。
 - 當未設定命令擁有者時，Doctor 會發出警告。命令擁有者是被允許執行擁有者專屬命令並核准危險操作的人類操作員帳戶。DM 配對僅允許某人與機器人交談；如果您在首次擁有者引導程式存在之前已核准發送者，請明確設定 `commands.ownerAllowFrom`。
-- 當配置了 Codex 模式代理程式且操作員的 Codex 家目錄中存在個人 Codex CLI 資產時，Doctor 會發出警告。本機 Codex app-server 啟動使用獨立的每個代理程式家目錄，因此請使用 `openclaw migrate codex --dry-run` 來盤點應被刻意提升的資產。
+- 當配置了 Codex 模式的代理並且操作員的 Codex 主目錄中存在個人 Codex CLI 資產時，Doctor 會報告一則資訊說明。本機 Codex 應用程式伺服器啟動使用獨立的逐代理主目錄，因此如有需要，請先安裝 Codex 外掛程式，然後使用 `openclaw migrate plan codex` 來盤點應有意提升的資產。
 - Doctor 會移除已退役的 `plugins.entries.codex.config.codexDynamicToolsProfile`；Codex app-server 始終保持 Codex 原生工作區工具的原生狀態。
 - 當允許預設代理程式的技能因缺少 bins、環境變數、設定或 OS 需求而無法在目前執行環境中使用時，Doctor 會發出警告。`doctor --fix` 可以使用 `skills.entries.<skill>.enabled=false` 停用那些無法使用的技能；當您想要保持技能啟用時，請改為安裝/設定缺少的需求。
 - 如果已啟用沙箱模式但 Docker 無法使用，doctor 會回報高信號警告並提供修復方法 (`install Docker` 或 `openclaw config set agents.defaults.sandbox.mode off`)。

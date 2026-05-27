@@ -11,7 +11,7 @@ doc-schema-version: 1
 
 外掛程式透過管道、模型提供者、代理程式框架、工具、技能、語音、即時轉錄、聲音、媒體理解、生成、網頁擷取、網頁搜尋及其他執行階段功能來擴充 OpenClaw。
 
-當您想要安裝外掛程式、重新啟動 Gateway、驗證執行階段是否已載入它，以及排除常見的設定失敗問題時，請使用此頁面。若要查看僅包含指令的範例，請參閱[管理外掛程式](/zh-Hant/plugins/manage-plugins)。若要查看隨附的官方外部及僅限原始碼之外掛程式的完整產生清單，請參閱[外掛程式清單](/zh-Hant/plugins/plugin-inventory)。
+當您想要安裝外掛程式、重新啟動 Gateway、驗證執行階段是否已載入它，以及排除常見的設定失敗時，請使用此頁面。若只要查看指令範例，請參閱[管理外掛程式](/zh-Hant/plugins/manage-plugins)。若要查看內建、官方外部和僅原始碼外掛程式的完整產生清單，請參閱[外掛程式清單](/zh-Hant/plugins/plugin-inventory)。
 
 ## 需求
 
@@ -32,7 +32,7 @@ doc-schema-version: 1
     openclaw plugins search "calendar"
     ```
 
-    ClawHub 是社群外掛程式的主要探索介面。在啟動轉換期間，一般的裸套件規格仍會從 npm 安裝。當您需要特定來源時，請使用明確的前綴。
+    ClawHub 是社群外掛程式的主要探索介面。在啟動切換期間，一般的純裸套件規格仍會從 npm 安裝。當您需要特定來源時，請使用明確的前綴。
 
   </Step>
 
@@ -111,7 +111,7 @@ doc-schema-version: 1
 | local path  | You are developing or testing a plugin on the same machine                     | `openclaw plugins install --link ./my-plugin`                  |
 | marketplace | You are installing a Claude-compatible marketplace plugin                      | `openclaw plugins install <plugin> --marketplace <source>`     |
 
-純套件規格具有特殊的相容性行為。如果純名稱符合隨附外掛程式 ID，OpenClaw 會使用該隨附來源。如果符合官方外部外掛程式 ID，OpenClaw 會使用官方套件目錄。其他一般的純套件規格會在啟動切換期間透過 npm 安裝。當您需要確定性來源選擇時，請使用 `clawhub:`、`npm:`、`git:` 或 `npm-pack:`。請參閱 [`openclaw plugins`](/zh-Hant/cli/plugins#install) 以了解完整的指令合約。
+裸套件規格具有特殊的相容性行為。如果裸名稱符合內建外掛程式 ID，OpenClaw 會使用該內建來源。如果它符合官方外部外掛程式 ID，OpenClaw 會使用官方套件目錄。其他一般的裸套件規格會在啟動切換期間透過 npm 安裝。當您需要確定性的來源選擇時，請使用 `clawhub:`、`npm:`、`git:` 或 `npm-pack:`。請參閱 [`openclaw plugins`](/zh-Hant/cli/plugins#install) 以了解完整的指令合約。
 
 ### 設定外掛程式原則
 
@@ -156,13 +156,29 @@ OpenClaw 辨識兩種插件格式：
 | 原生 OpenClaw 插件 | `openclaw.plugin.json` 加上在程序中載入的運行時模組         | 您正在安裝或建構 OpenClaw 專屬的運行時功能         |
 | 相容套件           | 映射至 OpenClaw 插件清單的 Codex、Claude 或 Cursor 插件配置 | 您正在重複使用相容的技能、指令、勾點或套件中繼資料 |
 
-這兩種格式都會出現在 `openclaw plugins list`、`openclaw plugins inspect`、`openclaw plugins enable` 和 `openclaw plugins disable` 中。請參閱 [Plugin bundles](/zh-Hant/plugins/bundles) 以了解套件相容性邊界，並參閱 [Building plugins](/zh-Hant/plugins/building-plugins) 以了解原生插件開發。
+這兩種格式都出現在 `openclaw plugins list`、`openclaw plugins inspect`、
+`openclaw plugins enable` 和 `openclaw plugins disable` 中。請參閱
+[外掛程式套件組合](/zh-Hant/plugins/bundles) 以了解套件組合相容性邊界，並參閱[建置外掛程式](/zh-Hant/plugins/building-plugins) 以了解原生外掛程式撰寫。
+
+## 外掛程式鉤子
+
+外掛程式可以在執行階段註冊鉤子，但有兩個不同的 API 具有不同的工作。
+
+- 透過 `api.on(...)` 使用型別鉤子來處理執行階段生命週期鉤子。這是中介軟體、原則、訊息重寫、提示成形和工具控制的慣用介面。
+- 僅當您想要參與 [鉤子](/zh-Hant/automation/hooks) 中描述的內部鉤子系統時，才使用 `api.registerHook(...)`。這主要用於粗略的指令/生命週期副作用，以及與現有 HOOK 樣式自動化的相容性。
+
+快速規則：
+
+- 如果處理器需要優先級、合併語義，或封鎖/取消行為，請使用類型化插件掛鉤。
+- 如果處理器只是對 `command:new`、`command:reset`、`message:sent` 或類似的粗略事件做出反應，`api.registerHook(...)` 就足夠了。
+
+外掛程式管理的內部掛鉤會以 `plugin:<id>` 顯示在 `openclaw hooks list` 中。您無法透過 `openclaw hooks` 啟用或停用它們；請改為啟用或停用外掛程式。
 
 ## 驗證作用中的 Gateway
 
-`openclaw plugins list` 和單純的 `openclaw plugins inspect` 會讀取冷配置、清單和登錄狀態。它們無法證明正在執行的 Gateway 是否已匯入相同的插件程式碼。
+`openclaw plugins list` 和純 `openclaw plugins inspect` 會讀取冷配置、資訊清單和註冊表狀態。它們無法證明正在執行的 Gateway 已匯入相同的外掛程式碼。
 
-當插件顯示已安裝，但即時聊天流量未使用它時：
+當外掛程式顯示已安裝但即時聊天流量未使用它時：
 
 ```bash
 openclaw gateway status --deep --require-rpc
@@ -170,92 +186,114 @@ openclaw plugins inspect <plugin-id> --runtime --json
 openclaw gateway restart
 ```
 
-受管理的 Gateway 會在改變插件來源的安裝、更新和解除安裝變更後自動重新啟動。在 VPS 或容器安裝中，請確保任何手動重新啟動都以實際服務您頻道的 `openclaw gateway run` 子程序為目標，而不僅是包裝程式或監督程式。
+受管理的 Gateway 會在變更外掛程式來源的安裝、更新和解除安裝後自動重新啟動。在 VPS 或容器安裝上，請確保任何手動重新啟動都是針對服務您頻道的實際 `openclaw gateway run` 子行程，而不僅僅是包裝程式或監督程式。
 
 ## 疑難排解
 
-| 徵狀                                             | 檢查                                                                                                                      | 修正                                                                            |
-| ------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
-| 插件顯示於 `plugins list` 中，但運行時勾點未執行 | 使用 `openclaw plugins inspect <id> --runtime --json` 並使用 `gateway status --deep --require-rpc` 確認作用中的 Gateway   | 在安裝、更新、配置或來源變更後，重新啟動即時 Gateway                            |
-| 出現重複的通道或工具擁有權診斷                   | 執行 `openclaw plugins list --enabled --verbose`，使用 `--runtime --json` 檢查每個可疑的外掛程式，並比較通道/工具的擁有權 | 停用其中一個擁有者、移除過時的安裝，或使用清單 `preferOver` 進行刻意替換        |
-| 設定顯示外掛程式遺失                             | 檢查 [外掛程式清單](/zh-Hant/plugins/plugin-inventory) 以確認它是隨附、官方外部還是僅限原始碼                                  | 安裝外部套件、啟用隨附的外掛程式，或移除過時的設定                              |
-| 安裝期間設定無效                                 | 閱讀驗證訊息，並在訊息指向過時的外掛程式狀態時執行 `openclaw doctor --fix`                                                | Doctor 可以透過停用項目並移除無效的內容，隔離無效的外掛程式設定                 |
-| 外掛程式路徑因可疑的擁有權或權限而被封鎖         | 檢查設定錯誤之前的診斷                                                                                                    | 修復檔案系統的擁有權/權限，然後執行 `openclaw plugins registry --refresh`       |
-| `OPENCLAW_NIX_MODE=1` 封鎖生命週期指令           | 確認安裝是由 Nix 管理                                                                                                     | 在 Nix 原始碼中變更外掛程式選擇，而非使用外掛程式變異指令                       |
-| 相依性匯入在執行時失敗                           | 檢查外掛程式是透過 npm/git/ClawHub 安裝，還是從本機路徑載入                                                               | 執行 `openclaw plugins update <id>`、重新安裝來源，或自行安裝本機外掛程式相依性 |
+| 症狀                                               | 檢查                                                                                                                    | 修正                                                                          |
+| -------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| 外掛程式顯示在 `plugins list` 中但執行時掛鉤未執行 | 使用 `openclaw plugins inspect <id> --runtime --json` 並以 `gateway status --deep --require-rpc` 確認作用中的 Gateway   | 在安裝、更新、設定或來源變更後重新啟動即時 Gateway                            |
+| 出現重複的頻道或工具擁有權診斷                     | 執行 `openclaw plugins list --enabled --verbose`，使用 `--runtime --json` 檢查每個可疑的外掛程式，並比較頻道/工具擁有權 | 停用其中一個擁有者，移除過時的安裝，或使用資訊清單 `preferOver` 進行刻意替換  |
+| 設定指出外掛程式遺失                               | 檢查 [外掛程式清單](/zh-Hant/plugins/plugin-inventory) 以判斷它是隨附、官方外部，還是僅限來源                                | 安裝外部套件、啟用隨附的外掛程式，或移除過時的設定                            |
+| 安裝期間設定無效                                   | 閱讀驗證訊息，並在它指出過時的外掛程式狀態時執行 `openclaw doctor --fix`                                                | Doctor 可以透過停用條目並移除無效的負載來隔離無效的外掛程式設定               |
+| 外掛路徑因可疑的所有權或權限而被封鎖               | 檢查設定錯誤之前的診斷訊息                                                                                              | 修復檔案系統所有權/權限，然後執行 `openclaw plugins registry --refresh`       |
+| `OPENCLAW_NIX_MODE=1` 封鎖生命週期指令             | 確認安裝是由 Nix 管理                                                                                                   | 請變更 Nix 來源中的外掛選擇，而不是使用外掛變異器指令                         |
+| 相依性匯入在執行階段失敗                           | 檢查外掛是透過 npm/git/ClawHub 安裝，還是從本地路徑載入                                                                 | 執行 `openclaw plugins update <id>`、重新安裝來源，或是自行安裝本地外掛相依性 |
 
-當過時的外掛程式設定仍然指定一個不再可探索的通道外掛程式時，
-Gateway 啟動會略過該外掛程式支援的通道，而不是封鎖所有
-其他通道。執行 `openclaw doctor --fix` 以移除過時的外掛程式和通道
-項目。如果沒有過時外掛程式證據的未知通道金鑰仍然會
-無法通過驗證，因此錯別字會保持可見。
+當過期的外掛設定仍命名一個無法再被探索的通道外掛時，
+Gateway 啟動會跳過該外掛支援的通道，而不是封鎖
+所有其他通道。執行 `openclaw doctor --fix` 以移除過期的外掛和通道
+項目。沒有過期外掛證據的未知通道金鑰仍會
+驗證失敗，以便讓拼寫錯誤保持可見。
 
-對於刻意的通道替換，偏好的外掛程式應該使用舊版或較低優先級
-的外掛程式 ID 宣告 `channelConfigs.<channel-id>.preferOver`。如果兩個外掛程式都明確啟用，OpenClaw 會保留該請求
-並回報重複的通道或工具診斷，而不是無聲地選擇
+若要刻意替換通道，偏好的外掛應使用舊版或較低優先級的
+外掛 id 宣告 `channelConfigs.<channel-id>.preferOver`。如果兩個外掛都明確啟用，OpenClaw
+會保留該請求並回報重複的通道或工具診斷，而不是靜默地選擇
 一個擁有者。
 
-如果已安裝的套件回報它 `requires compiled runtime output for
-TypeScript entry ...`，表示該套件發布時未包含 OpenClaw 在執行階段所需的 JavaScript 檔案。請在發布者提供編譯後的 JavaScript 後更新或重新安裝，或是在此期間停用/解除安裝該外掛。
+如果已安裝的套件回報它「requires compiled runtime output for
+TypeScript entry ...」（需要 TypeScript 入口的編譯執行階段輸出...），
+表示該套件發佈時未包含 OpenClaw 在執行階段所需的 JavaScript 檔案。
+在發佈者提供編譯後的 JavaScript 後更新或重新安裝，或者在此之前停用/移除外掛。
 
-### 外掛路徑所有權遭阻擋
+### 外掛路徑所有權被封鎖
 
 如果外掛診斷顯示
 `blocked plugin candidate: suspicious ownership (... uid=1000, expected uid=0 or root)`
-且組態驗證緊接著顯示 `plugin present but blocked`，表示 OpenClaw 發現外掛檔案是由與載入它們的行程不同的 Unix 使用者所擁有。請保留外掛組態不變；修正檔案系統所有權，或是以擁有狀態目錄的相同使用者身分執行 OpenClaw。
+且隨後的設定驗證顯示 `plugin present but blocked`，表示 OpenClaw 發現
+外掛檔案的所有者 Unix 使用者與載入它們的處理程序不同。
+請保留外掛設定；修復檔案系統所有權，或以擁有狀態目錄的
+相同使用者身分執行 OpenClaw。
 
-對於 Docker 安裝，官方映像檔是以 `node` (uid `1000`) 執行，因此主機 bind-mounted 的 OpenClaw 組態和工作區目錄通常應由 uid `1000` 所擁有：
+對於 Docker 安裝，官方映像檔以 `node` (uid `1000`) 執行，因此
+主機掛載綁定的 OpenClaw 設定和工作區目錄通常應
+由 uid `1000` 擁有：
 
 ```bash
 sudo chown -R 1000:1000 /path/to/openclaw-config /path/to/openclaw-workspace
 ```
 
-如果您刻意以 root 身分執行 OpenClaw，請將受管理的外掛根目錄修復為 root 所有權：
+如果您刻意以 root 身分執行 OpenClaw，請改將受管理的外掛根目錄修復
+為 root 所有權：
 
 ```bash
 sudo chown -R root:root /path/to/openclaw-config/npm
 ```
 
-修正所有權後，請重新執行 `openclaw doctor --fix` 或
-`openclaw plugins registry --refresh`，以便持續化的外掛註冊表與已修復的檔案相符。
+修復所有權後，請重新執行 `openclaw doctor --fix` 或
+`openclaw plugins registry --refresh`，以便持久化的插件註冊表與
+修復後的檔案相符。
 
-### 外掛工具設定緩慢
+### 插件工具設定緩慢
 
-如果代理輪次在準備工具時似乎停滯，請啟用追蹤記錄並檢查外掛工具工廠的時序記錄：
+如果在準備工具時代理輪次似乎停滯，請啟用追蹤記錄並
+檢查插件工具工廠計時行：
 
 ```bash
 openclaw config set logging.level trace
 openclaw logs --follow
 ```
 
-請尋找：
+尋找：
 
 ```text
 [trace:plugin-tools] factory timings ...
 ```
 
-摘要會列出總工廠時間和最慢的外掛工具工廠，包括外掛 ID、宣告的工具名稱、結果形狀，以及工具是否為選用。當單一工廠耗時至少 1 秒或總外掛工具工廠準備時間至少 5 秒時，緩慢的記錄會提升為警告。
+摘要會列出總工廠時間和最慢的插件工具工廠，
+包括插件 ID、宣告的工具名稱、結果形狀，以及該工具是否
+為可選。當單一工廠耗時至少 1 秒或總插件工具工廠準備耗時至少 5 秒時，
+緩慢的行會升級為警告。
 
-OpenClaw 會針對使用相同有效請求內容的重複解析，快取成功的外掛工具工廠結果。快取金鑰包含有效執行時期組態、工作區、代理/工作階段 ID、沙箱原則、瀏覽器設定、傳遞內容、請求者身分和所有權狀態，因此依賴這些受信任欄位的工廠會在內容變更時重新執行。如果時間仍然很高，外掛可能會在傳回其工具定義之前執行耗時的工作。
+OpenClaw 會快取成功的插件工具工廠結果，以便在相同的
+有效請求上下文中重複解析。快取鍵包括有效的
+執行時配置、工作區、代理/工作階段 ID、沙箱原則、瀏覽器設定、
+傳送上下文、請求者身分和所有權狀態，因此依賴這些受信任欄位的
+工廠會在上下文變更時重新執行。如果計時持續偏高，
+插件可能是在傳回工具定義之前執行了耗時的工作。
 
-如果某個外掛佔據了大部分時間，請檢查其執行時期註冊：
+如果某個插件佔據了大部分時間，請檢查其執行時註冊：
 
 ```bash
 openclaw plugins inspect <plugin-id> --runtime --json
 ```
 
-然後更新、重新安裝或停用該外掛程式。外掛程式作者應將昂貴的相依性載入移至工具執行路徑後方，而不是在工具工廠內部執行。
+然後更新、重新安裝或停用該插件。插件作者應將
+耗時的相依性載入移至工具執行路徑後方，而不是在
+工具工廠內部執行。
 
-關於相依性根目錄、套件元資料驗證、登錄記錄、啟動時重新載入行為以及舊版清理，請參閱[外掛程式相依性解析](/zh-Hant/plugins/dependency-resolution)。
+如需瞭解相依性根目錄、套件元資料驗證、註冊表記錄、啟動
+重新載入行為和舊版清理，請參閱
+[Plugin dependency resolution](/zh-Hant/plugins/dependency-resolution)。
 
 ## 相關
 
-- [管理外掛程式](/zh-Hant/plugins/manage-plugins) - 列出、安裝、更新、解除安裝和發佈的指令範例
-- [`openclaw plugins`](/zh-Hant/cli/plugins) - 完整的 CLI 參考資料
-- [外掛程式清單](/zh-Hant/plugins/plugin-inventory) - 已產生的套件和外部外掛程式清單
-- [外掛程式參考資料](/zh-Hant/plugins/reference) - 已產生的個別外掛程式參考頁面
-- [社群外掛程式](/zh-Hant/plugins/community) - ClawHub 探索和文件 PR 政策
-- [外掛程式相依性解析](/zh-Hant/plugins/dependency-resolution) - 安裝根目錄、登錄記錄和執行時期邊界
-- [建置外掛程式](/zh-Hant/plugins/building-plugins) - 原生外掛程式撰寫指南
-- [外掛程式 SDK 概覽](/zh-Hant/plugins/sdk-overview) - 執行時期註冊、掛鉤和 API 欄位
-- [外掛程式清單資訊](/zh-Hant/plugins/manifest) - 清單資訊和套件元資料
+- [Manage plugins](/zh-Hant/plugins/manage-plugins) - 列出、安裝、更新、解除安裝和發佈的指令範例
+- [`openclaw plugins`](/zh-Hant/cli/plugins) - 完整的 CLI 參考
+- [Plugin inventory](/zh-Hant/plugins/plugin-inventory) - 生成的內建和外部插件清單
+- [Plugin reference](/zh-Hant/plugins/reference) - 生成的個別插件參考頁面
+- [Community plugins](/zh-Hant/plugins/community) - ClawHub 探索和文件 PR 原則
+- [Plugin dependency resolution](/zh-Hant/plugins/dependency-resolution) - 安裝根目錄、註冊表記錄和執行時邊界
+- [Building plugins](/zh-Hant/plugins/building-plugins) - 原生插件撰寫指南
+- [Plugin SDK 概觀](/zh-Hant/plugins/sdk-overview) - 執行時期註冊、掛鉤與 API 欄位
+- [Plugin 資訊清單](/zh-Hant/plugins/manifest) - 資訊清單與套件元資料

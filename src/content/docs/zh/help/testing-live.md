@@ -535,7 +535,7 @@ openclaw infer image generate \
   - 当前在共享扫描中已声明但跳过的 `videoToVideo` 提供商：
     - `alibaba`、`qwen`、`xai`，因为这些路径当前需要远程 `http(s)` / MP4 参考 URL
     - `google` 因为当前共享的 Gemini/Veo 通道使用本地缓冲区支持的输入，而该路径在共享扫描中不被接受
-    - `openai` 因为当前共享通道缺少针对组织的特定视频修复/混音访问保证
+    - `openai`，因为当前的共享通道缺少组织特定的视频编辑访问权限保证
 - 可选缩小范围：
   - `OPENCLAW_LIVE_VIDEO_GENERATION_PROVIDERS="deepinfra,google,openai,runway"`
   - `OPENCLAW_LIVE_VIDEO_GENERATION_MODELS="google/veo-3.1-fast-generate-preview,openai/sora-2,runway/gen4_aleph"`

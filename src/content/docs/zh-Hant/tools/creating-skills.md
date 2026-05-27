@@ -8,7 +8,7 @@ read_when:
 
 技能會教導代理如何以及何時使用工具。每個技能都是一個目錄，其中包含一個帶有 YAML 前置資訊和 Markdown 指令的 `SKILL.md` 檔案。
 
-關於如何載入和優先排序技能，請參閱 [Skills](/zh-Hant/tools/skills)。
+如需了解技能如何載入與設定優先順序，請參閱 [Skills](/zh-Hant/tools/skills)。
 
 ## 建立您的第一個技能
 
@@ -93,27 +93,47 @@ YAML 前置資訊支援以下欄位：
 | `metadata.openclaw.requires.bins`   | 否   | PATH 中必要的二元檔案                     |
 | `metadata.openclaw.requires.config` | 否   | 必要的設定金鑰                            |
 
-## 最佳實務
+## 進階功能
 
-- **保持簡潔** — 指示模型做什麼，而不是如何成為 AI
-- **安全第一** — 如果您的技能使用 `exec`，請確保提示不允許來自不受信任輸入的任意指令注入
-- **本機測試** — 在分享前使用 `openclaw agent --message "..."` 進行測試
-- **使用 ClawHub** — 在 [ClawHub](https://clawhub.ai) 瀏覽和貢獻技能
+一旦基本技能運作正常，這些欄位有助於使其更可靠且便於移植：
+
+- **條件式啟用** — 使用 `requires.bins`、`requires.env` 或
+  `requires.config` 僅在所需相依項目可用時載入技能。請參閱 [Skills reference: gating](/zh-Hant/tools/skills#gating)。
+- **環境變數與 API 金鑰連線** — 使用 `skills.entries.<name>.env` 和
+  `skills.entries.<name>.apiKey` 將主機端環境變數注入至技能
+  輪次。請參閱 [Skills reference: config wiring](/zh-Hant/tools/skills#config-wiring)。
+- **叫用控制** — 設定 `user-invocable: false` 以隱藏斜線指令，
+  或設定 `disable-model-invocation: true` 以讓指令樣式的技能不出現在
+  模型提示中。請參閱 [Skills reference: frontmatter](/zh-Hant/tools/skills#frontmatter)。
+- **直接指令分派** — 當斜線指令應直接呼叫工具而非透過模型路由時，
+  請搭配 `command-tool` 使用 `command-dispatch: tool`。
+- **可移植路徑** — 在 `SKILL.md` 中使用 `{baseDir}` 來參考
+  技能目錄內的腳本或資源。
+- **發佈** — 準備發佈技能時使用 ClawHub 技能。
+  它會記錄目前的 `clawhub publish` 指令形狀與所需
+  中繼資料。
+
+## 最佳實踐
+
+- **保持簡潔** — 指示模型做*什麼*，而不是如何成為 AI
+- **安全第一** — 如果您的技能使用 `exec`，請確保提示不允許來自未受信任輸入的任意指令注入
+- **本機測試** — 使用 `openclaw agent --message "..."` 在分享前進行測試
+- **使用 ClawHub** — 瀏覽並貢獻技能於 [ClawHub](https://clawhub.ai)
 
 ## 技能存放位置
 
-| 位置                            | 優先順序 | 範圍             |
-| ------------------------------- | -------- | ---------------- |
-| `\<workspace\>/skills/`         | 最高     | 個別代理         |
-| `\<workspace\>/.agents/skills/` | 高       | 每個工作區代理   |
-| `~/.agents/skills/`             | 中       | 共享的代理設定檔 |
-| `~/.openclaw/skills/`           | 中       | 共享（所有代理） |
-| 內建（隨 OpenClaw 附帶）        | 低       | 全域             |
-| `skills.load.extraDirs`         | 最低     | 自訂共享資料夾   |
+| 位置                            | 優先順序 | 範圍                 |
+| ------------------------------- | -------- | -------------------- |
+| `\<workspace\>/skills/`         | 最高     | 個別代理程式         |
+| `\<workspace\>/.agents/skills/` | 高       | 每個工作區的代理程式 |
+| `~/.agents/skills/`             | 中       | 共用的代理程式設定檔 |
+| `~/.openclaw/skills/`           | 中       | 共用 (所有代理程式)  |
+| 內建 (隨 OpenClaw 附帶)         | 低       | 全域                 |
+| `skills.load.extraDirs`         | 最低     | 自訂共用資料夾       |
 
 ## 相關
 
-- [Skills 參考](/zh-Hant/tools/skills) — 載入、優先順序和閘道規則
-- [Skills 配置](/zh-Hant/tools/skills-config) — `skills.*` 配置架構
+- [Skills 參考](/zh-Hant/tools/skills) — 載入、優先順序和閘控規則
+- [Skills 設定](/zh-Hant/tools/skills-config) — `skills.*` 設定架構
 - [ClawHub](/zh-Hant/clawhub) — 公開技能註冊表
-- [建置插件](/zh-Hant/plugins/building-plugins) — 插件可以發布技能
+- [建置外掛程式](/zh-Hant/plugins/building-plugins) — 外掛程式可以隨附技能

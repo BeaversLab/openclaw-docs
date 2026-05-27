@@ -21,12 +21,12 @@ OpenClaw 可以通过 pi-ai 的 **Bedrock Converse** 流式提供商使用 **Ama
 
 <Tabs>
   <Tab title="访问密钥 / 环境变量">
-    **最适用于：** 开发者机器、CI 或您直接管理 AWS 凭证的主机。
+    **最适合于：** 开发者机器、CI 或直接管理 AWS 凭证的主机。
 
     <Steps>
       <Step title="在网关主机上设置 AWS 凭证">
         ```bash
-        export AWS_ACCESS_KEY_ID="AKIA..."
+        export AWS_ACCESS_KEY_ID="EXAMPLE_AWS_ACCESS_KEY_ID"
         export AWS_SECRET_ACCESS_KEY="..."
         export AWS_REGION="us-east-1"
         # Optional:
@@ -36,7 +36,7 @@ OpenClaw 可以通过 pi-ai 的 **Bedrock Converse** 流式提供商使用 **Ama
         export AWS_BEARER_TOKEN_BEDROCK="..."
         ```
       </Step>
-      <Step title="将 Bedrock 提供商和模型添加到您的配置">
+      <Step title="将 Bedrock 提供商和模型添加到您的配置中">
         不需要 `apiKey`。使用 `auth: "aws-sdk"` 配置提供商：
 
         ```json5
@@ -77,7 +77,7 @@ OpenClaw 可以通过 pi-ai 的 **Bedrock Converse** 流式提供商使用 **Ama
     </Steps>
 
     <Tip>
-    使用环境标记认证（`AWS_ACCESS_KEY_ID`、`AWS_PROFILE` 或 `AWS_BEARER_TOKEN_BEDROCK`OpenClaw），OpenClaw 会自动启用隐式 Bedrock 提供商以进行模型发现，无需额外配置。
+    使用环境标记身份验证（`AWS_ACCESS_KEY_ID`、`AWS_PROFILE` 或 `AWS_BEARER_TOKEN_BEDROCK`OpenClaw），OpenClaw 会自动为模型发现启用隐式 Bedrock 提供商，而无需额外配置。
     </Tip>
 
   </Tab>

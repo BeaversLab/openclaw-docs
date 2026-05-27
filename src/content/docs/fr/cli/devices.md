@@ -1,5 +1,5 @@
 ---
-summary: "Référence CLI pour `openclaw devices` (appareil association + rotation/révocation de jeton)"
+summary: "CLIRéférence CLI pour `openclaw devices` (appareillage des appareils + rotation/révocation de jetons)"
 read_when:
   - You are approving device pairing requests
   - You need to rotate or revoke device tokens
@@ -27,8 +27,8 @@ La sortie de la demande en attente affiche l'accès demandé à côté de l'acc�
 
 Supprimer une entrée d'appareil couplé.
 
-Lorsque vous êtes authentifié avec un jeton de périphérique apparié, les appelants non-administrateurs peuvent
-supprimer uniquement **leur propre** entrée de périphérique. La suppression d'un autre périphérique nécessite
+Lorsque vous êtes authentifié avec un jeton d'appareil apparié, les appelants non-administrateurs peuvent
+supprimer uniquement la ligne de **leur propre** appareil. La suppression d'un autre appareil nécessite
 `operator.admin`.
 
 ```
@@ -48,17 +48,23 @@ openclaw devices clear --yes --pending --json
 
 ### `openclaw devices approve [requestId] [--latest]`
 
-Approuver une demande d'appareil en attente par exact `requestId`. Si `requestId` est omis ou que `--latest` est passé, OpenClaw imprime uniquement la demande en attente sélectionnée et quitte ; relancez l'approbation avec l'ID exact de la demande après avoir vérifié les détails.
+Approuver une demande d'appareillage d'appareil en attente par `requestId` exact. Si `requestId`
+est omis ou si `--latest`OpenClaw est passé, OpenClaw affiche uniquement la demande en attente
+sélectionnée et quitte ; relancez l'approbation avec l'ID de demande exact après avoir vérifié
+les détails.
 
-<Note>Si un appareil tente à nouveau de s'appairer avec des détails d'authentification modifiés (rôle, portées ou clé publique), OpenClaw remplace l'entrée en attente précédente et émet un nouveau `requestId`. Exécutez `openclaw devices list` juste avant l'approbation pour utiliser l'ID actuel.</Note>
+<Note>Si un appareil réessaie de s'apparier avec des détails d'authentification modifiés (rôle, portées ou clé publique), OpenClaw remplace l'entrée en attente précédente et émet un nouveau OpenClaw`requestId`. Exécutez `openclaw devices list` juste avant l'approbation pour utiliser l'ID actuel.</Note>
 
-Si l'appareil est déjà associé et demande des portées plus étendues ou un rôle plus étendu, OpenClaw conserve l'approbation existante et crée une nouvelle demande de mise à niveau en attente. Consultez les colonnes `Requested` vs `Approved` dans `openclaw devices list` ou utilisez `openclaw devices approve --latest` pour prévisualiser la mise à niveau exacte avant de l'approuver.
+Si l'appareil est déjà apparié et demande des portées plus étendues ou un rôle plus étendu,
+OpenClaw conserve l'approbation existante en place et crée une nouvelle demande de mise à niveau
+en attente. Consultez les colonnes OpenClaw`Requested` vs `Approved` dans `openclaw devices list`
+ou utilisez `openclaw devices approve --latest` pour prévisualiser la mise à niveau exacte avant
+de l'approuver.
 
 Si le Gateway est explicitement configuré avec
-`gateway.nodes.pairing.autoApproveCidrs`, les premières demandes `role: node` provenant
-d'adresses IP clientes correspondantes peuvent être approuvées avant qu'elles n'apparaissent dans cette liste. Cette stratégie
-est désactivée par défaut et ne s'applique jamais aux clients opérateurs/navigateurs ou aux demandes
-de mise à niveau.
+Gateway`gateway.nodes.pairing.autoApproveCidrs`, les demandes de première `role: node` provenant
+des adresses IP clientes correspondantes peuvent être approuvées avant d'apparaître dans cette liste. Cette stratégie
+est désactivée par défaut et ne s'applique jamais aux clients opérateurs/navigateurs ni aux demandes de mise à niveau.
 
 ```
 openclaw devices approve
@@ -66,9 +72,39 @@ openclaw devices approve <requestId>
 openclaw devices approve --latest
 ```
 
+## Paperclip / Approbation de la première exécution de `openclaw_gateway`
+
+Lorsqu'un nouvel agent Paperclip se connecte via l'adaptateur `openclaw_gateway` pour la première fois, le Gateway peut exiger une approbation unique de l'appareil avant que les exécutions puissent réussir. Si Paperclip signale `openclaw_gateway_pairing_required`, approuvez l'appareil en attente et réessayez.
+
+Pour les passerelles locales, prévisualisez la dernière demande en attente :
+
+```bash
+openclaw devices approve --latest
+```
+
+L'aperçu imprime la commande exacte `openclaw devices approve <requestId>`. Vérifiez les détails de la demande, puis réexécutez cette commande avec l'ID de demande pour l'approuver.
+
+Pour les passerelles distantes ou les identifiants explicites, transmettez les mêmes options lors de la prévisualisation et de l'approbation :
+
+```bash
+openclaw devices approve --latest --url <gateway-ws-url> --token <gateway-token>
+```
+
+Pour éviter d'avoir à réapprouver après les redémarrages, conservez une clé d'appareil persistante dans la configuration de l'adaptateur Paperclip au lieu de générer une nouvelle identité éphémère à chaque exécution :
+
+```json
+{
+  "adapterConfig": {
+    "devicePrivateKeyPem": "<ed25519-private-key-pkcs8-pem>"
+  }
+}
+```
+
+Si l'approbation continue d'échouer, exécutez d'abord `openclaw devices list` pour confirmer qu'une demande en attente existe.
+
 ### `openclaw devices reject <requestId>`
 
-Rejeter une demande d'appairage d'appareil en attente.
+Rejeter une demande d'appariement d'appareil en attente.
 
 ```
 openclaw devices reject <requestId>
@@ -76,15 +112,15 @@ openclaw devices reject <requestId>
 
 ### `openclaw devices rotate --device <id> --role <role> [--scope <scope...>]`
 
-Faire pivoter un jeton d'appareil pour un rôle spécifique (en mettant éventuellement à jour les portées).
-Le rôle cible doit déjà exister dans le contrat d'appairage approuvé de cet appareil ;
+Faire pivoter un jeton d'appareil pour un rôle spécifique (en mettant à jour les étendues facultativement).
+Le rôle cible doit déjà exister dans le contrat d'appariement approuvé de cet appareil ;
 la rotation ne peut pas créer un nouveau rôle non approuvé.
 Si vous omettez `--scope`, les reconnexions ultérieures avec le jeton pivoté stocké réutilisent les
-portées approuvées mises en cache de ce jeton. Si vous transmettez des valeurs `--scope` explicites, celles-ci
-deviennent l'ensemble de portées stocké pour les futures reconnexions avec jeton mis en cache.
-Les appelants d'appareil appairé non-administrateurs ne peuvent faire pivoter que leur **propre** jeton d'appareil.
-L'ensemble de portées du jeton cible doit rester dans les portées d'opérateur propres de la session de l'appelant ;
-la rotation ne peut pas créer ou préserver un jeton d'opérateur plus large que celui
+étendues approuvées en cache de ce jeton. Si vous transmettez des valeurs `--scope` explicites, celles-ci
+deviennent l'ensemble d'étendues stocké pour les futures reconnexions avec jeton en cache.
+Les appelants d'appareil apparié non-administrateurs ne peuvent faire pivoter que leur **propre** jeton d'appareil.
+L'ensemble d'étendues du jeton cible doit rester dans les étendues d'opérateur propres de la session de l'appelant ;
+la rotation ne peut pas créer ou conserver un jeton d'opérateur plus large que celui
 que l'appelant possède déjà.
 
 ```
@@ -93,17 +129,16 @@ openclaw devices rotate --device <deviceId> --role operator --scope operator.rea
 
 Renvoie les métadonnées de rotation au format JSON. Si l'appelant fait pivoter son propre jeton tout en
 étant authentifié avec ce jeton d'appareil, la réponse inclut également le jeton de remplacement
-afin que le client puisse le conserver avant de se reconnecter. Les rotations partagées/administrateur
-ne renvoient pas le jeton bearer.
+afin que le client puisse le conserver avant de se reconnecter. Les rotations partagées/administratives
+ne répercutent pas le jeton porteur.
 
 ### `openclaw devices revoke --device <id> --role <role>`
 
 Révoquer un jeton d'appareil pour un rôle spécifique.
 
-Les appelants d'appareil appairé non-administrateurs ne peuvent révoquer que leur **propre** jeton d'appareil.
+Les appelants d'appareil jumelé non-administrateurs peuvent révoquer uniquement leur **propre** jeton d'appareil.
 La révocation du jeton d'un autre appareil nécessite `operator.admin`.
-L'ensemble de portées du jeton cible doit également s'inscrire dans les portées d'opérateur propres de la session de l'appelant ;
-les appelants avec uniquement un appairage ne peuvent pas révoquer les jetons d'opérateur administrateur/écriture.
+L'ensemble des portées de jeton cibles doit également s'inscrire dans les portées d'opérateur propres à la session de l'appelant ; les appelants jumelés uniquement ne peuvent pas révoquer les jetons d'opérateur d'administration/d'écriture.
 
 ```
 openclaw devices revoke --device <deviceId> --role node
@@ -113,36 +148,36 @@ Renvoie le résultat de la révocation au format JSON.
 
 ## Options courantes
 
-- `--url <url>` : URL WebSocket du Gateway (par défaut `gateway.remote.url` lorsque configuré).
-- `--token <token>` : Jeton du Gateway (si requis).
-- `--password <password>` : Mot de passe du Gateway (authentification par mot de passe).
-- `--timeout <ms>` : Délai d'attente RPC.
-- `--json` : Sortie JSON (recommandé pour les scripts).
+- `--url <url>` : URL WebSocket du Gateway (par défaut `gateway.remote.url` lorsqu'il est configuré).
+- `--token <token>` : jeton du Gateway (si requis).
+- `--password <password>` : mot de passe du Gateway (authentification par mot de passe).
+- `--timeout <ms>` : délai d'attente RPC.
+- `--json` : sortie JSON (recommandé pour les scripts).
 
-<Warning>Lorsque vous définissez `--url`, le CLI n'utilise pas les identifiants de la configuration ou de l'environnement en secours. Passez `--token` ou `--password` explicitement. L'absence d'identifiants explicites constitue une erreur.</Warning>
+<Warning>Lorsque vous définissez `--url`, la CLI n'utilise pas les informations d'identification de configuration ou d'environnement en secours. Passez `--token` ou `--password` explicitement. L'absence d'informations d'identification explicites constitue une erreur.</Warning>
 
-## Notes
+## Remarques
 
 - La rotation des jetons renvoie un nouveau jeton (sensible). Traitez-le comme un secret.
-- Ces commandes nécessitent la portée `operator.pairing` (ou `operator.admin`). Certaines approbations nécessitent également que l'appelant détienne les portées d'opérateur que l'appareil cible émettrait ou hériterait ; voir [Operator scopes](/fr/gateway/operator-scopes).
+- Ces commandes nécessitent la portée `operator.pairing` (ou `operator.admin`). Certaines
+  approbations nécessitent également que l'appelant détienne les portées d'opérateur que l'appareil
+  cible créerait ou hériterait ; voir [Operator scopes](/fr/gateway/operator-scopes).
 - `gateway.nodes.pairing.autoApproveCidrs` est une stratégie Gateway optionnelle pour
-  l'appareil de nœud frais uniquement ; elle ne modifie pas l'autorité d'approbation du CLI.
-- La rotation et la révocation de jetons restent dans l'ensemble de rôles d'appariement approuvés et
+  le jumelage d'appareils de nœuds frais uniquement ; elle ne modifie pas l'autorité d'approbation CLI.
+- La rotation et la révocation de jetons restent dans l'ensemble de rôles de jumelage approuvés et
   la ligne de base de portée approuvée pour cet appareil. Une entrée de jeton mise en cache orpheline ne
   confère pas une cible de gestion de jetons.
-- Pour les sessions de jetons d'appareils appariés, la gestion inter-appareils est réservée aux administrateurs :
-  `remove`, `rotate` et `revoke` sont propres à l'appelant, sauf si celui-ci possède
+- Pour les sessions de jetons d'appareil jumelés, la gestion inter-appareils est réservée aux administrateurs :
+  `remove`, `rotate` et `revoke` sont limités à soi-même, sauf si l'appelant dispose de
   `operator.admin`.
-- La mutation de jetons est également contenue dans la portée de l'appelant : une session d'appariement uniquement ne peut pas
-  faire tourner ou révoquer un jeton qui porte actuellement `operator.admin` ou
-  `operator.write`.
-- `devices clear` est intentionnellement protégé par `--yes`.
-- Si la portée d'appariement n'est pas disponible sur le local loopback (et qu'aucun `--url` explicite n'est passé), list/approve peut utiliser un secours d'appariement local.
-- `devices approve` nécessite un ID de demande explicite avant la frappe de jetons ; l'omission de `requestId` ou le passage de `--latest` ne permet de prévisualiser que la demande en attente la plus récente.
+- La mutation de jeton est également contenue dans la portée de l'appelant : une session d'appariement uniquement ne peut pas faire pivoter ou révoquer un jeton qui porte actuellement `operator.admin` ou `operator.write`.
+- `devices clear` est intentionnellement conditionné par `--yes`.
+- Si la portée d'appariement est indisponible sur la boucle locale (local loopback) (et qu'aucun `--url` explicite n'est passé), la liste/l'approbation peut utiliser un repli d'appariement local.
+- `devices approve` nécessite un ID de demande explicite avant la création de jetons ; l'omission de `requestId` ou le passage de `--latest` ne permet de prévisualiser que la plus récente demande en attente.
 
-## Liste de vérification de la récupération de dérive de jeton
+## Liste de vérification pour la récupération de dérive de jeton
 
-Utilisez ceci lorsque l'interface de contrôle ou d'autres clients continuent d'échouer avec `AUTH_TOKEN_MISMATCH`, `AUTH_DEVICE_TOKEN_MISMATCH` ou `AUTH_SCOPE_MISMATCH`.
+Utilisez ceci lorsque l'interface utilisateur de contrôle (Control UI) ou d'autres clients continuent d'échouer avec `AUTH_TOKEN_MISMATCH`, `AUTH_DEVICE_TOKEN_MISMATCH` ou `AUTH_SCOPE_MISMATCH`.
 
 1. Confirmer la source actuelle du jeton de passerelle :
 
@@ -150,19 +185,19 @@ Utilisez ceci lorsque l'interface de contrôle ou d'autres clients continuent d'
 openclaw config get gateway.auth.token
 ```
 
-2. Répertoriez les appareils appariés et identifiez l'ID de l'appareil concerné :
+2. Lister les appareils appariés et identifier l'ID de l'appareil concerné :
 
 ```bash
 openclaw devices list
 ```
 
-3. Faites pivoter le jeton d'opérateur pour l'appareil concerné :
+3. Faire pivoter le jeton d'opérateur pour l'appareil concerné :
 
 ```bash
 openclaw devices rotate --device <deviceId> --role operator
 ```
 
-4. Si la rotation ne suffit pas, supprimez l'appairement obsolète et approuvez à nouveau :
+4. Si la rotation ne suffit pas, supprimer l'appariement obsolète et approuver à nouveau :
 
 ```bash
 openclaw devices remove <deviceId>
@@ -170,18 +205,18 @@ openclaw devices list
 openclaw devices approve <requestId>
 ```
 
-5. Réessayez la connexion client avec le jeton/mot de passe partagé actuel.
+5. Réessayer la connexion du client avec le jeton/mot de passe partagé actuel.
 
 Notes :
 
 - La priorité normale d'authentification de reconnexion est d'abord le jeton/mot de passe partagé explicite, puis `deviceToken` explicite, puis le jeton d'appareil stocké, puis le jeton d'amorçage.
-- La récupération `AUTH_TOKEN_MISMATCH` de confiance peut temporairement envoyer à la fois le jeton partagé et le jeton d'appareil stocké pour la nouvelle tentative délimitée unique.
-- `AUTH_SCOPE_MISMATCH` signifie que le jeton d'appareil a été reconnu mais ne porte pas l'ensemble de portées demandé ; corrigez le contrat d'approbation de jumelage/de portée avant de modifier l'authentification de la passerelle partagée.
+- La récupération de `AUTH_TOKEN_MISMATCH` de confiance peut temporairement envoyer à la fois le jeton partagé et le jeton d'appareil stocké ensemble pour la seule tentative de reconnexion limitée.
+- `AUTH_SCOPE_MISMATCH` signifie que le jeton de l'appareil a été reconnu mais ne porte pas l'ensemble de portées demandé ; corrigez le contrat d'appariement/approbation de portée avant de modifier l'authentification de passerelle partagée.
 
-Connexe :
+Connexes :
 
 - [Dépannage de l'authentification du tableau de bord](/fr/web/dashboard#if-you-see-unauthorized-1008)
-- [Dépannage de la Gateway](/fr/gateway/troubleshooting#dashboard-control-ui-connectivity)
+- [Dépannage du Gateway](/fr/gateway/troubleshooting#dashboard-control-ui-connectivity)
 
 ## Connexes
 

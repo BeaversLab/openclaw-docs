@@ -149,26 +149,20 @@ Your App → claude-max-api-proxy → Claude Code CLI → Anthropic (via subscri
   </Accordion>
 </AccordionGroup>
 
-## 連結
+## 注意事項
 
-- **npm：** [https://www.npmjs.com/package/claude-max-api-proxy](https://www.npmjs.com/package/claude-max-api-proxy)
-- **GitHub：** [https://github.com/atalovesyou/claude-max-api-proxy](https://github.com/atalovesyou/claude-max-api-proxy)
-- **問題：** [https://github.com/atalovesyou/claude-max-api-proxy/issues](https://github.com/atalovesyou/claude-max-api-proxy/issues)
-
-## 備註
-
-- 這是一個 **社群工具**，並非由 Anthropic 或 OpenClaw 官方支援
-- 需要有效的 Claude Max/Pro 訂閱，並已驗證 Claude Code CLI
-- 代理在本地執行，不會將資料發送到任何第三方伺服器
+- 這是一個**社群工具**，並非由 Anthropic 或 OpenClaw 官方支援
+- 需要有效的 Claude Max/Pro 訂閱，並已透過 Claude Code CLI 完成驗證
+- 此代理伺服器在本地運行，不會將資料傳送至任何第三方伺服器
 - 完全支援串流回應
 
-<Note>若要使用 Claude CLI 或 API 金鑰進行原生 Anthropic 整合，請參閱 [Anthropic 提供者](/zh-Hant/providers/anthropic)。若要使用 OpenAI/Codex 訂閱，請參閱 [OpenAI 提供者](/zh-Hant/providers/openai)。</Note>
+<Note>若要使用 Claude CLI 或 API 金鑰進行原生 Anthropic 整合，請參閱 [Anthropic provider](/zh-Hant/providers/anthropic)。若為 OpenAI/Codex 訂閱，請參閱 [OpenAI provider](/zh-Hant/providers/openai)。</Note>
 
 ## 相關
 
 <CardGroup cols={2}>
   <Card title="Anthropic provider" href="/zh-Hant/providers/anthropic" icon="bolt">
-    使用 Claude CLI 或 API 金鑰的原生 OpenClaw 整合。
+    與 Claude CLI 或 API 金鑰的原生 OpenClaw 整合。
   </Card>
   <Card title="OpenAI provider" href="/zh-Hant/providers/openai" icon="robot">
     適用於 OpenAI/Codex 訂閱。

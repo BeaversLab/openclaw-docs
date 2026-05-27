@@ -189,7 +189,7 @@ openclaw doctor --lint --skip core/doctor/skills-readiness
 - 重复运行 `doctor --fix` 不再报告/应用 Talk 规范化，当唯一差异是对象键顺序时。
 - Doctor 包含内存搜索就绪检查，并在缺少嵌入凭证时推荐使用 `openclaw configure --section model`。
 - 当未配置命令所有者时，Doctor 会发出警告。命令所有者是允许运行仅限所有者的命令并批准危险操作的人工操作员账户。 配对仅允许某人与机器人对话；如果您在首次所有者引导存在之前批准了发送者，请显式设置 `commands.ownerAllowFrom`。
-- 当配置了 Codex 模式代理且操作员的 Codex 主目录中存在个人 Codex CLI 资产时，Doctor 会发出警告。本地 Codex 应用服务器启动使用隔离的每代理主目录，因此请使用 `openclaw migrate codex --dry-run` 来清点应有意识提升的资产。
+- 当配置了 Codex 模式的代理且操作员的 Codex 主目录中存在个人 Codex CLI 资产时，Doctor 会报告一条信息说明。本地 Codex 应用服务器启动使用隔离的每个代理主目录，因此如果需要，请先安装 Codex 插件，然后使用 `openclaw migrate plan codex` 清点应有意识提升的资产。
 - Doctor 会移除已退役的 `plugins.entries.codex.config.codexDynamicToolsProfile`；Codex 应用服务器始终将 Codex 原生工作区工具保持为原生状态。
 - 当允许默认代理使用的技能因缺少 bin、环境变量、配置或 OS 要求而在当前运行时环境中不可用时，Doctor 会发出警告。`doctor --fix` 可以使用 `skills.entries.<skill>.enabled=false` 禁用那些不可用的技能；当您希望保持技能处于活动状态时，请改为安装/配置缺失的要求。
 - 如果启用了沙箱模式但 Docker 不可用，doctor 会报告高信号警告并提供修复建议 (Docker`install Docker` 或 `openclaw config set agents.defaults.sandbox.mode off`)。

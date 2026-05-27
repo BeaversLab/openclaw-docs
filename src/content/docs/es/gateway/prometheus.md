@@ -18,7 +18,7 @@ El tipo de contenido es `text/plain; version=0.0.4; charset=utf-8`, el formato d
 
 <Warning>La ruta utiliza la autenticación de Gateway (ámbito de operador). No la exponga como un punto final `/metrics` público sin autenticar. Extráigala a través de la misma ruta de autenticación que utiliza para otras API de operador.</Warning>
 
-Para trazas, registros, envío OTLP y atributos semánticos de OpenTelemetry GenAI, consulte [Exportación de OpenTelemetry](/es/gateway/opentelemetry).
+Para las trazas, los registros, el envío OTLP y los atributos semánticos de GenAI de OpenTelemetry, consulte [exportación de OpenTelemetry](/es/gateway/opentelemetry).
 
 ## Inicio rápido
 
@@ -92,26 +92,32 @@ Para trazas, registros, envío OTLP y atributos semánticos de OpenTelemetry Gen
 | `openclaw_model_tokens_total`                 | contador   | `agent`, `channel`, `model`, `provider`, `token_type`                                     |
 | `openclaw_gen_ai_client_token_usage`          | histograma | `model`, `provider`, `token_type`                                                         |
 | `openclaw_model_cost_usd_total`               | contador   | `agent`, `channel`, `model`, `provider`                                                   |
-| `openclaw_tool_execution_total`               | contador   | `error_category`, `outcome`, `params_kind`, `tool`                                        |
-| `openclaw_tool_execution_duration_seconds`    | histograma | `error_category`, `outcome`, `params_kind`, `tool`                                        |
+| `openclaw_skill_used_total`                   | contador   | `activation`, `agent`, `skill`, `source`                                                  |
+| `openclaw_tool_execution_total`               | contador   | `error_category`, `outcome`, `params_kind`, `tool`, `tool_owner`, `tool_source`           |
+| `openclaw_tool_execution_duration_seconds`    | histograma | `error_category`, `outcome`, `params_kind`, `tool`, `tool_owner`, `tool_source`           |
 | `openclaw_harness_run_total`                  | contador   | `channel`, `error_category`, `harness`, `model`, `outcome`, `phase`, `plugin`, `provider` |
 | `openclaw_harness_run_duration_seconds`       | histograma | `channel`, `error_category`, `harness`, `model`, `outcome`, `phase`, `plugin`, `provider` |
+| `openclaw_message_received_total`             | contador   | `channel`, `source`                                                                       |
+| `openclaw_message_dispatch_started_total`     | counter    | `channel`, `source`                                                                       |
+| `openclaw_message_dispatch_completed_total`   | contador   | `channel`, `outcome`, `reason`, `source`                                                  |
+| `openclaw_message_dispatch_duration_seconds`  | histograma | `channel`, `outcome`, `reason`, `source`                                                  |
 | `openclaw_message_processed_total`            | contador   | `channel`, `outcome`, `reason`                                                            |
-| `openclaw_message_processed_duration_seconds` | histogram  | `channel`, `outcome`, `reason`                                                            |
-| `openclaw_message_delivery_started_total`     | counter    | `channel`, `delivery_kind`                                                                |
+| `openclaw_message_processed_duration_seconds` | histograma | `channel`, `outcome`, `reason`                                                            |
+| `openclaw_message_delivery_started_total`     | contador   | `channel`, `delivery_kind`                                                                |
 | `openclaw_message_delivery_total`             | contador   | `channel`, `delivery_kind`, `error_category`, `outcome`                                   |
-| `openclaw_message_delivery_duration_seconds`  | histograma | `channel`, `delivery_kind`, `error_category`, `outcome`                                   |
-| `openclaw_talk_event_total`                   | contador   | `brain`, `event_type`, `mode`, `provider`, `transport`                                    |
+| `openclaw_message_delivery_duration_seconds`  | histogram  | `channel`, `delivery_kind`, `error_category`, `outcome`                                   |
+| `openclaw_talk_event_total`                   | counter    | `brain`, `event_type`, `mode`, `provider`, `transport`                                    |
 | `openclaw_talk_event_duration_seconds`        | histograma | `brain`, `event_type`, `mode`, `provider`, `transport`                                    |
 | `openclaw_talk_audio_bytes`                   | histograma | `brain`, `event_type`, `mode`, `provider`, `transport`                                    |
-| `openclaw_queue_lane_size`                    | gauge      | `lane`                                                                                    |
-| `openclaw_queue_lane_wait_seconds`            | histogram  | `lane`                                                                                    |
-| `openclaw_session_state_total`                | counter    | `reason`, `state`                                                                         |
+| `openclaw_queue_lane_size`                    | indicador  | `lane`                                                                                    |
+| `openclaw_queue_lane_wait_seconds`            | histograma | `lane`                                                                                    |
+| `openclaw_session_state_total`                | contador   | `reason`, `state`                                                                         |
 | `openclaw_session_queue_depth`                | indicador  | `state`                                                                                   |
-| `openclaw_session_recovery_total`             | counter    | `action`, `active_work_kind`, `state`, `status`                                           |
+| `openclaw_session_turn_created_total`         | contador   | `agent`, `channel`, `trigger`                                                             |
+| `openclaw_session_recovery_total`             | contador   | `action`, `active_work_kind`, `state`, `status`                                           |
 | `openclaw_session_recovery_age_seconds`       | histograma | `action`, `active_work_kind`, `state`, `status`                                           |
 | `openclaw_memory_bytes`                       | indicador  | `kind`                                                                                    |
-| `openclaw_memory_rss_bytes`                   | histogram  | ninguno                                                                                   |
+| `openclaw_memory_rss_bytes`                   | histograma | ninguno                                                                                   |
 | `openclaw_memory_pressure_total`              | contador   | `level`, `reason`                                                                         |
 | `openclaw_telemetry_exporter_total`           | contador   | `exporter`, `reason`, `signal`, `status`                                                  |
 | `openclaw_prometheus_series_dropped_total`    | contador   | ninguno                                                                                   |
@@ -120,22 +126,22 @@ Para trazas, registros, envío OTLP y atributos semánticos de OpenTelemetry Gen
 
 <AccordionGroup>
   <Accordion title="Etiquetas delimitadas y de baja cardinalidad">
-    Las etiquetas de Prometheus se mantienen delimitadas y de baja cardinalidad. El exportador no emite identificadores de diagnóstico sin procesar, como `runId`, `sessionKey`, `sessionId`, `callId`, `toolCallId`, IDs de mensaje, IDs de chat o IDs de solicitud del proveedor.
+    Las etiquetas de Prometheus permanecen delimitadas y de baja cardinalidad. El exportador no emite identificadores de diagnóstico sin procesar, como `runId`, `sessionKey`, `sessionId`, `callId`, `toolCallId`, ID de mensaje, ID de chat o ID de solicitud del proveedor.
 
-    Los valores de las etiquetas se redactan y deben coincidir con la política de caracteres de baja cardinalidad de OpenClaw. Los valores que no cumplen con la política se reemplazan con `unknown`, `other` o `none`, según la métrica.
+    Los valores de las etiquetas se redactan y deben coincidir con la política de caracteres de baja cardinalidad de OpenClaw. Los valores que no cumplen con la política se reemplazan por `unknown`, `other` o `none`, dependiendo de la métrica. Las etiquetas que parecen claves de sesión de agente con ámbito también se reemplazan por `unknown`.
 
   </Accordion>
   <Accordion title="Límite de series y contabilidad de desbordamiento">
-    El exportador limita las series temporales retenidas en memoria a **2048** series en total entre contadores, indicadores e histogramas. Las series nuevas que superen ese límite se descartan y `openclaw_prometheus_series_dropped_total` se incrementa en una cada vez.
+    El exportador limita las series temporales retenidas en memoria a **2048** series en total entre contadores, medidores e histogramas. Las series nuevas más allá de ese límite se descartan y `openclaw_prometheus_series_dropped_total` se incrementa en uno cada vez.
 
-    Vigile este contador como una señal fuerte de que un atributo aguas arriba está filtrando valores de alta cardinalidad. El exportador nunca elimina el límite automáticamente; si aumenta, solucione el origen en lugar de deshabilitar el límite.
+    Controle este contador como una señal sólida de que un atributo upstream está filtrando valores de alta cardinalidad. El exportador nunca levanta el límite automáticamente; si aumenta, solucione el origen en lugar de deshabilitar el límite.
 
   </Accordion>
   <Accordion title="Lo que nunca aparece en la salida de Prometheus">
     - texto del prompt, texto de respuesta, entradas de herramientas, salidas de herramientas, prompts del sistema
-    - transcripciones de Talk, cargas de audio, IDs de llamada, IDs de sala, tokens de transferencia, IDs de turno e IDs de sesión sin procesar
-    - IDs de solicitud de proveedor sin procesar (solo hash delimitados, cuando corresponda, en spans: nunca en métricas)
-    - claves de sesión e IDs de sesión
+    - transcripciones de conversaciones, cargas de audio, ID de llamadas, ID de salas, tokens de transferencia, ID de turno e ID de sesión sin procesar
+    - ID de solicitud del proveedor sin procesar (solo hash delimitados, cuando corresponda, en spans, nunca en métricas)
+    - claves de sesión e ID de sesión
     - nombres de host, rutas de archivo, valores secretos
 
   </Accordion>
@@ -163,30 +169,33 @@ histogram_quantile(
   sum by (le, lane) (rate(openclaw_queue_lane_wait_seconds_bucket[5m]))
 ) < 2
 
+# Skill usage, split by bounded source
+sum by (skill, source) (increase(openclaw_skill_used_total[24h]))
+
 # Dropped Prometheus series (cardinality alarm)
 increase(openclaw_prometheus_series_dropped_total[15m]) > 0
 ```
 
-<Tip>Se recomienda `gen_ai_client_token_usage` para paneles entre proveedores: sigue las convenciones semánticas de OpenTelemetry GenAI y es coherente con las métricas de servicios GenAI que no son de OpenClaw.</Tip>
+<Tip>Prefiera `gen_ai_client_token_usage` para paneles entre proveedores: sigue las convenciones semánticas de GenAI de OpenTelemetry y es coherente con las métricas de servicios GenAI que no son de OpenClaw.</Tip>
 
-## Elección entre la exportación de Prometheus y OpenTelemetry
+## Elegir entre exportación de Prometheus y OpenTelemetry
 
 OpenClaw admite ambas superficies de forma independiente. Puede ejecutar una, ambas o ninguna.
 
 <Tabs>
   <Tab title="diagnostics-prometheus">
-    - Modelo de **extracción** (Pull): Prometheus extrae `/api/diagnostics/prometheus`.
+    - Modelo **Pull**: Prometheus extrae `/api/diagnostics/prometheus`.
     - No se requiere un recopilador externo.
     - Autenticado a través de la autenticación normal de Gateway.
     - La superficie es solo métricas (sin trazas ni registros).
-    - Lo mejor para pilas ya estandarizadas en Prometheus + Grafana.
+    - Ideal para pilas ya estandarizadas en Prometheus + Grafana.
 
   </Tab>
   <Tab title="diagnostics-otel">
-    - Modelo de **inserción** (Push): OpenClaw envía OTLP/HTTP a un recopilador o backend compatible con OTLP.
+    - Modelo **Push**: OpenClaw envía OTLP/HTTP a un recopilador o a un backend compatible con OTLP.
     - La superficie incluye métricas, trazas y registros.
     - Actúa como puente hacia Prometheus a través de un OpenTelemetry Collector (exportador `prometheus` o `prometheusremotewrite`) cuando necesita ambos.
-    - Consulte [Exportación de OpenTelemetry](/es/gateway/opentelemetry) para obtener el catálogo completo.
+    - Consulte [exportación de OpenTelemetry](/es/gateway/opentelemetry) para ver el catálogo completo.
 
   </Tab>
 </Tabs>
@@ -196,24 +205,24 @@ OpenClaw admite ambas superficies de forma independiente. Puede ejecutar una, am
 <AccordionGroup>
   <Accordion title="Cuerpo de respuesta vacío">
     - Compruebe `diagnostics.enabled: true` en la configuración.
-    - Confirme que el complemento esté habilitado y cargado con `openclaw plugins list --enabled`.
+    - Confirme que el complemento está habilitado y cargado con `openclaw plugins list --enabled`.
     - Genere algo de tráfico; los contadores e histogramas solo emiten líneas después de al menos un evento.
 
   </Accordion>
   <Accordion title="401 / no autorizado">
-    El punto final requiere el ámbito de operador de Gateway (`auth: "gateway"` con `gatewayRuntimeScopeSurface: "trusted-operator"`). Use el mismo token o contraseña que Prometheus usa para cualquier otra ruta de operador de Gateway. No existe un modo público no autenticado.
+    El punto final requiere el ámbito de operador de Gateway (`auth: "gateway"` con `gatewayRuntimeScopeSurface: "trusted-operator"`). Utilice el mismo token o contraseña que Prometheus utiliza para cualquier otra ruta de operador de Gateway. No existe ningún modo público no autenticado.
   </Accordion>
   <Accordion title="`openclaw_prometheus_series_dropped_total` está aumentando">
-    Un nuevo atributo está superando el límite de **2048** series. Inspeccione las métricas recientes para encontrar una etiqueta de cardinalidad inesperadamente alta y corríjala en la fuente. El exportador descarta intencionalmente las nuevas series en lugar de reescribir las etiquetas silenciosamente.
+    Un nuevo atributo está superando el límite de **2048** series. Inspeccione las métricas recientes para encontrar una etiqueta de cardinalidad inesperadamente alta y corríjala en el origen. El exportador descarta intencionalmente las nuevas series en lugar de reescribir silenciosamente las etiquetas.
   </Accordion>
   <Accordion title="Prometheus muestra series obsoletas después de un reinicio">
-    El complemento mantiene el estado solo en la memoria. Después de reiniciar el Gateway, los contadores se restablecen a cero y los medidores se reinician en su siguiente valor informado. Use PromQL `rate()` y `increase()` para manejar los reinicios de manera limpia.
+    El complemento mantiene el estado solo en la memoria. Después de reiniciar el Gateway, los contadores se restablecen a cero y los indicadores se reinician en su siguiente valor reportado. Utilice PromQL `rate()` y `increase()` para manejar los reinicios correctamente.
   </Accordion>
 </AccordionGroup>
 
 ## Relacionado
 
 - [Exportación de diagnósticos](/es/gateway/diagnostics) — archivo zip de diagnósticos locales para paquetes de soporte
-- [Salud y preparación](/es/gateway/health) — sondas `/healthz` y `/readyz`
+- [Estado y preparación](/es/gateway/health) — sondas `/healthz` y `/readyz`
 - [Registro](/es/logging) — registro basado en archivos
 - [Exportación de OpenTelemetry](/es/gateway/opentelemetry) — envío OTLP para trazas, métricas y registros

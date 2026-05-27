@@ -163,13 +163,31 @@ Las cuentas se asignan a perfiles `zalouser` en el estado de OpenClaw. Ejemplo:
 }
 ```
 
-## Indicador de escribiendo, reacciones y confirmaciones de entrega
+## Variables de entorno
+
+El plugin de Zalo Personal también puede leer la selección de perfil desde variables de entorno:
+
+- `ZALOUSER_PROFILE`: nombre del perfil a usar cuando no se establece ningún `profile` en la configuración del canal o de la cuenta.
+- `ZCA_PROFILE`: nombre del perfil de respaldo heredado, usado solo cuando `ZALOUSER_PROFILE` no está establecido.
+
+Los nombres de perfil seleccionan las credenciales de inicio de sesión de Zalo guardadas en el estado de OpenClaw. El orden de resolución es:
+
+1. `profile` explícito en la configuración.
+2. `ZALOUSER_PROFILE`.
+3. `ZCA_PROFILE`.
+4. El ID de cuenta para cuentas no predeterminadas, o `default` para la cuenta predeterminada.
+
+Para configuraciones multicuenta, se prefiere establecer `profile` en cada cuenta en la configuración para que
+una variable de entorno no haga que varias cuentas compartan la misma sesión
+de inicio de sesión.
+
+## Indicación de escritura, reacciones y confirmaciones de entrega
 
 - OpenClaw envía un evento de escritura antes de enviar una respuesta (mejor esfuerzo).
 - La acción de reacción al mensaje `react` es compatible con `zalouser` en las acciones del canal.
   - Use `remove: true` para eliminar un emoji de reacción específico de un mensaje.
   - Semántica de reacciones: [Reacciones](/es/tools/reactions)
-- Para los mensajes entrantes que incluyen metadatos de eventos, OpenClaw envía confirmaciones de entregado + visto (mejor esfuerzo).
+- Para los mensajes entrantes que incluyen metadatos de eventos, OpenClaw envía confirmaciones de entregado y visto (mejor esfuerzo).
 
 ## Solución de problemas
 
@@ -178,19 +196,19 @@ Las cuentas se asignan a perfiles `zalouser` en el estado de OpenClaw. Ejemplo:
 - `openclaw channels status --probe`
 - Volver a iniciar sesión: `openclaw channels logout --channel zalouser && openclaw channels login --channel zalouser`
 
-**La lista de permitidos/nombre del grupo no se resolvió:**
+**La lista de permitidos/nombre de grupo no se resolvió:**
 
-- Use IDs numéricos en `allowFrom`/`groupAllowFrom` y IDs de grupo estables en `groups`. Si intencionalmente necesita nombres exactos de amigos/grupos, habilite `channels.zalouser.dangerouslyAllowNameMatching: true`.
+- Use IDs numéricos en `allowFrom`/`groupAllowFrom` e IDs de grupo estables en `groups`. Si necesita intencionalmente nombres exactos de amigos/grupos, habilite `channels.zalouser.dangerouslyAllowNameMatching: true`.
 
-**Actualizado desde la configuración antigua basada en CLI:**
+**Actualizado desde la configuración anterior basada en CLI:**
 
-- Elimine cualquier supuesto antiguo sobre el proceso externo `zca`.
+- Elimine cualquier suposición anterior sobre el proceso externo `zca`.
 - El canal ahora se ejecuta completamente en OpenClaw sin binarios CLI externos.
 
 ## Relacionado
 
-- [Descripción general de canales](/es/channels) — todos los canales compatibles
-- [Emparejamiento](/es/channels/pairing) — flujo de autenticación y emparejamiento de DM
-- [Grupos](/es/channels/groups) — comportamiento del chat de grupo y filtrado de menciones
-- [Enrutamiento de canales](/es/channels/channel-routing) — enrutamiento de sesiones para mensajes
+- [Resumen de canales](/es/channels) — todos los canales compatibles
+- [Emparejamiento](/es/channels/pairing) — flujo de autenticación y emparejamiento por MD
+- [Grupos](/es/channels/groups) — comportamiento del chat grupal y filtrado de menciones
+- [Enrutamiento de canales](/es/channels/channel-routing) — enrutamiento de sesión para mensajes
 - [Seguridad](/es/gateway/security) — modelo de acceso y endurecimiento

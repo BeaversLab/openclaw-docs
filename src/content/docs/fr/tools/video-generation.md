@@ -51,9 +51,7 @@ La génération vidéo est asynchrone. Lorsque l'agent appelle `video_generate` 
 1. OpenClaw soumet la demande au fournisseur et renvoie immédiatement un identifiant de tâche.
 2. Le fournisseur traite la tâche en arrière-plan (généralement de 30 secondes à plusieurs minutes selon le fournisseur et la résolution ; les fournisseurs lents avec une file d'attente peuvent aller jusqu'au délai d'attente configuré).
 3. Lorsque la vidéo est prête, OpenClaw réveille la même session avec un événement interne de finition.
-4. L'agent informe l'utilisateur et joint la vidéo terminée via l'outil
-   de message. OpenClaw ne publie pas automatiquement la vidéo en repli si
-   l'agent de complétion écrit uniquement une réponse finale privée.
+4. L'agent informe l'utilisateur et joint la vidéo terminée via l'outil de message. Si la session du demandeur est inactive et que certaines vidéos générées manquent toujours à la livraison par l'outil de message, OpenClaw envoie une solution de repli directe idempotente avec uniquement la vidéo manquante.
 
 Pendant qu'une tâche est en cours, les appels en double à `video_generate` dans la même session renvoient l'état actuel de la tâche au lieu de lancer une autre génération. Utilisez `openclaw tasks list` ou `openclaw tasks show <taskId>` pour vérifier la progression depuis le CLI.
 
@@ -112,22 +110,22 @@ modes d'exécution disponibles lors de l'exécution.
 Le contrat de mode explicite utilisé par `video_generate`, les tests de contrat, et
 le sweep partagé en direct :
 
-| Provider   | `generate` | `imageToVideo` | `videoToVideo` | Voies partagées en direct aujourd'hui                                                                                                          |
-| ---------- | :--------: | :------------: | :------------: | ---------------------------------------------------------------------------------------------------------------------------------------------- |
-| Alibaba    |     ✓      |       ✓        |       ✓        | `generate`, `imageToVideo`; `videoToVideo` ignoré car ce provider a besoin d'URLs vidéo `http(s)` distantes                                    |
-| BytePlus   |     ✓      |       ✓        |       -        | `generate`, `imageToVideo`                                                                                                                     |
-| ComfyUI    |     ✓      |       ✓        |       -        | Pas dans le sweep partagé; la couverture spécifique au flux de travail réside avec les tests Comfy                                             |
-| DeepInfra  |     ✓      |       -        |       -        | `generate`; les schémas vidéo natifs DeepInfra sont texte-vidéo dans le contrat groupé                                                         |
-| fal        |     ✓      |       ✓        |       ✓        | `generate`, `imageToVideo`; `videoToVideo` uniquement lors de l'utilisation de Seedance référence-vers-vidéo                                   |
-| Google     |     ✓      |       ✓        |       ✓        | `generate`, `imageToVideo` ; `videoToVideo` partagé ignoré car le balayage actuel Gemini/Veo avec support de tampon n'accepte pas cette entrée |
-| MiniMax    |     ✓      |       ✓        |       -        | `generate`, `imageToVideo`                                                                                                                     |
-| OpenAI     |     ✓      |       ✓        |       ✓        | `generate`, `imageToVideo` ; `videoToVideo` partagé ignoré car ce chemin org/input nécessite actuellement un accès inpaint/remix côté provider |
-| OpenRouter |     ✓      |       ✓        |       -        | `generate`, `imageToVideo`                                                                                                                     |
-| Qwen       |     ✓      |       ✓        |       ✓        | `generate`, `imageToVideo` ; `videoToVideo` ignoré car ce provider a besoin d'URLs vidéo `http(s)` distantes                                   |
-| Runway     |     ✓      |       ✓        |       ✓        | `generate`, `imageToVideo` ; `videoToVideo` ne s'exécute que lorsque le modèle sélectionné est `runway/gen4_aleph`                             |
-| Together   |     ✓      |       ✓        |       -        | `generate`, `imageToVideo`                                                                                                                     |
-| Vydra      |     ✓      |       ✓        |       -        | `generate` ; `imageToVideo` partagé ignoré car `veo3` groupé est texte uniquement et `kling` groupé nécessite une URL d'image distante         |
-| xAI        |     ✓      |       ✓        |       ✓        | `generate`, `imageToVideo` ; `videoToVideo` ignoré car ce provider nécessite actuellement une URL MP4 distante                                 |
+| Provider   | `generate` | `imageToVideo` | `videoToVideo` | Voies partagées en direct aujourd'hui                                                                                                            |
+| ---------- | :--------: | :------------: | :------------: | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Alibaba    |     ✓      |       ✓        |       ✓        | `generate`, `imageToVideo`; `videoToVideo` ignoré car ce provider a besoin d'URLs vidéo `http(s)` distantes                                      |
+| BytePlus   |     ✓      |       ✓        |       -        | `generate`, `imageToVideo`                                                                                                                       |
+| ComfyUI    |     ✓      |       ✓        |       -        | Pas dans le sweep partagé; la couverture spécifique au flux de travail réside avec les tests Comfy                                               |
+| DeepInfra  |     ✓      |       -        |       -        | `generate`; les schémas vidéo natifs DeepInfra sont texte-vidéo dans le contrat groupé                                                           |
+| fal        |     ✓      |       ✓        |       ✓        | `generate`, `imageToVideo`; `videoToVideo` uniquement lors de l'utilisation de Seedance référence-vers-vidéo                                     |
+| Google     |     ✓      |       ✓        |       ✓        | `generate`, `imageToVideo` ; `videoToVideo` partagé ignoré car le balayage actuel Gemini/Veo avec support de tampon n'accepte pas cette entrée   |
+| MiniMax    |     ✓      |       ✓        |       -        | `generate`, `imageToVideo`                                                                                                                       |
+| OpenAI     |     ✓      |       ✓        |       ✓        | `generate`, `imageToVideo` ; `videoToVideo` partagé ignoré car ce chemin org/input nécessite actuellement un accès d'édition vidéo côté provider |
+| OpenRouter |     ✓      |       ✓        |       -        | `generate`, `imageToVideo`                                                                                                                       |
+| Qwen       |     ✓      |       ✓        |       ✓        | `generate`, `imageToVideo` ; `videoToVideo` ignoré car ce provider a besoin d'URLs vidéo `http(s)` distantes                                     |
+| Runway     |     ✓      |       ✓        |       ✓        | `generate`, `imageToVideo` ; `videoToVideo` ne s'exécute que lorsque le modèle sélectionné est `runway/gen4_aleph`                               |
+| Together   |     ✓      |       ✓        |       -        | `generate`, `imageToVideo`                                                                                                                       |
+| Vydra      |     ✓      |       ✓        |       -        | `generate` ; `imageToVideo` partagé ignoré car `veo3` groupé est texte uniquement et `kling` groupé nécessite une URL d'image distante           |
+| xAI        |     ✓      |       ✓        |       ✓        | `generate`, `imageToVideo` ; `videoToVideo` ignoré car ce provider nécessite actuellement une URL MP4 distante                                   |
 
 ## Paramètres de l'outil
 
@@ -198,17 +196,17 @@ le sweep partagé en direct :
 ### Avancé
 
 <ParamField path="action" type='"generate" | "status" | "list"' default="generate">
-  `"status"` retourne la tâche de session actuelle ; `"list"` inspecte les fournisseurs.
+  `"status"` renvoie la tâche de session actuelle ; `"list"` inspecte les providers.
 </ParamField>
-<ParamField path="model" type="string">Redéfinition du fournisseur/modèle (p. ex. `runway/gen4.5`).</ParamField>
-<ParamField path="filename" type="string">Indication du nom de fichier de sortie.</ParamField>
-<ParamField path="timeoutMs" type="number">Délai d'expiration facultatif de l'opération du fournisseur en millisecondes. En cas d'omission, OpenClaw utilise `agents.defaults.videoGenerationModel.timeoutMs` si configuré.</ParamField>
+<ParamField path="model" type="string">Remplacement de provider/modèle (ex. `runway/gen4.5`).</ParamField>
+<ParamField path="filename" type="string">Indication de nom de fichier de sortie.</ParamField>
+<ParamField path="timeoutMs" type="number">Délai d'expiration facultatif de l'opération du provider en millisecondes. En cas d'omission, OpenClaw utilise `agents.defaults.videoGenerationModel.timeoutMs` si configuré, sinon la valeur par défaut du provider créée par le plugin lorsqu'elle existe.</ParamField>
 <ParamField path="providerOptions" type="object">
-  Options spécifiques au fournisseur sous forme d'objet JSON (p. ex. `{"seed": 42, "draft": true}`).
-  Les fournisseurs qui déclarent un schéma typé valident les clés et les types ; les clés
-  inconnues ou les incompatibilités ignorent le candidat lors du basculement. Les fournisseurs sans
+  Options spécifiques au provider sous forme d'objet JSON (ex. `{"seed": 42, "draft": true}`).
+  Les providers qui déclarent un schéma typé valident les clés et les types ; les clés
+  inconnues ou les divergences ignorent le candidat lors du repli. Les providers sans
   schéma déclaré reçoivent les options telles quelles. Exécutez `video_generate action=list`
-  pour voir ce que chaque fournisseur accepte.
+  pour voir ce que chaque provider accepte.
 </ParamField>
 
 <Note>

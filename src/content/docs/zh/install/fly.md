@@ -98,21 +98,21 @@ read_when:
     fly secrets set OPENCLAW_GATEWAY_TOKEN=$(openssl rand -hex 32)
 
     # Model provider API keys
-    fly secrets set ANTHROPIC_API_KEY=sk-ant-...
+    fly secrets set ANTHROPIC_API_KEY=example-anthropic-key-not-real
 
     # Optional: Other providers
-    fly secrets set OPENAI_API_KEY=sk-...
+    fly secrets set OPENAI_API_KEY=example-openai-key-not-real
     fly secrets set GOOGLE_API_KEY=...
 
     # Channel tokens
-    fly secrets set DISCORD_BOT_TOKEN=MTQ...
+    fly secrets set DISCORD_BOT_TOKEN=example-discord-bot-token
     ```
 
-    **注意：**
+    **注意事项：**
 
-    - 非环回绑定 (`--bind lan`) 需要一个有效的网关身份验证路径。这个 Fly.io 示例使用了 `OPENCLAW_GATEWAY_TOKEN`，但 `gateway.auth.password` 或正确配置的非环回 `trusted-proxy` 部署也满足要求。
+    - 非回环绑定 (`--bind lan`) 需要有效的网关认证路径。此 Fly.io 示例使用 `OPENCLAW_GATEWAY_TOKEN`，但 `gateway.auth.password` 或正确配置的非回环 `trusted-proxy` 部署也满足该要求。
     - 像对待密码一样对待这些令牌。
-    - 对于所有 API 密钥和令牌，**优先使用环境变量而不是配置文件**。这可以避免密钥出现在 `openclaw.json` 中，防止意外泄露或被记录。
+    - 对于所有 API 密钥和令牌，**优先使用环境变量而非配置文件**。这可以将密钥保留在 `openclaw.json` 之外，以免意外泄露或被记录。
 
   </Step>
 

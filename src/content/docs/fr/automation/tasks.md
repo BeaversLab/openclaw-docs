@@ -91,10 +91,10 @@ Les tâches ne remplacent **pas** les sessions, les tâches cron ou les heartbea
 | Tâches multimédia d'agent      | `cli`           | Exécutions `image_generate`/`music_generate`/`video_generate` avec session | `silent`                             |
 
 <AccordionGroup>
-  <Accordion title="Notifications par défaut pour cron et les médias">
-    Les tâches cron de la session principale utilisent la politique de notification `silent` par défaut - elles créent des enregistrements pour le suivi mais ne génèrent pas de notifications. Les tâches cron isolées utilisent également par défaut `silent` mais sont plus visibles car elles s'exécutent dans leur propre session.
+  <Accordion title="Notify defaults for cron and media">
+    Les tâches cron de session principale utilisent la politique de notification `silent` par défaut - elles créent des enregistrements pour le suivi mais ne génèrent pas de notifications. Les tâches cron isolées utilisent également `silent` par défaut, mais sont plus visibles car elles s'exécutent dans leur propre session.
 
-    Les exécutions `image_generate`, `music_generate` et `video_generate` soutenues par une session utilisent également la politique de notification `silent`. Elles créent toujours des enregistrements de tâches, mais l'achèvement est renvoyé à la session de l'agent d'origine sous forme de réveil interne afin que l'agent puisse écrire le message de suivi et attacher lui-même le média fini. Les événements d'achèvement de médias générés nécessitent une livraison par outil de message : l'agent doit envoyer le média fini avec l'outil `message`, puis répondre `NO_REPLY`. Si l'agent d'achèvement écrit uniquement une réponse finale privée ou oublie la pièce jointe du média, OpenClaw marque le transfert d'achèvement comme ayant échoué ; il ne publie pas automatiquement le média généré en guise de solution de repli.
+    Les exécutions `image_generate`, `music_generate` et `video_generate` soutenues par une session utilisent également la politique de notification `silent`. Elles créent toujours des enregistrements de tâches, mais l'achèvement est renvoyé à la session de l'agent original sous la forme d'un réveil interne, afin que l'agent puisse écrire le message de suivi et joindre le média fini lui-même. Les événements d'achèvement de média généré nécessitent une livraison par outil de message : l'agent doit envoyer le média fini avec l'outil `message`, puis répondre `NO_REPLY`. Si la session demanderesse n'est plus active et que l'agent d'achèvement manque une partie ou la totalité des médias générés, OpenClaw envoie un repli direct idempotent avec uniquement les médias manquants vers la cible du channel d'origine.
 
   </Accordion>
   <Accordion title="Concurrent media-generation guardrail">
@@ -227,24 +227,24 @@ openclaw tasks notify <lookup> state_changes
     openclaw tasks maintenance --apply [--json]
     ```
 
-    Utilisez ceci pour prévisualiser ou appliquer la réconciliation, le marquage de nettoyage et l'élagage pour les tâches, l'état du flux de tâches (Task Flow) et les lignes obsolètes du registre de sessions d'exécution cron.
+    Utilisez ceci pour prévisualiser ou appliquer la réconciliation, le marquage du nettoyage et l'élagage pour les tâches, l'état du flux de tâches (Task Flow) et les lignes obsolètes du registre de session d'exécution cron.
 
-    La réconciliation est consciente du runtime :
+    La réconciliation est consciente de l'exécution (runtime-aware) :
 
     - Les tâches ACP/sous-agent vérifient leur session enfant sous-jacente.
-    - Les tâches de sous-agent dont la session enfant possède une pierre tombale de redémarrage-récupération (restart-recovery tombstone) sont marquées comme perdues au lieu d'être traitées comme des sessions sous-jacentes récupérables.
-    - Les tâches cron vérifient si le runtime cron possède toujours le travail, puis récupèrent le statut terminal à partir des journaux d'exécution cron persistés/de l'état du travail avant de revenir à `lost`. Seul le processus GatewayCLI fait autorité pour l'ensemble des travaux cron actifs en mémoire ; l'audit CLI hors ligne utilise l'historique durable mais ne marque pas une tâche cron comme perdue uniquement parce que cet ensemble local est vide.
+    - Les tâches de sous-agent dont la session enfant a une pierre tombale de redémarrage-récupération (restart-recovery tombstone) sont marquées comme perdues au lieu d'être traitées comme des sessions sous-jacentes récupérables.
+    - Les tâches cron vérifient si l'exécution cron possède toujours le travail, puis récupèrent le statut terminal à partir des journaux d'exécution cron persistants/état du travail avant de revenir à `lost`. Seul le processus Gateway fait autorité pour l'ensemble des travaux cron actifs en mémoire ; l'audit CLI hors ligne utilise l'historique durable mais ne marque pas une tâche cron comme perdue uniquement parce que cet ensemble local (Set) est vide.
     - Les tâches CLI avec une identité d'exécution vérifient le contexte d'exécution en direct propriétaire, et pas seulement les lignes de session enfant ou de session de chat.
 
-    Le nettoyage de fin est également conscient du runtime :
+    Le nettoyage de fin est également conscient de l'exécution :
 
     - La fin de sous-agent ferme au mieux (best-effort) les onglets/processus de navigateur suivis pour la session enfant avant que le nettoyage d'annonce ne continue.
-    - La fin cron isolée ferme au mieux les onglets/processus de navigateur suivis pour la session cron avant que l'exécution ne se termine complètement.
-    - La livraison cron isolée attend le suivi du sous-agent descendant lorsque cela est nécessaire et supprime le texte d'accusé de réception parent obsolète au lieu de l'annoncer.
-    - La livraison de fin de sous-agent privilégie le dernier texte d'assistant visible ; si celui-ci est vide, elle revient au dernier texte d'outil/toolResult assaini, et les exécutions d'appel d'outil en timeout uniquement peuvent s'effondrer en un résumé de progrès partiel court. Les exécutions échouées terminales annoncent le statut d'échec sans rejouer le texte de réponse capturé.
+    - La fin de cron isolé ferme au mieux les onglets/processus de navigateur suivis pour la session cron avant que l'exécution ne se termine complètement.
+    - La livraison de cron isolé attend le suivi de sous-agent descendant lorsque cela est nécessaire et supprime le texte de reconnaissance parent obsolète au lieu de l'annoncer.
+    - La livraison de fin de sous-agent utilise uniquement le dernier texte d'assistant visible de l'enfant. La sortie de l'outil/toolResult n'est pas promue dans le texte de résultat de l'enfant. Les exécutions échouées terminales annoncent le statut d'échec sans rejouer le texte de réponse capturé.
     - Les échecs de nettoyage ne masquent pas le résultat réel de la tâche.
 
-    Lors de l'application de la maintenance, OpenClaw supprime également les lignes obsolètes du registre de sessions `cron:<jobId>:run:<uuid>` âgées de plus de 7 jours, tout en préservant les lignes pour les travaux cron en cours d'exécution et en laissant intactes les lignes de session non cron.
+    Lors de l'application de la maintenance, OpenClaw supprime également les lignes obsolètes du registre de session `cron:<jobId>:run:<uuid>` âgées de plus de 7 jours, tout en préservant les lignes pour les travaux cron en cours d'exécution et en laissant les lignes de session non cron intactes.
 
   </Accordion>
   <Accordion title="tasks flow list | show | cancel">

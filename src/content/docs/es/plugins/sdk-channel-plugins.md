@@ -102,14 +102,14 @@ enganche canónico para mapear `rawId` al id de conversación base, id de hilo o
 Cuando devuelvas `parentConversationCandidates`, mantenlos ordenados del
 padre más estrecho al más amplio/conversación base.
 
-Usa `openclaw/plugin-sdk/channel-route` cuando el código del complemento necesite normalizar
+Use `openclaw/plugin-sdk/channel-route` cuando el código del complemento necesita normalizar
 campos tipo ruta, comparar un hilo secundario con su ruta principal, o construir una
-clave de deduplicación estable desde `{ channel, to, accountId, threadId }`. El asistente
-normaliza los ids de hilos numéricos de la misma manera que lo hace el núcleo, por lo que los complementos deben preferirlo
-sobre las comparaciones `String(threadId)` ad hoc.
-Los complementos con gramática de destino específica del proveedor pueden inyectar su analizador en
-`resolveChannelRouteTargetWithParser(...)` y aún así obtener la misma forma de destino de ruta
-y semánticas de reserva de hilo que usa el núcleo.
+clave de deduplicación estable a partir de `{ channel, to, accountId, threadId }`. El asistente
+normaliza los identificadores numéricos de hilo de la misma manera que lo hace el núcleo, por lo que los complementos deben preferirlo
+sobre comparaciones `String(threadId)` ad hoc.
+Los complementos con gramática de destino específica del proveedor deben exponer
+`messaging.resolveOutboundSessionRoute(...)` para que el núcleo obtenga la identidad de
+sesión e hilo nativa del proveedor sin usar shims del analizador.
 
 Los complementos agrupados que necesitan el mismo análisis antes de que se inicie el registro del canal
 también pueden exponer un archivo `session-key-api.ts` de nivel superior con una exportación
@@ -222,7 +222,7 @@ Para otras rutas frecuentes del canal, prefiera los asistentes estrechos sobre l
 - `openclaw/plugin-sdk/inbound-envelope` y
   `openclaw/plugin-sdk/inbound-reply-dispatch` para el cableado de ruta/sobre entrante
   y registro y despacho
-- `openclaw/plugin-sdk/messaging-targets` para el análisis/ coincidencia de objetivos
+- `openclaw/plugin-sdk/channel-targets` para asistentes de análisis de destino
 - `openclaw/plugin-sdk/outbound-media` y
   `openclaw/plugin-sdk/outbound-runtime` para la carga de medios, además de los delegados
   de identidad/envío saliente y la planificación de carga útil

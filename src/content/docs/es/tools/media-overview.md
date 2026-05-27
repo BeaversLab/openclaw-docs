@@ -80,13 +80,14 @@ El habla en vivo utiliza el contrato de sesión Talk en lugar de la ruta de la h
 | Vídeo                     | Asíncrono | El procesamiento del proveedor tarda de 30 s a varios minutos; las colas lentas pueden durar hasta el tiempo de espera configurado.            |
 | Música                    | Asíncrono | La misma característica de procesamiento del proveedor que el vídeo.                                                                           |
 
-Para herramientas asíncronas, OpenClaw envía la solicitud al proveedor, devuelve un ID de
-tarea inmediatamente y rastrea el trabajo en el registro de tareas. El agente continúa
+Para herramientas asíncronas, OpenClaw envía la solicitud al proveedor, devuelve un
+identificador de tarea inmediatamente y rastrea el trabajo en el registro de tareas. El agente continúa
 respondiendo a otros mensajes mientras se ejecuta el trabajo. Cuando el proveedor termina,
 OpenClaw despierta al agente con las rutas de los medios generados para que pueda informar al
-usuario y retransmitir el resultado a través de la herramienta de mensaje. OpenClaw trata la falta de
-evidencia de entrega de la herramienta de mensaje como un intento de finalización fallido y no
-publica automáticamente los medios generados como alternativa.
+usuario y retransmitir el resultado a través de la herramienta de mensajes. Si la sesión solicitante
+está inactiva y faltan algunos medios generados de la entrega de la herramienta de
+mensajes, OpenClaw envía una alternativa directa idempotente solo con los medios
+que faltan. Los medios ya entregados a través de la herramienta de mensajes no se publican de nuevo.
 
 ## Conversión de voz a texto y llamada de voz
 

@@ -7,7 +7,7 @@ read_when:
 title: "Bridge 协议"
 ---
 
-<Warning>TCP 桥接已被 **移除**。当前的 OpenClaw 构建版本不包含桥接监听器，并且 OpenClaw`bridge.*`Gateway(网关) 配置键也不再存在于架构中。此页面仅作历史参考保留。请将 [Gateway Protocol](/zh/gateway/protocol) 用于所有节点/操作员客户端。</Warning>
+<Warning>TCP bridge 已被**移除**。当前的 OpenClaw 构建版本不附带 bridge listener，并且 OpenClaw`bridge.*`Gateway(网关) 配置键也不再存在于 schema 中。此页面仅作为历史参考保留。请将 [Gateway Protocol](/zh/gateway/protocol) 用于所有节点/操作员客户端。</Warning>
 
 ## 存在原因
 
@@ -52,30 +52,34 @@ Gateway → 客户端：
 
 ## Exec 生命周期事件
 
-节点可以发出 `exec.finished` 或 `exec.denied` 事件来展示 system.run 活动。
-这些事件被映射到网关中的系统事件。（旧节点可能仍会发出 `exec.started`。）
+节点可以发出 `exec.finished` 事件来展示已完成的 `system.run` 活动。
+这些被映射到 gateway 中的系统事件。（旧版节点可能仍会发出 `exec.started`。）
+节点可能会针对被拒绝的 `system.run` 尝试发出 `exec.denied`；gateway 接受
+该事件作为最终拒绝，并且不会将系统事件排队或唤醒代理工作。
 
 有效载荷字段（除非另有说明，否则均为可选）：
 
-- `sessionKey`（必需）：用于接收系统事件的代理会话。
+- `sessionKey`（必填）：用于事件关联的代理会话，以及对于
+  `exec.finished`，用于系统事件传递。
 - `runId`：用于分组的唯一 exec id。
 - `command`：原始或格式化的命令字符串。
 - `exitCode`, `timedOut`, `success`, `output`：完成详情（仅限已完成）。
-- `reason`：拒绝原因（仅限已拒绝）。
+- `reason`：拒绝原因（仅限被拒绝）。
 
 ## 历史 tailnet 用法
 
-- 将桥接绑定到 tailnet IP：`bridge.bind: "tailnet"` 在
-  `~/.openclaw/openclaw.json` 中（仅限历史记录；`bridge.*` 不再有效）。
+- 将 bridge 绑定到 tailnet IP：`bridge.bind: "tailnet"` 于
+  `~/.openclaw/openclaw.json` 中（仅限历史用途；`bridge.*` 不再有效）。
 - 客户端通过 MagicDNS 名称或 tailnet IP 进行连接。
 - Bonjour **不**跨越网络；必要时请使用手动主机/端口或广域 DNS-SD。
 
 ## 版本控制
 
-桥接是**隐式 v1**（无最小/最大协商）。本节仅供参考；当前的节点/操作员客户端使用 WebSocket
-[Gateway(网关) 协议](<Gateway(网关)/en/gateway/protocol>)。
+该 bridge 是**隐式 v1**（无最小/最大协商）。本节仅
+作为历史参考；当前的节点/操作员客户端使用 WebSocket
+[Gateway Protocol](<Gateway(网关)/en/gateway/protocol>)。
 
 ## 相关
 
-- [Gateway(网关) 协议](<Gateway(网关)/en/gateway/protocol>)
-- [节点](/zh/nodes)
+- [Gateway protocol](<Gateway(网关)/en/gateway/protocol>)
+- [Nodes](/zh/nodes)

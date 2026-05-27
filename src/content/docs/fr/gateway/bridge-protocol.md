@@ -7,7 +7,7 @@ read_when:
 title: "Protocole de pont"
 ---
 
-<Warning>Le pont TCP a été **supprimé**. Les versions actuelles d'OpenClaw n'incluent plus l'écouteur du pont et les clés de configuration OpenClaw`bridge.*`Gateway ne sont plus dans le schéma. Cette page est conservée à titre historique uniquement. Utilisez le [Protocole Gateway](/fr/gateway/protocol) pour tous les clients nœuds/opérateurs.</Warning>
+<Warning>Le pont TCP a été **supprimé**. Les versions actuelles d'OpenClaw n'incluent plus l'écouteur du pont et les clés de configuration OpenClaw`bridge.*`Gateway ne figurent plus dans le schéma. Cette page est conservée uniquement à des fins historiques. Utilisez le [Protocole Gateway](/fr/gateway/protocol) pour tous les clients nœuds/opérateurs.</Warning>
 
 ## Pourquoi il existait
 
@@ -61,20 +61,23 @@ L'application héritée de la liste d'autorisation résidait dans `src/gateway/s
 
 ## Événements de cycle de vie de l'exécution
 
-Les nœuds peuvent émettre des événements `exec.finished` ou `exec.denied` pour exposer l'activité system.run.
-Ceux-ci sont mappés aux événements système dans la passerelle. (Les nœuds hérités peuvent encore émettre `exec.started`.)
+Les nœuds peuvent émettre des événements `exec.finished` pour signaler l'activité `system.run` terminée.
+Ces événements sont mappés à des événements système dans la passerelle. (Les nœuds hérités peuvent encore émettre `exec.started`.)
+Les nœuds peuvent émettre `exec.denied` pour les tentatives `system.run` refusées ; la passerelle accepte
+l'événement comme un refus définitif et ne met pas en file d'attente un événement système ni ne réveille le travail de l'agent.
 
 Champs de payload (tous optionnels sauf indication contraire) :
 
-- `sessionKey` (requis) : session agent pour recevoir l'événement système.
-- `runId` : id exec unique pour le regroupement.
+- `sessionKey` (requis) : session de l'agent pour la corrélation des événements et, pour
+  `exec.finished`, la livraison des événements système.
+- `runId` : identifiant d'exécution unique pour le regroupement.
 - `command` : chaîne de commande brute ou formatée.
-- `exitCode`, `timedOut`, `success`, `output` : détails de finition (terminé uniquement).
+- `exitCode`, `timedOut`, `success`, `output` : détails de l'achèvement (terminé uniquement).
 - `reason` : motif du refus (refusé uniquement).
 
 ## Utilisation historique du tailnet
 
-- Lier le pont à une IP tailnet : `bridge.bind: "tailnet"` dans
+- Lier le pont à une IP de tailnet : `bridge.bind: "tailnet"` dans
   `~/.openclaw/openclaw.json` (historique uniquement ; `bridge.*` n'est plus valide).
 - Les clients se connectent via le nom MagicDNS ou l'IP du tailnet.
 - Bonjour ne **traverse pas** les réseaux ; utilisez un hôte/port manuel ou un DNS-SD étendu
@@ -82,11 +85,11 @@ Champs de payload (tous optionnels sauf indication contraire) :
 
 ## Versionnage
 
-Le pont était en **v1 implicite** (sans négociation min/max). Cette section est une
-référence historique uniquement ; les clients nœud/opérateur actuels utilisent le WebSocket
-[Gateway Protocol](/fr/gateway/protocol).
+Le pont était en **v1 implicite** (sans négociation min/max). Cette section est
+une référence historique uniquement ; les clients nœuds/opérateurs actuels utilisent le WebSocket
+[Protocole Gateway](Gateway/en/gateway/protocol).
 
 ## Connexes
 
-- [Gateway protocol](/fr/gateway/protocol)
-- [Nodes](/fr/nodes)
+- [Protocole Gateway](Gateway/en/gateway/protocol)
+- [Nœuds](/fr/nodes)

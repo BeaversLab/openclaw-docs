@@ -13,7 +13,7 @@ read_when:
 
 OpenClaw 还包含 `x_search` 用于搜索 X（前 Twitter）帖子，以及 `web_fetch` 用于轻量级 URL 获取。在此阶段，`web_fetch` 保持在本地，而 `web_search` 和 `x_search` 可在底层使用 xAI Responses。
 
-<Info>`web_search` 是一个轻量级 HTTP 工具，不是浏览器自动化工具。对于 重 JS 网站或登录，请使用 [Web Browser](/zh/tools/browser)。对于 获取特定 URL，请使用 [Web Fetch](/zh/tools/web-fetch)。</Info>
+<Info>`web_search` 是一个轻量级 HTTP 工具，而非浏览器自动化工具。对于 重度 JS 的网站或登录操作，请使用 [Web Browser](/zh/tools/browser)。若要 获取特定的 URL，请使用 [Web Fetch](/zh/tools/web-fetch)。</Info>
 
 ## 快速开始
 
@@ -86,36 +86,36 @@ OpenClaw 还包含 `x_search` 用于搜索 X（前 Twitter）帖子，以及 `we
 
 ### 提供商对比
 
-| 提供商                                       | 结果样式                                 | 过滤器                               | API 密钥                                                                   |
-| -------------------------------------------- | ---------------------------------------- | ------------------------------------ | -------------------------------------------------------------------------- |
-| [Brave](/zh/tools/brave-search)              | 结构化片段                               | 国家、语言、时间、`llm-context` 模式 | `BRAVE_API_KEY`                                                            |
-| [DuckDuckGo](/zh/tools/duckduckgo-search)    | 结构化片段                               | --                                   | 无（无密钥）                                                               |
-| [Exa](/zh/tools/exa-search)                  | 结构化 + 已提取                          | 神经/关键词模式、日期、内容提取      | `EXA_API_KEY`                                                              |
-| [Firecrawl](/zh/tools/firecrawl)             | 结构化片段                               | 通过 `firecrawl_search` 工具         | `FIRECRAWL_API_KEY`                                                        |
-| [Gemini](/zh/tools/gemini-search)            | AI 合成 + 引用                           | --                                   | `GEMINI_API_KEY`                                                           |
-| [Grok](/zh/tools/grok-search)                | AI 合成 + 引用                           | --                                   | `XAI_API_KEY`                                                              |
-| [Kimi](/zh/tools/kimi-search)                | AI 综合 + 引用；在无依据的聊天回退时失败 | --                                   | `KIMI_API_KEY` / `MOONSHOT_API_KEY`                                        |
-| [MiniMax Search](/zh/tools/minimax-search)   | 结构化片段                               | 区域 (`global` / `cn`)               | `MINIMAX_CODE_PLAN_KEY` / `MINIMAX_CODING_API_KEY` / `MINIMAX_OAUTH_TOKEN` |
-| [Ollama Web Search](/zh/tools/ollama-search) | 结构化片段                               | --                                   | 已登录本地主机无限制；直接 `https://ollama.com` 搜索需要 `OLLAMA_API_KEY`  |
-| [Perplexity](/zh/tools/perplexity-search)    | 结构化片段                               | 国家、语言、时间、域名、内容限制     | `PERPLEXITY_API_KEY` / `OPENROUTER_API_KEY`                                |
-| [SearXNG](/zh/tools/searxng-search)          | 结构化片段                               | 类别、语言                           | 无（自托管）                                                               |
-| [Tavily](/zh/tools/tavily)                   | 结构化片段                               | 通过 `tavily_search` 工具            | `TAVILY_API_KEY`                                                           |
+| 提供商                                              | 结果样式                                 | 过滤器                               | API 密钥                                                                              |
+| --------------------------------------------------- | ---------------------------------------- | ------------------------------------ | ------------------------------------------------------------------------------------- |
+| [Brave](Brave/en/tools/brave-search)                | 结构化片段                               | 国家、语言、时间、`llm-context` 模式 | `BRAVE_API_KEY`                                                                       |
+| [DuckDuckGo](/zh/tools/duckduckgo-search)           | 结构化片段                               | --                                   | 无（无密钥）                                                                          |
+| [Exa](/zh/tools/exa-search)                         | 结构化 + 已提取                          | 神经/关键词模式、日期、内容提取      | `EXA_API_KEY`                                                                         |
+| [Firecrawl](Firecrawl/en/tools/firecrawl)           | 结构化片段                               | 通过 `firecrawl_search` 工具         | `FIRECRAWL_API_KEY`                                                                   |
+| [Gemini](/zh/tools/gemini-search)                   | AI 合成 + 引用                           | --                                   | `GEMINI_API_KEY`                                                                      |
+| [Grok](/zh/tools/grok-search)                       | AI 合成 + 引用                           | --                                   | xAI OAuth，OAuth`XAI_API_KEY` 或 `plugins.entries.xai.config.webSearch.apiKey`        |
+| [Kimi](/zh/tools/kimi-search)                       | AI 综合 + 引用；在无依据的聊天回退时失败 | --                                   | `KIMI_API_KEY` / `MOONSHOT_API_KEY`                                                   |
+| [MiniMax Search](MiniMax/en/tools/minimax-search)   | 结构化片段                               | 区域 (`global` / `cn`)               | `MINIMAX_CODE_PLAN_KEY` / `MINIMAX_CODING_API_KEY` / `MINIMAX_OAUTH_TOKEN`            |
+| [Ollama Web Search](Ollama/en/tools/ollama-search)  | 结构化片段                               | --                                   | 对于已登录的本地主机无需设置；对于直接 `https://ollama.com` 搜索需要 `OLLAMA_API_KEY` |
+| [Perplexity](Perplexity/en/tools/perplexity-search) | 结构化片段                               | 国家、语言、时间、域名、内容限制     | `PERPLEXITY_API_KEY` / `OPENROUTER_API_KEY`                                           |
+| [SearXNG](/zh/tools/searxng-search)                 | 结构化片段                               | 类别、语言                           | 无（自托管）                                                                          |
+| [Tavily](/zh/tools/tavily)                          | 结构化片段                               | 通过 `tavily_search` 工具            | `TAVILY_API_KEY`                                                                      |
 
 ## 自动检测
 
 ## 原生 OpenAI 网络搜索
 
-当启用 OpenClaw 网络搜索且未锁定受管提供商时，Direct OpenAI Responses 模型会自动使用 OpenAI 托管的 OpenAIOpenAI`web_search`OpenClawOpenAIOpenAIAPIOpenAI 工具。这是捆绑的 OpenAI 插件中属于提供商的行为，仅适用于原生 OpenAI API 流量，不适用于 OpenAI 兼容的代理基础 URL 或 Azure 路由。将 `tools.web.search.provider` 设置为其他提供商（例如 `brave`）以为 OpenAI 模型保留受管 `web_search`OpenAI 工具，或者设置 `tools.web.search.enabled: false`OpenAI 以同时禁用受管搜索和原生 OpenAI 搜索。
+当启用 OpenClaw 网络搜索且未固定托管提供商时，Direct OpenAI Responses 模型会自动使用 OpenAI 托管的 OpenAIOpenAI`web_search`OpenClawOpenAIOpenAIAPIOpenAI 工具。这是捆绑 OpenAI 插件中提供商拥有的行为，仅适用于原生 OpenAI API 流量，不适用于 OpenAI 兼容的代理基础 URL 或 Azure 路由。将 `tools.web.search.provider` 设置为其他提供商（例如 `brave`）以为 OpenAI 模型保留托管的 `web_search`OpenAI 工具，或者设置 `tools.web.search.enabled: false`OpenAI 以同时禁用托管搜索和原生 OpenAI 搜索。
 
 ## 原生 Codex 网络搜索
 
-具备 Codex 功能的模型可以选择使用提供商原生的 Responses `web_search`OpenClaw 工具，而不是 OpenClaw 的受管 `web_search` 函数。
+支持 Codex 的模型可以选择使用提供商原生的 Responses `web_search`OpenClaw 工具，而不是 OpenClaw 托管的 `web_search` 函数。
 
 - 在 `tools.web.search.openaiCodex` 下进行配置
-- 它仅对具备 Codex 功能的模型激活（`openai-codex/*` 或使用 `api: "openai-codex-responses"` 的提供商）
-- 受管 `web_search` 仍适用于非 Codex 模型
-- `mode: "cached"` 是默认设置也是推荐设置
-- `tools.web.search.enabled: false` 会同时禁用受管搜索和原生搜索
+- 它仅针对支持 Codex 的模型激活（`openai-codex/*` 或使用 `api: "openai-codex-responses"` 的提供商）
+- 托管的 `web_search` 仍适用于非 Codex 模型
+- `mode: "cached"` 是默认且推荐的设置
+- `tools.web.search.enabled: false` 禁用托管搜索和原生搜索
 
 ```json5
 {
@@ -140,17 +140,15 @@ OpenClaw 还包含 `x_search` 用于搜索 X（前 Twitter）帖子，以及 `we
 }
 ```
 
-如果启用了原生 Codex 搜索，但当前模型不具备 Codex 功能，OpenClaw 将保持正常的受管 OpenClaw`web_search` 行为。
+如果启用了原生 Codex 搜索但当前模型不支持 Codex，OpenClaw 将保持正常的托管 OpenClaw`web_search` 行为。
 
 ## 网络安全
 
-受管 `web_search`OpenClawAPIOpenClaw 提供商调用使用 OpenClaw 的防护获取路径。对于
-受信任的提供商 API 主机，OpenClaw 仅允许针对该提供商主机名在 `198.18.0.0/15` 和 `fc00::/7` 中使用 Surge、Clash 和 sing-box 的假 IP DNS 应答。
-其他私有、环回、链路本地和元数据目标仍然被阻止。
+托管的 `web_search`OpenClawAPIOpenClaw 提供商调用使用 OpenClaw 的受保护提取路径。对于受信任的提供商 API 主机，OpenClaw 仅针对该提供商主机名允许在 `198.18.0.0/15` 和 `fc00::/7` 中使用 Surge、Clash 和 sing-box 的虚假 IP DNS 应答。其他私有、环回、链路本地和元数据目的地仍然被阻止。
 
-这种自动许可不适用于任意的 `web_fetch` URL。对于
-`web_fetch`，仅当您的
-受信任代理拥有这些合成范围时，才明确启用 `tools.web.fetch.ssrfPolicy.allowRfc2544BenchmarkRange` 和
+此自动允许不适用于任意的 `web_fetch` URL。对于
+`web_fetch`，请仅在您的
+可信代理拥有这些合成范围时明确启用 `tools.web.fetch.ssrfPolicy.allowRfc2544BenchmarkRange` 和
 `tools.web.fetch.ssrfPolicy.allowIpv6UniqueLocalRange`。
 
 ## 设置网络搜索
@@ -158,31 +156,37 @@ OpenClaw 还包含 `x_search` 用于搜索 X（前 Twitter）帖子，以及 `we
 文档和设置流程中的提供商列表按字母顺序排列。自动检测保持
 单独的优先顺序。
 
-如果未设置 `provider`OpenClaw，OpenClaw 将按以下顺序检查提供商并使用
+如果未设置 `provider`OpenClaw，OpenClaw 将按此顺序检查提供商并使用
 第一个准备就绪的提供商：
 
 首先是支持 API 的提供商：
 
-1. **Brave** -- Brave`BRAVE_API_KEY` 或 `plugins.entries.brave.config.webSearch.apiKey`（顺序 10）
-2. **MiniMax Search** -- MiniMax`MINIMAX_CODE_PLAN_KEY` / `MINIMAX_CODING_API_KEY` / `MINIMAX_OAUTH_TOKEN` / `MINIMAX_API_KEY` 或 `plugins.entries.minimax.config.webSearch.apiKey`（顺序 15）
-3. **Gemini** -- `plugins.entries.google.config.webSearch.apiKey`、`GEMINI_API_KEY` 或 `models.providers.google.apiKey`（顺序 20）
-4. **Grok** -- `XAI_API_KEY` 或 `plugins.entries.xai.config.webSearch.apiKey`（顺序 30）
-5. **Kimi** -- `KIMI_API_KEY` / `MOONSHOT_API_KEY` 或 `plugins.entries.moonshot.config.webSearch.apiKey`（顺序 40）
-6. **Perplexity** -- Perplexity`PERPLEXITY_API_KEY` / `OPENROUTER_API_KEY` 或 `plugins.entries.perplexity.config.webSearch.apiKey`（顺序 50）
-7. **Firecrawl** -- Firecrawl`FIRECRAWL_API_KEY` 或 `plugins.entries.firecrawl.config.webSearch.apiKey`（顺序 60）
-8. **Exa** -- `EXA_API_KEY` 或 `plugins.entries.exa.config.webSearch.apiKey`；可选的 `plugins.entries.exa.config.webSearch.baseUrl` 会覆盖 Exa 端点（顺序 65）
-9. **Tavily** -- `TAVILY_API_KEY` 或 `plugins.entries.tavily.config.webSearch.apiKey`（顺序 70）
+1. **Brave** -- Brave`BRAVE_API_KEY` 或 `plugins.entries.brave.config.webSearch.apiKey` （顺序 10）
+2. **MiniMax Search** -- MiniMax`MINIMAX_CODE_PLAN_KEY` / `MINIMAX_CODING_API_KEY` / `MINIMAX_OAUTH_TOKEN` / `MINIMAX_API_KEY` 或 `plugins.entries.minimax.config.webSearch.apiKey` （顺序 15）
+3. **Gemini** -- `plugins.entries.google.config.webSearch.apiKey`、 `GEMINI_API_KEY` 或 `models.providers.google.apiKey` （顺序 20）
+4. **Grok** -- xAI OAuth、 OAuth`XAI_API_KEY` 或 `plugins.entries.xai.config.webSearch.apiKey` （顺序 30）
+5. **Kimi** -- `KIMI_API_KEY` / `MOONSHOT_API_KEY` 或 `plugins.entries.moonshot.config.webSearch.apiKey` （顺序 40）
+6. **Perplexity** -- Perplexity`PERPLEXITY_API_KEY` / `OPENROUTER_API_KEY` 或 `plugins.entries.perplexity.config.webSearch.apiKey` （顺序 50）
+7. **Firecrawl** -- Firecrawl`FIRECRAWL_API_KEY` 或 `plugins.entries.firecrawl.config.webSearch.apiKey` （顺序 60）
+8. **Exa** -- `EXA_API_KEY` 或 `plugins.entries.exa.config.webSearch.apiKey`；可选的 `plugins.entries.exa.config.webSearch.baseUrl` 会覆盖 Exa 端点 （顺序 65）
+9. **Tavily** -- `TAVILY_API_KEY` 或 `plugins.entries.tavily.config.webSearch.apiKey` （顺序 70）
 
 之后是无密钥的后备方案：
 
 10. **DuckDuckGo** -- 无需账户或 API 密钥的无密钥 HTML 后备方案（顺序 100）
-11. **Ollama Web Search** -- 当配置的本地 Ollama 主机可达并使用 OllamaOllama`ollama signin`Ollama 登录时，无需密钥的回退选项；当主机需要时，可以重用 Ollama 提供商的 bearer auth，并且在配置了 `OLLAMA_API_KEY` 时可以调用直接的 `https://ollama.com` 搜索（顺序 110）
-12. **SearXNG** -- `SEARXNG_BASE_URL` 或 `plugins.entries.searxng.config.webSearch.baseUrl`（顺序 200）
+11. **Ollama Web Search** -- 通过您配置的本地 Ollama 主机进行的免密钥回退，当其可达且使用 OllamaOllama`ollama signin`Ollama 登录时；当主机需要时，可以重用 Ollama 提供商的 bearer auth，并且当使用 `OLLAMA_API_KEY` 配置时，可以调用直接的 `https://ollama.com` 搜索 （顺序 110）
+12. **SearXNG** -- `SEARXNG_BASE_URL` 或 `plugins.entries.searxng.config.webSearch.baseUrl` （顺序 200）
 
 如果未检测到提供商，它将回退到 Brave（您将收到缺失密钥错误，提示您配置一个）。
 
 <Note>
-  所有提供商密钥字段均支持 SecretRef 对象。对于捆绑的 API 支持的 Web 搜索提供商（包括 Brave、Exa、Firecrawl、Gemini、Grok、Kimi、MiniMax、Perplexity 和 Tavily），无论提供商是通过 `tools.web.search.provider`API 显式选择还是通过自动检测选中，`plugins.entries.<plugin>.config.webSearch.apiKey`BraveFirecrawlMiniMaxPerplexityOpenClaw 下的插件作用域 SecretRefs 都会被解析。在自动检测模式下，OpenClaw 仅解析选定的提供商密钥——未选定的 SecretRefs 保持非活动状态，因此您可以配置多个提供商，而无需为您未使用的提供商支付解析成本。
+  所有提供商密钥字段均支持 SecretRef 对象。位于 `plugins.entries.<plugin>.config.webSearch.apiKey` 下的插件作用域 SecretRefs
+  会针对内置的 API 支持的网络搜索提供商进行解析，包括 Brave、Exa、Firecrawl、
+  Gemini、Grok、Kimi、MiniMax、Perplexity 和 Tavily，
+  无论提供商是通过 `tools.web.search.provider`OpenClaw 显式选择还是
+  通过自动检测选中。在自动检测模式下，OpenClaw 仅解析
+  选定的提供商密钥——未选定的 SecretRefs 保持非活动状态，因此您可以
+  配置多个提供商，而无需为未使用的提供商支付解析成本。
 </Note>
 
 ## 配置
@@ -204,30 +208,44 @@ OpenClaw 还包含 `x_search` 用于搜索 X（前 Twitter）帖子，以及 `we
 ```
 
 特定于提供商的配置（API 密钥、基础 URL、模式）位于
-API`plugins.entries.<plugin>.config.webSearch.*` 下。Gemini 还可以重用
-`models.providers.google.apiKey` 和 `models.providers.google.baseUrl` 作为其专用 Web 搜索配置和 `GEMINI_API_KEY` 之后的较低优先级
-回退选项。请参阅提供商页面以获取示例。
+`plugins.entries.<plugin>.config.webSearch.*` 之下。Gemini 还可以重用
+`models.providers.google.apiKey` 和 `models.providers.google.baseUrl` 作为其专用网络搜索配置和 `GEMINI_API_KEY` 之后的低优先级
+备用。请参阅
+提供商页面以获取示例。
+Grok 还可以重用来自 `openclaw models auth login
+--提供商 xai --method oauth` 的 xAI OAuth 身份验证配置文件；API 密钥配置仍作为备用。
 
-`tools.web.search.provider` 会根据内置和已安装插件清单中声明的网络搜索提供商 ID 进行验证。拼写错误（例如 `"brvae"`）会导致配置验证失败，而不是静默回退到自动检测。如果配置的提供商只有过时的插件证据，例如卸载第三方插件后残留的 `plugins.entries.<plugin>` 块，OpenClaw 会保持启动的弹性并报告警告，以便您重新安装插件或运行 `openclaw doctor --fix` 来清理过时的配置。
+`tools.web.search.provider` 会根据内置和已安装插件清单声明的网络搜索提供商 ID
+进行验证。诸如 `"brvae"` 之类的拼写错误
+将导致配置验证失败，而不是静默回退到自动检测。如果
+配置的提供商仅有过时的插件证据，例如卸载第三方插件后
+遗留的 `plugins.entries.<plugin>`OpenClaw 块，
+OpenClaw 将保持启动弹性并报告警告，以便您可以重新安装
+插件或运行 `openclaw doctor --fix` 来清理过时的配置。
 
-`web_fetch` 回退提供商的选择是独立的：
+`web_fetch` 备用提供商的选择是独立的：
 
 - 通过 `tools.web.fetch.provider` 进行选择
 - 或者省略该字段，让 OpenClaw 从可用的凭据中自动检测第一个就绪的网络获取提供商
-- 非沙箱隔离的 `web_fetch` 可以使用声明了 `contracts.webFetchProviders` 的已安装插件提供商；沙箱隔离的获取操作则仅限于内置功能
-- 目前内置的网络获取提供商是 Firecrawl，配置在 `plugins.entries.firecrawl.config.webFetch.*` 下
+- 非沙箱隔离的 `web_fetch` 可以使用声明了
+  `contracts.webFetchProviders` 的已安装插件提供商；沙箱隔离的获取保持仅限内置
+- 目前捆绑的 web-fetch 提供商是 Firecrawl，配置于
+  `plugins.entries.firecrawl.config.webFetch.*`
 
-当您在 `openclaw onboard` 或 `openclaw configure --section web` 期间选择 **Kimi** 时，OpenClaw 还可以询问：
+当您在 `openclaw onboard` 或
+`openclaw configure --section web` 期间选择 **Kimi** 时，OpenClaw 也可以请求：
 
-- Moonshot API API 区域（`https://api.moonshot.ai/v1` 或 `https://api.moonshot.cn/v1`）
-- 默认的 Kimi 网络搜索模型（默认为 `kimi-k2.6`）
+- Moonshot API 区域 (`https://api.moonshot.ai/v1` 或 `https://api.moonshot.cn/v1`)
+- 默认的 Kimi web-search 模型（默认为 `kimi-k2.6`）
 
-对于 `x_search`，请配置 `plugins.entries.xai.config.xSearch.*`。它使用与聊天相同的 xAI 身份验证配置文件，或 Grok 网络搜索使用的 `XAI_API_KEY` / 插件网络搜索凭据。
+对于 `x_search`，请配置 `plugins.entries.xai.config.xSearch.*`。它使用与聊天相同的
+xAI 身份验证配置文件，或者 Grok web search 使用的 `XAI_API_KEY` / 插件 web-search
+凭据。
 旧的 `tools.web.x_search.*` 配置会由 `openclaw doctor --fix` 自动迁移。
-当您在 `openclaw onboard` 或 `openclaw configure --section web`OpenClaw 期间选择 Grok 时，
-OpenClaw 还可以使用相同的密钥提供可选的 `x_search`OpenClaw 设置。
-这是 Grok 路径中的一个独立后续步骤，而不是一个单独的顶级
-网络搜索提供商选择。如果您选择其他提供商，OpenClaw 将不会
+当您在 `openclaw onboard` 或 `openclaw configure --section web` 期间选择 Grok 时，
+OpenClaw 也可以提供使用相同凭据的可选 `x_search` 设置。
+这是 Grok 路径中的一个单独后续步骤，而不是一个单独的顶级
+web-search 提供商选择。如果您选择了其他提供商，OpenClaw 将不会
 显示 `x_search` 提示。
 
 ### 存储 API 密钥
@@ -253,7 +271,7 @@ OpenClaw 还可以使用相同的密钥提供可选的 `x_search`OpenClaw 设置
     ```
 
   </Tab>
-  <Tab title="Environment variable"Gateway(网关)>
+  <Tab title="Environment variable">
     在 Gateway(网关) 进程环境中设置提供商环境变量：
 
     ```bash
@@ -284,18 +302,18 @@ OpenClaw 还可以使用相同的密钥提供可选的 `x_search`OpenClaw 设置
 | `max_tokens_per_page` | 每页 token 限制，默认为 2048（仅限 Perplexity） |
 
 <Warning>
-  并非所有参数都适用于所有提供商。Brave 的 `llm-context` 模式 会拒绝 `ui_lang`；`date_before` 还需要 `date_after`，因为 Brave 的自定义 新鲜度范围需要开始日期和结束日期。 Gemini、Grok 和 Kimi 返回一个带有引用的合成答案。它们 接受 `count` 以实现共享工具兼容性，但这不会改变 基于事实的答案的形状。Gemini 支持 `freshness`、`date_after` 和 `date_before`，方法是将它们转换为 Google 搜索基于事实的时间范围。
-  当您使用 Sonar/Perplexity 兼容性路径（`plugins.entries.perplexity.config.webSearch.baseUrl` / `model` 或 `OPENROUTER_API_KEY`）时，OpenRouter 的行为方式相同。 SearXNG 仅接受受信任的专用网络或环回主机的 `http://`； 公共 SearXNG 端点必须使用 `https://`。 Firecrawl 和 Tavily 仅通过 `web_search` 支持 `query` 和 `count` -- 如需高级选项，请使用它们专用工具。
+  并非所有参数都适用于所有提供商。Brave Brave `llm-context` 模式 会拒绝 `ui_lang`；`date_before` 还需要 `date_after`Brave，因为 Brave 自定义 新鲜度范围需要同时包含开始日期和结束日期。 Gemini、Grok 和 Kimi 会返回一个带引用的综合答案。它们 接受 `count` 以兼容共享工具，但这不会改变 基于事实的答案的形状。Gemma 支持 `freshness`、`date_after` 和 `date_before`，方法是将它们转换为 Google 搜索 grounding
+  时间范围。 当您使用 Sonar/Perplexity 兼容路径（`plugins.entries.perplexity.config.webSearch.baseUrl` / `model` 或 `OPENROUTER_API_KEY`）时，OpenRouter 的行为方式相同。 SearXNG 仅对受信任的专用网络或环回主机接受 `http://`； 公共 SearXNG 端点必须使用 `https://`。 Firecrawl 和 Tavily 仅通过 `web_search` 支持 `query` 和 `count` -- 如需高级选项，请使用它们专用工具。
 </Warning>
 
 ## x_search
 
-`x_search` 使用 xAI 查询 X（前 Twitter）帖子并返回
-带有引用的 AI 合成答案。它接受自然语言查询和
-可选的结构化筛选器。OpenClaw 仅在服务于此工具调用的请求上
-启用内置的 xAI `x_search` 工具。
+`x_search` 使用 xAI 查询 X（前身为 Twitter）帖子并返回
+带引用的 AI 综合答案。它接受自然语言查询和
+可选的结构化过滤器。OpenClaw 仅在服务于此工具调用的请求上启用内置的 xAI `x_search`
+工具。
 
-<Note>xAI 文档记载 `x_search` 支持关键词搜索、语义搜索、用户 搜索和主题串抓取。对于转推、回复、书签或浏览量等单条帖子的互动统计，请优先 针对确切的帖子 URL 或状态 ID 进行精确查找。广泛的关键词搜索可能会找到正确的帖子， 但返回的元数据可能不够完整。一个好的做法是：先找到帖子，然后 运行第二个 `x_search` 查询，专门针对该确切的帖子。</Note>
+<Note>xAI 文档指出 `x_search` 支持关键词搜索、语义搜索、用户搜索 和主题串抓取。对于单条帖子的互动数据（如转推、 回复、书签或浏览量），建议针对确切的帖子 URL 或状态 ID 进行定向查找。广泛的关键词搜索可能会找到正确的帖子，但返回的单条帖子元数据 可能不够完整。一个好的模式是：先定位帖子，然后 运行第二条 `x_search` 查询，专注于该确切帖子。</Note>
 
 ### x_search 配置
 
@@ -325,10 +343,10 @@ OpenClaw 还可以使用相同的密钥提供可选的 `x_search`OpenClaw 设置
 }
 ```
 
-当设置了 `plugins.entries.xai.config.xSearch.baseUrl` 时，
-`x_search` 会将帖子发送到 `<baseUrl>/responses`。如果省略了该字段，
+当设置了
+`plugins.entries.xai.config.xSearch.baseUrl` 时，`x_search` 会将帖子发布到 `<baseUrl>/responses`。如果省略了该字段，
 它会回退到 `plugins.entries.xai.config.webSearch.baseUrl`，然后是
-旧的 `tools.web.search.grok.baseUrl`，最后是公共 xAI 端点。
+传统的 `tools.web.search.grok.baseUrl`，最后是公共 xAI 端点。
 
 ### x_search 参数
 
@@ -401,6 +419,6 @@ await web_search({
 ## 相关
 
 - [Web Fetch](/zh/tools/web-fetch) -- 获取 URL 并提取可读内容
-- [Web Browser](/zh/tools/browser) -- 针对重度 JS 网站的完整浏览器自动化
-- [Grok Search](/zh/tools/grok-search) -- Grok 作为 `web_search` 提供商
-- [Ollama Web Search](/zh/tools/ollama-search) -- 通过您的 Ollama 主机进行免密钥网络搜索
+- [Web Browser](/zh/tools/browser) -- 针对重度 JavaScript 网站的完整浏览器自动化
+- [Grok Search](/zh/tools/grok-search) -- 使用 Grok 作为 `web_search` 提供商
+- [Ollama Web Search](Ollama/en/tools/ollama-searchOllama) -- 通过您的 Ollama 主机进行免密钥网络搜索

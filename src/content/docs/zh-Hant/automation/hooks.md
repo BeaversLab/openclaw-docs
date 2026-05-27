@@ -15,6 +15,18 @@ OpenClaw 中有兩種 hook：
 
 Hooks 也可以捆綁在插件內部。`openclaw hooks list` 顯示了獨立的 hooks 和由插件管理的 hooks。
 
+## 選擇正確的表面
+
+OpenClaw 有幾個看起來相似但解決不同問題的擴展表面：
+
+| 如果您想要...                                                                                   | 使用...                             | 原因                                                          |
+| ----------------------------------------------------------------------------------------------- | ----------------------------------- | ------------------------------------------------------------- |
+| 在 `/new` 時儲存快照，記錄 `/reset`，在 `message:sent` 後呼叫外部 API，或新增粗略的操作員自動化 | 內部掛鉤（`HOOK.md`，本頁）         | 基於檔案的掛鉤旨在供操作員管理的副作用和指令/生命週期自動化   |
+| 重寫提示，封鎖工具，取消傳出訊息，或新增有序的中介軟體/政策                                     | 透過 `api.on(...)` 的類型化外掛掛鉤 | 類型化掛鉤具有明確的契約、優先順序、合併規則以及封鎖/取消語意 |
+| 新增僅遙測匯出或可觀測性                                                                        | 診斷事件                            | 可觀測性是一個獨立的事件匯流排，而非政策掛鉤表面              |
+
+當您需要類似小型已安裝整合的自動化時，請使用內部掛鉤。當您需要執行時間生命週期控制時，請使用類型化外掛掛鉤。
+
 ## 快速開始
 
 ```bash
@@ -33,25 +45,25 @@ openclaw hooks info session-memory
 
 ## 事件類型
 
-| 事件                     | 觸發時機                      |
-| ------------------------ | ----------------------------- |
-| `command:new`            | 已發出 `/new` 指令            |
-| `command:reset`          | 已發出 `/reset` 指令          |
-| `command:stop`           | 已發出 `/stop` 指令           |
-| `command`                | 任何指令事件（通用監聽器）    |
-| `session:compact:before` | 壓縮摘要歷史記錄之前          |
-| `session:compact:after`  | 壓縮完成後                    |
-| `session:patch`          | 修改會話屬性時                |
-| `agent:bootstrap`        | 注入工作區引導檔案之前        |
-| `gateway:startup`        | 頻道啟動並載入 hook 後        |
-| `gateway:shutdown`       | 當 Gateway 開始關機時         |
-| `gateway:pre-restart`    | 在預期的 Gateway 重新啟動之前 |
-| `message:received`       | 來自任何頻道的傳入訊息        |
-| `message:transcribed`    | 音訊轉錄完成後                |
-| `message:preprocessed`   | 媒體和連結預處理完成或跳過後  |
-| `message:sent`           | 已送出傳出訊息                |
+| 事件                     | 觸發時機                           |
+| ------------------------ | ---------------------------------- |
+| `command:new`            | `/new` 指令已發出                  |
+| `command:reset`          | `/reset` 指令已發出                |
+| `command:stop`           | `/stop` 指令已發出                 |
+| `command`                | 任何指令事件（一般監聽器）         |
+| `session:compact:before` | 在壓縮摘要歷史記錄之前             |
+| `session:compact:after`  | 在壓縮完成之後                     |
+| `session:patch`          | 當工作階段屬性被修改時             |
+| `agent:bootstrap`        | 在工作區引導檔案注入之前           |
+| `gateway:startup`        | 在頻道啟動並載入掛鉤之後           |
+| `gateway:shutdown`       | 當閘道開始關閉時                   |
+| `gateway:pre-restart`    | 在預期的閘道重新啟動之前           |
+| `message:received`       | 來自任何頻道的傳入訊息             |
+| `message:transcribed`    | 在音訊轉錄完成之後                 |
+| `message:preprocessed`   | 在媒體和連結預處理完成或被跳過之後 |
+| `message:sent`           | 外寄訊息已送達                     |
 
-## 撰寫 Hook
+## 撰寫 Hooks
 
 ### Hook 結構
 
@@ -77,19 +89,19 @@ metadata: { "openclaw": { "emoji": "🔗", "events": ["command:new"], "requires"
 Detailed documentation goes here.
 ```
 
-**Metadata fields** (`metadata.openclaw`):
+**中繼資料欄位** (`metadata.openclaw`)：
 
-| 欄位       | 描述                                             |
+| 欄位       | 說明                                             |
 | ---------- | ------------------------------------------------ |
-| `emoji`    | 用於 CLI 的顯示表情符號                          |
+| `emoji`    | CLI 的顯示用 emoji                               |
 | `events`   | 要監聽的事件陣列                                 |
-| `export`   | 要使用的具名匯出 (預設為 `"default"`)            |
-| `os`       | 所需的平台 (例如 `["darwin", "linux"]`)          |
+| `export`   | 要使用的具名匯出（預設為 `"default"`）           |
+| `os`       | 所需的平台（例如 `["darwin", "linux"]`）         |
 | `requires` | 所需的 `bins`、`anyBins`、`env` 或 `config` 路徑 |
 | `always`   | 繞過資格檢查（布林值）                           |
 | `install`  | 安裝方法                                         |
 
-### 處理程序實作
+### 處理器實作
 
 ```typescript
 const handler = async (event) => {
@@ -100,40 +112,40 @@ const handler = async (event) => {
   console.log(`[my-hook] New command triggered`);
   // Your logic here
 
-  // Optionally send message to user
+  // Optionally send a reply on replyable surfaces
   event.messages.push("Hook executed!");
 };
 
 export default handler;
 ```
 
-每個事件包括：`type`、`action`、`sessionKey`、`timestamp`、`messages`（推送到使用者）以及 `context`（特定事件的資料）。Agent 和工具外掛程式 Hook 上下文也可以包含 `trace`，這是一個唯讀的 W3C 相容診斷追蹤上下文，外掛程式可以將其傳遞到結構化日誌中以進行 OTEL 關聯。
+每個事件包含：`type`、`action`、`sessionKey`、`timestamp`、`messages`（僅在可回覆介面上將回覆推送到此處），以及 `context`（事件特定資料）。Agent 和工具外掛 Hook 語境也可能包含 `trace`，這是一個唯讀的 W3C 相容診斷追蹤語境，外掛可以將其傳遞到結構化日誌中以便進行 OTEL 相關聯。
 
-### 事件上下文重點
+`event.messages` 僅會自動在可回覆的介面上傳遞，例如 `command:*` 和 `message:received`。僅生命週期的事件（如 `agent:bootstrap`、`session:*`、`gateway:*` 或 `message:sent`）沒有回覆頻道，並且會忽略推送的訊息。
 
-**指令事件** (`command:new`, `command:reset`)：`context.sessionEntry`、`context.previousSessionEntry`、`context.commandSource`、`context.workspaceDir`、`context.cfg`。
+### 事件語境重點
 
-**訊息事件** (`message:received`)：`context.from`、`context.content`、`context.channelId`、`context.metadata`（提供者特定的資料，包括 `senderId`、`senderName`、`guildId`）。`context.content` 偏好類指令訊息的非空白指令主體，然後回退到原始入站主體和通用主體；它不包含僅限 Agent 的增強內容，例如執行緒歷史記錄或連結摘要。
+**指令事件** (`command:new`、`command:reset`)：`context.sessionEntry`、`context.previousSessionEntry`、`context.commandSource`、`context.workspaceDir`、`context.cfg`。
 
-**訊息事件** (`message:sent`)：`context.to`、`context.content`、`context.success`、`context.channelId`。
+**訊息事件** (`message:received`): `context.from`, `context.content`, `context.channelId`, `context.metadata` (供應商特定資料，包括 `senderId`, `senderName`, `guildId`)。`context.content` 針對類似指令的訊息優先使用非空白指令主體，然後回退至原始傳入主體和通用主體；它不包含僅限代理程式的擴充內容，例如執行緒歷程或連結摘要。
 
-**訊息事件** (`message:transcribed`)：`context.transcript`、`context.from`、`context.channelId`、`context.mediaPath`。
+**訊息事件** (`message:sent`): `context.to`, `context.content`, `context.success`, `context.channelId`。
 
-**訊息事件** (`message:preprocessed`)：`context.bodyForAgent`（最終增強主體）、`context.from`、`context.channelId`。
+**訊息事件** (`message:transcribed`): `context.transcript`, `context.from`, `context.channelId`, `context.mediaPath`。
 
-**引導事件** (`agent:bootstrap`)：`context.bootstrapFiles` (可變陣列)、`context.agentId`。
+**訊息事件** (`message:preprocessed`): `context.bodyForAgent` (最終擴充主體), `context.from`, `context.channelId`。
 
-**Session patch events** (`session:patch`): `context.sessionEntry`, `context.patch` (僅限變更欄位), `context.cfg`。只有特權用戶端可以觸發 patch 事件。
+**啟動事件** (`agent:bootstrap`): `context.bootstrapFiles` (可變陣列), `context.agentId`。
 
-**Compaction events**: `session:compact:before` 包含 `messageCount`、`tokenCount`。`session:compact:after` 新增 `compactedCount`、`summaryLength`、`tokensBefore`、`tokensAfter`。
+**工作階段修補事件** (`session:patch`): `context.sessionEntry`, `context.patch` (僅限變更欄位), `context.cfg`。只有特權用戶端可以觸發修補事件。
 
-`command:stop` 觀察使用者發出 `/stop`；這是取消/指令
-生命週期，而非代理最終化閘道。需要檢查自然最終答案並要求代理再執行一次的外掛，應改用類型化
-外掛 hook `before_agent_finalize`。請參閱 [Plugin hooks](/zh-Hant/plugins/hooks)。
+**壓縮事件**: `session:compact:before` 包括 `messageCount`, `tokenCount`。`session:compact:after` 新增 `compactedCount`, `summaryLength`, `tokensBefore`, `tokensAfter`。
 
-**Gateway lifecycle events**: `gateway:shutdown` 包含 `reason` 和 `restartExpectedMs`，並在 Gateway 關機開始時觸發。`gateway:pre-restart` 包含相同的語境，但僅在關機是預期重啟的一部分且提供了有限的 `restartExpectedMs` 值時觸發。在關機期間，每個生命週期 hook 的等待都是盡力而為且有界限的，因此如果處理程序停滯，關機仍會繼續。`gateway:shutdown` 的預設等待預算為 5 秒，`gateway:pre-restart` 為 10 秒。
+`command:stop` 觀察使用者發出 `/stop`；這是取消/指令生命週期，而不是代理程式最終化閘道。需要檢查自然最終答案並要求代理程式再通過一次的外掛程式應該改用類型化的外掛程式 Hook `before_agent_finalize`。請參閱 [外掛程式 Hooks](/zh-Hant/plugins/hooks)。
 
-當通道仍可用時，請使用 `gateway:pre-restart` 發送簡短的重啟通知：
+**Gateway 生命週期事件**：`gateway:shutdown` 包含 `reason` 和 `restartExpectedMs`，並在 Gateway 開始關閉時觸發。`gateway:pre-restart` 包含相同的上下文，但僅在關閉是預期重啟的一部分且提供了有限的 `restartExpectedMs` 值時觸發。在關閉期間，每個生命週期 Hook 的等待都是盡力而為且有限的，因此如果處理程序停滯，關閉仍會繼續。`gateway:shutdown` 的預設等待時間為 5 秒，`gateway:pre-restart` 的預設等待時間為 10 秒。
+
+在通道仍可用時，請使用 `gateway:pre-restart` 發送簡短的重啟通知：
 
 ```typescript
 import { execFile } from "node:child_process";
@@ -151,42 +163,42 @@ export default async function handler(event) {
 }
 ```
 
-在 `gateway:shutdown`（或 `gateway:pre-restart`）事件與其餘關閉序列之間，Gateway 還會為程序停止時仍處於活動狀態的每個 Session 觸發一個類型化的 `session_end` 插件 Hook。對於普通的 SIGTERM/SIGINT 停止，該事件的 `reason` 為 `shutdown`，而當關閉作為預期重啟的一部分被排程時，則為 `restart`。此排空是有界的，因此緩慢的 `session_end` 處理程序無法阻止程序退出，並且將跳過已通過 replace / reset / delete / compaction 完成的 Session 以避免重複觸發。
+在 `gateway:shutdown` (或 `gateway:pre-restart`) 事件與其餘關閉順序之間，Gateway 還會針對進程停止時仍處於活動狀態的每個會話，觸發一個類型化的 `session_end` plugin hook。該事件的 `reason` 對於普通的 SIGTERM/SIGINT 停止為 `shutdown`，而當關閉被安排為預期重啟的一部分時則為 `restart`。此排空過程是受限的，因此緩慢的 `session_end` 處理程序無法阻止進程退出，並且將跳過已透過 replace / reset / delete / compaction 完成的會話，以避免重複觸發。
 
 ## Hook 探索
 
-Hooks 是從以下目錄探索的，按覆蓋優先級從低到高的順序排列：
+Hook 按覆蓋優先級從低到高的順序從以下目錄中探索：
 
-1. **內建 Hooks (Bundled hooks)**：隨 OpenClaw 附帶
-2. **插件 Hooks (Plugin hooks)**：捆綁在已安裝插件內的 hooks
-3. **託管 Hooks (Managed hooks)**：`~/.openclaw/hooks/`（用戶安裝，在工作區之間共享）。來自 `hooks.internal.load.extraDirs` 的額外目錄共享此優先級。
-4. **工作區 Hooks (Workspace hooks)**：`<workspace>/hooks/`（每個 Agent，預設停用，直到明確啟用）
+1. **內建 Hook**：隨 OpenClaw 附帶
+2. **外掛 Hook**：打包在已安裝外掛內的 Hook
+3. **受管 Hook**：`~/.openclaw/hooks/` (使用者安裝，在工作區之間共享)。來自 `hooks.internal.load.extraDirs` 的額外目錄共享此優先級。
+4. **工作區 Hook**：`<workspace>/hooks/` (每個代理程式，預設停用，直到明確啟用)
 
-工作區 Hooks 可以添加新的 Hook 名稱，但不能覆蓋具有相同名稱的內建、託管或插件提供的 Hooks。
+工作區 Hook 可以新增新的 Hook 名稱，但無法覆蓋具有相同名稱的內建、受管或外掛提供的 Hook。
 
-Gateway 在啟動時會跳過內部 Hook 探索，直到配置了內部 Hooks。使用 `openclaw hooks enable <name>` 啟用內建或託管 Hook，安裝 Hook 包，或設置 `hooks.internal.enabled=true` 以選擇加入。當您啟用一個命名 Hook 時，Gateway 僅加載該 Hook 的處理程序；`hooks.internal.enabled=true`、額外 Hook 目錄和舊版處理程序則選擇加入廣泛探索。
+Gateway 在啟動時會跳過內部 Hook 探索，直到設定內部 Hooks。使用 `openclaw hooks enable <name>` 啟用捆綁或受管理的 Hook，安裝 Hook 套件，或設定 `hooks.internal.enabled=true` 以加入。當您啟用一個命名的 Hook 時，Gateway 僅載入該 Hook 的處理程式；`hooks.internal.enabled=true`、額外的 Hook 目錄和舊版處理程式則會加入廣泛探索。
 
-### Hook 包
+### Hook 套件
 
-Hook 包是透過 `package.json` 中的 `openclaw.hooks` 匯出 hooks 的 npm 套件。安裝方式如下：
+Hook 套件是透過 `openclaw.hooks` 在 `package.json` 中匯出 hooks 的 npm 套件。使用以下方式安裝：
 
 ```bash
 openclaw plugins install <path-or-spec>
 ```
 
-Npm 規格僅限於註冊表（套件名稱 + 可選的確切版本或發佈標籤）。Git/URL/檔案規格和 semver 範圍將被拒絕。
+Npm 規格僅限於 registry（套件名稱 + 選用的確切版本或 dist-tag）。Git/URL/file 規格和 semver 範圍會被拒絕。
 
-## 內建 Hooks
+## 捆綁的 Hooks
 
-| Hook                  | 事件                                               | 功能                                             |
-| --------------------- | -------------------------------------------------- | ------------------------------------------------ |
-| session-memory        | `command:new`，`command:reset`                     | 將 Session 上下文保存到 `<workspace>/memory/`    |
-| bootstrap-extra-files | `agent:bootstrap`                                  | 從 glob 模式注入額外的引導檔案                   |
-| command-logger        | `command`                                          | 將所有指令記錄到 `~/.openclaw/logs/commands.log` |
-| compaction-notifier   | `session:compact:before`， `session:compact:after` | 當會話壓縮開始/結束時，發送可見的聊天通知        |
-| boot-md               | `gateway:startup`                                  | 當閘道啟動時執行 `BOOT.md`                       |
+| Hook                  | 事件                                              | 用途                                             |
+| --------------------- | ------------------------------------------------- | ------------------------------------------------ |
+| session-memory        | `command:new`, `command:reset`                    | 將會話上下文儲存至 `<workspace>/memory/`         |
+| bootstrap-extra-files | `agent:bootstrap`                                 | 從 glob 模式注入額外的啟動檔案                   |
+| command-logger        | `command`                                         | 將所有指令記錄到 `~/.openclaw/logs/commands.log` |
+| compaction-notifier   | `session:compact:before`, `session:compact:after` | 當會話壓縮開始/結束時發送可見的聊天通知          |
+| boot-md               | `gateway:startup`                                 | 當 Gateway 啟動時執行 `BOOT.md`                  |
 
-啟用任何內建的 hook：
+啟用任何捆綁的 Hook：
 
 ```bash
 openclaw hooks enable <hook-name>
@@ -194,9 +206,9 @@ openclaw hooks enable <hook-name>
 
 <a id="session-memory"></a>
 
-### session-memory 詳情
+### session-memory 詳細資訊
 
-擷取最後 15 個使用者/助理訊息，並使用主機本地日期儲存至 `<workspace>/memory/YYYY-MM-DD-HHMM.md`。記憶體擷取在背景執行，因此 `/new` 和 `/reset` 確認不會因為讀取逐字稿或選用性 slug 產生而延遲。設定 `hooks.internal.entries.session-memory.llmSlug: true` 以使用配置的模型產生描述性的檔案名稱 slug。需要設定 `workspace.dir`。
+擷取最後 15 則使用者/助理訊息，並使用主機本地日期儲存至 `<workspace>/memory/YYYY-MM-DD-HHMM.md`。記憶體捕獲在背景執行，因此 `/new` 和 `/reset` 確認不會因為讀取文字紀錄或選用的 slug 產生而延遲。設定 `hooks.internal.entries.session-memory.llmSlug: true` 以使用設定的模型產生描述性的檔案名稱 slug。需要設定 `workspace.dir`。
 
 <a id="bootstrap-extra-files"></a>
 
@@ -217,7 +229,7 @@ openclaw hooks enable <hook-name>
 }
 ```
 
-路徑會相對於工作區解析。僅會載入可識別的引導基本名稱 (`AGENTS.md`、`SOUL.md`、`TOOLS.md`、`IDENTITY.md`、`USER.md`、`HEARTBEAT.md`、`BOOTSTRAP.md`、`MEMORY.md`)。
+路徑相對於工作區解析。僅載入已識別的引導基本檔名 (`AGENTS.md`, `SOUL.md`, `TOOLS.md`, `IDENTITY.md`, `USER.md`, `HEARTBEAT.md`, `BOOTSTRAP.md`, `MEMORY.md`)。
 
 <a id="command-logger"></a>
 
@@ -229,22 +241,26 @@ openclaw hooks enable <hook-name>
 
 ### compaction-notifier 詳情
 
-當 OpenClaw 開始和結束壓縮會話逐字稿時，將簡短的狀態訊息發送到目前的對話中。這使得在聊天介面上的長回應較不令人困惑，因為使用者可以看到助理正在總結上下文，並且會在壓縮後繼續。
+當 OpenClaw 開始和完成壓縮會話文字記錄時，將簡短的狀態訊息發送到當前對話中。這使得在聊天介面上較長的回合不再令人困惑，因為用戶可以看到助理正在總結上下文，並將在壓縮後繼續。
 
 <a id="boot-md"></a>
 
 ### boot-md 詳情
 
-當閘道啟動時，從目前的工作區執行 `BOOT.md`。
+當閘道啟動時，從活動工作區執行 `BOOT.md`。
 
-## 外掛程式 Hooks
+## 插件 Hooks
 
-外掛程式可以透過 Plugin SDK 註冊類型化的 hooks 以進行更深層的整合：
-攔截工具呼叫、修改提示、控制訊息流等等。
+插件可以通過 Plugin SDK 註冊類型化的 hooks 以實現更深層的整合：攔截工具調用、修改提示、控制訊息流等。
 當您需要 `before_tool_call`、`before_agent_reply`、
-`before_install` 或其他行程內生命週期 hooks 時，請使用外掛程式 hooks。
+`before_install` 或其他進程內生命週期 hooks 時，請使用插件 hooks。
 
-如需完整的外掛程式 hook 參考資料，請參閱 [Plugin hooks](/zh-Hant/plugins/hooks)。
+插件管理的內部 hooks 則不同：它們參與本頁面的
+粗粒度指令/生命週期事件系統，並顯示在 `openclaw hooks list` 中作為
+`plugin:<id>`。使用它們來處理副作用以及與 hook 包的相容性，
+而不是用於有序的中間件或策略閘道。
+
+有關完整的 plugin hook 參考，請參閱 [Plugin hooks](/zh-Hant/plugins/hooks)。
 
 ## 設定
 
@@ -262,7 +278,7 @@ openclaw hooks enable <hook-name>
 }
 ```
 
-個別 hook 的環境變數：
+各 hook 的環境變數：
 
 ```json
 {
@@ -293,7 +309,7 @@ openclaw hooks enable <hook-name>
 }
 ```
 
-<Note>為了向後相容，仍支援舊式的 `hooks.internal.handlers` 陣列設定格式，但新的 hooks 應使用基於探索的系統。</Note>
+<Note>舊版 `hooks.internal.handlers` 陣列設定格式為了向後相容性仍然受支援，但新的 hooks 應使用基於發現的系統。</Note>
 
 ## CLI 參考
 
@@ -312,16 +328,16 @@ openclaw hooks enable <hook-name>
 openclaw hooks disable <hook-name>
 ```
 
-## 最佳實務
+## 最佳實踐
 
-- **保持處理程序的快速。** Hooks 在指令處理期間執行。請使用 `void processInBackground(event)` 以即發即棄 (fire-and-forget) 的方式處理繁重工作。
-- **優雅地處理錯誤。** 將有風險的操作包裝在 try/catch 中；請勿拋出錯誤，以便其他處理程序能夠執行。
-- **提早過濾事件。** 如果事件類型/動作不相關，請立即返回。
-- **使用特定的事件金鑰。** 為了減少開銷，偏好使用 `"events": ["command:new"]` 而非 `"events": ["command"]`。
+- **保持處理程序快速。** Hooks 在指令處理期間執行。使用 `void processInBackground(event)` 以即發即棄 的方式處理繁重工作。
+- **優雅地處理錯誤。** 將有風險的操作包裝在 try/catch 中；不要拋出異常，以便其他處理程式可以執行。
+- **儘早過濾事件。** 如果事件類型/操作不相關，請立即返回。
+- **使用特定的事件鍵。** 為了減少開銷，優先使用 `"events": ["command:new"]` 而非 `"events": ["command"]`。
 
-## 疑難排解
+## 故障排除
 
-### 未探索到 Hook
+### 未發現 Hook
 
 ```bash
 # Verify directory structure
@@ -338,11 +354,11 @@ openclaw hooks list
 openclaw hooks info my-hook
 ```
 
-請檢查是否有遺漏的二進位檔 (PATH)、環境變數、設定值或作業系統相容性問題。
+檢查是否缺少二進位檔案 (PATH)、環境變數、配置值或作業系統相容性。
 
 ### Hook 未執行
 
-1. 驗證 hook 是否已啟用：`openclaw hooks list`
+1. 驗證 Hook 已啟用：`openclaw hooks list`
 2. 重新啟動您的 gateway 程序以重新載入 hooks。
 3. 檢查 gateway 日誌：`./scripts/clawlog.sh | grep hook`
 
@@ -350,5 +366,5 @@ openclaw hooks info my-hook
 
 - [CLI 參考：hooks](/zh-Hant/cli/hooks)
 - [Webhooks](/zh-Hant/automation/cron-jobs#webhooks)
-- [Plugin hooks](/zh-Hant/plugins/hooks) — 行程內外掛程式生命週期 hooks
-- [Configuration](/zh-Hant/gateway/configuration-reference#hooks)
+- [Plugin hooks](/zh-Hant/plugins/hooks) — 程序內插件生命週期 hooks
+- [配置](/zh-Hant/gateway/configuration-reference#hooks)

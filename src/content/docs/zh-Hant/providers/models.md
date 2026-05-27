@@ -31,7 +31,6 @@ OpenClaw 可以使用許多 LLM 提供商。選擇一個，進行身份驗證，
 - [DeepInfra](/zh-Hant/providers/deepinfra)
 - [fal](/zh-Hant/providers/fal)
 - [Fireworks](/zh-Hant/providers/fireworks)
-- [GLM 模型](/zh-Hant/providers/glm)
 - [MiniMax](/zh-Hant/providers/minimax)
 - [Mistral](/zh-Hant/providers/mistral)
 - [Moonshot AI (Kimi + Kimi Coding)](/zh-Hant/providers/moonshot)
@@ -46,19 +45,19 @@ OpenClaw 可以使用許多 LLM 提供商。選擇一個，進行身份驗證，
 - [Vercel AI Gateway](/zh-Hant/providers/vercel-ai-gateway)
 - [Venice (Venice AI)](/zh-Hant/providers/venice)
 - [xAI](/zh-Hant/providers/xai)
-- [Z.AI](/zh-Hant/providers/zai)
+- [Z.AI (GLM)](/zh-Hant/providers/zai)
 
-## 其他提供者變體
+## 其他供應商變體
 
-- `anthropic-vertex` - 安裝 `@openclaw/anthropic-vertex-provider` 以在 Vertex 憑證可用時支援 Google Vertex 上的隱式 Anthropic；無需單獨的入門驗證選項
-- `copilot-proxy` - 本機 VS Code Copilot Proxy 橋接器；使用 `openclaw onboard --auth-choice copilot-proxy`
-- `google-gemini-cli` - 非官方 Gemini CLI OAuth 流程；需要本機安裝 `gemini` (`brew install gemini-cli` 或 `npm install -g @google/gemini-cli`)；預設模型 `google-gemini-cli/gemini-3-flash-preview`；使用 `openclaw onboard --auth-choice google-gemini-cli` 或 `openclaw models auth login --provider google-gemini-cli --set-default`
+- `anthropic-vertex` - 安裝 `@openclaw/anthropic-vertex-provider` 以在 Vertex 憑證可用時提供對 Google Vertex 上 Anthropic 的隱式支援；無需單獨的入門身份驗證選擇
+- `copilot-proxy` - 本地 VS Code Copilot Proxy 橋接器；使用 `openclaw onboard --auth-choice copilot-proxy`
+- `google-gemini-cli` - 非官方 Gemini CLI OAuth 流程；需要安裝本地 `gemini`（`brew install gemini-cli` 或 `npm install -g @google/gemini-cli`）；預設模型 `google-gemini-cli/gemini-3-flash-preview`；使用 `openclaw onboard --auth-choice google-gemini-cli` 或 `openclaw models auth login --provider google-gemini-cli --set-default`
 
-如需完整的提供者目錄（xAI、Groq、Mistral 等）及進階設定，
-請參閱 [模型提供者](/zh-Hant/concepts/model-providers)。
+如需完整的供應商目錄（xAI、Groq、Mistral 等）和進階配置，
+請參閱 [模型供應商](/zh-Hant/concepts/model-providers)。
 
 ## 相關
 
 - [模型選擇](/zh-Hant/concepts/model-providers)
-- [模型容錯](/zh-Hant/concepts/model-failover)
-- [模型 CLI](/zh-Hant/cli/models)
+- [模型故障切換](/zh-Hant/concepts/model-failover)
+- [Models CLI](/zh-Hant/cli/models)

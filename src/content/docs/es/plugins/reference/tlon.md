@@ -16,7 +16,7 @@ Añade la superficie del canal Tlon para enviar y recibir mensajes OpenClaw.
 
 ## Superficie
 
-canales: tlon; contratos: herramientas; habilidades
+canales: tlon; habilidades
 
 ## Documentación relacionada
 

@@ -53,12 +53,7 @@ Le prompt est intentionnellement compact et utilise des sections fixes :
 - **Skills** (lorsqu'elles sont disponibles) : indique au modèle comment charger les instructions de skills à la demande.
 - **OpenClaw Control** : indique au modèle de privilégier l'outil OpenClaw`gateway` pour
   le travail de configuration/redémarrage et d'éviter d'inventer des commandes CLI.
-- **OpenClaw Self-Update** : comment inspecter la configuration en toute sécurité avec
-  OpenClaw`config.schema.lookup`, modifier la configuration avec `config.patch`, remplacer la
-  configuration complète avec `config.apply`, et exécuter `update.run` uniquement sur
-  demande explicite de l'utilisateur. L'outil `gateway` réservé au propriétaire refuse également de
-  réécrire `tools.exec.ask` / `tools.exec.security`, y compris les alias `tools.bash.*`
-  obsolètes qui sont normalisés vers ces chemins d'exécution protégés.
+- **OpenClaw Mise à jour automatique** : comment inspecter la configuration en toute sécurité avec `config.schema.lookup`, appliquer un correctif à la configuration avec `config.patch`, remplacer la configuration complète par `config.apply` et exécuter `update.run` uniquement sur demande explicite de l'utilisateur. L'outil `gateway` orienté agent refuse également de réécrire `tools.exec.ask` / `tools.exec.security`, y compris les alias `tools.bash.*` obsolètes qui sont normalisés vers ces chemins d'exécution protégés.
 - **Workspace** : répertoire de travail (`agents.defaults.workspace`).
 - **Documentation** : chemin local vers la documentation/la source d'OpenClaw et quand les lire.
 - **Workspace Files (injected)** : indique que les fichiers d'amorçage sont inclus ci-dessous.

@@ -47,7 +47,7 @@ openclaw tui --local
 - `openclaw chat` 和 `openclaw terminal` 是 `openclaw tui --local` 的別名。
 - `--local` 不能與 `--url`、`--token` 或 `--password` 結合使用。
 - 本機模式直接使用內建的代理程式執行環境。大多數本機工具可以使用，但僅限 Gateway 的功能無法使用。
-- `openclaw` 和 `openclaw crestodian` 也使用此 TUI shell，並以 Crestodian 作為本機設定和修復聊天後端。
+- 在配置文件中編寫設置後，`openclaw` 和 `openclaw crestodian` 也會使用此 TUI shell，並以 Crestodian 作為本地設置和修復聊天後端。
 
 ## 您看到的畫面
 

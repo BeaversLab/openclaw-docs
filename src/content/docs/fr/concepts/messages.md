@@ -118,7 +118,7 @@ Si une exécution est déjà active, les messages entrants sont dirigés vers l'
 - Le mode par défaut est `steer`, avec un anti-rebond de 500 ms pour les lots de direction Codex et les files d'attente de suivi/collecte.
 - Modes : `steer`, `followup`, `collect` et `interrupt`.
 
-Détails : [File d'attente de commandes](/fr/concepts/queue) et [File d'attente d'orientation](/fr/concepts/queue-steering).
+Détails : [File d'attente de commandes](/fr/concepts/queue) et [File d'attente de pilotage](/fr/concepts/queue-steering).
 
 ## Propriété de l'exécution du canal
 
@@ -138,7 +138,7 @@ Paramètres clés :
 - `agents.defaults.humanDelay` (pause de type humain entre les réponses par bloc)
 - Remplacements de channel : `*.blockStreaming` et `*.blockStreamingCoalesce` (les canaux non-Telegram nécessitent un `*.blockStreaming: true` explicite)
 
-Détails : [Streaming + chunking](/fr/concepts/streaming).
+Détails : [Streaming + découpage](/fr/concepts/streaming).
 
 ## Visibilité du raisonnement et jetons
 
@@ -148,7 +148,7 @@ OpenClaw peut exposer ou masquer le raisonnement du model :
 - Le contenu du raisonnement compte toujours dans l'utilisation des jetons lorsqu'il est produit par le model.
 - Telegram prend en charge le flux de raisonnement dans une bulle de brouillon éphémère qui est supprimée après la livraison finale ; utilisez `/reasoning on` pour une sortie de raisonnement persistante.
 
-Détails : [Thinking + reasoning directives](/fr/tools/thinking) et [Token use](/fr/reference/token-use).
+Détails : [Directives de réflexion + raisonnement](/fr/tools/thinking) et [Utilisation des jetons](/fr/reference/token-use).
 
 ## Préfixes, fils de discussion et réponses
 
@@ -157,7 +157,7 @@ Le formatage des messages sortants est centralisé dans `messages` :
 - `messages.responsePrefix`, `channels.<channel>.responsePrefix` et `channels.<channel>.accounts.<id>.responsePrefix` (cascade de préfixes sortants), plus `channels.whatsapp.messagePrefix` (préfixe entrant WhatsApp)
 - Fil de discussion des réponses via `replyToMode` et les valeurs par défaut par channel
 
-Détails : [Configuration](/fr/gateway/config-agents#messages) et la documentation des canaux.
+Détails : [Configuration](/fr/gateway/config-agents#messages) et la documentation des channels.
 
 ## Réponses silencieuses
 
@@ -170,16 +170,20 @@ OpenClaw résout ce comportement par type de conversation :
 - Les groupes/canaux autorisent le silence par défaut uniquement pour les réponses automatiques de groupe. Dans le mode `message_tool` visible-reply, le silence signifie que le modèle n'appelle pas `message(action=send)`.
 - L'orchestration interne autorise le silence par défaut.
 
-OpenClaw utilise également des réponses silencieuses pour les échecs internes du runner qui se produisent avant toute réponse de l'assistant dans les chats non directs, afin que les groupes/canaux ne voient pas le texte standard d'erreur de passerelle. Les chats directs affichent par défaut un message d'échec compact ; les détails bruts du runner ne sont affichés que lorsque `/verbose` est `on` ou `full`.
+OpenClaw utilise également des réponses silencieuses pour les échecs internes du runner qui surviennent
+avant toute réponse de l'assistant dans les conversations non directes, afin que les groupes/channels ne voient
+pas le texte générique d'erreur de passerelle. Les conversations directes affichent par défaut un message d'échec compact ;
+les détails bruts du runner ne sont affichés que lorsque `/verbose full` est activé.
 
-Les valeurs par défaut se trouvent sous `agents.defaults.silentReply` ; `surfaces.<id>.silentReply` peut remplacer la stratégie de groupe/interne par surface.
+Les valeurs par défaut se trouvent sous `agents.defaults.silentReply` ; `surfaces.<id>.silentReply`
+peut remplacer la stratégie de groupe/interne par surface.
 
 Les réponses silencieuses brutes sont abandonnées sur toutes les surfaces, de sorte que les sessions parentes restent silencieuses au lieu de réécrire le texte sentinelle en bavardage de secours.
 
 ## Connexes
 
-- [Refactorisation du cycle de vie des messages](/fr/concepts/message-lifecycle-refactor) - conception cible pour l'envoi et la réception durables
+- [Refonte du cycle de vie des messages](/fr/concepts/message-lifecycle-refactor) - conception cible pour l'envoi et la réception durables
 - [Streaming](/fr/concepts/streaming) — livraison des messages en temps réel
-- [Réessai](/fr/concepts/retry) — comportement de réessai de livraison des messages
-- [File d'attente](/fr/concepts/queue) — file d'attente de traitement des messages
-- [Canaux](/fr/channels) — intégrations de plateformes de messagerie
+- [Nouvelle tentative](/fr/concepts/retry) — comportement de réessai de livraison des messages
+- [File d'attente](/fr/concepts/queue) — file de traitement des messages
+- [Channels](/fr/channels) — intégrations de plateformes de messagerie

@@ -104,10 +104,7 @@ Les outils courants fournis par des plugins incluent :
 
 ## Configurer l'accès et les approbations
 
-La stratégie d'outil est appliquée avant l'appel du model. Si la stratégie supprime un outil, le
-model ne reçoit pas le schéma de cet outil pour le tour. Une exécution peut perdre des outils
-en raison de la configuration globale, de la configuration par agent, de la stratégie de channel, des restrictions de provider,
-des règles de sandbox, du filtrage propriétaire uniquement, ou de la disponibilité des plugins.
+La stratégie relative aux tools est appliquée avant l'appel au modèle. Si la stratégie supprime un tool, le modèle ne reçoit pas le schéma de ce tool pour ce tour. Une exécution peut perdre des tools en raison de la configuration globale, de la configuration par agent, de la stratégie de channel, des restrictions de provider, des règles de sandbox, de la stratégie de channel/runtime, ou de la disponibilité des plugins.
 
 - [Outils et providers personnalisés](/fr/gateway/config-tools) documentent les profils d'outils,
   les listes d'autorisation/refus, les restrictions spécifiques aux providers, la détection de boucles et

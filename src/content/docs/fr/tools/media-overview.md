@@ -80,13 +80,7 @@ La parole en direct utilise le contrat de session Talk plutôt que le chemin de 
 | Vidéo           | Asynchrone | Le traitement du fournisseur prend de 30 s à plusieurs minutes ; les files d'attente lentes peuvent aller jusqu'au délai d'expiration configuré. |
 | Musique         | Asynchrone | Même caractéristique de traitement par le fournisseur que pour la vidéo.                                                                         |
 
-Pour les outils asynchrones, OpenClaw soumet la requête au provider, renvoie un identifiant
-de tâche immédiatement, et suit la tâche dans le registre des tâches. L'agent continue
-à répondre aux autres messages pendant que la tâche s'exécute. Lorsque le provider a terminé,
-OpenClaw réveille l'agent avec les chemins des médias générés afin qu'il puisse informer
-l'utilisateur et relayer le résultat via l'outil de message. OpenClaw traite l'absence
-de preuve de livraison par l'outil de message comme une tentative de complétion échouée et ne
-publie pas automatiquement les médias générés en solution de repli.
+Pour les outils asynchrones, OpenClaw soumet la requête au provider, renvoie un identifiant de tâche immédiatement, et suit la tâche dans le registre des tâches. L'agent continue de répondre à d'autres messages pendant l'exécution de la tâche. Lorsque le provider a terminé, OpenClaw réveille l'agent avec les chemins des médias générés afin qu'il puisse informer l'utilisateur et transmettre le résultat via l'outil de message. Si la session du demandeur est inactive et que certains médias générés manquent toujours à la livraison de l'outil de message, OpenClaw envoie une solution de repli directe idempotente contenant uniquement les médias manquants. Les médias déjà livrés via l'outil de message ne sont pas postés à nouveau.
 
 ## Speech-to-text et Appel vocal
 

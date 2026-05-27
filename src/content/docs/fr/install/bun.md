@@ -48,7 +48,7 @@ bun pm trust baileys protobufjs
 
 ## Mises en garde
 
-Certains scripts codent encore en dur pnpm (par exemple `docs:build`, `ui:*`, `protocol:check`). Exécutez ceux-ci via pnpm pour l'instant.
+Certains scripts codent encore en dur pnpm (par exemple `check:docs`, `ui:*`, `protocol:check`). Pour le moment, exécutez-les via pnpm.
 
 ## Connexes
 

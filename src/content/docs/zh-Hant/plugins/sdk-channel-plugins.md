@@ -51,8 +51,8 @@ read_when:
 
 如果您的平台在對話 ID 內儲存了額外的範圍，請在插件中使用 `messaging.resolveSessionConversation(...)` 保留該解析邏輯。這是將 `rawId` 對應至基礎對話 ID、可選執行緒 ID、明確的 `baseConversationId` 以及任何 `parentConversationCandidates` 的標準掛鉤。當您回傳 `parentConversationCandidates` 時，請將它們從最窄的父層排列到最寬/基礎的對話。
 
-當外掛程式碼需要正規化路由類欄位、比較子執行緒與其父路由，或從 `{ channel, to, accountId, threadId }` 建構穩定的去重金鑰時，請使用 `openclaw/plugin-sdk/channel-route`。此輔助函式會以與核心相同的方式正規化數字執行緒 ID，因此外掛應優先使用它，而非臨時的 `String(threadId)` 比較。
-具有供應商特定目標語法的外掛可以將其解析器注入 `resolveChannelRouteTargetWithParser(...)`，並仍然獲得與核心使用的相同路由目標形狀和執行緒後援語意。
+當外掛程式碼需要正規化類似路由的欄位、將子執行緒與其父路由進行比較，或從 `{ channel, to, accountId, threadId }` 建立穩定的去重金鑰時，請使用 `openclaw/plugin-sdk/channel-route`。此輔助函式會以與核心相同的方式正規化數值型執行緒 ID，因此外掛應優先使用它，而非臨時的 `String(threadId)` 比較。
+具有提供者特定目標語法的外掛應公開 `messaging.resolveOutboundSessionRoute(...)`，以便核心在不需要使用解析器填充的情況下取得提供者原生的階段和執行緒身份。
 
 在通道註冊表啟動之前需要相同解析功能的打包外掛，也可以公開頂層 `session-key-api.ts` 檔案，並帶有相符的 `resolveSessionConversation(...)` 匯出。核心僅在執行時外掛註冊表尚無法使用時，才會使用該引導安全的表面。
 
@@ -150,7 +150,7 @@ read_when:
 - `openclaw/plugin-sdk/inbound-envelope` 和
   `openclaw/plugin-sdk/inbound-reply-dispatch` 用於傳入路由/信封和
   記錄與調度佈線
-- `openclaw/plugin-sdk/messaging-targets` 用於目標解析/比對
+- 用於目標解析輔助函式的 `openclaw/plugin-sdk/channel-targets`
 - `openclaw/plugin-sdk/outbound-media` 和
   `openclaw/plugin-sdk/outbound-runtime` 用於媒體載入以及傳出
   身份/傳送委派和酬載規劃

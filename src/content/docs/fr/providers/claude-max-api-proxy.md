@@ -149,34 +149,28 @@ Le proxy :
   </Accordion>
 </AccordionGroup>
 
-## Liens
-
-- **npm :** [https://www.npmjs.com/package/claude-max-api-proxy](https://www.npmjs.com/package/claude-max-api-proxy)
-- **GitHub :** [https://github.com/atalovesyou/claude-max-api-proxy](https://github.com/atalovesyou/claude-max-api-proxy)
-- **Problèmes :** [https://github.com/atalovesyou/claude-max-api-proxy/issues](https://github.com/atalovesyou/claude-max-api-proxy/issues)
-
 ## Notes
 
-- C'est un **outil communautaire**, non officiellement pris en charge par Anthropic ou OpenClaw
-- Nécessite un abonnement Claude Max/Pro actif avec le CLI Claude Code authentifié
-- Le proxy s'exécute localement et n'envoie aucune donnée à des serveurs tiers
-- Les réponses en continu sont entièrement prises en charge
+- This is a **community tool**, not officially supported by Anthropic or OpenClaw
+- Requires an active Claude Max/Pro subscription with Claude Code CLI authenticated
+- The proxy runs locally and does not send data to any third-party servers
+- Streaming responses are fully supported
 
-<Note>Pour l'intégration native Anthropic avec le CLI Claude ou les clés API, voir [Fournisseur Anthropic](/fr/providers/anthropic). Pour les abonnements OpenAI/Codex, voir [Fournisseur OpenAI](/fr/providers/openai).</Note>
+<Note>For native Anthropic integration with Claude CLI or API keys, see [Anthropic provider](/fr/providers/anthropic). For OpenAI/Codex subscriptions, see [OpenAI provider](/fr/providers/openai).</Note>
 
-## Connexes
+## Related
 
 <CardGroup cols={2}>
-  <Card title="Fournisseur Anthropic" href="/fr/providers/anthropic" icon="bolt">
-    Intégration native OpenClaw avec le CLI Claude ou les clés API.
+  <Card title="Anthropic provider" href="/fr/providers/anthropic" icon="bolt">
+    Native OpenClaw integration with Claude CLI or API keys.
   </Card>
-  <Card title="Fournisseur OpenAI" href="/fr/providers/openai" icon="robot">
-    Pour les abonnements OpenAI/Codex.
+  <Card title="OpenAI provider" href="/fr/providers/openai" icon="robot">
+    For OpenAI/Codex subscriptions.
   </Card>
-  <Card title="Sélection du modèle" href="/fr/concepts/model-providers" icon="layers">
-    Vue d'ensemble de tous les fournisseurs, des références de modèle et du comportement de basculement.
+  <Card title="Model selection" href="/fr/concepts/model-providers" icon="layers">
+    Overview of all providers, model refs, and failover behavior.
   </Card>
   <Card title="Configuration" href="/fr/gateway/configuration" icon="gear">
-    Référence complète de la configuration.
+    Full config reference.
   </Card>
 </CardGroup>

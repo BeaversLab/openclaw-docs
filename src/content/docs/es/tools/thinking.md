@@ -56,7 +56,7 @@ title: "Niveles de pensamiento"
 ## Aplicación por agente
 
 - **Pi integrado**: el nivel resuelto se pasa al tiempo de ejecución del agente Pi en proceso.
-- **Backend de Claude CLI**: los niveles no desactivados se pasan a Claude Code como `--effort` cuando se usa `claude-cli`; consulte [CLI backends](/es/gateway/cli-backends).
+- **Backend de la CLI de Claude**: los niveles no oficiales se pasan a Claude Code como `--effort` cuando se usa `claude-cli`; consulte [CLI backends](/es/gateway/cli-backends).
 
 ## Modo rápido (/fast)
 
@@ -84,57 +84,57 @@ title: "Niveles de pensamiento"
 - La directiva en línea afecta solo ese mensaje; de lo contrario, se aplican los valores predeterminados de la sesión/globales.
 - Envíe `/verbose` (o `/verbose:`) sin argumentos para ver el nivel detallado actual.
 - Cuando el modo detallado está activado, los agentes que emiten resultados de herramientas estructurados (Pi, otros agentes JSON) devuelven cada llamada de herramienta como su propio mensaje de solo metadatos, con el prefijo `<emoji> <tool-name>: <arg>` cuando está disponible. Estos resúmenes de herramientas se envían tan pronto como comienza cada herramienta (burbujas separadas), no como deltas de transmisión.
-- Los resúmenes de fallos de herramientas siguen siendo visibles en modo normal, pero los sufijos de detalles de error sin procesar están ocultos a menos que el modo detallado sea `on` o `full`.
-- Cuando verbose es `full`, las salidas de las herramientas también se reenvían después de su finalización (burbuja separada, truncada a una longitud segura). Si activas o desactivas `/verbose on|full|off` mientras una ejecución está en curso, las siguientes burbujas de herramientas respetan la nueva configuración.
-- `agents.defaults.toolProgressDetail` controla la forma de los resúmenes de herramientas `/verbose` y las líneas de herramientas de borradores de progreso. Usa `"explain"` (predeterminado) para etiquetas humanas compactas como `🛠️ Exec: checking JS syntax`; usa `"raw"` cuando también quieras que se añada el comando/detalle sin procesar para depuración. `agents.list[].toolProgressDetail` por agente anula el valor predeterminado.
+- Los resúmenes de fallos de herramientas permanecen visibles en modo normal, pero los sufijos de detalles de errores sin procesar están ocultos a menos que verbose sea `full`.
+- Cuando verbose es `full`, las salidas de las herramientas también se reenvían después de completarse (burbuja separada, truncada a una longitud segura). Si activa `/verbose on|full|off` mientras una ejecución está en curso, las burbujas de herramientas posteriores respetan la nueva configuración.
+- `agents.defaults.toolProgressDetail` controla la forma de los resúmenes de herramientas `/verbose` y las líneas de herramientas de borrador de progreso. Use `"explain"` (predeterminado) para etiquetas humanas compactas como `🛠️ Exec: checking JS syntax`; use `"raw"` cuando también desee que se adjunte el comando/detalle sin procesar para depuración. El `agents.list[].toolProgressDetail` por agente anula el predeterminado.
   - `explain`: `🛠️ Exec: check JS syntax for /tmp/app.js`
   - `raw`: `🛠️ Exec: check JS syntax for /tmp/app.js, node --check /tmp/app.js`
 
 ## Directivas de rastreo de complementos (/trace)
 
 - Niveles: `on` | `off` (predeterminado).
-- Un mensaje solo de directiva alterna la salida de rastreo de complementos de la sesión y responde `Plugin trace enabled.` / `Plugin trace disabled.`.
+- Un mensaje con solo directiva activa la salida de traza del plugin de sesión y responde `Plugin trace enabled.` / `Plugin trace disabled.`.
 - La directiva en línea afecta solo a ese mensaje; de lo contrario, se aplican los valores predeterminados de la sesión/global.
-- Envía `/trace` (o `/trace:`) sin argumentos para ver el nivel de rastreo actual.
-- `/trace` es más limitado que `/verbose`: solo expone líneas de rastreo/depuración propiedad de complementos, como los resúmenes de depuración de Memoria Activa.
-- Las líneas de rastreo pueden aparecer en `/status` y como un mensaje de diagnóstico de seguimiento después de la respuesta normal del asistente.
+- Envíe `/trace` (o `/trace:`) sin argumentos para ver el nivel de traza actual.
+- `/trace` es más estrecho que `/verbose`: solo expone líneas de traza/depuración propiedad del plugin, como los resúmenes de depuración de Active Memory.
+- Las líneas de traza pueden aparecer en `/status` y como un mensaje de diagnóstico de seguimiento después de la respuesta normal del asistente.
 
 ## Visibilidad del razonamiento (/reasoning)
 
 - Niveles: `on|off|stream`.
 - Un mensaje solo de directiva alterna si se muestran los bloques de pensamiento en las respuestas.
 - Cuando está habilitado, el razonamiento se envía como un **mensaje separado** prefijado con `Thinking`.
-- `stream` (solo Telegram): transmite el razonamiento a la burbuja de borrador de Telegram mientras se genera la respuesta, y luego envía la respuesta final sin razonamiento.
+- `stream` (solo Telegram): transmite el razonamiento a la burbuja de borrador de Telegram mientras se genera la respuesta y luego envía la respuesta final sin razonamiento.
 - Alias: `/reason`.
-- Envía `/reasoning` (o `/reasoning:`) sin argumentos para ver el nivel de razonamiento actual.
-- Orden de resolución: directiva en línea, luego anulación de sesión, luego predeterminado por agente (`agents.list[].reasoningDefault`), luego predeterminado global (`agents.defaults.reasoningDefault`), luego respaldo (`off`).
+- Envíe `/reasoning` (o `/reasoning:`) sin argumentos para ver el nivel de razonamiento actual.
+- Orden de resolución: directiva en línea, luego anulación de sesión, luego predeterminado por agente (`agents.list[].reasoningDefault`), luego predeterminado global (`agents.defaults.reasoningDefault`), luego alternativa (`off`).
 
-Las etiquetas de razonamiento de modelo local mal formadas se manejan de forma conservadora. Los bloques `<think>...</think>` cerrados permanecen ocultos en las respuestas normales, y el razonamiento sin cerrar después de un texto ya visible también se oculta. Si una respuesta está completamente envuelta en una sola etiqueta de apertura sin cerrar y de otro modo se entregaría como texto vacío, OpenClaw elimina la etiqueta de apertura mal formada y entrega el texto restante.
+Las etiquetas de razonamiento de modelo local mal formadas se manejan de forma conservadora. Los bloques `<think>...</think>` cerrados permanecen ocultos en las respuestas normales, y el razonamiento no cerrado después de un texto ya visible también se oculta. Si una respuesta está completamente envuelta en una sola etiqueta de apertura no cerrada y de otro modo se entregaría como texto vacío, OpenClaw elimina la etiqueta de apertura mal formada y entrega el texto restante.
 
 ## Relacionado
 
-- La documentación del modo elevado se encuentra en [Modo elevado](/es/tools/elevated).
+- La documentación del modo elevado se encuentra en [Elevated mode](/es/tools/elevated).
 
 ## Latidos
 
-- El cuerpo de la sonda de latido es el mensaje de latido configurado (predeterminado: `Read HEARTBEAT.md if it exists (workspace context). Follow it strictly. Do not infer or repeat old tasks from prior chats. If nothing needs attention, reply HEARTBEAT_OK.`). Las directivas en línea en un mensaje de latido se aplican de la forma habitual (pero evite cambiar los valores predeterminados de la sesión desde los latidos).
-- La entrega de latidos predeterminada es solo la carga útil final. Para enviar también el mensaje separado `Thinking` (cuando esté disponible), configure `agents.defaults.heartbeat.includeReasoning: true` o por agente `agents.list[].heartbeat.includeReasoning: true`.
+- El cuerpo del sondeo de latido es el aviso de latido configurado (predeterminado: `Read HEARTBEAT.md if it exists (workspace context). Follow it strictly. Do not infer or repeat old tasks from prior chats. If nothing needs attention, reply HEARTBEAT_OK.`). Las directivas en línea en un mensaje de latido se aplican como de costumbre (pero evite cambiar los valores predeterminados de la sesión desde los latidos).
+- La entrega de latidos se predetermina solo a la carga útil final. Para también enviar el mensaje `Thinking` separado (cuando esté disponible), establezca `agents.defaults.heartbeat.includeReasoning: true` o por agente `agents.list[].heartbeat.includeReasoning: true`.
 
 ## Interfaz de usuario de chat web
 
 - El selector de pensamiento del chat web refleja el nivel almacenado de la sesión desde el almacenamiento/configuración de la sesión entrante cuando se carga la página.
-- Al elegir otro nivel, la anulación de la sesión se escribe inmediatamente a través de `sessions.patch`; no espera al siguiente envío y no es una anulación `thinkingOnce` de un solo uso.
-- La primera opción es siempre la elección de borrar anulación. Muestra `Inherited: <resolved level>` cuando la sesión está heredando un valor predeterminado efectivo que no es apagado, o `Off` cuando el pensamiento heredado está desactivado.
-- Las selecciones explícitas del selector se etiquetan como anulaciones, preservando las etiquetas del proveedor cuando están presentes (por ejemplo `Override: maximum` para una opción `max` etiquetada por el proveedor).
-- El selector usa `thinkingLevels` devuelto por la fila/valores predeterminados de la sesión de la puerta de enlace, con `thinkingOptions` mantenido como una lista de etiquedas heredadas. La interfaz de usuario del navegador no mantiene su propia lista de expresiones regulares del proveedor; los complementos poseen conjuntos de niveles específicos del modelo.
-- `/think:<level>` todavía funciona y actualiza el mismo nivel de sesión almacenado, por lo que las directivas del chat y el selector permanecen sincronizados.
+- Al elegir otro nivel, se escribe la anulación de sesión inmediatamente a través de `sessions.patch`; no espera al siguiente envío y no es una anulación `thinkingOnce` de un solo uso.
+- La primera opción es siempre la elección de borrar anulación. Muestra `Inherited: <resolved level>`, incluido `Inherited: Off` cuando el pensamiento heredado está deshabilitado.
+- Las opciones explícitas del selector usan sus etiquetas de nivel directo mientras conservan las etiquetas del proveedor cuando están presentes (por ejemplo `Maximum` para una opción `max` etiquetada por el proveedor).
+- El selector usa `thinkingLevels` devuelto por la fila/predeterminados de la sesión de la puerta de enlace, con `thinkingOptions` mantenido como una lista de etiquetas heredadas. La interfaz de usuario del navegador no mantiene su propia lista de expresiones regulares del proveedor; los complementos poseen conjuntos de niveles específicos del modelo.
+- `/think:<level>` todavía funciona y actualiza el mismo nivel de sesión almacenado, por lo que las directivas de chat y el selector permanecen sincronizados.
 
 ## Perfiles de proveedores
 
-- Los complementos de proveedores pueden exponer `resolveThinkingProfile(ctx)` para definir los niveles admitidos y el predeterminado del modelo.
-- Los complementos de proveedores que actúan como proxy de modelos Claude deben reutilizar `resolveClaudeThinkingProfile(modelId)` de `openclaw/plugin-sdk/provider-model-shared` para que los catálogos directos de Anthropic y los catálogos proxy se mantengan alineados.
+- Los complementos del proveedor pueden exponer `resolveThinkingProfile(ctx)` para definir los niveles admitidos y el predeterminado del modelo.
+- Los complementos del proveedor que actúan como proxy de modelos Claude deben reutilizar `resolveClaudeThinkingProfile(modelId)` de `openclaw/plugin-sdk/provider-model-shared` para que los catálogos directos de Anthropic y los de proxy se mantengan alineados.
 - Cada nivel de perfil tiene un `id` canónico almacenado (`off`, `minimal`, `low`, `medium`, `high`, `xhigh`, `adaptive` o `max`) y puede incluir un `label` de visualización. Los proveedores binarios usan `{ id: "low", label: "on" }`.
-- Los complementos de herramientas que necesiten validar una anulación explícita de pensamiento deben usar `api.runtime.agent.resolveThinkingPolicy({ provider, model })` más `api.runtime.agent.normalizeThinkingLevel(...)`; no deben mantener sus propias listas de niveles de proveedor/modelo.
-- Los complementos de herramientas con acceso a los metadatos de modelos personalizados configurados pueden pasar `catalog` a `resolveThinkingPolicy` para que las participaciones `compat.supportedReasoningEfforts` se reflejen en la validación del lado del complemento.
-- Los enlaces (hooks) heredados publicados (`supportsXHighThinking`, `isBinaryThinking` y `resolveDefaultThinkingLevel`) permanecen como adaptadores de compatibilidad, pero los nuevos conjuntos de niveles personalizados deben usar `resolveThinkingProfile`.
-- Las filas/valores predeterminados de la puerta de enlace exponen `thinkingLevels`, `thinkingOptions` y `thinkingDefault` para que los clientes de ACP/chat muestren los mismos identificadores y etiquetas de perfil que usa la validación en tiempo de ejecución.
+- Los complementos de herramientas que necesiten validar una anulación explícita de thinking deben usar `api.runtime.agent.resolveThinkingPolicy({ provider, model })` más `api.runtime.agent.normalizeThinkingLevel(...)`; no deben mantener sus propias listas de niveles de proveedor/modelo.
+- Los complementos de herramientas con acceso a los metadatos de modelos personalizados configurados pueden pasar `catalog` a `resolveThinkingPolicy` para que las participaciones opt-in de `compat.supportedReasoningEfforts` se reflejen en la validación del lado del complemento.
+- Los hooks heredados publicados (`supportsXHighThinking`, `isBinaryThinking` y `resolveDefaultThinkingLevel`) permanecen como adaptadores de compatibilidad, pero los nuevos conjuntos de niveles personalizados deben usar `resolveThinkingProfile`.
+- Las filas/valores predeterminados de Gateway exponen `thinkingLevels`, `thinkingOptions` y `thinkingDefault` para que los clientes de ACP/chat representen los mismos identificadores y etiquetas de perfil que usa la validación en tiempo de ejecución.

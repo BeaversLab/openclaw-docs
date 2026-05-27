@@ -31,7 +31,6 @@ OpenClaw 可以使用许多 LLM 提供商。选择一个，进行身份验证，
 - [DeepInfra](/zh/providers/deepinfra)
 - [fal](/zh/providers/fal)
 - [Fireworks](/zh/providers/fireworks)
-- [GLM 模型](/zh/providers/glm)
 - [MiniMax](/zh/providers/minimax)
 - [Mistral](/zh/providers/mistral)
 - [Moonshot AI (Kimi + Kimi Coding)](/zh/providers/moonshot)
@@ -43,15 +42,15 @@ OpenClaw 可以使用许多 LLM 提供商。选择一个，进行身份验证，
 - [Runway](/zh/providers/runway)
 - [StepFun](/zh/providers/stepfun)
 - [Synthetic](/zh/providers/synthetic)
-- [Vercel AI Gateway](<VercelGateway(网关)/en/providers/vercel-ai-gateway>)
-- [Venice (Venice AI)](VeniceVenice/en/providers/venice)
+- [Vercel AI Gateway(网关)](/zh/providers/vercel-ai-gateway)
+- [Venice (Venice AI)](/zh/providers/venice)
 - [xAI](/zh/providers/xai)
-- [Z.AI](/zh/providers/zai)
+- [Z.AI (GLM)](/zh/providers/zai)
 
 ## 其他提供商变体
 
-- `anthropic-vertex` - 安装 `@openclaw/anthropic-vertex-provider`Anthropic 以在 Vertex 凭据可用时提供对 Google Vertex 上隐式 Anthropic 的支持；无需单独的引导身份验证选择
-- `copilot-proxy` - 本地 VS Code Copilot 代理网桥；使用 `openclaw onboard --auth-choice copilot-proxy`
+- `anthropic-vertex` - 安装 `@openclaw/anthropic-vertex-provider` 以在 Vertex 凭据可用时支持 Google Vertex 上的隐式 Anthropic；无需单独的新手引导身份验证选择
+- `copilot-proxy` - 本地 VS Code Copilot 代理桥接；使用 `openclaw onboard --auth-choice copilot-proxy`
 - `google-gemini-cli` - 非官方 Gemini CLI OAuth 流程；需要本地安装 `gemini`（`brew install gemini-cli` 或 `npm install -g @google/gemini-cli`）；默认模型 `google-gemini-cli/gemini-3-flash-preview`；使用 `openclaw onboard --auth-choice google-gemini-cli` 或 `openclaw models auth login --provider google-gemini-cli --set-default`
 
 有关完整的提供商目录（xAI、Groq、Mistral 等）和高级配置，请参阅 [模型提供商](/zh/concepts/model-providers)。

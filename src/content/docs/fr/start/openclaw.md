@@ -1,5 +1,5 @@
 ---
-summary: "Guide de bout en bout pour utiliser OpenClaw comme assistant personnel avec des précautions de sécurité"
+summary: "Guide de bout en bout pour exécuter OpenClaw en tant qu'assistant personnel avec des mises en garde de sécurité"
 read_when:
   - Onboarding a new assistant instance
   - Reviewing safety/permission implications
@@ -18,9 +18,9 @@ Vous placez un agent dans une position susceptible de :
 
 Soyez prudent au début :
 
-- Définissez toujours `channels.whatsapp.allowFrom` (n'exécutez jamais une version ouverte au monde sur votre Mac personnel).
+- Définissez toujours `channels.whatsapp.allowFrom` (n'exécutez jamais ouvert au monde sur votre Mac personnel).
 - Utilisez un numéro WhatsApp dédié pour l'assistant.
-- Les battements de cœur (Heartbeats) sont désormais réglés par défaut sur toutes les 30 minutes. Désactivez-les jusqu'à ce que vous fassiez confiance à la configuration en définissant `agents.defaults.heartbeat.every: "0m"`.
+- Les battements de cœur (Heartbeats) sont désormais par défaut toutes les 30 minutes. Désactivez-les jusqu'à ce que vous fassiez confiance à la configuration en définissant `agents.defaults.heartbeat.every: "0m"`.
 
 ## Prérequis
 
@@ -64,22 +64,22 @@ openclaw gateway --port 18789
 
 Envoyez maintenant un message au numéro de l'assistant depuis votre téléphone autorisé.
 
-Une fois l'onboarding terminé, OpenClaw ouvre automatiquement le tableau de bord et affiche un lien propre (non tokenisé). Si le tableau de bord demande une authentification, collez le secret partagé configuré dans les paramètres de l'interface de contrôle (Control UI). L'onboarding utilise un jeton par défaut (`gateway.auth.token`), mais l'authentification par mot de passe fonctionne également si vous avez changé `gateway.auth.mode` pour `password`. Pour rouvrir plus tard : `openclaw dashboard`.
+Lorsque l'intégration est terminée, OpenClaw ouvre automatiquement le tableau de bord et imprime un lien propre (non tokenisé). Si le tableau de bord demande une authentification, collez le secret partagé configuré dans les paramètres de l'interface de contrôle (Control UI). L'intégration utilise un jeton par défaut (`gateway.auth.token`), mais l'authentification par mot de passe fonctionne également si vous avez changé `gateway.auth.mode` pour `password`. Pour rouvrir plus tard : `openclaw dashboard`.
 
 ## Donner à l'agent un espace de travail (AGENTS)
 
 OpenClaw lit les instructions de fonctionnement et la « mémoire » depuis son répertoire d'espace de travail.
 
-Par défaut, OpenClaw utilise `~/.openclaw/workspace` comme espace de travail de l'agent et le créera (ainsi que les fichiers de démarrage `AGENTS.md`, `SOUL.md`, `TOOLS.md`, `IDENTITY.md`, `USER.md`, `HEARTBEAT.md`) automatiquement lors de la configuration/première exécution de l'agent. `BOOTSTRAP.md` n'est créé que lorsque l'espace de travail est tout nouveau (il ne devrait pas réapparaître après l'avoir supprimé). `MEMORY.md` est facultatif (non créé automatiquement) ; lorsqu'il est présent, il est chargé pour les sessions normales. Les sessions de sous-agents n'injectent que `AGENTS.md` et `TOOLS.md`.
+Par défaut, OpenClaw utilise `~/.openclaw/workspace` comme espace de travail de l'agent, et le créera (ainsi que les `AGENTS.md` de démarrage, `SOUL.md`, `TOOLS.md`, `IDENTITY.md`, `USER.md`, `HEARTBEAT.md`) automatiquement lors de la configuration/du premier exécution de l'agent. `BOOTSTRAP.md` n'est créé que lorsque l'espace de travail est tout neuf (il ne devrait pas réapparaître après l'avoir supprimé). `MEMORY.md` est facultatif (non créé automatiquement) ; lorsqu'il est présent, il est chargé pour les sessions normales. Les sessions de sous-agent n'injectent que `AGENTS.md` et `TOOLS.md`.
 
-<Tip>Considérez ce dossier comme la mémoire de OpenClaw et faites-en un dépôt git (idéalement privé) afin que vos `AGENTS.md` et fichiers de mémoire soient sauvegardés. Si git est installé, les nouveaux espaces de travail sont initialisés automatiquement.</Tip>
+<Tip>Traitez ce dossier comme la mémoire de OpenClaw et faites-en un dépôt git (idéalement privé) afin que vos `AGENTS.md` et vos fichiers de mémoire soient sauvegardés. Si git est installé, les nouveaux espaces de travail sont automatiquement initialisés.</Tip>
 
 ```bash
 openclaw setup
 ```
 
-Plan complet de l'espace de travail + guide de sauvegarde : [Espace de travail de l'agent](/fr/concepts/agent-workspace)
-Flux de travail de la mémoire : [Mémoire](/fr/concepts/memory)
+Disposition complète de l'espace de travail + guide de sauvegarde : [Agent workspace](/fr/concepts/agent-workspace)
+Flux de travail de la mémoire : [Memory](/fr/concepts/memory)
 
 Optionnel : choisir un espace de travail différent avec `agents.defaults.workspace` (prend en charge `~`).
 
@@ -160,20 +160,20 @@ Exemple :
 ## Sessions et mémoire
 
 - Fichiers de session : `~/.openclaw/agents/<agentId>/sessions/{{SessionId}}.jsonl`
-- Métadonnées de session (utilisation des jetons, dernière route, etc.) : `~/.openclaw/agents/<agentId>/sessions/sessions.json` (ancien : `~/.openclaw/sessions/sessions.json`)
-- `/new` ou `/reset` lance une nouvelle session pour cette discussion (configurable via `resetTriggers`). S'il est envoyé seul, OpenClaw acknowledge la réinitialisation sans invoquer le model.
+- Métadonnées de session (utilisation des jetons, dernière route, etc.) : `~/.openclaw/agents/<agentId>/sessions/sessions.json` (obsolète : `~/.openclaw/sessions/sessions.json`)
+- `/new` ou `/reset` lance une nouvelle session pour cette conversation (configurable via `resetTriggers`). S'il est envoyé seul, OpenClaw accuse réception de la réinitialisation sans invoquer le model.
 - `/compact [instructions]` compacte le contexte de la session et signale le budget contextuel restant.
 
 ## Battements de cœur (mode proactif)
 
-Par défaut, OpenClaw exécute un battement de cœur toutes les 30 minutes avec le prompt :
+Par défaut, OpenClaw exécute un heartbeat toutes les 30 minutes avec le prompt :
 `Read HEARTBEAT.md if it exists (workspace context). Follow it strictly. Do not infer or repeat old tasks from prior chats. If nothing needs attention, reply HEARTBEAT_OK.`
 Définissez `agents.defaults.heartbeat.every: "0m"` pour désactiver.
 
-- Si `HEARTBEAT.md` existe mais est effectivement vide (seulement des lignes vides et des en-têtes markdown comme `# Heading`), OpenClaw ignore l'exécution du battement de cœur pour économiser les appels à l'API.
+- Si `HEARTBEAT.md` existe mais est effectivement vide (seulement des lignes vides et des en-têtes markdown comme `# Heading`), OpenClaw ignore l'exécution du heartbeat pour économiser les appels API.
 - Si le fichier est manquant, le battement de cœur s'exécute toujours et le model décide de quoi faire.
-- Si l'agent répond avec `HEARTBEAT_OK` (éventuellement avec un court remplissage ; voir `agents.defaults.heartbeat.ackMaxChars`), OpenClaw supprime la livraison sortante pour ce battement de cœur.
-- Par défaut, la livraison de battements de cœur vers les cibles de type `user:<id>` de type DM est autorisée. Définissez `agents.defaults.heartbeat.directPolicy: "block"` pour supprimer la livraison directe aux cibles tout en gardant les exécutions de battements de cœur actives.
+- Si l'agent répond avec `HEARTBEAT_OK` (éventuellement avec un remplissage court ; voir `agents.defaults.heartbeat.ackMaxChars`), OpenClaw supprime la livraison sortante pour ce heartbeat.
+- Par défaut, la livraison des heartbeat vers les cibles `user:<id>` de type DM est autorisée. Définissez `agents.defaults.heartbeat.directPolicy: "block"` pour supprimer la livraison aux cibles directes tout en gardant les exécutions de heartbeat actives.
 - Les battements de cœur exécutent des tours complets d'agent - des intervalles plus courts consomment plus de jetons.
 
 ```json5
@@ -194,7 +194,7 @@ Les pièces jointes entrantes (images/audio/docs) peuvent être présentées à 
 - `{{MediaUrl}}` (pseudo-URL)
 - `{{Transcript}}` (si la transcription audio est activée)
 
-Pièces jointes sortantes de l'agent : incluez `MEDIA:<path-or-url>` sur sa propre ligne (sans espaces). Exemple :
+Pièces jointes sortantes de l'agent : inclure `MEDIA:<path-or-url>` sur sa propre ligne (pas d'espaces). La directive doit commencer la ligne en texte brut, en dehors des blocs de code et sans wrappers Markdown tels que le gras ou le code en ligne. Exemple :
 
 ```
 Here's the screenshot.
@@ -203,12 +203,20 @@ MEDIA:https://example.com/screenshot.png
 
 OpenClaw les extrait et les envoie en tant que médias accompagnant le texte.
 
-Le comportement du chemin local suit le même modèle de confiance de lecture de fichier que l'agent :
+Ces formulaires ne sont pas des directives de pièce jointe et sont envoyés comme texte normal :
 
-- Si `tools.fs.workspaceOnly` est `true`, les chemins locaux sortants `MEDIA:` restent restreints à la racine temp OpenClaw, le cache multimédia, les chemins de l'espace de travail de l'agent et les fichiers générés par le bac à sable.
-- Si `tools.fs.workspaceOnly` est `false`, les chemins locaux sortants `MEDIA:` peuvent utiliser les fichiers locaux de l'hôte que l'agent est déjà autorisé à lire.
+```md
+**MEDIA:https://example.com/screenshot.png**
+`MEDIA:https://example.com/screenshot.png`
+Here is the screenshot: MEDIA:https://example.com/screenshot.png
+```
+
+Le comportement du chemin local suit le même modèle de confiance de lecture de fichiers que l'agent :
+
+- Si `tools.fs.workspaceOnly` est `true`, les chemins locaux sortants `MEDIA:`OpenClaw restent limités à la racine temp d'OpenClaw, le cache média, les chemins de l'espace de travail de l'agent et les fichiers générés par le bac à sable.
+- Si `tools.fs.workspaceOnly` est `false`, les `MEDIA:` sortants peuvent utiliser des fichiers locaux de l'hôte que l'agent est déjà autorisé à lire.
 - Les chemins locaux peuvent être absolus, relatifs à l'espace de travail ou relatifs au répertoire personnel avec `~/`.
-- Les envois locaux à l'hôte n'autorisent toujours que les types de médias et de documents sécurisés (images, audio, vidéo, PDF et documents Office). Les fichiers en texte brut et ceux ressemblant à des secrets ne sont pas considérés comme des médias envoyables.
+- Les envois locaux de l'hôte n'autorisent toujours que les types de médias et de documents sécurisés (images, audio, vidéo, PDF et documents Office). Les fichiers en texte brut et ceux ressemblant à des secrets ne sont pas considérés comme des médias envoyables.
 
 Cela signifie que les images/fichiers générés en dehors de l'espace de travail peuvent maintenant être envoyés lorsque votre stratégie de système de fichiers autorise déjà ces lectures, sans rouvrir l'exfiltration arbitraire de pièces jointes texte de l'hôte.
 
@@ -225,18 +233,18 @@ Les journaux se trouvent sous `/tmp/openclaw/` (par défaut : `openclaw-YYYY-MM-
 
 ## Étapes suivantes
 
-- WebChat : [WebChat](/fr/web/webchat)
-- Opérations du Gateway : [Gateway runbook](/fr/gateway)
+- WebChat : [WebChat](WebChatWebChat/en/web/webchat)
+- Opérations du Gateway : [Gateway runbook](GatewayGateway/en/gateway)
 - Cron + réveils : [Cron jobs](/fr/automation/cron-jobs)
-- Compagnon de barre de menu macOS : [application OpenClaw macOS](/fr/platforms/macos)
-- Application nœud iOS : [application iOS](/fr/platforms/ios)
-- Application nœud Android : [application Android](/fr/platforms/android)
-- Statut Windows : [Windows (WSL2)](/fr/platforms/windows)
-- Statut Linux : [application Linux](/fr/platforms/linux)
-- Sécurité : [Sécurité](/fr/gateway/security)
+- Compagnon de barre de menu macOS : [OpenClaw macOS app](macOSOpenClawmacOS/en/platforms/macos)
+- Application nœud iOS : [iOS app](iOSiOS/en/platforms/ios)
+- Application nœud Android : [Android app](AndroidAndroid/en/platforms/android)
+- Statut Windows : [Windows (WSL2)](WindowsWindowsWSL2/en/platforms/windows)
+- Statut Linux : [Linux app](LinuxLinux/en/platforms/linux)
+- Sécurité : [Security](/fr/gateway/security)
 
 ## Connexes
 
 - [Getting started](/fr/start/getting-started)
-- [Configuration](/fr/start/setup)
-- [Aperçu des canaux](/fr/channels)
+- [Setup](/fr/start/setup)
+- [Channels overview](/fr/channels)

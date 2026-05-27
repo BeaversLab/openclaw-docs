@@ -289,7 +289,7 @@ FAQ sur les modèles et les profils d'authentification. Pour la configuration, l
 
   </Accordion>
 
-  <Accordion title="Comment définir/remplacer les raccourcis de modèle (alias) ?">
+  <Accordion title="Comment définir/surcharger les raccourcis de modèle (alias) ?">
     Les alias proviennent de `agents.defaults.models.<modelId>.alias`. Exemple :
 
     ```json5
@@ -300,7 +300,6 @@ FAQ sur les modèles et les profils d'authentification. Pour la configuration, l
           models: {
             "anthropic/claude-opus-4-6": { alias: "opus" },
             "anthropic/claude-sonnet-4-6": { alias: "sonnet" },
-            "anthropic/claude-haiku-4-5": { alias: "haiku" },
           },
         },
       },

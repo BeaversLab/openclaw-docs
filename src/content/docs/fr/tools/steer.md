@@ -1,18 +1,18 @@
 ---
-summary: "Diriger une exécution active sans changer le mode de file d'attente"
+summary: "Diriger une exécution active sans changer le mode de file"
 read_when:
   - Using /steer or /tell while an agent is already running
   - Comparing /steer with /queue modes
-  - Deciding whether to steer the current run, a sub-agent, or an ACP session
+  - Deciding whether to steer the current run or an ACP session
 title: "Diriger"
 sidebarTitle: "Diriger"
 ---
 
-`/steer`OpenClaw essaie d'abord d'envoyer des instructions à une exécution déjà active. C'est pour les moments où l'on souhaite "ajuster cette exécution pendant qu'elle travaille encore". Si l'exécution actuelle ne peut pas accepter de guidage, OpenClaw envoie le message sous forme de invite normal au lieu de l'abandonner.
+`/steer` essaie d'abord d'envoyer des directives à une exécution déjà active. C'est pour les moments où l'on souhaite « ajuster cette exécution tant qu'elle fonctionne encore ». Si l'exécution actuelle ne peut pas accepter de directives, OpenClaw envoie le message sous forme de invite normal au lieu de l'abandonner.
 
 ## Session actuelle
 
-Utilisez `/steer` de niveau supérieur pour cibler l'exécution active de la session actuelle :
+Utilisez `/steer` de premier niveau pour cibler l'exécution active de la session actuelle :
 
 ```text
 /steer prefer the smaller patch and keep the tests focused
@@ -30,30 +30,20 @@ Comportement :
 
 ## Guidage vs file d'attente
 
-`/queue steer` fait en sorte que les messages entrants normaux essaient de guider l'exécution active lorsqu'ils arrivent pendant qu'une exécution est active. `/steer <message>` est une commande explicite qui essaie d'injecter le message de cette commande dans l'exécution active à la prochaine limite d'exécution prise en charge, indépendamment du paramètre `/queue` stocké. Lorsque cette injection n'est pas disponible, le préfixe de commande est supprimé et `<message>` continue comme un invite normal.
+`/queue steer` fait en sorte que les messages entrants normaux essaient de diriger l'exécution active lorsqu'ils arrivent pendant qu'une exécution est active. `/steer <message>` est une commande explicite qui essaie d'injecter le message de cette commande dans l'exécution active à la prochaine limite d'exécution prise en charge, quel que soit le paramètre `/queue` stocké. Lorsque cette injection n'est pas disponible, le préfixe de commande est supprimé et `<message>` continue en tant qu'invite normal.
 
 Utilisation :
 
-- `/steer <message>` lorsque vous voulez guider l'exécution active maintenant.
-- `/queue steer` lorsque vous voulez que les messages normaux futurs guident
-  les exécutions actives par défaut.
-- `/queue collect` ou `/queue followup` lorsque les messages normaux futurs doivent attendre
-  un tour ultérieur au lieu de guider l'exécution active.
-- `/queue interrupt` lorsque le message le plus récent doit remplacer l'exécution
-  active au lieu de la guider.
+- `/steer <message>` lorsque vous souhaitez guider l'exécution active immédiatement.
+- `/queue steer` lorsque vous souhaitez que les messages normaux futurs dirigent les exécutions actives par défaut.
+- `/queue collect` ou `/queue followup` lorsque les messages normaux futurs doivent attendre un tour ultérieur au lieu de diriger l'exécution active.
+- `/queue interrupt` lorsque le message le plus récent doit remplacer l'exécution active au lieu de la diriger.
 
-Pour les modes de file d'attente et les limites de guidage, voir [Command queue](/fr/concepts/queue) et
-[Steering queue](/fr/concepts/queue-steering).
+Pour les modes de file et les limites de direction, voir [File de commandes](/fr/concepts/queue) et [File de direction](/fr/concepts/queue-steering).
 
 ## Sous-agents
 
-Utilisez `/subagents steer` lorsque la cible est une exécution enfant :
-
-```text
-/subagents steer 2 focus only on the API surface
-```
-
-`/steer` de niveau supérieur ne sélectionne pas de sous-agent par id ou par index de liste. Il cible toujours l'exécution active de la session actuelle. Voir [Sub-agents](/fr/tools/subagents) pour les identifiants, les étiquettes et les commandes de contrôle des sous-agents.
+`/steer` de premier niveau cible l'exécution active de la session actuelle. Les sous-agents font rapport à leur session parente/demandeur ; `/subagents` sert uniquement à la visibilité.
 
 ## Sessions ACP
 
@@ -63,12 +53,11 @@ Utilisez `/acp steer` lorsque la cible est une session de harnais ACP :
 /acp steer --session agent:main:acp:codex tighten the repro
 ```
 
-Voir [ACP agents](/fr/tools/acp-agents) pour la sélection de session ACP et le comportement
-d'exécution.
+Voir [Agents ACP](/fr/tools/acp-agents) pour la sélection de session ACP et le comportement à l'exécution.
 
 ## Connexes
 
-- [Slash commands](/fr/tools/slash-commands)
-- [Command queue](/fr/concepts/queue)
-- [Steering queue](/fr/concepts/queue-steering)
+- [Commandes Slash](/fr/tools/slash-commands)
+- [File d'attente de commandes](/fr/concepts/queue)
+- [File d'attente de pilotage](/fr/concepts/queue-steering)
 - [Sous-agents](/fr/tools/subagents)

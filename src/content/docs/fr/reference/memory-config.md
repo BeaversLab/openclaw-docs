@@ -390,7 +390,7 @@ Formats pris en charge : `.jpg`, `.jpeg`, `.png`, `.webp`, `.gif`, `.heic`, `.he
 
 | Clé                | Type      | Par défaut | Description                                          |
 | ------------------ | --------- | ---------- | ---------------------------------------------------- |
-| `cache.enabled`    | `boolean` | `false`    | Mettre en cache les embeddings de chunks dans SQLite |
+| `cache.enabled`    | `boolean` | `true`     | Mettre en cache les embeddings de chunks dans SQLite |
 | `cache.maxEntries` | `number`  | `50000`    | Max cached embeddings                                |
 
 Empêche de ré-embedded du texte inchangé lors de la réindexation ou des mises à jour de transcription.

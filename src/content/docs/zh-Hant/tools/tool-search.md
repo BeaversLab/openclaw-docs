@@ -115,7 +115,7 @@ await openclaw.tools.call(calendarCreate.id, {
 
 - 工具允許和拒絕策略
 - 個別代理程式和個別沙箱工具限制
-- 僅限擁有者的閘道
+- 通道/運行時工具原則
 - 核准掛鉤
 - 外掛程式 `before_tool_call` 掛鉤
 - 工作階段身分識別、記錄和遙測

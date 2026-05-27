@@ -42,42 +42,44 @@ cp docs/reference/AGENTS.default.md ~/.openclaw/workspace/AGENTS.md
 
 - No vuelque directorios ni secretos en el chat.
 - No ejecute comandos destructivos a menos que se le solicite explícitamente.
-- No envíe respuestas parciales/en flujo a superficies de mensajería externas (solo respuestas finales).
+- Antes de cambiar la configuración o los programadores (por ejemplo, crontab, unidades de systemd, configuraciones de nginx o archivos rc de shell), inspeccione primero el estado existente y, por defecto, conservar/fusionar.
+- No envíes respuestas parciales/en streaming a superficies de mensajería externa (solo respuestas finales).
 
 ## Inicio de sesión (requerido)
 
-- Lea `SOUL.md`, `USER.md` y hoy+ayer en `memory/`.
-- Lea `MEMORY.md` cuando esté presente.
-- Hágalo antes de responder.
+- Lee `SOUL.md`, `USER.md` y hoy+ayer en `memory/`.
+- Lee `MEMORY.md` cuando esté presente.
+- Hazlo antes de responder.
 
 ## Alma (requerido)
 
-- `SOUL.md` define la identidad, el tono y los límites. Manténgalo actualizado.
-- Si cambia `SOUL.md`, informe al usuario.
-- Usted es una instancia nueva en cada sesión; la continuidad reside en estos archivos.
+- `SOUL.md` define la identidad, el tono y los límites. Mantenlo actualizado.
+- Si cambias `SOUL.md`, avísale al usuario.
+- Eres una instancia nueva en cada sesión; la continuidad reside en estos archivos.
 
 ## Espacios compartidos (recomendado)
 
-- Usted no es la voz del usuario; tenga cuidado en chats grupales o canales públicos.
-- No comparta datos privados, información de contacto o notas internas.
+- No eres la voz del usuario; ten cuidado en los chats grupales o canales públicos.
+- No compartas datos privados, información de contacto ni notas internas.
 
 ## Sistema de memoria (recomendado)
 
-- Registro diario: `memory/YYYY-MM-DD.md` (cree `memory/` si es necesario).
+- Registro diario: `memory/YYYY-MM-DD.md` (crea `memory/` si es necesario).
 - Memoria a largo plazo: `MEMORY.md` para datos duraderos, preferencias y decisiones.
-- `memory.md` en minúsculas es solo para entrada de reparación heredada; no mantenga ambos archivos raíz a propósito.
-- Al iniciar la sesión, lea hoy + ayer + `MEMORY.md` cuando esté presente.
+- El `memory.md` en minúsculas es solo para entrada de reparación heredada; no mantengas ambos archivos raíz a propósito.
+- Al inicio de la sesión, lee hoy + ayer + `MEMORY.md` cuando esté presente.
+- Antes de escribir archivos de memoria, léelos primero; escribe solo actualizaciones concretas, nunca marcadores de posición vacíos.
 - Captura: decisiones, preferencias, restricciones, bucles abiertos.
-- Evite secretos a menos que se solicite explícitamente.
+- Evita secretos a menos que se soliciten explícitamente.
 
 ## Herramientas y habilidades
 
-- Las herramientas viven en habilidades; siga el `SKILL.md` de cada habilidad cuando la necesite.
-- Mantenga notas específicas del entorno en `TOOLS.md` (Notas para habilidades).
+- Las herramientas viven en las habilidades; sigue el `SKILL.md` de cada habilidad cuando la necesites.
+- Mantén notas específicas del entorno en `TOOLS.md` (Notas para habilidades).
 
-## Consejo de copia de seguridad (recomendado)
+## Consejo de respaldo (recomendado)
 
-Si tratas este espacio de trabajo como la "memoria" de Clawd, conviértelo en un repositorio git (idealmente privado) para que `AGENTS.md` y tus archivos de memoria se respalden.
+Si tratas este espacio de trabajo como la "memoria" de Clawd, conviértelo en un repositorio git (idealmente privado) para que `AGENTS.md` y tus archivos de memoria tengan copia de seguridad.
 
 ```bash
 cd ~/.openclaw/workspace
@@ -89,39 +91,39 @@ git commit -m "Add Clawd workspace"
 
 ## Lo que hace OpenClaw
 
-- Ejecuta la puerta de enlace de WhatsApp + el agente de codificación Pi para que el asistente pueda leer/escribir chats, obtener contexto y ejecutar habilidades a través del host Mac.
-- La aplicación de macOS gestiona los permisos (grabación de pantalla, notificaciones, micrófono) y expone la CLI de `openclaw` a través de su binario incluido.
-- Los chats directos se colapsan en la sesión `main` del agente de forma predeterminada; los grupos se mantienen aislados como `agent:<agentId>:<channel>:group:<id>` (rooms/channels: `agent:<agentId>:<channel>:channel:<id>`); los latidos mantienen las tareas en segundo plano activas.
+- Ejecuta la puerta de enlace de WhatsApp + el agente de codificación Pi para que el asistente pueda leer/escribir chats, obtener contexto y ejecutar habilidades a través de la Mac host.
+- La aplicación de macOS gestiona los permisos (grabación de pantalla, notificaciones, micrófono) y expone la CLI `openclaw` a través de su binario incluido.
+- Los chats directos colapsan en la sesión `main` del agente por defecto; los grupos permanecen aislados como `agent:<agentId>:<channel>:group:<id>` (salas/canales: `agent:<agentId>:<channel>:channel:<id>`); los latidos mantienen las tareas en segundo plano activas.
 
 ## Habilidades principales (activar en Configuración → Habilidades)
 
-- **mcporter** - Entorno de ejecución/CLI del servidor de herramientas para gestionar los backends de habilidades externas.
-- **Peekaboo** - Capturas de pantalla rápidas de macOS con análisis de visión con IA opcional.
-- **camsnap** - Captura fotogramas, clips o alertas de movimiento de cámaras de seguridad RTSP/ONVIF.
+- **mcporter** - Entorno de tiempo de ejecución/CLI del servidor de herramientas para administrar backends de habilidades externas.
+- **Peekaboo** - Capturas de pantalla rápidas de macOS con análisis visual de IA opcional.
+- **camsnap** - Capturar fotogramas, clips o alertas de movimiento desde cámaras de seguridad RTSP/ONVIF.
 - **oracle** - CLI de agente compatible con OpenAI con repetición de sesión y control del navegador.
 - **eightctl** - Controla tu sueño, desde la terminal.
 - **imsg** - Enviar, leer, transmitir iMessage y SMS.
-- **wacli** - CLI de WhatsApp: sincronizar, buscar, enviar.
-- **discord** - Acciones de Discord: reaccionar, pegatinas, encuestas. Usa objetivos `user:<id>` o `channel:<id>` (los ids numéricos simples son ambiguos).
-- **gog** - CLI de Google Suite: Gmail, Calendario, Drive, Contactos.
-- **spotify-player** - Cliente de Spotify en terminal para buscar/encolar/controlar la reproducción.
-- **sag** - Voz de ElevenLabs con experiencia de usuario estilo mac say; transmite a los altavoces de forma predeterminada.
+- **wacli** - WhatsApp CLI: sincronizar, buscar, enviar.
+- **discord** - Acciones de Discord: reaccionar, pegatinas, encuestas. Utiliza objetivos `user:<id>` o `channel:<id>` (los identificadores numéricos simples son ambiguos).
+- **gog** - CLI de Google Suite: Gmail, Calendar, Drive, Contacts.
+- **spotify-player** - Cliente de Spotify terminal para buscar/encolar/controlar la reproducción.
+- **sag** - Voz de ElevenLabs con experiencia de usuario al estilo "say" de Mac; transmite a los altavoces por defecto.
 - **Sonos CLI** - Controla los altavoces Sonos (descubrir/estado/reproducción/volumen/agrupación) desde scripts.
 - **blucli** - Reproduce, agrupa y automatiza reproductores BluOS desde scripts.
 - **OpenHue CLI** - Control de iluminación Philips Hue para escenas y automatizaciones.
-- **OpenAI Whisper** - Voz a texto local para dictados rápidos y transcripciones de buzón de voz.
+- **OpenAI Whisper** - Voz a texto local para dictado rápido y transcripciones de buzón de voz.
 - **Gemini CLI** - Modelos de Google Gemini desde la terminal para preguntas y respuestas rápidas.
-- **agent-tools** - Kit de herramientas de utilidad para automatizaciones y scripts de ayuda.
+- **agent-tools** - Kit de herramientas de utilidad para automatizaciones y scripts auxiliares.
 
 ## Notas de uso
 
-- Prefiere la CLI de `openclaw` para scripts; la aplicación de mac gestiona los permisos.
-- Ejecuta instalaciones desde la pestaña Habilidades; oculta el botón si un binario ya está presente.
-- Mantén los latidos habilitados para que el asistente pueda programar recordatorios, supervisar bandejas de entrada y activar capturas de cámara.
-- La interfaz de usuario de Canvas se ejecuta en pantalla completa con superposiciones nativas. Evita colocar controles críticos en los bordes superior izquierdo/superior derecho/inferior; añade márgenes explícitos en el diseño y no confíes en los insets de área segura.
-- Para la verificación impulsada por el navegador, usa `openclaw browser` (pestañas/estado/captura de pantalla) con el perfil de Chrome gestionado por OpenClaw.
-- Para la inspección del DOM, usa `openclaw browser eval|query|dom|snapshot` (y `--json`/`--out` cuando necesites resultados de máquina).
-- Para las interacciones, usa `openclaw browser click|type|hover|drag|select|upload|press|wait|navigate|back|evaluate|run` (clic/escritura requieren referencias de instantánea; usa `evaluate` para selectores CSS).
+- Prefiere la CLI `openclaw` para scripting; la aplicación de Mac maneja los permisos.
+- Ejecuta las instalaciones desde la pestaña Habilidades; oculta el botón si un binario ya está presente.
+- Mantén los latidos habilitados para que el asistente pueda programar recordatorios, monitorear bandejas de entrada y activar capturas de cámara.
+- La interfaz de usuario de Canvas se ejecuta a pantalla completa con superposiciones nativas. Evita colocar controles críticos en los bordes superior-izquierdo/superior-derecho/inferior; agrega márgenes explícitos en el diseño y no confíes en los insets de área segura.
+- Para la verificación impulsada por navegador, usa `openclaw browser` (pestañas/estado/captura de pantalla) con el perfil de Chrome gestionado por OpenClaw.
+- Para la inspección del DOM, usa `openclaw browser eval|query|dom|snapshot` (y `--json`/`--out` cuando necesites salida de máquina).
+- Para las interacciones, usa `openclaw browser click|type|hover|drag|select|upload|press|wait|navigate|back|evaluate|run` (hacer clic/escribir requieren referencias de instantáneas; usa `evaluate` para selectores CSS).
 
 ## Relacionado
 

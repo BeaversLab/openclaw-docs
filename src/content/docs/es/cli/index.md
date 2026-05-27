@@ -24,15 +24,15 @@ Use los comandos de configuración por intención:
 | Mensajería y agentes           | [`message`](/es/cli/message) · [`agent`](/es/cli/agent) · [`agents`](/es/cli/agents) · [`acp`](/es/cli/acp) · [`mcp`](/es/cli/mcp)                                                                                                                                |
 | Salud y sesiones               | [`status`](/es/cli/status) · [`health`](/es/cli/health) · [`sessions`](/es/cli/sessions)                                                                                                                                                                          |
 | Puerta de enlace y registros   | [`gateway`](/es/cli/gateway) · [`logs`](/es/cli/logs) · [`system`](/es/cli/system)                                                                                                                                                                                |
-| Modelos e inferencia           | [`models`](/es/cli/models) · [`infer`](/es/cli/infer) · `capability` (alias de [`infer`](/es/cli/infer)) · [`memory`](/es/cli/memory) · [`commitments`](/es/cli/commitments) · [`wiki`](/es/cli/wiki)                                                             |
+| Modelos e inferencia           | [`models`](/es/cli/models) · [`infer`](/es/cli/infer) · `capability` (alias para [`infer`](/es/cli/infer)) · [`memory`](/es/cli/memory) · [`commitments`](/es/cli/commitments) · [`wiki`](/es/cli/wiki)                                                           |
 | Red y nodos                    | [`directory`](/es/cli/directory) · [`nodes`](/es/cli/nodes) · [`devices`](/es/cli/devices) · [`node`](/es/cli/node)                                                                                                                                               |
-| Tiempo de ejecución y sandbox  | [`approvals`](/es/cli/approvals) · `exec-policy` (ver [`approvals`](/es/cli/approvals)) · [`sandbox`](/es/cli/sandbox) · [`tui`](/es/cli/tui) · `chat`/`terminal` (alias de [`tui --local`](/es/cli/tui)) · [`browser`](/es/cli/browser)                          |
+| Tiempo de ejecución y sandbox  | [`approvals`](/es/cli/approvals) · `exec-policy` (ver [`approvals`](/es/cli/approvals)) · [`sandbox`](/es/cli/sandbox) · [`tui`](/es/cli/tui) · `chat`/`terminal` (alias para [`tui --local`](/es/cli/tui)) · [`browser`](/es/cli/browser)                        |
 | Automatización                 | [`cron`](/es/cli/cron) · [`tasks`](/es/cli/tasks) · [`hooks`](/es/cli/hooks) · [`webhooks`](/es/cli/webhooks)                                                                                                                                                     |
 | Descubrimiento y documentación | [`dns`](/es/cli/dns) · [`docs`](/es/cli/docs)                                                                                                                                                                                                                     |
 | Emparejamiento y canales       | [`pairing`](/es/cli/pairing) · [`qr`](/es/cli/qr) · [`channels`](/es/cli/channels)                                                                                                                                                                                |
 | Seguridad y complementos       | [`security`](/es/cli/security) · [`secrets`](/es/cli/secrets) · [`skills`](/es/cli/skills) · [`plugins`](/es/cli/plugins) · [`proxy`](/es/cli/proxy)                                                                                                              |
 | Alias heredados                | [`daemon`](/es/cli/daemon) (servicio de puerta de enlace) · [`clawbot`](/es/cli/clawbot) (espacio de nombres)                                                                                                                                                     |
-| Complementos (opcional)        | [`path`](/es/cli/path) · [`voicecall`](/es/cli/voicecall) (si está instalado)                                                                                                                                                                                     |
+| Complementos (opcional)        | [`meeting-notes`](/es/cli/meeting-notes) · [`path`](/es/cli/path) · [`policy`](/es/cli/policy) · [`voicecall`](/es/cli/voicecall) (si está instalado)                                                                                                             |
 
 ## Marcas globales
 
@@ -50,7 +50,7 @@ Use los comandos de configuración por intención:
 - Los colores ANSI y los indicadores de progreso solo se muestran en sesiones TTY.
 - Los hipervínculos OSC-8 se representan como enlaces en los que se admiten; de lo contrario,
   la interfaz de línea de comandos (CLI) recurre a URL simples.
-- `--json` (y `--plain` donde se admite) desactiva el estilo para una salida limpia.
+- `--json` (y `--plain` donde sea compatible) deshabilita el estilo para una salida limpia.
 - Los comandos de larga duración muestran un indicador de progreso (OSC 9;4 cuando se admite).
 
 Fuente de verdad de la paleta: `src/terminal/palette.ts`.
@@ -125,6 +125,10 @@ openclaw [--dev] [--profile <name>] <command>
     status
     index
     search
+  meeting-notes
+    list
+    show
+    path
   path
     resolve
     find
@@ -372,22 +376,22 @@ Los mensajes de chat admiten comandos `/...`. Consulte [slash commands](/es/tool
 Aspectos destacados:
 
 - `/status` — diagnósticos rápidos.
-- `/trace` — líneas de seguimiento/depuración de complementos con alcance de sesión.
-- `/config` — cambios de configuración persistentes.
+- `/trace` — líneas de rastreo/depuración de complementos con alcance de sesión.
+- `/config` — cambios de configuración persistente.
 - `/debug` — anulaciones de configuración solo en tiempo de ejecución (memoria, no disco; requiere `commands.debug: true`).
 
 ## Seguimiento de uso
 
 `openclaw status --usage` y la interfaz de usuario de Control muestran el uso/cuota del proveedor cuando
-hay credenciales de OAuth/API disponibles. Los datos provienen directamente de los puntos de conexión de uso del proveedor
-y se normalizan a `X% left`. Proveedores con ventanas de uso
-actuales: Anthropic, GitHub Copilot, Gemini CLI, OpenAI Codex, MiniMax,
+las credenciales de OAuth/API están disponibles. Los datos provienen directamente de los puntos finales de uso
+del proveedor y se normalizan a `X% left`. Proveedores con ventanas de uso
+actual: Anthropic, GitHub Copilot, Gemini CLI, OpenAI Codex, MiniMax,
 Xiaomi y z.ai.
 
 Consulte [Usage tracking](/es/concepts/usage-tracking) para obtener más detalles.
 
 ## Relacionado
 
-- [Slash commands](/es/tools/slash-commands)
-- [Configuration](/es/gateway/configuration)
-- [Environment](/es/help/environment)
+- [Comandos de barra](/es/tools/slash-commands)
+- [Configuración](/es/gateway/configuration)
+- [Entorno](/es/help/environment)

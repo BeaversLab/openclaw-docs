@@ -29,31 +29,32 @@ Linux 配套應用程式已在計劃中，但 Gateway 目前已完全支援。
 - GCP (Compute Engine): [GCP](/zh-Hant/install/gcp)
 - Azure (Linux VM): [Azure](/zh-Hant/install/azure)
 - exe.dev (VM + HTTPS proxy): [exe.dev](/zh-Hant/install/exe-dev)
+- EasyRunner (Podman + Caddy)：[EasyRunner](/zh-Hant/platforms/easyrunner)
 
 ## 常用連結
 
-- 安裝指南: [Getting Started](/zh-Hant/start/getting-started)
-- Gateway 手冊: [Gateway](/zh-Hant/gateway)
-- Gateway 配置: [Configuration](/zh-Hant/gateway/configuration)
-- 服務狀態: `openclaw gateway status`
+- 安裝指南：[Getting Started](/zh-Hant/start/getting-started)
+- Gateway 手冊：[Gateway](/zh-Hant/gateway)
+- Gateway 配置：[Configuration](/zh-Hant/gateway/configuration)
+- 服務狀態：`openclaw gateway status`
 
 ## Gateway 服務安裝 (CLI)
 
-使用以下任一方式 (全部支援)：
+使用以下其中一種（全部支援）：
 
-- 精靈 (建議): `openclaw onboard --install-daemon`
-- 直接: `openclaw gateway install`
-- 配置流程: `openclaw configure` → 選擇 **Gateway service**
-- 修復/遷移: `openclaw doctor` (提供安裝或修復服務的選項)
+- 精靈（推薦）：`openclaw onboard --install-daemon`
+- 直接：`openclaw gateway install`
+- 配置流程：`openclaw configure` → 選擇 **Gateway service**
+- 修復/遷移：`openclaw doctor`（提供安裝或修復服務的選項）
 
 服務目標取決於作業系統：
 
-- macOS: LaunchAgent (`ai.openclaw.gateway` 或 `ai.openclaw.<profile>`; 舊版 `com.openclaw.*`)
-- Linux/WSL2: systemd 使用者服務 (`openclaw-gateway[-<profile>].service`)
-- 原生 Windows: 排程的工作 (`OpenClaw Gateway` 或 `OpenClaw Gateway (<profile>)`)，如果拒絕建立工作，則會有針對每位使用者的 Startup-folder 登入項目後備方案
+- macOS：LaunchAgent (`ai.openclaw.gateway` 或 `ai.openclaw.<profile>`；舊版 `com.openclaw.*`)
+- Linux/WSL2：systemd 使用者服務 (`openclaw-gateway[-<profile>].service`)
+- 原生 Windows：工作排程器 (`OpenClaw Gateway` 或 `OpenClaw Gateway (<profile>)`)，如果建立工作被拒絕，則退回到每個使用者的啟動資料夾登入項目
 
 ## 相關
 
 - [安裝概覽](/zh-Hant/install)
-- [macOS 應用程式](/zh-Hant/platforms/macos)
-- [iOS 應用程式](/zh-Hant/platforms/ios)
+- [macOS app](/zh-Hant/platforms/macos)
+- [iOS app](/zh-Hant/platforms/ios)

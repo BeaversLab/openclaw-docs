@@ -63,8 +63,8 @@ Config `env` 區塊僅接受字面字串值。它不會展開
 }
 ```
 
-請參閱 [Secrets Management](/zh-Hant/gateway/secrets) 與
-[SecretRef credential surface](/zh-Hant/reference/secretref-credential-surface) 以了解
+請參閱 [機密管理](/zh-Hant/gateway/secrets) 以及
+[SecretRef 憑證介面](/zh-Hant/reference/secretref-credential-surface) 以了解
 支援的欄位。
 
 ## Shell env 匯入
@@ -95,14 +95,16 @@ OpenClaw 也會將上下文標記注入到衍生的子程序中：
 - `OPENCLAW_SHELL=acp`：為 ACP 執行時後端程序衍生程序設定（例如 `acpx`）。
 - `OPENCLAW_SHELL=acp-client`：當 `openclaw acp client` 衍生 ACP bridge 程序時為其設定。
 - `OPENCLAW_SHELL=tui-local`：為本機 TUI `!` shell 指令設定。
+- `OPENCLAW_CLI=1`：為由 CLI 進入點產生的子行程設定。
 
-這些是執行時期標記（非必需的使用者設定）。它們可用於 shell/profile 邏輯中，以套用特定情境的規則。
+這些是執行時期標記（而非必需的使用者設定）。它們可用於 shell/profile 邏輯中
+以套用特定情境的規則。
 
 ## UI 環境變數
 
-- `OPENCLAW_THEME=light`：當您的終端機具有淺色背景時，強制使用淺色 TUI 色板。
-- `OPENCLAW_THEME=dark`：強制使用深色 TUI 色板。
-- `COLORFGBG`：如果您的終端機匯出此變數，OpenClaw 將使用背景顏色提示來自動選擇 TUI 色板。
+- `OPENCLAW_THEME=light`：當您的終端機具有淺色背景時，強制使用淺色 TUI 調色盤。
+- `OPENCLAW_THEME=dark`：強制使用深色 TUI 調色盤。
+- `COLORFGBG`：如果您的終端機匯出此變數，OpenClaw 將使用背景顏色提示自動選擇 TUI 調色盤。
 
 ## 設定中的環境變數替換
 
@@ -120,42 +122,43 @@ OpenClaw 也會將上下文標記注入到衍生的子程序中：
 }
 ```
 
-詳情請參閱 [Configuration: Env var substitution](/zh-Hant/gateway/configuration-reference#env-var-substitution)。
+請參閱 [設定：環境變數替換](/zh-Hant/gateway/configuration-reference#env-var-substitution) 以了解完整細節。
 
 ## Secret 參照與 `${ENV}` 字串
 
-OpenClaw 支援兩種由環境變數驅動的模式：
+OpenClaw 支援兩種由環境驅動的模式：
 
 - 設定值中的 `${VAR}` 字串替換。
-- 用於支援 secret 參照欄位的 SecretRef 物件 (`{ source: "env", provider: "default", id: "VAR" }`)。
+- SecretRef 物件 (`{ source: "env", provider: "default", id: "VAR" }`)，用於支援 secret 參照的欄位。
 
-兩者皆會在啟動時從程序環境變數解析。SecretRef 的詳細資訊記載於 [Secrets Management](/zh-Hant/gateway/secrets)。
-設定 `env` 區塊本身不會解析 SecretRef 或 `file:...` 簡寫值。
+兩者皆會在啟用時從行程環境中解析。SecretRef 的詳細資訊記載於 [機密管理](/zh-Hant/gateway/secrets)。
+設定 `env` 區塊本身不會解析 SecretRef 或 `file:...`
+簡寫值。
 
 ## 路徑相關環境變數
 
-| 變數                     | 用途                                                                                                                            |
-| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------- |
-| `OPENCLAW_HOME`          | 覆寫用於所有內部路徑解析的家目錄 (`~/.openclaw/`、代理程式目錄、工作階段、憑證)。當將 OpenClaw 作為專用服務使用者執行時很有用。 |
-| `OPENCLAW_STATE_DIR`     | 覆寫狀態目錄 (預設為 `~/.openclaw`)。                                                                                           |
-| `OPENCLAW_CONFIG_PATH`   | 覆寫設定檔路徑 (預設為 `~/.openclaw/openclaw.json`)。                                                                           |
-| `OPENCLAW_INCLUDE_ROOTS` | 目錄路徑清單，其中 `$include` 指令可解析設定目錄外的檔案 (預設：無 — `$include` 僅限於設定目錄)。支援波號 (tilde) 展開。        |
+| 變數                     | 用途                                                                                                                                                                         |
+| ------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `OPENCLAW_HOME`          | 覆寫用於內部 OpenClaw 路徑預設值的主目錄 (`~/.openclaw/`、代理程式目錄、作業階段、憑證、安裝程式導入以及預設的 dev checkout)。當將 OpenClaw 作為專用服務使用者執行時很有用。 |
+| `OPENCLAW_STATE_DIR`     | 覆寫狀態目錄 (預設為 `~/.openclaw`)。                                                                                                                                        |
+| `OPENCLAW_CONFIG_PATH`   | 覆寫設定檔路徑 (預設為 `~/.openclaw/openclaw.json`)。                                                                                                                        |
+| `OPENCLAW_INCLUDE_ROOTS` | 目錄路徑清單，指定 `$include` 指令可在設定目錄之外解析檔案的位置（預設值：無 — `$include` 僅限於設定目錄內）。支援波浪號展開。                                               |
 
-## 記錄
+## 日誌記錄
 
 | 變數                             | 用途                                                                                                                                            |
 | -------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
 | `OPENCLAW_LOG_LEVEL`             | 覆寫檔案與主控台的日誌層級（例如 `debug`、`trace`）。優先順序高於設定中的 `logging.level` 與 `logging.consoleLevel`。無效值將被忽略並顯示警告。 |
-| `OPENCLAW_DEBUG_MODEL_TRANSPORT` | 在 `info` 層級輸出針對性的模型請求/回應時間診斷資訊，而無需啟用全域除錯日誌。                                                                   |
-| `OPENCLAW_DEBUG_MODEL_PAYLOAD`   | 模型載荷診斷：`summary`、`tools` 或 `full-redacted`。`full-redacted` 會被截斷與遮蔽，但仍可能包含提示/訊息文字。                                |
-| `OPENCLAW_DEBUG_SSE`             | 串流診斷：`events` 用於首次/完成時間，`peek` 則包含前五個經過遮蔽的 SSE 事件。                                                                  |
-| `OPENCLAW_DEBUG_CODE_MODE`       | 程式碼模式的模型層級診斷，包括提供者工具隱藏與僅限 exec/wait 執行強制。                                                                         |
+| `OPENCLAW_DEBUG_MODEL_TRANSPORT` | 在 `info` 層級輸出針對模型請求/回應的計時診斷資訊，無需啟用全域除錯日誌。                                                                       |
+| `OPENCLAW_DEBUG_MODEL_PAYLOAD`   | 模型載荷診斷：`summary`、`tools` 或 `full-redacted`。`full-redacted` 會進行截斷與遮罩，但可能包含提示/訊息文字。                                |
+| `OPENCLAW_DEBUG_SSE`             | 串流診斷：`events` 用於首個/完成計時，`peek` 則包含前五個經遮罩處理的 SSE 事件。                                                                |
+| `OPENCLAW_DEBUG_CODE_MODE`       | 程式碼模式的模型層級診斷，包括提供者工具隱藏以及僅執行/等待強制執行。                                                                           |
 
 ### `OPENCLAW_HOME`
 
-設定後，`OPENCLAW_HOME` 將取代系統的家目錄（`$HOME` / `os.homedir()`）用於所有內部路徑解析。這為無介面服務帳號啟用完整的檔案系統隔離。
+設定後，`OPENCLAW_HOME` 將取代系統主目錄（`$HOME` / `os.homedir()`），作為 OpenClaw 內部路徑的預設值。這包含預設狀態目錄、設定路徑、代理程式目錄、憑證、安裝程式導入工作區，以及 `openclaw update --channel dev` 使用的預設開發副本。
 
-**優先順序：** `OPENCLAW_HOME` > `$HOME` > `USERPROFILE` > `os.homedir()`
+**優先順序：** `OPENCLAW_HOME` > `$HOME` > `USERPROFILE` > Android 上的 Termux `PREFIX` 主目錄備案 > `os.homedir()`
 
 **範例** (macOS LaunchDaemon)：
 
@@ -167,43 +170,47 @@ OpenClaw 支援兩種由環境變數驅動的模式：
 </dict>
 ```
 
-`OPENCLAW_HOME` 也可設為波狀路徑（例如 `~/svc`），使用前會透過 `$HOME` 進行展開。
+`OPENCLAW_HOME` 也可設為波浪號路徑（例如 `~/svc`），將在使用前透過相同的 OS 主目錄備援鏈進行展開。
+
+明確的路徑變數，例如 `OPENCLAW_STATE_DIR`、`OPENCLAW_CONFIG_PATH` 和 `OPENCLAW_GIT_DIR`，仍然具有優先權。OS 帳戶任務，例如 shell 啟動檔案偵測、套件管理員設定和主機 `~` 擴展，可能仍然會使用真實的系統 home。
 
 ## nvm 使用者：web_fetch TLS 失敗
 
-若 Node.js 是透過 **nvm**（而非系統套件管理員）安裝，內建的 `fetch()` 會使用 nvm 捆綁的 CA 存儲，可能缺少現代根 CA（例如 Let's Encrypt 的 ISRG Root X1/X2、DigiCert Global Root G2 等）。這會導致 `web_fetch` 在大多數 HTTPS 網站上失敗並回報 `"fetch failed"`。
+如果 Node.js 是透過 **nvm** (而非系統套件管理員) 安裝，內建的 `fetch()` 會使用
+nvm 隨附的 CA 存儲，該存儲可能缺少現代化的根 CA (例如 Let's Encrypt 的 ISRG Root X1/X2、
+DigiCert Global Root G2 等)。這會導致 `web_fetch` 在大多數 HTTPS 網站上因 `"fetch failed"` 而失敗。
 
-在 Linux 上，OpenClaw 會自動偵測 nvm 並在實際啟動環境中套用修正：
+在 Linux 上，OpenClaw 會自動偵測 nvm 並在實際的啟動環境中套用修正：
 
 - `openclaw gateway install` 會將 `NODE_EXTRA_CA_CERTS` 寫入 systemd 服務環境
-- `openclaw` CLI 進入點會在 Node 啟動前設定 `NODE_EXTRA_CA_CERTS` 並重新執行自己
+- `openclaw` CLI 進入點會在 Node 啟動前設定 `NODE_EXTRA_CA_CERTS` 並重新執行自身
 
-**手動修正（適用於舊版本或直接啟動 `node ...`）：**
+**手動修正 (針對舊版本或直接啟動 `node ...` 的情況)：**
 
-在啟動 OpenClaw 之前匯出變數：
+在啟動 OpenClaw 之前匯出該變數：
 
 ```bash
 export NODE_EXTRA_CA_CERTS=/etc/ssl/certs/ca-certificates.crt
 openclaw gateway run
 ```
 
-請勿僅依賴將此變數寫入 `~/.openclaw/.env`；Node 會在
-程序啟動時讀取 `NODE_EXTRA_CA_CERTS`。
+不要依賴僅將此變數寫入 `~/.openclaw/.env`；Node 會在
+程式啟動時讀取 `NODE_EXTRA_CA_CERTS`。
 
 ## 舊版環境變數
 
 OpenClaw 僅讀取 `OPENCLAW_*` 環境變數。來自早期版本的舊版
 `CLAWDBOT_*` 和 `MOLTBOT_*` 前綴會被
-靜默忽略。
+無聲忽略。
 
-如果在啟動時仍於 Gateway 程序上設定任何這些變數，OpenClaw 會發出
-單一 Node 棄用警告 (`OPENCLAW_LEGACY_ENV_VARS`)，列出
-偵測到的前綴和總數。請將每個數值重新命名，以
-`OPENCLAW_` 取代舊版前綴（例如 `CLAWDBOT_GATEWAY_TOKEN` →
-`OPENCLAW_GATEWAY_TOKEN`）；舊名稱將不會生效。
+如果在啟動時 Gateway 程序上仍然設定了任何這些變數，OpenClaw 會發出
+單一個 Node 棄用警告 (`OPENCLAW_LEGACY_ENV_VARS`)，列出
+偵測到的前綴和總數。請以 `OPENCLAW_` 取代舊版前綴來重新命名每個值
+(例如 `CLAWDBOT_GATEWAY_TOKEN` →
+`OPENCLAW_GATEWAY_TOKEN`)；舊名稱將不會生效。
 
 ## 相關
 
-- [Gateway 配置](/zh-Hant/gateway/configuration)
+- [Gateway 設定](/zh-Hant/gateway/configuration)
 - [常見問題：環境變數與 .env 載入](/zh-Hant/help/faq#env-vars-and-env-loading)
 - [模型概覽](/zh-Hant/concepts/models)

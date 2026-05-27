@@ -94,7 +94,9 @@ a `COPILOT_GITHUB_TOKEN`, `GH_TOKEN` y luego `GITHUB_TOKEN`. Usa
     terminal, no en un script no interactivo ni en una canalización de CI.
   </Accordion>
 
-<Accordion title="La disponibilidad del modelo depende de su plan">La disponibilidad del modelo Copilot depende de su plan de GitHub. Si un modelo es rechazado, pruebe con otro ID (por ejemplo `github-copilot/gpt-4.1`).</Accordion>
+<Accordion title="La disponibilidad del modelo depende de su plan">
+  La disponibilidad del modelo Copilot depende de su plan de GitHub. Si un modelo es rechazado, pruebe con otro ID (por ejemplo `github-copilot/gpt-5.5`). Consulte los [modelos admitidos por plan de Copilot](https://docs.github.com/en/copilot/reference/ai-models/supported-models#supported-ai-models-per-copilot-plan) de GitHub para ver la lista actual de modelos.
+</Accordion>
 
   <Accordion title="Actualización en vivo del catálogo desde la API de Copilot">
     Una vez que la ruta de autenticación de inicio de sesión de dispositivo (o variable de entorno) ha resuelto un token de GitHub,

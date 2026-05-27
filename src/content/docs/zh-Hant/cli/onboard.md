@@ -47,21 +47,21 @@ openclaw onboard --mode remote --remote-url wss://gateway-host:18789
 `--modern` 啟動 Crestodian 對話式入門預覽。如果沒有
 `--modern`，`openclaw onboard` 將保持傳統的入門流程。
 
-純文字 `ws://` 適用於回送、私人 IP 字面值、`.local`，以及
-Tailnet `*.ts.net` 閘道 URL。對於其他受信任的私人 DNS 名稱，請在入門流程環境中設定
-`OPENCLAW_ALLOW_INSECURE_PRIVATE_WS=1`。
+在全新安裝的情況下，如果作用中的設定檔遺失或沒有任何經過編寫的設定（空白或僅有元資料），單獨執行 `openclaw` 也會啟動經典的上線流程。一旦設定檔包含經過編寫的設定，單獨執行 `openclaw` 將會改為開啟 Crestodian。
+
+對於回環位址、私有 IP 位址字面值、`.local` 以及 Tailnet `*.ts.net` 閘道 URL，接受純文字 `ws://`。對於其他受信任的私有 DNS 名稱，請在上線流程環境中設定 `OPENCLAW_ALLOW_INSECURE_PRIVATE_WS=1`。
 
 ## 地區設定
 
-互動式入門使用 CLI 精靈的語言代碼作為固定的設定文字。解析順序為：
+互動式上線使用 CLI 精靈的地區設定作為固定的設定複本。解析順序為：
 
 1. `OPENCLAW_LOCALE`
 2. `LC_ALL`
 3. `LC_MESSAGES`
 4. `LANG`
-5. 英文後備
+5. 英文備用
 
-支援的精靈語言代碼包括 `en`、`zh-CN` 和 `zh-TW`。語言代碼值可使用底線或 POSIX 後綴形式，例如 `zh_CN.UTF-8`。產品名稱、命令名稱、設定鍵、URL、提供者 ID、模型 ID 以及外掛/頻道標籤均保持原樣。
+支援的精靈地區設定為 `en`、`zh-CN` 和 `zh-TW`。地區設定值可以使用底線或 POSIX 後綴形式，例如 `zh_CN.UTF-8`。產品名稱、指令名稱、設定鍵、URL、提供者 ID、模型 ID 和外掛/通道標籤保持原樣。
 
 範例：
 
@@ -82,9 +82,9 @@ openclaw onboard --non-interactive \
   --custom-image-input
 ```
 
-`--custom-api-key` 在非互動模式下為選用。若省略，入門程式會檢查 `CUSTOM_API_KEY`。OpenClaw 會自動將常見的視覺模型 ID 標記為支援影像。對於未知的自訂視覺 ID，請傳入 `--custom-image-input`；若要強制僅限文字的中繼資料，則傳入 `--custom-text-input`。
+`--custom-api-key` 在非互動模式下為選用。如果省略，上線流程會檢查 `CUSTOM_API_KEY`。OpenClaw 會自動將常見的視覺模型 ID 標記為支援影像。針對未知的自訂視覺模型 ID，請傳遞 `--custom-image-input`，或傳遞 `--custom-text-input` 以強制使用僅文字元資料。
 
-LM Studio 在非互動模式下也支援特定提供者的金鑰旗標：
+LM Studio 在非互動模式下也支援特定於提供者的金鑰旗標：
 
 ```bash
 openclaw onboard --non-interactive \
@@ -105,9 +105,9 @@ openclaw onboard --non-interactive \
   --accept-risk
 ```
 
-`--custom-base-url` 預設為 `http://127.0.0.1:11434`。`--custom-model-id` 為選用；若省略，入門程式會使用 Ollama 建議的預設值。雲端模型 ID（例如 `kimi-k2.5:cloud`）也可在此使用。
+`--custom-base-url` 預設為 `http://127.0.0.1:11434`。`--custom-model-id` 為選用；如果省略，上線流程會使用 Ollama 建議的預設值。雲端模型 ID（例如 `kimi-k2.5:cloud`）也可以在此使用。
 
-將提供者金鑰以參照而非純文字形式儲存：
+將提供者金鑰以參照形式儲存，而非純文字：
 
 ```bash
 openclaw onboard --non-interactive \
@@ -116,27 +116,27 @@ openclaw onboard --non-interactive \
   --accept-risk
 ```
 
-使用 `--secret-input-mode ref` 時，入門程式會寫入由環境變數支援的參照，而非純文字金鑰值。對於由 auth-profile 支援的提供者，這會寫入 `keyRef` 項目；對於自訂提供者，這會將 `models.providers.<id>.apiKey` 寫為環境變數參照（例如 `{ source: "env", provider: "default", id: "CUSTOM_API_KEY" }`）。
+使用 `--secret-input-mode ref` 時，入門程式會寫入 env-backed 參照，而不是明文金鑰值。對於由 auth-profile 支援的提供者，這會寫入 `keyRef` 項目；對於自訂提供者，這會將 `models.providers.<id>.apiKey` 作為 env 參照寫入（例如 `{ source: "env", provider: "default", id: "CUSTOM_API_KEY" }`）。
 
 非互動式 `ref` 模式約定：
 
-- 在入門流程環境中設定提供者環境變數（例如 `OPENAI_API_KEY`）。
-- 除非已設定該環境變數，否則請勿傳入內聯金鑰旗標（例如 `--openai-api-key`）。
-- 若傳入內聯金鑰旗標但未提供所需環境變數，入門程式會顯示指引並快速失敗。
+- 在入門程式程序環境中設定提供者環境變數（例如 `OPENAI_API_KEY`）。
+- 除非該環境變數也已設定，否則請勿傳遞內嵌金鑰旗標（例如 `--openai-api-key`）。
+- 如果在沒有所需環境變數的情況下傳遞內嵌金鑰旗標，入門程式將會快速失敗並提供指導。
 
-非互動模式下的 Gateway 權杖選項：
+非互動模式下的閘道 Token 選項：
 
-- `--gateway-auth token --gateway-token <token>` 會儲存純文字權杖。
-- `--gateway-auth token --gateway-token-ref-env <name>` 將 `gateway.auth.token` 儲存為 env SecretRef。
+- `--gateway-auth token --gateway-token <token>` 會儲存明文 Token。
+- `--gateway-auth token --gateway-token-ref-env <name>` 會將 `gateway.auth.token` 作為 env SecretRef 儲存。
 - `--gateway-token` 和 `--gateway-token-ref-env` 互斥。
-- `--gateway-token-ref-env` 需要在上線流程環境中設定非空的環境變數。
-- 使用 `--install-daemon` 時，當權杖驗證需要權杖，SecretRef 管理的閘道權杖會被驗證，但不會在監督器服務環境元資料中以解析後的明文形式保存。
-- 使用 `--install-daemon` 時，如果權杖模式需要權杖且已設定的權杖 SecretRef 未解析，上線流程將以封閉式失敗並提供修復指導。
-- 使用 `--install-daemon` 時，如果同時設定了 `gateway.auth.token` 和 `gateway.auth.password` 但未設定 `gateway.auth.mode`，上線流程將封鎖安裝，直到明確設定模式。
-- 本機上線會將 `gateway.mode="local"` 寫入設定檔。如果後續的設定檔缺少 `gateway.mode`，應將其視為設定損毀或不完整的手動編輯，而非有效的本機模式捷徑。
-- 當選擇的設定路徑需要時，本機上線會安裝選定的可下載外掛程式。
-- 遠端上線僅寫入遠端閘道的連線資訊，且不安裝本機外掛套件。
-- `--allow-unconfigured` 是一個獨立的閘道執行時緊急應變措施。這並不意味著上線流程可以省略 `gateway.mode`。
+- `--gateway-token-ref-env` 需要在入門程式程序環境中設定非空環境變數。
+- 使用 `--install-daemon` 時，當 Token 驗證需要 Token 時，SecretRef 管理的閘道 Token 會經過驗證，但不會在監督器服務環境元資料中保存為已解析的明文。
+- 使用 `--install-daemon` 時，如果 Token 模式需要 Token 且設定的 Token SecretRef 未解析，入門程式將會封閉式失敗並提供修復指導。
+- 使用 `--install-daemon` 時，如果同時設定了 `gateway.auth.token` 和 `gateway.auth.password` 且未設定 `gateway.auth.mode`，入門程式將會封鎖安裝，直到明確設定模式為止。
+- 本機入門程式會將 `gateway.mode="local"` 寫入設定中。如果後續的設定檔缺少 `gateway.mode`，請將其視為設定損壞或不完整的手動編輯，而非有效的本機模式捷徑。
+- 當選擇的設定路徑需要時，本機入門程式會安裝選取的可下載外掛程式。
+- 遠端入門程式僅會寫入遠端閘道的連線資訊，並不會安裝本機外掛程式套件。
+- `--allow-unconfigured` 是一個獨立的閘道執行時緊急出口。這並不代表加入流程可以省略 `gateway.mode`。
 
 範例：
 
@@ -150,26 +150,26 @@ openclaw onboard --non-interactive \
   --accept-risk
 ```
 
-非互動式本機閘道健康狀態：
+非互動式本地閘道健康檢查：
 
-- 除非您傳遞 `--skip-health`，否則上線流程會等待可連線的本機閘道才會成功結束。
-- `--install-daemon` 會先啟動受管理的閘道安裝路徑。若沒有它，您必須已經有一個正在執行的本機閘道，例如 `openclaw gateway run`。
-- 如果您只想在自動化中進行設定/工作區/引導寫入，請使用 `--skip-health`。
-- 如果您自行管理工作區檔案，請傳入 `--skip-bootstrap` 以設定 `agents.defaults.skipBootstrap: true` 並跳過建立 `AGENTS.md`、`SOUL.md`、`TOOLS.md`、`IDENTITY.md`、`USER.md`、`HEARTBEAT.md` 和 `BOOTSTRAP.md`。
-- 在原生 Windows 上，`--install-daemon` 會先嘗試使用「工作排程器」，如果建立工作被拒絕，則會退而求其次使用每個使用者的「啟動」資料夾登入項目。
+- 除非您傳遞 `--skip-health`，否則加入流程會等待一個可連線的本地閘道後才會成功結束。
+- `--install-daemon` 會先啟動受管理的閘道安裝路徑。如果沒有它，您必須已經有一個本地閘道正在執行，例如 `openclaw gateway run`。
+- 如果您只想在自動化中進行 config/workspace/bootstrap 寫入，請使用 `--skip-health`。
+- 如果您自己管理工作區檔案，請傳遞 `--skip-bootstrap` 來設定 `agents.defaults.skipBootstrap: true` 並跳過建立 `AGENTS.md`、`SOUL.md`、`TOOLS.md`、`IDENTITY.md`、`USER.md`、`HEARTBEAT.md` 和 `BOOTSTRAP.md`。
+- 在原生 Windows 上，`--install-daemon` 會先嘗試「排定的工作」，如果建立工作被拒絕，則會退回到個別使用者的「啟動」資料夾登入項目。
 
-使用參考模式的互動式上線行為：
+使用參照模式時的互動式加入行為：
 
-- 當系統提示時，請選擇 **Use secret reference**。
-- 然後選擇以下其中一項：
+- 當收到提示時，選擇 **使用秘密參照**。
+- 然後選擇下列其中一項：
   - 環境變數
-  - 設定的祕密提供者 (`file` 或 `exec`)
-- 上線程序會在儲存參照之前執行快速的飛行前驗證。
-  - 如果驗證失敗，上線程序會顯示錯誤並讓您重試。
+  - 設定的秘密提供者 (`file` 或 `exec`)
+- 加入流程會在儲存參照之前執行快速的飛前驗證。
+  - 如果驗證失敗，加入流程會顯示錯誤並讓您重試。
 
 ### 非互動式 Z.AI 端點選擇
 
-<Note>`--auth-choice zai-api-key` 會自動為您的金鑰偵測最佳的 Z.AI 端點 (偏好使用 `zai/glm-5.1` 的通用 API)。如果您特別想要 GLM Coding Plan 端點，請選擇 `zai-coding-global` 或 `zai-coding-cn`。</Note>
+<Note>`--auth-choice zai-api-key` 會自動為您的金鑰偵測最佳的 Z.AI 端點（偏好使用帶有 `zai/glm-5.1` 的通用 API）。如果您特別想要 GLM Coding Plan 端點，請選擇 `zai-coding-global` 或 `zai-coding-cn`。</Note>
 
 ```bash
 # Promptless endpoint selection
@@ -195,29 +195,29 @@ openclaw onboard --non-interactive \
 
 <AccordionGroup>
   <Accordion title="Flow types">
-    - `quickstart`：最少的提示，自動產生 gateway token。
-    - `manual`：針對連接埠、綁定和驗證的完整提示 (`advanced` 的別名)。
-    - `import`：執行偵測到的移轉提供者，預覽計畫，然後在確認後套用。
+    - `quickstart`: 最少提示，自動產生 gateway token。
+    - `manual`: 針對 port、bind 和 auth 的完整提示（`advanced` 的別名）。
+    - `import`: 執行偵測到的遷移提供者，預覽計畫，然後在確認後套用。
 
   </Accordion>
-  <Accordion title="提供者預先過濾">
-    當驗證選擇暗示首選提供者時，上架流程會將預設模型與允許清單選擇器預先過濾為該提供者。對於 Volcengine 和 BytePlus，這也會比對編碼計劃的變體（`volcengine-plan/*`、`byteplus-plan/*`）。
+  <Accordion title="Provider prefiltering">
+    當 auth 選擇隱含了偏好的提供者時，onboarding 會將預設模型和允許清單選擇器預先篩選為該提供者。對於 Volcengine 和 BytePlus，這也會比對 coding-plan 變體（`volcengine-plan/*`、`byteplus-plan/*`）。
 
-    如果首選提供者篩選器尚未產生任何已載入的模型，上架流程會退回到未經過濾的目錄，而不是讓選擇器保持空白。
-
-  </Accordion>
-  <Accordion title="網頁搜尋後續">
-    部分網頁搜尋提供者會觸發特定的後續提示：
-
-    - **Grok** 可以提供選用的 `x_search` 設定，使用相同的 `XAI_API_KEY` 以及 `x_search` 模型選擇。
-    - **Kimi** 可以詢問 Moonshot API 區域（`api.moonshot.ai` 與 `api.moonshot.cn`）以及預設的 Kimi 網頁搜尋模型。
+    如果偏好的提供者篩選器尚未產生任何已載入的模型，onboarding 會改回退到未篩選的目錄，而不是讓選擇器維持空白。
 
   </Accordion>
-  <Accordion title="其他行為">
-    - 本地上架 DM 範圍行為：[CLI 設定參考](/zh-Hant/start/wizard-cli-reference#outputs-and-internals)。
-    - 最快第一次聊天：`openclaw dashboard`（控制 UI，無頻道設定）。
-    - 自訂提供者：連線任何 OpenAI 或 Anthropic 相容的端點，包括未列出的託管提供者。使用 Unknown 進行自動偵測。
-    - 如果偵測到 Hermes 狀態，上架流程會提供遷移流程。使用 [Migrate](/zh-Hant/cli/migrate) 進行試執行計畫、覆寫模式、報告和精確對應。
+  <Accordion title="Web-search follow-ups">
+    部分網路搜尋提供者會觸發提供者特定的後續提示：
+
+    - **Grok** 可以提供選用性 `x_search` 設定，使用相同的 xAI OAuth 設定檔或 API 金鑰以及 `x_search` 模型選擇。
+    - **Kimi** 可以詢問 Moonshot API 區域（`api.moonshot.ai` vs `api.moonshot.cn`）以及預設的 Kimi 網路搜尋模型。
+
+  </Accordion>
+  <Accordion title="Other behaviors">
+    - 本機 onboard DM 範圍行為：[CLI 設定參考](/zh-Hant/start/wizard-cli-reference#outputs-and-internals)。
+    - 最快的首次聊天：`openclaw dashboard`（Control UI，無頻道設定）。
+    - 自訂提供者：連線至任何 OpenAI 或 Anthropic 相容的端點，包含未列出的託管提供者。使用 Unknown 自動偵測。
+    - 如果偵測到 Hermes 狀態，onboarding 會提供遷移流程。使用 [Migrate](/zh-Hant/cli/migrate) 進行試執行計畫、覆寫模式、報告和精確對應。
 
   </Accordion>
 </AccordionGroup>
@@ -230,6 +230,6 @@ openclaw configure
 openclaw agents add <name>
 ```
 
-當您只需要基礎設定/工作區時，請改用 `openclaw setup`。之後使用 `openclaw configure` 進行特定變更，並使用 `openclaw channels add` 進行僅限頻道的設定。
+如果您只需要基本配置/工作區，請改用 `openclaw setup`。稍後使用 `openclaw configure` 進行特定變更，並使用 `openclaw channels add` 進行僅限通道的設定。
 
-<Note>`--json` 並不代表非互動模式。請使用 `--non-interactive` 進行腳本撰寫。</Note>
+<Note>`--json` 並不表示非互動模式。請使用 `--non-interactive` 進行腳本操作。</Note>

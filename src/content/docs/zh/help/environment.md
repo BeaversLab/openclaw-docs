@@ -63,9 +63,7 @@ OpenClaw 从多个来源获取环境变量。规则是 **绝不覆盖现有值**
 }
 ```
 
-请参阅 [Secrets Management](/zh/gateway/secrets) 和
-[SecretRef credential surface](/zh/reference/secretref-credential-surface) 了解
-受支持的字段。
+请参阅[密钥管理](/zh/gateway/secrets)和[SecretRef 凭据界面](/zh/reference/secretref-credential-surface)以了解受支持的字段。
 
 ## Shell env 导入
 
@@ -95,18 +93,19 @@ OpenClaw 还会将上下文标记注入到生成的子进程中：
 - `OPENCLAW_SHELL=acp`：为 ACP 运行时后端进程生成设置（例如 `acpx`）。
 - `OPENCLAW_SHELL=acp-client`：在生成 ACP 网桥进程时为 `openclaw acp client` 设置。
 - `OPENCLAW_SHELL=tui-local`TUI：为本地 TUI `!` Shell 命令设置。
+- `OPENCLAW_CLI=1`CLI：为由 CLI 入口点生成的子进程设置。
 
-这些是运行时标记（不是必需的用户配置）。它们可用于 Shell/配置文件逻辑中，以应用特定于上下文的规则。
+这些是运行时标记（非必需的用户配置）。它们可以在 shell/profile 逻辑中使用，以应用特定于上下文的规则。
 
 ## UI 环境变量
 
-- `OPENCLAW_THEME=light`TUI：当您的终端背景为浅色时，强制使用浅色 TUI 调色板。
+- `OPENCLAW_THEME=light`TUI：当您的终端具有浅色背景时，强制使用浅色 TUI 调色板。
 - `OPENCLAW_THEME=dark`TUI：强制使用深色 TUI 调色板。
-- `COLORFGBG`OpenClawTUI：如果您的终端导出了该变量，OpenClaw 将使用背景颜色提示自动选择 TUI 调色板。
+- `COLORFGBG`OpenClawTUI：如果您的终端导出了它，OpenClaw 将使用背景颜色提示来自动选择 TUI 调色板。
 
 ## 配置中的环境变量替换
 
-您可以使用 `${VAR_NAME}` 语法在配置字符串值中直接引用环境变量：
+您可以使用 `${VAR_NAME}` 语法直接在配置字符串值中引用环境变量：
 
 ```json5
 {
@@ -120,43 +119,43 @@ OpenClaw 还会将上下文标记注入到生成的子进程中：
 }
 ```
 
-有关完整详细信息，请参阅[配置：环境变量替换](/zh/gateway/configuration-reference#env-var-substitution)。
+有关详细信息，请参阅[配置：环境变量替换](/zh/gateway/configuration-reference#env-var-substitution)。
 
-## Secret 引用与 `${ENV}` 字符串
+## 密钥引用与 `${ENV}` 字符串
 
 OpenClaw 支持两种由环境驱动的模式：
 
 - 配置值中的 `${VAR}` 字符串替换。
 - 用于支持密钥引用的字段的 SecretRef 对象 (`{ source: "env", provider: "default", id: "VAR" }`)。
 
-两者都在激活时从进程环境解析。SecretRef 的详细信息记录在[密钥管理](/zh/gateway/secrets)中。
+两者均在激活时从进程环境解析。SecretRef 的详细信息记录在[密钥管理](/zh/gateway/secrets)中。
 配置 `env` 块本身不解析 SecretRef 或 `file:...`
 简写值。
 
-## 路径相关环境变量
+## 路径相关的环境变量
 
-| 变量                     | 用途                                                                                                                           |
-| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------ |
-| `OPENCLAW_HOME`          | 覆盖用于所有内部路径解析的主目录 (`~/.openclaw/`OpenClaw、代理目录、会话、凭据)。当作为专用服务用户运行 OpenClaw 时非常有用。  |
-| `OPENCLAW_STATE_DIR`     | 覆盖状态目录（默认 `~/.openclaw`）。                                                                                           |
-| `OPENCLAW_CONFIG_PATH`   | 覆盖配置文件路径（默认 `~/.openclaw/openclaw.json`）。                                                                         |
-| `OPENCLAW_INCLUDE_ROOTS` | 目录路径列表，`$include` 指令可以在其中解析配置目录之外的文件（默认值：无 —— `$include` 被限制在配置目录中）。支持波浪号展开。 |
+| 变量                     | 用途                                                                                                                                                                         |
+| ------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `OPENCLAW_HOME`          | 覆盖用于内部 OpenClaw 路径默认值的主目录（OpenClaw`~/.openclaw/`OpenClaw、代理目录、会话、凭据、安装程序引导以及默认开发签出）。当作为专用服务用户运行 OpenClaw 时非常有用。 |
+| `OPENCLAW_STATE_DIR`     | 覆盖状态目录（默认 `~/.openclaw`）。                                                                                                                                         |
+| `OPENCLAW_CONFIG_PATH`   | 覆盖配置文件路径（默认 `~/.openclaw/openclaw.json`）。                                                                                                                       |
+| `OPENCLAW_INCLUDE_ROOTS` | 目录路径列表，`$include` 指令可在其中解析配置目录之外的文件（默认：无 —— `$include` 被限制在配置目录内）。支持波浪号展开。                                                   |
 
 ## 日志记录
 
 | 变量                             | 用途                                                                                                                                          |
 | -------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
 | `OPENCLAW_LOG_LEVEL`             | 覆盖文件和控制台的日志级别（例如 `debug`、`trace`）。优先级高于配置中的 `logging.level` 和 `logging.consoleLevel`。无效值将被忽略并发出警告。 |
-| `OPENCLAW_DEBUG_MODEL_TRANSPORT` | 在 `info` 级别输出针对性的模型请求/响应计时诊断信息，而无需启用全局调试日志。                                                                 |
-| `OPENCLAW_DEBUG_MODEL_PAYLOAD`   | 模型负载诊断：`summary`、`tools` 或 `full-redacted`。`full-redacted` 会被截取和编辑，但可能包含提示词/消息文本。                              |
-| `OPENCLAW_DEBUG_SSE`             | 流式传输诊断：`events` 用于开始/完成计时，`peek` 用于包含前五个经过编辑的 SSE 事件。                                                          |
-| `OPENCLAW_DEBUG_CODE_MODE`       | 代码模式模型表面诊断，包括提供商工具隐藏以及仅执行/等待强制执行。                                                                             |
+| `OPENCLAW_DEBUG_MODEL_TRANSPORT` | 在 `info` 级别发出针对性的模型请求/响应计时诊断信息，而无需启用全局调试日志。                                                                 |
+| `OPENCLAW_DEBUG_MODEL_PAYLOAD`   | 模型负载诊断：`summary`、`tools` 或 `full-redacted`。`full-redacted` 会受到限制和编辑，但可能包含提示词/消息文本。                            |
+| `OPENCLAW_DEBUG_SSE`             | 流式传输诊断：`events` 用于首次/完成计时，`peek` 用于包含前五个经过编辑的 SSE 事件。                                                          |
+| `OPENCLAW_DEBUG_CODE_MODE`       | 代码模式模型层诊断，包括提供商工具隐藏以及仅执行/等待强制执行。                                                                               |
 
 ### `OPENCLAW_HOME`
 
-设置后，`OPENCLAW_HOME` 将替换系统主目录（`$HOME` / `os.homedir()`）用于所有内部路径解析。这为无头服务帐户启用了完整的文件系统隔离。
+设置后，`OPENCLAW_HOME` 将替换内部 OpenClaw 路径默认值的系统主目录（`$HOME` / `os.homedir()`OpenClaw）。这包括默认状态目录、配置路径、代理目录、凭据、安装程序新手引导工作区以及 `openclaw update --channel dev` 使用的默认开发检出目录。
 
-**优先级：** `OPENCLAW_HOME` > `$HOME` > `USERPROFILE` > `os.homedir()`
+**优先级：** `OPENCLAW_HOME` > `$HOME` > `USERPROFILE` > Android 上的 Termux `PREFIX`Android 主目录后备 > `os.homedir()`
 
 **示例** (macOS LaunchDaemon)：
 
@@ -168,13 +167,13 @@ OpenClaw 支持两种由环境驱动的模式：
 </dict>
 ```
 
-`OPENCLAW_HOME` 也可以设置为波浪号路径（例如 `~/svc`），该路径将在使用前使用 `$HOME` 进行展开。
+`OPENCLAW_HOME` 也可以设置为波浪号路径（例如 `~/svc`），该路径会在使用前通过相同的操作系统主目录回退链进行扩展。
+
+显式路径变量（如 `OPENCLAW_STATE_DIR`、`OPENCLAW_CONFIG_PATH` 和 `OPENCLAW_GIT_DIR`）仍然具有优先权。操作系统账户任务，例如 shell 启动文件检测、包管理器设置和主机 `~` 扩展，可能仍会使用实际的系统主目录。
 
 ## nvm 用户：web_fetch TLS 失败
 
-如果 Node.js 是通过 **nvm**（而非系统包管理器）安装的，其内置的 `fetch()` 使用
-nvm 捆绑的 CA 存储，这可能缺少现代根 CA（例如 Let's Encrypt 的 ISRG Root X1/X2、
-DigiCert Global Root G2 等）。这会导致 `web_fetch` 在大多数 HTTPS 站点上因 `"fetch failed"` 而失败。
+如果 Node.js 是通过 **nvm**（而非系统包管理器）安装的，则内置的 `fetch()` 使用 nvm 捆绑的 CA 存储库，该存储库可能缺少现代根 CA（例如 Let's Encrypt 的 ISRG Root X1/X2、DigiCert Global Root G2 等）。这会导致 `web_fetch` 在大多数 HTTPS 站点上因 `"fetch failed"` 而失败。
 
 在 Linux 上，OpenClaw 会自动检测 nvm 并在实际的启动环境中应用修复：
 
@@ -190,23 +189,16 @@ export NODE_EXTRA_CA_CERTS=/etc/ssl/certs/ca-certificates.crt
 openclaw gateway run
 ```
 
-对于此变量，不要依赖仅写入 `~/.openclaw/.env`；Node 在进程启动时会读取
-`NODE_EXTRA_CA_CERTS`。
+不要依赖仅将此变量写入 `~/.openclaw/.env`；Node 在进程启动时会读取 `NODE_EXTRA_CA_CERTS`。
 
 ## 旧版环境变量
 
-OpenClaw 仅读取 `OPENCLAW_*` 环境变量。早期版本中的旧版
-`CLAWDBOT_*` 和 `MOLTBOT_*` 前缀会被静默
-忽略。
+OpenClaw 仅读取 `OPENCLAW_*` 环境变量。早期版本中的旧版 `CLAWDBOT_*` 和 `MOLTBOT_*` 前缀将被静默忽略。
 
-如果在启动时 Gateway(网关) 进程上仍然设置了任何这些变量，OpenClaw 将发出
-一条 Node 弃用警告 (`OPENCLAW_LEGACY_ENV_VARS`)，其中列出了
-检测到的前缀和总计数。通过将
-旧版前缀替换为 `OPENCLAW_` 来重命名每个值（例如 `CLAWDBOT_GATEWAY_TOKEN` →
-`OPENCLAW_GATEWAY_TOKEN`）；旧名称将不再生效。
+如果在启动时 Gateway 进程上仍然设置了任何旧值，OpenClaw 将发出一个单一的 Node 弃用警告 (Gateway(网关)OpenClaw`OPENCLAW_LEGACY_ENV_VARS`)，其中列出了检测到的前缀和总数。请通过用 `OPENCLAW_` 替换旧前缀来重命名每个值（例如 `CLAWDBOT_GATEWAY_TOKEN` → `OPENCLAW_GATEWAY_TOKEN`）；旧名称将不再生效。
 
 ## 相关
 
-- [Gateway(网关) 配置](/zh/gateway/configuration)
+- [Gateway 配置](<Gateway(网关)/en/gateway/configuration>)
 - [常见问题：环境变量和 .env 加载](/zh/help/faq#env-vars-and-env-loading)
-- [模型概览](/zh/concepts/models)
+- [模型概述](/zh/concepts/models)

@@ -47,7 +47,7 @@ Notas:
 - `openclaw chat` y `openclaw terminal` son alias de `openclaw tui --local`.
 - `--local` no se puede combinar con `--url`, `--token` o `--password`.
 - El modo local utiliza directamente el tiempo de ejecución del agente integrado. La mayoría de las herramientas locales funcionan, pero las funciones exclusivas del Gateway no están disponibles.
-- `openclaw` y `openclaw crestodian` también usan este shell de TUI, con Crestodian como el backend de chat de configuración y reparación local.
+- Después de que un archivo de configuración ha establecido los ajustes, `openclaw` y `openclaw crestodian` también utilizan este shell de la TUI, con Crestodian como el backend de chat para la configuración y reparación local.
 
 ## Lo que ves
 

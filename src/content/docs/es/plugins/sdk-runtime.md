@@ -136,27 +136,29 @@ Use `openclaw/plugin-sdk/pair-loop-guard-runtime` directamente solo para bucles 
     });
     ```
 
-    `runEmbeddedAgent(...)` es el asistente neutral para iniciar un turno normal del agente OpenClaw desde el código del complemento. Utiliza la misma resolución de proveedor/modelo y selección de arnés del agente que las respuestas activadas por el canal.
+    `runEmbeddedAgent(...)` es la función auxiliar neutral para iniciar un turno normal del agente OpenClaw desde el código del complemento. Utiliza la misma resolución de proveedor/modelo y selección de arnés del agente que las respuestas activadas por el canal.
 
     `runEmbeddedPiAgent(...)` permanece como un alias de compatibilidad.
 
-    `resolveThinkingPolicy(...)` devuelve los niveles de pensamiento admitidos por el proveedor/modelo y el opcional predeterminado. Los complementos del proveedor son los propietarios del perfil específico del modelo a través de sus enlaces de pensamiento (thinking hooks), por lo que los complementos de herramientas deben llamar a este asistente de ejecución en lugar de importar o duplicar las listas de proveedores.
+    `resolveThinkingPolicy(...)` devuelve los niveles de pensamiento admitidos por el proveedor/modelo y el predeterminado opcional. Los complementos del proveedor poseen el perfil específico del modelo a través de sus ganchos de pensamiento, por lo que los complementos de herramientas deben llamar a esta función auxiliar de tiempo de ejecución en lugar de importar o duplicar las listas de proveedores.
 
     `normalizeThinkingLevel(...)` convierte el texto del usuario, como `on`, `x-high` o `extra high`, al nivel almacenado canónico antes de verificarlo con la política resuelta.
 
-    Los **asistentes de almacenamiento de sesión** están en `api.runtime.agent.session`:
+    **Los auxiliares del almacén de sesiones** están en `api.runtime.agent.session`:
 
     ```typescript
-    const storePath = api.runtime.agent.session.resolveStorePath(cfg);
-    const store = api.runtime.agent.session.loadSessionStore(storePath);
-    await api.runtime.agent.session.updateSessionStore(storePath, (nextStore) => {
-      // Patch one entry without replacing the whole file from stale state.
-      nextStore[sessionKey] = { ...nextStore[sessionKey], thinkingLevel: "high" };
+    const entry = api.runtime.agent.session.getSessionEntry({ agentId, sessionKey });
+    for (const { sessionKey, entry } of api.runtime.agent.session.listSessionEntries({ agentId })) {
+      // Iterate session rows without depending on the legacy sessions.json shape.
+    }
+    await api.runtime.agent.session.patchSessionEntry({
+      agentId,
+      sessionKey,
+      update: (entry) => ({ thinkingLevel: "high" }),
     });
-    const filePath = api.runtime.agent.session.resolveSessionFilePath(cfg, sessionId);
     ```
 
-    Se prefieren `updateSessionStore(...)` o `updateSessionStoreEntry(...)` para las escrituras en tiempo de ejecución. Se enrutan a través del escritor de almacenamiento de sesión propiedad de Gateway, preservan las actualizaciones simultáneas y reutilizan la caché en caliente. `saveSessionStore(...)` permanece disponible para compatibilidad y reescrituras de estilo de mantenimiento sin conexión.
+    Prefiera `getSessionEntry(...)`, `listSessionEntries(...)`, `patchSessionEntry(...)` o `upsertSessionEntry(...)` para los flujos de trabajo de sesión. Estos auxiliares dirigen las sesiones por identidad de agente/sesión, por lo que los complementos no dependen de la forma de almacenamiento heredada `sessions.json`. Use `preserveActivity: true` para parches solo de metadatos que no deben actualizar la actividad de la sesión, y `replaceEntry: true` solo cuando la devolución de llamada devuelve una entrada completa y los campos eliminados deben permanecer eliminados. `loadSessionStore(...)` permanece como una escotilla de escape de compatibilidad desaprobada para las personas que llaman que intencionalmente necesitan un clon mutable de todo el almacén.
 
   </Accordion>
   <Accordion title="api.runtime.agent.defaults">
@@ -170,8 +172,8 @@ Use `openclaw/plugin-sdk/pair-loop-guard-runtime` directamente solo para bucles 
   </Accordion>
 
   <Accordion title="api.runtime.llm">
-    Ejecute una finalización de texto propiedad del host sin importar elementos internos del proveedor o
-    duplicar la preparación del modelo/autenticación/URL base de OpenClaw.
+    Ejecute una finalización de texto propiedad del host sin importar los elementos internos del proveedor o
+    duplicar la preparación del modelo/auth/base URL de OpenClaw.
 
     ```typescript
     const result = await api.runtime.llm.complete({
@@ -182,20 +184,20 @@ Use `openclaw/plugin-sdk/pair-loop-guard-runtime` directamente solo para bucles 
     });
     ```
 
-    El auxiliar utiliza la misma ruta de preparación de finalización simple que el tiempo de ejecución
-    integrado de OpenClaw y la instantánea de configuración del tiempo de ejecución propiedad del host. Los motores de contexto
+    El asistente utiliza la misma ruta de preparación de finalización simple que el tiempo de ejecución integrado de OpenClaw
+    y la instantánea de configuración del tiempo de ejecución propiedad del host. Los motores de contexto
     reciben una capacidad `llm.complete` vinculada a la sesión, por lo que las llamadas al modelo utilizan el
     agente de la sesión activa y no vuelven silenciosamente al agente predeterminado. El
-    resultado incluye la atribución del proveedor/modelo/agente, además del uso de tokens,
-    caché y costos estimados normalizados cuando esté disponible.
+    resultado incluye la atribución del proveedor/modelo/agente más el token normalizado,
+    caché y el uso de costo estimado cuando esté disponible.
 
     <Warning>
-    Las anulaciones de modelo requieren la aceptación del operador a través de `plugins.entries.<id>.llm.allowModelOverride: true` en la configuración. Use `plugins.entries.<id>.llm.allowedModels` para restringir complementos de confianza a objetivos `provider/model` canónicos específicos. Las finalizaciones entre agentes requieren `plugins.entries.<id>.llm.allowAgentIdOverride: true`.
+    Las anulaciones de modelo requieren la aceptación del operador a través de `plugins.entries.<id>.llm.allowModelOverride: true` en la configuración. Use `plugins.entries.<id>.llm.allowedModels` para restringir los complementos de confianza a `provider/model` canónicos específicos. Las finalizaciones entre agentes requieren `plugins.entries.<id>.llm.allowAgentIdOverride: true`.
     </Warning>
 
   </Accordion>
   <Accordion title="api.runtime.subagent">
-    Inicia y gestiona ejecuciones de subagentes en segundo plano.
+    Inicie y gestione ejecuciones de subagentes en segundo plano.
 
     ```typescript
     // Start a subagent run
@@ -226,11 +228,11 @@ Use `openclaw/plugin-sdk/pair-loop-guard-runtime` directamente solo para bucles 
     Las anulaciones de modelo (`provider`/`model`) requieren la aceptación del operador a través de `plugins.entries.<id>.subagent.allowModelOverride: true` en la configuración. Los complementos que no son de confianza aún pueden ejecutar subagentes, pero se rechazan las solicitudes de anulación.
     </Warning>
 
-    `deleteSession(...)` puede eliminar las sesiones creadas por el mismo complemento a través de `api.runtime.subagent.run(...)`. Eliminar sesiones arbitrarias de usuario u operador aún requiere una solicitud de Gateway con ámbito de administrador.
+    `deleteSession(...)` puede eliminar las sesiones creadas por el mismo complemento a través de `api.runtime.subagent.run(...)`. Eliminar sesiones arbitrarias de usuario u operador aún requiere una solicitud de Gateway con alcance de administrador.
 
   </Accordion>
   <Accordion title="api.runtime.nodes">
-    Lista los nodos conectados e invoca un comando de host de nodo desde el código del plugin cargado por Gateway o desde los comandos CLI del plugin. Use esto cuando un plugin sea propietario del trabajo local en un dispositivo emparejado, por ejemplo, un navegador o puente de audio en otro Mac.
+    Enumere los nodos conectados e invoque un comando de host de nodo desde el código del complemento cargado por Gateway o desde los comandos de CLI del complemento. Úselo cuando un complemento realiza trabajo local en un dispositivo vinculado, por ejemplo, un navegador o un puente de audio en otra Mac.
 
     ```typescript
     const { nodes } = await api.runtime.nodes.list({ connected: true });
@@ -243,18 +245,18 @@ Use `openclaw/plugin-sdk/pair-loop-guard-runtime` directamente solo para bucles 
     });
     ```
 
-    Dentro del Gateway, este tiempo de ejecución está en proceso. En los comandos CLI del plugin, llama al Gateway configurado a través de RPC, por lo que comandos como `openclaw googlemeet recover-tab` pueden inspeccionar los nodos emparejados desde la terminal. Los comandos de nodo aún pasan por el emparejamiento normal de nodos del Gateway, listas de permitidos de comandos, políticas de invocación de nodos de plugins y manejo de comandos locales del nodo.
+    Dentro de Gateway, este tiempo de ejecución está en proceso. En los comandos de CLI del complemento, llama al Gateway configurado a través de RPC, por lo que comandos como `openclaw googlemeet recover-tab` pueden inspeccionar los nodos vinculados desde la terminal. Los comandos de nodo aún pasan por el emparejamiento normal de nodos de Gateway, listas de permitidos de comandos, políticas de invocación de nodos de complementos y el manejo de comandos locales del nodo.
 
-    Los plugins que expongan comandos de host de nodo peligrosos deben registrar una política de invocación de nodo con `api.registerNodeInvokePolicy(...)`. La política se ejecuta en el Gateway después de las comprobaciones de la lista de permitidos de comandos y antes de que el comando se reenvía al nodo, por lo que las llamadas directas `node.invoke` y las herramientas de plugin de nivel superior comparten la misma ruta de aplicación.
+    Los complementos que expongan comandos de host de nodo peligrosos deben registrar una política de invocación de nodo con `api.registerNodeInvokePolicy(...)`. La política se ejecuta en Gateway después de las comprobaciones de lista de permitidos y antes de que el comando se reenvía al nodo, por lo que las llamadas directas `node.invoke` y las herramientas de complemento de nivel superior comparten la misma ruta de aplicación.
 
   </Accordion>
   <Accordion title="api.runtime.tasks.managedFlows">
-    Vincula un tiempo de ejecución de Task Flow a una clave de sesión de OpenClaw existente o a un contexto de herramienta confiable, y luego crea y gestiona Task Flows sin pasar un propietario en cada llamada.
+    Vincule un tiempo de ejecución de Task Flow a una clave de sesión de OpenClaw existente o a un contexto de herramienta de confianza, luego cree y administre Task Flows sin pasar un propietario en cada llamada.
 
-    Task Flow rastrea el estado del flujo de trabajo de múltiples pasos duradero. No es un programador:
-    usa Cron o `api.session.workflow.scheduleSessionTurn(...)` para activaciones
-    futuras, y luego usa `managedFlows` desde el turno programado cuando ese trabajo
-    necesita estado de flujo, tareas secundarias, esperas o cancelación.
+    Task Flow rastrea el estado de flujo de trabajo duradero de varios pasos. No es un programador:
+    use Cron o `api.session.workflow.scheduleSessionTurn(...)` para activaciones
+    futuras, luego use `managedFlows` desde el turno programado cuando ese trabajo
+    necesite estado de flujo, tareas secundarias, esperas o cancelación.
 
     ```typescript
     const taskFlow = api.runtime.tasks.managedFlows.fromToolContext(ctx);
@@ -281,7 +283,7 @@ Use `openclaw/plugin-sdk/pair-loop-guard-runtime` directamente solo para bucles 
     });
     ```
 
-    Usa `bindSession({ sessionKey, requesterOrigin })` cuando ya tengas una clave de sesión de OpenClaw confiable desde tu propia capa de vinculación. No vincules desde la entrada cruda del usuario.
+    Use `bindSession({ sessionKey, requesterOrigin })` cuando ya tenga una clave de sesión de OpenClaw de confianza de su propia capa de vinculación. No se vincule desde la entrada directa del usuario.
 
   </Accordion>
   <Accordion title="api.runtime.tts">
@@ -307,11 +309,11 @@ Use `openclaw/plugin-sdk/pair-loop-guard-runtime` directamente solo para bucles 
     });
     ```
 
-    Utiliza la configuración `messages.tts` principal y la selección de proveedor. Devuelve el búfer de audio PCM + la frecuencia de muestreo.
+    Utiliza la configuración `messages.tts` central y la selección de proveedor. Devuelve un búfer de audio PCM + frecuencia de muestreo.
 
   </Accordion>
   <Accordion title="api.runtime.mediaUnderstanding">
-    Análisis de imágenes, audio y video.
+    Análisis de imagen, audio y video.
 
     ```typescript
     // Describe an image
@@ -369,7 +371,7 @@ Use `openclaw/plugin-sdk/pair-loop-guard-runtime` directamente solo para bucles 
     });
     ```
 
-    Devuelve `{ text: undefined }` cuando no se produce ninguna salida (por ejemplo, entrada omitida).
+    Devuelve `{ text: undefined }` cuando no se produce ninguna salida (ej. entrada omitida).
 
     <Info>
     `api.runtime.stt.transcribeAudioFile(...)` permanece como un alias de compatibilidad para `api.runtime.mediaUnderstanding.transcribeAudioFile(...)`.
@@ -428,7 +430,7 @@ Use `openclaw/plugin-sdk/pair-loop-guard-runtime` directamente solo para bucles 
 
   </Accordion>
   <Accordion title="api.runtime.config">
-    Instantánea de la configuración de tiempo de ejecución actual y escrituras de configuración transaccionales. Se prefiere
+    Instantánea de la configuración del runtime actual y escrituras de configuración transaccionales. Se prefiere
     la configuración que ya se pasó a la ruta de llamada activa; use
     `current()` solo cuando el controlador necesita la instantánea del proceso directamente.
 
@@ -499,7 +501,7 @@ Use `openclaw/plugin-sdk/pair-loop-guard-runtime` directamente solo para bucles 
 
   </Accordion>
   <Accordion title="api.runtime.state">
-    Resolución del directorio de estado y almacenamiento con claves respaldado por SQLite.
+    Resolución del directorio de estado y almacenamiento con clave respaldado por SQLite.
 
     ```typescript
     const stateDir = api.runtime.state.resolveStateDir(process.env);
@@ -516,10 +518,10 @@ Use `openclaw/plugin-sdk/pair-loop-guard-runtime` directamente solo para bucles 
     await store.clear();
     ```
 
-    Los almacenes con claves sobreviven a los reinicios y están aislados por el ID del plugin vinculado al tiempo de ejecución. Use `registerIfAbsent(...)` para reclamaciones de deduplicación atómica: devuelve `true` cuando la clave faltaba o había expirado y se registró, o `false` cuando ya existe un valor activo sin sobrescribir su valor, hora de creación o TTL. Límites: `maxEntries` por espacio de nombres, 1.000 filas activas por plugin, valores JSON menores a 64 KB y expiración TTL opcional.
+    Los almacenes con clave sobreviven a los reinicios y están aislados por el id del complemento vinculado al runtime. Use `registerIfAbsent(...)` para reclamaciones de deduplicación atómica: devuelve `true` cuando la clave faltaba o había expirado y fue registrada, o `false` cuando ya existe un valor activo sin sobrescribir su valor, tiempo de creación o TTL. Límites: `maxEntries` por espacio de nombres, 1,000 filas activas por complemento, valores JSON menores a 64KB y expiración TTL opcional.
 
     <Warning>
-    Solo plugins empaquetados en esta versión.
+    Solo complementos incluidos en esta versión.
     </Warning>
 
   </Accordion>
@@ -536,7 +538,7 @@ Use `openclaw/plugin-sdk/pair-loop-guard-runtime` directamente solo para bucles 
   <Accordion title="api.runtime.channel">
     Funciones auxiliares de tiempo de ejecución específicas del canal (disponibles cuando se carga un complemento de canal).
 
-    `api.runtime.channel.media` es la interfaz preferida para las descargas y el almacenamiento de medios del canal:
+    `api.runtime.channel.media` es la superficie preferida para las descargas y el almacenamiento de medios del canal:
 
     ```typescript
     const saved = await api.runtime.channel.media.saveRemoteMedia({
@@ -547,9 +549,9 @@ Use `openclaw/plugin-sdk/pair-loop-guard-runtime` directamente solo para bucles 
     });
     ```
 
-    Use `saveRemoteMedia(...)` cuando una URL remota debe convertirse en medio OpenClaw. Use `saveResponseMedia(...)` cuando el complemento ya haya obtenido un `Response` con autenticación, redirección o manejo de lista de permitidos propios del complemento. Use `readRemoteMediaBuffer(...)` solo cuando el complemento necesite bytes sin procesar para inspección, transformaciones, descifrado o re-carga. `fetchRemoteMedia(...)` sigue siendo un alias de compatibilidad en desuso para `readRemoteMediaBuffer(...)`.
+    Use `saveRemoteMedia(...)` cuando una URL remota debe convertirse en medio de OpenClaw. Use `saveResponseMedia(...)` cuando el complemento ya haya obtenido un `Response` con autenticación, redirección o manejo de lista de permitidos propios del complemento. Use `readRemoteMediaBuffer(...)` solo cuando el complemento necesite bytes sin procesar para inspección, transformaciones, descifrado o re-carga. `fetchRemoteMedia(...)` sigue siendo un alias de compatibilidad en desuso para `readRemoteMediaBuffer(...)`.
 
-    `api.runtime.channel.mentions` es la superficie compartida de la política de mención entrante para los complementos de canal incluidos que usan la inyección de tiempo de ejecución:
+    `api.runtime.channel.mentions` es la superficie compartida de política de mención entrante para complementos de canal agrupados que usan inyección en tiempo de ejecución:
 
     ```typescript
     const mentionMatch = api.runtime.channel.mentions.matchesMentionWithExplicit(text, {
@@ -631,29 +633,29 @@ Use `createPluginRuntimeStore` para almacenar la referencia de tiempo de ejecuci
   </Step>
 </Steps>
 
-<Note>Se prefiere `pluginId` para la identidad del almacén de tiempo de ejecución. La forma de menor nivel `key` es para casos poco comunes en los que un complemento necesita intencionalmente más de una ranura de tiempo de ejecución.</Note>
+<Note>Prefiera `pluginId` para la identidad del almacén de tiempo de ejecución. El formato de nivel inferior `key` es para casos poco comunes en los que un complemento necesita intencionalmente más de una ranura de tiempo de ejecución.</Note>
 
 ## Otros campos `api` de nivel superior
 
-Más allá de `api.runtime`, el objeto de la API también proporciona:
+Además de `api.runtime`, el objeto API también proporciona:
 
 <ParamField path="api.id" type="string">
-  Id. del complemento.
+  ID del complemento.
 </ParamField>
 <ParamField path="api.name" type="string">
   Nombre para mostrar del complemento.
 </ParamField>
 <ParamField path="api.config" type="OpenClawConfig">
-  Instantánea de la configuración actual (instantánea de runtime en memoria activa cuando está disponible).
+  Instantánea de configuración actual (instantánea de ejecución en memoria activa cuando está disponible).
 </ParamField>
 <ParamField path="api.pluginConfig" type="Record<string, unknown>">
-  Configuración específica del complemento de `plugins.entries.<id>.config`.
+  Configuración específica del complemento desde `plugins.entries.<id>.config`.
 </ParamField>
 <ParamField path="api.logger" type="PluginLogger">
-  Registrador con ámbito (`debug`, `info`, `warn`, `error`).
+  Registrador con alcance (`debug`, `info`, `warn`, `error`).
 </ParamField>
 <ParamField path="api.registrationMode" type="PluginRegistrationMode">
-  Modo de carga actual; `"setup-runtime"` es la ventana de inicio/configuración ligera previa a la entrada completa.
+  Modo de carga actual; `"setup-runtime"` es la ventana de inicio/configuración previa ligera antes de la entrada completa.
 </ParamField>
 <ParamField path="api.resolvePath(input)" type="(string) => string">
   Resuelve una ruta relativa a la raíz del complemento.
@@ -661,6 +663,6 @@ Más allá de `api.runtime`, el objeto de la API también proporciona:
 
 ## Relacionado
 
-- [Aspectos internos del complemento](/es/plugins/architecture) — modelo de capacidades y registro
+- [Aspectos internos del complemento](/es/plugins/architecture) — modelo de capacidad y registro
 - [Puntos de entrada del SDK](/es/plugins/sdk-entrypoints) — opciones de `definePluginEntry`
 - [Descripción general del SDK](/es/plugins/sdk-overview) — referencia de subruta

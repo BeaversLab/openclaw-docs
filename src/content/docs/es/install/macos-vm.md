@@ -103,10 +103,10 @@ En la ventana VNC:
 3. Crear una cuenta de usuario (recuerda el nombre de usuario y la contraseña)
 4. Omitir todas las funciones opcionales
 
-Una vez completada la configuración, activa SSH:
+Una vez completada la configuración:
 
-1. Abrir Ajustes del Sistema → General → Uso compartido
-2. Activar "Acceso remoto"
+1. Activar SSH: Abre Configuración del sistema -> General -> Compartir y activa "Inicio de sesión remoto".
+2. Para el uso de VM sin cabeza, activa el inicio de sesión automático: Abre Configuración del sistema -> Usuarios y grupos, selecciona "Iniciar sesión automáticamente como:" y elige el usuario de la VM.
 
 ---
 

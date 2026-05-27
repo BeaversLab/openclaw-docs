@@ -52,7 +52,7 @@ OpenAI GPT-5 系列覆蓋層保持核心執行規則簡短，並添加
 - **安全性**：簡短的防護提醒，以避免尋求權力的行為或繞過監督。
 - **技能** (當可用時)：告訴模型如何按需載入技能指令。
 - **OpenClaw Control**：告訴模型在設定/重新啟動作業中偏好使用 `gateway` 工具，並避免發明 CLI 指令。
-- **OpenClaw Self-Update**：如何使用 `config.schema.lookup` 安全地檢查設定、使用 `config.patch` 修補設定、使用 `config.apply` 取代完整設定，並僅在明確的使用者請求下執行 `update.run`。僅限擁有者使用的 `gateway` 工具也會拒絕重寫 `tools.exec.ask` / `tools.exec.security`，包括標準化為這些受保護執行路徑的舊版 `tools.bash.*` 別名。
+- **OpenClaw 自我更新**：如何使用 `config.schema.lookup` 安全地檢查設定，使用 `config.patch` 修補設定，使用 `config.apply` 替換完整設定，以及僅在明確的使用者請求下執行 `update.run`。面向代理程式的 `gateway` 工具也會拒絕重寫 `tools.exec.ask` / `tools.exec.security`，包括標準化為這些受保護執行路徑的舊版 `tools.bash.*` 別名。
 - **Workspace**：工作目錄 (`agents.defaults.workspace`)。
 - **Documentation**：OpenClaw 文件/來源的本地路徑以及何時閱讀它們。
 - **Workspace Files (injected)**：表示以下包含了啟動檔案。

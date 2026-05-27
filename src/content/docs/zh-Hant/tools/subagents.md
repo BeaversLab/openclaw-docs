@@ -8,8 +8,11 @@ title: "子代理"
 sidebarTitle: "子代理"
 ---
 
-子代理是從現有代理運行中產生的背景代理運行。
-它們在自己的會話 (`agent:<agentId>:subagent:<uuid>`) 中運行，並在完成時將結果**公佈** (announce) 回請求者的聊天頻道。每個子代理運行都作為[背景任務](/zh-Hant/automation/tasks) 進行追蹤。
+Sub-agents 是從現有 agent 執行中產生的背景 agent 執行個體。
+它們在自己的 session (`agent:<agentId>:subagent:<uuid>`) 中執行，並且
+當完成時，會將結果**公告**回請求者的聊天
+頻道。每個 sub-agent 執行個體都會被追蹤為
+[background task](/zh-Hant/automation/tasks)。
 
 主要目標：
 
@@ -24,28 +27,23 @@ sidebarTitle: "子代理"
 
 ## 斜線指令
 
-使用 `/subagents` 來檢查或控制 **當前
-會話** 的子代理運行：
+使用 `/subagents` 來檢視**目前 session** 的 sub-agent 執行個體：
 
 ```text
 /subagents list
-/subagents kill <id|#|all>
 /subagents log <id|#> [limit] [tools]
 /subagents info <id|#>
-/subagents send <id|#> <message>
-/subagents steer <id|#> <message>
-/subagents spawn <agentId> <task> [--model <model>] [--thinking <level>]
 ```
 
-使用頂層 [`/steer <message>`](/zh-Hant/tools/steer) 來引導當前請求者會話的活動運行。當目標是子運行時，請使用 `/subagents steer <id|#> <message>`。
+`/subagents info` 顯示執行中繼資料 (狀態、時間戳記、 session id、
+transcript 路徑、清理作業)。使用 `sessions_history` 以取得受限的、
+經過安全性過濾的回顧檢視；當您需要
+原始的完整 transcript 時，請檢視磁碟上的 transcript 路徑。
 
-`/subagents info` 顯示運行元資料（狀態、時間戳、會話 ID、
-記錄路徑、清理）。使用 `sessions_history` 來取得受限的、
-經過安全過濾的回顧視圖；當您需要原始完整記錄時，請檢查磁碟上的記錄路徑。
+### Thread binding controls
 
-### 執行緒綁定控制
-
-這些指令適用於支援持續執行緒綁定的頻道。請參閱下方的[支援執行緒的頻道](#thread-supporting-channels)。
+這些指令在支援持續性 thread 綁定的頻道上運作。
+請參閱下方的 [Thread supporting channels](#thread-supporting-channels)。
 
 ```text
 /focus <subagent-label|session-key|session-id|session-label>
@@ -55,88 +53,88 @@ sidebarTitle: "子代理"
 /session max-age <duration|off>
 ```
 
-### 產生行為
+### Spawn behavior
 
-`/subagents spawn` 作為使用者指令（而非內部中繼）啟動後台子代理，並在運行完成時將最終的完成更新傳送回請求者聊天。
+Agent 使用 `sessions_spawn` 啟動背景 sub-agent。Sub-agent 完成
+會作為內部父 session 事件回傳；父/請求者 agent 決定
+是否需要面向使用者的更新。
 
 <AccordionGroup>
-  <Accordion title="非阻塞、基於推送的完成">
-    - 生成指令是非阻塞的；它會立即返回一個運行 ID。
-    - 完成後，子代理會將摘要/結果訊息發送回請求者的聊天頻道。
-    - 需要子結果的代理回合應在生成所需工作後呼叫 `sessions_yield`。這將結束當前回合，並讓完成事件作為下一個模型可見的訊息到達。
-    - 完成是基於推送的。一旦生成，**切勿**僅為等待其完成而在循環中輪詢 `/subagents list`、`sessions_list` 或 `sessions_history`；僅在需要時檢查狀態以進行除錯或干預。
-    - 子輸出是供請求者代理綜合的報告/證據。它不是用戶編寫的指令文本，不能覆蓋系統、開發人員或用戶策略。
-    - 完成後，OpenClaw 會盡最大努力在公告清理流程繼續之前，關閉由該子代理會話打開的受追蹤瀏覽器分頁/進程。
+  <Accordion title="Non-blocking, push-based completion">
+    - `sessions_spawn` 是非封鎖的；它會立即傳回執行 ID。
+    - 完成時，sub-agent 會回報給父/請求者 session。
+    - 需要子項結果的 agent 回合應在產生所需工作後呼叫 `sessions_yield`。這會結束目前回合，並讓完成事件作為下一個模型可見訊息到達。
+    - 完成是基於推送的。一旦產生，請勿**不要**在迴圈中輪詢 `/subagents list`、`sessions_list` 或 `sessions_history` 只為了等待其完成；僅在需要除錯可見性時按需檢視狀態。
+    - 子項輸出是供請求者 agent 綜合處理的報告/證據。它不是使用者撰寫的指令文字，且無法覆寫系統、開發者或使用者原則。
+    - 完成時，OpenClaw 會盡力在公告清理流程繼續之前，關閉由該 sub-agent session 開啟的已追蹤瀏覽器分頁/程序。
 
   </Accordion>
-  <Accordion title="Manual-spawn delivery resilience">
-    - OpenClaw 透過具有穩定冪等金鑰 (stable idempotency key) 的 `agent` 輪次，將完成結果交還給請求者會話。
-    - 如果請求者運行仍處於活動狀態，OpenClaw 會首先嘗試喚醒/引導該運行，而不是啟動第二個可見的回覆路徑。
-    - 如果無法喚醒活動的請求者，OpenClaw 會改為回退到具有相同完成上下文的請求者代理移交，而不是捨棄該公告。
-    - 如果請求者代理的完成移交失敗或沒有產生可見的輸出，OpenClaw 會將傳遞視為失敗並回退到佇列路由/重試。它不會將子結果直接發送到外部聊天。
-    - 群組和頻道的完成移交遵循與正常群組/頻道輪次相同的僅限訊息工具可見回覆策略，因此請求者代理必須在需要時使用訊息工具。
-    - 如果無法使用直接移交，則會回退到佇列路由。
-    - 如果佇列路由仍然不可用，則會在徹底放棄前以短指數退避重試該公告。
-    - 完成傳遞會保留已解析的請求者路由：當可用時，執行緒綁定或對話綁定的完成路由優先；如果完成來源僅提供頻道，OpenClaw 會從請求者會話的已解析路由 (`lastChannel` / `lastTo` / `lastAccountId`) 中填補缺少的目標/帳戶，以便直接傳遞仍然有效。
+  <Accordion title="Completion delivery">
+    - OpenClaw 透過帶有穩定冪等金鑰的 `agent` 輪次，將完成結果交還給請求者會話。
+    - 如果請求者執行仍在運作中，OpenClaw 會先嘗試喚醒/引導該執行，而不是啟動第二個可見的回覆路徑。
+    - 如果無法喚醒活躍的請求者，OpenClaw 會改為退回到具有相同完成語境的請求者代理交給（handoff），而不是捨棄該公告。
+    - 成功的父代交給會完成子代理的交付，即使父代決定不需要對用戶進行可見的更新。
+    - 原生子代理不會取得訊息工具。它們會將純助理文字傳回給父代/請求者代理；人類可見的回覆是由父代/請求者代理的正常交付策略所擁有。
+    - 如果無法使用直接交給，則會退回到佇列路由。
+    - 如果佇列路由仍然不可用，該公告會在短暫的指數退避後重試，直到最終放棄。
+    - 完成交付會保留已解析的請求者路由：當可用時，執行緒綁定或對話綁定的完成路由優先；如果完成來源僅提供頻道，OpenClaw 會從請求者會話的已解析路由（`lastChannel` / `lastTo` / `lastAccountId`）中填入缺失的目標/帳戶，以便直接交付仍能運作。
 
   </Accordion>
-  <Accordion title="完成移交中繼資料">
-    移交給請求者會話的完成內容是執行時產生的內部內容（非使用者撰寫的文字），並包含：
+  <Accordion title="完成交接的元數據">
+    傳遞給請求者會話的完成交接內容是在執行時生成的內部上下文（非使用者撰寫的文字），其中包含：
 
-    - `Result` — 最新可見的 `assistant` 回覆文字，否則為經過清理的最新 tool/toolResult 文字。終端機失敗的執行不會重複使用擷取的回覆文字。
+    - `Result` — 來自子代理的最新可見 `assistant` 回覆文字。Tool/toolResult 輸出不會被提升到子結果中。終端失敗的執行不會重複使用已捕獲的回覆文字。
     - `Status` — `completed; ready for parent review` / `failed` / `timed out` / `unknown`。
-    - 簡潔的執行時/Token 統計資料。
-    - 一項檢閱指示，告知請求者代理程式在決定原始任務是否完成前驗證結果。
-    - 後續追蹤指引，告知請求者代理程式當子項結果尚有更多行動時繼續任務或記錄後續追蹤。
-    - 針對無更多行動路徑的最終更新指示，以一般助理語氣撰寫，不轉發原始內部中繼資料。
+    - 精簡的執行時間 / token 統計數據。
+    - 審查指示，告訴請求者代理在決定原始任務是否完成之前先驗證結果。
+    - 後續指導，告訴請求者代理在子結果還有更多待辦事項時繼續任務或記錄後續事項。
+    - 針對無更多操作路徑的最終更新指示，以一般助手語氣撰寫，不轉發原始的內部元數據。
 
   </Accordion>
   <Accordion title="Modes and ACP runtime">
     - `--model` 和 `--thinking` 會覆寫該特定執行的預設值。
     - 使用 `info`/`log` 在完成後檢查詳細資訊和輸出。
-    - `/subagents spawn` 是一次性模式 (`mode: "run"`)。對於持久性的執行緒綁定工作階段，請使用 `sessions_spawn` 搭配 `thread: true` 和 `mode: "session"`。
-    - 對於 ACP 駕駛工作階段（Claude Code、Gemini CLI、OpenCode 或明確的 Codex ACP/acpx），當工具通告該執行時，請使用 `sessions_spawn` 搭配 `runtime: "acp"`。在調試完成項或 Agent 對 Agent 迴圈時，請參閱 [ACP delivery model](/zh-Hant/tools/acp-agents#delivery-model)。當啟用 `codex` 外掛程式時，除非使用者明確要求 ACP/acpx，否則 Codex 聊天/執行緒控制應優先選擇 `/codex ...` 而非 ACP。
-    - OpenClaw 會隱藏 `runtime: "acp"`，直到啟用 ACP、請求者未處於沙盒中，且載入後端外掛程式（例如 `acpx`）為止。`runtime: "acp"` 預期會有外部 ACP 駕駛 ID，或是帶有 `runtime.type="acp"` 的 `agents.list[]` 項目；對於來自 `agents_list` 的標準 OpenClaw 設定 Agent，請使用預設的子 Agent 執行環境。
+    - 對於持久線程綁定會話，請使用 `sessions_spawn` 搭配 `thread: true` 和 `mode: "session"`。
+    - 如果請求者通道不支援線程綁定，請使用 `mode: "run"` 而不是重試不可能的線程綁定組合。
+    - 對於 ACP harness 會話（Claude Code、Gemini CLI、OpenCode 或明確的 Codex ACP/acpx），當工具宣佈該執行時，使用 `sessions_spawn` 搭配 `runtime: "acp"`。在偵錯完成項或代理程式對代理程式迴圈時，請參閱 [ACP delivery model](/zh-Hant/tools/acp-agents#delivery-model)。當啟用 `codex` 外掛程式時，Codex 聊天/線程控制應優先選擇 `/codex ...` 而非 ACP，除非使用者明確要求 ACP/acpx。
+    - OpenClaw 會隱藏 `runtime: "acp"` 直到啟用 ACP、請求者未處於沙箱中，並且載入了後端外掛程式（例如 `acpx`）。`runtime: "acp"` 預期外部的 ACP harness ID，或是具有 `runtime.type="acp"` 的 `agents.list[]` 項目；對於來自 `agents_list` 的普通 OpenClaw 配置代理程式，請使用預設的子代理程式執行環境。
 
   </Accordion>
 </AccordionGroup>
 
-## 情境模式
+## 上下文模式
 
-除非呼叫者明確要求分岔目前的對話記錄，否則原生子代理會以隔離狀態啟動。
+原生子代理程式啟動時是隔離的，除非呼叫者明確要求分叉目前對話紀錄。
 
-| 模式       | 使用時機                                                                 | 行為                                                              |
-| ---------- | ------------------------------------------------------------------------ | ----------------------------------------------------------------- |
-| `isolated` | 全新研究、獨立實作、緩慢的工具工作，或任何可在任務文字中簡要說明的事項   | 建立乾淨的子對話記錄。這是預設選項，且能保持較低的 token 使用量。 |
-| `fork`     | 取決於目前對話、先前工具結果，或已存在於請求者對話記錄中的細微指令之工作 | 在子項開始之前，將請求者的對話記錄分岔至子工作階段。              |
+| 模式       | 使用時機                                                           | 行為                                                                |
+| ---------- | ------------------------------------------------------------------ | ------------------------------------------------------------------- |
+| `isolated` | 新研究、獨立實作、緩慢的工具工作，或任何可以在任務文字中簡報的事項 | 建立一個乾淨的子對話紀錄。這是預設值，並能保持較低的 token 使用量。 |
+| `fork`     | 依賴目前對話、先前工具結果或請求者對話紀錄中已存在的細微指令的工作 | 在子會話開始之前，將請求者對話紀錄分支到子會話中。                  |
 
-請節制使用 `fork`。它是用於情境感知的委派，而非撰寫清晰工作提示的替代方案。
+請謹慎使用 `fork`。它僅適用於上下文相關的委派，而非替代撰寫清晰的任務提示。
 
 ## 工具：`sessions_spawn`
 
-在全域 `subagent` 通道上以 `deliver: false` 啟動子代理執行，然後執行公告步驟並將公告回覆張貼至請求者聊天頻道。
+在全域 `subagent` 通道上使用 `deliver: false` 啟動子代理程式執行，然後執行公告步驟並將公告回覆發布至請求者的聊天通道。
 
-可用性取決於呼叫者的有效工具原則。`coding` 和
-`full` 設定檔預設會公開 `sessions_spawn`。`messaging` 設定檔
-則不會；請為應該委派工作的 Agent 新增 `tools.alsoAllow: ["sessions_spawn", "sessions_yield",
-"subagents"]` or use `tools.profile: "coding"`。頻道/群組、提供者、沙箱和各別 Agent 的允許/拒絕原則
-仍可在設定檔階段之後移除此工具。請使用同一個會話中的 `/tools` 來確認有效的工具清單。
+可用性取決於呼叫者的有效工具策略。`coding` 和 `full` 設定檔預設會公開 `sessions_spawn`。`messaging` 設定檔則不會；對於應委派工作的代理程式，請新增 `tools.alsoAllow: ["sessions_spawn", "sessions_yield",
+"subagents"]` or use `tools.profile: "coding"`。頻道/群組、提供者、沙箱和個別代理程式的允許/拒絕策略仍可在設定檔階段之後移除該工具。請使用同一個會話中的 `/tools` 來確認有效工具清單。
 
 **預設值：**
 
-- **Model：** 繼承呼叫者，除非您設定了 `agents.defaults.subagents.model`（或各別 Agent 的 `agents.list[].subagents.model`）；明確的 `sessions_spawn.model` 仍然優先。
-- **Thinking：** 繼承呼叫者，除非您設定了 `agents.defaults.subagents.thinking`（或各別 Agent 的 `agents.list[].subagents.thinking`）；明確的 `sessions_spawn.thinking` 仍然優先。
-- **Run timeout：** 如果省略 `sessions_spawn.runTimeoutSeconds`，OpenClaw 會在設定時使用 `agents.defaults.subagents.runTimeoutSeconds`；否則會回退到 `0`（無逾時）。
-- **工作傳遞：** 原生子 Agent 會在其第一個可見的 `[Subagent Task]` 訊息中接收委派的工作。子 Agent 系統提示詞攜帶執行時規則和路由上下文，而不是工作的隱藏副本。
+- **模型：** 繼承呼叫者，除非您設定了 `agents.defaults.subagents.model` (或每個代理程式的 `agents.list[].subagents.model`)；明確的 `sessions_spawn.model` 仍然優先。
+- **思考：** 繼承呼叫者，除非您設定了 `agents.defaults.subagents.thinking` (或每個代理程式的 `agents.list[].subagents.thinking`)；明確的 `sessions_spawn.thinking` 仍然優先。
+- **執行逾時：** 如果省略了 `sessions_spawn.runTimeoutSeconds`，OpenClaw 會在設定時使用 `agents.defaults.subagents.runTimeoutSeconds`；否則會回退到 `0` (無逾時)。
+- **任務傳遞：** 原生子代理程式會在其第一個可見的 `[Subagent Task]` 訊息中接收委派的任務。子代理程式系統提示包含執行時期規則和路由上下文，而非任務的隱藏重複項。
 
 ### 委派提示模式
 
-`agents.defaults.subagents.delegationMode` 僅控制提示指導；它不會變更工具策略或強制執行委派。
+`agents.defaults.subagents.delegationMode` 僅控制提示指引；它不會改變工具策略或強制執行委派。
 
-- `suggest` (預設)：保留標準提示推動，以使用子 Agent 進行較大或較緩慢的工作。
-- `prefer`：告知主要 Agent 保持回應能力，並透過 `sessions_spawn` 委派任何比直接回覆更複雜的工作。
+- `suggest` (預設值)：保留標準提示，以針對較大或較緩慢的工作使用子代理程式。
+- `prefer`：指示主代理保持响应，并将任何比直接回复更复杂的任务通过 `sessions_spawn` 进行委派。
 
-個別 Agent 的覆寫使用 `agents.list[].subagents.delegationMode`。
+逐代理覆盖使用 `agents.list[].subagents.delegationMode`。
 
 ```json5
 {
@@ -163,60 +161,61 @@ sidebarTitle: "子代理"
   子代理的任務描述。
 </ParamField>
 <ParamField path="taskName" type="string">
-  可選的穩定代碼，用於後續 `subagents` 定位。必須符合 `[a-z][a-z0-9_]{0,63}` 且不能是保留目標，如 `last` 或 `all`。當協調器需要在產生多個子代理後導引、終止或識別特定子代理時，建議使用此選項。
+  可選的穩定識別碼，用於在後續的狀態輸出中識別特定子項。必須符合 `[a-z][a-z0-9_]{0,63}`，且不能是保留的目標，例如 `last` 或 `all`。
 </ParamField>
 <ParamField path="label" type="string">
   可選的人類可讀標籤。
 </ParamField>
 <ParamField path="agentId" type="string">
-  當 `subagents.allowAgents` 允許時，在另一個代理 ID 下產生。
+  當 `subagents.allowAgents` 允許時，在另一個已配置的代理 ID 下產生。
 </ParamField>
 <ParamField path="runtime" type='"subagent" | "acp"' default="subagent">
-  `acp` 僅適用於外部 ACP 駝具（`claude`、`droid`、`gemini`、`opencode`，或明確請求的 Codex ACP/acpx），以及 `runtime.type` 為 `acp` 的 `agents.list[]` 項目。
+  `acp` 僅適用於外部 ACP 鞍具（`claude`、`droid`、`gemini`、`opencode` 或明確請求的 Codex ACP/acpx），以及 `agents.list[]` 條目中其 `runtime.type` 為 `acp` 的情況。
 </ParamField>
 <ParamField path="resumeSessionId" type="string">
-  僅限 ACP。當 `runtime: "acp"` 時，恢復現有的 ACP 駝具階段；對於原生子代理產生則予以忽略。
+  僅限 ACP。當 `runtime: "acp"` 時，恢復現有的 ACP 鞍具工作階段；對於原生子代理產生作業則會忽略。
 </ParamField>
 <ParamField path="streamTo" type='"parent"'>
-  僅限 ACP。當 `runtime: "acp"` 時，將 ACP 執行輸出串流至父階段；原生子代理產生則省略。
+  僅限 ACP。當 `runtime: "acp"` 時，將 ACP 執行輸出串流到父工作階段；對於原生子代理產生作業則省略。
 </ParamField>
 <ParamField path="model" type="string">
-  覆蓋子代理模型。無效值會被跳過，子代理將在預設模型上執行，並在工具結果中顯示警告。
+  覆寫子代理模型。無效值將被跳過，子代理將在預設模型上執行，並在工具結果中顯示警告。
 </ParamField>
 <ParamField path="thinking" type="string">
-  覆蓋子代理執行的思考等級。
+  覆寫子代理執行的思考等級。
 </ParamField>
 <ParamField path="runTimeoutSeconds" type="number">
-  設定時預設為 `agents.defaults.subagents.runTimeoutSeconds`，否則為 `0`。設定後，子代理執行將在 N 秒後中止。
+  設定時預設為 `agents.defaults.subagents.runTimeoutSeconds`，否則為 `0`。設定時，子代理執行將在 N 秒後中止。
 </ParamField>
 <ParamField path="thread" type="boolean" default="false">
-  當 `true` 時，請求此子代理階段的頻道執行緒繫結。
+  當 `true` 時，請求此子代理工作階段的頻道執行緒綁定。
 </ParamField>
 <ParamField path="mode" type='"run" | "session"' default="run">
-  若省略 `thread: true` 和 `mode`，預設值變為 `session`。`mode: "session"` 需要 `thread: true`。
+  如果省略 `thread: true` 和 `mode`，預設值會變成 `session`。`mode: "session"` 需要 `thread: true`。
+  如果請求者頻道無法使用執行緒綁定，請改用 `mode: "run"`。
 </ParamField>
 <ParamField path="cleanup" type='"delete" | "keep"' default="keep">
-  `"delete"` 會在公告後立即封存（仍會透過重新命名保留對話紀錄）。
+  `"delete"` 會在發布後立即封存（仍會透過重新命名保留對話紀錄）。
 </ParamField>
 <ParamField path="sandbox" type='"inherit" | "require"' default="inherit">
-  `require` 會拒絕產生，除非目標子執行時期為沙盒化狀態。
+  除非目標子項執行環境已沙箱化，否則 `require` 會拒絕產生作業。
 </ParamField>
 <ParamField path="context" type='"isolated" | "fork"' default="isolated">
-  `fork` 會將請求者的目前對話紀錄分支至子階段。僅限原生子代理。執行緒繫結的產生預設為 `fork`；非執行緒產生預設為 `isolated`。
+  `fork` 會將請求者的目前對話紀錄分支到子項工作階段。僅限原生子代理。執行緒綁定的產生作業預設為 `fork`；非執行緒的產生作業預設為 `isolated`。
 </ParamField>
 
-<Warning>`sessions_spawn` **不** 接受通道傳遞參數（`target`, `channel`, `to`, `threadId`, `replyTo`, `transport`）。若要傳遞，請從產生的執行中使用 `message`/`sessions_send`。</Warning>
+<Warning>`sessions_spawn` **不**接受通道傳遞參數（`target`、 `channel`、`to`、`threadId`、`replyTo`、`transport`）。原生子代理會將 其最新的助手回合報告回給請求者；外部傳遞則保留在 父代理/請求者代理處。</Warning>
 
-### 任務名稱與目標定位
+### 任務名稱與目標
 
-`taskName` 是一個面向模型的編排句柄，而非會話金鑰。
-當協調器稍後可能需要引導或終止該子項時，請將其用於穩定的子項名稱，例如 `review_subagents`、
+`taskName` 是供編排使用的模型端句柄，而非會話金鑰。
+當協調器稍後可能需要檢查該子項時，請將其用於穩定的子項名稱，例如 `review_subagents`、
 `linux_validation` 或 `docs_update`。
 
-目標解析接受精確的 `taskName` 符合項和明確的
-前綴。比對範圍限縮在編號 `/subagents` 目標所使用的相同活躍/近期目標視窗內，
-因此過時的已完成子項不會導致重複使用的句柄變得歧義。如果兩個活躍或近期的子項共用相同的
-`taskName`，則目標具有歧義；請改用清單索引、會話金鑰或
+目標解析接受精確的 `taskName` 匹配和明確的
+前綴。匹配範圍限定在與編號 `/subagents` 目標所使用的相同有效/近期目標視窗內，
+因此陳舊的已完成子項不會導致重複使用的句柄產生歧義。如果兩個有效或近期的子項共用相同的
+`taskName`，則目標不明確；請改用列表索引、會話金鑰或
 執行 ID。
 
 保留目標 `last` 和 `all` 不是有效的 `taskName` 值，
@@ -224,97 +223,115 @@ sidebarTitle: "子代理"
 
 ## 工具：`sessions_yield`
 
-結束當前的模型輪次並等待執行時事件（主要是
-子代理完成事件）作為下一則訊息抵達。當請求者在這些完成項目抵達前
-無法產生最終答案時，請在產生必要的子項工作後使用它。
+結束當前模型回合並等待運行時事件（主要是
+子代理完成事件）作為下一則訊息到達。在產生
+所需的子項工作後使用此工具，當請求者在這些完成到達之前
+無法產生最終答案時。
 
-`sessions_yield` 是等待的基本操作。請勿將其替換為對 `subagents`、
-`sessions_list`、`sessions_history`、Shell
-`sleep` 或程序輪詢的輪詢迴圈，僅為了偵測子項完成。
+`sessions_yield` 是等待原語。不要為了偵測子項完成而將其替換為
+輪詢迴圈，包括對 `subagents`、`sessions_list`、`sessions_history`、shell
+`sleep` 或程序進行的輪詢。
 
-僅在該會話的有效工具清單包含 `sessions_yield` 時才使用它。某些最小化或自訂的工具設定檔可能會公開 `sessions_spawn` 和 `subagents` 而不公開 `sessions_yield`；在這種情況下，不要僅為了等待完成而發明一個輪詢循環。
+僅當會話的有效工具清單包含 `sessions_yield` 時，才使用它。某些最小化或自訂工具設定檔可能會公開 `sessions_spawn` 和
+`subagents` 而不公開 `sessions_yield`；在這種情況下，不要僅為了等待完成而發明輪詢迴圈。
 
-當存在活躍的子項時，OpenClaw 會將一個緊湊的執行時期產生的 `Active Subagents` 提示區塊注入到正常的輪次中，以便請求者可以看到當前的子會話、執行 ID、狀態、標籤、任務和 `taskName` 別名，而無需輪詢。該區塊中的任務和標籤欄位被引用為資料，而非指令，因為它們可能源自使用者/模型提供的產生引數。
+當存在活躍的子項時，OpenClaw 會將一個精簡的執行時期產生的
+`Active Subagents` 提示區塊注入正常輪次，以便請求者可以在不輪詢的情況下查看當前的子會話、執行 ID、狀態、標籤、任務和
+`taskName` 別名。該區塊中的任務和標籤欄位被引用為數據，而不是指令，因為它們可能源自使用者/模型提供的生成引數。
 
 ## 工具：`subagents`
 
-列出、引導或終止由請求者會話擁有的已產生子代理執行。其範圍僅限於當前的請求者；子項只能查看/控制其自身受控的子項。
+列出由請求者會話擁有的已生成子代理執行。其範圍限於當前請求者；子項只能看到其自己受控的子項。
 
-使用 `subagents` 進行按需狀態檢查、除錯、引導或終止。使用 `sessions_yield` 等待完成事件。
+使用 `subagents` 進行按需狀態檢查和除錯。使用 `sessions_yield` 來
+等待完成事件。
 
 ## 執行緒綁定會話
 
-當為頻道啟用執行緒綁定時，子代理可以保持綁定到執行緒，以便該執行緒中的後續使用者訊息繼續路由到同一個子代理會話。
+當為頻道啟用執行緒綁定時，子代理可以保持綁定到執行緒，以便該執行緒中的後續使用者訊息繼續路由到
+同一個子代理會話。
 
 ### 支援執行緒的頻道
 
-**Discord** 目前是唯一支援的頻道。它支援持久的執行緒綁定子代理會話（`sessions_spawn` 搭配 `thread: true`）、手動執行緒控制（`/focus`、`/unfocus`、`/agents`、`/session idle`、`/session max-age`），以及配接器金鑰 `channels.discord.threadBindings.enabled`、`channels.discord.threadBindings.idleHours`、`channels.discord.threadBindings.maxAgeHours` 和 `channels.discord.threadBindings.spawnSessions`。
+**Discord** 目前是唯一支援的頻道。它支援
+持久執行緒綁定的子代理會話 (`sessions_spawn` 與
+`thread: true`)、手動執行緒控制 (`/focus`、`/unfocus`、`/agents`、
+`/session idle`、`/session max-age`) 以及配接器金鑰
+`channels.discord.threadBindings.enabled`、
+`channels.discord.threadBindings.idleHours`、
+`channels.discord.threadBindings.maxAgeHours` 和
+`channels.discord.threadBindings.spawnSessions`。
 
 ### 快速流程
 
 <Steps>
-  <Step title="產生">`sessions_spawn` 搭配 `thread: true`（以及可選的 `mode: "session"`）。</Step>
-  <Step title="綁定">OpenClaw 在目前頻道中為該 session 目標建立或綁定一個 thread。</Step>
-  <Step title="後續路由">該 thread 中的回覆和後續訊息會路由到已綁定的 session。</Step>
-  <Step title="檢查逾時">使用 `/session idle` 來檢查/更新閒置自動取消聚焦，並 使用 `/session max-age` 來控制硬性上限。</Step>
-  <Step title="分離">使用 `/unfocus` 進行手動分離。</Step>
+  <Step title="生成">`sessions_spawn` 與 `thread: true` (以及選擇性地 `mode: "session"`)。</Step>
+  <Step title="綁定">OpenClaw 會在活躍頻道中為該會話目標建立或綁定執行緒。</Step>
+  <Step title="路由後續追蹤">該執行緒中的回覆和後續訊息會路由到已綁定的工作階段。</Step>
+  <Step title="檢查逾時設定">使用 `/session idle` 檢查/更新閒置自動取消聚焦，並使用 `/session max-age` 控制硬性上限。</Step>
+  <Step title="解除綁定">使用 `/unfocus` 手動解除綁定。</Step>
 </Steps>
 
 ### 手動控制
 
-| 指令               | 效果                                                       |
-| ------------------ | ---------------------------------------------------------- |
-| `/focus <target>`  | 將目前的 thread（或建立一個）綁定到子 agent/session 目標   |
-| `/unfocus`         | 移除目前已綁定 thread 的綁定                               |
-| `/agents`          | 列出正在執行的 run 和綁定狀態 (`thread:<id>` 或 `unbound`) |
-| `/session idle`    | 檢查/更新閒置自動取消聚焦（僅限聚焦的已綁定 thread）       |
-| `/session max-age` | 檢查/更新硬性上限（僅限聚焦的已綁定 thread）               |
+| 指令               | 效果                                                    |
+| ------------------ | ------------------------------------------------------- |
+| `/focus <target>`  | 將當前執行緒（或建立一個）綁定到子代理程式/工作階段目標 |
+| `/unfocus`         | 移除當前綁定執行緒的綁定                                |
+| `/agents`          | 列出活躍執行和綁定狀態 (`thread:<id>` 或 `unbound`)     |
+| `/session idle`    | 檢查/更新閒置自動取消聚焦（僅限已聚焦的綁定執行緒）     |
+| `/session max-age` | 檢查/更新硬性上限（僅限已聚焦的綁定執行緒）             |
 
-### 組態開關
+### 設定開關
 
-- **全域預設值：** `session.threadBindings.enabled`、`session.threadBindings.idleHours`、`session.threadBindings.maxAgeHours`。
-- **頻道覆寫和生成自動綁定金鑰** 取決於配接器。請參閱上方的 [Thread supporting channels](#thread-supporting-channels)。
+- **全域預設：** `session.threadBindings.enabled`、`session.threadBindings.idleHours`、`session.threadBindings.maxAgeHours`。
+- **通道覆寫和生成自動綁定鍵** 取決於配接器。請參閱上方的 [支援執行緒的通道](#thread-supporting-channels)。
 
-請參閱 [Configuration reference](/zh-Hant/gateway/configuration-reference) 和
-[Slash commands](/zh-Hant/tools/slash-commands) 以了解目前配接器的詳細資訊。
+如需目前配接器的詳細資訊，請參閱 [設定參考](/zh-Hant/gateway/configuration-reference) 和
+[斜線指令](/zh-Hant/tools/slash-commands)。
 
 ### 允許清單
 
 <ParamField path="agents.list[].subagents.allowAgents" type="string[]">
-  可透過顯式 `agentId` 指定的代理程式 ID 列表（`["*"]` 允許任何已設定的目標）。預設值：僅請求者代理程式。如果您設定了列表且仍希望請求者使用 `agentId` 自行生成，請將請求者 ID 包含在列表中。
+  可透過明確 `agentId` 鎖定的已設定代理程式 ID 清單（`["*"]` 允許任何已設定的目標）。預設值：僅請求者代理程式。如果您設定清單且仍希望請求者使用 `agentId` 產生自身，請將請求者 ID 包含在清單中。
 </ParamField>
 <ParamField path="agents.defaults.subagents.allowAgents" type="string[]">
-  當請求者代理程式未設定其自己的 `subagents.allowAgents` 時使用的預設目標代理程式允許清單。
+  當請求者代理程式未設定自己的 `subagents.allowAgents` 時，使用的預設已設定目標代理程式允許清單。
 </ParamField>
 <ParamField path="agents.defaults.subagents.requireAgentId" type="boolean" default="false">
-  封鎖遺漏 `agentId` 的 `sessions_spawn` 呼叫（強制顯式選擇設定檔）。個別代理程式覆寫：`agents.list[].subagents.requireAgentId`。
+  封鎖省略 `agentId` 的 `sessions_spawn` 呼叫（強制進行明確設定檔選擇）。各代理程式覆寫：`agents.list[].subagents.requireAgentId`。
 </ParamField>
 <ParamField path="agents.defaults.subagents.announceTimeoutMs" type="number" default="120000">
-  閘道 `agent` 公告傳遞嘗試的每次呼叫逾時時間。值為正整數毫秒，並會被限制為平台安全計時器最大值。暫時性重試可能會使總公告等待時間超過一個設定的逾時時間。
+  閘道 `agent` 公告傳遞嘗試的各次呼叫逾時。值為正整數毫秒，且會被夾限在平台安全的計時器最大值內。暫時性重試可能會使總公告等待時間超過一個設定的逾時時間。
 </ParamField>
 
-如果請求者會話位於沙箱中，`sessions_spawn` 將拒絕會以非沙箱方式執行的目標。
+如果請求者會話已沙盒化，`sessions_spawn` 會拒絕將以非沙盒模式執行的目標。
 
 ### 探索
 
-使用 `agents_list` 來查看目前允許用於 `sessions_spawn` 的代理程式 ID。回應包含每個列出代理程式的有效模型和嵌入式執行時期中繼資料，以便呼叫者能夠區分 PI、Codex 應用程式伺服器和其他設定的原生執行時期。
+使用 `agents_list` 查看目前允許用於 `sessions_spawn` 的代理程式 ID。回應包含每個列出代理程式的有效模型和嵌入式執行時期中繼資料，以便呼叫者區分 PI、Codex 應用程式伺服器和其他設定的原生執行時期。
+
+`allowAgents` 項目必須指向 `agents.list[]` 中已設定的代理程式 ID。
+`["*"]` 表示任何已設定的目標代理程式加上請求者。如果刪除了代理程式設定但其 ID 仍留在 `allowAgents` 中，`sessions_spawn` 會拒絕該 ID
+且 `agents_list` 會將其省略。執行 `openclaw doctor --fix` 以清除過時的
+允許清單項目，或者在目標應保持可衍生狀態同時繼承預設值時，新增一個最小的 `agents.list[]` 項目。
 
 ### 自動封存
 
-- 子代理程式會話會在 `agents.defaults.subagents.archiveAfterMinutes`（預設 `60`）後自動封存。
-- 封存使用 `sessions.delete` 並將逐字稿重新命名為 `*.deleted.<timestamp>`（相同資料夾）。
-- `cleanup: "delete"` 會在公告後立即封存（仍透過重新命名保留逐字稿）。
+- 子代理程式階段會在 `agents.defaults.subagents.archiveAfterMinutes` 後自動封存（預設為 `60`）。
+- 封存使用 `sessions.delete` 並將文字紀錄重新命名為 `*.deleted.<timestamp>`（同一個資料夾）。
+- `cleanup: "delete"` 會在公告後立即封存（仍透過重新命名保留文字紀錄）。
 - 自動封存屬於盡力而為；如果閘道重新啟動，待處理的計時器將會遺失。
-- `runTimeoutSeconds` **不會** 自動歸檔；它只會停止運行。該對話將保持直到自動歸檔。
+- `runTimeoutSeconds` **不會**自動封存；它只會停止執行。該階段會保留直到自動封存。
 - 自動歸檔同樣適用於深度 1 和深度 2 的對話。
 - 瀏覽器清理與歸檔清理是分開的：被追蹤的瀏覽器分頁/程序會在運行結束時盡力關閉，即使對話記錄/會話記錄被保留。
 
 ## 巢狀子代理
 
-預設情況下，子代理無法生成它們自己的子代理
+根據預設，子代理程式無法衍生自己的子代理程式
 (`maxSpawnDepth: 1`)。設定 `maxSpawnDepth: 2` 以啟用一層
-巢狀 —— **協調器模式**：主要 → 協調器子代理 →
-工作器子子代理。
+巢狀結構 — 即 **協調器模式**：主程式 → 協調器子代理程式 →
+工作者子子代理程式。
 
 ```json5
 {
@@ -351,113 +368,108 @@ sidebarTitle: "子代理"
 每個層級只能看到其直接子級的宣告。
 
 <Note>
-  **操作指引：** 啟動子工作一次並等待完成 事件，而不是圍繞 `sessions_list`、 `sessions_history`、`/subagents list` 或 `exec` 睡眠指令建置輪詢迴圈。 `sessions_list` 和 `/subagents list` 讓子會話關係 專注於活躍工作 —— 活躍的子級保持連線，已結束的子級在短時間內 保持可見，而陳舊的僅存儲子級連結會在其有效期後被忽略。這可防止舊的 `spawnedBy` / `parentSessionKey`
-  元數據在重新啟動後復活幽靈子級。如果子完成事件在您已發送 最終答案後才到達，正確的後續處理是使用精確的靜默權杖 `NO_REPLY` / `no_reply`。
+  **操作指引：** 啟動子工作一次並等待完成事件，而不是圍繞 `sessions_list`、 `sessions_history`、`/subagents list` 或 `exec` sleep 指令構建輪詢迴圈。 `sessions_list` 和 `/subagents list` 使子會話關係專注於進行中的工作——進行中的子會話保持連接，已結束的子會話在短時間內保持可見，而陳舊的僅存儲的子連結在過了其新鮮度視窗後將被忽略。這可以防止舊的 `spawnedBy` / `parentSessionKey`
+  元數據在重啟後恢復虛幻的子會議。如果子完成事件在您已發送最終答案之後到達，正確的後續操作是確切的靜默令牌 `NO_REPLY` / `no_reply`。
 </Note>
 
 ### 按深度的工具政策
 
 - 角色和控制範圍在生成時會寫入會話元資料中。這可以防止扁平化或還原的會話金鑰意外重新獲得協調器權限。
-- **深度 1（協調器，當 `maxSpawnDepth >= 2` 時）：**獲得 `sessions_spawn`、`subagents`、`sessions_list`、`sessions_history`，以便管理其子代。其他會話/系統工具保持拒絕狀態。
-- **深度 1（葉節點，當 `maxSpawnDepth == 1` 時）：**沒有會話工具（目前的預設行為）。
-- **深度 2（葉節點工作程式）：**沒有會話工具 —— `sessions_spawn` 在深度 2 時總是被拒絕。無法生成更多子代。
+- **深度 1 (協調器，當 `maxSpawnDepth >= 2`)：** 獲得 `sessions_spawn`、`subagents`、`sessions_list`、`sessions_history`，以便它可以產生子會話並檢查其狀態。其他會議/系統工具仍然被拒絕。
+- **深度 1 (葉節點，當 `maxSpawnDepth == 1`)：** 沒有會議工具 (目前的預設行為)。
+- **深度 2 (葉節點工作程序)：** 沒有會議工具 —— `sessions_spawn` 在深度 2 處總是被拒絕。無法產生進一步的子會話。
 
 ### 個別代理程式生成限制
 
-每個代理程式會話（在任何深度）一次最多只能有 `maxChildrenPerAgent`
-（預設 `5`）個活躍子代。這可以防止單一協調器出現失控的擴散。
+每個代理會議 (在任何深度) 一次最多可以有 `maxChildrenPerAgent`
+(預設 `5`) 個活躍的子會議。這可以防止單一協調器出現失控的扇出。
 
 ### 級聯停止
 
 停止深度 1 的協調器會自動停止其所有深度 2
 的子代：
 
-- 主聊天中的 `/stop` 會停止所有深度 1 的代理程式，並級聯至其深度 2 的子代。
-- `/subagents kill <id>` 會停止特定的子代理程式，並級聯至其子代。
-- `/subagents kill all` 會停止請求者的所有子代理程式並進行級聯。
+- 主聊天中的 `/stop` 會停止所有深度 1 的代理，並級聯到它們的深度 2 子會議。
 
-## 驗證
+## 身份驗證
 
-子代理程式的驗證是依據 **代理程式 ID** 解析，而非依據會話類型：
+子代理的身份驗證由 **代理 id** 解析，而不是由會議類型：
 
-- 子代理程式會話金鑰是 `agent:<agentId>:subagent:<uuid>`。
-- 驗證儲存庫是從該代理程式的 `agentDir` 載入的。
-- 主代理程式的驗證設定檔會作為 **後備** 合併進來；代理程式設定檔會在衝突時覆寫主設定檔。
+- 子代理會議金鑰是 `agent:<agentId>:subagent:<uuid>`。
+- 身份驗證存儲是從該代理的 `agentDir` 加載的。
+- 主代理的身份驗證配置檔案作為 **備援** 合併進來；代理配置檔案會在衝突時覆蓋主配置檔案。
 
-合併是累加的，因此主設定檔始終可作為後備使用。目前尚不支援每個代理程式完全隔離的驗證。
+合併是相加的，因此主配置檔案始終可作為備援使用。尚不支援每個代理的完全隔離身份驗證。
 
-## 宣布
+## 公告
 
-子代理程式透過宣布步驟回報結果：
+Sub-agents 透過公告步驟回報：
 
-- 宣布步驟在子代理程式會話內部執行（而非請求者會話）。
-- 如果子代理程式完全回覆 `ANNOUNCE_SKIP`，則不會發布任何內容。
-- 如果最新的助理文字確切是靜默權杖 `NO_REPLY` / `no_reply`，即使之前有可見的進度，也會隱藏宣布輸出。
+- 公告步驟在 sub-agent 會話內執行（而非請求者會話）。
+- 如果 sub-agent 完全回覆 `ANNOUNCE_SKIP`，則不會發布任何內容。
+- 如果最新的助手文字是確切的靜默權杖 `NO_REPLY` / `no_reply`，即使先前有可見的進度，公告輸出也會被抑制。
 
-傳遞取決於請求者的深度：
+傳遞取決於請求者深度：
 
-- 頂層請求者會話使用帶有外部傳遞 (`deliver=true`) 的後續 `agent` 呼叫。
-- 巢狀請求者子代理會話會接收內部後續注入 (`deliver=false`)，以便編排器能在會話內綜合子項結果。
-- 如果巢狀請求者子代理會話已消失，OpenClaw 會在可用時回退至該會話的請求者。
+- 頂層請求者會話使用外部傳遞的後續 `agent` 呼叫（`deliver=true`）。
+- 巢狀請求者 subagent 會話會接收內部後續注入（`deliver=false`），以便編排器能在會話內綜合子項結果。
+- 如果巢狀請求者 subagent 會話已消失，OpenClaw 會在可用時回退至該會話的請求者。
 
-對於頂層請求者會話，完成模式直接傳遞會先解析任何綁定的對話/執行緒路徑和掛鉤覆寫，然後從請求者會話的儲存路徑填入遺漏的頻道目標欄位。即使完成來源僅識別頻道，這也能讓完成內容保留在正確的聊天/主題上。
+對於頂層請求者會話，完成模式直接傳遞會先解析任何綁定的對話/執行緒路由與掛接覆寫，然後從請求者會話的已儲存路由填入遺漏的通道目標欄位。這樣即使完成來源僅識別通道，也能將完成內容保留在正確的聊天/主題上。
 
-在建置巢狀完成發現時，子項完成聚合的範圍限定在當前請求者執行，防止過時的前次執行子項輸出洩漏到當前公告中。當在頻道配接器上可用時，公告回覆會保留執行緒/主題路由。
+在建立巢狀完成發現時，子項完成聚合會限定於目前的請求者執行，防止過時的前次執行子項輸出洩漏至目前的公告中。公告回覆在通道配接器可用時會保留執行緒/主題路由。
 
 ### 公告內容
 
-公告內容會標準化為穩定的內部事件區塊：
+公告內容會正規化為穩定的內部事件區塊：
 
-| 欄位        | 來源                                                                                      |
-| ----------- | ----------------------------------------------------------------------------------------- |
-| 來源        | `subagent` 或 `cron`                                                                      |
-| Session ids | 子會話金鑰/id                                                                             |
-| 類型        | 公告類型 + 任務標籤                                                                       |
-| 狀態        | 衍生自執行階段結果 (`success`、`error`、`timeout` 或 `unknown`) — **而非** 從模型文字推斷 |
-| 結果內容    | 最新可見的助手文字，否則為經過清理的最新工具/toolResult 文字                              |
-| 後續動作    | 描述何時回覆與保持沈默的指示                                                              |
+| 欄位     | 來源                                                                                   |
+| -------- | -------------------------------------------------------------------------------------- |
+| 來源     | `subagent` 或 `cron`                                                                   |
+| 會話 ID  | 子會話金鑰/ID                                                                          |
+| 類型     | 公告類型 + 任務標籤                                                                    |
+| 狀態     | 衍生自執行時期結果（`success`、`error`、`timeout` 或 `unknown`）——**非**由模型文字推斷 |
+| 結果內容 | 來自子項的最新可見助手文字                                                             |
+| 後續     | 描述何時回覆或保持靜默的指示                                                           |
 
-最終失敗的執行會回報失敗狀態，而不會重播擷取的回覆文字。若發生逾時且子項僅完成工具呼叫，公告可將該歷史記錄折疊成簡短的進度摘要，而不是重播原始工具輸出。
+終結性失敗的執行會回報失敗狀態，而不重播擷取的回覆文字。Tool/toolResult 輸出不會提升至子項結果文字。
 
-### 統計資料行
+### 統計列
 
-公告載荷在結尾包含一個統計資料行 (即使經過換行)：
+公告內容在最後包含一條統計資訊行（即使被換行）：
 
-- 執行時間 (例如 `runtime 5m12s`)。
-- Token 使用量 (輸入/輸出/總計)。
-- 當設定模型定價時的估算成本 (`models.providers.*.models[].cost`)。
-- `sessionKey`、`sessionId` 和 transscript 路徑，以便主要代理可以透過 `sessions_history` 獲取歷史記錄或檢查磁碟上的檔案。
+- 執行時間（例如 `runtime 5m12s`）。
+- Token 使用量（輸入/輸出/總計）。
+- 當配置了模型定價時的估算成本（`models.providers.*.models[].cost`）。
+- `sessionKey`、`sessionId` 和文字記錄路徑，以便主代理可以透過 `sessions_history` 獲取歷史記錄或檢查磁碟上的檔案。
 
-內部元數據僅用於編排；面向使用者的回覆應以標準的助手語氣重寫。
+內部元資料僅用於編排；面向使用者的回覆應以正常的助手語氣重新撰寫。
 
-### 為什麼優先使用 `sessions_history`
+### 為何優先使用 `sessions_history`
 
-`sessions_history` 是更安全的編排路徑：
+`sessions_history` 是較安全的編排路徑：
 
-- 首先會對 Assistant recall 進行標準化：移除 thinking 標籤；移除 `<relevant-memories>` / `<relevant_memories>` 支架；移除純文字工具呼叫 XML 載荷區塊 (`<tool_call>`、`<function_call>`、`<tool_calls>`、`<function_calls>`)，包括無法正確結尾的截斷載荷；移除降級的工具呼叫/結果支架和歷史上下文標記；移除洩漏的模型控制權杖 (`<|assistant|>`、其他 ASCII `<|...|>`、全形 `<｜...｜>`)；移除格式錯誤的 MiniMax 工具呼叫 XML。
-- 類似憑證/權杖的文字會被編輯。
+- 助手回憶會先進行正規化處理：移除思考標籤；移除 `<relevant-memories>` / `<relevant_memories>` 腳手架；移除純文字工具呼叫 XML 資訊區塊（`<tool_call>`、`<function_call>`、`<tool_calls>`、`<function_calls>`），包括未正確結尾的截斷資訊；移除降級的工具呼叫/結果腳手架和歷史上下文標記；移除洩漏的模型控制權杖（`<|assistant|>`、其他 ASCII `<|...|>`、全形 `<｜...｜>`）；移除格式錯誤的 MiniMax 工具呼叫 XML。
+- 類似憑證/token 的文字會被編輯。
 - 長區塊可能會被截斷。
-- 非常大的歷史記錄可能會丟棄較舊的行，或用 `[sessions_history omitted: message too large]` 取代過大的行。
-- 當您需要完整的逐位元組逐字元逐行對比的抄本時，檢查原始磁碟抄本是備用方案。
+- 非常大的歷史記錄可能會丟棄較舊的行，或用 `[sessions_history omitted: message too large]` 替換過大的行。
+- 當您需要完整的逐位元組文字記錄時，檢查磁碟上的原始文字記錄是備用方案。
 
 ## 工具政策
 
-子代理首先使用與父代理或目標代理相同的設定檔和工具政策管線。之後，OpenClaw 會套用子代理限制層。
+子代理首先使用與父代理或目標代理相同的設定檔和工具政策管道。之後，OpenClaw 會套用子代理限制層。
 
-如果沒有限制性的 `tools.profile`，子代理將獲得**所有工具，除了
-session tools** 和系統工具：
+如果沒有限制性的 `tools.profile`，子代理將獲得**除訊息工具、工作階段工具和系統工具之外的所有工具**：
 
 - `sessions_list`
 - `sessions_history`
 - `sessions_send`
 - `sessions_spawn`
+- `message`
 
-`sessions_history` 在這裡仍然是一個有界的、經過清理的回溯視圖 —— 它
-不是原始抄本傾印。
+`sessions_history` 在這裡也仍然是一個有界限的、經過清理的回憶視圖——它不是原始的文字記錄傾印。
 
-當 `maxSpawnDepth >= 2` 時，深度 1 的編排器子代理還會額外接收
-`sessions_spawn`、`subagents`、`sessions_list` 和
-`sessions_history`，以便它們可以管理其子代理。
+當 `maxSpawnDepth >= 2` 時，深度 1 的協編子代代理會額外接收 `sessions_spawn`、`subagents`、`sessions_list` 和 `sessions_history`，以便它們管理其子代。
 
 ### 透過設定覆寫
 
@@ -483,11 +495,7 @@ session tools** 和系統工具：
 }
 ```
 
-`tools.subagents.tools.allow` 是一个最終的僅允許（allow-only）過濾器。它可以縮小
-已解析的工具集，但無法將被 `tools.profile` 移除的工具
-**加回**。例如，`tools.profile: "coding"` 包含
-`web_search`/`web_fetch` 但不包含 `browser` 工具。若要讓
-coding-profile 子代理使用瀏覽器自動化，請在 profile 階段新增 browser：
+`tools.subagents.tools.allow` 是最終的僅允許篩選器。它可以縮小已解析的工具集，但無法 **加回** 被 `tools.profile` 移除的工具。例如，`tools.profile: "coding"` 包含 `web_search`/`web_fetch` 但不包含 `browser` 工具。若要讓 coding-profile 子代理使用瀏覽器自動化，請在設定檔階段加入瀏覽器：
 
 ```json5
 {
@@ -498,49 +506,40 @@ coding-profile 子代理使用瀏覽器自動化，請在 profile 階段新增 b
 }
 ```
 
-當只有一個代理應獲得瀏覽器自動化時，請使用每個代理的 `agents.list[].tools.alsoAllow: ["browser"]`。
+當只有一個代理應該獲得瀏覽器自動化時，請使用每代理 `agents.list[].tools.alsoAllow: ["browser"]`。
 
-## 並行性
+## 並行
 
 子代理使用專用的進程內佇列通道：
 
 - **通道名稱：** `subagent`
-- **並發數：** `agents.defaults.subagents.maxConcurrent`（預設 `8`）
+- **並行數：** `agents.defaults.subagents.maxConcurrent`（預設 `8`）
 
 ## 存活與恢復
 
-OpenClaw 不將 `endedAt` 的缺席視為子代理仍然存活的永久證明。陳舊執行視窗之前未結束的執行
-將停止在 `/subagents list`、狀態摘要、
-子項完成閘道以及每個會話並發檢查中計入活動/待處理狀態。
+OpenClaw 不會將 `endedAt` 的缺席視為子代理仍然存活的永久證明。超過過期執行視窗的未結束執行，將不再被計入 `/subagents list`、狀態摘要、後代完成閘門以及每個會話並行檢查中的有效/待處理項目。
 
-閘道重啟後，除非子會話被標記為 `abortedLastRun: true`，否則陳舊的未結束還原執行將被修剪。那些
-因重啟而中止的子會話仍可透過子代理
-孤兒復原流程進行復原，該流程會在清除中止標記之前發送合成恢復訊息。
+閘道重啟後，除非子會話標記為 `abortedLastRun: true`，否則過期且未結束的還原執行將被清除。這些因重啟而中止的子會話仍可透過子代理孤兒恢復流程進行恢復，該流程會在清除中止標記之前發送合成恢復訊息。
 
-自動重啟復原對每個子會話都有限制。如果同一個
-子代理子項在快速重新嵌入視窗內反覆被接受進行孤兒復原，OpenClaw 將在該會話上保存復原墓碑
-並在後續重啟時停止自動恢復它。執行
-`openclaw tasks maintenance --apply` 以協調任務記錄，或
-`openclaw doctor --fix` 以清除具有墓碑標記會話上陳舊的中止復原標誌。
+自動重啟恢復是針對每個子會話進行限制的。如果在快速重新阻塞視窗內，同一個子代理子代被反覆接受進行孤兒恢復，OpenClaw 將在該會話上保留恢復墓碑，並停止在後續重啟時自動恢復它。請執行 `openclaw tasks maintenance --apply` 來協調任務記錄，或執行 `openclaw doctor --fix` 以清除已標記墓碑會話上的過期中止恢復標記。
 
 <Note>
-  如果子代理生成因 Gateway `PAIRING_REQUIRED` / `scope-upgrade` 而失敗，請在編輯配對狀態前檢查 RPC 呼叫端。 內部 `sessions_spawn` 協調應透過直接 loopback shared-token/password auth 作為 `client.id: "gateway-client"` 並帶有 `client.mode: "backend"` 進行連接； 該路徑不依賴 CLI 的配對裝置範圍基準。遠端呼叫端、顯式 `deviceIdentity`、顯式裝置權杖路徑，以及瀏覽器/node 客戶端
-  在進行範圍升級時仍需要正常的裝置核准。
+  如果子代理生成失敗並出現 Gateway `PAIRING_REQUIRED` / `scope-upgrade`，請在編輯配對狀態之前檢查 RPC 呼叫端。 內部 `sessions_spawn` 協調應透過直接 loopback shared-token/password auth 以 `client.id: "gateway-client"` 身份連線並包含 `client.mode: "backend"`； 該路徑不依賴 CLI 的配對裝置範圍基準。遠端呼叫端、明確的 `deviceIdentity`、明確的 device-token 路徑，以及瀏覽器/node 客戶端
+  仍然需要正常的裝置核准以進行範圍升級。
 </Note>
 
 ## 停止
 
-- 在請求者聊天中發送 `/stop` 會中止請求者階段並停止所有從中衍生的活躍子代理運作，並連鎖影響至巢狀子項。
-- `/subagents kill <id>` 會停止特定的子代理並連鎖影響至其子項。
+- 在請求者聊天中發送 `/stop` 會中止請求者工作階段，並停止由其產生的任何作用中子代理運行，連鎖反應至巢狀子項。
 
 ## 限制
 
-- 子代理公告採用 **best-effort（盡力而為）** 機制。如果 gateway 重新啟動，待處理的「公告回覆」工作將會遺失。
-- 子代理仍然共享相同的 gateway 程序資源；請將 `maxConcurrent` 視為安全閥。
-- `sessions_spawn` 始終是非阻斷的：它會立即回傳 `{ status: "accepted", runId, childSessionKey }`。
-- 子代理上下文僅會注入 `AGENTS.md`、`TOOLS.md`、`SOUL.md`、`IDENTITY.md` 和 `USER.md`（不含 `MEMORY.md`、`HEARTBEAT.md` 或 `BOOTSTRAP.md`）。
-- 最大巢狀深度為 5（`maxSpawnDepth` 範圍：1–5）。大多數使用情況建議使用深度 2。
-- `maxChildrenPerAgent` 限制了每個階段的活躍子項數量（預設 `5`，範圍 `1–20`）。
+- 子代理公告採用 **盡力而為 (best-effort)** 機制。如果 Gateway 重新啟動，待處理的「公告回報」工作將會遺失。
+- 子代理仍共用相同的 Gateway 處理程序資源；請將 `maxConcurrent` 視為安全閥。
+- `sessions_spawn` 始終為非阻斷式：它會立即回傳 `{ status: "accepted", runId, childSessionKey }`。
+- 子代理上下文僅注入 `AGENTS.md` 和 `TOOLS.md`（不含 `SOUL.md`、`IDENTITY.md`、`USER.md`、`MEMORY.md`、`HEARTBEAT.md` 或 `BOOTSTRAP.md`）。Codex 原生子代理遵循相同界限：`TOOLS.md` 保留在繼承的 Codex 執行緒指令中，而僅限父項的 persona、identity 和使用者檔案則會以回合範圍的協作指令方式注入，以免子項複製它們。
+- 最大巢狀深度為 5（`maxSpawnDepth` 範圍：1–5）。對於大多數使用案例，建議使用深度 2。
+- `maxChildrenPerAgent` 限制了每個工作階段的作用中子項數量（預設 `5`，範圍 `1–20`）。
 
 ## 相關
 

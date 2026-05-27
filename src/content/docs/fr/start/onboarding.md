@@ -7,8 +7,8 @@ title: "Onboarding (application macOS)"
 sidebarTitle: "Onboarding : application macOS"
 ---
 
-Ce document décrit le processus de configuration actuel du premier lancement. L'objectif est une expérience fluide du "jour 0" : choisir où s'exécute le Gateway, connecter l'auth, lancer l'assistant et laisser l'agent s'initialiser.
-Pour une vue d'ensemble des parcours d'onboarding, consultez [Onboarding Overview](Gateway/en/start/onboarding-overview).
+Ce document décrit le processus de configuration du premier lancement **actuel**. L'objectif est une expérience fluide dès le « jour 0 » : choisir où le Gateway s'exécute, connecter l'authentification, lancer l'assistant et laisser l'agent s'initialiser.
+Pour une vue d'ensemble des chemins d'intégration, voir [Vue d'ensemble de l'onboarding](/fr/start/onboarding-overview).
 
 <Steps>
 <Step title="Approuver l'avertissement macOS">
@@ -28,31 +28,32 @@ Pour une vue d'ensemble des parcours d'onboarding, consultez [Onboarding Overvie
 
 Modèle de confiance de sécurité :
 
-- Par défaut, OpenClaw est un agent personnel : une seule frontière d'opérateur de confiance.
-- Les configurations partagées/multi-utilisateurs nécessitent un verrouillage (séparation des frontières de confiance, accès minimal aux outils et respect des [Consignes de sécurité](/fr/gateway/security)).
-- L'intégration locale définit désormais les nouvelles configurations par défaut sur `tools.profile: "coding"` afin que les nouvelles installations locales conservent les outils de système de fichiers/exécution sans forcer le profil `full` sans restriction.
-- Si des hooks/webhooks ou d'autres flux de contenu non fiables sont activés, utilisez un niveau de modèle moderne robuste et maintenez une politique d'outils et un bac à sable (sandboxing) stricts.
+- Par défaut, OpenClaw est un agent personnel : une limite d'opérateur de confiance.
+- Les configurations partagées/multi-utilisateurs nécessitent un verrouillage (séparation des limites de confiance, accès aux outils minimal, et suivre [Sécurité](/fr/gateway/security)).
+- L'onboarding local définit désormais les nouvelles configurations sur `tools.profile: "coding"` afin que les nouvelles configurations locales conservent les outils de système de fichiers/exécution sans forcer le profil non restreint `full`.
+- Si des hooks/webhooks ou d'autres flux de contenu non fiables sont activés, utilisez un niveau de modèle moderne puissant et maintenez une politique d'outils/sandboxing stricte.
 
 </Step>
 <Step title="Local vs Remote">
 <Frame>
-<img src="/assets/macos-onboarding/04-choose-gateway.png"GatewayGateway alt="" />
+<img src="/assets/macos-onboarding/04-choose-gateway.png" alt="" />
 </Frame>
 
-Où s'exécute le **Gateway** ?
+Où le **Gateway** s'exécute-t-il ?
 
-- **Ce Mac (Local uniquement) :** l'onboarding peut configurer l'auth et écrire les identifiants
+- **Ce Mac (Local uniquement) :** l'onboarding peut configurer l'authentification et écrire les identifiants
   localement.
-- **À distance (via SSH/Tailnet) :** l'onboarding ne configure **pas** l'auth locale ;
-  les identifiants doivent exister sur l'hôte de la passerelle.
-- **Configurer plus tard :** ignorer la configuration et laisser l'application non configurée.
+- **Distant (via SSH/Tailnet) :** l'onboarding ne configure **pas** l'authentification locale ;
+  les identifiants doivent exister sur l'hôte de la passerelle. Le champ du jeton de passerelle distant
+  stocke le jeton utilisé par l'application macOS pour se connecter à ce Gateway ; les valeurs `gateway.remote.token` non en clair existantes sont conservées jusqu'à ce que vous les remplaciez.
+- **Configurer plus tard :** ignorez la configuration et laissez l'application non configurée.
 
 <Tip>
-**Conseil d'auth Gateway :**
+**Conseil d'authentification Gateway :**
 
-- L'assistant génère désormais un **token** même pour le bouclage local, donc les clients WS locaux doivent s'authentifier.
-- Si vous désactivez l'auth, tout processus local peut se connecter ; utilisez cela uniquement sur des machines entièrement fiables.
-- Utilisez un **token** pour l'accès multi-machines ou les liaisons non bouclées.
+- L'assistant génère désormais un **jeton** même pour les connexions en boucle, donc les clients WS locaux doivent s'authentifier.
+- Si vous désactivez l'authentification, tout processus local peut se connecter ; utilisez cela uniquement sur des machines entièrement fiables.
+- Utilisez un **jeton** pour l'accès multi-machine ou les liaisons non en boucle.
 
 </Tip>
 </Step>
@@ -73,14 +74,17 @@ L'onboarding demande les autorisations TCC nécessaires pour :
 - Localisation
 
 </Step>
-<Step title="CLI">
+<Step title="CLICLI">
   <Info>Cette étape est facultative</Info>
-  L'application peut installer le `openclaw` CLI global via CLI, pnpm ou bun.
-  Elle privilégie d'abord CLI, puis pnpm, puis bun si c'est le seul gestionnaire de paquets détecté.
-  Pour le runtime du npm, Node reste la voie recommandée.
+  L'application peut installer le `openclaw`CLI CLI global via npm, pnpm ou bun.
+  Elle privilégie d'abord npm, puis pnpm, puis bun si c'est le seul gestionnaire de paquets détecté.
+  Pour le runtime du Gateway, Node reste la voie recommandée.
 </Step>
 <Step title="Onboarding Chat (dedicated session)">
-  Après la configuration, l'application ouvre une session de chat d'onboarding dédiée pour que l'agent puisse se présenter et guider les prochaines étapes. Cela permet de séparer les instructions du premier lancement de votre conversation normale. Consultez [Bootstrapping](/fr/start/bootstrapping) pour savoir ce qui se passe sur l'hôte de la passerelle lors de la première exécution de l'agent.
+  Après la configuration, l'application ouvre une session de chat d'onboarding dédiée afin que l'agent puisse
+  se présenter et guider les étapes suivantes. Cela permet de séparer les instructions de premier démarrage
+  de votre conversation normale. Consultez [Bootstrapping](/fr/start/bootstrapping) pour
+  savoir ce qui se passe sur l'hôte de la passerelle lors de la première exécution de l'agent.
 </Step>
 </Steps>
 

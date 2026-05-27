@@ -369,30 +369,31 @@ El ciclo de vida de Exec se expone como mensajes del sistema:
 
 - `Exec running` (solo si el comando excede el umbral de aviso de ejecución).
 - `Exec finished`.
-- `Exec denied`.
 
 Estos se publican en la sesión del agente después de que el nodo reporta el evento.
-Las aprobaciones de ejecución del host de la puerta de enlace emiten los mismos eventos del ciclo de vida cuando el
-comando finaliza (y opcionalmente cuando se ejecuta por más tiempo que el umbral).
+Las aprobaciones de ejecución denegadas son terminales: OpenClaw puede reportar la denegación al
+operador o a la ruta de chat directo, pero no publica `Exec denied` de nuevo en la
+sesión del agente ni reactiva el trabajo del agente.
+Las aprobaciones de ejecución del host de puerta de enlace emiten los mismos eventos del ciclo de vida cuando
+el comando finaliza (y opcionalmente cuando se ejecuta por más tiempo que el umbral).
 Las ejecuciones con puerta de aprobación reutilizan el id de aprobación como el `runId` en estos
-mensajes para facilitar la correlación.
+mensajes para una fácil correlación.
 
 ## Comportamiento de aprobación denegada
 
-Cuando se deniega una aprobación de ejecución asíncrona, OpenClaw evita que el agente
-reutilice la salida de cualquier ejecución anterior del mismo comando en la sesión.
-El motivo de la denegación se pasa con una guía explícita de que no hay salida de comando
-disponible, lo que evita que el agente afirme que hay una nueva salida o
-repita el comando denegado con resultados obsoletos de una ejecución exitosa
-previa.
+Cuando se deniega una aprobación de ejecución asíncrona, OpenClaw trata la solicitud como terminal.
+Puede mostrar una denegación concisa al operador o a la ruta de chat directo, pero no
+envía orientación de denegación a través de la sesión del agente. Esto evita que un comando
+denegado se convierta en otro turno del modelo y evita que el agente reutilice
+la salida de una ejecución anterior del mismo comando.
 
 ## Implicaciones
 
-- **`full`** es potente; prefiere listas de permitidos cuando sea posible.
-- **`ask`** te mantiene informado mientras todavía permite aprobaciones rápidas.
-- Las listas de permitidos por agente evitan que las aprobaciones de un agente se filtren a otros.
-- Las aprobaciones solo se aplican a las solicitudes de ejecución en el host de **remitentes autorizados**. Los remitentes no autorizados no pueden emitir `/exec`.
-- `/exec security=full` es una conveniencia a nivel de sesión para operadores autorizados y omite las aprobaciones por diseño. Para bloquear estrictamente la ejecución en el host, configure la seguridad de aprobaciones en `deny` o deniegue la herramienta `exec` mediante la política de herramientas.
+- **`full`** es potente; prefiera las listas de permitidos cuando sea posible.
+- **`ask`** lo mantiene informado mientras permite aprobaciones rápidas.
+- Las listas de permitidos por agente evitan que las aprobaciones de un agente se filtren en otros.
+- Las aprobaciones solo se aplican a solicitudes de ejecución de host de **remitentes autorizados**. Los remitentes no autorizados no pueden emitir `/exec`.
+- `/exec security=full` es una comodidad a nivel de sesión para operadores autorizados y omite aprobaciones por diseño. Para bloquear totalmente la ejecución en el host, configure la seguridad de aprobaciones en `deny` o deniegue la herramienta `exec` mediante la política de herramientas.
 
 ## Relacionado
 
@@ -412,7 +413,7 @@ previa.
   <Card title="Seguridad" href="/es/gateway/security" icon="lock">
     Modelo de seguridad y endurecimiento.
   </Card>
-  <Card title="Sandbox vs tool policy vs elevated" href="/es/gateway/sandbox-vs-tool-policy-vs-elevated" icon="sliders">
+  <Card title="Sandbox vs política de herramientas vs elevado" href="/es/gateway/sandbox-vs-tool-policy-vs-elevated" icon="sliders">
     Cuándo utilizar cada control.
   </Card>
   <Card title="Skills" href="/es/tools/skills" icon="sparkles">

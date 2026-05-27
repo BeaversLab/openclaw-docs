@@ -53,11 +53,11 @@ El prompt es intencionalmente compacto y utiliza secciones fijas:
 - **Habilidades** (cuando están disponibles): indica al modelo cómo cargar las instrucciones de habilidades bajo demanda.
 - **Control de OpenClaw**: indica al modelo que prefiera la herramienta `gateway` para
   el trabajo de configuración/reinicio y que evite inventar comandos de CLI.
-- **Autoactualización de OpenClaw**: cómo inspeccionar la configuración de forma segura con
-  `config.schema.lookup`, parchear la configuración con `config.patch`, reemplazar la configuración
-  completa con `config.apply` y ejecutar `update.run` solo bajo solicitud explícita del
-  usuario. La herramienta `gateway` solo para propietarios también se niega a reescribir
-  `tools.exec.ask` / `tools.exec.security`, incluyendo los alias `tools.bash.*`
+- **Actualización automática de OpenClaw**: cómo inspeccionar la configuración de forma segura con
+  `config.schema.lookup`, aplicar parches a la configuración con `config.patch`, reemplazar la
+  configuración completa con `config.apply` y ejecutar `update.run` solo bajo solicitud
+  explícita del usuario. La herramienta `gateway` orientada al agente también se niega a reescribir
+  `tools.exec.ask` / `tools.exec.security`, incluidos los alias `tools.bash.*`
   heredados que se normalizan a esas rutas de ejecución protegidas.
 - **Espacio de trabajo**: directorio de trabajo (`agents.defaults.workspace`).
 - **Documentación**: ruta local a los documentos/fuente de OpenClaw y cuándo leerlos.

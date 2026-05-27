@@ -1,5 +1,5 @@
 ---
-summary: "Capa de orquestación de flujo de Task Flow por encima de las tareas en segundo plano"
+summary: "Capa de orquestación de Task Flow encima de las tareas en segundo plano"
 read_when:
   - You want to understand how Task Flow relates to background tasks
   - You encounter Task Flow or openclaw tasks flow in release notes or docs

@@ -16,7 +16,7 @@ title: "Discord 外掛程式"
 
 ## 介面
 
-頻道：discord
+channels: discord; contracts: meetingNotesSourceProviders
 
 ## 相關文件
 

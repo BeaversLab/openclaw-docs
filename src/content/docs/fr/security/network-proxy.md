@@ -54,9 +54,9 @@ Tant que le proxy est actif, OpenClaw efface `no_proxy` et `NO_PROXY`. Ces liste
 ## Termes de proxy connexes
 
 - `proxy.enabled` / `proxy.proxyUrl` : routage du proxy de transfert sortant pour le trafic sortant du runtime OpenClaw. Cette page documente cette fonctionnalité.
-- `gateway.auth.mode: "trusted-proxy"` : authentification de proxy inverse consciente de l'identité entrante pour l'accès Gateway. Voir [Authentification de proxy de confiance](/fr/gateway/trusted-proxy-auth).
-- `openclaw proxy` : proxy de débogage local et inspecteur de capture pour le développement et le support. Voir [openclaw proxy](/fr/cli/proxy).
-- `tools.web.fetch.useTrustedEnvProxy` : option pour `web_fetch` afin de laisser un proxy d'environnement HTTP(S) contrôlé par l'opérateur résoudre le DNS tout en conservant le paramètre par défaut strict de DNS pinning et la stratégie de nom d'hôte. Voir [Web fetch](/fr/tools/web-fetch#trusted-env-proxy).
+- `gateway.auth.mode: "trusted-proxy"` : authentification reverse-proxy entrante sensible à l'identité pour l'accès à la Gateway. Voir [Authentification de proxy de confiance](/fr/gateway/trusted-proxy-auth).
+- `openclaw proxy` : proxy de débogage local et inspecteur de capture pour le développement et le support. Voir [proxy openclaw](/fr/cli/proxy).
+- `tools.web.fetch.useTrustedEnvProxy` : option pour `web_fetch` permettant à un proxy d'environnement HTTP(S) contrôlé par l'opérateur de résoudre le DNS tout en conservant le paramètre DNS strict et la stratégie de nom d'hôte par défaut. Voir [Récupération Web](/fr/tools/web-fetch#trusted-env-proxy).
 - Paramètres de proxy spécifiques au canal ou au provider : remplacements spécifiques au propriétaire pour un transport particulier. Privilégiez le proxy réseau géré lorsque l'objectif est un contrôle centralisé de la sortie sur l'environnement d'exécution.
 
 ## Configuration
@@ -87,7 +87,7 @@ OPENCLAW_PROXY_URL=http://127.0.0.1:3128 openclaw gateway run
 
 ### Gateway Loopback Mode
 
-Les clients du plan de contrôle du Gateway local se connectent généralement à un WebSocket de bouclage tel que `ws://127.0.0.1:18789`. Utilisez `proxy.loopbackMode` pour choisir le comportement de ce trafic lorsque le proxy géré est actif :
+Les clients du plan de contrôle de la Gateway locale se connectent généralement à un WebSocket de boucle locale (loopback) tel que `ws://127.0.0.1:18789`. Utilisez `proxy.loopbackMode` pour choisir comment se comportent les exceptions de proxy géré pour la boucle locale lorsque le proxy géré est actif :
 
 ```yaml
 proxy:
@@ -96,9 +96,9 @@ proxy:
   loopbackMode: gateway-only # gateway-only, proxy, or block
 ```
 
-- `gateway-only` (par défaut) : OpenClaw enregistre l'autorité de bouclage du Gateway dans la stratégie de contournement gérée de Proxyline, afin que le trafic WebSocket du Gateway local puisse se connecter directement. Les ports de bouclage personnalisés du Gateway fonctionnent car l'hôte et le port de l'URL du Gateway actif sont enregistrés.
-- `proxy` : OpenClaw n'enregistre pas de contournement de bouclage Gateway , donc le trafic Gateway local est envoyé via le proxy géré. Si le proxy est distant, il doit fournir un routage spécial pour le service de bouclage de l'hôte OpenClaw , tel que le mappage vers un nom d'hôte, une IP ou un tunnel accessible par le proxy. Les proxies distants standard résolvent `127.0.0.1` et `localhost` à partir de l'hôte du proxy, et non à partir de l'hôte OpenClaw.
-- `block` : OpenClaw refuse les connexions du plan de contrôle de bouclage Gateway avant l'ouverture d'un socket.
+- `gateway-only` (par défaut) : OpenClaw enregistre l'autorité de boucle locale de la Gateway dans la stratégie de contournement géré de Proxyline afin que le traffic WebSocket de la Gateway locale puisse se connecter directement. Les ports de boucle locale personnalisés de la Gateway fonctionnent car l'hôte et le port de l'URL active de la Gateway sont enregistrés. Le plugin de navigateur inclus peut également enregistrer les points de terminaison WebSocket exacts de préparation CDP et DevTools locaux pour les navigateurs gérés lancés par OpenClaw, et le provider d'intégration de mémoire Ollama inclus peut utiliser son propre chemin direct gardé plus étroit pour l'origine d'intégration de boucle locale hôte-local exactement configurée.
+- `proxy` : OpenClaw n'enregistre pas les contournements de boucle locale pour la Gateway ou Ollama, de sorte que le trafic de boucle locale est envoyé via le proxy géré. Si le proxy est distant, il doit fournir un routage spécial pour le service de boucle locale de l'hôte OpenClaw, tel qu'en le mappant à un nom d'hôte, une IP ou un tunnel accessible par proxy. Les proxies distants standard résolvent `127.0.0.1` et `localhost` depuis l'hôte du proxy, et non depuis l'hôte OpenClaw.
+- `block`OpenClawGatewayOllama : OpenClaw refuse les connexions du plan de contrôle en boucle locale de Gateway et les connexions en boucle locale d'intégration hébergées et protégées d'Ollama avant l'ouverture d'un socket.
 
 Si `enabled=true` mais qu'aucune URL de proxy valide n'est configurée, les commandes protégées échouent au démarrage au lieu de revenir à un accès réseau direct.
 
@@ -249,12 +249,12 @@ proxy:
 ## Limites
 
 - Le proxy améliore la couverture pour les clients HTTP et WebSocket JavaScript locaux au processus, mais il ne s'agit pas d'un bac à sable réseau au niveau de l'OS.
-- Le trafic du plan de contrôle de bouclage Gateway est par défaut contourné localement directement via `proxy.loopbackMode: "gateway-only"`. OpenClaw implémente ce contournement en enregistrant l'autorité de bouclage Gateway active dans la stratégie de contournement gérée de Proxyline. Les opérateurs peuvent définir `proxy.loopbackMode: "proxy"` pour envoyer le trafic de bouclage Gateway via le proxy géré, ou `proxy.loopbackMode: "block"` pour refuser les connexions de bouclage Gateway. Voir [Mode de bouclage Gateway](#gateway-loopback-mode) pour l'avertissement concernant le proxy distant.
+- Le trafic du plan de contrôle en boucle locale de Gateway est réglé par défaut sur un contournement local direct via Gateway`proxy.loopbackMode: "gateway-only"`OpenClawGateway. OpenClaw implémente ce contournement en enregistrant l'autorité de boucle locale Gateway active dans la stratégie de contournement gérée de Proxyline. Les opérateurs peuvent définir `proxy.loopbackMode: "proxy"`Gateway pour envoyer le trafic en boucle locale de Gateway via le proxy géré, ou `proxy.loopbackMode: "block"`GatewayGateway pour refuser les connexions en boucle locale de Gateway. Consultez [Gateway Loopback Mode](#gateway-loopback-mode) pour la mise en garde concernant le proxy distant.
 - Les sockets bruts `net`, `tls` et `http2`OpenClawOpenClaw, les modules natifs et les processus enfants non-OpenClaw peuvent contourner le routage du proxy au niveau Node, à moins qu'ils n'héritent et ne respectent les variables d'environnement du proxy. Les processus enfants CLI d'OpenClaw forkés héritent de l'URL du proxy géré et de l'état `proxy.loopbackMode`.
 - IRC est un canal TCP/TLS brut en dehors du routage du proxy de transfert géré par l'opérateur. Dans les déploiements qui nécessitent que tout le trafic sortant passe par ce proxy de transfert, définissez `channels.irc.enabled=false`, sauf si la sortie IRC directe est explicitement approuvée.
 - Le proxy de débogage local est un outil de diagnostic et son transfert direct en amont pour les requêtes proxy et les tunnels CONNECT est désactivé par défaut lorsque le mode de proxy géré est actif ; n'activez le transfert direct que pour les diagnostics locaux approuvés.
-- Les WebUI locales de l'utilisateur et les serveurs de modèles locaux doivent être ajoutés à la liste d'autorisation (allowlisted) dans la stratégie du proxy de l'opérateur si nécessaire ; OpenClaw n'expose pas de contournement général du réseau local pour eux.
-- Le contournement du proxy pour le plan de contrôle du Gateway est intentionnellement limité à Gateway`localhost` et aux URL IP de bouclage locales (loopback) littérales. Utilisez `ws://127.0.0.1:18789`, `ws://[::1]:18789` ou `ws://localhost:18789`Gateway pour les connexions directes au plan de contrôle du Gateway ; les autres noms d'hôte sont routés comme le trafic ordinaire basé sur le nom d'hôte.
+- Les WebUI locales de l'utilisateur et les serveurs de modèle locaux doivent être ajoutés à la liste d'autorisation (allowlisted) dans la stratégie de proxy de l'opérateur si nécessaire ; OpenClaw n'expose pas de contournement général de réseau local pour eux. Le fournisseur d'intégration de mémoire Ollama inclus est plus restreint : il peut utiliser un chemin direct protégé uniquement pour l'origine d'intégration en boucle locale exacte de l'hôte dérivée du OpenClawOllama`baseUrl`Ollama configuré, afin que les intégrations locales continuent de fonctionner lorsque le proxy géré ne peut pas atteindre la boucle locale de l'hôte. Les hôtes d'intégration Ollama LAN, tailnet, réseau privé et public utilisent toujours le chemin du proxy géré. `proxy.loopbackMode: "proxy"`Ollama envoie ce trafic en boucle locale Ollama via le proxy géré, et `proxy.loopbackMode: "block"` le refuse avant l'ouverture d'une connexion.
+- Le contournement du proxy du plan de contrôle de Gateway est intentionnellement limité à Gateway`localhost` et aux URL d'IP en boucle locale littérales. Utilisez `ws://127.0.0.1:18789`, `ws://[::1]:18789` ou `ws://localhost:18789`Gateway pour les connexions directes locales du plan de contrôle de Gateway ; les autres noms d'hôte sont routés comme le trafic ordinaire basé sur le nom d'hôte.
 - OpenClaw n'inspecte, ne teste ni ne certifie votre stratégie de proxy.
 - Traitez les modifications de la stratégie de proxy comme des modifications opérationnelles sensibles à la sécurité.
 
@@ -265,4 +265,4 @@ proxy:
 | Bouclage du plan de contrôle du Gateway                        | Direct uniquement pour l'URL du Gateway en bouclage locale configurée.                                                    |
 | Transfert en amont du proxy de débogage                        | Désactivé tant que le mode de proxy géré est actif, sauf s'il est explicitement activé pour les diagnostics locaux.       |
 | IRC                                                            | TCP/TLS brut ; non pris en charge par le mode de proxy HTTP géré. Désactivez sauf si la sortie IRC directe est approuvée. |
-| Autres appels client `net`, `tls` ou `http2` bruts             | Doit être classé par le gardien de socket brut avant l'atterrissage.                                                      |
+| Autres appels bruts de clients `net`, `tls` ou `http2`         | Doit être classé par le gardien de socket brut avant l'atterrissage.                                                      |

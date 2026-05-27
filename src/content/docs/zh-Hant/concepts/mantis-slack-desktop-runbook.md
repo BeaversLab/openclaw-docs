@@ -1,11 +1,11 @@
 ---
-summary: "Mantis Slack 桌面版 QA 的操作員手冊：GitHub 分派、本機 CLI、溫暖 VNC 租約、Hydrate 模式、計時解讀、成品與失敗處理。"
+summary: "Mantis Slack desktop QA 的操作員手冊：GitHub 分派、本機 CLI、暖租 VNC、Hydrate 模式、計時解讀、產出成果與失敗處理。"
 read_when:
   - Running Mantis Slack desktop QA from GitHub or locally
   - Debugging slow Mantis Slack desktop runs
   - Choosing source, prehydrated, or warm-lease mode
   - Posting screenshot and video evidence to a PR
-title: "Mantis Slack 桌面版操作手冊"
+title: "Mantis Slack desktop runbook"
 ---
 
 Mantis Slack 桌面版 QA 是針對需要 Linux 桌面、VNC 救援、Slack Web、真正的 OpenClaw 閘道、螢幕截圖、影片以及 PR 證據註解的 Slack 級別錯誤的真實 UI 通道。
@@ -19,15 +19,10 @@ Mantis 使用三種不同的儲存層：
 - 提供者映像檔：由 Crabbox 擁有並儲存在雲端提供者帳戶中。
   它包含機器功能，例如 Chrome/Chromium、ffmpeg、scrot、
   Node/corepack/pnpm、原生建置工具以及空的快取目錄。
-- 溫暖租約狀態：由目前的操作員階段擁有。在租約期間，它可以包含
-  已登入的瀏覽器設定檔、`/var/cache/crabbox/pnpm` 以及準備好的來源
-  檢出。
-- Mantis 成品：由 OpenClaw 執行擁有。它們位於
-  `.artifacts/qa-e2e/mantis/...` 之下，接著 GitHub Actions 會將其上傳，而
-  Mantis GitHub App 會在 PR 上發表內嵌證據註解。
+- Warm lease 狀態：由目前操作員 session 擁有。在租約存續期間，它可以包含已登入的瀏覽器設定檔、`/var/cache/crabbox/pnpm`，以及準備好的來源 checkout。
+- Mantis 產出成果：由 OpenClaw 執行擁有。它們位於 `.artifacts/qa-e2e/mantis/...` 下，接著 GitHub Actions 會將其上傳，且 Mantis GitHub App 會在 PR 上評論內嵌證據。
 
-切勿將機密、瀏覽器 Cookie、Slack 登入狀態、存放庫檢出、
-`node_modules` 或 `dist/` 放入預先烘焙的提供者映像檔中。
+切勿將機密、瀏覽器 Cookie、Slack 登入狀態、儲存庫 checkout、`node_modules` 或 `dist/` 放入預先建置的提供者映像檔中。
 
 ## GitHub 分派
 
@@ -44,13 +39,11 @@ gh workflow run mantis-slack-desktop-smoke.yml \
   -f hydrate_mode=source
 ```
 
-允許的 `candidate_ref` 值有意設限，因為工作流程
-使用即時憑證：目前的 `main` 祖系、發佈標籤，或來自
-`openclaw/openclaw` 的開放 PR Head。
+允許的 `candidate_ref` 值被有意限制，因為工作流程使用即時憑證：目前的 `main` 祖系、發行標籤，或來自 `openclaw/openclaw` 的開放 PR head。
 
 工作流程會寫入：
 
-- 已上傳的成品：`mantis-slack-desktop-smoke-<run-id>-<attempt>`；
+- 已上傳的產出成果：`mantis-slack-desktop-smoke-<run-id>-<attempt>`；
 - 來自 Mantis GitHub App 的內嵌 PR 註解；
 - `slack-desktop-smoke.png`；
 - `slack-desktop-smoke.mp4`；
@@ -58,11 +51,10 @@ gh workflow run mantis-slack-desktop-smoke.yml \
 - `slack-desktop-smoke-change.mp4`；
 - `mantis-slack-desktop-smoke-summary.json`；
 - `mantis-slack-desktop-smoke-report.md`；
-- 遠端日誌，例如 `slack-desktop-command.log`、`openclaw-gateway.log`、
+- 遠端記錄檔，例如 `slack-desktop-command.log`、`openclaw-gateway.log`、
   `chrome.log` 和 `ffmpeg.log`。
 
-PR 評論會透過隱藏的
-`<!-- mantis-slack-desktop-smoke -->` 標記就地更新。
+PR 評論會透過隱藏的 `<!-- mantis-slack-desktop-smoke -->` 標記就地更新。
 
 ## 本機 CLI
 
@@ -110,65 +102,81 @@ pnpm openclaw qa mantis slack-desktop-smoke \
   --hydrate-mode source
 ```
 
-僅當重用的遠端工作區已經擁有
-`node_modules` 和已建置的 `dist/` 時，才使用 `--hydrate-mode prehydrated`。如果缺少這些，Mantis 將以封閉式失敗處理。
+只有在重複使用的遠端工作區已經有 `node_modules` 和建置好的 `dist/` 時，才使用 `--hydrate-mode prehydrated`。如果缺少這些，Mantis 將會以封閉式失敗結束。
+
+驗證原生 Slack 核准 UI：
+
+```bash
+pnpm openclaw qa mantis slack-desktop-smoke \
+  --provider aws \
+  --class standard \
+  --approval-checkpoints \
+  --credential-source convex \
+  --credential-role maintainer \
+  --hydrate-mode source
+```
+
+Approval checkpoint 模式與 `--gateway-setup` 互斥。除非您傳遞明確的 approval checkpoint `--scenario` 標誌，否則它會執行 opt-in 的 `slack-approval-exec-native` 和 `slack-approval-plugin-native` 情境；其他的 Slack 情境會在 VM 啟動前被拒絕。Slack QA runner 會根據觀察到的真實 Slack API 訊息寫入每個 checkpoint JSON 檔案，然後遠端監看器會將該訊息快照渲染為 `approval-checkpoints/<scenario>-pending.png` 和 `approval-checkpoints/<scenario>-resolved.png`。如果缺少任何 checkpoint JSON、訊息證據、ack JSON 或渲染後的螢幕截圖，或是這些檔案為空，則執行會失敗。
+
+Cold GitHub Actions 租用沒有 Slack Web cookies，因此它們的瀏覽器擷取可能會停留在 Slack 登入頁面。對於 approval checkpoint 證明，請信任渲染後的 checkpoint 影像和 Slack QA 成果，而不是 `slack-desktop-smoke.png`。只有在瀏覽器螢幕截圖本身必須顯示 Slack Web 時，才使用保留的溫租用 (warm lease) 搭配手動登入的 Slack Web 設定檔。
 
 ## Hydrate 模式
 
-| 模式          | 使用時機                 | 遠端行為                                                                       | 權衡                                 |
-| ------------- | ------------------------ | ------------------------------------------------------------------------------ | ------------------------------------ |
-| `source`      | 一般 PR 驗證、冷機器、CI | 在 VM 內執行 `pnpm install --frozen-lockfile --prefer-offline` 和 `pnpm build` | 最慢，最強的來源檢出驗證             |
-| `prehydrated` | 您刻意準備了可重用的租用 | 需要現有的 `node_modules` 和 `dist/`；跳過安裝/建置                            | 快速，但僅對操作員控制的溫熱租用有效 |
+| 模式          | 使用時機                     | 遠端行為                                                                       | 權衡                               |
+| ------------- | ---------------------------- | ------------------------------------------------------------------------------ | ---------------------------------- |
+| `source`      | 一般 PR 證明、冷機器、CI     | 在 VM 內執行 `pnpm install --frozen-lockfile --prefer-offline` 和 `pnpm build` | 最慢，最強的 source-checkout 證明  |
+| `prehydrated` | 您刻意準備了可重複使用的租用 | 需要現有的 `node_modules` 和 `dist/`；跳過安裝/建構                            | 快速，但僅適用於操作員控制的溫租用 |
 
-GitHub Actions 總是在 VM 執行前準備候選檢出。其 pnpm store 會根據作業系統、Node 版本和鎖定檔進行快取。VM 來源執行也會在存在時使用 `/var/cache/crabbox/pnpm`。
+GitHub Actions 總是在 VM 執行前準備候選的 checkout。其 pnpm store 會依 OS、Node 版本和 lockfile 進行快取。VM source 執行也會在存在時使用 `/var/cache/crabbox/pnpm`。
 
-## 時序解讀
+## 時間解讀
 
-`mantis-slack-desktop-smoke-report.md` 包含階段時序：
+`mantis-slack-desktop-smoke-report.md` 包含階段時間：
 
-- `crabbox.warmup`：雲端提供者啟動、桌面/瀏覽器就緒度以及 SSH。
-- `crabbox.inspect`：租用中繼資料查詢。
-- `credentials.prepare`：取得 Convex 憑證租用。
-- `crabbox.remote_run`：同步、瀏覽器啟動、OpenClaw 安裝/建置或
-  hydrate 驗證、閘道啟動、截圖和影片擷取。
-- `artifacts.copy`：從 VM rsync 回來。
+- `crabbox.warmup`：雲端供應商啟動、桌面/瀏覽器就緒度以及 SSH。
+- `crabbox.inspect`：租用元資料查詢。
+- `credentials.prepare`：Convex 憑證租用取得。
+- `crabbox.remote_run`：同步、瀏覽器啟動、OpenClaw 安裝/建構或 hydrate 驗證、閘道啟動、螢幕截圖和視訊擷取。
+- `artifacts.copy`：從 VM 進行 rsync 回傳。
 
-當 Crabbox 在 Mantis 複製證明 OpenClaw 閘道
-已啟動且設定已完成的中繼資料後，傳回非零遠端狀態時，`crabbox.remote_run` 可被標記為 `accepted`。將 `accepted` 視為附帶說明的通過，
-而非失敗情境。
+`crabbox.remote_run` 可以被標記為 `accepted`，前提是 Crabbox 在 Mantis 複製了證明 OpenClaw
+網關設定已完成或 Slack QA 指令本身已成功退出的元數據後，返回非零的
+遠端狀態。
+將 `accepted` 視為帶解釋的通過，而非失敗的場景。
 
-如果執行緩慢：
+如果運行速度較慢：
 
-- 暖機佔主導：預先烘焙或升級更好的 Crabbox 提供者映像；
-- remote_run 在 `source` 中佔主導：使用溫熱租用、改善 pnpm store 重複使用，
-  或將機器先決條件移入提供者映像；
-- remote_run 主導 `prehydrated`：遠端工作區實際上尚未
+- warmup 佔主導：預先烘焙或升級更好的 Crabbox provider 映像檔；
+- remote_run 在 `source` 中佔主導：使用 warm lease，改善 pnpm store 的重複使用，
+  或將機器前置需求移入 provider 映像檔中；
+- remote_run 在 `prehydrated` 中佔主導：遠端工作空間實際上並未
   準備就緒，或是 gateway/browser/Slack 設定緩慢；
-- artifact copy 主導：檢查影片大小與 artifact 目錄內容。
+- artifact copy 佔主導：檢查影片大小和 artifact 目錄內容。
 
 ## 證據檢查清單
 
-一個好的 PR 註解應該顯示：
+一個好的 PR 評論應該顯示：
 
-- scenario id 與 candidate SHA；
+- scenario id 和 candidate SHA；
 - GitHub Actions run URL；
 - artifact URL；
-- 內嵌截圖；
-- 若有提供則加上內嵌動畫預覽；
-- 完整 MP4 與裁切後 MP4 連結；
-- 通過/失敗狀態；
-- 附加報告中的時序摘要。
+- inline approval checkpoint 截圖，或是來自已登入 warm lease 的
+  Slack Web 截圖；
+- inline 動畫預覽（如果可用）；
+- 完整 MP4 和裁剪後的 MP4 連結；
+- pass/fail 狀態；
+- 附加報告中的時間摘要。
 
-請勿將截圖或影片提交到儲存庫。請將它們保留在 GitHub
-Actions artifacts 或 PR 註解中。
+請勿將截圖或影片提交到儲存庫中。請將它們保留在 GitHub
+Actions artifacts 或 PR 評論中。
 
 ## 失敗處理
 
-若工作流程在 VM 執行前失敗，請先檢查 Actions 工作。常見
-原因包括不受信任的 `candidate_ref`、缺少環境 secrets，或 candidate
+如果 workflow 在 VM 執行之前失敗，請先檢查 Actions job。典型
+原因是不受信任的 `candidate_ref`、遺失環境 secrets，或是 candidate
 安裝/建置失敗。
 
-若 VM 執行失敗但截圖已被複製回來，請檢查：
+如果 VM 執行失敗但截圖已被複製回來，請檢查：
 
 ```bash
 cat mantis-slack-desktop-smoke-report.md
@@ -179,17 +187,17 @@ cat chrome.log
 cat ffmpeg.log
 ```
 
-若該次執行保留了租用，請使用報告中的 `crabbox vnc ...` 指令開啟 VNC。
-完成後請停止租用：
+如果執行保留了 lease，請使用報告中的 `crabbox vnc ...` 指令開啟 VNC。
+完成後停止 lease：
 
 ```bash
 crabbox stop --provider aws <cbx_id-or-slug>
 ```
 
-若 Slack 登入已過期，請在保留的租用上透過 VNC 進行修復，並使用
-`--lease-id` 重新執行。請勿將該瀏覽器設定檔烘焙到 provider 映像中。
+如果 Slack 登入過期，請在保留的 lease 上透過 VNC 修復並使用
+`--lease-id` 重新執行。請勿將該瀏覽器設定檔烘焙到 provider 映像檔中。
 
-## 相關資訊
+## 相關
 
 - [QA 概觀](/zh-Hant/concepts/qa-e2e-automation)
 - [Slack 頻道](/zh-Hant/channels/slack)

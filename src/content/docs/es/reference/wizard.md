@@ -29,46 +29,46 @@ Para obtener una descripción general de alto nivel, consulte [Incorporación (C
 
   </Step>
   <Step title="Modelo/Auth">
-    - **Clave de API de Anthropic**: usa `ANTHROPIC_API_KEY` si está presente o solicita una clave, y luego la guarda para el uso del demonio.
-    - **Clave de API de Anthropic**: opción de asistente de Anthropic preferida en onboarding/configure.
-    - **Token de configuración de Anthropic**: aún disponible en onboarding/configure, aunque OpenClaw ahora prefiere reutilizar la CLI de Claude cuando esté disponible.
+    - **Clave de API de Anthropic**: usa `ANTHROPIC_API_KEY` si está presente o solicita una clave, luego la guarda para uso del demonio.
+    - **Clave de API de Anthropic**: elección de asistente de Anthropic preferida en onboarding/configure.
+    - **Token de configuración de Anthropic**: aún disponible en onboarding/configure, aunque OpenClaw ahora prefiere reutilizar Claude CLI cuando está disponible.
     - **Suscripción a OpenAI Code (Codex) (OAuth)**: flujo del navegador; pegue el `code#state`.
-      - Establece `agents.defaults.model` en `openai/gpt-5.5` a través del tiempo de ejecución de Codex cuando el modelo no está configurado o ya es de la familia OpenAI.
+      - Establece `agents.defaults.model` en `openai/gpt-5.5` a través del runtime de Codex cuando el modelo no está establecido o ya es de la familia OpenAI.
     - **Suscripción a OpenAI Code (Codex) (emparejamiento de dispositivos)**: flujo de emparejamiento del navegador con un código de dispositivo de corta duración.
-      - Establece `agents.defaults.model` en `openai/gpt-5.5` a través del tiempo de ejecución de Codex cuando el modelo no está configurado o ya es de la familia OpenAI.
-    - **Clave de API de OpenAI**: usa `OPENAI_API_KEY` si está presente o solicita una clave, y luego la almacena en perfiles de autenticación.
-      - Establece `agents.defaults.model` en `openai/gpt-5.5` cuando el modelo no está configurado, `openai/*`, o `openai-codex/*`.
-    - **Clave de API de xAI (Grok)**: solicita `XAI_API_KEY` y configura xAI como proveedor de modelos.
+      - Establece `agents.defaults.model` en `openai/gpt-5.5` a través del runtime de Codex cuando el modelo no está establecido o ya es de la familia OpenAI.
+    - **Clave de API de OpenAI**: usa `OPENAI_API_KEY` si está presente o solicita una clave, luego la almacena en perfiles de autenticación.
+      - Establece `agents.defaults.model` en `openai/gpt-5.5` cuando el modelo no está establecido, `openai/*`, o `openai-codex/*`.
+    - **xAI (Grok) OAuth / Clave de API**: inicia sesión con xAI OAuth cuando se elige, o solicita `XAI_API_KEY` en la ruta de clave de API, y configura xAI como proveedor de modelos.
     - **OpenCode**: solicita `OPENCODE_API_KEY` (o `OPENCODE_ZEN_API_KEY`, consígalo en https://opencode.ai/auth) y le permite elegir el catálogo Zen o Go.
-    - **Ollama**: ofrece primero **Nube + Local**, **Solo nube** o **Solo local**. `Cloud only` solicita `OLLAMA_API_KEY` y usa `https://ollama.com`; los modos respaldados por el host solicitan la URL base de Ollama, descubren los modelos disponibles y extraen automáticamente el modelo local seleccionado cuando sea necesario; `Cloud + Local` también comprueba si ese host de Ollama ha iniciado sesión para el acceso en la nube.
+    - **Ollama**: ofrece primero **Nube + Local**, **Solo nube** o **Solo local**. `Cloud only` solicita `OLLAMA_API_KEY` y usa `https://ollama.com`; los modos respaldados por el host solicitan la URL base de Ollama, descubren los modelos disponibles y extraen automáticamente el modelo local seleccionado cuando sea necesario; `Cloud + Local` también verifica si ese host de Ollama ha iniciado sesión para acceso a la nube.
     - Más detalles: [Ollama](/es/providers/ollama)
-    - **Clave de API**: almacena la clave por usted.
+    - **Clave de API**: almacena la clave para usted.
     - **Vercel AI Gateway (proxy multi-modelo)**: solicita `AI_GATEWAY_API_KEY`.
     - Más detalles: [Vercel AI Gateway](/es/providers/vercel-ai-gateway)
     - **Cloudflare AI Gateway**: solicita el ID de cuenta, el ID de puerta de enlace y `CLOUDFLARE_AI_GATEWAY_API_KEY`.
     - Más detalles: [Cloudflare AI Gateway](/es/providers/cloudflare-ai-gateway)
-    - **MiniMax**: la configuración se escribe automáticamente; el alojamiento predeterminado es `MiniMax-M2.7`.
-      La configuración con clave de API usa `minimax/...` y la configuración OAuth usa
+    - **MiniMax**: la configuración se escribe automáticamente; el valor predeterminado alojado es `MiniMax-M2.7`.
+      La configuración con clave de API usa `minimax/...`, y la configuración OAuth usa
       `minimax-portal/...`.
     - Más detalles: [MiniMax](/es/providers/minimax)
-    - **StepFun**: la configuración se escribe automáticamente para StepFun estándar o Step Plan en puntos de conexión de China o globales.
-    - El estándar actualmente incluye `step-3.5-flash` y Step Plan también incluye `step-3.5-flash-2603`.
+    - **StepFun**: la configuración se escribe automáticamente para StepFun estándar o Step Plan en endpoints de China o globales.
+    - Estándar actualmente incluye `step-3.5-flash`, y Step Plan también incluye `step-3.5-flash-2603`.
     - Más detalles: [StepFun](/es/providers/stepfun)
     - **Synthetic (compatible con Anthropic)**: solicita `SYNTHETIC_API_KEY`.
     - Más detalles: [Synthetic](/es/providers/synthetic)
     - **Moonshot (Kimi K2)**: la configuración se escribe automáticamente.
     - **Kimi Coding**: la configuración se escribe automáticamente.
     - Más detalles: [Moonshot AI (Kimi + Kimi Coding)](/es/providers/moonshot)
-    - **Omitir**: aún no se ha configurado la autenticación.
-    - Elija un modelo predeterminado de las opciones detectadas (o ingrese el proveedor/modelo manualmente). Para obtener la mejor calidad y un menor riesgo de inyección de avisos, elija el modelo de última generación más fuerte disponible en su pila de proveedores.
-    - Onboarding ejecuta una verificación del modelo y advierte si el modelo configurado es desconocido o le falta autenticación.
-    - El modo de almacenamiento de clave de API es, por defecto, valores de perfil de autenticación en texto sin formato. Use `--secret-input-mode ref` para almacenar referencias respaldadas por el entorno en su lugar (por ejemplo `keyRef: { source: "env", provider: "default", id: "OPENAI_API_KEY" }`).
+    - **Omitir**: aún no se ha configurado ninguna autenticación.
+    - Elija un modelo predeterminado de las opciones detectadas (o ingrese proveedor/modelo manualmente). Para obtener la mejor calidad y un menor riesgo de inyección de prompts, elija el modelo de última generación más fuerte disponible en su stack de proveedores.
+    - Onboarding ejecuta una verificación del modelo y advierte si el modelo configurado es desconocido o falta la autenticación.
+    - El modo de almacenamiento de clave de API predeterminado es valores de perfil de autenticación en texto plano. Use `--secret-input-mode ref` para almacenar referencias respaldadas por env en su lugar (por ejemplo `keyRef: { source: "env", provider: "default", id: "OPENAI_API_KEY" }`).
     - Los perfiles de autenticación residen en `~/.openclaw/agents/<agentId>/agent/auth-profiles.json` (claves de API + OAuth). `~/.openclaw/credentials/oauth.json` es solo una importación heredada.
     - Más detalles: [/concepts/oauth](/es/concepts/oauth)
     <Note>
     Consejo para headless/servidor: complete OAuth en una máquina con un navegador, luego copie
     el `auth-profiles.json` de ese agente (por ejemplo
-    `~/.openclaw/agents/<agentId>/agent/auth-profiles.json`, o la ruta `$OPENCLAW_STATE_DIR/...` coincidente)
+    `~/.openclaw/agents/<agentId>/agent/auth-profiles.json`, o la ruta `$OPENCLAW_STATE_DIR/...` correspondiente)
     al host de la puerta de enlace. `credentials/oauth.json`
     es solo una fuente de importación heredada.
     </Note>

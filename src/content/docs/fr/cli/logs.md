@@ -12,8 +12,8 @@ Tail Gateway file logs over RPC (works in remote mode).
 
 Related:
 
-- Vue d'ensemble de la journalisation : [Journalisation](/fr/logging)
-- CLI du Gateway : [gateway](GatewayCLI/en/cli/gateway)
+- Aperçu de la journalisation : [Journalisation](/fr/logging)
+- CLI Gateway : [gateway](GatewayCLI/en/cli/gateway)
 
 ## Options
 
@@ -57,9 +57,10 @@ openclaw logs --url ws://127.0.0.1:18789 --token "$OPENCLAW_GATEWAY_TOKEN"
 
 - Utilisez `--local-time` pour afficher les horodatages dans votre fuseau horaire local.
 - Si le Gateway local loopback implicite demande un appairage, se ferme pendant la connexion ou expire avant que Gateway`logs.tail` ne réponde, `openclaw logs`Gateway revient automatiquement au fichier journal du Gateway configuré. Les cibles `--url` explicites n'utilisent pas ce repli.
-- Lors de l'utilisation de `--follow`, les déconnexions transitoires du gateway (fermeture WebSocket, expiration, interruption de connexion) déclenchent une reconnexion automatique avec une temporisation exponentielle (jusqu'à 8 nouvelles tentatives, plafonnées à 30 s entre les tentatives). Un avertissement est imprimé sur stderr à chaque nouvelle tentative, et un avis `[logs] gateway reconnected` est imprimé une fois qu'un sondage réussit. En mode `--json`, l'avertissement de nouvelle tentative et la transition de reconnexion sont tous deux émis sous forme d'enregistrements `{"type":"notice"}` sur stderr. Les erreurs non récupérables (échec d'authentification, mauvaise configuration) provoquent toujours une sortie immédiate.
+- `openclaw logs --follow`GatewayRPCLinuxGatewayGateway ne suit pas les fichiers de repli configurés après des échecs implicites du RPC Gateway local. Sur Linux, il utilise le journal Gateway systemd actif de l'utilisateur par PID lorsque disponible et imprime la source de journal sélectionnée ; sinon, il continue de réessayer le Gateway en direct au lieu de suivre un fichier côte à côte potentiellement périmé.
+- Lors de l'utilisation de `--follow`, les déconnexions transitoires du gateway (fermeture WebSocket, expiration, interruption de connexion) déclenchent une reconnexion automatique avec un backoff exponentiel (jusqu'à 8 tentatives, plafonnées à 30 s entre les tentatives). Un avertissement est imprimé sur stderr à chaque nouvelle tentative, et un avis `[logs] gateway reconnected` est imprimé dès qu'un sondage réussit. En mode `--json`, l'avertissement de nouvelle tentative et la transition de reconnexion sont tous deux émis sous forme d'enregistrements `{"type":"notice"}` sur stderr. Les erreurs non récupérables (échec d'authentification, mauvaise configuration) provoquent toujours une sortie immédiate.
 
 ## Connexes
 
 - [Référence CLI](CLI/en/cli)
-- [Journalisation du Gateway](Gateway/en/gateway/logging)
+- [Journalisation Gateway](Gateway/en/gateway/logging)

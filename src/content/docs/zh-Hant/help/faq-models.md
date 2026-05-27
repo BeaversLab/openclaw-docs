@@ -300,14 +300,13 @@ sidebarTitle: "模型常見問題"
           models: {
             "anthropic/claude-opus-4-6": { alias: "opus" },
             "anthropic/claude-sonnet-4-6": { alias: "sonnet" },
-            "anthropic/claude-haiku-4-5": { alias: "haiku" },
           },
         },
       },
     }
     ```
 
-    然後 `/model sonnet`（或在支援時使用 `/<alias>`）將解析為該模型 ID。
+    然後 `/model sonnet`（或受支援時使用 `/<alias>`）會解析為該模型 ID。
 
   </Accordion>
 

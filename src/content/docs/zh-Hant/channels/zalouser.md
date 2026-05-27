@@ -164,34 +164,50 @@ openclaw directory groups list --channel zalouser --query "work"
 }
 ```
 
-## 輸入中、反應和傳遞回執
+## 環境變數
 
-- OpenClaw 會在發送回覆之前發送輸入中事件 (盡力而為)。
-- 在頻道動作中，支援對 `zalouser` 使用訊息反應動作 `react`。
+Zalo 個人版外掛程式也可以從環境變數讀取設定檔選擇：
+
+- `ZALOUSER_PROFILE`：當頻道或帳戶設定中未設定 `profile` 時使用的設定檔名稱。
+- `ZCA_PROFILE`：舊版後備設定檔名稱，僅在未設定 `ZALOUSER_PROFILE` 時使用。
+
+設定檔名稱會選擇 OpenClaw 狀態中已儲存的 Zalo 登入憑證。解析順序為：
+
+1. 設定中的明確 `profile`。
+2. `ZALOUSER_PROFILE`。
+3. `ZCA_PROFILE`。
+4. 非預設帳戶的帳戶 ID，若是預設帳戶則為 `default`。
+
+對於多帳戶設定，建議在設定中的每個帳戶上設定 `profile`，以免單一環境變數導致多個帳戶共用相同的登入階段。
+
+## 輸入中、反應及傳送回執
+
+- OpenClaw 會在發送回覆前發送輸入中事件（盡力而為）。
+- 訊息反應動作 `react` 支援頻道動作中的 `zalouser`。
   - 使用 `remove: true` 從訊息中移除特定的反應表情符號。
-  - 反應語意：[Reactions](/zh-Hant/tools/reactions)
-- 對於包含事件元資料的傳入訊息，OpenClaw 會發送已傳遞 + 已讀回執 (盡力而為)。
+  - 反應語意：[反應](/zh-Hant/tools/reactions)
+- 對於包含事件中繼資料的傳入訊息，OpenClaw 會發送已傳送 + 已讀回執（盡力而為）。
 
 ## 疑難排解
 
-**無法保持登入：**
+**無法保持登入狀態：**
 
 - `openclaw channels status --probe`
 - 重新登入：`openclaw channels logout --channel zalouser && openclaw channels login --channel zalouser`
 
 **允許清單/群組名稱無法解析：**
 
-- 在 `allowFrom`/`groupAllowFrom` 中使用數字 ID，並在 `groups` 中使用穩定的群組 ID。如果您確實需要精確的好友/群組名稱，請啟用 `channels.zalouser.dangerouslyAllowNameMatching: true`。
+- 在 `allowFrom`/`groupAllowFrom` 中使用數字 ID，並在 `groups` 中使用穩定的群組 ID。如果您刻意需要確切的好友/群組名稱，請啟用 `channels.zalouser.dangerouslyAllowNameMatching: true`。
 
 **從舊版基於 CLI 的設定升級：**
 
-- 移除任何關於舊的外部 `zca` 程序的假設。
-- 該頻道現已在 OpenClaw 中完全運行，無需外部 CLI 二進位文件。
+- 移除任何舊的外部 `zca` 程序假設。
+- 該頻道現已完全在 OpenClaw 中運作，無需外部 CLI 執行檔。
 
 ## 相關
 
 - [頻道概覽](/zh-Hant/channels) — 所有支援的頻道
-- [配對](/zh-Hant/channels/pairing) — 私訊驗證和配對流程
-- [群組](/zh-Hant/channels/groups) — 群組聊天行為和提及閘控
-- [頻道路由](/zh-Hant/channels/channel-routing) — 訊息的會話路由
-- [安全性](/zh-Hant/gateway/security) — 存取模型和強化措施
+- [配對](/zh-Hant/channels/pairing) — DM 認證與配對流程
+- [群組](/zh-Hant/channels/groups) — 群組聊天行為與提及限制
+- [通道路由](/zh-Hant/channels/channel-routing) — 訊息的會話路由
+- [安全性](/zh-Hant/gateway/security) — 存取模型與強化防護

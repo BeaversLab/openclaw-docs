@@ -366,48 +366,41 @@ Exec 生命週期會以系統訊息呈現：
 
 - `Exec running`（僅在指令超過執行通知閾值時）。
 - `Exec finished`。
-- `Exec denied`。
 
-這些訊息會在節點回報事件後發佈至代理程式的會話。
-閘道託管的 exec 核准在指令完成時（以及可選地，在執行時間超過閾值時）會發出相同的生命週期事件。
-受核准控管的 exec 會重複使用核准 id 作為這些訊息中的 `runId`，以便於關聯。
+這些內容會在節點回報事件後發佈至 Agent 的會話。被拒絕的 Exec 執行核准是終結性的：OpenClaw 可以向操作員或直接聊天路由回報拒絕情況，但不會將 `Exec denied` 回傳至 Agent 會話或喚醒 Agent 工作。Gateway-host 的 Exec 執行核准會在指令完成時（以及可選的當執行時間超過閾值時）發出相同的生命週期事件。受核准閘道的 Exec 會在這些訊息中重複使用核准 ID 作為 `runId`，以便於關聯。
 
 ## 拒絕核准的行為
 
-當非同步 exec 核准被拒絕時，OpenClaw 會防止代理程式
-重複使用會話中先前任何相同執行的輸出。
-拒絕原因會伴隨明確指引傳遞，指出沒有可用的指令輸出，
-這會阻止代理程式聲稱有新的輸出，或使用先前成功執行的過時結果
-重複執行被拒絕的指令。
+當非同步 Exec 執行核准被拒絕時，OpenClaw 會將該請求視為終結性。它可以向操作員或直接聊天路由顯示簡明的拒絕訊息，但不會透過 Agent 會話回傳拒絕指引。這能防止被拒絕的指令變成另一個模型輪次，並避免 Agent 重複使用同一指令先前執行的輸出。
 
-## 影響
+## 影響與意涵
 
-- **`full`** 功能強大；盡可能優先使用允許清單。
-- **`ask`** 讓您保持知情，同時仍允許快速核准。
-- 每個代理程式的允許清單可防止一個代理程式的核准洩漏至其他代理程式。
-- 核准僅適用於來自 **授權發送者** 的主機 exec 請求。未授權的發送者無法發出 `/exec`。
-- `/exec security=full` 是授權操作者的會話級便利功能，設計上會跳過核准。若要完全阻擋主機 exec，請將核准安全性設定為 `deny` 或透過工具政策拒絕 `exec` 工具。
+- **`full`** 功能強大；請盡可能優先使用允許清單。
+- **`ask`** 讓您保持掌握，同時仍允許快速核准。
+- 個別 Agent 的允許清單可防止某個 Agent 的核准洩漏至其他 Agent。
+- 核准僅適用於來自**授權發送者**的主機 Exec 請求。未授權的發送者無法發出 `/exec`。
+- `/exec security=full` 是供授權操作員使用的會話層級便利功能，且依設計會略過核准。若要硬封鎖主機 Exec，請將核准安全性設定為 `deny`，或透過工具政策拒絕 `exec` 工具。
 
-## 相關
+## 相關內容
 
 <CardGroup cols={2}>
-  <Card title="Exec approvals - advanced" href="/zh-Hant/tools/exec-approvals-advanced" icon="gear">
-    安全 bins、直譯器綁定，以及核准轉發至聊天。
+  <Card title="Exec 執行核准 - 進階" href="/zh-Hant/tools/exec-approvals-advanced" icon="gear">
+    安全 binaries、直譯器綁定，以及核准轉發至聊天。
   </Card>
   <Card title="Exec 工具" href="/zh-Hant/tools/exec" icon="terminal">
-    Shell 命令執行工具。
+    Shell 指令執行工具。
   </Card>
-  <Card title="提權模式" href="/zh-Hant/tools/elevated" icon="shield-exclamation">
-    還會跳過審核的緊急應變路徑。
+  <Card title="提昇模式" href="/zh-Hant/tools/elevated" icon="shield-exclamation">
+    同時跳過審核的緊急應變路徑。
   </Card>
-  <Card title="沙盒化" href="/zh-Hant/gateway/sandboxing" icon="box">
-    沙盒模式與工作區存取。
+  <Card title="沙箱" href="/zh-Hant/gateway/sandboxing" icon="box">
+    沙箱模式與工作區存取。
   </Card>
   <Card title="安全性" href="/zh-Hant/gateway/security" icon="lock">
-    安全模型與加固措施。
+    安全模型與強化防護。
   </Card>
-  <Card title="沙盒 vs. 工具策略 vs. 提權" href="/zh-Hant/gateway/sandbox-vs-tool-policy-vs-elevated" icon="sliders">
-    何時採用各項控制機制。
+  <Card title="沙箱 vs 工具政策 vs 提昇" href="/zh-Hant/gateway/sandbox-vs-tool-policy-vs-elevated" icon="sliders">
+    何時使用各項控制措施。
   </Card>
   <Card title="技能" href="/zh-Hant/tools/skills" icon="sparkles">
     由技能支援的自動允許行為。

@@ -12,9 +12,9 @@ Model discovery, scanning, and configuration (default model, fallbacks, auth pro
 
 相關：
 
-- 提供商 + 模型：[Models](/zh-Hant/providers/models)
-- 模型選擇概念 + `/models` 斜線指令：[Models concept](/zh-Hant/concepts/models)
-- 提供商驗證設定：[Getting started](/zh-Hant/start/getting-started)
+- 供應商 + 模型：[模型](/zh-Hant/providers/models)
+- 模型選取概念 + `/models` 斜線指令：[模型概念](/zh-Hant/concepts/models)
+- 供應商驗證設定：[快速開始](/zh-Hant/start/getting-started)
 
 ## 常用指令
 
@@ -25,26 +25,24 @@ openclaw models set <model-or-alias>
 openclaw models scan
 ```
 
-`openclaw models status` 會顯示解析後的預設值/備選方案以及驗證概覽。
-當提供商使用量快照可用時，OAuth/API-key 狀態區段會包含
-提供商使用視窗和配額快照。
-目前的使用視窗提供商：Anthropic、GitHub Copilot、Gemini CLI、OpenAI
-Codex、MiniMax、Xiaomi 和 z.ai。使用量驗證來自提供商專屬的掛鉤
-（如果可用）；否則 OpenClaw 會回退到從驗證設定檔、env 或 config
-中匹配 OAuth/API-key 憑證。
-在 `--json` 輸出中，`auth.providers` 是意識 env/config/store 的提供商
-概覽，而 `auth.oauth` 僅為 auth-store 設定檔的健康狀態。
-新增 `--probe` 以對每個已設定的提供商設定檔執行即時驗證探測。
-探測是真實請求（可能會消耗 Token 並觸發速率限制）。
-使用 `--agent <id>` 來檢查已設定代理程式的模型/驗證狀態。若省略，
-指令會使用 `OPENCLAW_AGENT_DIR`/`PI_CODING_AGENT_DIR`（如果已設定），否則使用
-已設定的預設代理程式。
-探測列可以來自驗證設定檔、env 憑證或 `models.json`。
-若要針對 Codex OAuth 進行疑難排解，`openclaw models status`、
-`openclaw models auth list --provider openai-codex` 和
-`openclaw config get agents.defaults.model --json` 是確認代理程式
-是否擁有可透過原生 Codex 執行時期使用 `openai-codex` 的可用
-`openai/*` 驗證設定檔的最快方式。請參閱 [OpenAI provider setup](/zh-Hant/providers/openai#check-and-recover-codex-oauth-routing)。
+`openclaw models status` 會顯示解析後的預設/備選（fallbacks）以及驗證概覽。
+當供應商使用情況快照可用時，OAuth/API 金鑰狀態區塊會包含
+供應商使用視窗與配額快照。
+目前支援使用視窗的供應商：Anthropic、GitHub Copilot、Gemini CLI、OpenAI
+Codex、MiniMax、小米 與 z.ai。使用驗證資訊來自供應商特定的掛鉤（hooks），
+若無則 OpenClaw 會退回比對來自驗證設定檔、環境變數或配置中的 OAuth/API 金鑰憑證。
+在 `--json` 輸出中，`auth.providers` 是感知環境/配置/儲存的供應商
+概覽，而 `auth.oauth` 僅包含驗證儲存設定檔的健康狀態。
+新增 `--probe` 可對每個已配置的供應商設定檔執行即時驗證探測。
+探測為真實請求（可能會消耗 Token 並觸發速率限制）。
+使用 `--agent <id>` 可檢查已配置代理程式的模型/驗證狀態。若省略，
+該指令會使用 `OPENCLAW_AGENT_DIR`/`PI_CODING_AGENT_DIR`（若已設定），否則使用
+已配置的預設代理程式。
+探測列可以來自驗證設定檔、環境變數憑證或 `models.json`。
+若要進行 Codex OAuth 疑難排解，`openclaw models status`、
+`openclaw models auth list --provider openai-codex` 與
+`openclaw config get agents.defaults.model --json` 是確認代理程式是否具有
+透過原生 Codex 執行環境供 `openai/*` 使用的可用 `openai-codex` 驗證設定檔的最快方式。請參閱 [OpenAI 供應商設定](/zh-Hant/providers/openai#check-and-recover-codex-oauth-routing)。
 
 備註：
 
@@ -144,6 +142,8 @@ openclaw models fallbacks list
 openclaw models auth add
 openclaw models auth list [--provider <id>] [--json]
 openclaw models auth login --provider <id>
+openclaw models auth login --provider openai --profile-id openai:work
+openclaw models auth paste-api-key --provider <id>
 openclaw models auth setup-token --provider <id>
 openclaw models auth paste-token
 ```
@@ -153,34 +153,46 @@ openclaw models auth paste-token
 `models auth list` 列出所選代理程式的已儲存驗證設定檔，而不會列印權杖、API 金鑰或 OAuth 機密資料。使用 `--provider <id>` 篩選至單一供應商 (例如 `openai-codex`)，並使用 `--json` 進行腳本撰寫。
 
 `models auth login` 會執行提供者外掛程式的驗證流程 (OAuth/API 金鑰)。請使用
-`openclaw plugins list` 來檢視已安裝的提供者。
+`openclaw plugins list` 來查看安裝了哪些提供者。
 使用 `openclaw models auth --agent <id> <subcommand>` 將驗證結果寫入
 特定設定的代理程式存放區。父層 `--agent` 標誌會被
-`add`、`list`、`login`、`setup-token`、`paste-token` 和
+`add`、`list`、`login`、`paste-api-key`、`setup-token`、`paste-token` 和
 `login-github-copilot` 遵循。
 
-對於 OpenAI 模型，`--provider openai` 預設為 ChatGPT/Codex 帳號登入。
-僅在您想要新增 OpenAI API-key 設定檔時才使用 `--method api-key`，
-通常是作為 Codex 訂閱限制的備份。舊版的
-`--provider openai-codex` 拼寫方式仍然適用於現有指令碼。
+對於 OpenAI 模型，`--provider openai` 預設為 ChatGPT/Codex 帳戶登入。
+僅當您想要新增 OpenAI API 金鑰設定檔時才使用 `--method api-key`，
+通常作為 Codex 訂閱限制的備援方案。舊版
+`--provider openai-codex` 拼寫方式仍適用於現有指令碼。
 
 範例：
 
 ```bash
 openclaw models auth login --provider openai --set-default
 openclaw models auth login --provider openai --method api-key
+openclaw models auth paste-api-key --provider openai-codex
 openclaw models auth list --provider openai
 ```
 
 備註：
 
-- 對於公開權杖驗證方法的提供者，`setup-token` 和 `paste-token` 仍然是通用的權杖指令。
-- `setup-token` 需要一個互動式 TTY 並執行提供者的權杖驗證方法（當該方法存在時，預設為該提供者的 `setup-token` 方法）。
-- `paste-token` 接受在其他地方產生或來自動自動化的權杖字串。
-- `paste-token` 需要 `--provider`，會提示輸入權杖值，並將其寫入預設的 profile id `<provider>:manual`，除非您傳遞了 `--profile-id`。
-- `paste-token --expires-in <duration>` 會根據相對持續時間（例如 `365d` 或 `12h`）儲存絕對的權杖到期時間。
-- Anthropic 說明：Anthropic 人員告訴我們，OpenClaw 風格的 Claude CLI 使用再次被允許，因此除非 Anthropic 發布新政策，否則 OpenClaw 將此整合中的 Claude CLI 重用和 `claude -p` 使用視為經過授權。
-- Anthropic `setup-token` / `paste-token` 仍然作為支援的 OpenClaw 權杖路徑可用，但當 Claude CLI 重用和 `claude -p` 可用時，OpenClaw 現在傾向於使用它們。
+- `login` 接受 `--profile-id <id>`，適用於登入期間支援命名
+  設定檔的提供者。使用此功能可將同一提供者的多個登入分開。
+- `paste-api-key` 接受在其他地方產生的 API 金鑰，提示輸入金鑰
+  值，並將其寫入預設設定檔 ID `<provider>:manual`，除非您
+  傳遞 `--profile-id`。在自動化中，透過 stdin 傳輸金鑰，例如
+  `printf "%s\n" "$OPENAI_API_KEY" | openclaw models auth paste-api-key --provider openai-codex`。
+- `setup-token` 和 `paste-token` 仍然是通用金鑰指令，適用於公開
+  金鑰驗證方法的提供者。
+- `setup-token` 需要互動式 TTY 並執行提供者的金鑰驗證
+  方法 (當提供者公開此方法時，預設為該提供者的 `setup-token` 方法)。
+- `paste-token` 接受在其他地方或從自動化產生的金鑰字串。
+- `paste-token` 需要 `--provider`，提示輸入金鑰值，並將
+  其寫入預設設定檔 ID `<provider>:manual`，除非您傳遞
+  `--profile-id`。
+- `paste-token --expires-in <duration>` 會根據相對持續時間 (例如 `365d` 或 `12h`) 儲存絕對的金鑰過期時間。
+- 對於 `openai-codex`，OpenAI API 金鑰和 ChatGPT/OAuth 權杖素材是不同的認證形態。使用 `paste-api-key` 來管理 `sk-...` OpenAI API 金鑰，並僅對權杖認證素材使用 `paste-token`。
+- Anthropic 說明：Anthropic 人员告訴我們，OpenClaw 風格的 Claude CLI 使用再次被允許，因此除非 Anthropic 發布新政策，否則 OpenClaw 將 Claude CLI 的重複使用和 `claude -p` 的使用視為此整合的認可方式。
+- Anthropic `setup-token` / `paste-token` 仍作為支援的 OpenClaw 權杖路徑可用，但現在若 Claude CLI 重複使用和 `claude -p` 可用，OpenClaw 會優先使用它們。
 
 ## 相關
 

@@ -16,7 +16,7 @@ Ajoute la surface channel Discord pour l'envoi et la réception de messages Open
 
 ## Surface
 
-channels : discord
+channels: discord; contracts: meetingNotesSourceProviders
 
 ## Documentation connexe
 

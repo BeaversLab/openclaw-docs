@@ -54,9 +54,9 @@ OpenClaw process
 ## 相关代理术语
 
 - `proxy.enabled` / `proxy.proxyUrl`OpenClaw：OpenClaw 运行时出口的出站前向代理路由。本页记录了该功能。
-- `gateway.auth.mode: "trusted-proxy"`Gateway(网关)：用于 Gateway(网关) 访问的入站身份感知反向代理认证。请参阅[受信任的代理认证](/zh/gateway/trusted-proxy-auth)。
+- `gateway.auth.mode: "trusted-proxy"`Gateway(网关)：用于访问Gateway(网关)的入站感知身份的反向代理身份验证。请参阅 [Trusted proxy auth](/zh/gateway/trusted-proxy-auth)。
 - `openclaw proxy`：用于开发和支持的本地调试代理和捕获检查器。请参阅 [openclaw proxy](/zh/cli/proxy)。
-- `tools.web.fetch.useTrustedEnvProxy`：选择启用 `web_fetch`，以便让操作员控制的 HTTP(S) 环境代理解析 DNS，同时保留默认的严格 DNS 固定和主机名策略。请参阅 [Web fetch](/zh/tools/web-fetch#trusted-env-proxy)。
+- `tools.web.fetch.useTrustedEnvProxy`：`web_fetch` 的可选功能，允许操作员控制的 HTTP(S) 环境代理解析 DNS，同时保持默认的严格 DNS 固定和主机名策略。请参阅 [Web fetch](/zh/tools/web-fetch#trusted-env-proxy)。
 - 特定于通道或提供商的代理设置：特定传输的所有者特定覆盖。当目标是在整个运行时中进行集中出口控制时，请优先使用托管网络代理。
 
 ## 配置
@@ -87,7 +87,7 @@ OPENCLAW_PROXY_URL=http://127.0.0.1:3128 openclaw gateway run
 
 ### Gateway(网关) 环回模式
 
-本地 Gateway(网关) 控制平面客户端通常连接到环回 WebSocket，例如 Gateway(网关)`ws://127.0.0.1:18789`。当托管代理处于活动状态时，请使用 `proxy.loopbackMode` 来选择该流量的行为方式：
+本地 Gateway(网关) 控制平面客户端通常连接到本地回环 WebSocket，例如 Gateway(网关)`ws://127.0.0.1:18789`。使用 `proxy.loopbackMode` 来选择在托管代理处于活动状态时，本地回环托管代理异常的行为方式：
 
 ```yaml
 proxy:
@@ -96,9 +96,9 @@ proxy:
   loopbackMode: gateway-only # gateway-only, proxy, or block
 ```
 
-- `gateway-only`OpenClawGateway(网关)Gateway(网关)Gateway(网关)Gateway(网关)（默认）：OpenClaw 在 Proxyline 的托管绕过策略中注册 Gateway(网关) 环回权限，以便本地 Gateway(网关) WebSocket 流量可以直接连接。自定义环回 Gateway(网关) 端口之所以有效，是因为活动 Gateway(网关) URL 的主机和端口已注册。
-- `proxy`OpenClawGateway(网关)Gateway(网关)OpenClaw：OpenClaw 不注册 Gateway(网关) 环回绕过，因此本地 Gateway(网关) 流量通过托管代理发送。如果代理是远程的，它必须为 OpenClaw 主机的环回服务提供特殊路由，例如将其映射到代理可访问的主机名、IP 或隧道。标准远程代理从代理主机而不是从 OpenClaw 主机解析 `127.0.0.1` 和 `localhost`OpenClaw。
-- `block`OpenClawGateway(网关)：OpenClaw 在打开套接字之前拒绝环回 Gateway(网关) 控制平面连接。
+- `gateway-only`OpenClawGateway(网关)Gateway(网关)Gateway(网关)Gateway(网关)OpenClawOllama（默认值）：OpenClaw 在 Proxyline 的托管绕过策略中注册 Gateway(网关) 回环授权，以便本地 Gateway(网关) WebSocket 流量可以直接连接。自定义本地回环 Gateway(网关) 端口可以工作，因为活动 Gateway(网关) URL 的主机和端口已注册。捆绑的浏览器插件还可以为 OpenClaw 启动的托管浏览器注册确切的本地 CDP 就绪状态和 DevTools WebSocket 端点，捆绑的 Ollama 内存嵌入提供商可以使用其自己更窄的受保护直接路径，用于确切配置的主机本地回环嵌入源。
+- `proxy`OpenClawGateway(网关)OllamaOpenClaw：OpenClaw 不注册 Gateway(网关) 或 Ollama 回环绕过，因此回环流量通过托管代理发送。如果代理是远程的，它必须为 OpenClaw 主机的回环服务提供特殊路由，例如将其映射到代理可访问的主机名、IP 或隧道。标准远程代理从代理主机解析 `127.0.0.1` 和 `localhost`OpenClaw，而不是从 OpenClaw 主机解析。
+- `block`OpenClawGateway(网关)Ollama：在打开套接字之前，OpenClaw 会拒绝 Gateway loopback 控制平面连接和受保护的 Ollama 主机本地嵌入 loopback 连接。
 
 如果设置了 `enabled=true` 但未配置有效的代理 URL，受保护的命令将在启动时失败，而不是回退到直接网络访问。
 
@@ -249,18 +249,18 @@ proxy:
 ## 限制
 
 - 该代理改进了对进程本地 JavaScript HTTP 和 WebSocket 客户端的覆盖范围，但它不是操作系统级别的网络沙箱。
-- Gateway(网关) 回环控制平面流量默认为通过 `proxy.loopbackMode: "gateway-only"` 直接本地绕过。OpenClaw 通过在 Proxyline 的受管绕过策略中注册活动的 Gateway(网关) 回环权限来实现该绕过。操作员可以设置 `proxy.loopbackMode: "proxy"` 以通过受管代理发送 Gateway(网关) 回环流量，或设置 `proxy.loopbackMode: "block"` 以拒绝回环 Gateway(网关) 连接。有关远程代理的注意事项，请参阅 [Gateway(网关) Loopback Mode](#gateway-loopback-mode)。
+- Gateway loopback 控制平面流量默认通过 Gateway(网关)`proxy.loopbackMode: "gateway-only"`OpenClawGateway(网关) 直接进行本地绕过。OpenClaw 通过在 Proxyline 的托管绕过策略中注册活动的 Gateway loopback 权限来实现该绕过。操作员可以设置 `proxy.loopbackMode: "proxy"`Gateway(网关) 将 Gateway loopback 流量通过托管代理发送，或者设置 `proxy.loopbackMode: "block"`Gateway(网关)Gateway(网关) 拒绝 loopback Gateway 连接。有关远程代理的注意事项，请参阅 [Gateway Loopback Mode](#gateway-loopback-mode)。
 - 原始 `net`、`tls` 和 `http2` 套接字、原生插件以及非 OpenClaw 子进程可能会绕过 Node 级别的代理路由，除非它们继承并遵守代理环境变量。分叉的 OpenClaw 子 CLI 会继承受管代理 URL 和 `proxy.loopbackMode` 状态。
 - IRC 是一个操作员管理的正向代理路由之外的原始 TCP/TLS 渠道。在要求所有出口流量都通过该正向代理的部署中，请设置 `channels.irc.enabled=false`，除非明确批准直接 IRC 出口。
 - 本地调试代理是诊断工具，当受管代理模式处于活动状态时，其对代理请求和 CONNECT 隧道的直接上游转发默认被禁用；仅针对已批准的本地诊断启用直接转发。
-- 用户本地 WebUI 和本地模型服务器应在需要时被添加到操作员代理策略的允许列表中；OpenClaw 不会为它们公开通用的本地网络旁路。
-- Gateway(网关) 控制平面代理旁路有意限制为 `localhost` 和文字回环 IP URL。对于本地直接 Gateway(网关) 控制平面连接，请使用 `ws://127.0.0.1:18789`、`ws://[::1]:18789` 或 `ws://localhost:18789`；其他主机名的路由方式与基于普通主机名的流量相同。
+- 用户本地 WebUI 和本地模型服务器应在需要时在运营商代理策略中列入允许列表；OpenClaw 不会为其公开通用本地网络绕过。捆绑的 Ollama 内存嵌入提供商更为严格：它只能针对从配置的 OpenClawOllama`baseUrl`Ollama 派生的确切主机本地 loopback 嵌入源使用受保护的直接路径，因此当托管代理无法访问主机 loopback 时，主机本地嵌入仍能继续工作。LAN、tailnet、私有网络和公共 Ollama 嵌入主机仍使用托管代理路径。`proxy.loopbackMode: "proxy"`Ollama 将此 Ollama loopback 流量通过托管代理发送，而 `proxy.loopbackMode: "block"` 会在打开连接之前拒绝它。
+- Gateway 控制平面代理绕过特意仅限于 Gateway(网关)`localhost` 和字面量 loopback IP URL。请使用 `ws://127.0.0.1:18789`、`ws://[::1]:18789` 或 `ws://localhost:18789`Gateway(网关) 进行本地直接 Gateway 控制平面连接；其他主机名的路由与基于普通主机名的流量相同。
 - OpenClaw 不会检查、测试或认证您的代理策略。
 - 请将代理策略更改视为敏感的安全操作变更。
 
 | 覆盖范围                                                  | 受管代理状态                                                                  |
 | --------------------------------------------------------- | ----------------------------------------------------------------------------- |
-| `fetch`、`node:http`、`node:https`，常见 WebSocket 客户端 | 配置后，通过受管代理挂钩进行路由。                                            |
+| `fetch`、`node:http`、`node:https`、常见 WebSocket 客户端 | 配置后，通过受管代理挂钩进行路由。                                            |
 | APNs 直接 HTTP/2                                          | 通过 APNs 受管 CONNECT 助手进行路由。                                         |
 | Gateway(网关) 控制平面回路                                | 仅针对配置的本地回路 Gateway(网关) URL 进行直接连接。                         |
 | 调试代理上游转发                                          | 当受管代理模式处于活动状态时禁用，除非明确为本地诊断启用。                    |

@@ -45,66 +45,67 @@ openclaw status --all
 
 ### WhatsApp 故障特徵
 
-| 症狀                      | 最快檢查                                       | 修復                                                                                           |
-| ------------------------- | ---------------------------------------------- | ---------------------------------------------------------------------------------------------- |
-| 已連線但無私訊回覆        | `openclaw pairing list whatsapp`               | 核准發送者或切換私訊原則/允許清單。                                                            |
-| 群組訊息被忽略            | 檢查 `requireMention` + 設定中的提及模式       | 提及機器人或放寬該群組的提及原則。                                                             |
-| QR 登入逾時並顯示 408     | 檢查閘道 `HTTPS_PROXY` / `HTTP_PROXY` 環境變數 | 設定可連線的 Proxy；僅在需要繞過時使用 `NO_PROXY`。                                            |
-| 隨機斷線/重新登入迴圈     | `openclaw channels status --probe` + 日誌      | 即使目前連線中，最近的重新連線仍會被標記；請監控日誌，重新啟動閘道，如果持續不穩定則重新連結。 |
-| 回覆延遲數秒/數分鐘才到達 | `openclaw doctor --fix`                        | 當已驗證的過時本機 TUI 客戶端降低閘道事件迴圈效能時，Doctor 會將其停止。                       |
+| 症狀                               | 最快檢查                                       | 修復                                                                                           |
+| ---------------------------------- | ---------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| 已連線但無私訊回覆                 | `openclaw pairing list whatsapp`               | 核准發送者或切換私訊原則/允許清單。                                                            |
+| 群組訊息被忽略                     | 檢查 `requireMention` + 設定中的提及模式       | 提及機器人或放寬該群組的提及原則。                                                             |
+| QR 登入逾時並顯示 408              | 檢查閘道 `HTTPS_PROXY` / `HTTP_PROXY` 環境變數 | 設定可連線的 Proxy；僅在需要繞過時使用 `NO_PROXY`。                                            |
+| 隨機斷線/重新登入迴圈              | `openclaw channels status --probe` + 日誌      | 即使目前連線中，最近的重新連線仍會被標記；請監控日誌，重新啟動閘道，如果持續不穩定則重新連結。 |
+| `status=408 Request Time-out` 迴圈 | Probe、logs、doctor，然後是 gateway status     | 先修復主機連線/時序問題；如果迴圈持續存在，請備份認證並重新連結帳戶。                          |
+| 回覆延遲數秒/數分鐘到達            | `openclaw doctor --fix`                        | 當已驗證的過期本地 TUI 用戶端導致 Gateway 事件迴圈效能下降時，Doctor 會將其停止。              |
 
-完整疑難排解：[WhatsApp 疑難排解](/zh-Hant/channels/whatsapp#troubleshooting)
+完整疑難排解：[WhatsApp troubleshooting](/zh-Hant/channels/whatsapp#troubleshooting)
 
 ## Telegram
 
 ### Telegram 故障特徵
 
-| 症狀                           | 最快檢查                                 | 修復                                                                                                      |
-| ------------------------------ | ---------------------------------------- | --------------------------------------------------------------------------------------------------------- |
-| `/start` 但沒有可用的回覆流程  | `openclaw pairing list telegram`         | 批准配對或變更私人訊息政策。                                                                              |
-| Bot 線上但群組保持靜默         | 驗證提及要求和 Bot 隱私模式              | 停用隱私模式以取得群組可見性或提及 Bot。                                                                  |
-| 傳送失敗並伴隨網路錯誤         | 檢查日誌中的 Telegram API 呼叫失敗       | 修復指向 `api.telegram.org` 的 DNS/IPv6/Proxy 路由。                                                      |
-| 啟動回報 `getMe returned 401`  | 檢查已配置的權杖來源                     | 重新複製或重新產生 BotFather 權杖並更新 `botToken`、`tokenFile` 或 default-account `TELEGRAM_BOT_TOKEN`。 |
-| 輪詢停滯或重新連線緩慢         | `openclaw logs --follow` 進行輪詢診斷    | 升級；如果重新啟動是誤報，請調整 `pollingStallThresholdMs`。持續停滯仍然指向 Proxy/DNS/IPv6。             |
-| `setMyCommands` 在啟動時被拒絕 | 檢查日誌中的 `BOT_COMMANDS_TOO_MUCH`     | 減少外掛程式/技能/自訂 Telegram 指令或停用原生選單。                                                      |
-| 升級後允許清單阻擋您           | `openclaw security audit` 和配置允許清單 | 執行 `openclaw doctor --fix` 或將 `@username` 替換為數字傳送者 ID。                                       |
+| 症狀                            | 最快檢查                                     | 修復                                                                                                        |
+| ------------------------------- | -------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `/start` 但無可用的回覆流程     | `openclaw pairing list telegram`             | 批准配對或變更 DM 政策。                                                                                    |
+| Bot 上線但群組保持靜默          | 驗證提及要求與 bot 隱私模式                  | 停用群組可見性的隱私模式或提及 bot。                                                                        |
+| 發送失敗並伴隨網路錯誤          | 檢查日誌中的 Telegram API 呼叫失敗           | 修復對 `api.telegram.org` 的 DNS/IPv6/Proxy 路由。                                                          |
+| 啟動時回報 `getMe returned 401` | 檢查設定的 token 來源                        | 重新複製或重新產生 BotFather token 並更新 `botToken`、`tokenFile` 或 default-account `TELEGRAM_BOT_TOKEN`。 |
+| 輪詢停滯或重連緩慢              | 執行 `openclaw logs --follow` 以進行輪詢診斷 | 升級；如果重啟是誤報，請調整 `pollingStallThresholdMs`。持續停滯仍指向 proxy/DNS/IPv6。                     |
+| `setMyCommands` 在啟動時被拒絕  | 檢查日誌中的 `BOT_COMMANDS_TOO_MUCH`         | 減少外掛/技能/自訂 Telegram 指令或停用原生選單。                                                            |
+| 升級後許可清單封鎖了您          | `openclaw security audit` 和設定檔許可清單   | 執行 `openclaw doctor --fix` 或將 `@username` 替換為數字發送者 ID。                                         |
 
-完整疑難排解：[Telegram 疑難排解](/zh-Hant/channels/telegram#troubleshooting)
+完整疑難排解：[Telegram troubleshooting](/zh-Hant/channels/telegram#troubleshooting)
 
 ## Discord
 
-### Discord 故障徵兆
+### Discord 故障特徵
 
-| 徵兆                                 | 最快檢查                                                                             | 修正                                                                                                                                                                                                                            |
-| ------------------------------------ | ------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Bot 線上但無伺服器回覆               | `openclaw channels status --probe`                                                   | 允許伺服器/頻道並驗證訊息內容意圖。                                                                                                                                                                                             |
-| 群組訊息被忽略                       | 檢查日誌中的提及閘門遺漏                                                             | 提及 Bot 或設定伺服器/頻道 `requireMention: false`。                                                                                                                                                                            |
-| 正在輸入/使用權杖但沒有 Discord 訊息 | 檢查這是環境房間事件還是模型遺漏了 `message(action=send)` 的已選 `message_tool` 房間 | 檢查閘道詳細日誌中的隱藏最終負載元資料，驗證 `messages.groupChat.unmentionedInbound`，閱讀 [Ambient room events](/zh-Hant/channels/ambient-room-events)，或是針對一般群組請求保持 `messages.groupChat.visibleReplies: "automatic"`。 |
-| 缺少私人訊息回覆                     | `openclaw pairing list discord`                                                      | 批准私人訊息配對或調整私人訊息政策。                                                                                                                                                                                            |
+| 症狀                                 | 最快檢查                                                                         | 修復                                                                                                                                                                                                                                |
+| ------------------------------------ | -------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Bot 上線但沒有伺服器回覆             | `openclaw channels status --probe`                                               | 允許伺服器/頻道並驗證訊息內容意圖。                                                                                                                                                                                                 |
+| 群組訊息被忽略                       | 檢查日誌中的提及閘門遺失                                                         | 提及 bot 或設定伺服器/頻道 `requireMention: false`。                                                                                                                                                                                |
+| 輸入中/token 使用但沒有 Discord 訊息 | 檢查這是環境房間事件還是模型錯過的選用 `message_tool``message(action=send)` 房間 | 檢查閘道詳細日誌中是否有隱藏的最終負載元數據，驗證 `messages.groupChat.unmentionedInbound`，閱讀 [Ambient room events](/zh-Hant/channels/ambient-room-events)，或針對一般群組請求保持 `messages.groupChat.visibleReplies: "automatic"`。 |
+| 缺少私訊回覆                         | `openclaw pairing list discord`                                                  | 核准私訊配對或調整私訊原則。                                                                                                                                                                                                        |
 
 完整疑難排解：[Discord 疑難排解](/zh-Hant/channels/discord#troubleshooting)
 
 ## Slack
 
-### Slack 故障徵兆
+### Slack 失敗特徵
 
-| 徵兆                        | 最快檢查                           | 修正                                                                                                                                    |
-| --------------------------- | ---------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
-| Socket 模式已連線但沒有回應 | `openclaw channels status --probe` | 驗證 App token + Bot token 和所需的範圍；在基於 SecretRef 的設定上，留意 `botTokenStatus` / `appTokenStatus = configured_unavailable`。 |
-| DMs 已封鎖                  | `openclaw pairing list slack`      | 批准配對或放寬 DM 政策。                                                                                                                |
-| 頻道訊息被忽略              | 檢查 `groupPolicy` 和頻道允許清單  | 允許該頻道或將策略切換為 `open`。                                                                                                       |
+| 徵狀                      | 最快檢查                           | 修復                                                                                                                                      |
+| ------------------------- | ---------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| Socket 模式已連接但無回應 | `openclaw channels status --probe` | 驗證 App token + Bot token 以及所需的範圍；在基於 SecretRef 的設定中，留意 `botTokenStatus` / `appTokenStatus = configured_unavailable`。 |
+| 私訊被封鎖                | `openclaw pairing list slack`      | 核准配對或放寬私訊原則。                                                                                                                  |
+| 頻道訊息被忽略            | 檢查 `groupPolicy` 和頻道允許清單  | 允許該頻道或將原則切換為 `open`。                                                                                                         |
 
 完整疑難排解：[Slack 疑難排解](/zh-Hant/channels/slack#troubleshooting)
 
 ## iMessage
 
-### iMessage 故障特徵
+### iMessage 失敗特徵
 
-| 症狀                           | 快速檢查                                              | 修復                                                                |
-| ------------------------------ | ----------------------------------------------------- | ------------------------------------------------------------------- |
-| `imsg` 缺失或在非 macOS 上失敗 | `openclaw channels status --probe --channel imessage` | 在 Messages Mac 上執行 OpenClaw，或是為 `cliPath` 使用 SSH 包裝器。 |
-| 在 macOS 上可發送但無法接收    | 檢查訊息自動化的 macOS 隱私權限                       | 重新授予 TCC 權限並重新啟動頻道程序。                               |
-| DM 發送者被封鎖                | `openclaw pairing list imessage`                      | 批准配對或更新允許清單。                                            |
+| 徵狀                           | 最快檢查                                              | 修復                                                              |
+| ------------------------------ | ----------------------------------------------------- | ----------------------------------------------------------------- |
+| `imsg` 缺失或在非 macOS 上失敗 | `openclaw channels status --probe --channel imessage` | 在 Messages Mac 上執行 OpenClaw，或為 `cliPath` 使用 SSH 包裝器。 |
+| 在 macOS 上可傳送但無法接收    | 檢查 Messages 自動化的 macOS 隱私權限                 | 重新授權 TCC 權限並重新啟動頻道程序。                             |
+| 私訊發送者被封鎖               | `openclaw pairing list imessage`                      | 核准配對或更新允許清單。                                          |
 
 完整疑難排解：
 
@@ -112,42 +113,42 @@ openclaw status --all
 
 ## Signal
 
-### Signal 故障特徵
+### Signal 失敗特徵
 
-| 症狀                       | 快速檢查                           | 修復                                          |
+| 徵狀                       | 最快檢查                           | 修復                                          |
 | -------------------------- | ---------------------------------- | --------------------------------------------- |
 | Daemon 可連線但 Bot 無回應 | `openclaw channels status --probe` | 驗證 `signal-cli` daemon URL/帳戶和接收模式。 |
-| DM 已封鎖                  | `openclaw pairing list signal`     | 批准發送者或調整 DM 政策。                    |
-| 群組回覆未觸發             | 檢查群組允許清單和提及模式         | 新增發送者/群組或放寬閘道。                   |
+| 私訊被封鎖                 | `openclaw pairing list signal`     | 核准發送者或調整私訊原則。                    |
+| 群組回覆未觸發             | 檢查群組允許清單和提及模式         | 新增發送者/群組或放寬過濾條件。               |
 
 完整疑難排解：[Signal 疑難排解](/zh-Hant/channels/signal#troubleshooting)
 
 ## QQ Bot
 
-### QQ Bot 故障特徵
+### QQ Bot 失敗特徵
 
-| 症狀                     | 快速檢查                               | 修復                                               |
+| 症狀                     | 最快檢查                               | 修復                                               |
 | ------------------------ | -------------------------------------- | -------------------------------------------------- |
 | Bot 回覆「gone to Mars」 | 驗證設定中的 `appId` 和 `clientSecret` | 設定憑證或重新啟動閘道。                           |
-| 沒有傳入訊息             | `openclaw channels status --probe`     | 驗證 QQ 開放平台上的憑證。                         |
+| 沒有收到訊息             | `openclaw channels status --probe`     | 驗證 QQ 開放平台上的憑證。                         |
 | 語音未轉錄               | 檢查 STT 提供者設定                    | 設定 `channels.qqbot.stt` 或 `tools.media.audio`。 |
-| 主動訊息未送達           | 檢查 QQ 平台互動要求                   | 若近期沒有互動，QQ 可能會封鎖 Bot 發起的訊息。     |
+| 主動訊息未送達           | 檢查 QQ 平台互動要求                   | 如果沒有最近的互動，QQ 可能會阻擋 Bot 發起的訊息。 |
 
 完整疑難排解：[QQ Bot 疑難排解](/zh-Hant/channels/qqbot#troubleshooting)
 
 ## Matrix
 
-### Matrix 失敗徵兆
+### Matrix 失敗特徵
 
-| 症狀                          | 最快速檢查                             | 修復                                                                  |
+| 症狀                          | 最快檢查                               | 修復                                                                  |
 | ----------------------------- | -------------------------------------- | --------------------------------------------------------------------- |
-| 已登入但忽略房間訊息          | `openclaw channels status --probe`     | 檢查 `groupPolicy`、房間允許清單和提及閘控。                          |
+| 已登入但忽略房間訊息          | `openclaw channels status --probe`     | 檢查 `groupPolicy`、房間允許清單和提及閘門。                          |
 | 私訊未處理                    | `openclaw pairing list matrix`         | 核准發送者或調整私訊原則。                                            |
 | 加密房間失敗                  | `openclaw matrix verify status`        | 重新驗證裝置，然後檢查 `openclaw matrix verify backup status`。       |
-| 備份還原待處理/失敗           | `openclaw matrix verify backup status` | 執行 `openclaw matrix verify backup restore` 或使用復原金鑰重新執行。 |
-| 交叉簽署/啟動狀態看起來不正確 | `openclaw matrix verify bootstrap`     | 一次性修復秘密儲存、交叉簽署和備份狀態。                              |
+| 備份還原擱置中/損壞           | `openclaw matrix verify backup status` | 執行 `openclaw matrix verify backup restore` 或使用復原金鑰重新執行。 |
+| 交叉簽署/引導程序看起來不正確 | `openclaw matrix verify bootstrap`     | 一次性修復祕密儲存、交叉簽署和備份狀態。                              |
 
-完整設定與配置：[Matrix](/zh-Hant/channels/matrix)
+完整設定和組態：[Matrix](/zh-Hant/channels/matrix)
 
 ## 相關
 

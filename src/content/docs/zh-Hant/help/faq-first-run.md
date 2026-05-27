@@ -475,24 +475,29 @@ sidebarTitle: "首次執行常見問題"
 
   </Accordion>
 
-  <Accordion title="我需要 Claude 或 OpenAI 訂閱才能執行此程式嗎？">
-    不需要。您可以使用 **API 金鑰**（Anthropic/OpenAI/其他）或 **僅限本機的模型** 來執行 OpenClaw，讓您的資料保留在您的裝置上。訂閱（Claude Pro/Max 或 OpenAI Codex）是驗證這些提供者的可選方式。
+  <Accordion title="執行此程式需要 Claude 或 OpenAI 訂閱嗎？">
+    不需要。您可以使用 **API 金鑰** (Anthropic/OpenAI/其他) 或僅限
+    **本機模型** 來執行 OpenClaw，讓您的資料保留在您的裝置上。訂閱 (Claude
+    Pro/Max 或 OpenAI Codex) 是驗證這些提供者的選用方式。
 
-    對於 OpenClaw 中的 Anthropic，實際的區分如下：
+    對於 OpenClaw 中的 Anthropic，實際區分如下：
 
     - **Anthropic API 金鑰**：正常的 Anthropic API 計費
-    - **OpenClaw 中的 Claude CLI / Claude 訂閱驗證**：Anthropic 人員
-      告訴我們這種使用方式再次被允許，除非 Anthropic 發布新的政策，否則 OpenClaw 將 `claude -p`
-      視為此整合的核准用法
+    - **OpenClaw 中的 Claude CLI / Claude 訂閱驗證**：Anthropic 工作人員
+      告訴我們這種使用方式再次被允許，除非 Anthropic 發布新的政策，
+      否則 OpenClaw 將視 `claude -p`
+      的使用為此整合所批准
 
-    對於長期執行的閘道主機，Anthropic API 金鑰仍然是更可預測的設定方式。OpenAI Codex OAuth 明確支援像 OpenClaw 這樣的外部工具。
+    對於長期運作的閘道主機，Anthropic API 金鑰仍然是較
+    可預測的設定。OpenAI Codex OAuth 明確支援像 OpenClaw 這類的外部工具。
 
-    OpenClaw 也支援其他託管的訂閱式選項，包括 **Qwen Cloud Coding Plan**、**MiniMax Coding Plan** 和
+    OpenClaw 也支援其他託管的訂閱式選項，包括
+    **Qwen Cloud Coding Plan**、**MiniMax Coding Plan** 和
     **Z.AI / GLM Coding Plan**。
 
     文件：[Anthropic](/zh-Hant/providers/anthropic)、[OpenAI](/zh-Hant/providers/openai)、
     [Qwen Cloud](/zh-Hant/providers/qwen)、
-    [MiniMax](/zh-Hant/providers/minimax)、[GLM Models](/zh-Hant/providers/glm)、
+    [MiniMax](/zh-Hant/providers/minimax)、[Z.AI (GLM)](/zh-Hant/providers/zai)、
     [Local models](/zh-Hant/gateway/local-models)、[Models](/zh-Hant/concepts/models)。
 
   </Accordion>
@@ -504,14 +509,18 @@ sidebarTitle: "首次執行常見問題"
 
   </Accordion>
 
-  <Accordion title="你們支援 Claude 訂閱驗證（Claude Pro 或 Max）嗎？">
+  <Accordion title="你們支援 Claude 訂閱驗證 (Claude Pro 或 Max) 嗎？">
     是的。
 
-    Anthropic 的工作人員告訴我們這種使用方式再次被允許，因此除非 Anthropic 發布新政策，OpenClaw 將此整合中的 Claude CLI 重複使用和 `claude -p` 使用視為經認可。
+    Anthropic 工作人員告訴我們這種使用方式再次被允許，因此除非 Anthropic 發布新的政策，
+    否則 OpenClaw 將 Claude CLI 重新使用和 `claude -p` 的使用視為此整合所批准。
 
-    Anthropic 設定權杖仍可作為支援的 OpenClaw 權杖路徑使用，但如果有可用，OpenClaw 現在更傾向於使用 Claude CLI 重複使用和 `claude -p`。對於生產環境或多用戶工作負載，Anthropic API 金鑰驗證仍然是更安全、更可預測的選擇。如果您想要 OpenClaw 中其他訂閱式的託管選項，請參閱 [OpenAI](/zh-Hant/providers/openai)、[Qwen / Model
+    Anthropic setup-token 仍作為支援的 OpenClaw token 路徑提供，但在可用的情況下，OpenClaw 現在傾向於使用 Claude CLI 重新使用和 `claude -p`。
+    對於生產環境或多用戶工作負載，Anthropic API 金鑰驗證仍然是
+    更安全、更可預測的選擇。如果您想要 OpenClaw 中的其他訂閱式託管
+    選項，請參閱 [OpenAI](/zh-Hant/providers/openai)、[Qwen / Model
     Cloud](/zh-Hant/providers/qwen)、[MiniMax](/zh-Hant/providers/minimax) 和 [GLM
-    Models](/zh-Hant/providers/glm)。
+    Models](/zh-Hant/providers/zai)。
 
   </Accordion>
 
@@ -520,13 +529,20 @@ sidebarTitle: "首次執行常見問題"
 <a id="why-am-i-seeing-http-429-ratelimiterror-from-anthropic"></a>
 
 <AccordionGroup>
-  <Accordion title="為什麼我會看到來自 Anthropic 的 HTTP 429 rate_limit_error 錯誤？">
-    這表示您的 **Anthropic 配額/速率限制** 在目前時間視窗內已耗盡。如果您使用的是 **Claude CLI**，請等待時間視窗重置或升級您的方案。如果您使用的是 **Anthropic API 金鑰**，請檢查 Anthropic Console 的使用量/帳單狀況，並視需要提高限制。
+  <Accordion title="為什麼我會收到來自 Anthropic 的 HTTP 429 rate_limit_error 錯誤？">
+    這表示您目前的 **Anthropic 配額/速率限制** 已用盡。如果您
+    使用的是 **Claude CLI**，請等待時間視窗重置或升級您的方案。如果您
+    使用的是 **Anthropic API 金鑰**，請查看 Anthropic Console
+    的使用量/帳單，並視需要提高限制。
 
-    如果訊息具體是：
-    `Extra usage is required for long context requests`，則表示該請求嘗試使用 Anthropic 的 1M context beta (`context1m: true`)。這僅在您的憑證符合長 context 計費資格（API 金鑰計費或啟用了額外使用量的 OpenClaw Claude 登入路徑）時才有效。
+    如果訊息特別是：
+    `Extra usage is required for long context requests`，則表示請求嘗試使用
+    Anthropic 的 1M 上下文視窗（具備 GA 能力的 1M Claude 4.x 模型或舊版
+    `context1m: true` 設定）。這僅在您的憑證符合
+    長上下文計費資格（API 金鑰計費或啟用額外使用量的 OpenClaw Claude 登入路徑）
+    時才有效。
 
-    提示：設定一個 **備用模型**，以便在提供者受到速率限制時，OpenClaw 能繼續回應。
+    提示：設定一個 **後備模型**，以便在供應商受限時 OpenClaw 能持續回覆。
     請參閱 [模型](/zh-Hant/cli/models)、[OAuth](/zh-Hant/concepts/oauth) 和
     [/gateway/troubleshooting#anthropic-429-extra-usage-required-for-long-context](/zh-Hant/gateway/troubleshooting#anthropic-429-extra-usage-required-for-long-context)。
 

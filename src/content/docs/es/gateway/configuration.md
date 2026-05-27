@@ -488,23 +488,24 @@ candidato contiene marcadores de posición de secretos redactados como `***`.
     ```
 
     - **Archivo único**: reemplaza al objeto contenedor
-    - **Array de archivos**: se fusiona en profundidad en orden (el último prevalece)
+    - **Matriz de archivos**: se fusiona profundamente en orden (el último prevalece)
     - **Claves hermanas**: se fusionan después de las inclusiones (anulan los valores incluidos)
-    - **Inclusiones anidadas**: admitidas hasta 10 niveles de profundidad
+    - **Inclusiones anidadas**: compatibles hasta 10 niveles de profundidad
     - **Rutas relativas**: se resuelven en relación con el archivo que incluye
+    - **Formato de ruta**: las rutas de inclusión no deben contener bytes nulos y deben ser estrictamente menores a 4096 caracteres antes y después de la resolución
     - **Escrituras propiedad de OpenClaw**: cuando una escritura modifica solo una sección de nivel superior
-      respaldada por una inclusión de archivo único como `plugins: { $include: "./plugins.json5" }`,
+      respaldada por una inclusión de archivo único tal como `plugins: { $include: "./plugins.json5" }`,
       OpenClaw actualiza ese archivo incluido y deja `openclaw.json` intacto
-    - **Escritura simultánea no admitida**: las inclusiones raíz, los arrays de inclusión y las inclusiones
-      con anulaciones hermanas fallan de forma cerrada para las escrituras propiedad de OpenClaw en lugar de
+    - **Escritura intermedia no compatible**: las inclusiones raíz, las matrices de inclusión y las inclusiones
+      con anulaciones hermanas fallan cerrado para las escrituras propiedad de OpenClaw en lugar de
       aplanar la configuración
     - **Confinamiento**: las rutas `$include` deben resolverse bajo el directorio que contiene
-      `openclaw.json`. Para compartir un árbol entre máquinas o usuarios, establezca
+      `openclaw.json`. Para compartir un árbol entre máquinas o usuarios, configure
       `OPENCLAW_INCLUDE_ROOTS` en una lista de rutas (`:` en POSIX, `;` en Windows) de
       directorios adicionales que las inclusiones pueden referenciar. Los enlaces simbólicos se resuelven
-      y se vuelven a comprobar, por lo que una ruta que léxicamente vive en un directorio de configuración pero cuyo
-      objetivo real escapa de cada raíz permitida aún se rechaza.
-    - **Manejo de errores**: errores claros para archivos faltantes, errores de análisis e inclusiones circulares
+      y se vuelven a verificar, por lo que una ruta que léxicamente vive en un directorio de configuración pero cuyo
+      objetivo real escapa de cada raíz permitida todavía se rechaza.
+    - **Manejo de errores**: errores claros para archivos faltantes, errores de análisis, inclusiones circulares, formato de ruta no válido y longitud excesiva
 
   </Accordion>
 </AccordionGroup>

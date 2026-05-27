@@ -92,19 +92,31 @@ Para exponer las GPUs del anfitrión a los entornos aislados de Docker, establez
 <Warning>
 **Restricciones de Docker-out-of-Docker (DooD)**
 
-Si implementa el propio OpenClaw Gateway como un contenedor Docker, este orquesta contenedores de sandbox hermanos utilizando el socket Docker del host (DooD). Esto introduce una restricción específica de asignación de rutas:
+Si implementa el propio Gateway de OpenClaw como un contenedor de Docker, orquesta contenedores de sandbox hermanos utilizando el socket de Docker del host (DooD). Esto introduce una restricción específica de mapeo de rutas:
 
-- **La configuración requiere rutas del host**: La configuración `openclaw.json` `workspace` DEBE contener la **ruta absoluta del host** (por ejemplo, `/home/user/.openclaw/workspaces`), no la ruta interna del contenedor Gateway. Cuando OpenClaw solicita al demonio Docker que genere un sandbox, el demonio evalúa las rutas relativas al espacio de nombres del sistema operativo del host, no al espacio de nombres del Gateway.
-- **Paridad del puente FS (mapa de volumen idéntico)**: El proceso nativo del OpenClaw Gateway también escribe archivos de latido y puente en el directorio `workspace`. Dado que el Gateway evalúa exactamente la misma cadena (la ruta del host) desde su propio entorno contenizado, la implementación del Gateway DEBE incluir un mapa de volumen idéntico que vincule el espacio de nombres del host de forma nativa (`-v /home/user/.openclaw:/home/user/.openclaw`).
-- **Modo de código Codex**: Cuando un sandbox de OpenClaw está activo, OpenClaw limita los turnos del servidor de aplicaciones Codex al sandboxing de código `workspace-write` de Codex, incluso si el valor predeterminado del complemento Codex es `danger-full-access`. La marca de red del turno de Codex sigue la configuración de salida del sandbox de OpenClaw, por lo que `network: "none"` de Docker permanece sin conexión y `network: "bridge"` o una red Docker personalizada permite el acceso de salida. No monte el socket Docker del host en los contenedores de sandbox del agente o en los sandboxes personalizados de Codex.
+- **La configuración requiere rutas del host**: La configuración `openclaw.json` `workspace` DEBE contener la **ruta absoluta del Host** (por ejemplo, `/home/user/.openclaw/workspaces`), no la ruta interna del contenedor del Gateway. Cuando OpenClaw solicita al demonio de Docker que inicie un sandbox, el demonio evalúa las rutas en relación con el espacio de nombres del SO del Host, no con el espacio de nombres del Gateway.
+- **Paridad del puente FS (mapa de volumen idéntico)**: El proceso nativo del Gateway de OpenClaw también escribe archivos de latido y de puente en el directorio `workspace`. Dado que el Gateway evalúa exactamente la misma cadena (la ruta del host) desde dentro de su propio entorno contenedorizado, la implementación del Gateway DEBE incluir un mapa de volumen idéntico que vincule el espacio de nombres del host de forma nativa (`-v /home/user/.openclaw:/home/user/.openclaw`).
+- **Modo de código de Codex**: Cuando hay un sandbox de OpenClaw activo, OpenClaw deshabilita el modo de código nativo del servidor de aplicaciones de Codex, los servidores MCP del usuario y la ejecución de complementos respaldados por aplicaciones para ese turno, porque esas superficies nativas se ejecutan desde el proceso del servidor de aplicaciones del Gateway-host en lugar del backend del sandbox de OpenClaw. El acceso al shell se expone a través de herramientas respaldadas por el sandbox de OpenClaw, como `sandbox_exec` y `sandbox_process`, cuando las herramientas exec/process normales están disponibles. No monte el socket de Docker del host en contenedores de sandbox de agente o en sandboxes personalizados de Codex.
 
-Si asigna rutas internamente sin paridad absoluta con el host, OpenClaw genera de forma nativa un error de permiso `EACCES` al intentar escribir su latido dentro del entorno del contenedor porque la cadena de ruta completamente calificada no existe de forma nativa.
+En hosts de Ubuntu/AppArmor, el `workspace-write` de Codex puede fallar antes del inicio del shell
+cuando ejecuta intencionalmente el `workspace-write` nativo de Codex sin un sandbox de
+OpenClaw activo y al usuario del servicio no se le permite crear espacios de nombres de
+usuario sin privilegios. Cuando la salida del sandbox de Docker está deshabilitada (`network: "none"`, el valor predeterminado), Codex también necesita un espacio de nombres de red sin privilegios. Los síntomas comunes son
+`bwrap: setting up uid map: Permission denied` y
+`bwrap: loopback: Failed RTM_NEWADDR: Operation not permitted`. Ejecute
+`openclaw doctor`; si informa un fallo en la sonda del espacio de nombres bwrap de Codex, prefiera
+un perfil de AppArmor que conceda los espacios de nombres necesarios al proceso del servicio
+de OpenClaw. `kernel.apparmor_restrict_unprivileged_userns=0` es una alternativa de
+nivel de host con compensaciones de seguridad; úsela solo cuando esa postura del host sea
+aceptable.
+
+Si asigna rutas internamente sin paridad absoluta del host, OpenClaw genera un error de permisos `EACCES` de forma nativa al intentar escribir su latido dentro del entorno del contenedor porque la cadena de ruta totalmente calificada no existe de forma nativa.
 
 </Warning>
 
 ### Backend SSH
 
-Use `backend: "ssh"` cuando desee que OpenClaw aplique sandboxing a `exec`, herramientas de archivos y lecturas de medios en una máquina arbitraria accesible por SSH.
+Use `backend: "ssh"` cuando desees que OpenClaw ponga en `exec`, herramientas de archivo y lecturas de medios en una máquina arbitraria accesible por SSH.
 
 ```json5
 {
@@ -136,23 +148,23 @@ Use `backend: "ssh"` cuando desee que OpenClaw aplique sandboxing a `exec`, herr
 
 <AccordionGroup>
   <Accordion title="Cómo funciona">
-    - OpenClaw crea una raíz remota por ámbito bajo `sandbox.ssh.workspaceRoot`.
-    - En el primer uso después de crear o recrear, OpenClaw propaga ese espacio de trabajo remoto desde el espacio de trabajo local una vez.
-    - Después de eso, `exec`, `read`, `write`, `edit`, `apply_patch`, las lecturas de medios de instrucciones y la transferencia de medios entrantes se ejecutan directamente contra el espacio de trabajo remoto a través de SSH.
-    - OpenClaw no sincroniza los cambios remotos de vuelta al espacio de trabajo local automáticamente.
+    - OpenClaw crea una raíz remota por alcance bajo `sandbox.ssh.workspaceRoot`.
+    - En el primer uso después de crear o recrear, OpenClaw siembra ese espacio de trabajo remoto desde el espacio de trabajo local una vez.
+    - Después de eso, `exec`, `read`, `write`, `edit`, `apply_patch`, las lecturas de medios del prompt y la preparación de medios entrantes se ejecutan directamente contra el espacio de trabajo remoto a través de SSH.
+    - OpenClaw no sincroniza automáticamente los cambios remotos de vuelta al espacio de trabajo local.
 
   </Accordion>
   <Accordion title="Material de autenticación">
     - `identityFile`, `certificateFile`, `knownHostsFile`: usan archivos locales existentes y los pasan a través de la configuración de OpenSSH.
-    - `identityData`, `certificateData`, `knownHostsData`: usan cadenas en línea o SecretRefs. OpenClaw las resuelve a través de la instantánea de tiempo de ejecución de secretos normal, las escribe en archivos temporales con `0600` y las elimina cuando termina la sesión SSH.
+    - `identityData`, `certificateData`, `knownHostsData`: usan cadenas en línea o SecretRefs. OpenClaw las resuelve a través de la instantánea de tiempo de ejecución de secretos normal, las escribe en archivos temporales con `0600` y los elimina cuando termina la sesión SSH.
     - Si se establecen tanto `*File` como `*Data` para el mismo elemento, `*Data` tiene prioridad para esa sesión SSH.
 
   </Accordion>
-  <Accordion title="Consecuencias canónicas remotas">
-    Este es un modelo **remoto-canónico**. El espacio de trabajo SSH remoto se convierte en el estado real del entorno restringido después de la propagación inicial.
+  <Accordion title="Consecuencias de canonicalidad remota">
+    Este es un modelo **remoto-canónico**. El espacio de trabajo SSH remoto se convierte en el estado real del entorno aislado después de la siembra inicial.
 
-    - Las ediciones locales en el host realizadas fuera de OpenClaw después del paso de propagación no son visibles de forma remota hasta que se vuelva a crear el entorno restringido.
-    - `openclaw sandbox recreate` elimina la raíz remota por ámbito y propaga nuevamente desde el local en el siguiente uso.
+    - Las ediciones locales en el host realizadas fuera de OpenClaw después del paso de siembra no son visibles remotamente hasta que recrees el entorno aislado.
+    - `openclaw sandbox recreate` elimina la raíz remota por alcance y vuelve a sembrar desde lo local en el próximo uso.
     - El aislamiento del navegador no es compatible con el backend SSH.
     - La configuración de `sandbox.docker.*` no se aplica al backend SSH.
 
@@ -161,9 +173,9 @@ Use `backend: "ssh"` cuando desee que OpenClaw aplique sandboxing a `exec`, herr
 
 ### Backend OpenShell
 
-Use `backend: "openshell"` cuando quieras que OpenClaw aisle las herramientas en un entorno remoto gestionado por OpenShell. Para la guía de configuración completa, la referencia de configuración y la comparación de modos de espacio de trabajo, consulta la página dedicada de [OpenShell](/es/gateway/openshell).
+Use `backend: "openshell"` cuando quieras que OpenClaw aísle herramientas en un entorno remoto administrado por OpenShell. Para ver la guía completa de configuración, la referencia de configuración y la comparación de modos de espacio de trabajo, consulta la [página dedicada a OpenShell](/es/gateway/openshell).
 
-OpenShell reutiliza el mismo transporte SSH central y puente de sistema de archivos remoto que el backend SSH genérico, y añade un ciclo de vida específico de OpenShell (`sandbox create/get/delete`, `sandbox ssh-config`) más el modo de espacio de trabajo opcional `mirror`.
+OpenShell reutiliza el mismo transporte SSH central y el puente de sistema de archivos remoto que el backend SSH genérico, y añade un ciclo de vida específico de OpenShell (`sandbox create/get/delete`, `sandbox ssh-config`) además del modo de espacio de trabajo opcional `mirror`.
 
 ```json5
 {
@@ -195,14 +207,14 @@ OpenShell reutiliza el mismo transporte SSH central y puente de sistema de archi
 
 Modos de OpenShell:
 
-- `mirror` (predeterminado): el espacio de trabajo local se mantiene canónico. OpenClaw sincroniza los archivos locales en OpenShell antes de la ejecución y sincroniza el espacio de trabajo remoto de vuelta después de la ejecución.
-- `remote`: el espacio de trabajo de OpenShell es canónico después de que se crea el sandbox. OpenClaw siembra el espacio de trabajo remoto una vez desde el espacio de trabajo local, luego las herramientas de archivos y la ejecución se ejecutan directamente contra el sandbox remoto sin sincronizar los cambios de vuelta.
+- `mirror` (predeterminado): el espacio de trabajo local permanece canónico. OpenClaw sincroniza los archivos locales en OpenShell antes de la ejecución y sincroniza el espacio de trabajo remoto de vuelta después de la ejecución.
+- `remote`: el espacio de trabajo de OpenShell es canónico después de crear el sandbox. OpenClaw inicializa el espacio de trabajo remoto una vez desde el espacio de trabajo local, luego las herramientas de archivos y la ejecución se ejecutan directamente contra el sandbox remoto sin sincronizar los cambios de vuelta.
 
 <AccordionGroup>
   <Accordion title="Detalles del transporte remoto">
     - OpenClaw solicita a OpenShell la configuración SSH específica del sandbox a través de `openshell sandbox ssh-config <name>`.
-    - Core escribe esa configuración SSH en un archivo temporal, abre la sesión SSH y reutiliza el mismo puente de sistema de archivos remoto utilizado por `backend: "ssh"`.
-    - En el modo `mirror` solo difiere el ciclo de vida: sincronizar de local a remoto antes de la ejecución, luego sincronizar de vuelta después de la ejecución.
+    - Core escribe esa configuración SSH en un archivo temporal, abre la sesión SSH y reutiliza el mismo puente de sistema de archivos remoto usado por `backend: "ssh"`.
+    - En el modo `mirror` solo difiere el ciclo de vida: sincronizar de local a remoto antes de la ejecución y luego sincronizar de vuelta después de la ejecución.
 
   </Accordion>
   <Accordion title="Limitaciones actuales de OpenShell">
@@ -218,58 +230,58 @@ Modos de OpenShell:
 OpenShell tiene dos modelos de espacio de trabajo. Esta es la parte más importante en la práctica.
 
 <Tabs>
-  <Tab title="espejo (local canónico)">
-    Use `plugins.entries.openshell.config.mode: "mirror"` cuando desee que **el espacio de trabajo local se mantenga canónico**.
+  <Tab title="mirror (local canonical)">
+    Use `plugins.entries.openshell.config.mode: "mirror"` cuando desees que el **espacio de trabajo local se mantenga canónico**.
 
     Comportamiento:
 
-    - Antes de `exec`, OpenClaw sincroniza el espacio de trabajo local en el espacio aislado OpenShell.
+    - Antes de `exec`, OpenClaw sincroniza el espacio de trabajo local en el sandbox OpenShell.
     - Después de `exec`, OpenClaw sincroniza el espacio de trabajo remoto de vuelta al espacio de trabajo local.
-    - Las herramientas de archivos aún operan a través del puente del espacio aislado, pero el espacio de trabajo local sigue siendo la fuente de verdad entre turnos.
+    - Las herramientas de archivos aún operan a través del puente del sandbox, pero el espacio de trabajo local sigue siendo la fuente de verdad entre turnos.
 
-    Use esto cuando:
+    Usa esto cuando:
 
-    - edite archivos localmente fuera de OpenClaw y desea que esos cambios aparezcan automáticamente en el espacio aislado
-    - desea que el espacio aislado OpenShell se comporte tanto como sea posible como el backend de Docker
-    - desea que el espacio de trabajo del host refleje las escrituras del espacio aislado después de cada turno de ejecución
+    - edites archivos localmente fuera de OpenClaw y quieras que esos cambios aparezcan automáticamente en el sandbox
+    - quieras que el sandbox OpenShell se comporte tanto como sea posible como el backend de Docker
+    - quieras que el espacio de trabajo del host refleje las escrituras del sandbox después de cada turno de ejecución
 
-    Compromiso: costo de sincronización adicional antes y después de la ejecución.
+    Compromiso: costo adicional de sincronización antes y después de la ejecución.
 
   </Tab>
-  <Tab title="remoto (OpenShell canónico)">
-    Use `plugins.entries.openshell.config.mode: "remote"` cuando desee que **el espacio de trabajo OpenShell se convierta en canónico**.
+  <Tab title="remote (OpenShell canonical)">
+    Use `plugins.entries.openshell.config.mode: "remote"` cuando desees que el **espacio de trabajo OpenShell se convierta en canónico**.
 
     Comportamiento:
 
-    - Cuando se crea el espacio aislado por primera vez, OpenClaw inicializa el espacio de trabajo remoto desde el espacio de trabajo local una sola vez.
-    - Después de eso, `exec`, `read`, `write`, `edit` y `apply_patch` operan directamente sobre el espacio de trabajo OpenShell remoto.
+    - Cuando se crea el sandbox por primera vez, OpenClaw siembra el espacio de trabajo remoto desde el espacio de trabajo local una sola vez.
+    - Después de eso, `exec`, `read`, `write`, `edit` y `apply_patch` operan directamente contra el espacio de trabajo remoto de OpenShell.
     - OpenClaw **no** sincroniza los cambios remotos de vuelta al espacio de trabajo local después de la ejecución.
-    - Las lecturas de medios en el momento del prompt aún funcionan porque las herramientas de archivos y medios leen a través del puente del espacio aislado en lugar de asumir una ruta de host local.
-    - El transporte es SSH hacia el espacio aislado OpenShell devuelto por `openshell sandbox ssh-config`.
+    - Las lecturas de medios en el momento del prompt siguen funcionando porque las herramientas de archivos y medios leen a través del puente del sandbox en lugar de asumir una ruta local del host.
+    - El transporte es SSH hacia el sandbox OpenShell devuelto por `openshell sandbox ssh-config`.
 
     Consecuencias importantes:
 
-    - Si edita archivos en el host fuera de OpenClaw después del paso de inicialización, el espacio aislado remoto **no** verá esos cambios automáticamente.
-    - Si se vuelve a crear el espacio aislado, el espacio de trabajo remoto se inicializa desde el espacio de trabajo local nuevamente.
-    - Con `scope: "agent"` o `scope: "shared"`, ese espacio de trabajo remoto se comparte en ese mismo alcance.
+    - Si editas archivos en el host fuera de OpenClaw después del paso de siembra, el sandbox remoto **no** verá esos cambios automáticamente.
+    - Si se vuelve a crear el sandbox, el espacio de trabajo remoto se vuelve a sembrar desde el espacio de trabajo local.
+    - Con `scope: "agent"` o `scope: "shared"`, ese espacio de trabajo remoto se comparte en ese mismo ámbito.
 
-    Use esto cuando:
+    Usa esto cuando:
 
-    - el espacio aislado debe vivir principalmente en el lado remoto de OpenShell
-    - desea una sobrecarga de sincronización menor por turno
-    - no desea que las ediciones locales en el host sobrescriban silenciosamente el estado del espacio aislado remoto
+    - el sandbox debe vivir principalmente en el lado remoto de OpenShell
+    - quieras una sobrecarga de sincronización por turno menor
+    - no quieras que las ediciones locales del host sobrescriban silenciosamente el estado del sandbox remoto
 
   </Tab>
 </Tabs>
 
-Elija `mirror` si piensa en el sandbox como un entorno de ejecución temporal. Elija `remote` si piensa en el sandbox como el espacio de trabajo real.
+Elija `mirror` si considera el sandbox como un entorno de ejecución temporal. Elija `remote` si considera el sandbox como el espacio de trabajo real.
 
 #### Ciclo de vida de OpenShell
 
 Los sandbox de OpenShell aún se gestionan a través del ciclo de vida normal del sandbox:
 
-- `openclaw sandbox list` muestra los tiempos de ejecución de OpenShell así como los tiempos de ejecución de Docker
-- `openclaw sandbox recreate` elimina el tiempo de ejecución actual y permite que OpenClaw lo vuelva a crear en el próximo uso
+- `openclaw sandbox list` muestra los entornos de ejecución de OpenShell así como los entornos de ejecución de Docker
+- `openclaw sandbox recreate` elimina el entorno de ejecución actual y permite que OpenClaw lo vuelva a crear en el próximo uso
 - la lógica de poda también es consciente del backend
 
 Para el modo `remote`, volver a crear es especialmente importante:
@@ -284,26 +296,26 @@ Para el modo `mirror`, volver a crear restablece principalmente el entorno de ej
 `agents.defaults.sandbox.workspaceAccess` controla **lo que el sandbox puede ver**:
 
 <Tabs>
-  <Tab title="ninguno (predeterminado)">Las herramientas ven un espacio de trabajo de sandbox bajo `~/.openclaw/sandboxes`.</Tab>
-  <Tab title="ro">Monta el espacio de trabajo del agente como solo lectura en `/agent` (desactiva `write`/`edit`/`apply_patch`).</Tab>
+  <Tab title="none (predeterminado)">Las herramientas ven un espacio de trabajo de sandbox bajo `~/.openclaw/sandboxes`.</Tab>
+  <Tab title="ro">Monta el espacio de trabajo del agente como solo lectura en `/agent` (deshabilita `write`/`edit`/`apply_patch`).</Tab>
   <Tab title="rw">Monta el espacio de trabajo del agente como lectura/escritura en `/workspace`.</Tab>
 </Tabs>
 
 Con el backend OpenShell:
 
-- El modo `mirror` aún usa el espacio de trabajo local como fuente canónica entre turnos de ejecución
-- El modo `remote` usa el espacio de trabajo de OpenShell remoto como la fuente canónica después de la semilla inicial
-- `workspaceAccess: "ro"` y `"none"` aún restringen el comportamiento de escritura de la misma manera
+- El modo `mirror` sigue utilizando el espacio de trabajo local como fuente canónica entre turnos de ejecución
+- El modo `remote` utiliza el espacio de trabajo de OpenShell remoto como fuente canónica después de la semilla inicial
+- `workspaceAccess: "ro"` y `"none"` todavía restringen el comportamiento de escritura de la misma manera
 
 Los medios entrantes se copian en el espacio de trabajo del sandbox activo (`media/inbound/*`).
 
-<Note>**Nota de habilidades:** la herramienta `read` está arraigada en el sandbox. Con `workspaceAccess: "none"`, OpenClaw refleja las habilidades elegibles en el espacio de trabajo del sandbox (`.../skills`) para que puedan ser leídas. Con `"rw"`, las habilidades del espacio de trabajo son legibles desde `/workspace/skills`.</Note>
+<Note>**Nota sobre habilidades:** la herramienta `read` está arraigada en el sandbox. Con `workspaceAccess: "none"`, OpenClaw refleja las habilidades elegibles en el espacio de trabajo del sandbox (`.../skills`) para que puedan leerse. Con `"rw"`, las habilidades del espacio de trabajo son legibles desde `/workspace/skills`.</Note>
 
 ## Montajes de enlace personalizados
 
-`agents.defaults.sandbox.docker.binds` monta directorios de host adicionales en el contenedor. Formato: `host:container:mode` (por ejemplo, `"/home/user/source:/source:rw"`).
+`agents.defaults.sandbox.docker.binds` monta directorios adicionales del host en el contenedor. Formato: `host:container:mode` (por ejemplo, `"/home/user/source:/source:rw"`).
 
-Los enlaces globales y por agente se **combinan** (no se reemplazan). En `scope: "shared"`, se ignoran los enlaces por agente.
+Los enlaces globales y por agente se **fusionan** (no se reemplazan). En `scope: "shared"`, se ignoran los enlaces por agente.
 
 `agents.defaults.sandbox.browser.binds` monta directorios adicionales del host solo en el contenedor del **navegador de sandbox**.
 
@@ -337,17 +349,17 @@ Ejemplo (fuente de solo lectura + un directorio de datos adicional):
 ```
 
 <Warning>
-**Seguridad de enlaces (binds)**
+**Seguridad de los enlaces (binds)**
 
-- Los enlaces omiten el sistema de archivos del sandbox: exponen rutas del host con el modo que configures (`:ro` o `:rw`).
-- OpenClaw bloquea fuentes de enlace peligrosas (por ejemplo: `docker.sock`, `/etc`, `/proc`, `/sys`, `/dev`, y montajes principales que las expongan).
-- OpenClaw también bloquea raíces comunes de credenciales en el directorio de inicio, tales como `~/.aws`, `~/.cargo`, `~/.config`, `~/.docker`, `~/.gnupg`, `~/.netrc`, `~/.npm` y `~/.ssh`.
-- La validación de enlaces no es solo coincidencia de cadenas. OpenClaw normaliza la ruta de origen y luego la resuelve de nuevo a través del ancestro existente más profundo antes de volver a comprobar las rutas bloqueadas y las raíces permitidas.
-- Eso significa que las fugas mediante enlaces simbólicos principales aún fallan de forma cerrada incluso cuando la hoja final aún no existe. Ejemplo: `/workspace/run-link/new-file` aún se resuelve como `/var/run/...` si `run-link` apunta allí.
-- Las raíces de origen permitidas se canonifican de la misma manera, por lo que una ruta que solo parece estar dentro de la lista de permitidos antes de la resolución del enlace simbólico todavía se rechaza como `outside allowed roots`.
+- Los enlaces omiten el sistema de archivos del entorno limitado (sandbox): exponen rutas del host con el modo que configures (`:ro` o `:rw`).
+- OpenClaw bloquea fuentes de enlaces peligrosas (por ejemplo: `docker.sock`, `/etc`, `/proc`, `/sys`, `/dev` y montajes principales que los expondrían).
+- OpenClaw también bloquea raíces comunes de credenciales del directorio de inicio, como `~/.aws`, `~/.cargo`, `~/.config`, `~/.docker`, `~/.gnupg`, `~/.netrc`, `~/.npm` y `~/.ssh`.
+- La validación de enlaces no es solo coincidencia de cadenas. OpenClaw normaliza la ruta de origen y luego la resuelve de nuevo a través del antecesor existente más profundo antes de volver a comprobar las rutas bloqueadas y las raíces permitidas.
+- Eso significa que los escapes a través de enlaces simbólicos principales todavía fallan de forma segura (fail closed) incluso cuando la hoja final aún no existe. Ejemplo: `/workspace/run-link/new-file` todavía se resuelve como `/var/run/...` si `run-link` apunta allí.
+- Las raíces de origen permitidas se canonalizan de la misma manera, por lo que una ruta que solo parece estar dentro de la lista blanca antes de la resolución de enlaces simbólicos aún se rechaza como `outside allowed roots`.
 - Los montajes sensibles (secretos, claves SSH, credenciales de servicio) deben ser `:ro` a menos que sean absolutamente necesarios.
 - Combínalo con `workspaceAccess: "ro"` si solo necesitas acceso de lectura al espacio de trabajo; los modos de enlace siguen siendo independientes.
-- Consulta [Sandbox vs Tool Policy vs Elevated](/es/gateway/sandbox-vs-tool-policy-vs-elevated) para saber cómo los enlaces interactúan con la política de herramientas y la ejecución elevada.
+- Consulta [Sandbox vs Tool Policy vs Elevated](/es/gateway/sandbox-vs-tool-policy-vs-elevated) para ver cómo los enlaces interactúan con la política de herramientas y la ejecución elevada.
 
 </Warning>
 
@@ -356,23 +368,23 @@ Ejemplo (fuente de solo lectura + un directorio de datos adicional):
 Imagen de Docker predeterminada: `openclaw-sandbox:bookworm-slim`
 
 <Note>
-**Source checkout vs npm install**
+**Obtención del código fuente vs instalación de npm**
 
-Los scripts auxiliares `scripts/sandbox-setup.sh`, `scripts/sandbox-common-setup.sh` y `scripts/sandbox-browser-setup.sh` solo están disponibles al ejecutar desde un [source checkout](https://github.com/openclaw/openclaw). No se incluyen en el paquete npm.
+Los scripts de ayuda `scripts/sandbox-setup.sh`, `scripts/sandbox-common-setup.sh` y `scripts/sandbox-browser-setup.sh` solo están disponibles cuando se ejecutan desde una [obtención del código fuente](https://github.com/openclaw/openclaw). No se incluyen en el paquete npm.
 
-Si instaló OpenClaw a través de `npm install -g openclaw`, utilice los comandos `docker build` en línea que se muestran a continuación.
+Si instaló OpenClaw mediante `npm install -g openclaw`, utilice los comandos en línea `docker build` que se muestran a continuación.
 
 </Note>
 
 <Steps>
   <Step title="Construir la imagen predeterminada">
-    Desde un source checkout:
+    Desde una obtención del código fuente:
 
     ```bash
     scripts/sandbox-setup.sh
     ```
 
-    Desde una instalación de npm (no se necesita source checkout):
+    Desde una instalación de npm (no se necesita obtención del código fuente):
 
     ```bash
     docker build -t openclaw-sandbox:bookworm-slim - <<'DOCKERFILE'
@@ -388,15 +400,15 @@ Si instaló OpenClaw a través de `npm install -g openclaw`, utilice los comando
     DOCKERFILE
     ```
 
-    La imagen predeterminada **no** incluye Node. Si una habilidad necesita Node (u otros tiempos de ejecución), prepare una imagen personalizada o instálela a través de `sandbox.docker.setupCommand` (requiere salida de red + raíz grabable + usuario root).
+    La imagen predeterminada **no** incluye Node. Si una habilidad necesita Node (u otros tiempos de ejecución), prepare una imagen personalizada o instálela mediante `sandbox.docker.setupCommand` (requiere salida de red + root escribible + usuario root).
 
-    OpenClaw no sustituye silenciosamente el `debian:bookworm-slim` plano cuando falta `openclaw-sandbox:bookworm-slim`. Las ejecuciones en sandbox que apuntan a la imagen predeterminada fallan rápidamente con una instrucción de construcción hasta que la construya, porque la imagen empaquetada transporta `python3` para los ayudantes de escritura/edición del sandbox.
+    OpenClaw no sustituye silenciosamente `debian:bookworm-slim` simple cuando falta `openclaw-sandbox:bookworm-slim`. Las ejecuciones en sandbox que apuntan a la imagen predeterminada fallan rápidamente con una instrucción de compilación hasta que la construya, porque la imagen empaquetada lleva `python3` para los ayudantes de escritura/edición del sandbox.
 
   </Step>
   <Step title="Opcional: construir la imagen común">
     Para una imagen de sandbox más funcional con herramientas comunes (por ejemplo `curl`, `jq`, `nodejs`, `python3`, `git`):
 
-    Desde un source checkout:
+    Desde una obtención del código fuente:
 
     ```bash
     scripts/sandbox-common-setup.sh
@@ -408,7 +420,7 @@ Si instaló OpenClaw a través de `npm install -g openclaw`, utilice los comando
 
   </Step>
   <Step title="Opcional: construir la imagen del navegador sandbox">
-    Desde un source checkout:
+    Desde una obtención del código fuente:
 
     ```bash
     scripts/sandbox-browser-setup.sh
@@ -419,11 +431,11 @@ Si instaló OpenClaw a través de `npm install -g openclaw`, utilice los comando
   </Step>
 </Steps>
 
-De forma predeterminada, los contenedores de sandbox de Docker se ejecutan **sin red**. Anule esto con `agents.defaults.sandbox.docker.network`.
+De manera predeterminada, los contenedores de espacio aislado de Docker se ejecutan **sin red**. Anule esto con `agents.defaults.sandbox.docker.network`.
 
 <AccordionGroup>
-  <Accordion title="Valores predeterminados de Chromium en el navegador sandbox">
-    La imagen del navegador sandbox incluida también aplica valores predeterminados de inicio de Chromium conservadores para cargas de trabajo en contenedores. Los valores predeterminados actuales del contenedor incluyen:
+  <Accordion title="Valores predeterminados de Chromium para el navegador de espacio aislado">
+    La imagen del navegador de espacio aislado incluida también aplica valores predeterminados de inicio de Chromium conservadores para las cargas de trabajo en contenedores. Los valores predeterminados actuales del contenedor incluyen:
 
     - `--remote-debugging-address=127.0.0.1`
     - `--remote-debugging-port=<derived from OPENCLAW_BROWSER_CDP_PORT>`
@@ -443,24 +455,24 @@ De forma predeterminada, los contenedores de sandbox de Docker se ejecutan **sin
     - `--metrics-recording-only`
     - `--renderer-process-limit=2`
     - `--no-sandbox` cuando `noSandbox` está habilitado.
-    - Las tres marcas de endurecimiento de gráficos (`--disable-3d-apis`, `--disable-software-rasterizer`, `--disable-gpu`) son opcionales y son útiles cuando los contenedores no tienen soporte de GPU. Establezca `OPENCLAW_BROWSER_DISABLE_GRAPHICS_FLAGS=0` si su carga de trabajo requiere WebGL u otras características de navegador 3D.
-    - `--disable-extensions` está habilitado de forma predeterminada y se puede deshabilitar con `OPENCLAW_BROWSER_DISABLE_EXTENSIONS=0` para flujos que dependen de extensiones.
+    - Las tres banderas de endurecimiento de gráficos (`--disable-3d-apis`, `--disable-software-rasterizer`, `--disable-gpu`) son opcionales y son útiles cuando los contenedores no cuentan con soporte de GPU. Establezca `OPENCLAW_BROWSER_DISABLE_GRAPHICS_FLAGS=0` si su carga de trabajo requiere WebGL u otras funciones 3D/de navegador.
+    - `--disable-extensions` está habilitado de manera predeterminada y se puede deshabilitar con `OPENCLAW_BROWSER_DISABLE_EXTENSIONS=0` para flujos que dependen de extensiones.
     - `--renderer-process-limit=2` está controlado por `OPENCLAW_BROWSER_RENDERER_PROCESS_LIMIT=<N>`, donde `0` mantiene el valor predeterminado de Chromium.
 
-    Si necesita un perfil de tiempo de ejecución diferente, use una imagen de navegador personalizada y proporcione su propio punto de entrada. Para los perfiles de Chromium locales (sin contenedor), use `browser.extraArgs` para agregar marcas de inicio adicionales.
+    Si necesita un perfil de tiempo de ejecución diferente, use una imagen de navegador personalizada y proporcione su propio punto de entrada. Para los perfiles de Chromium locales (no en contenedor), use `browser.extraArgs` para agregar banderas de inicio adicionales.
 
   </Accordion>
   <Accordion title="Valores predeterminados de seguridad de red">
     - `network: "host"` está bloqueado.
-    - `network: "container:<id>"` está bloqueado de forma predeterminada (riesgo de omisión de unión de espacio de nombres).
-    - Anulación de emergencia: `agents.defaults.sandbox.docker.dangerouslyAllowContainerNamespaceJoin: true`.
+    - `network: "container:<id>"` está bloqueado de manera predeterminada (riesgo de omisión de unión de espacios de nombres).
+    - Anulación de emergencia (break-glass): `agents.defaults.sandbox.docker.dangerouslyAllowContainerNamespaceJoin: true`.
 
   </Accordion>
 </AccordionGroup>
 
-Las instalaciones de Docker y el gateway en contenedores viven aquí: [Docker](/es/install/docker)
+Las instalaciones de Docker y el gateway en contenedor se encuentran aquí: [Docker](/es/install/docker)
 
-Para los despliegues del gateway Docker, `scripts/docker/setup.sh` puede arrancar la configuración del sandbox. Establezca `OPENCLAW_SANDBOX=1` (o `true`/`yes`/`on`) para habilitar esa ruta. Puede anular la ubicación del socket con `OPENCLAW_DOCKER_SOCKET`. Configuración completa y referencia de variables de entorno: [Docker](/es/install/docker#agent-sandbox).
+Para las implementaciones del gateway Docker, `scripts/docker/setup.sh` puede arrancar la configuración del sandbox. Establezca `OPENCLAW_SANDBOX=1` (o `true`/`yes`/`on`) para habilitar esa ruta. Puede anular la ubicación del socket con `OPENCLAW_DOCKER_SOCKET`. Configuración completa y referencia de variables de entorno: [Docker](/es/install/docker#agent-sandbox).
 
 ## setupCommand (configuración única del contenedor)
 
@@ -473,12 +485,12 @@ Rutas:
 
 <AccordionGroup>
   <Accordion title="Errores comunes">
-    - El `docker.network` predeterminado es `"none"` (sin salida), por lo que las instalaciones de paquetes fallarán.
-    - `docker.network: "container:<id>"` requiere `dangerouslyAllowContainerNamespaceJoin: true` y es solo para situaciones de emergencia.
+    - El valor predeterminado de `docker.network` es `"none"` (sin salida), por lo que las instalaciones de paquetes fallarán.
+    - `docker.network: "container:<id>"` requiere `dangerouslyAllowContainerNamespaceJoin: true` y es solo para casos de emergencia.
     - `readOnlyRoot: true` evita escrituras; establezca `readOnlyRoot: false` o prepare una imagen personalizada.
-    - `user` debe ser root para las instalaciones de paquetes (omita `user` o establezca `user: "0:0"`).
-    - La ejecución en el sandbox **no** hereda el `process.env` del host. Use `agents.defaults.sandbox.docker.env` (o una imagen personalizada) para las claves de API de habilidades.
-    - Los valores en `agents.defaults.sandbox.docker.env` se pasan como variables de entorno explícitas del contenedor Docker. Cualquiera con acceso al demonio de Docker puede inspeccionarlos con comandos de metadatos de Docker como `docker inspect`. Use una imagen personalizada, un archivo secreto montado u otra ruta de entrega de secretos si esa exposición de metadatos no es aceptable.
+    - `user` debe ser root para instalaciones de paquetes (omita `user` o establezca `user: "0:0"`).
+    - La ejecución del sandbox **no** hereda el `process.env` del host. Use `agents.defaults.sandbox.docker.env` (o una imagen personalizada) para las claves API de habilidades.
+    - Los valores en `agents.defaults.sandbox.docker.env` se pasan como variables de entorno explícitas del contenedor Docker. Cualquier persona con acceso al demonio de Docker puede inspeccionarlas con comandos de metadatos de Docker como `docker inspect`. Use una imagen personalizada, un archivo secreto montado u otra ruta de entrega de secretos si esa exposición de metadatos no es aceptable.
 
   </Accordion>
 </AccordionGroup>
@@ -487,18 +499,18 @@ Rutas:
 
 Las políticas de permiso/denegación de herramientas todavía se aplican antes que las reglas del sandbox. Si una herramienta se deniega globalmente o por agente, el sandbox no la restaura.
 
-`tools.elevated` es un escape explícito que ejecuta `exec` fuera del sandbox (`gateway` de forma predeterminada, o `node` cuando el objetivo de ejecución es `node`). Las directivas `/exec` solo se aplican a remitentes autorizados y persisten por sesión; para deshabilitar `exec` de forma estricta, use la denegación de la política de herramientas (consulte [Sandbox vs Tool Policy vs Elevated](/es/gateway/sandbox-vs-tool-policy-vs-elevated)).
+`tools.elevated` es una vía de escape explícita que ejecuta `exec` fuera del sandbox (`gateway` de forma predeterminada, o `node` cuando el objetivo de ejecución es `node`). Las directivas `/exec` solo se aplican para remitentes autorizados y persisten por sesión; para deshabilitar permanentemente `exec`, use la denegación de política de herramientas (consulte [Sandbox vs Tool Policy vs Elevated](/es/gateway/sandbox-vs-tool-policy-vs-elevated)).
 
 Depuración:
 
-- Use `openclaw sandbox explain` para inspeccionar el modo efectivo de sandbox, la política de herramientas y las claves de configuración de corrección.
-- Consulte [Sandbox vs Tool Policy vs Elevated](/es/gateway/sandbox-vs-tool-policy-vs-elevated) para obtener el modelo mental de "¿por qué está bloqueado esto?".
+- Use `openclaw sandbox explain` para inspeccionar el modo efectivo de sandbox, la política de herramientas y las claves de configuración de arreglo.
+- Consulte [Sandbox vs Tool Policy vs Elevated](/es/gateway/sandbox-vs-tool-policy-vs-elevated) para ver el modelo mental de "¿por qué está bloqueado esto?".
 
 Manténgalo protegido.
 
 ## Invalidaciones de multiagente
 
-Cada agente puede anular sandbox + herramientas: `agents.list[].sandbox` y `agents.list[].tools` (más `agents.list[].tools.sandbox.tools` para la política de herramientas de sandbox). Consulte [Multi-Agent Sandbox & Tools](/es/tools/multi-agent-sandbox-tools) para conocer la precedencia.
+Cada agente puede anular el sandbox y las herramientas: `agents.list[].sandbox` y `agents.list[].tools` (más `agents.list[].tools.sandbox.tools` para la política de herramientas del sandbox). Consulte [Multi-Agent Sandbox & Tools](/es/tools/multi-agent-sandbox-tools) para obtener información sobre la precedencia.
 
 ## Ejemplo de habilitación mínima
 
@@ -519,7 +531,7 @@ Cada agente puede anular sandbox + herramientas: `agents.list[].sandbox` y `agen
 ## Relacionado
 
 - [Multi-Agent Sandbox & Tools](/es/tools/multi-agent-sandbox-tools) — anulaciones por agente y precedencia
-- [OpenShell](/es/gateway/openshell) — configuración administrada del backend de sandbox, modos de espacio de trabajo y referencia de configuración
+- [OpenShell](/es/gateway/openshell) — configuración del backend de sandbox administrado, modos de espacio de trabajo y referencia de configuración
 - [Sandbox configuration](/es/gateway/config-agents#agentsdefaultssandbox)
 - [Sandbox vs Tool Policy vs Elevated](/es/gateway/sandbox-vs-tool-policy-vs-elevated) — depuración de "¿por qué está bloqueado esto?"
 - [Security](/es/gateway/security)

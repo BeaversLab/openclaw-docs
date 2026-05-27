@@ -92,9 +92,9 @@ sidebarTitle: "后台任务"
 
 <AccordionGroup>
   <Accordion title="Notify defaults for cron and media">
-    主会话 cron 任务默认使用 `silent` 通知策略——它们会创建记录以供追踪，但不会生成通知。隔离的 cron 任务也默认使用 `silent`，但因其在自己的会话中运行而更为可见。
+    主会话 cron 任务默认使用 `silent` 通知策略——它们会创建记录以供追踪，但不会生成通知。独立的 cron 任务也默认使用 `silent`，但更易于察觉，因为它们在自己的会话中运行。
 
-    支持会话的 `image_generate`、`music_generate` 和 `video_generate` 运行也使用 `silent` 通知策略。它们仍会创建任务记录，但完成状态会作为内部唤醒信号交还给原始代理会话，以便代理编写后续消息并自行附加完成的媒体。生成媒体的完成事件需要通过消息工具进行投递：代理必须使用 `message` 工具发送完成的媒体，然后回复 `NO_REPLY`OpenClaw。如果完成代理仅写入私有最终回复或遗漏了媒体附件，OpenClaw 会将完成交接标记为失败；它不会自动回退发布生成的媒体。
+    会话支持的 `image_generate`、`music_generate` 和 `video_generate` 运行也使用 `silent` 通知策略。它们仍然会创建任务记录，但完成状态会作为内部唤醒（internal wake）返回给原始代理会话，以便代理可以编写后续消息并自行附加完成的媒体。生成媒体的完成事件需要消息工具（message-工具）传递：代理必须使用 `message` 工具发送完成的媒体，然后回复 `NO_REPLY`。如果请求者会话不再处于活动状态，且完成代理遗漏了部分或全部生成的媒体，OpenClaw 将向原始渠道目标发送一个仅包含缺失媒体的幂等直接回退。
 
   </Accordion>
   <Accordion title="Concurrent media-generation guardrail">
@@ -226,24 +226,24 @@ openclaw tasks notify <lookup> state_changes
     openclaw tasks maintenance --apply [--json]
     ```
 
-    使用此功能预览或应用任务、Task Flow 状态以及过时的 cron 运行会话注册表行的对帐、清理标记和修剪。
+    使用此项可预览或应用针对任务、Task Flow 状态以及过时的 cron 运行会话注册表行的对账、清理标记和修剪。
 
-    对帐是运行时感知的：
+    对账具有运行时感知能力：
 
     - ACP/subagent 任务会检查其后备子会话。
-    - 如果子会话具有重启恢复墓碑标记，则 Subagent 任务将被标记为丢失，而不是被视为可恢复的后备会话。
-    - Cron 任务会检查 cron 运行时是否仍拥有该作业，然后从持久化的 cron 运行日志/作业状态中恢复终端状态，最后才回退到 `lost`。只有 Gateway(网关) 进程对内存中的 cron 活跃作业集具有权威性；离线 CLI 审计使用持久历史记录，但不会仅仅因为本地 Set 为空就将 cron 任务标记为丢失。
+    - 如果子会话具有重启恢复标记，则 Subagent 任务将被标记为丢失，而不是被视为可恢复的后备会话。
+    - Cron 任务会检查 cron 运行时是否仍拥有该作业，然后从持久化的 cron 运行日志/作业状态中恢复最终状态，最后才回退到 `lost`。只有 Gateway(网关) 进程才是内存中 cron 活跃作业集的权威来源；离线 CLI 审计使用持久历史记录，但不会仅仅因为该本地 Set 为空就将 cron 任务标记为丢失。
     - 具有运行标识的 CLI 任务会检查所属的实时运行上下文，而不仅仅是子会话或聊天会话行。
 
-    完成清理也是运行时感知的：
+    完成清理也具有运行时感知能力：
 
-    - Subagent 完成时会尽力在继续宣布清理之前为子会话关闭受跟踪的浏览器选项卡/进程。
-    - 隔离的 cron 完成时会尽力在运行完全拆除之前为 cron 会话关闭受跟踪的浏览器选项卡/进程。
-    - 隔离的 cron 传递会在需要时等待后代 subagent 的后续操作，并抑制过时的父级确认文本，而不是宣布它。
-    - Subagent 完成传递首选最新的可见助手文本；如果该文本为空，则回退到经过清理的最新工具/toolResult 文本，并且仅超时的工具调用运行可以折叠为简短的部分进度摘要。终端失败运行会宣布失败状态，而不会重播捕获的回复文本。
-    - 清理失败不会掩盖真实的任务结果。
+    - Subagent 完成后会尽力关闭子会话的受跟踪浏览器选项卡/进程，然后再继续公告清理。
+    - 隔离的 cron 完成后会尽力关闭 cron 会话的受跟踪浏览器选项卡/进程，然后再完全拆除运行。
+    - 隔离的 cron 投递会在需要时等待子代 subagent 的后续跟进，并抑制过时的父级确认文本，而不是公告它。
+    - Subagent 完成投递仅使用子级的最新可见助手文本。Tool/toolResult 输出不会被提升为子结果文本。最终失败的运行会公告失败状态，而不会重播捕获的回复文本。
+    - 清理失败不会掩盖实际的任务结果。
 
-    在应用维护时，OpenClaw 还会删除超过 7 天的过时 `cron:<jobId>:run:<uuid>` 会话注册表行，同时保留当前正在运行的 cron 作业的行，并保持非 cron 会话行不变。
+    在应用维护时，OpenClaw 还会删除超过 7 天的过时 `cron:<jobId>:run:<uuid>` 会话注册表行，同时保留当前正在运行的 cron 作业的行，并且保留非 cron 会话行不变。
 
   </Accordion>
   <Accordion title="tasks flow list | show | cancel">

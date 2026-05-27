@@ -528,7 +528,7 @@ openclaw infer image generate \
   - 目前共用掃描中已宣告但跳過的 `videoToVideo` 提供者：
     - `alibaba`、`qwen`、`xai` 因為這些路徑目前需要遠端 `http(s)` / MP4 參考 URL
     - `google`，因為目前共用的 Gemini/Veo 通道使用本機緩衝支援輸入，且該路徑在共用掃描中不被接受
-    - `openai`，因為目前共用的通道缺乏組織特定的視訊重繪/混音存取保證
+    - `openai` 因為當前共享通道缺乏特定於組織的影片編輯存取保證
 - 可選的縮小範圍：
   - `OPENCLAW_LIVE_VIDEO_GENERATION_PROVIDERS="deepinfra,google,openai,runway"`
   - `OPENCLAW_LIVE_VIDEO_GENERATION_MODELS="google/veo-3.1-fast-generate-preview,openai/sora-2,runway/gen4_aleph"`

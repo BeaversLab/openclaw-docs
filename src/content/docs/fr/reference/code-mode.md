@@ -10,42 +10,38 @@ read_when:
 
 Le mode code est une fonctionnalité expérimentale de l'agent-runtime OpenClaw. Il est désactivé par défaut. Lorsque vous l'activez, OpenClaw modifie ce que le modèle voit pour une exécution : au lieu d'exposer directement chaque schéma d'outil activé, le modèle ne voit que OpenClawOpenClaw`exec` et `wait`.
 
-Cette page documente le mode code OpenClaw. Ce n'est pas le mode code Codex. Le mode code Codex fait partie du harnais de codage Codex et possède son propre espace de travail projet, son runtime, ses outils et sa sémantique d'exécution. Le mode code Codex et la recherche dynamique d'outils native Codex sont des surfaces stables du harnais Codex. Le mode code OpenClaw est un adaptateur de surface d'outil expérimental possédé par OpenClaw pour les exécutions OpenClaw génériques. Il utilise OpenClawOpenClawOpenClawOpenClaw`quickjs-wasi`OpenClawOpenClaw, un catalogue d'outils caché OpenClaw, et l'exécuteur d'outils OpenClaw normal.
+Cette page documente le mode de code OpenClaw. Ce n'est pas le mode de code Codex. Les deux fonctionnalités partagent un nom, mais elles sont implémentées par différents runtimes et exposent différents OpenClaw`exec` contrats :
+
+- Le mode de code Codex est activé pour les threads du serveur d'application Codex, sauf si une stratégie d'outil restreinte désactive le mode de code natif. Il s'exécute dans le harnais de codage Codex, où le modèle écrit des commandes shell via un contrat `exec.command`.
+- Le mode de code OpenClaw est désactivé sauf si OpenClaw`tools.codeMode.enabled: true`OpenClaw est configuré. Il s'exécute dans le runtime d'agent générique OpenClaw, où le modèle écrit des programmes JavaScript ou TypeScript via un contrat `exec.code`.
+
+Le mode de code Codex et la recherche dynamique d'outils native Codex sont des surfaces stables du harnais Codex. Le mode de code OpenClaw est un adaptateur de surface d'outil expérimental propriétaire d'OpenClaw pour les exécutions génériques OpenClaw. Il utilise OpenClawOpenClawOpenClaw`quickjs-wasi`OpenClawOpenClaw, un catalogue d'outils caché OpenClaw, et l'exécuteur d'outils OpenClaw normal.
 
 ## Qu'est-ce que c'est ?
 
-Le mode code OpenClaw permet au modèle d'écrire un petit programme JavaScript ou TypeScript au lieu de choisir directement parmi une longue liste d'outils.
+Le mode de code OpenClaw permet au modèle d'écrire un petit programme JavaScript ou TypeScript au lieu de choisir directement parmi une longue liste d'outils.
 
-Lorsque le mode code est actif :
+Lorsque le mode de code est actif :
 
 - La liste d'outils visible par le modèle est exactement `exec` et `wait`.
-- `exec` évalue du JavaScript ou TypeScript généré par le modèle dans un worker QuickJS-WASI contraint.
-- Les outils OpenClaw normaux sont cachés du prompt du modèle et exposés à l'intérieur du programme invité via OpenClaw`ALL_TOOLS` et `tools`.
-- Le code invité peut rechercher dans le catalogue caché, décrire un outil et appeler un outil via le même chemin d'exécution OpenClaw utilisé par les tours d'agent normaux.
-- `wait` reprend une exécution en mode code suspendue lorsque des appels d'outils imbriqués sont toujours en attente.
+- `exec` évalue le JavaScript ou TypeScript généré par le modèle dans un worker QuickJS-WASI contraint.
+- Les outils OpenClaw normaux sont masqués du prompt du modèle et exposés à l'intérieur du programme invité via OpenClaw`ALL_TOOLS` et `tools`.
+- Le code invité peut rechercher le catalogue caché, décrire un outil et appeler un outil via le même chemin d'exécution OpenClaw utilisé par les tours d'agent normaux.
+- `wait` reprend une exécution en mode de code suspendue lorsque des appels d'outils imbriqués sont toujours en attente.
 
-La distinction importante : le mode code modifie la surface d'orchestration orientée model. Il ne remplace pas les outils OpenClaw, les outils de plugin, les outils MCP, l'authentification,
-la politique d'approbation, le comportement du canal ou la sélection du model.
+La distinction importante : le mode code modifie la surface d'orchestration orientée modèle. Il ne remplace pas les outils OpenClaw, les outils de plugin, les outils MCP, l'authentification, la politique d'approbation, le comportement du canal ou la sélection du modèle.
 
-## Pourquoi est-ce une bonne chose ?
+## Pourquoi est-ce bénéfique ?
 
-Le mode code facilite l'utilisation de grands catalogues d'outils par les models.
+Le mode code facilite l'utilisation de grands catalogues d'outils par les modèles.
 
-- Surface de prompt plus petite : les providers reçoivent deux outils de contrôle au lieu de dizaines
-  ou de centaines de schémas d'outils complets.
-- Meilleure orchestration : le model peut utiliser des boucles, des jointures, de petites transformations,
-  une logique conditionnelle et des appels d'outils imbriqués parallèles dans une seule cellule de code.
-- Neutre vis-à-vis du provider : cela fonctionne pour les outils OpenClaw, de plugin, MCP et client sans
-  dépendre de l'exécution de code native du provider.
-- Les politiques existantes restent en vigueur : les appels d'outils imbriqués passent toujours par la politique OpenClaw,
-  les approbations, les hooks, le contexte de session et les chemins d'audit.
-- Mode d'échec clair : lorsque le mode code est explicitement activé et que le runtime est
-  indisponible, OpenClaw échoue en mode fermé au lieu de revenir à une exposition directe large des
-  outils.
+- Surface de prompt réduite : les fournisseurs reçoivent deux outils de contrôle au lieu de dizaines ou de centaines de schémas d'outils complets.
+- Meilleure orchestration : le modèle peut utiliser des boucles, des jointures, des petites transformations, une logique conditionnelle et des appels d'outils imbriqués parallèles à l'intérieur d'une seule cellule de code.
+- Neutre vis-à-vis du fournisseur : cela fonctionne pour les outils OpenClaw, de plugin, MCP et client sans dépendre de l'exécution de code natif du fournisseur.
+- Les politiques existantes restent en vigueur : les appels d'outils imbriqués passent toujours par la politique OpenClaw, les approbations, les hooks, le contexte de session et les chemins d'audit.
+- Mode d'échec clair : lorsque le mode code est explicitement activé et que le runtime n'est pas disponible, OpenClaw échoue de manière fermée au lieu de revenir à une exposition directe large des outils.
 
-Le mode code est particulièrement utile pour les agents disposant d'un grand catalogue d'outils activé ou
-pour les workflows où le model doit rechercher, combiner et appeler
-à plusieurs reprises des outils avant de produire une réponse.
+Le mode code est particulièrement utile pour les agents ayant un grand catalogue d'outils activé ou pour les workflows où le modèle doit rechercher, combiner et appeler des outils de manière répétée avant de produire une réponse.
 
 ## Comment l'activer
 
@@ -71,8 +67,7 @@ La forme abrégée est également acceptée :
 }
 ```
 
-Le mode code reste désactivé lorsque `tools.codeMode` est omis, `false`, ou un objet
-sans `enabled: true`.
+Le mode code reste désactivé lorsque `tools.codeMode` est omis, `false`, ou un objet sans `enabled: true`.
 
 Utilisez des limites explicites si vous souhaitez des contraintes plus strictes :
 
@@ -94,8 +89,7 @@ Utilisez des limites explicites si vous souhaitez des contraintes plus strictes 
 }
 ```
 
-Pour confirmer la forme de la charge utile du model lors du débogage, exécutez la Gateway avec
-une journalisation ciblée :
+Pour confirmer la forme de la charge utile du modèle lors du débogage, exécutez le Gateway avec une journalisation ciblée :
 
 ```bash
 OPENCLAW_DEBUG_CODE_MODE=1 \
@@ -104,123 +98,109 @@ OPENCLAW_DEBUG_MODEL_PAYLOAD=tools \
 openclaw gateway
 ```
 
-Avec le mode code actif, les noms d'outils orientés model journalisés doivent être `exec` et
-`wait`. Si vous avez besoin de la charge utile du provider expurgée, ajoutez
-`OPENCLAW_DEBUG_MODEL_PAYLOAD=full-redacted` pour une courte session de débogage.
+Avec le mode code actif, les noms d'outils orientés modèle journalisés doivent être `exec` et `wait`. Si vous avez besoin de la charge utile du fournisseur expurgée, ajoutez `OPENCLAW_DEBUG_MODEL_PAYLOAD=full-redacted` pour une courte session de débogage.
 
 ## Visite technique
 
-Le reste de cette page décrit le contrat de runtime et les détails de l'implémentation.
-Il est destiné aux mainteneurs, aux auteurs de plugins déboguant l'exposition des outils et
-aux opérateurs validant les déploiements à haut risque.
+Le reste de cette page décrit le contrat de runtime et les détails de mise en œuvre. Il est destiné aux mainteneurs, aux auteurs de plugins déboguant l'exposition des outils et aux opérateurs validant les déploiements à haut risque.
 
 ## État du runtime
 
 - Runtime : [`quickjs-wasi`](https://github.com/vercel-labs/quickjs-wasi).
 - État par défaut : désactivé.
-- Stabilité : surface expérimentale OpenClaw ; Codex Code mode est une surface
-  stable distincte du harnais Codex.
+- Stabilité : surface expérimentale OpenClaw ; Codex Code mode est une surface stable séparée du harnais Codex.
 - Surface cible : exécutions d'agent OpenClaw génériques.
-- Posture de sécurité : le code du modèle est hostile.
-- Promesse面向utilisateur : l'activation du mode code ne revient jamais silencieusement à une
-  exposition directe étendue des outils.
+- Posture de sécurité : le code du model est hostile.
+- Promesse面向utilisateur : l'activation du mode code ne revient jamais silencieusement à une exposition directe et large des tools.
 
 ## Portée
 
-Le mode code possède la forme d'orchestration面向model pour une exécution préparée. Il ne
-possède pas la sélection du modèle, le comportement du canal, l'authentification, la politique d'outil ou les
-implémentations d'outil.
+Le mode code possède la forme d'orchestration orientée model pour une exécution préparée. Il ne possède pas la sélection du model, le comportement du channel, l'auth, la politique de tool, ou les implémentations de tool.
 
 Dans la portée :
 
-- définitions d'outil `exec` et `wait` visibles par le modèle
-- construction de catalogue d'outils caché
+- définitions de tool `exec` et `wait` visibles par le model
+- construction de catalogue de tools masqué
 - exécution invitée JavaScript et TypeScript
 - runtime worker QuickJS-WASI
-- rappels (callbacks) hôte pour la recherche de catalogue, la description du schéma et l'appel d'outil
+- rappels (callbacks) d'hôte pour la recherche dans le catalogue, la description du schéma et l'appel de tool
 - état reproductible pour les programmes invités suspendus
-- limites de sortie, de délai d'attente, de mémoire, d'appel en attente et d'instantané
-- télémétrie et projection de trajectoire pour les appels d'outil imbriqués
+- limites de sortie, de délai d'attente, de mémoire, d'appels en attente et d'instantanés
+- télémétrie et projection de trajectoire pour les appels de tools imbriqués
 
 Hors portée :
 
-- exécution de code à distance native du fournisseur
-- sémantique d'exécution du shell
-- modification de l'autorisation d'outil existante
+- exécution de code distant natif au provider
+- sémantique d'exécution de shell
+- modification de l'autorisation existante des tools
 - scripts persistants créés par l'utilisateur
-- accès au gestionnaire de paquets, aux fichiers, au réseau ou aux modules dans le code invité
-- réutilisation directe des composants internes du mode Codex Code
+- accès au gestionnaire de packages, aux fichiers, au réseau ou aux modules dans le code invité
+- réutilisation directe des éléments internes de Codex Code mode
 
-Les outils détenus par le fournisseur, tels que les bac à sable Python distants, restent des outils distincts. Voir
-[Code execution](/fr/tools/code-execution).
+Les tools possédés par le provider, tels que les bac à sable Python distants, restent des tools séparés. Voir [Exécution de code](/fr/tools/code-execution).
 
 ## Termes
 
-Le **mode code** est le mode d'exécution OpenClaw qui masque les outils normaux du modèle et
-n'expose que `exec` et `wait`.
+**Code mode** est le mode d'exécution OpenClaw qui masque les tools normaux du model et n'expose que `exec` et `wait`.
 
-Le **runtime invité** est la machine virtuelle JavaScript QuickJS-WASI qui évalue le code du modèle.
+**Guest runtime** est la VM JavaScript QuickJS-WASI qui évalue le code du model.
 
-Le **pont hôte** est la surface de rappel étroite compatible JSON du code invité
-vers OpenClaw.
+**Host bridge** est l'étroite surface de rappel compatible JSON du code invité vers OpenClaw.
 
-Le **Catalogue** est la liste effective des outils délimitée à l'exécution, après la résolution normale de la
-politique d'outil, des plugins, de MCP et des outils clients.
+**Catalog** est la liste des tools effectifs limitée à l'exécution, après la résolution normale de la politique de tool, des plugins, de MCP et des tools client.
 
-Un **appel d'outil imbriqué** est un appel d'outil effectué depuis le code invité via le pont hôte.
+**Nested tool call** est un appel de tool effectué depuis le code invité via le pont hôte.
 
-Un **Instantané** est l'état sérialisé de la VM QuickJS-WASI sauvegardé afin que `wait` puisse continuer une
-exécution en mode code suspendue.
+**Snapshot** est l'état sérialisé de la VM QuickJS-WASI enregistré pour que `wait` puisse continuer une exécution en mode code suspendue.
 
 ## Configuration
 
-`tools.codeMode.enabled` est la porte d'activation. Le paramétrage d'autres champs de mode code
-n'active pas la fonctionnalité.
+`tools.codeMode.enabled` est la porte d'activation. Définir d'autres champs de mode de code n'active pas la fonctionnalité.
 
 Champs pris en charge :
 
-- `enabled` : booléen. Par défaut `false`. Active le mode code uniquement lorsque `true`.
+- `enabled` : booléen. Par défaut `false`. Active le code mode uniquement lorsque `true`.
 - `runtime` : `"quickjs-wasi"`. Seul runtime pris en charge.
 - `mode` : `"only"`. Expose `exec` et `wait`, masque les outils normaux du model.
 - `languages` : tableau de `"javascript"` et `"typescript"`. La valeur par défaut inclut
   les deux.
-- `timeoutMs` : limite d'horloge pour un `exec` ou un `wait`. Par défaut `10000`.
-  Plage du runtime : `100` à `60000`.
-- `memoryLimitBytes` : limite du tas QuickJS. Par défaut `67108864`. Plage du runtime :
+- `timeoutMs` : limite d'horloge pour un `exec` ou `wait`. Par défaut `10000`.
+  Limitation du runtime : `100` à `60000`.
+- `memoryLimitBytes` : limite de tas QuickJS. Par défaut `67108864`. Limitation du runtime :
   `1048576` à `1073741824`.
-- `maxOutputBytes` : limite pour le texte, le JSON et les journaux renvoyés. Par défaut `65536`.
-  Plage du runtime : `1024` à `10485760`.
+- `maxOutputBytes` : limite pour le texte, JSON et les journaux renvoyés. Par défaut `65536`.
+  Limitation du runtime : `1024` à `10485760`.
 - `maxSnapshotBytes` : limite pour les instantanés sérialisés de la VM. Par défaut `10485760`.
-  Plage du runtime : `1024` à `268435456`.
-- `maxPendingToolCalls` : limite pour les appels d'outils imbriqués simultanés. Par défaut `16`.
-  Plage du runtime : `1` à `128`.
+  Limitation du runtime : `1024` à `268435456`.
+- `maxPendingToolCalls` : limite pour les appels d'outil imbriqués simultanés. Par défaut `16`.
+  Limitation du runtime : `1` à `128`.
 - `snapshotTtlSeconds` : durée pendant laquelle une VM suspendue peut être reprise. Par défaut `900`.
-  Plage du runtime : `1` à `86400`.
-- `searchDefaultLimit` : nombre par défaut de résultats de recherche dans le catalogue caché. Par défaut `8`.
+  Limitation du runtime : `1` à `86400`.
+- `searchDefaultLimit` : nombre de résultats de recherche par défaut du catalogue masqué. Par défaut `8`.
   Le runtime limite cela à `maxSearchLimit`.
-- `maxSearchLimit` : nombre maximum de résultats de recherche dans le catalogue caché. Par défaut `50`.
-  Plage du runtime : `1` à `50`.
+- `maxSearchLimit` : nombre maximal de résultats de recherche du catalogue masqué. Par défaut `50`.
+  Limitation du runtime : `1` à `50`.
 
-Si le mode code est activé mais que QuickJS-WASI ne peut pas être chargé, OpenClaw échoue de manière fermée pour cette exécution. Il n'expose pas silencieusement les outils normaux en solution de repli.
+Si le mode code est activé mais que QuickJS-WASI ne peut pas être chargé, OpenClaw échoue de manière sécurisée pour cette exécution. Il n'expose pas silencieusement les outils normaux en solution de repli.
 
 ## Activation
 
-Le mode code est évalué une fois que la stratégie d'outil effective est connue et avant que la requête finale au modèle ne soit assemblée.
+Le mode code est évalué une fois la stratégie d'outil effective connue et avant que la demande finale au modèle ne soit assemblée.
 
 Ordre d'activation :
 
-1. Résoudre l'agent, le modèle, le fournisseur, le bac à sable, le canal, l'expéditeur et la stratégie d'exécution.
+1. Résoudre l'agent, le modèle, le fournisseur, le bac à sable (sandbox), le canal, l'expéditeur et la stratégie d'exécution.
 2. Construire la liste effective des outils OpenClaw.
-3. Ajouter les outils éligibles des plugins, MCP et clients.
+3. Ajouter les plugins éligibles, MCP et les outils client.
 4. Appliquer la stratégie d'autorisation et de refus.
 5. Si `tools.codeMode.enabled` est faux, continuer avec l'exposition normale des outils.
 6. Si activé et que des outils sont actifs pour l'exécution, enregistrer les outils effectifs dans le catalogue du mode code.
 7. Supprimer tous les outils normaux de la liste des outils visibles par le modèle.
 8. Ajouter le `exec` et le `wait` du mode code.
 
-Les exécutions qui n'ont intentionnellement aucun outil, comme les appels bruts au modèle, `disableTools`, ou une liste d'autorisation vide, n'activent pas la surface du mode code même si la configuration contient `tools.codeMode.enabled: true`.
+Les exécutions qui n'ont intentionnellement pas d'outils, comme les appels bruts au modèle, `disableTools`, ou une liste d'autorisation vide, n'activent pas la surface du mode code même si la configuration contient `tools.codeMode.enabled: true`.
 
-Le catalogue du mode code est limité à l'exécution. Il ne doit pas faire fuiter des outils provenant d'un autre agent, session, expéditeur ou exécution.
+Le catalogue du mode code est limité à l'exécution. Il ne doit pas faire fuiter d'outils provenant d'un autre agent, session, expéditeur ou exécution.
 
 ## Outils visibles par le modèle
 
@@ -231,7 +211,7 @@ Lorsque le mode code est actif, le modèle voit exactement ces outils de premier
 
 Tous les autres outils activés sont masqués de la liste des outils face au modèle et enregistrés dans le catalogue du mode code.
 
-Le modèle doit utiliser `exec` pour l'orchestration d'outils, la jonction de données, les boucles, les appels imbriqués parallèles et les transformations structurées. Le modèle doit utiliser `wait` uniquement lorsque `exec` renvoie un résultat `waiting` reproductible.
+Le modèle doit utiliser `exec` pour l'orchestration des outils, la jointure de données, les boucles, les appels imbriqués parallèles et les transformations structurées. Le modèle doit utiliser `wait` uniquement lorsque `exec` renvoie un résultat `waiting` reproductible.
 
 ## `exec`
 
@@ -241,19 +221,27 @@ Entrée :
 
 ```typescript
 type CodeModeExecInput = {
-  code: string;
+  code?: string;
+  command?: string;
   language?: "javascript" | "typescript";
 };
 ```
 
 Règles d'entrée :
 
-- `code` est requis et ne doit pas être vide.
-- `language` est `"javascript"` par défaut.
-- Si `language` est `"typescript"`, OpenClaw transpile avant l'évaluation.
-- `exec` rejette `import`, `require`, l'importation dynamique et les modèles de chargeur de modules
+- L'un ou l'autre de `code` ou `command` doit être non vide.
+- `code` est le champ documenté face au modèle.
+- `command` est accepté comme un alias compatible exec pour les stratégies de hook et
+  les réécritures approuvées ; lorsque les deux sont présents, les valeurs doivent correspondre.
+- Les événements de hook `exec` du mode code externe incluent `toolKind: "code_mode_exec"` et
+  incluent `toolInputKind: "javascript" | "typescript"` lorsque la langue d'entrée
+  est connue, afin que les stratégies puissent distinguer les cellules du mode code des appels `exec`
+  de style shell qui partagent le même nom d'outil.
+- `language` est défini par défaut sur `"javascript"`.
+- Si `language` est `"typescript"`OpenClaw, OpenClaw transpile avant l'évaluation.
+- `exec` rejette `import`, `require`, l'import dynamique et les motifs de chargeur de module
   dans v1.
-- `exec` n'expose pas l'implémentation normale du shell `exec` de manière récursive.
+- `exec` n'expose pas récursivement l'implémentation normale du shell `exec`.
 
 Résultat :
 
@@ -285,15 +273,15 @@ type CodeModeFailedResult = {
 };
 ```
 
-`exec` renvoie `waiting` lorsque la machine virtuelle QuickJS se suspend avec un état reproductible. Le
+`exec` renvoie `waiting` lorsque la VM QuickJS se suspend avec un état reproductible. Le
 résultat inclut un `runId` pour `wait`.
 
-`exec` renvoie `completed` uniquement lorsque la machine virtuelle invitée n'a aucune tâche en attente et que
+`exec` renvoie `completed`OpenClaw uniquement lorsque la VM invitée n'a pas de travail en attente et que
 la valeur finale est compatible JSON après l'exécution de l'adaptateur de sortie d'OpenClaw.
 
 ## `wait`
 
-`wait` poursuit une machine virtuelle de mode code suspendue.
+`wait` poursuit une VM en mode code suspendue.
 
 Entrée :
 
@@ -305,36 +293,35 @@ type CodeModeWaitInput = {
 
 La sortie est la même union `CodeModeResult` renvoyée par `exec`.
 
-`wait` existe car les outils imbriqués d'OpenClaw peuvent être lents, interactifs, soumis à approbation
-ou diffuser des mises à jour partielles. Le modèle ne devrait pas avoir besoin de garder un long appel
-`exec` ouvert pendant que l'hôte attend un travail externe.
+`wait`OpenClaw existe car les outils OpenClaw imbriqués peuvent être lents, interactifs, soumis à approbation
+ou diffuser des mises à jour partielles. Le modèle ne devrait pas avoir besoin de garder un long
+appel `exec` ouvert pendant que l'hôte attend un travail externe.
 
-La capture instantanée et la restauration QuickJS-WASI constituent le mécanisme de reprise de la v1 :
+La capture instantanée et la restauration QuickJS-WASI constituent le mécanisme de reprise v1 :
 
-1. `exec` évalue le code jusqu'à la fin, l'échec ou la suspension.
-2. Lors de la suspension, OpenClaw capture instantanément la machine virtuelle QuickJS et enregistre le travail hôte
+1. `exec` évalue le code jusqu'à l'achèvement, l'échec ou la suspension.
+2. En cas de suspension, OpenClaw capture une instantanée de la VM QuickJS et enregistre le travail hôte
    en attente.
-3. Lorsque le travail en attente est réglé, `wait` restaure la capture instantanée de la machine virtuelle.
-4. OpenClaw réenregistre les rappels de l'hôte par noms stables.
-5. OpenClaw transmet les résultats des outils imbriqués dans la machine virtuelle restaurée.
-6. OpenClaw vide les tâches en attente de QuickJS.
+3. Une fois le travail en attente réglé, `wait` restaure l'instantané de la VM.
+4. OpenClaw réinscrit les rappels de l'hôte par des noms stables.
+5. OpenClaw transmet les résultats d'outils imbriqués dans la VM restaurée.
+6. OpenClaw vide les tâches en attente QuickJS.
 7. `wait` renvoie `completed`, `failed`, ou un autre résultat `waiting`.
 
-Les captures instantanées sont un état d'exécution, et non des artefacts utilisateur. Elles sont limitées en taille, expirées,
-et délimitées à l'exécution et à la session qui les ont créées.
+Les instantanés sont un état d'exécution, et non des artefacts utilisateur. Ils sont limités en taille, expirés, et limités à l'exécution et à la session qui les ont créés.
 
 `wait` échoue lorsque :
 
-- le `runId` est inconnu.
-- la capture instantanée a expiré.
-- la session ou l'exécution parente a été abandonnée.
-- l'appelant n'est pas dans la même portée de session ou d'exécution.
-- La restauration de QuickJS-WASI échoue.
+- `runId` est inconnu.
+- l'instantané a expiré.
+- l'exécution parente ou la session a été abandonnée.
+- l'appelant n'est pas dans la même portée d'exécution/session.
+- La restauration QuickJS-WASI échoue.
 - la restauration dépasserait les limites configurées.
 
-## API d'exécution invitée
+## API du runtime invité
 
-L'exécution invitée expose une petite API globale :
+Le runtime invité expose une petite API globale :
 
 ```typescript
 declare const ALL_TOOLS: ToolCatalogEntry[];
@@ -345,8 +332,7 @@ declare function json(value: unknown): void;
 declare function yield_control(reason?: string): Promise<void>;
 ```
 
-`ALL_TOOLS` est des métadonnées compactes pour le catalogue délimité à l'exécution. Il ne contient pas
-par défaut de schémas complets.
+`ALL_TOOLS` est des métadonnées compactes pour le catalogue limité à l'exécution. Il ne contient pas de schémas complets par défaut.
 
 ```typescript
 type ToolCatalogEntry = {
@@ -359,7 +345,7 @@ type ToolCatalogEntry = {
 };
 ```
 
-Le schéma complet n'est chargé qu'à la demande :
+Le schéma complet est chargé uniquement à la demande :
 
 ```typescript
 type ToolCatalogEntryWithSchema = ToolCatalogEntry & {
@@ -389,15 +375,13 @@ const content = await tools.call(fileRead.id, { path: "README.md" });
 const hits = await tools.web_search({ query: "OpenClaw code mode" });
 ```
 
-L'exécution invitée ne doit pas exposer directement les objets de l'hôte. Les entrées et les sorties traversent
-le pont sous forme de valeurs compatibles JSON avec des limites de taille explicites.
+Le runtime invité ne doit pas exposer directement les objets de l'hôte. Les entrées et les sorties traversent le pont sous forme de valeurs compatibles JSON avec des limites de taille explicites.
 
 ## API de sortie
 
-`text(value)` ajoute une sortie lisible par l'homme au tableau `output`.
+`text(value)` ajoute une sortie lisible par l'humain au tableau `output`.
 
-`json(value)` ajoute un élément de sortie structuré après une sérialisation
-compatible JSON.
+`json(value)` ajoute un élément de sortie structuré après une sérialisation compatible JSON.
 
 La valeur finale renvoyée par le code invité devient `value` dans un résultat `completed`.
 
@@ -410,23 +394,23 @@ type CodeModeOutput = { type: "text"; text: string } | { type: "json"; value: un
 Règles de sortie :
 
 - l'ordre de sortie correspond aux appels de l'invité
-- la sortie est plafonnée par `maxOutputBytes`
+- la sortie est limitée par `maxOutputBytes`
 - les valeurs non sérialisables sont converties en chaînes simples ou en erreurs
 - les valeurs binaires ne sont pas prises en charge dans v1
 - les images et les fichiers transitent par les outils OpenClaw ordinaires, et non par
-  le pont du code-mode
+  le pont du mode code
 
 ## Catalogue d'outils
 
-Le catalogue caché inclut les outils après filtrage effectif par stratégie :
+Le catalogue caché inclut les outils après le filtrage effectif par la stratégie :
 
-1. Outils de base OpenClaw.
-2. Outils de plug-in regroupés.
-3. Outils de plug-in externes.
+1. Outils principaux OpenClaw.
+2. Outils de plugin regroupés.
+3. Outils de plugin externes.
 4. Outils MCP.
-5. Outils fournis par le client pour l'exécution en cours.
+5. Outils fournis par le client pour l'exécution actuelle.
 
-Les identifiants du catalogue sont stables au sein d'une exécution et déterministes sur des ensembles d'outils équivalents lorsque cela est possible.
+Les identifiants du catalogue sont stables au cours d'une exécution et déterministes pour des ensembles d'outils équivalents lorsque cela est possible.
 
 Forme d'identifiant recommandée :
 
@@ -443,7 +427,7 @@ mcp:github:create_issue
 client:app:select_file
 ```
 
-Le catalogue omet les outils de contrôle du code-mode :
+Le catalogue omet les outils de contrôle du mode code :
 
 - `exec`
 - `wait`
@@ -452,79 +436,77 @@ Le catalogue omet les outils de contrôle du code-mode :
 - `tool_describe`
 - `tool_call`
 
-Cela empêche la récursion et maintient le contrat orienté modèle étroit.
+Cela évite la récursion et maintient le contrat orienté modèle étroit.
 
-## Interaction Recherche d'outils
+## Interaction avec la recherche d'outils
 
-Le code-mode remplace la surface de modèle de recherche d'outils PI pour les exécutions où il est
-actif.
+Le mode code remplace la surface de modèle PI Tool Search pour les exécutions où il est actif.
 
-Lorsque `tools.codeMode.enabled` est vrai et que le code-mode s'active :
+Lorsque `tools.codeMode.enabled` est vrai et que le mode code s'active :
 
-- OpenClaw n'expose pas OpenClaw`tool_search_code`, `tool_search`, `tool_describe`
+- OpenClaw n'expose pas OpenClaw`tool_search_code`, `tool_search`, `tool_describe`,
   ou `tool_call` en tant qu'outils visibles par le modèle.
 - La même idée de catalogue se déplace à l'intérieur du runtime invité.
-- Le runtime invité reçoit des métadonnées `ALL_TOOLS` compactes et des assistants de recherche, de description et d'appel.
-- Les appels imbriqués sont dispatchés via le même chemin d'exécution OpenClaw que celui utilisé par Tool Search.
+- Le runtime invité reçoit des métadonnées `ALL_TOOLS` compactes ainsi que des aides de recherche, de description et d'appel.
+- Les appels imbriqués sont distribués via le même chemin d'exécution OpenClaw que Tool Search utilise.
 
-La page existante [Tool Search](/fr/tools/tool-searchOpenClaw) décrit le pont de catalogue compact PI. Le mode Code est l'alternative générique OpenClaw pour les exécutions qui peuvent
-utiliser `exec` et `wait`.
+La page existante [Tool Search](/fr/tools/tool-searchOpenClaw) décrit le pont de catalogue compact PI. Le mode code est l'alternative générique OpenClaw pour les exécutions qui peuvent utiliser `exec` et `wait`.
 
 ## Noms d'outils et collisions
 
-L'outil `exec`OpenClaw visible par le modèle est l'outil en mode Code. Si l'outil `exec` du shell OpenClaw normal est activé, il est masqué pour le modèle et catalogué comme n'importe quel autre outil.
+L'outil `exec`OpenClaw visible par le modèle est l'outil du mode code. Si l'outil `exec` du shell OpenClaw normal est activé, il est masqué pour le modèle et catalogué comme tout autre outil.
 
 À l'intérieur du runtime invité :
 
-- `tools.call("openclaw:core:exec", input)` peut appeler l'outil d'exécution du shell si
-  la stratégie le permet.
-- `tools.exec(...)` n'est installé que si l'entrée de catalogue du shell exec possède un
-  nom sécurisé sans ambiguïté.
-- l'outil `exec` en mode Code n'est jamais disponible de manière récursive via `tools`.
+- `tools.call("openclaw:core:exec", input)` peut appeler l'outil d'exécution de shell si
+  la stratégie l'autorise.
+- `tools.exec(...)` n'est installé que si l'entrée du catalogue d'exécution de shell possède un
+  nom sans équivoque et sûr.
+- l'outil `exec` du mode code n'est jamais disponible de manière récursive via `tools`.
 
-Si deux outils se normalisent vers le même nom de commodité sécurisé, OpenClaw omet la
-fonction de commodité et exige OpenClaw`tools.call(id, input)`.
+Si deux outils se normalisent vers le même nom de fonction sûr, OpenClaw omet la
+fonction de commodité et nécessite OpenClaw`tools.call(id, input)`.
 
-## Exécution d'outils imbriqués
+## Exécution d'outil imbriquée
 
-Chaque appel d'outil imbriqué traverse le pont hôte et réentre dans OpenClaw.
+Chaque appel d'outil imbriqué traverse le pont hôte et ré-entre dans OpenClaw.
 
 L'exécution imbriquée préserve :
 
 - id de l'agent actif
 - id de session et clé de session
-- contexte de l'expéditeur et du canal
-- stratégie du bac à sable
+- expéditeur et contexte de channel
+- stratégie de bac à sable (sandbox)
 - stratégie d'approbation
-- hooks `before_tool_call` du plugin
+- hooks de plugin `before_tool_call`
 - signal d'abandon
-- mises à jour en streaming lorsque disponibles
-- événements de trajectoire et d'audit
+- mises à jour en streaming lorsque disponible
+- trajectoire et événements d'audit
 
-Les appels imbriqués sont projetés dans la transcription en tant que vrais appels d'outils afin que les bundles de support
-puissent montrer ce qui s'est passé. La projection identifie l'appel de l'outil parent en mode Code
-et l'ID de l'outil imbriqué.
+Les appels imbriqués sont projetés dans la transcription comme de véritables appels d'outils afin que les bundles de support
+puissent montrer ce qui s'est passé. La projection identifie l'appel d'outil parent en mode code
+et l'id de l'outil imbriqué.
 
 Les appels imbriqués parallèles sont autorisés jusqu'à `maxPendingToolCalls`.
 
 ## État d'exécution
 
-Chaque exécution en mode Code possède une machine à états :
+Chaque exécution en mode code possède une machine à états :
 
-- `running` : la VM s'exécute ou des appels imbriqués sont en cours.
-- `waiting` : un instantané de la VM existe et peut être repris avec `wait`.
+- `running` : la VM est en cours d'exécution ou des appels imbriqués sont en cours.
+- `waiting` : l'instantané de la VM existe et peut être repris avec `wait`.
 - `completed` : valeur finale retournée ; instantané supprimé.
 - `failed` : erreur retournée ; instantané supprimé.
 - `expired` : l'instantané ou l'état en attente a dépassé la rétention ; impossible de reprendre.
-- `aborted` : l'exécution/session parente a été annulée ; instantané supprimé.
+- `aborted` : exécution/session parente annulée ; instantané supprimé.
 
-L'état est délimité par l'exécution de l'agent, la session et l'ID d'appel d'outil. Un appel `wait` depuis une
+L'état est délimité par l'exécution de l'agent, la session et l'id de l'appel d'outil. Un appel `wait` depuis une
 exécution ou une session différente échoue.
 
 Le stockage des instantanés est limité :
 
-- nombre maximum d'octets d'instantané par exécution
-- nombre maximum d'instantanés actifs par processus
+- octets d'instantané maximum par exécution
+- instantanés en direct maximum par processus
 - TTL de l'instantané
 - nettoyage à la fin de l'exécution
 - nettoyage à l'arrêt du Gateway lorsque la persistance n'est pas prise en charge
@@ -539,53 +521,48 @@ Responsabilités du runtime :
 
 - compiler ou charger le module WebAssembly QuickJS-WASI
 - créer une VM isolée par exécution en mode code ou par reprise
-- enregistrer les rappels de l'hôte par des noms stables
+- enregistrer les rappels hôte par noms stables
 - définir les limites de mémoire et d'interruption
 - évaluer JavaScript
 - vider les tâches en attente
-- créer un instantané de l'état de la VM suspendue
+- instantané de l'état de la VM suspendue
 - restaurer les instantanés pour `wait`
 - supprimer les handles de VM et les instantanés après les états terminaux
 
-Le runtime s'exécute en dehors de la boucle d'événements principale de OpenClaw dans un worker. Une
-boucle inférieure invitée ne doit pas bloquer indéfiniment le processus Gateway.
+Le runtime s'exécute en dehors de la boucle d'événements principale d'OpenClaw dans un worker. Une boucle infinie invitée ne doit pas bloquer indéfiniment le processus Gateway.
 
 ## TypeScript
 
-La prise en charge de TypeScript est uniquement une transformation source :
+La prise en charge de TypeScript est uniquement une transformation de source :
 
 - entrée acceptée : une chaîne de code TypeScript
 - sortie : chaîne JavaScript évaluée par QuickJS-WASI
 - pas de vérification de type
 - pas de résolution de module
-- pas de `import` ou de `require` dans v1
+- pas de `import` ni de `require` dans v1
 - les diagnostics sont renvoyés sous forme de résultats `failed`
 
-Le compilateur TypeScript est chargé paresseusement uniquement pour les cellules TypeScript. Les
-cellules JavaScript simples et le mode code désactivé ne chargent pas le compilateur.
+Le compilateur TypeScript est chargé paresseusement uniquement pour les cellules TypeScript. Les cellules JavaScript simples et le mode code désactivé ne chargent pas le compilateur.
 
 La transformation doit préserver les numéros de ligne utiles lorsque cela est possible.
 
 ## Limite de sécurité
 
-Le code du modèle est hostile. Le runtime utilise une défense en profondeur :
+Le code du modèle est hostile. Le runtime utilise la défense en profondeur :
 
 - exécuter QuickJS-WASI en dehors de la boucle d'événements principale
-- charger `quickjs-wasi` comme dépendance directe, et non via Codex ou un package
-  transitif
-- pas de système de fichiers, de réseau, de sous-processus, d'importation de module, de variables d'environnement ou
-  d'objets globaux de l'hôte chez l'invité
+- charger `quickjs-wasi` comme dépendance directe, et non via Codex ou un package transitif
+- pas de système de fichiers, de réseau, de sous-processus, d'importation de module, de variables d'environnement ou d'objets globaux de l'hôte dans l'invité
 - utiliser les limites de mémoire et d'interruption de QuickJS
-- appliquer un délai d'attente temps réel (wall-clock) du processus parent
-- appliquer les plafonds de sortie, d'instantané, de journal et d'appels en attente
+- appliquer le délai d'attente temps réel du processus parent
+- appliquer les limites de sortie, d'instantané, de journal et d'appel en attente
 - sérialiser les valeurs du pont de l'hôte via un adaptateur JSON étroit
 - convertir les erreurs de l'hôte en erreurs simples de l'invité, jamais en objets du domaine de l'hôte
 - abandonner les instantanés en cas de délai d'attente, d'abandon, de fin de session ou d'expiration
 - rejeter l'accès récursif à `exec`, `wait` et aux outils de contrôle de recherche d'outils
-- empêcher les collisions de noms de commodité de masquer les assistants du catalogue
+- empêcher les collisions de noms pratiques de masquer les assistants du catalogue
 
-Le bac à sable est une couche de sécurité. Les opérateurs peuvent toujours avoir besoin d'un durcissement au niveau du système d'exploitation
-pour les déploiements à haut risque.
+Le bac à sable est une couche de sécurité. Les opérateurs peuvent toujours avoir besoin d'un durcissement au niveau du système d'exploitation pour les déploiements à haut risque.
 
 ## Codes d'erreur
 
@@ -593,28 +570,25 @@ pour les déploiements à haut risque.
 type CodeModeErrorCode = "runtime_unavailable" | "invalid_config" | "invalid_input" | "unsupported_language" | "typescript_transform_failed" | "module_access_denied" | "timeout" | "memory_limit_exceeded" | "output_limit_exceeded" | "snapshot_limit_exceeded" | "snapshot_expired" | "snapshot_restore_failed" | "too_many_pending_tool_calls" | "nested_tool_failed" | "aborted" | "internal_error";
 ```
 
-Les erreurs renvoyées à l'invité sont des données simples. Les instances `Error` de l'hôte, les objets
-de pile, les prototypes et les fonctions de l'hôte ne traversent pas vers QuickJS.
+Les erreurs renvoyées à l'invité sont des données simples. Les instances d'`Error` de l'hôte, les objets de pile, les prototypes et les fonctions de l'hôte ne traversent pas vers QuickJS.
 
 ## Télémétrie
 
-Le mode code signale :
+Le mode code rapporte :
 
 - les noms d'outils visibles envoyés au modèle
 - la taille et la répartition par source du catalogue caché
-- les comptes de `exec` et `wait`
-- les comptes de recherche imbriquée, de description et d'appel
+- les comptes de `exec` et de `wait`
+- les comptes de recherche, de description et d'appel imbriqués
 - les ids d'outils imbriqués appelés
-- les échecs de délai d'attente, de mémoire, d'instantané et de plafond de sortie
-- les événements du cycle de vie des instantanés
+- délai d'expiration, mémoire, instantané et échecs de limite de sortie
+- événements du cycle de vie des instantanés
 
-La télémétrie ne doit pas inclure de secrets, de valeurs brutes d'environnement ou d'entrées d'outils non expurgées
-au-delà de la politique de trajectoire existante d'OpenClaw.
+La télémétrie ne doit pas inclure de secrets, de valeurs brutes d'environnement ou d'entrées de tool non masquées au-delà de la politique de trajectoire OpenClaw existante.
 
 ## Débogage
 
-Utilisez la journalisation ciblée du transport de modèle lorsque le mode code se comporte différemment d'une
-exécution d'outil normale :
+Utilisez la journalisation ciblée du transport de model lorsque le mode code se comporte différemment d'une exécution de tool normale :
 
 ```bash
 OPENCLAW_DEBUG_CODE_MODE=1 \
@@ -624,86 +598,79 @@ OPENCLAW_DEBUG_SSE=events \
 openclaw gateway
 ```
 
-Pour le débogage de la forme des charges utiles, utilisez `OPENCLAW_DEBUG_MODEL_PAYLOAD=full-redacted`.
-Cela enregistre un instantané JSON plafonné et expurgé de la requête du modèle ; il ne doit
-être utilisé que pendant le débogage car les invites et le texte des messages peuvent toujours apparaître.
+Pour le débogage de la forme de la charge utile, utilisez `OPENCLAW_DEBUG_MODEL_PAYLOAD=full-redacted`.
+Cela enregistre un instantané JSON limité et masqué de la requête du model ; il ne doit être utilisé que pendant le débogage car les invites et le texte des messages peuvent toujours apparaître.
 
-Pour le débogage du flux, utilisez `OPENCLAW_DEBUG_SSE=peek` pour enregistrer les cinq premiers
-événements SSE expurgés. Le mode code échoue également en mode fermé si la charge utile finale du fournisseur
-ne contient pas exactement `exec` et `wait` après l'activation de la surface du mode code.
+Pour le débogage du flux, utilisez `OPENCLAW_DEBUG_SSE=peek` pour enregistrer les cinq premiers événements SSE masqués. Le mode code échoue également de manière fermée si la charge utile finale du provider ne contient pas exactement `exec` et `wait` après activation de la surface du mode code.
 
 ## Disposition de l'implémentation
 
 Unités d'implémentation :
 
-- config contract : `tools.codeMode`
-- catalog builder : effective tools to compact entries and id map
-- model-surface adapter : replace visible tools with `exec` and `wait`
-- QuickJS-WASI runtime adapter : load, eval, snapshot, restore, dispose
-- worker supervisor : timeout, abort, crash isolation
-- bridge adapter : JSON-safe host callbacks and result delivery
-- TypeScript transform adapter
-- snapshot store : TTL, size caps, run/session scoping
-- trajectory projection for nested tool calls
-- telemetry counters and diagnostics
+- contrat de configuration : `tools.codeMode`
+- générateur de catalogue : tools effectifs vers entrées compactes et carte d'ID
+- adaptateur de surface de model : remplacer les tools visibles par `exec` et `wait`
+- adaptateur d'exécution QuickJS-WASI : chargement, évaluation, instantané, restauration, suppression
+- superviseur de worker : délai d'expiration, abandon, isolation des plantages
+- adaptateur de pont : rappels d'hôte sûrs pour JSON et livraison des résultats
+- adaptateur de transformation TypeScript
+- magasin d'instantanés : TTL, limites de taille, portée exécution/session
+- projection de trajectoire pour les appels de tool imbriqués
+- compteurs de télémétrie et diagnostics
 
-The implementation reuses catalog and executor concepts from Tool Search, but
-does not use the `node:vm` child as the sandbox.
+L'implémentation réutilise les concepts de catalogue et d'exécuteur de Tool Search, mais n'utilise pas l'enfant `node:vm` comme bac à sable.
 
-## Validation checklist
+## Liste de vérification de validation
 
-Code mode coverage should prove :
+La couverture du mode code doit prouver :
 
-- disabled config leaves existing tool exposure unchanged
-- object config without `enabled: true` leaves code mode disabled
-- enabled config exposes only `exec` and `wait` to the model when tools are
-  active for the run
-- raw no-tool runs, `disableTools`, and empty allowlists do not trigger code-mode
-  payload enforcement
-- all effective tools appear in `ALL_TOOLS`
-- denied tools do not appear in `ALL_TOOLS`
-- `tools.search`, `tools.describe`, and `tools.call` work for OpenClaw tools
-- Tool Search control tools are hidden from both the model surface and the hidden
-  catalog
-- nested calls preserve approval and hook behavior
-- shell `exec` is hidden from the model but callable by catalog id when allowed
-- recursive code-mode `exec` and `wait` are not callable from guest code
-- TypeScript input is transformed and evaluated without loading TypeScript on
-  disabled or JavaScript-only paths
-- `import`, `require`, filesystem, network, and environment access fail
-- infinite loops time out and cannot block the Gateway
-- memory cap failures terminate the guest VM
-- les limites de sortie et d'instantané sont appliquées pour les appels terminés et suspendus
-- `wait` reprend un instantané suspendu et renvoie la valeur finale
-- les valeurs expirées, abandonnées, de mauvaise session et inconnues de `runId` échouent
-- la relecture et la persistance de la transcription préservent les appels de contrôle du code-mode
-- la transcription et la télémétrie affichent clairement les appels d'outil imbriqués
+- la configuration désactivée laisse l'exposition des tools existante inchangée
+- la configuration d'objet sans `enabled: true` laisse le mode code désactivé
+- la configuration activée expose uniquement `exec` et `wait` au model lorsque les tools sont
+  actifs pour l'exécution
+- les exécutions brutes sans tool, `disableTools`, et les listes d'autorisation vides ne déclenchent pas l'application de la charge utile du mode code
+- tous les tools effectifs apparaissent dans `ALL_TOOLS`
+- les tools refusés n'apparaissent pas dans `ALL_TOOLS`
+- `tools.search`, `tools.describe` et `tools.call`OpenClaw fonctionnent pour les outils OpenClaw
+- Les outils de contrôle Tool Search sont cachés à la fois de la surface du modèle et du catalogue caché
+- les appels imbriqués préservent le comportement d'approbation et de hook
+- le shell `exec` est caché du modèle mais appelable par id de catalogue lorsque autorisé
+- le mode code récursif `exec` et `wait` ne sont pas appelables depuis le code invité
+- l'entrée TypeScript est transformée et évaluée sans charger TypeScript sur les chemins désactivés ou JavaScript uniquement
+- `import`, `require`, le système de fichiers, le réseau et l'accès à l'environnement échouent
+- les boucles infinies expirent et ne peuvent pas bloquer la passerelle
+- les échecs de limite de mémoire terminent la VM invitée
+- les limites de sortie et de capture sont appliquées pour les appels terminés et suspendus
+- `wait` reprend une capture suspendue et renvoie la valeur finale
+- les valeurs expirées, annulées, wrong-session et inconnues de `runId` échouent
+- la relecture et la persistance de la transcription préservent les appels de contrôle du mode code
+- la transcription et la télémétrie affichent clairement les appels d'outils imbriqués
 
 ## Plan de test de bout en bout
 
-Exécutez-les en tant que tests d'intégration ou de bout en bout lors de la modification de l'exécution :
+Exécutez-les en tant que tests d'intégration ou de bout en bout lors de la modification du runtime :
 
-1. Démarrez une Gateway avec `tools.codeMode.enabled: false`.
+1. Démarrez une passerelle avec Gateway`tools.codeMode.enabled: false`.
 2. Envoyez un tour d'agent avec un petit ensemble d'outils directs.
 3. Vérifiez que les outils visibles par le modèle sont inchangés.
 4. Redémarrez avec `tools.codeMode.enabled: true`.
-5. Envoyez un tour d'agent avec les outils de test OpenClaw, de plugin, MCP et client.
-6. Vérifiez que la liste d'outils visible par le modèle est exactement `exec`, `wait`.
+5. Envoyez un tour d'agent avec les outils de test OpenClaw, plugin, MCP et client.
+6. Vérifiez que la liste des outils visibles par le modèle est exactement `exec`, `wait`.
 7. Dans `exec`, lisez `ALL_TOOLS` et vérifiez que les outils de test effectifs sont présents.
 8. Dans `exec`, appelez `tools.search`, `tools.describe` et `tools.call`.
 9. Vérifiez que les outils refusés sont absents et ne peuvent pas être appelés par id deviné.
-10. Démarrez un appel d'outil imbriqué qui se résout après le retour de `exec` de `waiting`.
-11. Appelez `wait` et vérifiez que la VM restaurée reçoit le résultat de l'outil.
+10. Démarrez un appel d'outil imbriqué qui se résout après que `exec` renvoie `waiting`.
+11. Appelez `wait` et vérifiez que la VM restaurée reçoit le résultat du tool.
 12. Vérifiez que la réponse finale contient la sortie produite après la restauration.
-13. Vérifiez que l'expiration du délai d'attente, l'abandon et l'expiration de l'instantané nettoient l'état de l'exécution.
-14. Exportez la trajectoire et vérifiez que les appels imbriqués sont visibles sous l'appel parent
-    de code-mode.
+13. Vérifiez que l'expiration du délai, l'annulation et l'expiration de l'instantané nettoient l'état de l'exécution.
+14. Exportez la trajectoire et vérifiez que les appels imbriqués sont visibles sous l'appel
+    code-mode parent.
 
-Les modifications uniquement documentaires sur cette page doivent toujours exécuter `pnpm check:docs`.
+Les modifications purement documentaires sur cette page doivent toujours exécuter `pnpm check:docs`.
 
 ## Connexes
 
-- [Recherche d'outils](/fr/tools/tool-search)
+- [Recherche de tool](/fr/tools/tool-search)
 - [Runtimes d'agent](/fr/concepts/agent-runtimes)
-- [Outil Exec](/fr/tools/exec)
+- [Tool Exec](/fr/tools/exec)
 - [Exécution de code](/fr/tools/code-execution)

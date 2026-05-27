@@ -9,10 +9,11 @@ sidebarTitle: "Ajout de capacités"
 ---
 
 <Info>
-  Ceci est un **guide du contributeur** destiné aux développeurs du cœur de OpenClaw. Si vous créez un plugin externe, consultez plutôt [Création de plugins](/fr/plugins/building-plugins). Pour la référence approfondie de l'architecture (modèle de capacité, propriété, pipeline de chargement, assistants d'exécution), consultez [Fonctionnement interne des plugins](/fr/plugins/architecture).
+  Ceci est un **guide pour les contributeurs** destiné aux développeurs du cœur d'OpenClaw. Si vous créez un plugin externe, consultez plutôt [Création de plugins](/fr/plugins/building-plugins). Pour la référence approfondie de l'architecture (modèle de capacité, propriété, pipeline de chargement, assistants d'exécution), consultez [Fonctionnement interne des plugins](/fr/plugins/architecture).
 </Info>
 
-Utilisez ceci lorsque OpenClaw a besoin d'un nouveau domaine partagé tel que la génération d'images, la génération de vidéos, ou une future zone de fonctionnalités prise en charge par un fournisseur.
+Utilisez ceci lorsqu'OpenClaw a besoin d'un nouveau domaine partagé tel que les embeddings, la
+génération d'images, la génération vidéo, ou une future zone de fonctionnalités supportée par un fournisseur.
 
 La règle :
 
@@ -110,21 +111,34 @@ La clé de configuration est intentionnellement séparée du routage d'analyse v
 
 Gardez-les séparés afin que le repli et la politique restent explicites.
 
-## Liste de contrôle de révision
+## Fournisseurs d'embeddings
 
-Avant d'expédier une nouvelle capacité, vérifiez :
+Utilisez `embeddingProviders` pour les fournisseurs d'embeddings vectoriels réutilisables. Ce contrat
+est volontairement plus large que la mémoire : les outils, la recherche, la récupération, les importateurs, ou
+les plugins de fonctionnalités futurs peuvent consommer des embeddings sans dépendre du moteur
+de mémoire.
 
-- Aucun canal/outil n'importe directement de code fournisseur.
-- Le helper d'exécution est le chemin partagé.
-- Au moins un test de contrat affirme la possession regroupée.
-- La documentation de configuration nomme la nouvelle clé de modèle/configuration.
-- La documentation du plugin explique la limite de propriété.
+Pour les adaptateurs spécifiques au moteur de mémoire, continuez d'utiliser `memoryEmbeddingProviders`.
+Ces adaptateurs possèdent les détails d'indexation de la mémoire tels que la division requête/document,
+les métadonnées d'exécution et la configuration du moteur de mémoire local. Ne faites pas dépendre un fournisseur
+d'embeddings générique de modules appartenant à la mémoire, sauf si le fournisseur n'est
+utilisable que par la mémoire.
 
-Si une PR saute la couche de capacité et encode en dur le comportement du fournisseur dans un canal/outil, renvoyez-la et définissez d'abord le contrat.
+## Liste de vérification pour la révision
+
+Avant de publier une nouvelle capacité, vérifiez :
+
+- Aucun channel/tool n'importe directement de code fournisseur.
+- L'assistant d'exécution est le chemin partagé.
+- Au moins un test de contrat affirme la propriété groupée.
+- La documentation de configuration nomme la nouvelle clé de model/config.
+- La documentation des plugins explique la limite de propriété.
+
+Si une PR ignore la couche de capacité et encode en dur le comportement du fournisseur dans un channel/tool, renvoyez-la et définissez d'abord le contrat.
 
 ## Connexes
 
-- [Plugin internals](/fr/plugins/architecture) — modèle de capacité, propriété, pipeline de chargement, helpers d'exécution.
-- [Building plugins](/fr/plugins/building-plugins) — tutoriel du premier plugin.
-- [SDK overview](/fr/plugins/sdk-overview) — carte d'importation et référence de l'API d'enregistrement.
-- [Creating skills](/fr/tools/creating-skills) — surface contributeur compagnon.
+- [Fonctionnement interne des plugins](/fr/plugins/architecture) — modèle de capacité, propriété, pipeline de chargement, assistants d'exécution.
+- [Création de plugins](/fr/plugins/building-plugins) — tutoriel pour le premier plugin.
+- [Présentation du SDK](/fr/plugins/sdk-overview) — référence de la carte d'importation et de l'API d'enregistrement.
+- [Création de compétences](/fr/tools/creating-skills) — surface contributive accompagnante.

@@ -530,7 +530,7 @@ Cela couvre l'analyse des arguments de CLI, la résolution config/default-agent,
   - Providers `videoToVideo` actuellement déclarés mais ignorés dans le balayage partagé :
     - `alibaba`, `qwen`, `xai` car ces chemins nécessitent actuellement des URLs de référence distantes `http(s)` / MP4
     - `google` car la voie partagée Gemini/Véo actuelle utilise une entrée sauvegardée en mémoire tampon locale et ce chemin n'est pas accepté dans le balayage partagé
-    - `openai` car la voie partagée actuelle ne dispose pas de garanties d'accès à la restauration/remixage vidéo spécifiques à l'organisation
+    - `openai` car la voie partagée actuelle ne garantit pas l'accès spécifique à l'organisation pour l'édition vidéo
 - Rétrécissement facultatif :
   - `OPENCLAW_LIVE_VIDEO_GENERATION_PROVIDERS="deepinfra,google,openai,runway"`
   - `OPENCLAW_LIVE_VIDEO_GENERATION_MODELS="google/veo-3.1-fast-generate-preview,openai/sora-2,runway/gen4_aleph"`

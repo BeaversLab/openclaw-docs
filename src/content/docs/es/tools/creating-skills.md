@@ -94,27 +94,49 @@ El frontmatter YAML admite estos campos:
 | `metadata.openclaw.requires.bins`   | No          | Binarios requeridos en PATH                                          |
 | `metadata.openclaw.requires.config` | No          | Claves de configuración requeridas                                   |
 
+## Características avanzadas
+
+Una vez que una habilidad básica funciona, estos campos ayudan a que sea fiable y portátil:
+
+- **Activación condicional** — use `requires.bins`, `requires.env` o
+  `requires.config` para cargar la habilidad solo cuando las dependencias requeridas estén
+  disponibles. Consulte [Referencia de habilidades: bloqueo](/es/tools/skills#gating).
+- **Cableado de entorno y clave de API** — use `skills.entries.<name>.env` y
+  `skills.entries.<name>.apiKey` para inyectar el entorno del lado del host para un turno
+  de habilidad. Consulte [Referencia de habilidades: cableado de configuración](/es/tools/skills#config-wiring).
+- **Control de invocación** — establezca `user-invocable: false` para ocultar un comando de barra,
+  o `disable-model-invocation: true` para mantener una habilidad de estilo de comando fuera del
+  prompt del modelo. Consulte [Referencia de habilidades: frontmatter](/es/tools/skills#frontmatter).
+- **Despacho directo de comandos** — use `command-dispatch: tool` con
+  `command-tool` cuando un comando de barra deba llamar a una herramienta directamente en lugar de
+  enrutar a través del modelo.
+- **Rutas portables** — use `{baseDir}` en `SKILL.md` al hacer referencia a scripts
+  o activos dentro del directorio de la habilidad.
+- **Publicación** — use la habilidad ClawHub al preparar una habilidad para su publicación.
+  Documenta la forma actual del comando `clawhub publish` y los metadatos
+  requeridos.
+
 ## Mejores prácticas
 
-- **Sé conciso** — indica al modelo _qué_ hacer, no cómo ser una IA
-- **Seguridad ante todo** — si su habilidad utiliza `exec`, asegúrese de que los mensajes no permitan la inyección de comandos arbitrarios desde entradas que no son confiables
+- **Sea conciso** — indique al modelo _qué_ hacer, no cómo ser una IA
+- **Seguridad primero** — si su habilidad usa `exec`, asegúrese de que los prompts no permitan la inyección arbitraria de comandos desde entradas que no son confiables
 - **Probar localmente** — use `openclaw agent --message "..."` para probar antes de compartir
-- **Use ClawHub** — navegue y contribuya con habilidades en [ClawHub](https://clawhub.ai)
+- **Usar ClawHub** — navegue y contribuya con habilidades en [ClawHub](https://clawhub.ai)
 
 ## Dónde residen las habilidades
 
-| Ubicación                       | Precedencia | Ámbito                              |
+| Ubicación                       | Precedencia | Alcance                             |
 | ------------------------------- | ----------- | ----------------------------------- |
 | `\<workspace\>/skills/`         | La más alta | Por agente                          |
-| `\<workspace\>/.agents/skills/` | Alta        | Por agente del espacio de trabajo   |
+| `\<workspace\>/.agents/skills/` | Alta        | Agente por espacio de trabajo       |
 | `~/.agents/skills/`             | Media       | Perfil de agente compartido         |
 | `~/.openclaw/skills/`           | Media       | Compartido (todos los agentes)      |
 | Incluido (enviado con OpenClaw) | Baja        | Global                              |
-| `skills.load.extraDirs`         | La más baja | Carpetas compartidas personalizadas |
+| `skills.load.extraDirs`         | El más bajo | Carpetas compartidas personalizadas |
 
 ## Relacionado
 
-- [Referencia de habilidades](/es/tools/skills) — reglas de carga, precedencia y bloqueo
+- [Referencia de habilidades](/es/tools/skills) — carga, precedencia y reglas de filtrado
 - [Configuración de habilidades](/es/tools/skills-config) — esquema de configuración de `skills.*`
 - [ClawHub](/es/clawhub) — registro público de habilidades
 - [Construcción de complementos](/es/plugins/building-plugins) — los complementos pueden incluir habilidades

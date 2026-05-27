@@ -30,12 +30,13 @@ También se planean aplicaciones complementarias nativas para Windows; se recomi
 - GCP (Compute Engine): [GCP](/es/install/gcp)
 - Azure (VM de Linux): [Azure](/es/install/azure)
 - exe.dev (VM + proxy HTTPS): [exe.dev](/es/install/exe-dev)
+- EasyRunner (Podman + Caddy): [EasyRunner](/es/platforms/easyrunner)
 
 ## Enlaces comunes
 
-- Guía de instalación: [Cómo empezar](/es/start/getting-started)
+- Guía de instalación: [Getting Started](/es/start/getting-started)
 - Manual del Gateway: [Gateway](/es/gateway)
-- Configuración del Gateway: [Configuración](/es/gateway/configuration)
+- Configuración del Gateway: [Configuration](/es/gateway/configuration)
 - Estado del servicio: `openclaw gateway status`
 
 ## Instalación del servicio Gateway (CLI)
@@ -45,7 +46,7 @@ Use uno de estos (todos compatibles):
 - Asistente (recomendado): `openclaw onboard --install-daemon`
 - Directo: `openclaw gateway install`
 - Flujo de configuración: `openclaw configure` → seleccione **Gateway service**
-- Reparar/migrar: `openclaw doctor` (ofrece instalar o solucionar el servicio)
+- Reparar/migrar: `openclaw doctor` (ofrece instalar o reparar el servicio)
 
 El destino del servicio depende del sistema operativo:
 
@@ -56,5 +57,5 @@ El destino del servicio depende del sistema operativo:
 ## Relacionado
 
 - [Resumen de instalación](/es/install)
-- [aplicación de macOS](/es/platforms/macos)
-- [aplicación de iOS](/es/platforms/ios)
+- [macOS app](/es/platforms/macos)
+- [iOS app](/es/platforms/ios)

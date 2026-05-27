@@ -98,21 +98,21 @@ read_when:
     fly secrets set OPENCLAW_GATEWAY_TOKEN=$(openssl rand -hex 32)
 
     # Model provider API keys
-    fly secrets set ANTHROPIC_API_KEY=sk-ant-...
+    fly secrets set ANTHROPIC_API_KEY=example-anthropic-key-not-real
 
     # Optional: Other providers
-    fly secrets set OPENAI_API_KEY=sk-...
+    fly secrets set OPENAI_API_KEY=example-openai-key-not-real
     fly secrets set GOOGLE_API_KEY=...
 
     # Channel tokens
-    fly secrets set DISCORD_BOT_TOKEN=MTQ...
+    fly secrets set DISCORD_BOT_TOKEN=example-discord-bot-token
     ```
 
     **Notas:**
 
-    - Los enlaces no bucleados (`--bind lan`) requieren una ruta de autenticación de puerta de enlace válida. Este ejemplo de Fly.io utiliza `OPENCLAW_GATEWAY_TOKEN`, pero `gateway.auth.password` o un despliegue no bucleado `trusted-proxy` configurado correctamente también satisfacen el requisito.
+    - Los enlaces que no son de bucle local (`--bind lan`) requieren una ruta de autenticación de puerta de enlace válida. Este ejemplo de Fly.io utiliza `OPENCLAW_GATEWAY_TOKEN`, pero `gateway.auth.password` o un despliegue `trusted-proxy` que no sea de bucle local correctamente configurado también satisfacen el requisito.
     - Trate estos tokens como contraseñas.
-    - **Prefiera las variables de entorno sobre el archivo de configuración** para todas las claves y tokens de API. Esto mantiene los secretos fuera de `openclaw.json` donde podrían exponerse o registrarse accidentalmente.
+    - **Prefiera las variables de entorno antes que el archivo de configuración** para todas las claves de API y tokens. Esto mantiene los secretos fuera de `openclaw.json` donde podrían ser expuestos o registrados accidentalmente.
 
   </Step>
 

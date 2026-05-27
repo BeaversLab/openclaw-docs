@@ -149,20 +149,14 @@ El proxy:
   </Accordion>
 </AccordionGroup>
 
-## Enlaces
-
-- **npm:** [https://www.npmjs.com/package/claude-max-api-proxy](https://www.npmjs.com/package/claude-max-api-proxy)
-- **GitHub:** [https://github.com/atalovesyou/claude-max-api-proxy](https://github.com/atalovesyou/claude-max-api-proxy)
-- **Problemas:** [https://github.com/atalovesyou/claude-max-api-proxy/issues](https://github.com/atalovesyou/claude-max-api-proxy/issues)
-
 ## Notas
 
-- Esta es una **herramienta de la comunidad**, no respaldada oficialmente por Anthropic u OpenClaw
+- Esta es una **herramienta de la comunidad**, no es compatible oficialmente con Anthropic o OpenClaw
 - Requiere una suscripción activa de Claude Max/Pro con la CLI de Claude Code autenticada
 - El proxy se ejecuta localmente y no envía datos a ningún servidor de terceros
 - Las respuestas en streaming son totalmente compatibles
 
-<Note>Para la integración nativa de Anthropic con Claude CLI o claves de API, consulte [Proveedor Anthropic](/es/providers/anthropic). Para suscripciones de OpenAI/Codex, consulte [Proveedor OpenAI](/es/providers/openai).</Note>
+<Note>Para la integración nativa de Anthropic con Claude CLI o claves de API, consulte [proveedor Anthropic](/es/providers/anthropic). Para suscripciones de OpenAI/Codex, consulte [proveedor OpenAI](/es/providers/openai).</Note>
 
 ## Relacionado
 
@@ -173,7 +167,7 @@ El proxy:
   <Card title="Proveedor OpenAI" href="/es/providers/openai" icon="robot">
     Para suscripciones de OpenAI/Codex.
   </Card>
-  <Card title="Selección de modelo" href="/es/concepts/model-providers" icon="layers">
+  <Card title="Selección de modelos" href="/es/concepts/model-providers" icon="layers">
     Resumen de todos los proveedores, referencias de modelos y comportamiento de conmutación por error.
   </Card>
   <Card title="Configuración" href="/es/gateway/configuration" icon="gear">

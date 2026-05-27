@@ -42,7 +42,7 @@ Venice propose deux niveaux de confidentialité — comprendre cela est essentie
 <Steps>
   <Step title="Obtenez votre clé API">
     1. Inscrivez-vous sur [venice.ai](https://venice.ai)
-    2. Allez dans **Settings > API Keys > Create new key**
+    2. Allez dans **Paramètres > Clés API > Créer une nouvelle clé**
     3. Copiez votre clé API (format : `vapi_xxxxxxxxxxxx`)
   </Step>
   <Step title="Configurer OpenClaw">
@@ -164,24 +164,21 @@ de réflexion du fournisseur DeepSeek natif.
     | `minimax-m25`                          | MiniMax M2.5                       | 198k     | Raisonnement                 |
   </Accordion>
 
-  <Accordion title="Modèles anonymisés (15) — via proxy Venice">
-    | ID du modèle                        | Nom                           | Contexte | Fonctionnalités                  |
-    | ------------------------------- | ------------------------------ | ------- | ------------------------- |
-    | `claude-opus-4-6`               | Claude Opus 4.6 (via Venice)   | 1M      | Raisonnement, vision         |
-    | `claude-opus-4-5`               | Claude Opus 4.5 (via Venice)   | 198k    | Raisonnement, vision         |
-    | `claude-sonnet-4-6`             | Claude Sonnet 4.6 (via Venice) | 1M      | Raisonnement, vision         |
-    | `claude-sonnet-4-5`             | Claude Sonnet 4.5 (via Venice) | 198k    | Raisonnement, vision         |
-    | `openai-gpt-54`                 | GPT-5.4 (via Venice)           | 1M      | Raisonnement, vision         |
-    | `openai-gpt-53-codex`           | GPT-5.3 Codex (via Venice)     | 400k    | Raisonnement, vision, codage |
-    | `openai-gpt-52`                 | GPT-5.2 (via Venice)           | 256k    | Raisonnement                 |
-    | `openai-gpt-52-codex`           | GPT-5.2 Codex (via Venice)     | 256k    | Raisonnement, vision, codage |
-    | `openai-gpt-4o-2024-11-20`      | GPT-4o (via Venice)            | 128k    | Vision                    |
-    | `openai-gpt-4o-mini-2024-07-18` | GPT-4o Mini (via Venice)       | 128k    | Vision                    |
-    | `gemini-3-1-pro-preview`        | Gemini 3.1 Pro (via Venice)    | 1M      | Raisonnement, vision         |
-    | `gemini-3-pro-preview`          | Gemini 3 Pro (via Venice)      | 198k    | Raisonnement, vision         |
-    | `gemini-3-flash-preview`        | Gemini 3 Flash (via Venice)    | 256k    | Raisonnement, vision         |
-    | `grok-41-fast`                  | Grok 4.1 Fast (via Venice)     | 1M      | Raisonnement, vision         |
-    | `grok-code-fast-1`              | Grok Code Fast 1 (via Venice)  | 256k    | Raisonnement, codage         |
+  <Accordion title="VeniceModèles anonymisés (12) — via proxy Venice">
+    | ID du modèle                     | Nom                            | Contexte | Fonctionnalités             |
+    | ------------------------------- | ------------------------------ | -------- | --------------------------- |
+    | `claude-opus-4-6`Venice               | Claude Opus 4.6 (via Venice)   | 1M       | Raisonnement, vision        |
+    | `claude-sonnet-4-6`Venice             | Claude Sonnet 4.6 (via Venice) | 1M       | Raisonnement, vision        |
+    | `openai-gpt-54`Venice                 | GPT-5.4 (via Venice)           | 1M       | Raisonnement, vision        |
+    | `openai-gpt-53-codex`Venice           | GPT-5.3 Codex (via Venice)     | 400k     | Raisonnement, vision, code  |
+    | `openai-gpt-52`Venice                 | GPT-5.2 (via Venice)           | 256k     | Raisonnement                |
+    | `openai-gpt-52-codex`Venice           | GPT-5.2 Codex (via Venice)     | 256k     | Raisonnement, vision, code  |
+    | `openai-gpt-4o-2024-11-20`Venice      | GPT-4o (via Venice)            | 128k     | Vision                      |
+    | `openai-gpt-4o-mini-2024-07-18`Venice | GPT-4o Mini (via Venice)       | 128k     | Vision                      |
+    | `gemini-3-1-pro-preview`Venice        | Gemini 3.1 Pro (via Venice)    | 1M       | Raisonnement, vision        |
+    | `gemini-3-pro-preview`Venice          | Gemini 3 Pro (via Venice)      | 198k     | Raisonnement, vision        |
+    | `gemini-3-flash-preview`Venice        | Gemini 3 Flash (via Venice)    | 256k     | Raisonnement, vision        |
+    | `grok-41-fast`Venice                  | Grok 4.1 Fast (via Venice)     | 1M       | Raisonnement, vision        |
   </Accordion>
 </AccordionGroup>
 
@@ -189,16 +186,16 @@ de réflexion du fournisseur DeepSeek natif.
 
 OpenClaw est fourni avec un catalogue de modèles initial Venice basé sur un manifeste pour le listing en lecture seule. L'actualisation au moment de l'exécution peut toujours découvrir des modèles à partir de Venice API, et revient au catalogue du manifeste si API est inaccessible.
 
-Le point de terminaison `/models` est public (aucune authentification requise pour le listing), mais l'inférence nécessite une clé API valide.
+Le point de terminaison `/models` est public (aucune authentification requise pour la liste), mais l'inférence nécessite une clé API valide.
 
 ## Streaming et support des outils
 
-| Fonctionnalité         | Support                                                          |
-| ---------------------- | ---------------------------------------------------------------- |
-| **Streaming**          | Tous les modèles                                                 |
-| **Appel de fonctions** | La plupart des modèles (voir `supportsFunctionCalling` dans API) |
-| **Vision/Images**      | Modèles marqués avec la fonctionnalité "Vision"                  |
-| **Mode JSON**          | Pris en charge via `response_format`                             |
+| Fonctionnalité         | Support                                                                |
+| ---------------------- | ---------------------------------------------------------------------- |
+| **Streaming**          | Tous les modèles                                                       |
+| **Appel de fonctions** | La plupart des modèles (vérifiez `supportsFunctionCalling` dans l'API) |
+| **Vision/Images**      | Modèles marqués avec la fonctionnalité "Vision"                        |
+| **Mode JSON**          | Pris en charge via `response_format`                                   |
 
 ## Tarification
 
@@ -238,7 +235,7 @@ openclaw agent --model venice/qwen3-coder-480b-a35b-instruct --message "Refactor
 ## Dépannage
 
 <AccordionGroup>
-  <Accordion title="APIClé API non reconnue">
+  <Accordion title="Clé API non reconnue">
     ```bash
     echo $VENICE_API_KEY
     openclaw models list | grep venice
@@ -248,12 +245,10 @@ openclaw agent --model venice/qwen3-coder-480b-a35b-instruct --message "Refactor
 
   </Accordion>
 
-<Accordion title="Modèle non disponible" Venice>
-  Le catalogue de modèles Venice est mis à jour dynamiquement. Exécutez `openclaw models list` pour voir les modèles actuellement disponibles. Certains modèles peuvent être temporairement hors ligne.
-</Accordion>
+<Accordion title="Modèle non disponible">Le catalogue de modèles Venice est mis à jour dynamiquement. Exécutez `openclaw models list` pour voir les modèles actuellement disponibles. Certains modèles peuvent être temporairement hors ligne.</Accordion>
 
-  <Accordion title="Problèmes de connexion"VeniceAPI>
-    L'API Venice se trouve à `https://api.venice.ai/api/v1`. Assurez-vous que votre réseau autorise les connexions HTTPS.
+  <Accordion title="Problèmes de connexion">
+    L'Venice API se trouve à `https://api.venice.ai/api/v1`. Assurez-vous que votre réseau autorise les connexions HTTPS.
   </Accordion>
 </AccordionGroup>
 

@@ -12,7 +12,7 @@ title: "記錄"
 
 相關主題：
 
-- 日誌概覽：[日誌記錄](/zh-Hant/logging)
+- 日誌概述：[日誌記錄](/zh-Hant/logging)
 - Gateway CLI：[gateway](/zh-Hant/cli/gateway)
 
 ## 選項
@@ -57,7 +57,8 @@ openclaw logs --url ws://127.0.0.1:18789 --token "$OPENCLAW_GATEWAY_TOKEN"
 
 - 使用 `--local-time` 以您的當地時區顯示時間戳記。
 - 如果隱式本地回環 Gateway 要求配對、在連接期間關閉，或者在 `logs.tail` 回應之前超時，`openclaw logs` 將自動回退到已配置的 Gateway 檔案日誌。明確的 `--url` 目標不會使用此回退機制。
-- 使用 `--follow` 時，暫時性的 gateway 中斷連線（WebSocket 關閉、逾時、連線中斷）會觸發自動重新連線，並伴隨指數退避（最多重試 8 次，每次嘗試間隔上限為 30 秒）。每次重試時會向 stderr 列印警告，一旦輪詢成功，便會列印 `[logs] gateway reconnected` 通知。在 `--json` 模式下，重試警告和重新連線過渡都會以 `{"type":"notice"}` 記錄的形式發送到 stderr。無法修復的錯誤（驗證失敗、配置錯誤）仍會立即結束程式。
+- 在隱式本地 Gateway RPC 失敗後，`openclaw logs --follow` 不會跟隨配置的檔案後援路徑。在 Linux 上，如果可用，它會依 PID 使用作用中的使用者系統 systemd Gateway 日誌，並列印出選取的日誌來源；否則它會持續重試即時 Gateway，而不是追蹤可能過時的並存檔案。
+- 使用 `--follow` 時，暫時性的 gateway 中斷（WebSocket 關閉、逾時、連線中斷）會觸發自動重新連線，並採用指數退避機制（最多重試 8 次，每次嘗試間隔上限為 30 秒）。每次重試時都會向 stderr 列印警告，並且當輪詢成功時會列印一次 `[logs] gateway reconnected` 通知。在 `--json` 模式下，重試警告和重新連線轉換都會以 `{"type":"notice"}` 記錄的形式發出到 stderr。無法復原的錯誤（驗證失敗、設定錯誤）仍會立即結束程式。
 
 ## 相關
 

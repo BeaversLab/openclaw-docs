@@ -16,7 +16,7 @@ title: "TlonTlon 插件"
 
 ## 表面
 
-渠道：tlon；合约：tools；技能
+channels: tlon; skills
 
 ## 相关文档
 

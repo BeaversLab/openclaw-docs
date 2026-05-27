@@ -41,7 +41,9 @@ La dirección en el mismo turno (Same-turn steering) es el valor predeterminado.
 - `collect`: no dirigir. Combinar los mensajes en cola en un **único** turno de seguimiento después de la ventana de silencio. Si los mensajes tienen como objetivo diferentes canales/hilos, se drenan individualmente para preservar el enrutamiento.
 - `interrupt`: abortar la ejecución activa para esa sesión y luego ejecutar el mensaje más reciente.
 
-Para conocer el tiempo y el comportamiento de las dependencias específicos del tiempo de ejecución, consulte [Cola de dirección](/es/concepts/queue-steering). Para el comando `/steer <message>` explícito, consulte [Dirigir (Steer)](/es/tools/steer).
+Para ver el tiempo específico de la ejecución y el comportamiento de las dependencias, consulte
+[Steering queue](/es/concepts/queue-steering). Para el comando explícito `/steer <message>`,
+consulte [Steer](/es/tools/steer).
 
 Configure globalmente o por canal a través de `messages.queue`:
 
@@ -71,41 +73,58 @@ Las opciones se aplican a la entrega en cola. `debounceMs` también establece la
 
 Valores predeterminados: `debounceMs: 500`, `cap: 20`, `drop: summarize`.
 
+## Steer y streaming
+
+Cuando el streaming del canal es `partial` o `block`, el steering puede parecer varias
+respuestas cortas visibles mientras la ejecución activa alcanza los límites de tiempo de ejecución:
+
+- `partial`: la vista previa puede finalizar antes, y luego comienza una nueva vista previa después
+  de que el steering sea aceptado.
+- `block`: los bloques de tamaño de borrador pueden crear la misma apariencia secuencial.
+- Sin streaming, el steering vuelve a un seguimiento después de la ejecución activa cuando
+  el tiempo de ejecución no puede aceptar steering en el mismo turno.
+
+`steer` no aborta las herramientas en vuelo. Use `/queue interrupt` cuando el mensaje
+más reciente deba abortar la ejecución actual.
+
 ## Precedencia
 
 Para la selección del modo, OpenClaw resuelve:
 
-1. Invalidación `/queue` en línea o almacenada por sesión.
+1. Invalidación en línea o almacenada por sesión `/queue`.
 2. `messages.queue.byChannel.<channel>`.
 3. `messages.queue.mode`.
 4. `steer` predeterminado.
 
-Para las opciones, las opciones `/queue` en línea o almacenadas tienen prioridad sobre la configuración. Luego se aplican el antirrebote específico del canal (`messages.queue.debounceMsByChannel`), los valores predeterminados de antirrebote del complemento, las opciones globales `messages.queue` y los valores predeterminados integrados. `cap` y `drop` son opciones globales/de sesión, no claves de configuración por canal.
+Para las opciones, las opciones en línea o almacenadas `/queue` tienen prioridad sobre la configuración. Luego
+se aplica el antirrebote específico del canal (`messages.queue.debounceMsByChannel`), los valores predeterminados
+de antirrebote del complemento, las opciones globales `messages.queue` y los valores predeterminados integrados.
+`cap` y `drop` son opciones globales/de sesión, no claves de configuración por canal.
 
 ## Invalidaciones por sesión
 
-- Envíe `/queue <steer|followup|collect|interrupt>` como comando independiente para almacenar el modo de cola para la sesión actual.
+- Envíe `/queue <steer|followup|collect|interrupt>` como un comando independiente para almacenar el modo de cola para la sesión actual.
 - Las opciones se pueden combinar: `/queue collect debounce:0.5s cap:25 drop:summarize`
 - `/queue default` o `/queue reset` borra la invalidación de la sesión.
 
 ## Alcance y garantías
 
-- Se aplica a las ejecuciones del agente de respuesta automática en todos los canales entrantes que utilizan la canalización de respuesta de la puerta de enlace (WhatsApp web, Telegram, Slack, Discord, Signal, iMessage, webchat, etc.).
-- El carril predeterminado (`main`) es a nivel de proceso para latidos entrantes + principales; establezca `agents.defaults.maxConcurrent` para permitir múltiples sesiones en paralelo.
-- Pueden existir carriles adicionales (p. ej. `cron`, `cron-nested`, `nested`, `subagent`) para que los trabajos en segundo plano se ejecuten en paralelo sin bloquear las respuestas entrantes. Los turnos de agentes cron aislados mantienen un espacio `cron` mientras que su ejecución interna del agente usa `cron-nested`; ambos usan `cron.maxConcurrentRuns`. Los flujos `nested` compartidos no cron mantienen su propio comportamiento de carril. Estas ejecuciones separadas se rastrean como [tareas en segundo plano](/es/automation/tasks).
-- Los carriles por sesión garantizan que solo una ejecución de agente toque una sesión dada a la vez.
-- Sin dependencias externas ni subprocesos de trabajo en segundo plano; TypeScript puro + promesas.
+- Se aplica a las ejecuciones del agente de autorespuesta en todos los canales entrantes que utilizan la canalización de respuesta de la puerta de enlace (WhatsApp web, Telegram, Slack, Discord, Signal, iMessage, webchat, etc.).
+- El carril predeterminado (`main`) es para todo el proceso para latidos entrantes + principales; establezca `agents.defaults.maxConcurrent` para permitir múltiples sesiones en paralelo.
+- Pueden existir carriles adicionales (p. ej. `cron`, `cron-nested`, `nested`, `subagent`) para que los trabajos en segundo plano se ejecuten en paralelo sin bloquear las respuestas entrantes. Los turnos aislados de agentes cron ocupan un espacio `cron` mientras su ejecución interna del agente utiliza `cron-nested`; ambos usan `cron.maxConcurrentRuns`. Los flujos `nested` compartidos no cron mantienen su propio comportamiento de carril. Estas ejecuciones separadas se rastrean como [tareas en segundo plano](/es/automation/tasks).
+- Los carriles por sesión garantizan que solo una ejecución de agente toque una sesión determinada a la vez.
+- Sin dependencias externas ni hilos de trabajo en segundo plano; TypeScript puro + promesas.
 
 ## Solución de problemas
 
-- Si los comandos parecen atascados, habilite los registros detallados y busque líneas "queued for ...ms" para confirmar que la cola se está drenando.
-- Si necesita la profundidad de la cola, habilite los registros detallados y observe las líneas de temporización de la cola.
-- Las ejecuciones del servidor de aplicaciones de Codex que aceptan un turno y luego dejan de emitir progreso son interrumpidas por el adaptador Codex para que el carril de sesión activo pueda liberarse en lugar de esperar el tiempo de espera de la ejecución externa.
-- Cuando los diagnósticos están habilitados, las sesiones que permanecen en `processing` más allá de `diagnostics.stuckSessionWarnMs` sin respuesta, herramienta, estado, bloqueo o progreso de ACP observado se clasifican por actividad actual. El trabajo activo se registra como `session.long_running`; el trabajo activo sin progreso reciente se registra como `session.stalled`; `session.stuck` está reservado para el mantenimiento de sesiones obsoletas sin trabajo activo, y solo esa ruta puede liberar el carril de sesión afectado para que se drene el trabajo en cola. Los diagnósticos repetidos `session.stuck` se reducen mientras la sesión permanece sin cambios.
+- Si los comandos parecen atascados, habilite los registros detallados y busque las líneas "queued for ...ms" para confirmar que la cola se está drenando.
+- Si necesita la profundidad de la cola, habilite los registros detallados y observe las líneas de tiempo de la cola.
+- Las ejecuciones del servidor de aplicaciones Codex que aceptan un turno y luego dejan de emitir progreso son interrumpidas por el adaptador Codex para que el carril de sesión activo pueda liberarse en lugar de esperar el tiempo de espera de la ejecución externa.
+- Cuando el diagnóstico está habilitado, las sesiones que permanecen en `processing` más allá de `diagnostics.stuckSessionWarnMs` sin progreso observado de respuesta, herramienta, estado, bloque o ACP se clasifican por actividad actual. El trabajo activo se registra como `session.long_running`; el trabajo activo sin progreso reciente se registra como `session.stalled`; `session.stuck` está reservado para la contabilidad de sesiones obsoletas sin trabajo activo, y solo esa ruta puede liberar el carril de sesión afectado para que se drene el trabajo en cola. Los diagnósticos `session.stuck` repetidos se reducen mientras la sesión permanece sin cambios.
 
 ## Relacionado
 
 - [Gestión de sesiones](/es/concepts/session)
-- [Cola de dirección](/es/concepts/queue-steering)
-- [Dirigir](/es/tools/steer)
+- [Cola de dirección (Steering queue)](/es/concepts/queue-steering)
+- [Dirigir (Steer)](/es/tools/steer)
 - [Política de reintentos](/es/concepts/retry)

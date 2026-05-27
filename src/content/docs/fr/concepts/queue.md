@@ -41,7 +41,9 @@ La guidance au sein du même tour est la valeur par défaut. Un prompt qui arriv
 - `collect` : ne pas guider. Fusionner les messages en file d'attente en un tour de suivi **unique** après la fenêtre de silence. Si les messages ciblent différents canaux/fils de discussion, ils sont vidés individuellement pour préserver le routage.
 - `interrupt` : annule l'exécution active pour cette session, puis exécute le message le plus récent.
 
-Pour le comportement de minutage et de dépendance spécifique au runtime, voir [Steering queue](/fr/concepts/queue-steering). Pour la commande explicite `/steer <message>`, voir [Steer](/fr/tools/steer).
+Pour le comportement de minutage et de dépendance spécifique à l'exécution, consultez
+[Steering queue](/fr/concepts/queue-steering). Pour la commande explicite `/steer <message>`,
+voir [Steer](/fr/tools/steer).
 
 Configurer globalement ou par canal via `messages.queue` :
 
@@ -71,44 +73,58 @@ Les options s'appliquent à la livraison en file d'attente. `debounceMs` défini
 
 Par défaut : `debounceMs: 500`, `cap: 20`, `drop: summarize`.
 
-## Priorité
+## Steer et streaming
+
+Lorsque le streaming de channel est `partial` ou `block`, le steer peut donner l'impression de plusieurs
+réponses visibles courtes pendant que l'exécution active atteint les limites d'exécution :
+
+- `partial` : l'aperçu peut être finalisé tôt, puis un nouvel aperçu commence après
+  que le steer a été accepté.
+- `block` : les blocs de taille de brouillon peuvent créer la même apparence séquentielle.
+- Sans streaming, le steer revient à une suite après l'exécution active lorsque
+  le runtime ne peut pas accepter le steer de même tour.
+
+`steer` n'interrompt pas les outils en cours de vol. Utilisez `/queue interrupt` lorsque le plus
+récent message doit interrompre l'exécution en cours.
+
+## Précédence
 
 Pour la sélection du mode, OpenClaw résout :
 
-1. La priorité au `/queue` en ligne ou stocké par session.
+1. Remplacement en ligne ou stocké par session `/queue`.
 2. `messages.queue.byChannel.<channel>`.
 3. `messages.queue.mode`.
 4. `steer` par défaut.
 
-Pour les options, les options `/queue` en ligne ou stockées priment sur la configuration. Ensuite,
-le debounce spécifique au canal (`messages.queue.debounceMsByChannel`), les valeurs par défaut de
-debounce des plug-ins, les options globales `messages.queue` et les valeurs par défaut intégrées sont
-appliquées. `cap` et `drop` sont des options globales/session, pas des clés de configuration par canal.
+Pour les options, les options en ligne ou stockées `/queue` priment sur la configuration. Ensuite,
+le debounce spécifique au channel (`messages.queue.debounceMsByChannel`), les valeurs par défaut
+debounce du plugin, les options globales `messages.queue` et les valeurs par défaut intégrées sont
+appliquées. `cap` et `drop` sont des options globales/session, pas des clés de configuration par channel.
 
 ## Remplacements par session
 
 - Envoyez `/queue <steer|followup|collect|interrupt>` comme une commande autonome pour stocker le mode de file pour la session actuelle.
 - Les options peuvent être combinées : `/queue collect debounce:0.5s cap:25 drop:summarize`
-- `/queue default` ou `/queue reset` efface le remplacement de session.
+- `/queue default` ou `/queue reset` efface le remplacement de la session.
 
 ## Portée et garanties
 
-- S'applique aux exécutions d'agents de réponse automatique sur tous les canaux entrants utilisant le pipeline de réponse de passerelle (WhatsApp web, Telegram, Slack, Discord, Signal, iMessage, webchat, etc.).
-- La voie par défaut (`main`) est à l'échelle du processus pour les battements de cœur entrants + principaux ; définissez `agents.defaults.maxConcurrent` pour permettre plusieurs sessions en parallèle.
-- Des voies supplémentaires peuvent exister (par ex. `cron`, `cron-nested`, `nested`, `subagent`) afin que les tâches d'arrière-plan puissent s'exécuter en parallèle sans bloquer les réponses entrantes. Les tours d'agent cron isolés occupent un emplacement `cron` tandis que leur exécution d'agent interne utilise `cron-nested` ; les deux utilisent `cron.maxConcurrentRuns`. Les flux `nested` non cron partagés conservent leur propre comportement de voie. Ces exécutions détachées sont suivies en tant que [tâches d'arrière-plan](/fr/automation/tasks).
-- Les voies par session garantissent qu'une seule exécution d'agent traite une session donnée à la fois.
-- Aucune dépendance externe ni threads de travail d'arrière-plan ; pur TypeScript + promesses.
+- S'applique aux exécutions d'agent de réponse automatique sur tous les channels entrants qui utilisent le pipeline de réponse de passerelle (WhatsApp web, Telegram, Slack, Discord, Signal, iMessage, webchat, etc.).
+- La voie par défaut (`main`) est définie pour l'ensemble du processus pour les battements de cœur entrants + principaux ; définissez `agents.defaults.maxConcurrent` pour autoriser plusieurs sessions en parallèle.
+- Des voies supplémentaires peuvent exister (par ex. `cron`, `cron-nested`, `nested`, `subagent`) afin que les tâches d'arrière-plan puissent s'exécuter en parallèle sans bloquer les réponses entrantes. Les tours d'agent cron isolés occupent un emplacement `cron` tandis que leur exécution d'agent interne utilise `cron-nested` ; les deux utilisent `cron.maxConcurrentRuns`. Les flux `nested` partagés non-cron conservent leur propre comportement de voie. Ces exécutions détachées sont suivies en tant que [tâches d'arrière-plan](/fr/automation/tasks).
+- Les voies par session garantissent qu'une seule exécution d'agent touche une session donnée à la fois.
+- Aucune dépendance externe ou thread de travail d'arrière-plan ; pur TypeScript + promesses.
 
 ## Dépannage
 
-- Si les commandes semblent bloquées, activez les journaux détaillés et recherchez les lignes « queued for ...ms » pour confirmer que la file d'attente se vide.
-- Si vous avez besoin de la profondeur de la file d'attente, activez les journaux détaillés et surveillez les lignes de synchronisation de la file d'attente.
-- Les exécutions du serveur d'application Codex qui acceptent un tour puis cessent d'émettre des progrès sont interrompues par l'adaptateur Codex afin que la voie de session active puisse être libérée au lieu d'attendre l'expiration du délai d'exécution externe.
-- Lorsque le diagnostic est activé, les sessions qui restent dans `processing` au-delà de `diagnostics.stuckSessionWarnMs` sans réponse, outil, statut, bloc ou progression ACP observé sont classées par activité actuelle. Le travail actif est journalisé comme `session.long_running` ; le travail actif sans progression récente est journalisé comme `session.stalled` ; `session.stuck` est réservé à la gestion des sessions périmées sans travail actif, et seul ce chemin peut libérer la voie de session affectée afin que le travail en file d'attente se vide. Les diagnostics `session.stuck` répétés se désengagent tant que la session reste inchangée.
+- Si les commandes semblent bloquées, activez les journaux détaillés et recherchez les lignes "queued for ...ms" pour confirmer que la file se vide.
+- Si vous avez besoin de la profondeur de la file, activez les journaux détaillés et surveillez les lignes de timing de la file.
+- Les exécutions du serveur d'application Codex qui acceptent un tour puis cessent d'émettre des progrès sont interrompues par l'adaptateur Codex afin que la voie de session active puisse être libérée au lieu d'attendre le délai d'expiration de l'exécution externe.
+- Lorsque les diagnostics sont activés, les sessions qui restent dans `processing` au-delà de `diagnostics.stuckSessionWarnMs` sans réponse, tool, statut, bloc ou progrès ACP observé sont classées par activité actuelle. Le travail actif est journalisé comme `session.long_running` ; le travail actif sans progrès récent est journalisé comme `session.stalled` ; `session.stuck` est réservé pour la maintenance de session obsolète sans travail actif, et seul ce chemin peut libérer la voie de session affectée pour que le travail en file se vide. Les diagnostics `session.stuck` répétés se désengagent tant que la session reste inchangée.
 
 ## Connexes
 
 - [Gestion de session](/fr/concepts/session)
-- [File d'attente de pilotage](/fr/concepts/queue-steering)
-- [Piloter (Steer)](/fr/tools/steer)
+- [File de steer](/fr/concepts/queue-steering)
+- [Steer](/fr/tools/steer)
 - [Politique de réessai](/fr/concepts/retry)

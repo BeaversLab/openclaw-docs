@@ -40,14 +40,13 @@ OpenClaw puede usar muchos proveedores de LLM. Elija un proveedor, autentíquese
 - [fal](/es/providers/fal)
 - [Fireworks](/es/providers/fireworks)
 - [GitHub Copilot](/es/providers/github-copilot)
-- [Modelos GLM](/es/providers/glm)
 - [Google (Gemini)](/es/providers/google)
 - [Gradium](/es/providers/gradium)
 - [Groq (inferencia LPU)](/es/providers/groq)
 - [Hugging Face (Inferencia)](/es/providers/huggingface)
 - [inferrs (modelos locales)](/es/providers/inferrs)
 - [Kilocode](/es/providers/kilocode)
-- [LiteLLM (pasarela unificada)](/es/providers/litellm)
+- [LiteLLM (puerta de enlace unificada)](/es/providers/litellm)
 - [LM Studio (modelos locales)](/es/providers/lmstudio)
 - [MiniMax](/es/providers/minimax)
 - [Mistral](/es/providers/mistral)
@@ -68,21 +67,21 @@ OpenClaw puede usar muchos proveedores de LLM. Elija un proveedor, autentíquese
 - [Synthetic](/es/providers/synthetic)
 - [Tencent Cloud (TokenHub)](/es/providers/tencent)
 - [Together AI](/es/providers/together)
-- [Venice (Venice AI, privacy-focused)](/es/providers/venice)
+- [Venice (Venice AI, centrado en la privacidad)](/es/providers/venice)
 - [Vercel AI Gateway](/es/providers/vercel-ai-gateway)
-- [vLLM (local models)](/es/providers/vllm)
+- [vLLM (modelos locales)](/es/providers/vllm)
 - [Volcengine (Doubao)](/es/providers/volcengine)
 - [Vydra](/es/providers/vydra)
 - [xAI](/es/providers/xai)
 - [Xiaomi](/es/providers/xiaomi)
-- [Z.AI](/es/providers/zai)
+- [Z.AI (GLM)](/es/providers/zai)
 
-## Páginas de descripción general compartidas
+## Páginas de resumen compartidas
 
 - [Variantes adicionales incluidas](/es/providers/models#additional-bundled-provider-variants) - Anthropic Vertex, Copilot Proxy y Gemini CLI OAuth
-- [Generación de imágenes](/es/tools/image-generation) - Herramienta compartida `image_generate`, selección de proveedor y conmutación por error
-- [Generación de música](/es/tools/music-generation) - Herramienta compartida `music_generate`, selección de proveedor y conmutación por error
-- [Generación de video](/es/tools/video-generation) - Herramienta `video_generate` compartida, selección de proveedor y conmutación por error
+- [Generación de imágenes](/es/tools/image-generation) - Herramienta `image_generate` compartida, selección de proveedor y conmutación por error
+- [Generación de música](/es/tools/music-generation) - Herramienta `music_generate` compartida, selección de proveedor y conmutación por error
+- [Generación de vídeo](/es/tools/video-generation) - Herramienta `video_generate` compartida, selección de proveedor y conmutación por error
 
 ## Proveedores de transcripción
 
@@ -95,7 +94,7 @@ OpenClaw puede usar muchos proveedores de LLM. Elija un proveedor, autentíquese
 
 ## Herramientas comunitarias
 
-- [Claude Max API Proxy](/es/providers/claude-max-api-proxy) - Proxy comunitario para las credenciales de suscripción de Claude (verifique la política/términos de Anthropic antes de usar)
+- [Claude Max API Proxy](/es/providers/claude-max-api-proxy) - Proxy comunitario para credenciales de suscripción de Claude (verifique la política/términos de Anthropic antes de usar)
 
 Para el catálogo completo de proveedores (xAI, Groq, Mistral, etc.) y la configuración avanzada,
-consulte [Proveedores de modelos](/es/concepts/model-providers).
+consulte [Model providers](/es/concepts/model-providers).

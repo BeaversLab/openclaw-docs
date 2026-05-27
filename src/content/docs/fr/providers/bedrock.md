@@ -21,12 +21,12 @@ Choisissez votre méthode d'authentification préférée et suivez les étapes d
 
 <Tabs>
   <Tab title="Clés d'accès / env vars">
-    **Idéal pour :** machines de développement, CI, ou hôtes où vous gérez directement les identifiants AWS.
+    **Idéal pour :** machines de développeur, CI ou hôtes où vous gérez directement les identifiants AWS.
 
     <Steps>
       <Step title="Définir les identifiants AWS sur l'hôte de la passerelle">
         ```bash
-        export AWS_ACCESS_KEY_ID="AKIA..."
+        export AWS_ACCESS_KEY_ID="EXAMPLE_AWS_ACCESS_KEY_ID"
         export AWS_SECRET_ACCESS_KEY="..."
         export AWS_REGION="us-east-1"
         # Optional:
@@ -37,7 +37,7 @@ Choisissez votre méthode d'authentification préférée et suivez les étapes d
         ```
       </Step>
       <Step title="Ajouter un provider Bedrock et un modèle à votre configuration">
-        Aucune `apiKey` n'est requise. Configurez le provider avec `auth: "aws-sdk"` :
+        Aucun `apiKey` n'est requis. Configurez le provider avec `auth: "aws-sdk"` :
 
         ```json5
         {
@@ -77,7 +77,7 @@ Choisissez votre méthode d'authentification préférée et suivez les étapes d
     </Steps>
 
     <Tip>
-    Avec l'authentification par marqueur d'environnement (`AWS_ACCESS_KEY_ID`, `AWS_PROFILE` ou `AWS_BEARER_TOKEN_BEDROCK`OpenClaw), OpenClaw active automatiquement le provider Bedrock implicite pour la découverte de modèles sans configuration supplémentaire.
+    Avec l'auth par marqueur d'environnement (`AWS_ACCESS_KEY_ID`, `AWS_PROFILE` ou `AWS_BEARER_TOKEN_BEDROCK`OpenClaw), OpenClaw active automatiquement le provider Bedrock implicite pour la découverte de modèles sans configuration supplémentaire.
     </Tip>
 
   </Tab>

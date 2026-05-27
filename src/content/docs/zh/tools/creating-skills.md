@@ -8,7 +8,7 @@ read_when:
 
 Skills 教会智能体如何以及何时使用工具。每个 Skill 是一个包含 `SKILL.md` 文件的目录，该文件具有 YAML frontmatter 和 markdown 指令。
 
-有关如何加载和优先处理 Skills，请参阅 [Skills](/zh/tools/skills)。
+关于 Skills 如何加载和确定优先级，请参阅 [Skills](/zh/tools/skills)。
 
 ## 创建你的第一个 Skill
 
@@ -93,27 +93,47 @@ YAML frontmatter 支持以下字段：
 | `metadata.openclaw.requires.bins`   | 否   | PATH 上所需的二进制文件                        |
 | `metadata.openclaw.requires.config` | 否   | 所需的配置键                                   |
 
+## 高级功能
+
+当基本 Skill 能够运行后，以下字段有助于使其更可靠且更易于移植：
+
+- **条件激活** — 使用 `requires.bins`、`requires.env` 或
+  `requires.config`，以便仅在所需的依赖项可用时加载 Skill。请参阅 [Skills reference: gating](/zh/tools/skills#gating)。
+- **环境和 API 密钥连接** — 使用 `skills.entries.<name>.env` 和
+  `skills.entries.<name>.apiKey` 为 Skill 轮次注入主机端环境。请参阅 [Skills reference: config wiring](/zh/tools/skills#config-wiring)。
+- **调用控制** — 设置 `user-invocable: false` 以隐藏斜杠命令，
+  或设置 `disable-model-invocation: true` 以使命令式 Skill 不出现在
+  模型提示中。请参阅 [Skills reference: frontmatter](/zh/tools/skills#frontmatter)。
+- **直接命令调度** — 当斜杠命令应直接调用工具而不是
+  通过模型路由时，使用 `command-dispatch: tool` 配合
+  `command-tool`。
+- **可移植路径** — 在 `SKILL.md` 中引用 Skill 目录内的脚本
+  或资产时，请使用 `{baseDir}`。
+- **发布** — 在准备发布 Skill 时，请使用 ClawHub Skill。
+  它记录了当前的 `clawhub publish` 命令形态和必需的
+  元数据。
+
 ## 最佳实践
 
-- **保持简洁** — 指示模型*做*什么，而不是如何成为 AI
-- **安全第一** — 如果您的技能使用了 `exec`，请确保提示词不允许来自不受信任输入的任意命令注入
-- **本地测试** — 在分享之前使用 `openclaw agent --message "..."` 进行测试
-- **使用 ClawHub** — 在 [ClawHub](https://clawhub.ai) 浏览和贡献技能
+- **言简意赅** — 指示模型做*什么*，而不是如何做一个 AI
+- **安全第一** — 如果您的 Skill 使用了 `exec`，请确保提示不允许从不受信任的输入中注入任意命令
+- **本地测试** — 在共享之前，请使用 `openclaw agent --message "..."` 进行测试
+- **使用 ClawHub** — 在 [ClawHub](https://clawhub.ai) 浏览并贡献 Skills
 
 ## Skills 的位置
 
-| 位置                            | 优先级 | 范围                |
-| ------------------------------- | ------ | ------------------- |
-| `\<workspace\>/skills/`         | 最高   | 每个 Agent          |
-| `\<workspace\>/.agents/skills/` | 高     | 每个工作区 Agent    |
-| `~/.agents/skills/`             | 中     | 共享 Agent 配置文件 |
-| `~/.openclaw/skills/`           | 中     | 共享（所有 Agents） |
-| 内置（随 OpenClaw 附带）        | 低     | 全局                |
-| `skills.load.extraDirs`         | 最低   | 自定义共享文件夹    |
+| 位置                            | 优先级 | 作用域             |
+| ------------------------------- | ------ | ------------------ |
+| `\<workspace\>/skills/`         | 最高   | 每个代理           |
+| `\<workspace\>/.agents/skills/` | 高     | 每个工作区代理     |
+| `~/.agents/skills/`             | 中等   | 共享代理配置文件   |
+| `~/.openclaw/skills/`           | 中等   | 共享（所有智能体） |
+| 内置（随 OpenClaw 一起提供）    | 低     | 全局               |
+| `skills.load.extraDirs`         | 最低   | 自定义共享文件夹   |
 
 ## 相关
 
 - [Skills 参考](/zh/tools/skills) — 加载、优先级和门控规则
 - [Skills 配置](/zh/tools/skills-config) — `skills.*` 配置架构
-- [ClawHub](/zh/clawhub) — 公共技能注册表
-- [构建插件](/zh/plugins/building-plugins) — 插件可以包含技能
+- [ClawHub](ClawHub/en/clawhub) — 公共技能注册表
+- [构建插件](/zh/plugins/building-plugins) — 插件可以提供技能

@@ -40,16 +40,13 @@ openclaw update --channel dev
 - **`stable`**（git 安裝）：簽出最新的穩定版 git 標籤。
 - **`beta`**（git 安裝）：優先使用最新的 beta git 標籤，但當 beta 缺失或較舊時，會回退到
   最新的穩定版 git 標籤。
-- **`dev`**：確保有 git checkout（預設 `~/openclaw`，可使用
-  `OPENCLAW_GIT_DIR` 覆寫），切換到 `main`，在 upstream 上進行 rebase，建置，並
-  從該 checkout 安裝全域 CLI。
+- **`dev`**: 確保 git checkout（預設為 `~/openclaw`，或當設定了 `OPENCLAW_HOME` 時為 `$OPENCLAW_HOME/openclaw`；可透過 `OPENCLAW_GIT_DIR` 覆寫），切換至 `main`，在 upstream 上 rebase，建構，並從該 checkout 安裝全域 CLI。
 
 <Tip>如果您想要同時使用 stable 和 dev，請保留兩個副本並將您的閘道指向 stable 的那一個。</Tip>
 
 ## 單次版本或標籤指定
 
-使用 `--tag` 針對單次更新指定特定的 dist-tag、版本或套件規格，
-而**不**會變更您持續儲存的頻道：
+使用 `--tag` 以針對單次更新指定特定的 dist-tag、版本或 package 規格，而**不**改變您持續使用的頻道：
 
 ```bash
 # Install a specific version
@@ -58,27 +55,27 @@ openclaw update --tag 2026.4.1-beta.1
 # Install from the beta dist-tag (one-off, does not persist)
 openclaw update --tag beta
 
-# Install from GitHub main branch (npm tarball)
-openclaw update --tag main
+# Switch to the moving GitHub main checkout
+openclaw update --channel dev
 
 # Install a specific npm package spec
 openclaw update --tag openclaw@2026.4.1-beta.1
+
+# Install from GitHub main once without persisting the channel
+openclaw update --tag main
 ```
 
 備註：
 
-- `--tag` 僅適用於 **套件 (npm) 安裝**。Git 安裝會忽略它。
-- 標籤不會被持續儲存。您的下一次 `openclaw update` 將照常使用您設定的
-  頻道。
-- 降級保護：如果目標版本比您目前的版本舊，
-  OpenClaw 會提示確認（使用 `--yes` 跳過）。
-- `--channel beta` 與 `--tag beta` 不同：頻道流程可以在 beta 缺失或較舊時
-  回退至 stable/latest，而 `--tag beta` 則是針對該次執行
-  直接指定 `beta` dist-tag。
+- `--tag` 僅適用於 **package (npm) 安裝**。Git 安裝會將其忽略。
+- 該 tag 不會被持久化。您的下一次 `openclaw update` 將照常使用您設定的頻道。
+- 對於 package 安裝，OpenClaw 會在分階段的 npm 安裝之前，將 GitHub/git 來源規格預先打包成暫存 tarball。當您希望將變動的 `main` checkout 作為您的持久安裝時，請使用 `--channel dev` 或 `--install-method git --version main`。
+- 降級保護：如果目標版本比您目前的版本舊，OpenClaw 會提示確認（使用 `--yes` 跳過）。
+- `--channel beta` 與 `--tag beta` 不同：當 beta 缺失或較舊時，頻道流程可以回退至 stable/latest，而 `--tag beta` 則在該次執行中針對原始的 `beta` dist-tag。
 
-## 試執行
+## 試運行
 
-預覽 `openclaw update` 將執行的操作而不實際變更：
+預覽 `openclaw update` 將會做什麼而不進行變更：
 
 ```bash
 openclaw update --dry-run
@@ -87,17 +84,15 @@ openclaw update --tag 2026.4.1-beta.1 --dry-run
 openclaw update --dry-run --json
 ```
 
-試執行會顯示有效頻道、目標版本、計劃的操作，
-以及是否需要降級確認。
+試運行會顯示有效頻道、目標版本、計劃操作，以及是否需要降級確認。
 
 ## 外掛程式與頻道
 
-當您使用 `openclaw update` 切換頻道時，OpenClaw 也會同步外掛程式
-來源：
+當您使用 `openclaw update` 切換頻道時，OpenClaw 也會同步外掛程式來源：
 
-- `dev` 偏好來自 git checkout 的隨附外掛程式。
-- `stable` 和 `beta` 會還原以 npm 安裝的外掛程式套件。
-- 以 npm 安裝的外掛程式會在核心更新完成後進行更新。
+- `dev` 偏好來自 git checkout 的捆綁外掛程式。
+- `stable` 和 `beta` 會還原透過 npm 安裝的外掛程式套件。
+- 透過 npm 安裝的外掛程式會在核心更新完成後更新。
 
 ## 檢查目前狀態
 
@@ -105,29 +100,28 @@ openclaw update --dry-run --json
 openclaw update status
 ```
 
-顯示使用中的頻道、安裝類型（git 或套件）、目前版本，
-以及來源（設定、git 標籤、git 分支或預設值）。
+顯示使用中的頻道、安裝類型（git 或 package）、目前版本，以及來源（設定、git tag、git branch 或預設值）。
 
-## 標籤最佳實務
+## 標記最佳實踐
 
-- 為您希望 git checkout 停留的發布版本加上標籤（穩定版用 `vYYYY.M.D`，
-  beta 版用 `vYYYY.M.D-beta.N`）。
-- `vYYYY.M.D.beta.N` 為了相容性也會被識別，但建議優先使用 `-beta.N`。
-- 舊式的 `vYYYY.M.D-<patch>` 標籤仍會被識別為穩定版（非 beta）。
+- 標記您希望 git 檢出對應的版本（穩定版用 `vYYYY.M.D`，
+  測試版用 `vYYYY.M.D-beta.N`）。
+- 為了相容性，也能識別 `vYYYY.M.D.beta.N`，但建議優先使用 `-beta.N`。
+- 舊版 `vYYYY.M.D-<patch>` 標籤仍會被視為穩定版（非測試版）。
 - 保持標籤不可變：切勿移動或重複使用標籤。
-- 對於 npm 安裝，npm dist-tags 依然是主要依據：
-  - `latest` -> stable
-  - `beta` -> 候選組建或 beta 優先的穩定組建
+- npm dist-tags 仍是 npm 安裝的來源真相：
+  - `latest` -> 穩定版
+  - `beta` -> 候選構建或優先測試版的穩定構建
   - `dev` -> main 快照（選用）
 
-## macOS app 可用性
+## macOS 應用程式可用性
 
-Beta 和 dev 版本可能**不**包含 macOS 應用程式版本。這沒關係：
+測試版和開發版構建可能**不**會包含 macOS 應用程式版本。這沒關係：
 
-- git 標籤和 npm dist-tag 仍然可以發佈。
-- 在發布說明或變更日誌中註明「此 beta 版本沒有 macOS 構建版本」。
+- git 標籤和 npm dist-tag 仍然可以發布。
+- 在版本說明或變更記錄中註明「此測試版無 macOS 構建」。
 
 ## 相關
 
 - [更新](/zh-Hant/install/updating)
-- [安裝程式內部機制](/zh-Hant/install/installer)
+- [安裝程式內部運作](/zh-Hant/install/installer)
