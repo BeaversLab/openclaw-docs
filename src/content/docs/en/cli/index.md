@@ -30,12 +30,12 @@ Use the setup commands by intent:
 | Models and inference | [`models`](/en/cli/models) · [`infer`](/en/cli/infer) · `capability` (alias for [`infer`](/en/cli/infer)) · [`memory`](/en/cli/memory) · [`commitments`](/en/cli/commitments) · [`wiki`](/en/cli/wiki)                                                      |
 | Network and nodes    | [`directory`](/en/cli/directory) · [`nodes`](/en/cli/nodes) · [`devices`](/en/cli/devices) · [`node`](/en/cli/node)                                                                                                                                   |
 | Runtime and sandbox  | [`approvals`](/en/cli/approvals) · `exec-policy` (see [`approvals`](/en/cli/approvals)) · [`sandbox`](/en/cli/sandbox) · [`tui`](/en/cli/tui) · `chat`/`terminal` (aliases for [`tui --local`](/en/cli/tui)) · [`browser`](/en/cli/browser)                 |
-| Automation           | [`cron`](/en/cli/cron) · [`tasks`](/en/cli/tasks) · [`hooks`](/en/cli/hooks) · [`webhooks`](/en/cli/webhooks)                                                                                                                                         |
+| Automation           | [`cron`](/en/cli/cron) · [`tasks`](/en/cli/tasks) · [`hooks`](/en/cli/hooks) · [`webhooks`](/en/cli/webhooks) · [`transcripts`](/en/cli/transcripts)                                                                                                     |
 | Discovery and docs   | [`dns`](/en/cli/dns) · [`docs`](/en/cli/docs)                                                                                                                                                                                                   |
 | Pairing and channels | [`pairing`](/en/cli/pairing) · [`qr`](/en/cli/qr) · [`channels`](/en/cli/channels)                                                                                                                                                                 |
 | Security and plugins | [`security`](/en/cli/security) · [`secrets`](/en/cli/secrets) · [`skills`](/en/cli/skills) · [`plugins`](/en/cli/plugins) · [`proxy`](/en/cli/proxy)                                                                                                     |
 | Legacy aliases       | [`daemon`](/en/cli/daemon) (gateway service) · [`clawbot`](/en/cli/clawbot) (namespace)                                                                                                                                                         |
-| Plugins (optional)   | [`meeting-notes`](/en/cli/meeting-notes) · [`path`](/en/cli/path) · [`policy`](/en/cli/policy) · [`voicecall`](/en/cli/voicecall) (if installed)                                                                                                      |
+| Plugins (optional)   | [`path`](/en/cli/path) · [`policy`](/en/cli/policy) · [`voicecall`](/en/cli/voicecall) (if installed)                                                                                                                                              |
 
 ## Global flags
 
@@ -128,7 +128,7 @@ openclaw [--dev] [--profile <name>] <command>
     status
     index
     search
-  meeting-notes
+  transcripts
     list
     show
     path
