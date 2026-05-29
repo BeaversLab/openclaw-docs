@@ -167,16 +167,36 @@ If you want managed startup after install:
 Deploy OpenClaw on a cloud server or VPS:
 
 <CardGroup cols={3}>
-  <Card title="VPS" href="/en/vps">Any Linux VPS</Card>
-  <Card title="Docker VM" href="/en/install/docker-vm-runtime">Shared Docker steps</Card>
-  <Card title="Kubernetes" href="/en/install/kubernetes">K8s</Card>
-  <Card title="Fly.io" href="/en/install/fly">Fly.io</Card>
-  <Card title="Hetzner" href="/en/install/hetzner">Hetzner</Card>
-  <Card title="GCP" href="/en/install/gcp">Google Cloud</Card>
-  <Card title="Azure" href="/en/install/azure">Azure</Card>
-  <Card title="Railway" href="/en/install/railway">Railway</Card>
-  <Card title="Render" href="/en/install/render">Render</Card>
-  <Card title="Northflank" href="/en/install/northflank">Northflank</Card>
+  <Card title="VPS" href="/en/vps">
+    Any Linux VPS.
+  </Card>
+  <Card title="Docker VM" href="/en/install/docker-vm-runtime">
+    Shared Docker steps.
+  </Card>
+  <Card title="Kubernetes" href="/en/install/kubernetes">
+    K8s deployment.
+  </Card>
+  <Card title="Fly.io" href="/en/install/fly">
+    Deploy on Fly.io.
+  </Card>
+  <Card title="Hetzner" href="/en/install/hetzner">
+    Hetzner deployment.
+  </Card>
+  <Card title="GCP" href="/en/install/gcp">
+    Google Cloud deployment.
+  </Card>
+  <Card title="Azure" href="/en/install/azure">
+    Azure deployment.
+  </Card>
+  <Card title="Railway" href="/en/install/railway">
+    Railway deployment.
+  </Card>
+  <Card title="Render" href="/en/install/render">
+    Render deployment.
+  </Card>
+  <Card title="Northflank" href="/en/install/northflank">
+    Northflank deployment.
+  </Card>
 </CardGroup>
 
 ## Update, migrate, or uninstall
