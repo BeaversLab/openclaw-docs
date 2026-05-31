@@ -43,6 +43,7 @@ Notes:
 - Local mode uses the embedded agent runtime directly. Most local tools work, but Gateway-only features are unavailable.
 - Local mode adds `/auth [provider]` inside the TUI command surface.
 - Plugin approval gates still apply in local mode. Tools that require approval prompt for a decision in the terminal; nothing is silently auto-approved because the Gateway is not involved.
+- Session [goals](/en/tools/goal) appear in the footer and can be managed with `/goal`.
 
 ## Examples
 
@@ -87,3 +88,4 @@ rerun `openclaw config validate`. See [TUI](/en/web/tui) and [Config](/en/cli/co
 
 - [CLI reference](/en/cli)
 - [TUI](/en/web/tui)
+- [Goal](/en/tools/goal)
