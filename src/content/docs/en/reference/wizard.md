@@ -47,7 +47,7 @@ For a high-level overview, see [Onboarding (CLI)](/en/start/wizard).
     - More detail: [Vercel AI Gateway](/en/providers/vercel-ai-gateway)
     - **Cloudflare AI Gateway**: prompts for Account ID, Gateway ID, and `CLOUDFLARE_AI_GATEWAY_API_KEY`.
     - More detail: [Cloudflare AI Gateway](/en/providers/cloudflare-ai-gateway)
-    - **MiniMax**: config is auto-written; hosted default is `MiniMax-M2.7`.
+    - **MiniMax**: config is auto-written; hosted default is `MiniMax-M3`.
       API-key setup uses `minimax/...`, and OAuth setup uses
       `minimax-portal/...`.
     - More detail: [MiniMax](/en/providers/minimax)

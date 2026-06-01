@@ -21,15 +21,15 @@ group membership, provider restrictions, and configuration fields, use
 For most agents, start with the built-in tool categories, then adjust policy
 only when the agent should see fewer tools or needs explicit host access.
 
-| If you need to...                           | Use this first                                 | Then read                                                               |
-| ------------------------------------------- | ---------------------------------------------- | ----------------------------------------------------------------------- |
-| Let an agent act with existing capabilities | [Built-in tools](#built-in-tool-categories)    | [Tool categories](#built-in-tool-categories)                            |
-| Control what an agent can call              | [Tool policy](#configure-access-and-approvals) | [Tools and custom providers](/en/gateway/config-tools)                     |
-| Teach an agent a workflow                   | [Skills](#choose-tools-skills-or-plugins)      | [Skills](/en/tools/skills) and [Creating skills](/en/tools/creating-skills)   |
-| Add a new integration or runtime surface    | [Plugins](#extend-capabilities)                | [Plugins](/en/tools/plugin) and [Build plugins](/en/plugins/building-plugins) |
-| Run work later or in the background         | [Automation](/en/automation)                      | [Automation overview](/en/automation)                                      |
-| Coordinate multiple agents or harnesses     | [Sub-agents](/en/tools/subagents)                 | [ACP agents](/en/tools/acp-agents) and [Agent send](/en/tools/agent-send)     |
-| Search a large OpenClaw tool catalog        | [Tool Search](/en/tools/tool-search)              | [Tool Search](/en/tools/tool-search)                                       |
+| If you need to...                           | Use this first                                 | Then read                                                                                                       |
+| ------------------------------------------- | ---------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| Let an agent act with existing capabilities | [Built-in tools](#built-in-tool-categories)    | [Tool categories](#built-in-tool-categories)                                                                    |
+| Control what an agent can call              | [Tool policy](#configure-access-and-approvals) | [Tools and custom providers](/en/gateway/config-tools)                                                             |
+| Teach an agent a workflow                   | [Skills](#choose-tools-skills-or-plugins)      | [Skills](/en/tools/skills), [Creating skills](/en/tools/creating-skills), and [Skill Workshop](/en/tools/skill-workshop) |
+| Add a new integration or runtime surface    | [Plugins](#extend-capabilities)                | [Plugins](/en/tools/plugin) and [Build plugins](/en/plugins/building-plugins)                                         |
+| Run work later or in the background         | [Automation](/en/automation)                      | [Automation overview](/en/automation)                                                                              |
+| Coordinate multiple agents or harnesses     | [Sub-agents](/en/tools/subagents)                 | [ACP agents](/en/tools/acp-agents) and [Agent send](/en/tools/agent-send)                                             |
+| Search a large OpenClaw tool catalog        | [Tool Search](/en/tools/tool-search)              | [Tool Search](/en/tools/tool-search)                                                                               |
 
 ## Choose tools, skills, or plugins
 
@@ -55,7 +55,7 @@ only when the agent should see fewer tools or needs explicit host access.
     Skills can live in a workspace, shared skill directory, managed OpenClaw
     skill root, or plugin package.
 
-    [Skills](/en/tools/skills) | [Creating skills](/en/tools/creating-skills) | [Skills config](/en/tools/skills-config)
+    [Skills](/en/tools/skills) | [Skill Workshop](/en/tools/skill-workshop) | [Creating skills](/en/tools/creating-skills) | [Skills config](/en/tools/skills-config)
 
   </Step>
 
@@ -172,4 +172,5 @@ current turn:
 - [Plugins](/en/tools/plugin) for plugin installation and management
 - [Plugin SDK](/en/plugins/sdk-overview) for plugin author reference
 - [Skills](/en/tools/skills) for skill load order, gating, and config
+- [Skill Workshop](/en/tools/skill-workshop) for generated and reviewed skill creation
 - [Tool Search](/en/tools/tool-search) for compact OpenClaw tool catalog discovery
