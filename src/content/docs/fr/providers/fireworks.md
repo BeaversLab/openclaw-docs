@@ -80,7 +80,7 @@ openclaw onboard --non-interactive \
 
 ## Identifiants de modèles Fireworks personnalisés
 
-OpenClaw accepte n'importe quel modèle Fireworks ou identifiant de routeur au moment de l'exécution. Utilisez l'identifiant exact affiché par Fireworks et préfixez-le avec OpenClaw`fireworks/`OpenAIAPI. La résolution dynamique clone le modèle Fire Pass (entrée texte + image, API compatible OpenAI, coût zéro par défaut) et désactive automatiquement la réflexion lorsque l'identifiant correspond au modèle Kimi.
+OpenClaw accepte n'importe quel Fireworks model ou identifiant de routeur (router id) lors de l'exécution. Utilisez l'identifiant exact affiché par Fireworks et faites-le précéder de OpenClaw`fireworks/`OpenAIAPIGLM. La résolution dynamique clone le modèle Fire Pass (saisie de texte + image, API compatible OpenAI, coût nul par défaut) et désactive automatiquement la réflexion lorsque l'identifiant correspond au modèle Kimi. Les identifiants dynamiques GLM sont marqués comme texte uniquement, sauf si vous configurez une entrée de model personnalisée avec saisie d'image.
 
 ```json5
 {

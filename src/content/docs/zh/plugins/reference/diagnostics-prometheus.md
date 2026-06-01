@@ -1,5 +1,5 @@
 ---
-summary: "OpenClawOpenClaw 诊断 Prometheus 导出器。"
+summary: "OpenClaw用于运行时指标的 OpenClaw 诊断 Prometheus 导出器。"
 read_when:
   - You are installing, configuring, or auditing the diagnostics-prometheus plugin
 title: "诊断 Prometheus 插件"
@@ -7,7 +7,7 @@ title: "诊断 Prometheus 插件"
 
 # 诊断 Prometheus 插件
 
-OpenClaw 诊断 Prometheus 导出器。
+用于运行时指标的 OpenClaw 诊断 Prometheus 导出器。
 
 ## 分发
 

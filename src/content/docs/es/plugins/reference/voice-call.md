@@ -1,5 +1,5 @@
 ---
-summary: "Añade herramientas que los agentes pueden invocar."
+summary: "Plugin de llamadas de voz de OpenClaw para llamadas telefónicas de Twilio, Telnyx y Plivo."
 read_when:
   - You are installing, configuring, or auditing the voice-call plugin
 title: "Complemento de llamada de voz"
@@ -7,7 +7,7 @@ title: "Complemento de llamada de voz"
 
 # Complemento de llamada de voz
 
-Añade herramientas que los agentes pueden invocar.
+Plugin de llamadas de voz de OpenClaw para llamadas telefónicas de Twilio, Telnyx y Plivo.
 
 ## Distribución
 

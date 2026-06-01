@@ -134,7 +134,7 @@ Configurez le proxy pour :
 
 Utilisez cette liste de refus comme point de départ pour tout proxy de transfert, pare-feu ou stratégie de sortie.
 
-La logique de classificateur au niveau de l'application d'OpenClaw réside dans `src/infra/net/ssrf.ts` et `src/shared/net/ip.ts`. Les hooks de parité pertinents sont `BLOCKED_HOSTNAMES`, `BLOCKED_IPV4_SPECIAL_USE_RANGES`, `BLOCKED_IPV6_SPECIAL_USE_RANGES`, `RFC2544_BENCHMARK_PREFIX`, ainsi que la gestion intégrée de la sentinelle IPv4 pour NAT64, 6to4, Teredo, ISATAP et les formes mappées IPv4. Ces fichiers constituent des références utiles lors de la maintenance d'une stratégie de proxy externe, mais OpenClaw n'exporte ni n'applique automatiquement ces règles dans votre proxy.
+La logique de classificateur au niveau de l'application OpenClaw réside dans `src/infra/net/ssrf.ts` et `packages/net-policy/src/ip.ts`. Les hooks de parité pertinents sont `BLOCKED_HOSTNAMES`, `BLOCKED_IPV4_SPECIAL_USE_RANGES`, `BLOCKED_IPV6_SPECIAL_USE_RANGES`, `RFC2544_BENCHMARK_PREFIX`, ainsi que la gestion intégrée des sentinelles IPv4 pour NAT64, 6to4, Teredo, ISATAP et les formes mappées IPv4. Ces fichiers constituent des références utiles lors de la maintenance d'une stratégie de proxy externe, mais OpenClaw n'exporte ni n'applique automatiquement ces règles dans votre proxy.
 
 | Plage ou hôte                                                                        | Pourquoi bloquer                                                |
 | ------------------------------------------------------------------------------------ | --------------------------------------------------------------- |

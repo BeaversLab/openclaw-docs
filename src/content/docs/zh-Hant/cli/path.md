@@ -169,23 +169,24 @@ oc://FILE/SECTION/ITEM/FIELD?session=SCOPE
 
 - Markdown frontmatter 值和 `- key: value` 項目欄位是字串葉節點。
   Markdown 插入會附加區段、frontmatter 鍵或區段項目，並為變更後的檔案呈現規範的 markdown 形狀。
-- JSONC leaf writes coerce the string value to the existing leaf type
-  (`string`, finite `number`, `true`/`false`, or `null`). JSONC object and array
-  insertions parse `<value>` as JSON and use the `jsonc-parser` edit path for
-  ordinary leaf writes, preserving comments and nearby formatting.
-- JSONL leaf writes coerce like JSONC inside a line. Whole-line replacement and
-  append parse `<value>` as JSON. Rendered JSONL preserves the file's dominant
-  LF/CRLF line-ending convention.
-- YAML leaf writes coerce to the existing scalar type (`string`, finite
-  `number`, `true`/`false`, or `null`). YAML insertions use the bundled
-  `yaml` package's document API for map/sequence updates. Malformed YAML
-  documents with parser errors are refused before mutation with `parse-error`.
+- JSONC leaf 寫入會將字串值強制轉換為現有的 leaf 類型
+  (`string`、有限的 `number`、`true`/`false` 或 `null`)。當 JSONC/JSON/JSONL leaf 替換應將 `<value>` 解析為 JSON 且
+  可能會改變形狀時（例如用物件取代字串 SecretRef 簡寫），請使用 `--value-json`。
+  JSONC 物件與陣列的插入會將 `<value>` 解析為 JSON，並使用
+  `jsonc-parser` 編輯路徑進行一般 leaf 寫入，以保留註解與
+  相鄰的格式。
+- JSONL leaf 寫入會在單行內像 JSONC 一樣進行強制轉換。整行替換與
+  附加會將 `<value>` 解析為 JSON。輸出的 JSONL 會保留檔案主要的
+  LF/CRLF換行符慣例。
+- YAML leaf 寫入會強制轉換為現有的純量類型 (`string`、有限的
+  `number`、`true`/`false` 或 `null`)。YAML 插入使用內建的
+  `yaml` 套件之文件 API 進行 map/sequence 更新。格式錯誤且
+  含有解析器錯誤的 YAML 文件會在變更前透過 `parse-error` 拒絕。
 
-Use `--dry-run` before user-visible writes when the exact bytes matter. The
-substrate preserves byte-identical output for parse/emit round-trips, but a
-mutation can canonicalize the edited region or file depending on kind.
-Add `--diff` when you want the preview as a focused before/after patch instead
-of the full rendered file.
+當確切的位元組很重要時，請在使用者可見的寫入前使用 `--dry-run`。
+substrate 會在解析/輸出的往返中保留位元組一致的輸出，但根據類型，
+變更可能會將編輯的區域或檔案標準化。當您希望預覽是
+專注的修改前後差異，而非完整的輸出檔案時，請新增 `--diff`。
 
 ## Examples
 
@@ -217,6 +218,12 @@ More grammar examples:
 ```bash
 # Quote keys containing / or .
 openclaw path resolve 'oc://config.jsonc/agents.defaults.models/"anthropic/claude-opus-4-7"/alias'
+
+# Deep JSON/JSONC paths can use slash segments; they normalize to dotted subsegments
+openclaw path set 'oc://openclaw.json/agents/list/0/tools/exec/security' 'allowlist' --dry-run
+
+# Replace a JSONC leaf with a parsed object
+openclaw path set 'oc://openclaw.json/gateway/auth/token' '{"source":"file","provider":"secrets","id":"/test"}' --value-json --dry-run
 
 # Predicate search over JSONC children
 openclaw path find 'oc://config.jsonc/plugins/[enabled=true]/id'
@@ -286,9 +293,9 @@ $ openclaw path find 'oc://x.md/tools/*' --file frontmatter.md --human
   oc://x.md/tools/send-email   →  node @ L11 [md-item]
 ```
 
-The `[frontmatter]` predicate addresses the YAML frontmatter block; `tools`
-matches the `## Tools` heading via slug, and item leaves keep their slug form
-even when the source uses underscores (`send_email` → `send-email`).
+`[frontmatter]` 述詞用於定址 YAML frontmatter 區塊；`tools`
+透過 slug 比對 `## Tools` 標題，且項目 leaf 會保持其 slug 形式，
+即使來源使用底線也是如此 (`send_email` → `send-email`)。
 
 ### JSONC
 
@@ -316,7 +323,8 @@ $ openclaw path set 'oc://config.jsonc/plugins/slack/enabled' 'true' --file conf
 }
 ```
 
-JSONC 編輯作業透過 `jsonc-parser` 進行，因此註解和空白字元能在 `set` 中保留下來。請先執行 `--dry-run` 以在提交前檢查位元組內容。
+JSONC 編輯會透過 `jsonc-parser` 進行，因此註解與空白字元能在
+`set` 中保留下來。請先執行 `--dry-run` 以在提交前檢查位元組。
 
 ### JSONL
 
@@ -335,7 +343,7 @@ $ openclaw path resolve 'oc://session.jsonl/L2/ts' --file session.jsonl --human
 leaf @ L2: "2" (number)
 ```
 
-每一行都是一筆記錄。當您不知道行號時，請使用謂詞 (`[event=action]`) 進行定址；若知道，則使用標準的 `LN` 片段。
+每一行都是一個記錄。當您不知道行號時，透過述詞 (`[event=action]`) 定址，或者在知道時透過標準 `LN` 區段定址。
 
 ### YAML
 
@@ -363,13 +371,13 @@ steps:
     command: openclaw.invoke
 ```
 
-YAML 使用 `yaml` 套件的 `Document` API 而非自訂的解析器，因此一般的解析/輸出來回轉換會保留註解和編寫形狀，而解析後的路徑則使用與 JSONC 相同的 map-key / sequence-index 模型。同一個適配器也處理 `.yaml`、`.yml` 和 `.lobster` 檔案。
+YAML 使用 `yaml` 套件的 `Document` API，而非手寫的解析器，因此一般的解析/輸出往返過程會保留註解和撰寫形狀，而解析後的路徑則使用與 JSONC 相同的 map-key / sequence-index 模型。同一個配接器處理 `.yaml`、`.yml` 和 `.lobster` 檔案。
 
 ## 子命令參考
 
 ### `resolve <oc-path>`
 
-讀取單一 leaf 或節點。萬用字元會被拒絕 — 請使用 `find`。匹配時以 `0` 結束，乾淨地未匹配時以 `1` 結束，解析錯誤或拒絕的模式則以 `2` 結束。
+讀取單一葉節點或節點。不接受萬用字元 — 請使用 `find`。匹配時傳回 `0`，乾淨的未匹配傳回 `1`，解析錯誤或拒絕的樣式傳回 `2`。
 
 ```bash
 openclaw path resolve 'oc://AGENTS.md/tools/gh/risk' --human
@@ -378,7 +386,7 @@ openclaw path resolve 'oc://gateway.jsonc/server/port' --json
 
 ### `find <pattern>`
 
-列舉萬用字元 / 謂詞 / 聯集模式的每個匹配項。至少有一個匹配時以 `0` 結束，零個時以 `1` 結束。檔案槽位的萬用字元會被拒絕並回傳 `OC_PATH_FILE_WILDCARD_UNSUPPORTED` — 請傳入具體的檔案 (多檔案 globbing 是後續功能)。
+列舉萬用字元 / 述詞 / 聯集樣式的每個匹配項。若至少有一個匹配則傳回 `0`，零個則傳回 `1`。檔案槽位的萬用字元會被拒絕並傳回 `OC_PATH_FILE_WILDCARD_UNSUPPORTED` — 請傳入具體檔案（多檔案全域搜尋是後續功能）。
 
 ```bash
 openclaw path find 'oc://AGENTS.md/tools/**/risk'
@@ -388,7 +396,7 @@ openclaw path find 'oc://config.jsonc/plugins/{github,slack}/enabled'
 
 ### `set <oc-path> <value>`
 
-寫入一個 leaf。搭配 `--dry-run` 以預覽將被寫入的位元組而不觸及檔案。加入 `--diff` 以取得 unified diff 預覽。成功寫入時以 `0` 結束，若基層拒絕 (例如觸及哨兵守衛) 則以 `1` 結束，解析錯誤則以 `2` 結束。
+寫入葉節點。搭配 `--dry-run` 以預覽將被寫入的位元組而不會觸碰檔案。加入 `--diff` 以取得 unified diff 預覽。成功寫入時傳回 `0`，若基板拒絕（例如，觸及哨兵防護）則傳回 `1`，解析錯誤則傳回 `2`。
 
 ```bash
 openclaw path set 'oc://gateway.jsonc/version' '2.0' --dry-run
@@ -397,7 +405,7 @@ openclaw path set 'oc://gateway.jsonc/version' '2.0'
 openclaw path set 'oc://AGENTS.md/Tools/+gh/risk' 'low'
 ```
 
-`+key` 插入標記會在子項不存在時建立具名的子項；`+nnn` 和單純的 `+` 則分別用於索引插入和附加插入。
+`+key` 插入標記會在具名子項不存在時建立它；`+nnn` 和裸露的 `+` 分別用於索引和附加插入。
 
 ### `validate <oc-path>`
 
@@ -411,8 +419,7 @@ valid: oc://AGENTS.md/tools/gh
   item:    gh
 ```
 
-有效時退出 `0`，無效時退出 `1`（附帶結構化的 `code` 和
-`message`），發生引數錯誤時退出 `2`。
+有效時傳回 `0`，無效時傳回 `1`（並帶有結構化的 `code` 和 `message`），引數錯誤則傳回 `2`。
 
 ### `emit <file>`
 
@@ -427,22 +434,19 @@ openclaw path emit ./gateway.jsonc --json
 
 | 代碼 | 含義                                                            |
 | ---- | --------------------------------------------------------------- |
-| `0`  | 成功。（`resolve` / `find`：至少一個符合項。`set`：寫入成功。） |
-| `1`  | 無符合項，或 `set` 被基質拒絕（無系統層級錯誤）。               |
+| `0`  | 成功。（`resolve` / `find`：至少一個相符項。`set`：寫入成功。） |
+| `1`  | 沒有相符項，或 `set` 被基礎層拒絕（無系統層級錯誤）。           |
 | `2`  | 引數或解析錯誤。                                                |
 
 ## 輸出模式
 
-`openclaw path` 具備 TTY 感知能力：在終端機上輸出人類可讀的文字，當 stdout 被管道傳輸或重新導向時則輸出 JSON。`--json` 和 `--human` 會覆寫自動偵測。
+`openclaw path` 感知 TTY：在終端機上輸出人類可讀的文字，當 stdout 被管道傳輸或重新導向時輸出 JSON。`--json` 和 `--human` 會覆寫自動偵測設定。
 
 ## 備註
 
-- `set` 透過基質的發送路徑寫入位元組，該路徑會自動套用編輯哨兵防護。攜帶
-  `__OPENCLAW_REDACTED__`（逐字或作為子字串）的葉節點會在寫入時被拒絕。
-- JSONC 解析和葉節點編輯使用外掛程式本地的 `jsonc-parser`
-  依賴項，因此註解和格式會在一般葉節點寫入時保留，而不會透過手動解析/重新渲染路徑。
-- `path` 不認識 LKG。如果檔案受到 LKG 追蹤，下一次 observe 呼叫將決定是否升級 / 復原。`set --batch` 用於
-  透過 LKG 升級/復原生命週期進行原子性多重設定，預計將與 LKG 復原基質一起推出。
+- `set` 透過基礎層的發送路徑寫入位元組，這會自動套用編輯守衛。包含 `__OPENCLAW_REDACTED__`（逐字或作為子字串）的葉節點會在寫入時被拒絕。
+- JSONC 解析和葉節點編輯使用外掛本地的 `jsonc-parser` 相依性，因此註解和格式會在一般葉節點寫入時被保留，而不會透過手動撰寫的解析器/重新渲染路徑。
+- `path` 不瞭解 LKG。如果檔案正在追蹤 LKG，下一次的觀察呼叫會決定是否要升級 / 復原。計劃與 LKG 復原基礎層一起推出 `set --batch` 以透過 LKG 升級/復原生命週期進行原子多重設定。
 
 ## 相關
 

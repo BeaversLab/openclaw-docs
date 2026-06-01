@@ -1,5 +1,5 @@
 ---
-summary: "Añade compatibilidad con proveedores de búsqueda web."
+summary: "Complemento del proveedor de búsqueda Brave de OpenClaw para la búsqueda web."
 read_when:
   - You are installing, configuring, or auditing the brave plugin
 title: "Complemento Brave"
@@ -7,7 +7,7 @@ title: "Complemento Brave"
 
 # Complemento Brave
 
-Añade compatibilidad con proveedores de búsqueda web.
+Complemento del proveedor de búsqueda Brave de OpenClaw para la búsqueda web.
 
 ## Distribución
 

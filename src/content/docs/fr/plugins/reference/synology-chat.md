@@ -1,5 +1,5 @@
 ---
-summary: "Ajoute la surface de channel Synology Chat pour l'envoi et la réception de messages OpenClaw."
+summary: "Plugin de canal Synology Chat pour les canaux OpenClaw et les messages directs."
 read_when:
   - You are installing, configuring, or auditing the synology-chat plugin
 title: "Plugin Synology Chat"
@@ -7,7 +7,7 @@ title: "Plugin Synology Chat"
 
 # Plugin Synology Chat
 
-Ajoute la surface de channel Synology Chat pour l'envoi et la réception de messages OpenClaw.
+Plugin de canal Synology Chat pour les canaux OpenClaw et les messages directs.
 
 ## Distribution
 

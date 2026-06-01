@@ -1,5 +1,5 @@
 ---
-summary: "AnthropicOpenClaw为 OpenClaw 添加 Anthropic Vertex 模型提供商支持。"
+summary: "OpenClawAnthropicOpenClaw Anthropic Vertex 提供商插件，用于 Google Vertex AI 上的 Claude 模型。"
 read_when:
   - You are installing, configuring, or auditing the anthropic-vertex plugin
 title: "AnthropicAnthropic Vertex 插件"
@@ -7,7 +7,7 @@ title: "AnthropicAnthropic Vertex 插件"
 
 # Anthropic Vertex 插件
 
-为 OpenClaw 添加 Anthropic Vertex 模型提供商支持。
+OpenClaw Anthropic Vertex 提供商插件，用于 Google Vertex AI 上的 Claude 模型。
 
 ## 分发
 

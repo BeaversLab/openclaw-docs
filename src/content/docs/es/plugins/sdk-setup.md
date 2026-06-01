@@ -517,7 +517,7 @@ El tipo `ChannelSetupWizard` admite `credentials`, `textInputs`, `dmPolicy`, `al
 openclaw plugins install <package-name>
 ```
 
-<Info>Para instalaciones fuente de npm, `openclaw plugins install` instala el paquete bajo `~/.openclaw/npm` con los scripts de ciclo de vida deshabilitados. Mantenga los árboles de dependencias de los complementos puros JS/TS y evite paquetes que requieran compilaciones `postinstall`.</Info>
+<Info>Para instalaciones desde npm, `openclaw plugins install` instala el paquete en un proyecto por complemento bajo `~/.openclaw/npm/projects` con los scripts de ciclo de vida deshabilitados. Mantenga los árboles de dependencias de los complementos puramente JS/TS y evite paquetes que requieran compilaciones `postinstall`.</Info>
 
 <Note>El inicio de Gateway no instala las dependencias de los complementos. Los flujos de instalación de npm/git/ClawHub poseen la convergencia de dependencias; los complementos locales ya deben tener instaladas sus dependencias.</Note>
 

@@ -34,7 +34,7 @@ title: "OpenClaw"
 
 ## 什麼是 OpenClaw？
 
-OpenClaw 是一個 **自託管的閘道**，可將您喜愛的聊天應用程式和頻道介面——包括內建頻道以及隨附或外部的頻道外掛程式，例如 Discord、Google Chat、iMessage、Matrix、Microsoft Teams、Signal、Slack、Telegram、WhatsApp、Zalo 等等——連接到像 Pi 這樣的 AI 編碼代理。您在自己的機器（或伺服器）上運行單一 Gateway 處理程序，它就會成為您的訊息應用程式與始終可用的 AI 助手之間的橋樑。
+OpenClaw 是一個 **自託管閘道**，可將您最喜歡的聊天應用程式和頻道介面 — 內建頻道以及捆綁或外部頻道外掛程式（例如 Discord、Google Chat、iMessage、Matrix、Microsoft Teams、Signal、Slack、Telegram、WhatsApp、Zalo 等） — 連接到 AI 編碼代理程式。您在自己的機器（或伺服器）上執行單一 Gateway 程序，它就會成為您的訊息應用程式與隨時可用的 AI 助理之間的橋樑。
 
 **適合對象？** 希望擁有個人 AI 助理，並能從任何地方傳送訊息給它的開發者與進階使用者 — 而且無需放棄資料控制權或依賴代管服務。
 
@@ -52,7 +52,7 @@ OpenClaw 是一個 **自託管的閘道**，可將您喜愛的聊天應用程式
 ```mermaid
 flowchart LR
   A["Chat apps + plugins"] --> B["Gateway"]
-  B --> C["Pi agent"]
+  B --> C["OpenClaw agent"]
   B --> D["CLI"]
   B --> E["Web Control UI"]
   B --> F["macOS app"]
@@ -126,7 +126,7 @@ Gateway 是工作階段、路由和通道連線的唯一真實來源。
 
 設定檔位於 `~/.openclaw/openclaw.json`。
 
-- 如果您**不做任何操作**，OpenClaw 將使用捆綁的 Pi 二進位檔案，以 RPC 模式搭配每位發送者的獨立連線階段運作。
+- 如果您 **什麼都不做**，OpenClaw 將使用捆綁的 OpenClaw 代理程式執行時，並透過每位發送者的會話進行運作。
 - 如果您想要鎖定權限，請從 `channels.whatsapp.allowFrom` 開始並（針對群組）設定提及規則。
 
 範例：

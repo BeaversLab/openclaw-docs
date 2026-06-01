@@ -13,11 +13,7 @@ OpenClaw peut accepter des messages écrits par d'autres bots sur des channels q
 Lorsque ce chemin est activé, la protection de boucle par paire empêche deux identités de bot de
 se répondre indéfiniment.
 
-Le garde-fou est appliqué par le noyau central de tour de channel. Chaque channel prenant en charge
-mappe son propre événement entrant en faits génériques : compte ou portée, id de conversation,
-id du bot émetteur, et id du bot récepteur. Le noyau suit ensuite la paire de participants dans les deux
-directions, applique un budget à fenêtre glissante, et supprime la paire pendant une
-période de refroidissement une fois le budget dépassé.
+Le garde est appliqué par le moteur de réponses entrant du noyau. Chaque channel pris en charge mappe son propre événement entrant en faits génériques : compte ou portée, identifiant de conversation, identifiant du bot émetteur et identifiant du bot récepteur. Le noyau suit ensuite la paire de participants dans les deux sens, applique un budget à fenêtre glissante et supprime la paire pendant une période de refroidissement une fois le budget dépassé.
 
 ## Valeurs par défaut
 

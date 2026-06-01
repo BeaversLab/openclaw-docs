@@ -1,28 +1,28 @@
 ---
-summary: "OpenClawOpenAI将 OpenClaw 与 vLLM（OpenAI 兼容的本地服务器）结合使用"
+summary: "OpenClawOpenAI使用 vLLM（兼容 OpenAI 的本地服务器）运行 OpenClaw"
 read_when:
   - You want to run OpenClaw against a local vLLM server
   - You want OpenAI-compatible /v1 endpoints with your own models
 title: "vLLM"
 ---
 
-vLLM 可以通过 **OpenAI 兼容** 的 HTTP API 来提供开源（以及部分自定义）模型。OpenClaw 使用 `openai-completions` API 连接到 vLLM。
+vLLM 可以通过 **OpenAI 兼容**的 HTTP API 提供开源（及一些自定义）模型。OpenClaw 使用 OpenAIAPIOpenClaw`openai-completions`API API 连接到 vLLM。
 
-OpenClaw 也可以从 vLLM **自动发现** 可用模型，当你选择使用 `VLLM_API_KEY` 时（如果你的服务器不强制认证，任何值都可以）。当你还配置了自定义 vLLM 基础 URL 时，请在 `agents.defaults.models` 中使用 `vllm/*` 以保持发现动态更新。
+当您选择使用 OpenClaw`VLLM_API_KEY`（如果您的服务器不强制验证身份，任何值均可）时，OpenClaw 还可以 **自动发现** vLLM 中的可用模型。当您还配置了自定义 vLLM 基础 URL 时，请在 `agents.defaults.models` 中使用 `vllm/*` 以保持发现机制的动态性。
 
-OpenClaw 将 OpenClaw`vllm`OpenAI 视为支持流式使用计费的本地 OpenAI 兼容提供商，因此状态/上下文 token 计数可以从 `stream_options.include_usage` 响应中更新。
+OpenClaw 将 OpenClaw`vllm`OpenAI 视为支持流式使用计数的本地 OpenAI 兼容提供商，因此状态/上下文令牌计数可以从 `stream_options.include_usage` 响应中更新。
 
-| 属性         | 值                                        |
-| ------------ | ----------------------------------------- |
-| 提供商 ID    | `vllm`                                    |
-| API          | `openai-completions`OpenAI（OpenAI 兼容） |
-| 身份验证     | `VLLM_API_KEY` 环境变量                   |
-| 默认基础 URL | `http://127.0.0.1:8000/v1`                |
+| 属性         | 值                                       |
+| ------------ | ---------------------------------------- |
+| 提供商 ID    | `vllm`                                   |
+| API          | `openai-completions`OpenAI (OpenAI 兼容) |
+| 身份验证     | `VLLM_API_KEY` 环境变量                  |
+| 默认基础 URL | `http://127.0.0.1:8000/v1`               |
 
 ## 入门指南
 
 <Steps>
-  <Step title="OpenAI启动兼容 OpenAI 的 vLLM 服务器">
+  <Step title="OpenAI使用 OpenAI 兼容服务器启动 vLLM">
     您的基础 URL 应公开 `/v1` 端点（例如 `/v1/models`、`/v1/chat/completions`）。vLLM 通常运行在：
 
     ```
@@ -30,8 +30,8 @@ OpenClaw 将 OpenClaw`vllm`OpenAI 视为支持流式使用计费的本地 OpenAI
     ```
 
   </Step>
-  <Step title="设置 API 密钥环境变量">
-    如果您的服务器不强制进行身份验证，则可以使用任意值：
+  <Step title="API设置 API 密钥环境变量">
+    如果您的服务器不强制验证身份，任何值均可：
 
     ```bash
     export VLLM_API_KEY="vllm-local"
@@ -61,7 +61,7 @@ OpenClaw 将 OpenClaw`vllm`OpenAI 视为支持流式使用计费的本地 OpenAI
 
 ## 模型发现（隐式提供商）
 
-当设置了 `VLLM_API_KEY`（或存在身份验证配置文件）并且您**未**定义 `models.providers.vllm` 时，OpenClaw 会查询：
+当设置了 `VLLM_API_KEY`（或存在身份验证配置文件）并且您**没有**定义 `models.providers.vllm` 时，OpenClaw 将查询：
 
 ```
 GET http://127.0.0.1:8000/v1/models
@@ -69,7 +69,7 @@ GET http://127.0.0.1:8000/v1/models
 
 并将返回的 ID 转换为模型条目。
 
-<Note>如果您显式设置了 `models.providers.vllm`OpenClaw，OpenClaw 默认将使用您声明的模型。当您希望 OpenClaw 查询该已配置提供商的 `/models` 端点并包含所有 advertised vLLM 模型时，请将 `"vllm/*": {}` 添加到 `agents.defaults.models`OpenClaw 中。</Note>
+<Note>如果您显式设置了 `models.providers.vllm`，OpenClaw 默认将使用您声明的模型。当您希望 OpenClaw 查询该配置提供商的 `/models` 端点并包含所有公布的 vLLM 模型时，请将 `"vllm/*": {}` 添加到 `agents.defaults.models` 中。</Note>
 
 ## 显式配置（手动模型）
 
@@ -127,21 +127,42 @@ GET http://127.0.0.1:8000/v1/models
     vLLM 被视为代理风格的 OpenAI 兼容 `/v1` 后端，而非原生
     OpenAI 端点。这意味着：
 
-    | 行为 | 是否应用？ |
+    | Behavior | Applied? |
     |----------|----------|
     | 原生 OpenAI 请求塑形 | 否 |
     | `service_tier` | 未发送 |
     | 响应 `store` | 未发送 |
     | 提示缓存提示 | 未发送 |
     | OpenAI 推理兼容负载塑形 | 未应用 |
-    | 隐藏的 OpenClaw 归属标头 | 不会注入到自定义基础 URL |
+    | 隐藏的 OpenClaw 归属标头 | 未在自定义基础 URL 上注入 |
 
   </Accordion>
 
-  <Accordion title="QwenQwen 思维控制">
-    对于通过 vLLM 提供的 Qwen 模型，当
-    服务器期望 Qwen 聊天模板 kwargs 时，请在
-    模型条目上设置 `params.qwenThinkingFormat: "chat-template"`。OpenClaw 将 `/think off` 映射到：
+  <Accordion title="QwenQwen 思维控制"Qwen>
+    对于通过 vLLM 提供的 Qwen 模型，当服务器期望 Qwen 聊天模板 kwargs 时，请在配置的提供商模型行上设置
+    `compat.thinkingFormat: "qwen-chat-template"`Qwen。以这种方式配置的模型会暴露一个二进制 `/think` 配置文件（`off`，`on`QwenOpenAI），因为
+    Qwen 模板思维是一个开/关请求标志，而不是 OpenAI 风格的努力阶梯。
+
+    ```json5
+    {
+      models: {
+        providers: {
+          vllm: {
+            models: [
+              {
+                id: "Qwen/Qwen3-8B",
+                name: "Qwen3 8B",
+                reasoning: true,
+                compat: { thinkingFormat: "qwen-chat-template" },
+              },
+            ],
+          },
+        },
+      },
+    }
+    ```OpenClaw
+
+    OpenClaw 将 `/think off` 映射为：
 
     ```json
     {
@@ -152,17 +173,15 @@ GET http://127.0.0.1:8000/v1/models
     }
     ```
 
-    非 `off` 思维级别会发送 `enable_thinking: true`。如果您的端点
-    改为期望 DashScope 风格的顶级标志，请使用
-    `params.qwenThinkingFormat: "top-level"` 在
-    请求根级别发送 `enable_thinking`。也接受蛇形命名法（snake-case）的 `params.qwen_thinking_format`。
+    非 `off` 思维级别发送 `enable_thinking: true`。如果您的端点
+    期望 DashScope 风格的顶级标志，请改用
+    `compat.thinkingFormat: "qwen"` 在请求根目录发送 `enable_thinking`。
 
   </Accordion>
 
-  <Accordion title="Nemotron 3 思维控制">
-    vLLM/Nemotron 3 可以使用 chat-template kwargs 来控制推理结果是
-    作为隐藏推理返回还是作为可见的答案文本返回。当 OpenClaw 会话
-    在关闭思考功能的情况下使用 `vllm/nemotron-3-*` 时，内置的 vLLM 插件会发送：
+  <Accordion title="Nemotron 3 思维控制"OpenClaw>
+    vLLM/Nemotron 3 可以使用聊天模板 kwargs 来控制推理是作为隐藏推理返回还是作为可见的答案文本返回。当 OpenClaw 会话
+    在思维关闭的情况下使用 `vllm/nemotron-3-*` 时，捆绑的 vLLM 插件会发送：
 
     ```json
     {
@@ -174,8 +193,7 @@ GET http://127.0.0.1:8000/v1/models
     ```
 
     要自定义这些值，请在模型参数下设置 `chat_template_kwargs`。
-    如果您还设置了 `params.extra_body.chat_template_kwargs`，该值将具有
-    最终优先权，因为 `extra_body` 是最后一个请求体覆盖项。
+    如果您还设置了 `params.extra_body.chat_template_kwargs`，该值将具有最终优先权，因为 `extra_body` 是最后一个请求正文覆盖。
 
     ```json5
     {
@@ -199,7 +217,9 @@ GET http://127.0.0.1:8000/v1/models
   </Accordion>
 
   <Accordion title="QwenQwen 工具调用显示为文本">
-    首先请确保启动 vLLM 时，为该模型配置了正确的工具调用解析器和聊天模板。例如，vLLM 文档中为 Qwen2.5 模型列出了 `hermes`，为 Qwen3-Coder 模型列出了 `qwen3_xml`。
+    首先请确保启动 vLLM 时使用了适合该模型工具调用解析器和聊天模板。
+    例如，vLLM 文档中针对 Qwen2.5 模型记录了 `hermes`，针对
+    Qwen3-Coder 模型记录了 `qwen3_xml`。
 
     症状：
 
@@ -207,7 +227,8 @@ GET http://127.0.0.1:8000/v1/models
     - 助手打印原始 JSON/XML，例如 `{"name":"read","arguments":...}`
     - 当 OpenClaw 发送 `tool_choice: "auto"`OpenClaw 时，vLLM 返回空的 `tool_calls`Qwen 数组
 
-    某些 Qwen/vLLM 组合仅在请求使用 `tool_choice: "required"`OpenAI 时才返回结构化工具调用。对于这些模型条目，请使用 `params.extra_body` 强制设置 OpenAI 兼容的请求字段：
+    某些 Qwen/vLLM 组合仅当请求使用 `tool_choice: "required"`OpenAI 时才会返回结构化工具调用。
+    对于这些模型条目，请使用 `params.extra_body` 强制设置 OpenAI 兼容的请求字段：
 
     ```json5
     {
@@ -239,7 +260,9 @@ GET http://127.0.0.1:8000/v1/models
     openclaw config set agents.defaults.models '{"vllm/Qwen-Qwen2.5-Coder-32B-Instruct":{"params":{"extra_body":{"tool_choice":"required"}}}}' --strict-json --merge
     ```
 
-    这是一个可选的兼容性变通方案。它使得每次涉及工具的模型轮次都强制要求工具调用，因此请仅将其用于该行为可接受的专用本地模型条目。不要将其作为所有 vLLM 模型的全局默认值，也不要使用盲目地将任意助手文本转换为可执行工具调用的代理。
+    这是一个可选的兼容性变通方案。它会导致每一次带工具的模型轮次都要求必须进行工具调用，
+    因此请仅对接受该行为的专用本地模型条目使用它。不要将其作为所有 vLLM 模型的全局默认值，
+    也不要使用盲目地将任意助手文本转换为可执行工具调用的代理。
 
   </Accordion>
 
@@ -297,50 +320,49 @@ GET http://127.0.0.1:8000/v1/models
     }
     ```
 
-    `timeoutSeconds` 仅适用于 vLLM 模型 HTTP 请求，包括
-    连接设置、响应头、主体流传输和总
-    受保护提取中止。在增加
-    `agents.defaults.timeoutSeconds` 之前，请优先使用此项，后者控制整个代理运行。
+    `timeoutSeconds` 仅适用于 vLLM 模型的 HTTP 请求，包括
+    连接建立、响应头、主体流传输以及整体
+    guarded-fetch 中止。在增加 `agents.defaults.timeoutSeconds` 之前请优先使用此设置，
+    因为 `agents.defaults.timeoutSeconds` 控制的是整个代理的运行。
 
   </Accordion>
 
-  <Accordion title="服务器无法访问">
+  <Accordion title="Server not reachable">
     检查 vLLM 服务器是否正在运行且可访问：
 
     ```bash
     curl http://127.0.0.1:8000/v1/models
     ```
 
-    如果您看到连接错误，请验证主机、端口，以及 vLLM 是否以 OpenAI 兼容服务器模式启动。
+    如果看到连接错误，请验证主机、端口，以及 vLLM 是否以 OpenAI 兼容的服务器模式启动。
     对于显式环回、LAN 或 Tailscale 端点，OpenClaw 信任
-    确切配置的 `models.providers.vllm.baseUrl` 源，用于受保护的模型
-    请求。元数据/链路本地源在没有明确
-    选择加入的情况下仍然被阻止。仅当
-    vLLM 请求必须到达另一个私有源时才设置 `models.providers.vllm.request.allowPrivateNetwork: true`，并将其设置为 `false`
-    以退出确切的源信任。
+    为受保护的模型请求精确配置的 `models.providers.vllm.baseUrl` 源。如果没有显式
+    选择加入，元数据/链路本地源仍将被阻止。仅当
+    vLLM 请求必须到达另一个私有源时，才设置 `models.providers.vllm.request.allowPrivateNetwork: true`，并将其设置为 `false`
+    以退出精确源信任。
 
   </Accordion>
 
-  <Accordion title="请求上的身份验证错误">
-    如果请求因身份验证错误而失败，请设置一个与您的服务器配置匹配的真实 `VLLM_API_KEY`，或在 `models.providers.vllm` 下显式配置提供商。
+  <Accordion title="Auth errors on requests">
+    如果请求因身份验证错误而失败，请设置与服务器配置匹配的真实 `VLLM_API_KEY`，或在 `models.providers.vllm` 下显式配置提供商。
 
     <Tip>
-    如果您的 vLLM 服务器不强制执行身份验证，则 `VLLM_API_KEY` 的任何非空值都作为 OpenClaw 的选择加入信号。
+    如果您的 vLLM 服务器不强制执行身份验证，任何非空的 `VLLM_API_KEY` 值均可作为 OpenClaw 的选择加入信号。
     </Tip>
 
   </Accordion>
 
-<Accordion title="未发现模型">自动发现需要设置 `VLLM_API_KEY`。如果您定义了 `models.providers.vllm`OpenClaw，OpenClaw 将仅使用您声明的模型，除非 `agents.defaults.models` 包含 `"vllm/*": {}`。</Accordion>
+<Accordion title="No models discovered">自动发现需要设置 `VLLM_API_KEY`。如果您已定义 `models.providers.vllm`，除非 `agents.defaults.models` 包含 `"vllm/*": {}`，否则 OpenClaw 仅使用您声明的模型。</Accordion>
 
-  <Accordion title="工具呈现为原始文本"QwenQwen>
-    如果 Qwen 模型输出 JSON/XML 工具语法而不是执行技能，
-    请查看上文高级配置中的 Qwen 指南。通常的修复方法是：
+  <Accordion title="Tools render as raw text">
+    如果 Qwen 模型打印 JSON/XML 工具语法而不是执行技能，
+    请检查上方高级配置中的 Qwen 指南。通常的修复方法是：
 
-    - 使用适用于该模型的正确解析器/模板启动 vLLM
+    - 使用针对该模型的正确解析器/模板启动 vLLM
     - 使用 `openclaw models list --provider vllm` 确认确切的模型 ID
-    - 添加专用的针对每个模型的 `params.extra_body.tool_choice: "required"`
-      仅当 `tool_choice: "auto"` 仍然返回空值或纯文本
-      工具调用时才进行覆盖
+    - 添加专用的按模型 `params.extra_body.tool_choice: "required"`
+      覆盖，仅当 `tool_choice: "auto"` 仍返回空或纯文本
+      工具调用时
 
   </Accordion>
 </AccordionGroup>
@@ -353,11 +375,11 @@ GET http://127.0.0.1:8000/v1/models
   <Card title="模型选择" href="/zh/concepts/model-providers" icon="layers">
     选择提供商、模型引用和故障转移行为。
   </Card>
-  <Card title="OpenAIOpenAI" href="/zh/providers/openai" icon="bolt" OpenAIOpenAI>
-    原生 OpenAI 提供商和 OpenAI 兼容的路由行为。
+  <Card title="OpenAI" href="/zh/providers/openai" icon="bolt">
+    原生 OpenAI 提供商和 OpenAI 兼容路由行为。
   </Card>
-  <Card title="OAuthOAuth 和 auth" href="/zh/gateway/authentication" icon="key">
-    Auth 详细信息和凭据复用规则。
+  <Card title="OAuth 和 auth" href="/zh/gateway/authentication" icon="key">
+    身份验证详细信息和凭据重用规则。
   </Card>
   <Card title="故障排除" href="/zh/help/troubleshooting" icon="wrench">
     常见问题及其解决方法。

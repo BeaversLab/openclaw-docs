@@ -39,7 +39,7 @@ Tous les chemins d'entrée doivent rester à l'intérieur du répertoire du pack
 et les pairs JavaScript construits inférés ne rendent pas un chemin source `extensions` ou
 `setupEntry` sortant valide.
 
-<Tip>**Vous cherchez un tutoriel ?** Voir [Plugins d'outils](/fr/plugins/tool-plugins), [Plugins de canal](/fr/plugins/sdk-channel-plugins), ou [Plugins de fournisseur](/fr/plugins/sdk-provider-plugins) pour des guides étape par étape.</Tip>
+<Tip>**Vous cherchez un guide pas à pas ?** Consultez [Tool Plugins](/fr/plugins/tool-plugins), [Channel Plugins](/fr/plugins/sdk-channel-plugins) ou [Provider Plugins](/fr/plugins/sdk-provider-plugins) pour des guides détaillés.</Tip>
 
 ## `defineToolPlugin`
 
@@ -194,9 +194,9 @@ import { defineSetupPluginEntry } from "openclaw/plugin-sdk/channel-core";
 export default defineSetupPluginEntry(myChannelPlugin);
 ```
 
-OpenClaw charge ceci à la place de l'entrée complète lorsqu'un channel est désactivé,
-non configuré, ou lorsque le chargement différé est activé. Voir
-[Configuration et configuration](/fr/plugins/sdk-setup#setup-entry) pour savoir quand cela est important.
+OpenClaw charge ceci à la place de l'entrée complète lorsqu'un canal est désactivé,
+non configuré, ou lorsque le chargement différé est activé. Consultez
+[Setup and Config](/fr/plugins/sdk-setup#setup-entry) pour savoir quand cela est important.
 
 En pratique, associez `defineSetupPluginEntry(...)` aux familles d'assistants de configuration étroits :
 
@@ -228,11 +228,22 @@ export default defineBundledChannelSetupEntry({
     specifier: "./runtime-api.js",
     exportName: "setMyChannelRuntime",
   },
+  registerSetupRuntime(api) {
+    api.registerHttpRoute({
+      path: "/my-channel/events",
+      auth: "plugin",
+      handler: async (req, res) => {
+        /* setup-safe route */
+      },
+    });
+  },
 });
 ```
 
-Utilisez ce contrat regroupé uniquement lorsque les flux de configuration ont vraiment besoin d'un setter de runtime léger
-avant le chargement de l'entrée complète du canal.
+Utilisez ce contrat groupé uniquement lorsque les flux de configuration ont véritablement besoin d'un defineur d'exécution léger
+ou d'une surface de passerelle sûre pour la configuration avant le chargement de l'entrée complète du canal.
+`registerSetupRuntime` ne s'exécute que pour les chargements `"setup-runtime"` ; limitez-le aux
+routes ou méthodes de configuration uniquement qui doivent exister avant l'activation complète différée.
 
 ## Mode d'inscription
 
@@ -275,16 +286,16 @@ digne de confiance mais légère : aucun client réseau, sous-processus, écoute
 workers en arrière-plan, lectures d'informations d'identification ou autres effets secondaires d'exécution en direct
 au niveau supérieur.
 
-Considérez `"setup-runtime"` comme la fenêtre pendant laquelle les surfaces de démarrage uniquement de configuration doivent
-exister sans réintégrer l'exécution complète du canal groupé. Sont adaptés
-l'enregistrement du canal, les routes HTTP sécurisées pour la configuration, les méthodes de passerelle sécurisées pour la configuration, et
+Traitez `"setup-runtime"` comme la fenêtre pendant laquelle les surfaces de démarrage de configuration uniquement doivent
+exister sans réintroduire l'exécution complète groupée du canal. Les bons candidats sont
+l'enregistrement du canal, les routes HTTP sûres pour la configuration, les méthodes de passerelle sûres pour la configuration, et
 les assistants de configuration délégués. Les services d'arrière-plan lourds, les enregistreurs CLI et
-les amorçages du SDK fournisseur/client appartiennent toujours à `"full"`.
+les initialisations du SDK provider/client appartiennent toujours à `"full"`.
 
 Pour les enregistreurs CLI spécifiquement :
 
-- utilisez `descriptors` lorsque l'enregistreur possède une ou plusieurs commandes racines et que vous
-  voulez que OpenClaw charge à la demande le véritable module CLI lors de la première invocation
+- utilisez `descriptors` lorsque le registraire possède une ou plusieurs commandes racines et que vous
+  voulez que OpenClaw charge en différé le vrai module CLI lors de la première invocation
 - assurez-vous que ces descripteurs couvrent chaque racine de commande de premier niveau exposée par
   l'enregistreur
 - gardez les noms de commande des descripteurs en lettres, chiffres, tiret et trait de soulignement,
@@ -308,8 +319,8 @@ Utilisez `openclaw plugins inspect <id>` pour voir la forme d'un plugin.
 
 ## Connexes
 
-- [Aperçu du SDK](/fr/plugins/sdk-overview) - référence de l'API d'enregistrement et des sous-chemins
+- [SDK Overview](/fr/plugins/sdk-overview) - référence de l'API d'enregistrement et des sous-chemins
 - [Runtime Helpers](/fr/plugins/sdk-runtime) - `api.runtime` et `createPluginRuntimeStore`
-- [Setup and Config](/fr/plugins/sdk-setup) - manifest, point d'entrée de configuration, chargement différé
-- [Channel Plugins](/fr/plugins/sdk-channel-plugins) - construction de l'objet `ChannelPlugin`
-- [Provider Plugins](/fr/plugins/sdk-provider-plugins) - inscription du provider et hooks
+- [Configuration et configuration](/fr/plugins/sdk-setup) - manifest, point d'entrée de configuration, chargement différé
+- [Plugins de canal](/fr/plugins/sdk-channel-plugins) - construction de l'objet `ChannelPlugin`
+- [Plugins de provider](/fr/plugins/sdk-provider-plugins) - inscription de provider et hooks

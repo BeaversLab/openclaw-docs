@@ -100,11 +100,13 @@ métodos:
 | `api.registerWebFetchProvider(...)`              | Proveedor de recuperación/extracción web         |
 | `api.registerWebSearchProvider(...)`             | Búsqueda web                                     |
 
-Los proveedores de incrustación registrados con `api.registerEmbeddingProvider(...)` también
-deben aparecer en `contracts.embeddingProviders` en el manifiesto del complemento. Esta
-es la superficie de incrustación genérica para la generación de vectores reutilizable. Los adaptadores
-solo de memoria todavía usan `api.registerMemoryEmbeddingProvider(...)` y
-`contracts.memoryEmbeddingProviders`.
+Los proveedores de incrustaciones registrados con `api.registerEmbeddingProvider(...)` también
+deben figurar en `contracts.embeddingProviders` en el manifiesto del complemento. Esta
+es la superficie de incrustación genérica para la generación de vectores reutilizable. La búsqueda de
+memoria puede consumir esta superficie de proveedor genérica. La
+interfaz `api.registerMemoryEmbeddingProvider(...)` y
+`contracts.memoryEmbeddingProviders` más antigua es una compatibilidad desaprobada mientras
+los proveedores existentes específicos de la memoria migran.
 
 ### Herramientas y comandos
 
@@ -126,18 +128,19 @@ Las entradas de orientación pueden ser cadenas heredadas, que se aplican a cada
 de mensaje, o entradas estructuradas:
 
 ```ts
-agentPromptGuidance: ["Global command hint.", { text: "Only show this in the main PI prompt.", surfaces: ["pi_main"] }];
+agentPromptGuidance: ["Global command hint.", { text: "Only show this in the main OpenClaw prompt.", surfaces: ["openclaw_main"] }];
 ```
 
-El `surfaces` estructurado puede incluir `pi_main`, `codex_app_server`, `cli_backend`,
-`acp_backend` o `subagent`. Omita `surfaces` para una orientación
-intencional de todas las superficies. No pase una matriz `surfaces` vacía; se rechaza para que
-la pérdida accidental de alcance no se convierta en texto de mensaje global.
+El `surfaces` estructurado puede incluir `openclaw_main`, `codex_app_server`,
+`cli_backend`, `acp_backend` o `subagent`. `pi_main` sigue siendo un alias desaprobado
+para `openclaw_main`. Omita `surfaces` para una orientación intencional de todas las superficies. No
+pase una matriz `surfaces` vacía; se rechaza para que la pérdida accidental de alcance no
+se convierta en texto de prompt global.
 
-Las instrucciones del desarrollador del servidor de aplicaciones de Codex nativo son más estrictas
-que otras superficies de mensaje: solo la orientación explícitamente limitada a `codex_app_server` se promociona a
-carril de mayor prioridad. La orientación de cadenas heredadas y la orientación estructurada sin ámbito
-siguen disponibles para superficies de mensaje que no sean de Codex por compatibilidad.
+Las instrucciones del desarrollador del servidor de aplicaciones de Codex nativo son más estrictas que otras
+superficies de prompt: solo la orientación explícitamente limitada a `codex_app_server` se promueve a
+ese carril de mayor prioridad. La orientación de cadena heredada y la orientación estructurada sin ámbito
+siguen disponibles para las superficies de prompt que no son de Codex por compatibilidad.
 
 ### Infraestructura
 
@@ -148,7 +151,7 @@ siguen disponibles para superficies de mensaje que no sean de Codex por compatib
 | `api.registerGatewayMethod(name, handler)`     | Método RPC de Gateway                                           |
 | `api.registerGatewayDiscoveryService(service)` | Anunciador de descubrimiento de Gateway local                   |
 | `api.registerCli(registrar, opts?)`            | Subcomando de CLI                                               |
-| `api.registerNodeCliFeature(registrar, opts?)` | CLI de funciones de nodo bajo `openclaw nodes`                  |
+| `api.registerNodeCliFeature(registrar, opts?)` | CLI de características de nodo bajo `openclaw nodes`            |
 | `api.registerService(service)`                 | Servicio en segundo plano                                       |
 | `api.registerInteractiveHandler(registration)` | Controlador interactivo                                         |
 | `api.registerAgentToolResultMiddleware(...)`   | Middleware de resultados de herramientas en tiempo de ejecución |
@@ -159,21 +162,21 @@ siguen disponibles para superficies de mensaje que no sean de Codex por compatib
 
 Los enlaces del host son los puntos de unión del SDK para complementos que necesitan participar en el ciclo de vida del host en lugar de solo agregar un proveedor, canal o herramienta. Son contratos genéricos; el modo Plan puede usarlos, pero también los flujos de trabajo de aprobación, las puertas de políticas del espacio de trabajo, los monitores en segundo plano, los asistentes de configuración y los complementos de interfaz de usuario complementarios.
 
-| Método                                                                               | Contrato al que pertenece                                                                                                                                                      |
-| ------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `api.session.state.registerSessionExtension(...)`                                    | Estado de sesión propiedad del complemento y compatible con JSON, proyectado a través de sesiones del Gateway                                                                  |
-| `api.session.workflow.enqueueNextTurnInjection(...)`                                 | Contexto duradero de exactamente una vez inyectado en el siguiente turno del agente para una sesión                                                                            |
-| `api.registerTrustedToolPolicy(...)`                                                 | Política de herramienta previa al complemento, agrupada/confiable, que puede bloquear o reescribir los parámetros de la herramienta                                            |
-| `api.registerToolMetadata(...)`                                                      | Metadatos de visualización del catálogo de herramientas sin cambiar la implementación de la herramienta                                                                        |
-| `api.registerCommand(...)`                                                           | Comandos de complemento con ámbito; los resultados de los comandos pueden establecer `continueAgent: true`; los comandos nativos de Discord admiten `descriptionLocalizations` |
-| `api.session.controls.registerControlUiDescriptor(...)`                              | Descriptores de contribución a la interfaz de usuario de control para sesiones, herramientas, ejecuciones o superficies de configuración                                       |
-| `api.lifecycle.registerRuntimeLifecycle(...)`                                        | Devoluciones de llamada de limpieza para recursos de tiempo de ejecución propiedad del complemento en rutas de restablecimiento/eliminación/recarga                            |
-| `api.agent.events.registerAgentEventSubscription(...)`                               | Suscripciones a eventos saneados para el estado del flujo de trabajo y los monitores                                                                                           |
-| `api.runContext.setRunContext(...)` / `getRunContext(...)` / `clearRunContext(...)`  | Estado de trabajo provisional del complemento por ejecución, borrado en el ciclo de vida de ejecución terminal                                                                 |
-| `api.session.workflow.registerSessionSchedulerJob(...)`                              | Metadatos de limpieza para trabajos del programador propiedad del complemento; no programa trabajo ni crea registros de tareas                                                 |
-| `api.session.workflow.sendSessionAttachment(...)`                                    | Entrega de archivos adjuntos mediada por el host, solo agrupada, a la ruta de sesión de salida directa activa                                                                  |
-| `api.session.workflow.scheduleSessionTurn(...)` / `unscheduleSessionTurnsByTag(...)` | Turnos de sesión programados respaldados por Cron, solo agrupados, más limpieza basada en etiquetas                                                                            |
-| `api.session.controls.registerSessionAction(...)`                                    | Acciones de sesión tipificadas que los clientes pueden enviar a través del Gateway                                                                                             |
+| Método                                                                               | Contrato al que pertenece                                                                                                                                                       |
+| ------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `api.session.state.registerSessionExtension(...)`                                    | Estado de sesión propiedad del complemento y compatible con JSON, proyectado a través de sesiones del Gateway                                                                   |
+| `api.session.workflow.enqueueNextTurnInjection(...)`                                 | Contexto duradero de exactamente una vez inyectado en el siguiente turno del agente para una sesión                                                                             |
+| `api.registerTrustedToolPolicy(...)`                                                 | Política de herramienta previa al complemento, agrupada/confiable, que puede bloquear o reescribir los parámetros de la herramienta                                             |
+| `api.registerToolMetadata(...)`                                                      | Metadatos de visualización del catálogo de herramientas sin cambiar la implementación de la herramienta                                                                         |
+| `api.registerCommand(...)`                                                           | Comandos de complementos con ámbito; los resultados de los comandos pueden establecer `continueAgent: true`; los comandos nativos de Discord admiten `descriptionLocalizations` |
+| `api.session.controls.registerControlUiDescriptor(...)`                              | Descriptores de contribución a la interfaz de usuario de control para sesiones, herramientas, ejecuciones o superficies de configuración                                        |
+| `api.lifecycle.registerRuntimeLifecycle(...)`                                        | Devoluciones de llamada de limpieza para recursos de tiempo de ejecución propiedad del complemento en rutas de restablecimiento/eliminación/recarga                             |
+| `api.agent.events.registerAgentEventSubscription(...)`                               | Suscripciones a eventos saneados para el estado del flujo de trabajo y los monitores                                                                                            |
+| `api.runContext.setRunContext(...)` / `getRunContext(...)` / `clearRunContext(...)`  | Estado de trabajo provisional del complemento por ejecución, borrado en el ciclo de vida de ejecución terminal                                                                  |
+| `api.session.workflow.registerSessionSchedulerJob(...)`                              | Metadatos de limpieza para trabajos del programador propiedad del complemento; no programa trabajo ni crea registros de tareas                                                  |
+| `api.session.workflow.sendSessionAttachment(...)`                                    | Entrega de archivos adjuntos mediada por el host, solo agrupada, a la ruta de sesión de salida directa activa                                                                   |
+| `api.session.workflow.scheduleSessionTurn(...)` / `unscheduleSessionTurnsByTag(...)` | Turnos de sesión programados respaldados por Cron, solo agrupados, más limpieza basada en etiquetas                                                                             |
+| `api.session.controls.registerSessionAction(...)`                                    | Acciones de sesión tipificadas que los clientes pueden enviar a través del Gateway                                                                                              |
 
 Use los espacios de nombres agrupados para el nuevo código del complemento:
 
@@ -190,16 +193,34 @@ Use los espacios de nombres agrupados para el nuevo código del complemento:
 - `api.runContext.setRunContext(...)` / `getRunContext(...)` / `clearRunContext(...)`
 - `api.lifecycle.registerRuntimeLifecycle(...)`
 
-Los métodos planos equivalentes siguen disponibles como alias de compatibilidad en desuso para los complementos existentes. No agregues nuevo código de complemento que llame directamente a `api.registerSessionExtension`, `api.enqueueNextTurnInjection`, `api.registerControlUiDescriptor`, `api.registerRuntimeLifecycle`, `api.registerAgentEventSubscription`, `api.emitAgentEvent`, `api.setRunContext`, `api.getRunContext`, `api.clearRunContext`, `api.registerSessionSchedulerJob`, `api.registerSessionAction`, `api.sendSessionAttachment`, `api.scheduleSessionTurn` o `api.unscheduleSessionTurnsByTag`.
+Los métodos planos equivalentes siguen disponibles como alias de compatibilidad
+obsoletos para los complementos existentes. No agregues nuevo código de complemento
+que llame directamente a `api.registerSessionExtension`, `api.enqueueNextTurnInjection`,
+`api.registerControlUiDescriptor`, `api.registerRuntimeLifecycle`,
+`api.registerAgentEventSubscription`, `api.emitAgentEvent`,
+`api.setRunContext`, `api.getRunContext`, `api.clearRunContext`,
+`api.registerSessionSchedulerJob`, `api.registerSessionAction`,
+`api.sendSessionAttachment`, `api.scheduleSessionTurn` o
+`api.unscheduleSessionTurnsByTag`.
 
-`scheduleSessionTurn(...)` es una conveniencia con ámbito de sesión sobre el programador Cron de Gateway. Cron controla el tiempo y crea el registro de tareas en segundo plano cuando se ejecuta el turno; el SDK del complemento solo restringe la sesión de destino, la nomenclatura propiedad del complemento y la limpieza. Usa `api.runtime.tasks.managedFlows` dentro del turno programado cuando el trabajo en sí necesita un estado duradero de Flujo de tareas de varios pasos.
+`scheduleSessionTurn(...)` es una conveniencia con ámbito de sesión sobre el
+programador Cron de Gateway. Cron controla el tiempo y crea el registro de tareas
+en segundo plano cuando se ejecuta el turno; el Plugin SDK solo restringe la
+sesión de destino, la nomenclatura propiedad del complemento y la limpieza.
+Utiliza `api.runtime.tasks.managedFlows` dentro del turno programado cuando el trabajo
+mismo necesita un estado de flujo de tareas de varios pasos duradero.
 
 Los contratos dividen intencionalmente la autoridad:
 
 - Los complementos externos pueden ser propietarios de extensiones de sesión, descriptores de interfaz de usuario, comandos, metadatos de herramientas, inyecciones de siguiente turno y enlaces normales.
-- Las políticas de herramientas de confianza se ejecutan antes que los enlaces `before_tool_call` ordinarios y están disponibles solo en paquetes porque participan en la política de seguridad del host.
+- Las políticas de herramientas de confianza se ejecutan antes que los ganchos
+  ordinarios `before_tool_call` y solo están disponibles en versiones
+  incluidas (bundled-only) porque participan en la política de seguridad del host.
 - La propiedad reservada de comandos está disponible solo en paquetes. Los complementos externos deben usar sus propios nombres de comandos o alias.
-- `allowPromptInjection=false` deshabilita los enlaces de mutación de avisos, incluyendo `agent_turn_prepare`, `before_prompt_build`, `heartbeat_prompt_contribution`, campos de aviso de `before_agent_start` heredados y `enqueueNextTurnInjection`.
+- `allowPromptInjection=false` deshabilita los hooks de modificación de prompt, incluyendo
+  `agent_turn_prepare`, `before_prompt_build`, `heartbeat_prompt_contribution`,
+  campos de prompt del `before_agent_start` heredado y
+  `enqueueNextTurnInjection`.
 
 Ejemplos de consumidores que no son de Plan:
 
@@ -210,27 +231,29 @@ Ejemplos de consumidores que no son de Plan:
 | Monitor del ciclo de vida en segundo plano           | Limpieza del ciclo de vida de ejecución, suscripción a eventos de agente, propiedad/limpieza del programador de sesiones, contribución de aviso de latido, descriptor de interfaz de usuario |
 | Asistente de configuración o incorporación           | Extensión de sesión, comandos con ámbito, descriptor de interfaz de usuario de control                                                                                                       |
 
-<Note>Los espacios de nombres reservados de administración del núcleo (`config.*`, `exec.approvals.*`, `wizard.*`, `update.*`) siempre se mantienen `operator.admin`, incluso si un complemento intenta asignar un ámbito de método de puerta de enlace más estrecho. Prefiera prefijos específicos del complemento para los métodos propiedad del complemento.</Note>
+<Note>Los espacios de nombres de administrador central reservados (`config.*`, `exec.approvals.*`, `wizard.*`, `update.*`) siempre se mantienen `operator.admin`, incluso si un complemento intenta asignar un ámbito de método de gateway más estrecho. Se prefieren prefijos específicos del complemento para métodos propiedad del complemento.</Note>
 
 <Accordion title="Cuándo usar el middleware de resultados de herramientas">
-  Los complementos empaquetados pueden usar `api.registerAgentToolResultMiddleware(...)` cuando
+  Los complementos agrupados pueden usar `api.registerAgentToolResultMiddleware(...)` cuando
   necesitan reescribir un resultado de herramienta después de la ejecución y antes de que el tiempo de ejecución
-  alimente ese resultado de vuelta al modelo. Esta es la costura neutral de tiempo de ejecución confiable
-  para reductores de salida asincrónicos como tokenjuice.
+  introduzca ese resultado de nuevo en el modelo. Esta es la costura neutral de tiempo de ejecución confiable
+  para reductores de salida asíncronos como tokenjuice.
 
-Los complementos empaquetados deben declarar `contracts.agentToolResultMiddleware` para cada
-tiempo de ejecución objetivo, por ejemplo `["pi", "codex"]`. Los complementos externos
-no pueden registrar este middleware; mantenga los enlaces normales de complementos de OpenClaw para el trabajo
-que no necesita la sincronización de resultados de herramientas previa al modelo. La antigua ruta de registro de fábrica de extensión integrada solo para Pi se ha eliminado.
+Los complementos agrupados deben declarar `contracts.agentToolResultMiddleware` para cada
+tiempo de ejecución objetivo, por ejemplo `["openclaw", "codex"]`. Los complementos externos
+no pueden registrar este middleware; mantenga los hooks normales de complementos de OpenClaw para el trabajo
+que no necesite el tiempo de resultado de herramienta pre-modelo. La antigua ruta de registro de fábrica de extensiones solo para ejecutor integrado
+ha sido eliminada.
 
 </Accordion>
 
 ### Registro de descubrimiento de puerta de enlace
 
-`api.registerGatewayDiscoveryService(...)` permite que un complemento anuncie la
-puerta de enlace activa en un transporte de descubrimiento local como mDNS/Bonjour. OpenClaw llama al
-servicio durante el inicio de la puerta de enlace cuando el descubrimiento local está habilitado, pasa los
-puertos de puerta de enlace actuales y datos de sugerencia TXT no secretos, y llama al controlador `stop` devuelto durante el apagado de la puerta de enlace.
+`api.registerGatewayDiscoveryService(...)` permite que un complemento anuncie el Gateway
+activo en un transporte de descubrimiento local como mDNS/Bonjour. OpenClaw llama al
+servicio durante el inicio del Gateway cuando el descubrimiento local está habilitado, pasa los
+puertos del Gateway actuales y datos de sugerencia TXT no secretos, y llama al controlador `stop`
+devuelto durante el apagado del Gateway.
 
 ```typescript
 api.registerGatewayDiscoveryService({
@@ -252,21 +275,21 @@ poseen la confianza.
 
 ### Metadatos de registro de CLI
 
-`api.registerCli(registrar, opts?)` acepta dos tipos de metadatos de comandos:
+`api.registerCli(registrar, opts?)` acepta dos tipos de metadatos de comando:
 
 - `commands`: nombres de comandos explícitos propiedad del registrador
 - `descriptors`: descriptores de comandos en tiempo de análisis utilizados para la ayuda de CLI,
-  enrutamiento y registro diferido de CLI de complementos
+  enrutamiento y registro perezoso de CLI de complementos
 - `parentPath`: ruta de comando principal opcional para grupos de comandos anidados, como
   `["nodes"]`
 
-Para características de nodo emparejado, prefiere
+Para características de nodos emparejados, prefiera
 `api.registerNodeCliFeature(registrar, opts?)`. Es un pequeño contenedor alrededor de
 `api.registerCli(..., { parentPath: ["nodes"] })` y hace que comandos como
 `openclaw nodes canvas` sean características de nodo propiedad explícita del complemento.
 
-Si deseas que un comando de complemento permanezca con carga diferida en la ruta raíz normal de la CLI,
-proporciona `descriptors` que cubran cada raíz de comando de nivel superior expuesta por ese
+Si desea que un comando de complemento permanezca cargado de forma diferida en la ruta raíz normal de la CLI,
+proporcione `descriptors` que cubra cada raíz de comando de nivel superior expuesta por ese
 registrador.
 
 ```typescript
@@ -308,24 +331,23 @@ api.registerCli(
 );
 ```
 
-Usa `commands` por sí solo solo cuando no necesites registro raíz de CLI con carga diferida.
-Esa ruta de compatidad ansiosa sigue siendo compatible, pero no instala
-marcadores de posición respaldados por descriptores para la carga diferida en tiempo de análisis.
+Use `commands` por sí solo solo cuando no necesite el registro diferido de la CLI raíz.
+Esa ruta de compatificación ansiosa sigue siendo compatible, pero no instala
+marcadores de posición respaldados por descriptores para la carga diferida en el momento del análisis.
 
 ### Registro de backend de CLI
 
 `api.registerCliBackend(...)` permite que un complemento sea propietario de la configuración predeterminada para un
-backend de CLI de IA local como `claude-cli` o `my-cli`.
+backend local de IA de la CLI, como `claude-cli` o `my-cli`.
 
-- El `id` del backend se convierte en el prefijo del proveedor en las referencias de modelo como `my-cli/gpt-5`.
-- El `config` del backend utiliza la misma forma que `agents.defaults.cliBackends.<id>`.
-- La configuración del usuario aún tiene prioridad. OpenClaw fusiona `agents.defaults.cliBackends.<id>` sobre la
+- El `id` del backend se convierte en el prefijo del proveedor en las referencias de modelos como `my-cli/gpt-5`.
+- El `config` del backend usa la misma forma que `agents.defaults.cliBackends.<id>`.
+- La configuración del usuario todavía tiene prioridad. OpenClaw combina `agents.defaults.cliBackends.<id>` sobre la
   predeterminada del complemento antes de ejecutar la CLI.
-- Usa `normalizeConfig` cuando un backend necesite reescrituras de compatibilidad después de la fusión
+- Use `normalizeConfig` cuando un backend necesite reescrituras de compatibilidad después de la combinación
   (por ejemplo, normalizar formas antiguas de indicadores).
-- Usa `resolveExecutionArgs` para reescrituras de argv con ámbito de solicitud que pertenecen a
-  el dialecto de la CLI, como mapear los niveles de pensamiento de OpenClaw a un indicador de esfuerzo
-  nativo.
+- Use `resolveExecutionArgs` para reescrituras de argv con ámbito de solicitud que pertenezcan a
+  al dialecto de la CLI, como mapear los niveles de pensamiento de OpenClaw a un indicador de esfuerzo nativo.
 
 Para una guía de creación de extremo a extremo, consulta
 [Complementos de backend de CLI](/es/plugins/cli-backend-plugins).
@@ -334,34 +356,34 @@ Para una guía de creación de extremo a extremo, consulta
 
 | Método                                     | Lo que registra                                                                                                                                                                    |
 | ------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `api.registerContextEngine(id, factory)`   | Motor de contexto (uno activo a la vez). La devolución de llamada `assemble()` recibe `availableTools` y `citationsMode` para que el motor pueda adaptar las adiciones al mensaje. |
+| `api.registerContextEngine(id, factory)`   | Motor de contexto (uno activo a la vez). La devolución de llamada `assemble()` recibe `availableTools` y `citationsMode` para que el motor pueda adaptar las adiciones del prompt. |
 | `api.registerMemoryCapability(capability)` | Capacidad de memoria unificada                                                                                                                                                     |
 | `api.registerMemoryPromptSection(builder)` | Generador de sección de mensaje de memoria                                                                                                                                         |
 | `api.registerMemoryFlushPlan(resolver)`    | Resolutor de plan de vaciado de memoria                                                                                                                                            |
 | `api.registerMemoryRuntime(runtime)`       | Adaptador de tiempo de ejecución de memoria                                                                                                                                        |
 
-### Adaptadores de incrustación de memoria
+### Adaptadores de incrustación de memoria en desuso
 
 | Método                                         | Lo que registra                                                 |
 | ---------------------------------------------- | --------------------------------------------------------------- |
 | `api.registerMemoryEmbeddingProvider(adapter)` | Adaptador de incrustación de memoria para el complemento activo |
 
-- `registerMemoryCapability` es la API exclusiva de complemento de memoria preferida.
+- `registerMemoryCapability` es la API exclusiva preferida para complementos de memoria.
 - `registerMemoryCapability` también puede exponer `publicArtifacts.listArtifacts(...)`
   para que los complementos complementarios puedan consumir artefactos de memoria exportados a través de
-  `openclaw/plugin-sdk/memory-host-core` en lugar de acceder a un diseño privado
+  `openclaw/plugin-sdk/memory-host-core` en lugar de acceder al diseño privado
   de un complemento de memoria específico.
 - `registerMemoryPromptSection`, `registerMemoryFlushPlan` y
-  `registerMemoryRuntime` son API exclusivas de complemento de memoria compatibles con versiones anteriores.
-- `MemoryFlushPlan.model` puede fijar el turno de vaciado a una referencia `provider/model`
+  `registerMemoryRuntime` son APIs exclusivas de complementos de memoria compatibles con versiones heredadas.
+- `MemoryFlushPlan.model` puede fijar el turno de vaciado en una referencia `provider/model`
   exacta, como `ollama/qwen3:8b`, sin heredar la cadena de reserva
   activa.
-- `registerMemoryEmbeddingProvider` permite que el complemento de memoria activo registre uno
-  o más IDs de adaptador de incrustación (por ejemplo `openai`, `gemini` o un ID
-  personalizado definido por el complemento).
-- La configuración del usuario, como `agents.defaults.memorySearch.provider` y
-  `agents.defaults.memorySearch.fallback`, se resuelve con respecto a esos IDs
-  de adaptador registrados.
+- `registerMemoryEmbeddingProvider` está obsoleto. Los nuevos proveedores de inserción
+  deben usar `api.registerEmbeddingProvider(...)` y
+  `contracts.embeddingProviders`.
+- Los proveedores existentes específicos de memoria continúan funcionando durante el período de migración,
+  pero la inspección de complementos informa esto como una deuda de compatibilidad para
+  los complementos no incluidos.
 
 ### Eventos y ciclo de vida
 

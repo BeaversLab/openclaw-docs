@@ -91,7 +91,7 @@ openclaw sessions cleanup --json
 - `--dry-run`：預覽有多少項目會被修剪/上限限制，而不進行寫入。
   - 在文字模式下，dry-run 會列印每個 session 的動作表 (`Action`, `Key`, `Age`, `Model`, `Flags`)，以便您查看會保留什麼與移除什麼。
 - `--enforce`：即使 `session.maintenance.mode` 為 `warn`，仍執行維護。
-- `--fix-missing`：移除文字紀錄檔案遺失的項目，即使它們通常尚不會因為時間/計數而過期。
+- `--fix-missing`：移除缺少文字記錄檔案或僅有標頭/空白資料的條目，即使它們尚未達到正常的過期/計數淘汰條件。
 - `--fix-dm-scope`：當 `session.dmScope` 為 `main` 時，淘汰先前 `per-peer`、`per-channel-peer` 或 `per-account-channel-peer` 路由留下的過時對方鍵值直接 DM 資料列。請先使用 `--dry-run`；套用清理會從 `sessions.json` 中移除這些資料列，並將其文字記錄保留為已刪除的封存。
 - `--active-key <key>`：保護特定的啟用金鑰免於磁碟預算驅逐。耐久的外部對話指標，例如群組工作階段和執行緒範圍的聊天工作階段，也會依據年齡/計數/磁碟預算維護而保留。
 - `--agent <id>`：對單一設定的代理程式存放區執行清理。

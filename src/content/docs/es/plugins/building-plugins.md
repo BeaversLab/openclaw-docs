@@ -220,15 +220,34 @@ Los usuarios aceptan con `tools.allow`:
 }
 ```
 
-Use herramientas opcionales para efectos secundarios, binarios inusuales o capacidades que no deben exponerse de forma predeterminada. Los nombres de las herramientas no deben entrar en conflicto con las herramientas principales; los conflictos se omiten y se informan en los diagnósticos del complemento. Los registros con formato incorrecto, incluidos los descriptores de herramientas sin `parameters`, se omiten y se informan de la misma manera. Las herramientas registradas son funciones tipificadas que el modelo puede llamar después de pasar las comprobaciones de política y lista de permitidos.
+Las herramientas opcionales controlan si una herramienta está expuesta al modelo. Use
+[solicitudes de permiso de complementos](/es/plugins/plugin-permission-requests) cuando una herramienta
+o hook deba solicitar aprobación después de que el modelo la seleccione y antes de que
+se ejecute la acción.
 
-Las fábricas de herramientas reciben un objeto de contexto proporcionado por el tiempo de ejecución. Use `ctx.activeModel` cuando una herramienta necesite registrar, mostrar o adaptarse al modelo activo para el turno actual. El objeto puede incluir `provider`, `modelId` y `modelRef`. Trátelo como metadatos informativos del tiempo de ejecución, no como un límite de seguridad contra el operador local, el código del complemento instalado o un tiempo de ejecución de OpenClaw modificado. Las herramientas locales sensibles aún deben requerir una aceptación explícita del complemento o del operador y deben fallar de forma cerrada cuando faltan o no son adecuados los metadatos del modelo activo.
+Use herramientas opcionales para efectos secundarios, binarios inusuales o capacidades que
+no deben exponerse de forma predeterminada. Los nombres de las herramientas no deben entrar en conflicto con las herramientas principales;
+los conflictos se omiten y se informan en el diagnóstico del complemento. Los registros
+malformados, incluidos los descriptores de herramientas sin `parameters`, se omiten y
+se informan de la misma manera. Las herramientas registradas son funciones tipificadas que el modelo puede llamar
+después de que se aprueben las verificaciones de políticas y listas de permitidos.
 
-El manifiesto declara la propiedad y el descubrimiento; la ejecución aún llama a la implementación de la herramienta registrada en vivo. Mantenga `toolMetadata.<tool>.optional: true` alineado con `api.registerTool(..., { optional: true })` para que OpenClaw pueda evitar cargar ese tiempo de ejecución del complemento hasta que la herramienta se haya agregado explícitamente a la lista de permitidos.
+Las fábricas de herramientas reciben un objeto de contexto proporcionado por el tiempo de ejecución. Use `ctx.activeModel`
+cuando una herramienta necesite registrar, mostrar o adaptarse al modelo activo para el
+turno actual. El objeto puede incluir `provider`, `modelId` y `modelRef`. Trátelo como
+metadatos de tiempo de ejecución informativos, no como un límite de seguridad contra el
+operador local, el código del complemento instalado o un tiempo de ejecución de OpenClaw modificado. Las herramientas locales
+sensibles aún deben requerir una opción explícita del complemento u operador y fallar cerradas
+cuando falten los metadatos del modelo activo o no sean adecuados.
+
+El manifiesto declara la propiedad y el descubrimiento; la ejecución aún llama a la
+implementación de la herramienta registrada en vivo. Mantenga `toolMetadata.<tool>.optional: true`
+alineado con `api.registerTool(..., { optional: true })` para que OpenClaw pueda evitar
+cargar ese tiempo de ejecución del complemento hasta que la herramienta se agregue explícitamente a la lista de permitidos.
 
 ## Convenciones de importación
 
-Importe desde subrutas enfocadas del SDK:
+Importe desde subrutas centradas del SDK:
 
 ```typescript
 import { definePluginEntry } from "openclaw/plugin-sdk/plugin-entry";
@@ -241,47 +260,55 @@ No importe desde el barril raíz en desuso:
 import { definePluginEntry } from "openclaw/plugin-sdk";
 ```
 
-Dentro de su paquete de complementos, use archivos barril locales como `api.ts` y `runtime-api.ts` para importaciones internas. No importe su propio complemento a través de una ruta del SDK. Los asistentes específicos del proveedor deben permanecer en el paquete del proveedor a menos que la unión sea verdaderamente genérica.
+Dentro de su paquete de complemento, use archivos barril locales como `api.ts` y
+`runtime-api.ts` para importaciones internas. No importe su propio complemento a través de una
+ruta del SDK. Los asistentes específicos del proveedor deben permanecer en el paquete del proveedor a menos que
+la unión sea verdaderamente genérica.
 
-Los métodos RPC de Gateway personalizados son un punto de entrada avanzado. Manténgalos en un prefijo específico del complemento; los espacios de nombres de administración principal como `config.*`, `exec.approvals.*`, `operator.admin.*`, `wizard.*` y `update.*` permanecen reservados y resuelven a `operator.admin`. El puente `openclaw/plugin-sdk/gateway-method-runtime` está reservado para las rutas HTTP de complementos que declaran `contracts.gatewayMethodDispatch: ["authenticated-request"]`.
+Los métodos RPC de Gateway personalizados son un punto de entrada avanzado. Manténgalos en un
+prefijo específico del complemento; los espacios de nombres de administración principal como `config.*`,
+`exec.approvals.*`, `operator.admin.*`, `wizard.*` y `update.*` permanecen reservados
+y se resuelven en `operator.admin`. El
+puente `openclaw/plugin-sdk/gateway-method-runtime` está reservado para las rutas HTTP
+de complementos que declaran `contracts.gatewayMethodDispatch: ["authenticated-request"]`.
 
-Para ver el mapa de importación completo, consulte [Plugin SDK overview](/es/plugins/sdk-overview).
+Para ver el mapa de importación completo, consulte [Descripción general del SDK de complementos](/es/plugins/sdk-overview).
 
 ## Lista de verificación previa al envío
 
-<Check>**package.** tiene los metadatos correctos `openclaw`</Check>
+<Check>**package.** tiene metadatos `openclaw` correctos</Check>
 <Check>El manifiesto **openclaw.plugin.** está presente y es válido</Check>
 <Check>El punto de entrada usa `defineChannelPluginEntry` o `definePluginEntry`</Check>
-<Check>Todas las importaciones usan rutas `plugin-sdk/<subpath>` enfocadas</Check>
-<Check>Las importaciones internas usan módulos locales, no auto-importaciones del SDK</Check>
+<Check>Todas las importaciones usan rutas `plugin-sdk/<subpath>` centradas</Check>
+<Check>Las importaciones internas usan módulos locales, no autoimportaciones del SDK</Check>
 <Check>Las pruebas pasan (`pnpm test -- <bundled-plugin-root>/my-plugin/`)</Check>
-<Check>`pnpm check` pasa (complementos dentro del repositorio)</Check>
+<Check>`pnpm check` pasa (complementos en el repositorio)</Check>
 
-## Probar contra versiones beta
+## Probar con versiones beta
 
-1. Esté atento a las etiquetas de lanzamiento de GitHub en [openclaw/openclaw](https://github.com/openclaw/openclaw/releases) y suscríbase a través de `Watch` > `Releases`. Las etiquetas beta se parecen a `v2026.3.N-beta.1`. También puede activar las notificaciones para la cuenta oficial de OpenClaw X [@openclaw](https://x.com/openclaw) para anuncios de lanzamiento.
-2. Pruebe su complemento contra la etiqueta beta tan pronto como aparezca. La ventana antes de la versión estable suele ser de solo unas pocas horas.
-3. Publique en el hilo de su complemento en el canal de Discord `plugin-forum` después de probar con `all good` o con lo que se rompió. Si aún no tiene un hilo, cree uno.
-4. Si algo se rompe, abra o actualice un problema titulado `Beta blocker: <plugin-name> - <summary>` y aplique la etiqueta `beta-blocker`. Ponga el enlace del problema en su hilo.
-5. Abre una PR a `main` titulada `fix(<plugin-id>): beta blocker - <summary>` y vincula la incidencia tanto en la PR como en tu hilo de Discord. Los colaboradores no pueden etiquetar las PR, por lo que el título es la señal del lado de la PR para los mantenedores y la automatización. Los bloqueos con una PR se fusionan; los bloqueos sin una podrían lanzarse de todos modos. Los mantenedores supervisan estos hilos durante las pruebas beta.
-6. El silencio significa luz verde. Si pierdes la ventana, tu corrección probablemente se incluirá en el siguiente ciclo.
+1. Esté atento a las etiquetas de lanzamiento de GitHub en [openclaw/openclaw](https://github.com/openclaw/openclaw/releases) y suscríbase mediante `Watch` > `Releases`. Las etiquetas beta se parecen a `v2026.3.N-beta.1`. También puede activar las notificaciones para la cuenta oficial de X de OpenClaw [@openclaw](https://x.com/openclaw) para recibir anuncios de lanzamiento.
+2. Pruebe su complemento con la etiqueta beta tan pronto como aparezca. La ventana antes de la versión estable suele ser de solo unas pocas horas.
+3. Publique en el hilo de su complemento en el canal de Discord `plugin-forum` después de probar con `all good` o con lo que falló. Si aún no tiene un hilo, cree uno.
+4. Si algo falla, abra o actualice un problema titulado `Beta blocker: <plugin-name> - <summary>` y aplique la etiqueta `beta-blocker`. Ponga el enlace del problema en su hilo.
+5. Abre un PR hacia `main` titulado `fix(<plugin-id>): beta blocker - <summary>` y vincula el problema tanto en el PR como en tu hilo de Discord. Los colaboradores no pueden etiquetar los PR, por lo que el título es la señal del lado del PR para los mantenedores y la automatización. Los bloqueadores con un PR se fusionan; los bloqueadores sin uno podrían enviarse de todos modos. Los mantenedores observan estos hilos durante las pruebas beta.
+6. El silencio significa que está bien (verde). Si pierdes la ventana, tu corrección probablemente se incluirá en el siguiente ciclo.
 
-## Siguientes pasos
+## Próximos pasos
 
 <CardGroup cols={2}>
   <Card title="Plugins de canal" icon="messages-square" href="/es/plugins/sdk-channel-plugins">
-    Crea un plugin de canal de mensajería
+    Construye un plugin de canal de mensajería
   </Card>
   <Card title="Plugins de proveedor" icon="cpu" href="/es/plugins/sdk-provider-plugins">
-    Crea un plugin de proveedor de modelos
+    Construye un plugin de proveedor de modelos
   </Card>
   <Card title="Plugins de backend de CLI" icon="terminal" href="/es/plugins/cli-backend-plugins">
     Registra un backend de CLI de IA local
   </Card>
-  <Card title="Resumen del SDK" icon="book-open" href="/es/plugins/sdk-overview">
-    Mapa de importación y referencia de la API de registro
+  <Card title="Descripción general del SDK" icon="book-open" href="/es/plugins/sdk-overview">
+    Referencia de la API de mapa de importación y registro
   </Card>
-  <Card title="Ayudantes de tiempo de ejecución" icon="settings" href="/es/plugins/sdk-runtime">
+  <Card title="Ayudas de tiempo de ejecución" icon="settings" href="/es/plugins/sdk-runtime">
     TTS, búsqueda, subagente a través de api.runtime
   </Card>
   <Card title="Pruebas" icon="test-tubes" href="/es/plugins/sdk-testing">

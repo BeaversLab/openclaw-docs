@@ -186,21 +186,19 @@ la forme AST spécifique à chaque type.
 - Les valeurs de frontmatter Markdown et les champs d'élément `- key: value` sont des feuilles de chaîne.
   Les insertions Markdown ajoutent des sections, des clés de frontmatter ou des éléments de section
   et rendent une forme Markdown canonique pour le fichier modifié.
-- Les écritures de feuilles JSONC forcent la valeur de chaîne vers le type de feuille existant
-  (`string`, `number` fini, `true`/`false`, ou `null`). Les insertions d'objets et de tableaux JSONC analysent `<value>` en tant que JSON et utilisent le chemin d'édition `jsonc-parser` pour
-  les écritures de feuilles ordinaires, en préservant les commentaires et le formatage environnant.
-- Les écritures de feuilles JSONL forcent comme JSONC à l'intérieur d'une ligne. Le remplacement de ligne entière et
-  l'ajout analysent `<value>` en tant que JSON. Le JSONL rendu préserve la convention dominante
-  de fin de ligne LF/CRLF du fichier.
-- Les écritures de feuilles YAML forcent vers le type scalaire existant (`string`, `number` fini,
-  `true`/`false`, ou `null`). Les insertions YAML utilisent l'API de document du package `yaml` inclus pour les mises à jour de cartes/séquences. Les documents YAML malformés
-  avec des erreurs d'analyse sont refusés avant mutation avec `parse-error`.
+- Les écritures de feuilles JSONC contraignent la valeur de chaîne au type de feuille existant
+  (`string`, `number` fini, `true`/`false`, ou `null`). Utilisez `--value-json`
+  lorsqu'un remplacement de feuille JSONC/JSON/JSONL doit analyser `<value>` en tant que JSON et
+  peut changer de forme, comme remplacer une abréviation de chaîne SecretRef par un
+  objet. Les insertions d'objets et de tableaux JSONC analysent `<value>` en tant que JSON et utilisent le
+  chemin d'édition `jsonc-parser` pour les écritures de feuilles ordinaires, en préservant les commentaires et
+  le formatage environnant.
+- Les écritures de feuilles JSONL contraignent comme JSONC à l'intérieur d'une ligne. Le remplacement de ligne entière et
+  l'ajout analysent `<value>` en tant que JSON. Le JSONL rendu préserve la convention de fin de ligne
+  LF/CRLF dominante du fichier.
+- Les écritures de feuilles YAML forcent le type scalaire existant (`string`, `number` fini, `true`/`false` ou `null`). Les insertions YAML utilisent l'API API de document du package `yaml` groupé pour les mises à jour de mappes/séquences. Les documents YAML malformés avec des erreurs d'analyse sont refusés avant la mutation avec `parse-error`.
 
-Utilisez `--dry-run` avant les écritures visibles par l'utilisateur lorsque les octets exacts importent. Le
-substrat préserve une sortie identique en octets pour les allers-retours d'analyse/émission, mais une
-mutation peut canoniser la région ou le fichier édité selon le type.
-Ajoutez `--diff` lorsque vous voulez l'aperçu sous forme de patch avant/après ciblé au lieu
-du fichier rendu complet.
+Utilisez `--dry-run` avant les écritures visibles par l'utilisateur lorsque les octets exacts comptent. Le substrat préserve une sortie identique en octets pour les allers-retours d'analyse/d'émission, mais une mutation peut canonifier la région ou le fichier modifié selon le type. Ajoutez `--diff` lorsque vous souhaitez l'aperçu sous forme de correctif avant/après ciblé au lieu du fichier complet rendu.
 
 ## Exemples
 
@@ -232,6 +230,12 @@ Plus d'exemples de grammaire :
 ```bash
 # Quote keys containing / or .
 openclaw path resolve 'oc://config.jsonc/agents.defaults.models/"anthropic/claude-opus-4-7"/alias'
+
+# Deep JSON/JSONC paths can use slash segments; they normalize to dotted subsegments
+openclaw path set 'oc://openclaw.json/agents/list/0/tools/exec/security' 'allowlist' --dry-run
+
+# Replace a JSONC leaf with a parsed object
+openclaw path set 'oc://openclaw.json/gateway/auth/token' '{"source":"file","provider":"secrets","id":"/test"}' --value-json --dry-run
 
 # Predicate search over JSONC children
 openclaw path find 'oc://config.jsonc/plugins/[enabled=true]/id'
@@ -301,9 +305,7 @@ $ openclaw path find 'oc://x.md/tools/*' --file frontmatter.md --human
   oc://x.md/tools/send-email   →  node @ L11 [md-item]
 ```
 
-Le prédicat `[frontmatter]` adresse le bloc de frontmatter YAML ; `tools`
-correspond à l'en-tête `## Tools` via le slug, et les feuilles d'élément gardent leur forme de slug
-même lorsque la source utilise des traits de soulignement (`send_email` → `send-email`).
+Le prédicat `[frontmatter]` adresse le bloc de frontmatter YAML ; `tools` fait correspondre l'en-tête `## Tools` via le slug, et les feuilles d'élément conservent leur forme de slug même lorsque la source utilise des tirets du bas (`send_email` → `send-email`).
 
 ### JSONC
 
@@ -331,7 +333,7 @@ $ openclaw path set 'oc://config.jsonc/plugins/slack/enabled' 'true' --file conf
 }
 ```
 
-Les modifications JSONC passent par `jsonc-parser`, de sorte que les commentaires et les espaces blancs survivent à un `set`. Exécutez d'abord avec `--dry-run` pour inspecter les octets avant de valider.
+Les modifications JSONC passent par `jsonc-parser`, donc les commentaires et les espaces blancs survivent à un `set`. Exécutez d'abord avec `--dry-run` pour inspecter les octets avant de valider.
 
 ### JSONL
 
@@ -350,7 +352,7 @@ $ openclaw path resolve 'oc://session.jsonl/L2/ts' --file session.jsonl --human
 leaf @ L2: "2" (number)
 ```
 
-Chaque ligne est un enregistrement. Adressez par prédicat (`[event=action]`) lorsque vous ne connaissez pas le numéro de ligne, ou par le segment canonique `LN` lorsque vous le connaissez.
+Chaque ligne est un enregistrement. Adressez par prédicat (`[event=action]`) lorsque vous ne connaissez pas le numéro de ligne, ou par le segment `LN` canonique lorsque vous le connaissez.
 
 ### YAML
 
@@ -378,13 +380,13 @@ steps:
     command: openclaw.invoke
 ```
 
-YAML utilise l'API `Document` du paquet `yaml` plutôt qu'un analyseur fait sur mesure, de sorte que les allers-retours d'analyse/d'émission ordinaires préservent les commentaires et la forme de rédaction tandis que les chemins résolus utilisent le même modèle de clé de carte / d'index de séquence que JSONC. Le même adaptateur gère les fichiers `.yaml`, `.yml` et `.lobster`.
+YAML utilise l'API `Document` du paquet `yaml` plutôt qu'un analyseur fait sur mesure, de sorte que les allers-retours d'analyse/d'émission ordinaires préservent les commentaires et la forme de rédaction, tandis que les chemins résolus utilisent le même modèle de clé de carte / d'index de séquence que JSONC. Le même adaptateur gère les fichiers `.yaml`, `.yml` et `.lobster`.
 
 ## Référence des sous-commandes
 
 ### `resolve <oc-path>`
 
-Lit une feuille ou un nœud unique. Les caractères génériques sont rejetés — utilisez `find` pour ceux-ci. Sort `0` en cas de correspondance, `1` en cas d'absence nette, `2` en cas d'erreur d'analyse ou de motif refusé.
+Lire une feuille ou un nœud unique. Les caractères génériques sont rejetés — utilisez `find` pour ceux-ci. Quitte avec `0` en cas de correspondance, `1` en cas d'absence nette, `2` en cas d'erreur d'analyse ou de motif refusé.
 
 ```bash
 openclaw path resolve 'oc://AGENTS.md/tools/gh/risk' --human
@@ -393,7 +395,7 @@ openclaw path resolve 'oc://gateway.jsonc/server/port' --json
 
 ### `find <pattern>`
 
-Énumère chaque correspondance pour un motif de caractère générique / prédicat / union. Sort `0` s'il y a au moins une correspondance, `1` s'il y en a zéro. Les caractères génériques d'emplacement de fichier sont rejetés avec `OC_PATH_FILE_WILDCARD_UNSUPPORTED` — passez un fichier concret (le globbing multi-fichiers est une fonctionnalité future).
+Énumérer chaque correspondance pour un motif de caractère générique / prédicat / union. Quitte avec `0` s'il y a au moins une correspondance, `1` pour zéro. Les caractères génériques d'emplacement de fichier sont rejetés avec `OC_PATH_FILE_WILDCARD_UNSUPPORTED` — passez un fichier concret (le globbing multi-fichiers est une fonctionnalité à venir).
 
 ```bash
 openclaw path find 'oc://AGENTS.md/tools/**/risk'
@@ -403,7 +405,7 @@ openclaw path find 'oc://config.jsonc/plugins/{github,slack}/enabled'
 
 ### `set <oc-path> <value>`
 
-Écrit une feuille. Associez avec `--dry-run` pour prévisualiser les octets qui seraient écrits sans toucher au fichier. Ajoutez `--diff` pour une prévisualisation diff unifiée. Sort `0` en cas d'écriture réussie, `1` si le substrat refuse (par exemple, une collision de garde sentinelle), `2` en cas d'erreurs d'analyse.
+Écrire une feuille. Combiner avec `--dry-run` pour prévisualiser les octets qui seraient écrits sans toucher au fichier. Ajoutez `--diff` pour un aperçu diff unifié. Quitte avec `0` en cas d'écriture réussie, `1` si le substrat refuse (par exemple, un garde sentinel atteint), `2` en cas d'erreurs d'analyse.
 
 ```bash
 openclaw path set 'oc://gateway.jsonc/version' '2.0' --dry-run
@@ -412,7 +414,7 @@ openclaw path set 'oc://gateway.jsonc/version' '2.0'
 openclaw path set 'oc://AGENTS.md/Tools/+gh/risk' 'low'
 ```
 
-Le marqueur d'insertion `+key` crée l'enfant nommé s'il n'existe pas déjà ; `+nnn` et le `+` nu fonctionnent respectivement pour l'insertion indexée et l'ajout.
+Le marqueur d'insertion `+key` crée l'enfant nommé s'il n'existe pas déjà ; `+nnn` et le `+` seul fonctionnent respectivement pour l'insertion indexée et l'ajout.
 
 ### `validate <oc-path>`
 
@@ -426,7 +428,7 @@ valid: oc://AGENTS.md/tools/gh
   item:    gh
 ```
 
-Quitte avec `0` si valide, `1` si invalide (avec un `code` structuré et
+Quitte avec `0` en cas de succès, `1` en cas d'échec (avec un `code` structuré et
 `message`), `2` en cas d'erreur d'argument.
 
 ### `emit <file>`
@@ -440,21 +442,30 @@ openclaw path emit ./gateway.jsonc --json
 
 ## Codes de sortie
 
-| Code | Signification                                                                            |
-| ---- | ---------------------------------------------------------------------------------------- |
-| `0`  | Succès. (`resolve` / `find` : au moins une correspondance. `set` : écriture réussie.)    |
-| `1`  | Aucune correspondance, ou `set` rejeté par le substrat (pas d'erreur au niveau système). |
-| `2`  | Erreur d'argument ou d'analyse.                                                          |
+| Code | Signification                                                                               |
+| ---- | ------------------------------------------------------------------------------------------- |
+| `0`  | Succès. (`resolve` / `find` : au moins une correspondance. `set` : écriture réussie.)       |
+| `1`  | Aucune correspondance, ou `set` rejeté par le substrat (pas d'erreur au niveau du système). |
+| `2`  | Erreur d'argument ou d'analyse.                                                             |
 
 ## Mode de sortie
 
-`openclaw path` est conscient du TTY : sortie lisible par l'humain sur un terminal, JSON lorsque stdout est redirigé par un tuyau ou une redirection. `--json` et `--human` forcent la détection automatique.
+`openclaw path` est conscient du TTY : sortie lisible par l'homme sur un terminal, JSON lorsque
+stdout est redirigé par un tube ou une redirection. `--json` et `--human` outrepassent
+la détection automatique.
 
 ## Notes
 
-- `set` écrit des octets via le chemin d'émission du substrat, qui applique automatiquement la garde de sentinelle de rédaction. Une feuille contenant `__OPENCLAW_REDACTED__` (mot pour mot ou en tant que sous-chaîne) est refusée au moment de l'écriture.
-- L'analyse JSONC et les modifications de feuilles utilisent la dépendance locale `jsonc-parser` du plugin, de sorte que les commentaires et le formatage sont préservés lors des écritures de feuilles ordinaires au lieu de passer par un chemin d'analyse/re-rendu fait maison.
-- `path` ne connaît pas le LKG. Si le fichier est suivi par le LKG, le prochain appel observe décide de promouvoir ou de récupérer. `set --batch` pour un multi-ensemble atomique à travers le cycle de vie de promotion/récupération LKG est prévu parallèlement au substrat de récupération LKG.
+- `set` écrit les octets via le chemin d'émission du substrat, qui applique
+  automatiquement la garde de sentinelle de rédaction. Une feuille contenant
+  `__OPENCLAW_REDACTED__` (tel quel ou en tant que sous-chaîne) est refusée lors de l'écriture.
+- L'analyse JSONC et les modifications de feuilles utilisent la dépendance locale `jsonc-parser`
+  du plugin, donc les commentaires et le formatage sont préservés lors des écritures de feuilles ordinaires
+  au lieu de passer par un chemin d'analyse/re-rendu fait main.
+- `path` ne connaît pas LKG. Si le fichier est suivi par LKG, le prochain
+  appel observe décide de promouvoir/récupérer. `set --batch` pour
+  un multi-ensemble atomique via le cycle de vie de promotion/récupération LKG est prévu
+  en même temps que le substrat de récupération LKG.
 
 ## Connexes
 

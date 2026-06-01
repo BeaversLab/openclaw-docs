@@ -37,7 +37,7 @@ Le canal WhatsApp fonctionne via **Baileys Web**. Ce document capture les règle
 - Lorsque des médias sont présents, l'expéditeur Web résout les chemins locaux ou les URL en utilisant le même pipeline que `openclaw message send`.
 - Plusieurs entrées multimédias sont envoyées séquentiellement si fournies.
 
-## Médias entrants vers les commandes (Pi)
+## Médias entrants vers les commandes
 
 - Lorsque les messages Web entrants incluent des médias, OpenClaw les télécharge dans un fichier temporaire et expose des variables de modèle :
   - `{{MediaUrl}}` pseudo-URL pour les médias entrants.

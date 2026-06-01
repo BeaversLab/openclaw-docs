@@ -1,5 +1,5 @@
 ---
-summary: "NextcloudOpenClawAjoute la surface de channel Nextcloud Talk pour l'envoi et la réception de messages OpenClaw."
+summary: "OpenClawNextcloudOpenClaw Nextcloud Talk channel plugin pour conversations."
 read_when:
   - You are installing, configuring, or auditing the nextcloud-talk plugin
 title: "NextcloudPlugin Nextcloud Talk"
@@ -7,7 +7,7 @@ title: "NextcloudPlugin Nextcloud Talk"
 
 # Plugin Nextcloud Talk
 
-Ajoute la surface de channel Nextcloud Talk pour l'envoi et la réception de messages OpenClaw.
+OpenClaw Nextcloud Talk channel plugin pour conversations.
 
 ## Distribution
 

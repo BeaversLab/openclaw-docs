@@ -132,7 +132,7 @@ OpenClaw utiliza el mismo `VYDRA_API_KEY` para las tres capacidades.
   </Accordion>
 
   <Accordion title="Síntesis de voz">
-    Establezca Vydra como el proveedor de voz:
+    Establezca Vydra como proveedor de voz:
 
     ```json5
     {
@@ -142,7 +142,7 @@ OpenClaw utiliza el mismo `VYDRA_API_KEY` para las tres capacidades.
           providers: {
             vydra: {
               apiKey: "${VYDRA_API_KEY}",
-              voiceId: "21m00Tcm4TlvDq8ikWAM",
+              speakerVoiceId: "21m00Tcm4TlvDq8ikWAM",
             },
           },
         },

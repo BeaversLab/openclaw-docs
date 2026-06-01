@@ -27,12 +27,12 @@ title: "CLI 参考"
 | 模型和推理           | [`models`](/zh/cli/models) · [`infer`](/zh/cli/infer) · `capability`（[`infer`](/zh/cli/infer) 的别名） · [`memory`](/zh/cli/memory) · [`commitments`](/zh/cli/commitments) · [`wiki`](/zh/cli/wiki)                                                              |
 | 网络和节点           | [`directory`](/zh/cli/directory) · [`nodes`](/zh/cli/nodes) · [`devices`](/zh/cli/devices) · [`node`](/zh/cli/node)                                                                                                                                               |
 | 运行时和沙盒         | [`approvals`](/zh/cli/approvals) · `exec-policy`（参见 [`approvals`](/zh/cli/approvals)） · [`sandbox`](/zh/cli/sandbox) · [`tui`](/zh/cli/tui) · `chat`/`terminal`（[`tui --local`](/zh/cli/tui) 的别名） · [`browser`](/zh/cli/browser)                         |
-| 自动化               | [`cron`](/zh/cli/cron) · [`tasks`](/zh/cli/tasks) · [`hooks`](/zh/cli/hooks) · [`webhooks`](/zh/cli/webhooks)                                                                                                                                                     |
+| 自动化               | [`cron`](/zh/cli/cron) · [`tasks`](/zh/cli/tasks) · [`hooks`](/zh/cli/hooks) · [`webhooks`](/zh/cli/webhooks) · [`transcripts`](/zh/cli/transcripts)                                                                                                              |
 | 设备发现和文档       | [`dns`](/zh/cli/dns) · [`docs`](/zh/cli/docs)                                                                                                                                                                                                                     |
 | 配对和频道           | [`pairing`](/zh/cli/pairing) · [`qr`](/zh/cli/qr) · [`channels`](/zh/cli/channels)                                                                                                                                                                                |
 | 安全性与插件         | [`security`](/zh/cli/security) · [`secrets`](/zh/cli/secrets) · [`skills`](/zh/cli/skills) · [`plugins`](/zh/cli/plugins) · [`proxy`](/zh/cli/proxy)                                                                                                              |
-| 旧版别名             | [`daemon`](/zh/cli/daemon)（网关服务） · [`clawbot`](/zh/cli/clawbot)（命名空间）                                                                                                                                                                                 |
-| 插件（可选）         | [`meeting-notes`](/zh/cli/meeting-notes) · [`path`](/zh/cli/path) · [`policy`](/zh/cli/policy) · [`voicecall`](/zh/cli/voicecall) （如果已安装）                                                                                                                  |
+| 旧版别名             | [`daemon`](/zh/cli/daemon) (gateway service) · [`clawbot`](/zh/cli/clawbot) (namespace)                                                                                                                                                                           |
+| 插件（可选）         | [`path`](/zh/cli/path) · [`policy`](/zh/cli/policy) · [`voicecall`](/zh/cli/voicecall) (if installed)                                                                                                                                                             |
 
 ## 全局标志
 
@@ -125,7 +125,7 @@ openclaw [--dev] [--profile <name>] <command>
     status
     index
     search
-  meeting-notes
+  transcripts
     list
     show
     path
@@ -365,7 +365,7 @@ openclaw [--dev] [--profile <name>] <command>
   terminal (alias: tui --local)
 ```
 
-插件可以添加额外的顶层命令（例如 `openclaw voicecall`）。
+插件可以添加额外的顶级命令（例如 `openclaw voicecall`）。
 
 </Accordion>
 

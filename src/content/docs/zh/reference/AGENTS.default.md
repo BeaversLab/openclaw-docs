@@ -91,7 +91,7 @@ git commit -m "Add Clawd workspace"
 
 ## OpenClaw 的功能
 
-- 运行 WhatsApp 网关 + Pi 编程代理，以便助手可以读/写聊天记录、获取上下文，并通过主机 Mac 运行 Skills。
+- 运行 WhatsApp 网关 + 嵌入式 OpenClaw 代理，以便助手可以通过主机 Mac 读取/写入聊天、获取上下文并运行技能。
 - macOS 应用程序管理权限（屏幕录制、通知、麦克风），并通过其捆绑的二进制文件公开 macOS`openclaw`CLI CLI。
 - 直接聊天默认折叠到代理的 `main` 会话中；群组保持隔离为 `agent:<agentId>:<channel>:group:<id>`（房间/频道：`agent:<agentId>:<channel>:channel:<id>`）；心跳保持后台任务运行。
 

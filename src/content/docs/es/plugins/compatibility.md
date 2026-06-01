@@ -117,34 +117,21 @@ Los registros de compatibilidad actuales incluyen:
   `api.runtime.subagent.getSession`, `api.runtime.stt`, y `api.runtime.config.loadConfig()` / `api.runtime.config.writeConfigFile(...)` en desuso
 - registro dividido de complementos de memoria heredados mientras los complementos de memoria pasan a
   `registerMemoryCapability`
-- ayudantes del SDK de canal heredados para esquemas de mensajes nativos, control de menciones,
-  formato de sobre entrante y anidamiento de capacidades de aprobación
-- alias de ayuda de clave de ruta y destino comparable de canal heredados mientras los complementos
-  pasan a `openclaw/plugin-sdk/channel-route`
-- sugerencias de activación que están siendo reemplazadas por la propiedad de contribución del manifiesto
-- respaldo de tiempo de ejecución `setup-api` mientras los descriptores de configuración pasan a metadatos `setup.requiresRuntime: false` en frío
-- ganchos `discovery` del proveedor mientras los ganchos del catálogo de proveedores pasan a
-  `catalog.run(...)`
-- metadatos `showConfigured` / `showInSetup` del canal mientras los paquetes de canal pasan
-  a `openclaw.channel.exposure`
-- claves de configuración de política de tiempo de ejecución heredadas mientras doctor migra a los operadores a
-  `agentRuntime`
-- respaldo de metadatos de configuración de canal incluido generado mientras llegan
-  metadatos `channelConfigs` primero en el registro
-- indicadores de entorno de desactivación y migración de instalación del registro de complementos persistidos mientras
-  los flujos de reparación migran a los operadores a `openclaw plugins registry --refresh` y
-  `openclaw doctor --fix`
-- rutas de configuración de búsqueda web, obtención web y x_search propiedad de complementos heredadas mientras
-  el médico las migra a `plugins.entries.<plugin>.config`
-- alias de ruta de carga de complementos integrados y configuración creada por `plugins.installs` heredados
-  mientras los metadatos de instalación se mueven al libro mayor de complementos administrado por estado
+- registro heredado de proveedores de incrustación específicos de la memoria mientras los proveedores de incrustación pasan a `api.registerEmbeddingProvider(...)` y `contracts.embeddingProviders`
+- asistentes heredados del SDK de canales para esquemas de mensajes nativos, filtrado de menciones, formato de sobre entrante y anidamiento de capacidades de aprobación
+- alias heredados de clave de ruta de canal y asistentes de destino comparable mientras los complementos pasan a `openclaw/plugin-sdk/channel-route`
+- sugerencias de activación que están siendo reemplazadas por la propiedad de las contribuciones del manifiesto
+- reserva de ejecución de `setup-api` mientras los descriptores de configuración pasan a metadatos en frío `setup.requiresRuntime: false`
+- ganchos `discovery` del proveedor mientras los ganchos del catálogo de proveedores pasan a `catalog.run(...)`
+- metadatos `showConfigured` / `showInSetup` del canal mientras los paquetes de canal pasan a `openclaw.channel.exposure`
+- claves de configuración heredadas de políticas de tiempo de ejecución mientras el doctor migra los operadores a `agentRuntime`
+- reserva de metadatos de configuración de canal agrupados generados mientras aterrizan los metadatos `channelConfigs` primero en el registro
+- indicadores de entorno de desactivación del registro de complementos y migración de instalación persistidos mientras los flujos de reparación migran los operadores a `openclaw plugins registry --refresh` y `openclaw doctor --fix`
+- rutas de configuración heredadas de búsqueda web, recuperación web y x_search propiedad de complementos mientras el doctor los migra a `plugins.entries.<plugin>.config`
+- configuración creada por `plugins.installs` heredada y alias de ruta de carga de complementos agrupados mientras los metadatos de instalación pasan al libro mayor de complementos administrados por estado
 
-El código nuevo de complementos debe preferir el reemplazo listado en el registro y en la
-guía de migración específica. Los complementos existentes pueden seguir usando una ruta de compatibilidad
-hasta que los documentos, diagnósticos y notas de la versión anuncien un período de eliminación.
+El nuevo código de complementos debe preferir el reemplazo que figura en el registro y en la guía de migración específica. Los complementos existentes pueden seguir utilizando una ruta de compatibilidad hasta que la documentación, los diagnósticos y las notas de la versión anuncien un período de eliminación.
 
 ## Notas de la versión
 
-Las notas de la versión deben incluir las próximas obsolescencias de complementos con fechas objetivo y
-enlaces a los documentos de migración. Esa advertencia debe ocurrir antes de que una ruta de compatibilidad
-pase a `removal-pending` o `removed`.
+Las notas de la versión deben incluir las futuras obsolescencias de complementos con fechas objetivo y enlaces a la documentación de migración. Esa advertencia debe producirse antes de que una ruta de compatibilidad pase a `removal-pending` o `removed`.

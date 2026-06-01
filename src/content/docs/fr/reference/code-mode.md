@@ -440,7 +440,7 @@ Cela évite la récursion et maintient le contrat orienté modèle étroit.
 
 ## Interaction avec la recherche d'outils
 
-Le mode code remplace la surface de modèle PI Tool Search pour les exécutions où il est actif.
+Le mode code remplace la surface du modèle de recherche d'outils OpenClaw pour les exécutions où il est actif.
 
 Lorsque `tools.codeMode.enabled` est vrai et que le mode code s'active :
 
@@ -450,7 +450,7 @@ Lorsque `tools.codeMode.enabled` est vrai et que le mode code s'active :
 - Le runtime invité reçoit des métadonnées `ALL_TOOLS` compactes ainsi que des aides de recherche, de description et d'appel.
 - Les appels imbriqués sont distribués via le même chemin d'exécution OpenClaw que Tool Search utilise.
 
-La page existante [Tool Search](/fr/tools/tool-searchOpenClaw) décrit le pont de catalogue compact PI. Le mode code est l'alternative générique OpenClaw pour les exécutions qui peuvent utiliser `exec` et `wait`.
+La page existante [Tool Search](/fr/tools/tool-search) décrit le pont de catalogue compact OpenClaw. Le mode code est l'alternative générique OpenClaw pour les exécutions qui peuvent utiliser `exec` et `wait`.
 
 ## Noms d'outils et collisions
 

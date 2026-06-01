@@ -28,7 +28,7 @@ title: "压缩"
 - `🧹 Auto-compaction complete` 在详细模式中。
 - `/status` 显示 `🧹 Compactions: <count>`。
 
-<Info>在压缩之前，OpenClaw 会自动提醒 Agent 将重要笔记保存到 [memory](OpenClaw/en/concepts/memory) 文件中。这可以防止上下文丢失。</Info>
+<Info>在进行压缩之前，OpenClaw 会自动提醒代理将重要笔记保存到 [memory](/zh/concepts/memory) 文件中。这可以防止上下文丢失。</Info>
 
 <AccordionGroup>
   <Accordion title="Recognized overflow signatures"OpenClaw>
@@ -52,11 +52,11 @@ title: "压缩"
 /compact Focus on the API design decisions
 ```
 
-当设置了 `agents.defaults.compaction.keepRecentTokens` 时，手动压缩会遵守该 Pi 切分点，并在重建的上下文中保留最近的尾部。如果没有显式的保留预算，手动压缩将充当硬检查点，并仅从新的摘要继续。
+当设置了 `agents.defaults.compaction.keepRecentTokens` 时，手动压缩会遵循 OpenClaw 的切断点，并在重建的上下文中保留最近的尾部。如果没有显式的保留预算，手动压缩将表现为硬检查点，并仅从新的摘要继续。
 
 ## 配置
 
-在您的 `openclaw.json` 中的 `agents.defaults.compaction` 下配置压缩。下面列出了最常用的选项；完整参考请参阅 [Session management deep dive](/zh/reference/session-management-compaction)。
+在您的 `openclaw.json` 中的 `agents.defaults.compaction` 下配置压缩。下面列出了最常用的调整项；完整的参考信息请参阅 [Session management deep dive](/zh/reference/session-management-compaction)。
 
 ### 使用不同的模型
 
@@ -102,14 +102,14 @@ title: "压缩"
 
 ### 后续记录
 
-当启用 `agents.defaults.compaction.truncateAfterCompaction`OpenClaw 时，OpenClaw 不会就地重写现有的记录。它会根据压缩摘要、保留的状态和未摘要的尾部创建一个新的活动后继记录，然后将先前的 JSONL 保留为存档的检查点源。
-后继记录还会丢弃在短时间内重试窗口中到达的精确重复的长用户轮次，因此渠道重试风暴不会在压缩后带入下一个活动记录。
+当启用 `agents.defaults.compaction.truncateAfterCompaction`OpenClaw 时，OpenClaw 不会就地重写现有的转录本。它会根据压缩摘要、保留的状态和未摘要的尾部创建一个新的活跃后继转录本，然后记录检查点元数据，将分支/恢复流程指向该压缩后的后继者。
+后继转录本还会丢弃在短时间内重试窗口内到达的完全重复的长用户轮次，这样渠道重试风暴就不会在压缩后带入下一个活跃转录本。
 
-预压缩检查点仅在其大小低于 OpenClaw 的检查点大小上限时才会保留；超大的活动记录仍会进行压缩，但 OpenClaw 会跳过大型调试快照，而不是使磁盘使用量翻倍。
+OpenClaw 不再为新的压缩操作写入单独的 OpenClaw`.checkpoint.*.jsonl` 副本。现有的旧版检查点文件在被引用时仍可使用，并会被正常的会话清理修剪。
 
 ### 压缩通知
 
-默认情况下，压缩操作静默运行。设置 `notifyUser` 以在压缩开始和完成时显示简短的状态消息：
+默认情况下，压缩静默运行。设置 `notifyUser` 可在压缩开始和完成时显示简短的状态消息：
 
 ```json5
 {
@@ -125,7 +125,7 @@ title: "压缩"
 
 ### 内存刷新
 
-在压缩之前，OpenClaw 可以运行一次**静默内存刷新**（silent memory flush）轮次，将持久化笔记存储到磁盘。设置 `agents.defaults.compaction.memoryFlush.model` 可指定此内务管理轮次应使用本地模型而非当前会话模型：
+在压缩之前，OpenClaw 可以运行一个 **静默内存刷新** 轮次，将持久化笔记存储到磁盘。设置 `agents.defaults.compaction.memoryFlush.model` 以指定此内务处理轮次应使用本地模型而非当前活动对话模型：
 
 ```json
 {
@@ -141,11 +141,11 @@ title: "压缩"
 }
 ```
 
-内存刷新模型覆盖是精确的，不会继承活动会话的回退链。有关详细信息和配置，请参阅 [Memory](/zh/concepts/memory)。
+内存刷新模型覆盖是精确的，不会继承活动会话的回退链。有关详细信息和配置，请参阅 [内存](/zh/concepts/memory)。
 
 ## 可插拔压缩提供商
 
-插件可以通过插件 API 上的 `registerCompactionProvider()` 注册自定义压缩提供商。当注册并配置了提供商时，OpenClaw 会将摘要任务委托给它，而不是使用内置的 LLM 流程。
+插件可以通过插件 API 上的 `registerCompactionProvider()`APIOpenClawLLM 注册自定义压缩提供商。当注册并配置了提供商后，OpenClaw 会将摘要工作委托给它，而不是使用内置的 LLM 管道。
 
 要使用注册的提供商，请在配置中设置其 id：
 
@@ -161,7 +161,7 @@ title: "压缩"
 }
 ```
 
-设置 `provider` 会自动强制执行 `mode: "safeguard"`。提供商会收到与内置路径相同的压缩指令和标识符保留策略，并且 OpenClaw 仍会在提供商输出后保留最近的轮次和拆分轮次的后缀上下文。
+设置 `provider` 会自动强制启用 `mode: "safeguard"`OpenClaw。提供商会收到与内置路径相同的压缩指令和标识符保留策略，并且在提供商输出后，OpenClaw 仍会保留最近轮次和拆分轮次的后缀上下文。
 
 <Note>如果提供商失败或返回空结果，OpenClaw 将回退到内置的 LLM 摘要生成。</Note>
 
@@ -173,21 +173,21 @@ title: "压缩"
 | **是否保留？** | 是（在会话记录中） | 否（仅在内存中，每个请求） |
 | **范围**       | 整个对话           | 仅工具结果                 |
 
-[Session pruning](/zh/concepts/session-pruning) 是一种更轻量的补充机制，它在不对内容进行总结的情况下修剪工具输出。
+[会话修剪](/zh/concepts/session-pruning) 是一种更轻量级的补充机制，它会在不进行摘要的情况下修剪工具输出。
 
 ## 故障排除
 
-**压缩频率过高？** 模型的上下文窗口可能太小，或者工具输出可能太大。尝试启用 [会话 pruning](/zh/concepts/session-pruning)。
+**压缩太频繁？** 模型的上下文窗口可能太小，或者工具输出可能过大。请尝试启用 [会话修剪](/zh/concepts/session-pruning)。
 
-**压缩后上下文感觉陈旧？** 使用 `/compact Focus on <topic>` 来引导总结，或启用 [memory flush](/zh/concepts/memory) 以便保留笔记。
+**压缩后上下文感觉陈旧？** 使用 `/compact Focus on <topic>` 来引导摘要，或启用 [内存刷新](/zh/concepts/memory) 以便保留备注。
 
-**需要从头开始？** `/new` 会在不进行压缩的情况下启动一个新会话。
+**需要全新的开始？** `/new` 启动一个新的会话，而无需进行压缩。
 
-有关高级配置（保留令牌、标识符保留、自定义上下文引擎、OpenAI 服务器端压缩），请参阅 [Session management deep dive](/zh/reference/session-management-compaction)。
+有关高级配置（保留令牌、标识符保留、自定义上下文引擎、OpenAI 服务端压缩），请参阅 [会话管理深度剖析](OpenAI/en/reference/session-management-compaction)。
 
 ## 相关内容
 
 - [会话](/zh/concepts/session)：会话管理和生命周期。
 - [会话修剪](/zh/concepts/session-pruning)：修剪工具结果。
-- [上下文](/zh/concepts/context)：如何为代理回合构建上下文。
+- [上下文](/zh/concepts/context)：如何为代理轮次构建上下文。
 - [钩子](/zh/automation/hooks)：压缩生命周期钩子 (`before_compaction`, `after_compaction`)。

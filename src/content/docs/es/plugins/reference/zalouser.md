@@ -1,5 +1,5 @@
 ---
-summary: "Añade la superficie del canal de Zalo Personal para enviar y recibir mensajes de OpenClaw."
+summary: "Complemento de cuenta personal de Zalo de OpenClaw mediante integración nativa con zca-js."
 read_when:
   - You are installing, configuring, or auditing the zalouser plugin
 title: "Complemento de Zalo Personal"
@@ -7,7 +7,7 @@ title: "Complemento de Zalo Personal"
 
 # Complemento de Zalo Personal
 
-Añade la superficie del canal de Zalo Personal para enviar y recibir mensajes de OpenClaw.
+Complemento de cuenta personal de Zalo de OpenClaw mediante integración nativa con zca-js.
 
 ## Distribución
 

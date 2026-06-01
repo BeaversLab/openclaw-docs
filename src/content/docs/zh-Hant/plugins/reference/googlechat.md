@@ -1,5 +1,5 @@
 ---
-summary: "新增 Google Chat 頻道介面，用於傳送和接收 OpenClaw 訊息。"
+summary: "OpenClaw Google Chat 頻道外掛程式，適用於聊天室和私人訊息。"
 read_when:
   - You are installing, configuring, or auditing the googlechat plugin
 title: "Google Chat 外掛程式"
@@ -7,7 +7,7 @@ title: "Google Chat 外掛程式"
 
 # Google Chat 外掛程式
 
-新增 Google Chat 頻道介面，用於傳送和接收 OpenClaw 訊息。
+OpenClaw Google Chat 頻道外掛程式，適用於聊天室和私人訊息。
 
 ## 發佈
 

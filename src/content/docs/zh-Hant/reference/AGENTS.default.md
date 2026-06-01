@@ -91,7 +91,7 @@ git commit -m "Add Clawd workspace"
 
 ## What OpenClaw does
 
-- Runs WhatsApp gateway + Pi coding agent so the assistant can read/write chats, fetch context, and run skills via the host Mac.
+- 運行 WhatsApp 閘道 + 嵌入式 OpenClaw 代理程式，讓助理可以讀寫聊天訊息、擷取背景，並透過主機 Mac 執行技能。
 - macOS app manages permissions (screen recording, notifications, microphone) and exposes the `openclaw` CLI via its bundled binary.
 - 預設情況下，直接聊天會折疊至代理的 `main` 會話中；群組則保持隔離狀態，即 `agent:<agentId>:<channel>:group:<id>` (房間/頻道: `agent:<agentId>:<channel>:channel:<id>`)；心跳訊號可讓背景任務保持運作。
 

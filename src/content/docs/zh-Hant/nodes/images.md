@@ -37,7 +37,7 @@ WhatsApp 頻道透過 **Baileys Web** 運作。此文件記錄了目前針對發
 - 當存在媒體時，Web 發送器會使用與 `openclaw message send` 相同的流程來解析本機路徑或 URL。
 - 若提供多個媒體項目，將會依序發送。
 
-## 傳入媒體至指令 (Pi)
+## 傳入媒體到指令
 
 - 當傳入的 Web 訊息包含媒體時，OpenClaw 會將其下載至暫存檔，並公開範本變數：
   - `{{MediaUrl}}` 用於傳入媒體的偽 URL。

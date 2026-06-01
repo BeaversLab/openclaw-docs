@@ -1,5 +1,5 @@
 ---
-summary: "Ajoute la surface du canal LINE pour l'envoi et la réception de messages OpenClaw."
+summary: "OpenClawAPIPlug-in OpenClaw LINE channel pour les discussions de LINE Bot API."
 read_when:
   - You are installing, configuring, or auditing the line plugin
 title: "Plug-in LINE"
@@ -7,7 +7,7 @@ title: "Plug-in LINE"
 
 # Plug-in LINE
 
-Ajoute la surface du canal LINE pour l'envoi et la réception de messages OpenClaw.
+Plug-in OpenClaw LINE channel pour les discussions de LINE Bot API.
 
 ## Distribution
 

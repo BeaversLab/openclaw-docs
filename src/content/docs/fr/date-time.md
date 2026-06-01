@@ -11,10 +11,10 @@ Les horodatages du provider sont conservés afin que les outils gardent leur sé
 
 ## Enveloppes de messages (locale par défaut)
 
-Les messages entrants sont enveloppés avec un horodatage (précision à la minute) :
+Les messages entrants sont encapsulés avec un horodatage (précision à la seconde) :
 
 ```
-[Provider ... 2026-01-05 16:26 PST] message text
+[Provider ... Mon 2026-01-05 16:26:34 PST] message text
 ```
 
 Cet horodatage d'enveloppe est **local à l'hôte par défaut**, quel que soit le fuseau horaire du provider.
@@ -45,19 +45,19 @@ Vous pouvez modifier ce comportement :
 **Local (par défaut) :**
 
 ```
-[WhatsApp +1555 2026-01-18 00:19 PST] hello
+[WhatsApp +1555 Sun 2026-01-18 00:19:42 PST] hello
 ```
 
 **Fuseau horaire de l'utilisateur :**
 
 ```
-[WhatsApp +1555 2026-01-18 00:19 CST] hello
+[WhatsApp +1555 Sun 2026-01-18 00:19:42 CST] hello
 ```
 
 **Temps écoulé activé :**
 
 ```
-[WhatsApp +1555 +30s 2026-01-18T05:19Z] follow-up
+[WhatsApp +1555 +30s Sun 2026-01-18T05:19:00Z] follow-up
 ```
 
 ## Prompt système : date et heure actuelles

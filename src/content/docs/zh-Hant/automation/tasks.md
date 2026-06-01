@@ -92,9 +92,9 @@ sidebarTitle: "背景任務"
 
 <AccordionGroup>
   <Accordion title="Notify defaults for cron and media">
-    主會話 cron 任務預設使用 `silent` 通知原則——它們會建立記錄以進行追蹤，但不會產生通知。隔離 cron 任務也預設為 `silent`，但因為它們在自己的會話中運行，所以更為顯眼。
+    主會話 cron 任務預設使用 `silent` 通知策略——它們會建立記錄以便追蹤，但不會產生通知。隔離 cron 任務也預設為 `silent`，但因為在自己的會話中執行，所以更為可見。
 
-    由會話支援的 `image_generate`、`music_generate` 和 `video_generate` 執行也使用 `silent` 通知原則。它們仍會建立任務記錄，但完成狀態會作為內部喚醒（wake）傳回給原始代理程式會話，以便代理程式能撰寫後續訊息並自行附加已完成的媒體。產生媒體的完成事件需要透過訊息工具傳遞：代理程式必須使用 `message` 工具傳送已完成的媒體，然後回覆 `NO_REPLY`。如果請求者的會話已不再處於活動狀態，且完成代理程式遺漏了部分或全部產生的媒體，OpenClaw 會將僅包含遺失媒體的等幕直接後備（idempotent direct fallback）傳送至原始頻道目標。
+    由會話支援的 `image_generate`、`music_generate` 與 `video_generate` 執行也使用 `silent` 通知策略。它們仍會建立任務記錄，但完成會以內部喚醒的方式交回給原始的 agent 會話，讓 agent 可以撰寫後續訊息並自行附加完成的媒體。生成媒體的完成事件需要透過訊息工具來傳遞：agent 必須使用 `message` 工具傳送完成的媒體，然後 `NO_REPLY` 回覆。如果請求者的會話不再處於作用中，或其作用中的喚醒失敗，且完成 agent 錯過了部分或所有生成的媒體，OpenClaw 會對原始的頻道目標發送一個僅包含遺失媒體的等幕直接後援。
 
   </Accordion>
   <Accordion title="並行媒體生成防護機制">

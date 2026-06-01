@@ -50,7 +50,7 @@ OpenClaw persiste las sesiones en dos capas:
    - Transcripción de solo anexado con estructura de árbol (las entradas tienen `id` + `parentId`)
    - Almacena la conversación real + llamadas a herramientas + resúmenes de compactación
    - Se utiliza para reconstruir el contexto del modelo para turnos futuros
-   - Los puntos de control de depuración grandes de precompactación se omiten una vez que la transcripción activa excede el límite de tamaño del punto de control, evitando una segunda copia gigante de `.checkpoint.*.jsonl`.
+   - Los puntos de control de compactación son metadatos sobre la transcripción sucesora compactada. Las nuevas compactaciones no escriben una segunda copia de `.checkpoint.*.jsonl`.
 
 Los lectores del historial del Gateway deben evitar materializar la transcripción completa a menos que la superficie necesite explícitamente acceso histórico arbitrario. El historial de la primera página, el historial de chat incrustado, la recuperación de reinicio y las verificaciones de tokens/uso utilizan lecturas de cola limitadas. Los escaneos completos de la transcripción pasan por el índice de transcripción asíncrono, que se almacena en caché mediante la ruta del archivo más `mtimeMs`/`size` y se comparte entre lectores simultáneos.
 
@@ -141,7 +141,7 @@ Reglas generales:
 - **Restablecimiento diario** (predeterminado a las 4:00 AM hora local en el host de la puerta de enlace) crea un nuevo `sessionId` en el siguiente mensaje después del límite de restablecimiento.
 - **Expiración por inactividad** (`session.reset.idleMinutes` o el heredado `session.idleMinutes`) crea un nuevo `sessionId` cuando llega un mensaje después de la ventana de inactividad. Cuando se configuran diario + inactividad, gana el que expire primero.
 - **Eventos del sistema** (latido, activaciones de cron, notificaciones de ejecución, mantenimiento de la puerta de enlace) pueden mutar la fila de sesión pero no extienden la vigencia del restablecimiento diario/inactivo. La transición por restablecimiento descarta las notificaciones de eventos del sistema en cola para la sesión anterior de que se construya el nuevo prompt.
-- **Política de bifurcación principal** utiliza la rama activa de PI al crear un hilo o una bifurcación de subagente. Si esa rama es demasiado grande, OpenClaw inicia el secundario con contexto aislado en lugar de fallar o heredar un historial inutilizable. La política de tamaño es automática; la configuración heredada `session.parentForkMaxTokens` es eliminada por `openclaw doctor --fix`.
+- **Parent fork policy** utiliza la rama activa de OpenClaw al crear un hilo o un subagente bifurcado. Si esa rama es demasiado grande, OpenClaw inicia el secundario con contexto aislado en lugar de fallar o heredar un historial inutilizable. La política de tamaño es automática; la configuración heredada `session.parentForkMaxTokens` es eliminada por `openclaw doctor --fix`.
 
 Detalle de implementación: la decisión ocurre en `initSessionState()` en `src/auto-reply/reply/session.ts`.
 
@@ -182,7 +182,7 @@ Es seguro editar el almacén, pero la Gateway es la autoridad: puede reescribir 
 
 ## Estructura de la transcripción (`*.jsonl`)
 
-Las transcripciones son gestionadas por `@earendil-works/pi-coding-agent`'s `SessionManager`.
+Las transcripciones son gestionadas por `openclaw/plugin-sdk/agent-sessions` de `SessionManager`.
 
 El archivo es JSONL:
 
@@ -226,74 +226,77 @@ Después de la compactación, los turnos futuros ven:
 - El resumen de compactación
 - Mensajes después de `firstKeptEntryId`
 
+La reinyección de la sección AGENTS.md después de la compactación es opcional a través de
+`agents.defaults.compaction.postCompactionSections`; cuando no está configurado o es `[]`,
+OpenClaw no añade extractos de AGENTS.md encima del resumen de compactación.
+
 La compactación es **persistente** (a diferencia de la poda de sesiones). Consulte [/concepts/session-pruning](/es/concepts/session-pruning).
 
 ## Límites de los fragmentos de compactación y emparejamiento de herramientas
 
 Cuando OpenClaw divide una transcripción larga en fragmentos de compactación, mantiene las llamadas a herramientas del asistente emparejadas con sus entradas `toolResult` correspondientes.
 
-- Si la división por porción de tokens cae entre una llamada a herramienta y su resultado, OpenClaw
-  desplaza el límite hacia el mensaje de llamada a herramienta del asistente en lugar de separar
-  el par.
-- Si un bloque de resultado de herramienta al final pudiera hacer que el fragmento supere el objetivo,
-  OpenClaw preserva ese bloque de herramienta pendiente y mantiene la cola no resumida
-  intacta.
-- Los bloques de llamadas a herramientas abortadas/erróneas no mantienen una división pendiente abierta.
+- Si la división del token-share cae entre una llamada a herramienta y su resultado, OpenClaw desplaza el límite hacia el mensaje de llamada a herramienta del asistente en lugar de separar el par.
+- Si un bloque de resultado de herramienta final empujara el fragmento por encima del objetivo, OpenClaw preserva ese bloque de herramienta pendiente y mantiene la cola no resumida intacta.
+- Los bloques de llamadas a herramientas abortadas/error no mantienen abierta una división pendiente.
 
 ---
 
-## Cuándo ocurre la auto-compactación (tiempo de ejecución de Pi)
+## Cuando ocurre la auto-compactación (tiempo de ejecución de OpenClaw)
 
-En el agente Pi integrado, la auto-compactación se activa en dos casos:
+En el agente integrado de OpenClaw, la auto-compactación se activa en dos casos:
 
 1. **Recuperación por desbordamiento**: el modelo devuelve un error de desbordamiento de contexto
    (`request_too_large`, `context length exceeded`, `input exceeds the maximum
 number of tokens`, `input token count exceeds the maximum number of input
 tokens`, `input is too long for the model`, `ollama error: context length
 exceeded`, y variantes similares específicas del proveedor) → compactar → reintentar.
+   Cuando el proveedor informa el recuento de tokens intentado, OpenClaw reenvía ese
+   recuento observado a la compactación de recuperación por desbordamiento. Si el proveedor confirma
+   el desbordamiento pero no expone un recuento analizable, OpenClaw pasa un recuento sintético
+   mínimamente por encima del presupuesto a los motores de compactación y diagnósticos.
    Si la recuperación por desbordamiento aún falla, OpenClaw muestra orientación explícita al
    usuario y conserva la asignación de sesión actual en lugar de rotar silenciosamente
    la clave de sesión a un nuevo id de sesión. El siguiente paso está controlado por el operador:
    reintentar el mensaje, ejecutar `/compact`, o ejecutar `/new` cuando se prefiera
    una sesión nueva.
-2. **Mantenimiento del umbral**: después de un turno exitoso, cuando:
+2. **Mantenimiento de umbral**: después de un turno exitoso, cuando:
 
 `contextTokens > contextWindow - reserveTokens`
 
 Donde:
 
 - `contextWindow` es la ventana de contexto del modelo
-- `reserveTokens` es el margen reservado para los indicadores + la siguiente salida del modelo
+- `reserveTokens` es el margen reservado para los prompts + la siguiente salida del modelo
 
-Estas son las semánticas del tiempo de ejecución de Pi (OpenClaw consume los eventos, pero Pi decide cuándo compactar).
+Estas son las semánticas de tiempo de ejecución de OpenClaw.
 
 OpenClaw también puede activar una compactación local previa antes de abrir la siguiente
 ejecución cuando `agents.defaults.compaction.maxActiveTranscriptBytes` está establecido y el
-archivo de transcripción activo alcanza ese tamaño. Esto es una protección de tamaño de archivo para el
-costo de reapertura local, no un archivo sin procesar: OpenClaw aún ejecuta la compactación semántica normal,
-y requiere `truncateAfterCompaction` para que el resumen compactado pueda convertirse en
+archivo de transcripción activo alcanza ese tamaño. Este es un guardiador de tamaño de archivo
+para el costo de reapertura local, no archivo sin procesar: OpenClaw aún ejecuta la compactación
+semántica normal, y requiere `truncateAfterCompaction` para que el resumen compactado pueda convertirse en
 una nueva transcripción sucesora.
 
-Para ejecuciones integradas de Pi, `agents.defaults.compaction.midTurnPrecheck.enabled: true`
-añade una protección de bucle de herramientas opcional. Después de que se anexa un resultado de herramienta y antes de
-la siguiente llamada al modelo, OpenClaw estima la presión del prompt utilizando la misma lógica de presupuesto de pre-vuelo
-utilizada al inicio del turno. Si el contexto ya no cabe, la protección no
-compacta dentro del enlace `transformContext` de Pi. Genera una señal
-estructurada de pre-verificación a mitad de turno, detiene el envío del prompt actual y permite que
-el bucle de ejecución externo use la ruta de recuperación existente: truncar resultados de herramientas excesivamente grandes
+Para ejecuciones integradas de OpenClaw, `agents.defaults.compaction.midTurnPrecheck.enabled: true`
+agrega un guardia de bucle de herramientas opcional. Después de que se anexe un resultado de herramienta y antes de la
+siguiente llamada al modelo, OpenClaw estima la presión del prompt utilizando la misma lógica de presupuesto
+preflight utilizada al inicio del turno. Si el contexto ya no cabe, el guardia no
+compacta dentro del gancho `transformContext` del tiempo de ejecución de OpenClaw. Genera una señal
+estructurada de preverificación media, detiene el envío del prompt actual y permite que
+el bucle de ejecución externo use la ruta de recuperación existente: truncar resultados de herramientas sobredimensionados
 cuando eso sea suficiente, o activar el modo de compactación configurado y reintentar. La
-opción está deshabilitada de forma predeterminada y funciona con ambos modos de compactación
-`default` y `safeguard`,
-incluida la compactación de safeguard respaldada por el proveedor.
-Esto es independiente de `maxActiveTranscriptBytes`: la protección de tamaño en bytes se ejecuta
-antes de que se abra un turno, mientras que la pre-verificación a mitad de turno se ejecuta más tarde en el bucle de herramientas de Pi integrado
-después de que se hayan anexado los nuevos resultados de herramientas.
+opción está desactivada de forma predeterminada y funciona tanto con `default` como con `safeguard`
+modos de compactación, incluyendo la compactación de salvaguarda respaldada por el proveedor.
+Esto es independiente de `maxActiveTranscriptBytes`: el guardia de tamaño en bytes se ejecuta
+antes de que se abra un turno, mientras que la preverificación media se ejecuta más tarde en el bucle de herramientas de OpenClaw integrado
+después de que se han anexado nuevos resultados de herramientas.
 
 ---
 
 ## Configuración de compactación (`reserveTokens`, `keepRecentTokens`)
 
-La configuración de compactación de Pi reside en la configuración de Pi:
+La configuración de compactación del tiempo de ejecución de OpenClaw se encuentra en la configuración del agente:
 
 ```json5
 {
@@ -305,54 +308,54 @@ La configuración de compactación de Pi reside en la configuración de Pi:
 }
 ```
 
-OpenClaw también impone un suelo de seguridad para las ejecuciones integradas:
+OpenClaw también impone un límite de seguridad para ejecuciones integradas:
 
 - Si `compaction.reserveTokens < reserveTokensFloor`, OpenClaw lo aumenta.
-- El suelo predeterminado es `20000` tokens.
-- Establezca `agents.defaults.compaction.reserveTokensFloor: 0` para deshabilitar el suelo.
+- El límite predeterminado es `20000` tokens.
+- Establezca `agents.defaults.compaction.reserveTokensFloor: 0` para desactivar el límite.
 - Si ya es más alto, OpenClaw lo deja como está.
-- `/compact` manual respeta un `agents.defaults.compaction.keepRecentTokens`
-  explícito y mantiene el punto de corte de cola reciente de Pi. Sin un presupuesto de mantenimiento explícito,
+- La `/compact` manual respeta un `agents.defaults.compaction.keepRecentTokens`
+  explícito y mantiene el punto de corte de cola reciente del tiempo de ejecución de OpenClaw. Sin un presupuesto de mantenimiento explícito,
   la compactación manual sigue siendo un punto de control fijo y el contexto reconstruido comienza desde
   el nuevo resumen.
 - Establezca `agents.defaults.compaction.midTurnPrecheck.enabled: true` para ejecutar la
-  pre-verificación opcional del bucle de herramientas después de los nuevos resultados de herramientas y antes de la siguiente llamada
-  al modelo. Esto es solo un disparador; la generación de resumen todavía usa la ruta
-  configurada de compactación. Es independiente de `maxActiveTranscriptBytes`, que es una
-  protección de tamaño en bytes de la transcripción activa al inicio del turno.
+  preverificación opcional del bucle de herramientas después de nuevos resultados de herramientas y antes de la siguiente llamada al
+  modelo. Esto es solo un disparador; la generación de resumen todavía usa la ruta de
+  compactación configurada. Es independiente de `maxActiveTranscriptBytes`, que es un
+  guardia de tamaño en bytes de la transcripción activa al inicio del turno.
 - Establezca `agents.defaults.compaction.maxActiveTranscriptBytes` en un valor de bytes o
   una cadena como `"20mb"` para ejecutar la compactación local antes de un turno cuando la transcripción
-  activa se vuelve grande. Esta protección está activa solo cuando
+  activa se vuelva grande. Esta protección solo está activa cuando
   `truncateAfterCompaction` también está habilitado. Déjelo sin establecer o establezca `0` para
-  deshabilitar.
+  desactivarlo.
 - Cuando `agents.defaults.compaction.truncateAfterCompaction` está habilitado,
   OpenClaw rota la transcripción activa a un JSONL sucesor compactado después
-  de la compactación. La transcripción completa antigua permanece archivada y vinculada desde
-  el punto de control de compactación en lugar de ser reescrita en su lugar.
+  de la compactación. Las acciones de punto de control de bifurcación/restauración utilizan ese sucesor compactado;
+  los archivos de punto de control de pre-compactación heredados permanecen legibles mientras se referencien.
 
-Por qué: dejar suficiente espacio para el "mantenimiento" de varios turnos (como las escrituras de memoria) antes de que la compactación se vuelva inevitable.
+Por qué: deje suficiente margen para el "mantenimiento" de varios turnos (como escrituras en memoria) antes de que la compactación sea inevitable.
 
-Implementación: `ensurePiCompactionReserveTokens()` en `src/agents/pi-settings.ts`
-(llamado desde `src/agents/pi-embedded-runner.ts`).
+Implementación: `ensureAgentCompactionReserveTokens()` en `src/agents/agent-settings.ts`
+(llamado desde `src/agents/embedded-agent-runner.ts`).
 
 ---
 
 ## Proveedores de compactación conectables
 
-Los complementos pueden registrar un proveedor de compactación a través de `registerCompactionProvider()` en la API de complementos. Cuando `agents.defaults.compaction.provider` se establece en un id de proveedor registrado, la extensión de seguridad delega el resumen a ese proveedor en lugar de a la canalización `summarizeInStages` integrada.
+Los complementos pueden registrar un proveedor de compactación a través de `registerCompactionProvider()` en la API de complementos. Cuando `agents.defaults.compaction.provider` se establece en un id de proveedor registrado, la extensión de protección delega la resumización a ese proveedor en lugar de al canalización integrada `summarizeInStages`.
 
-- `provider`: id de un complemento proveedor de compactación registrado. Déjelo sin establecer para el resumen LLM predeterminado.
-- Establecer un `provider` fuerza `mode: "safeguard"`.
+- `provider`: id de un complemento proveedor de compactación registrado. Déjelo sin establecer para la resumización predeterminada de LLM.
+- Establecer `provider` fuerza `mode: "safeguard"`.
 - Los proveedores reciben las mismas instrucciones de compactación y la política de preservación de identificadores que la ruta integrada.
-- El mecanismo de seguridad sigue preservando el contexto de sufijo de turno reciente y turno dividido después de la salida del proveedor.
-- El mecanismo de seguridad de resumen integrado redestila los resúmenes anteriores con nuevos mensajes
-  en lugar de preservar el resumen anterior completo palabra por palabra.
-- El modo de seguridad habilita las auditorías de calidad de resumen de forma predeterminada; establezca
-  `qualityGuard.enabled: false` para omitir el comportamiento de reintento ante salida con formato incorrecto.
-- Si el proveedor falla o devuelve un resultado vacío, OpenClaw recurre automáticamente al resumen de LLM integrado.
-- Las señales de anulación/tiempo de espera se vuelven a lanzar (no se tragan) para respetar la cancelación de quien llama.
+- La protección aún conserva el contexto de sufijo de turno reciente y turno dividido después de la salida del proveedor.
+- La resumización de protección integrada redestila resúmenes previos con nuevos mensajes
+  en lugar de preservar el resumen previo completo textualmente.
+- El modo de protección habilita las auditorías de calidad de resumen de forma predeterminada; establezca
+  `qualityGuard.enabled: false` para omitir el comportamiento de reintentar si la salida está malformada.
+- Si el proveedor falla o devuelve un resultado vacío, OpenClaw recurre automáticamente a la resumización de LLM integrada.
+- Las señales de aborto/tiempo de espera se relanzan (no se tragan) para respetar la cancelación de quien realiza la llamada.
 
-Fuente: `src/plugins/compaction-provider.ts`, `src/agents/pi-hooks/compaction-safeguard.ts`.
+Fuente: `src/plugins/compaction-provider.ts`, `src/agents/agent-hooks/compaction-safeguard.ts`.
 
 ---
 
@@ -363,7 +366,7 @@ Puede observar la compactación y el estado de la sesión a través de:
 - `/status` (en cualquier sesión de chat)
 - `openclaw status` (CLI)
 - `openclaw sessions` / `sessions --json`
-- Registros de la puerta de enlace (`pnpm gateway:watch` o `openclaw logs --follow`): `embedded run auto-compaction start` + `complete`
+- Registros de Gateway (`pnpm gateway:watch` o `openclaw logs --follow`): `embedded run auto-compaction start` + `complete`
 - Modo detallado: `🧹 Auto-compaction complete` + recuento de compactación
 
 ---
@@ -374,60 +377,65 @@ OpenClaw admite turnos "silenciosos" para tareas en segundo plano donde el usuar
 
 Convención:
 
-- El asistente inicia su resultado con el token silencioso exacto `NO_REPLY` /
+- El asistente inicia su salida con el token silencioso exacto `NO_REPLY` /
   `no_reply` para indicar "no entregar una respuesta al usuario".
 - OpenClaw elimina/suprime esto en la capa de entrega.
-- La supresión exacta de tokens silenciosos no distingue entre mayúsculas y minúsculas, por lo que `NO_REPLY` y
-  `no_reply` cuentan cuando toda la carga útil es solo el token silencioso.
-- Esto es solo para turnos de fondo verdaderos/sin entrega; no es un atajo para
+- La supresión exacta del token silencioso no distingue entre mayúsculas y minúsculas, por lo que `NO_REPLY` y
+  `no_reply` ambos cuentan cuando toda la carga es solo el token silencioso.
+- Esto es solo para turnos de verdadero fondo/sin entrega; no es un atajo para
   solicitudes de usuario accionables ordinarias.
 
-A partir de `2026.1.10`, OpenClaw también suprime el **streaming de borrador/escritura** cuando un
-fragmento parcial comienza con `NO_REPLY`, de modo que las operaciones silenciosas no filtre resultados parciales
-a mitad del turno.
+A partir de `2026.1.10`, OpenClaw también suprime el **streaming de borrador/escribiendo** cuando un
+fragmento parcial comienza con `NO_REPLY`, para que las operaciones silenciosas no filtren una salida
+parcial a mitad del turno.
 
 ---
 
-## "Vaciamiento de memoria" pre-compactación (implementado)
+## "Volcado de memoria" de pre-compacción (implementado)
 
-Objetivo: antes de que ocurra la auto-compacción, ejecutar un turno agente silencioso que escriba el estado duradero en el disco (por ejemplo, `memory/YYYY-MM-DD.md` en el espacio de trabajo del agente) para que la compactación no pueda borrar el contexto crítico.
+Objetivo: antes de que ocurra la auto-compacción, ejecutar un turno de agente silencioso que escriba el estado duradero
+en el disco (p. ej. `memory/YYYY-MM-DD.md` en el espacio de trabajo del agente) para que la compactación no pueda
+borrar el contexto crítico.
 
-OpenClaw utiliza el enfoque de **vaciamiento previo al umbral**:
+OpenClaw utiliza el enfoque de **volcado previo al umbral**:
 
 1. Monitorear el uso del contexto de la sesión.
-2. Cuando cruza un "umbral suave" (por debajo del umbral de compactación de Pi), ejecuta una directiva silenciosa de "escribir memoria ahora" al agente.
-3. Use el token silencioso exacto `NO_REPLY` / `no_reply` para que el usuario no vea nada.
+2. Cuando cruza un "umbral suave" (por debajo del umbral de compactación del tiempo de ejecución de OpenClaw), ejecutar una directiva
+   silenciosa de "escribir memoria ahora" al agente.
+3. Use el token silencioso exacto `NO_REPLY` / `no_reply` para que el usuario no vea
+   nada.
 
-Configuración (`agents.defaults.compaction.memoryFlush`):
+Config (`agents.defaults.compaction.memoryFlush`):
 
 - `enabled` (predeterminado: `true`)
-- `model` (anulación opcional exacta del proveedor/modelo para el turno de vaciado, por ejemplo `ollama/qwen3:8b`)
+- `model` (opcional, anulación exacta de proveedor/modelo para el turno de flush, por ejemplo `ollama/qwen3:8b`)
 - `softThresholdTokens` (predeterminado: `4000`)
-- `prompt` (mensaje de usuario para el turno de vaciado)
-- `systemPrompt` (prompt del sistema adicional añadido para el turno de vaciado)
+- `prompt` (mensaje de usuario para el turno de flush)
+- `systemPrompt` (prompt del sistema adicional añadido para el turno de flush)
 
 Notas:
 
-- El prompt predeterminado/prompt del sistema incluye una sugerencia `NO_REPLY` para suprimir la entrega.
-- Cuando se establece `model`, el turno de vaciado usa ese modelo sin heredar la cadena de reserva de la sesión activa, por lo que el mantenimiento solo local no cae silenciosamente en un modelo de conversación de pago.
+- El prompt predeterminado/prompt del sistema incluye una sugerencia `NO_REPLY` para suprimir
+  la entrega.
+- Cuando se establece `model`, el turno de vaciado utiliza ese modelo sin heredar la cadena de reserva de la sesión activa, por lo que el mantenimiento solo local no recurre silenciosamente a un modelo de conversación de pago.
 - El vaciado se ejecuta una vez por ciclo de compactación (rastreado en `sessions.json`).
-- El flush se ejecuta solo para sesiones Pi integradas (los backends CLI lo omiten).
+- El vaciado se ejecuta solo para sesiones de OpenClaw integradas (los backends de CLI lo omiten).
 - El vaciado se omite cuando el espacio de trabajo de la sesión es de solo lectura (`workspaceAccess: "ro"` o `"none"`).
-- Consulte [Memoria](/es/concepts/memory) para ver el diseño de archivos del espacio de trabajo y los patrones de escritura.
+- Consulte [Memoria](/es/concepts/memory) para conocer el diseño de archivos del espacio de trabajo y los patrones de escritura.
 
-Pi también expone un enlace `session_before_compact` en la API de extensiones, pero la lógica de vaciado de OpenClaw reside hoy en el lado del Gateway.
+OpenClaw también expone un gancho `session_before_compact` en la API de extensiones, pero hoy la lógica de vaciado de OpenClaw reside en el lado del Gateway.
 
 ---
 
 ## Lista de verificación de solución de problemas
 
 - ¿Clave de sesión incorrecta? Comience con [/concepts/session](/es/concepts/session) y confirme el `sessionKey` en `/status`.
-- ¿Discrepancia entre el almacén y la transcripción? Confirme el host del Gateway y la ruta del almacén desde `openclaw status`.
-- ¿Spam de compactación? Comprueba:
+- ¿Discrepancia entre el almacén y la transcripción? Confirme el host de Gateway y la ruta del almacén desde `openclaw status`.
+- ¿Spam de compactación? Compruebe:
   - ventana de contexto del modelo (demasiado pequeña)
-  - configuración de compactación (`reserveTokens` demasiado alto para la ventana del modelo puede causar una compactación anterior)
-  - hinchazón de resultados de herramientas: habilita/ajusta la poda de la sesión
-- ¿Filtrando turnos silenciosos? Confirme que la respuesta comienza con `NO_REPLY` (token exacto insensible a mayúsculas y minúsculas) y que está en una compilación que incluye la corrección de supresión de transmisión.
+  - configuración de compactación (`reserveTokens` demasiado alta para la ventana del modelo puede causar una compactación anterior)
+  - hinchazón de resultados de herramientas: habilite/ajuste la poda de sesiones
+- ¿Filtrado de turnos silenciosos? Confirme que la respuesta comienza con `NO_REPLY` (token exacto que no distingue entre mayúsculas y minúsculas) y que está en una compilación que incluye la corrección de supresión de transmisión.
 
 ## Relacionado
 

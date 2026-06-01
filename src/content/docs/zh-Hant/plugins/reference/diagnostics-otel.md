@@ -1,5 +1,5 @@
 ---
-summary: "OpenClaw 診斷 OpenTelemetry 匯出工具。"
+summary: "OpenClaw 診斷 OpenTelemetry 匯出器，用於指標和追蹤。"
 read_when:
   - You are installing, configuring, or auditing the diagnostics-otel plugin
 title: "診斷 OpenTelemetry 外掛程式"
@@ -7,7 +7,7 @@ title: "診斷 OpenTelemetry 外掛程式"
 
 # 診斷 OpenTelemetry 外掛程式
 
-OpenClaw 診斷 OpenTelemetry 匯出工具。
+OpenClaw 診斷 OpenTelemetry 匯出器，用於指標和追蹤。
 
 ## 發行版本
 

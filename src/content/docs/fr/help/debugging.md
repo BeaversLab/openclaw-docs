@@ -276,67 +276,64 @@ Fichier par défaut :
 
 `~/.openclaw/logs/raw-stream.jsonl`
 
-## Journalisation des chunks bruts (pi-mono)
+## Journalisation des blocs bruts compatibles OpenAI
 
-Pour capturer les **chunks bruts compatibles OpenAI** avant qu'ils ne soient analysés en blocs,
-pi-mono expose un enregistreur séparé :
+Pour capturer les **blocs bruts compatibles OpenAI** avant qu'ils ne soient analysés en blocs,
+activez le journalleur de transport :
 
 ```bash
-PI_RAW_STREAM=1
+OPENCLAW_RAW_STREAM=1
 ```
 
 Chemin optionnel :
 
 ```bash
-PI_RAW_STREAM_PATH=~/.pi-mono/logs/raw-openai-completions.jsonl
+OPENCLAW_RAW_STREAM_PATH=~/.openclaw/logs/raw-openai-completions.jsonl
 ```
 
 Fichier par défaut :
 
-`~/.pi-mono/logs/raw-openai-completions.jsonl`
-
-> Remarque : ceci n'est émis que par les processus utilisant le provider
-> `openai-completions` de pi-mono.
+`~/.openclaw/logs/raw-openai-completions.jsonl`
 
 ## Notes de sécurité
 
-- Les journaux de flux bruts peuvent inclure des invites complètes, la sortie des outils et les données utilisateur.
+- Les journaux de flux bruts peuvent inclure des invites complètes, des sorties d'outils et des données utilisateur.
 - Gardez les journaux en local et supprimez-les après le débogage.
 - Si vous partagez des journaux, nettoyez d'abord les secrets et les données personnelles.
 
 ## Débogage dans VSCode
 
-Les source maps sont nécessaires pour activer le débogage dans les IDE basés sur VSCode, car de nombreux fichiers générés finissent par des noms hachés dans le cadre du processus de build. Les configurations `launch.json` incluses ciblent le service Gateway, mais peuvent être adaptées rapidement à d'autres fins :
+Les source maps sont nécessaires pour activer le débogage dans les IDE basés sur VSCode, car de nombreux fichiers générés finissent par des noms hachés dans le cadre du processus de construction. Les configurations `launch.json` incluses ciblent le service Gateway, mais peuvent être rapidement adaptées à d'autres fins :
 
-1. **Recompiler et déboguer le Gateway** - Débogue le service Gateway après avoir créé une nouvelle build
-2. **Déboguer le Gateway** - Débogue le service Gateway d'une build existante
+1. **Reconstruire et déboguer Gateway** - Débogue le service Gateway après avoir créé une nouvelle build
+2. **Déboguer Gateway** - Débogue le service Gateway d'une build existante
 
 ### Configuration
 
-La configuration par défaut **Recompiler et déboguer le Gateway** est complète ; elle supprimera automatiquement le dossier `/dist` et recompilera le projet avec le débogage activé :
+La configuration par défaut **Reconstruire et déboguer Gateway** est prête à l'emploi, elle supprimera automatiquement le dossier `/dist` et reconstruira le projet avec le débogage activé :
 
 1. Ouvrez le panneau **Exécuter et déboguer** à partir de la barre d'activité ou appuyez sur `Ctrl`+`Shift`+`D`
-2. Dans l'IDE, assurez-vous que **Recompiler et déboguer le Gateway** est sélectionné dans le menu déroulant de configuration, puis appuyez sur le bouton **Démarrer le débogage**
+2. Dans l'IDE, assurez-vous que **Reconstruire et déboguer Gateway** est sélectionné dans le menu déroulant de configuration, puis appuyez sur le bouton **Démarrer le débogage**
 
-Alternativement - si vous préférez gérer les processus de build et de débogage manuellement :
+Alternativement - si vous préférez gérer les processus de construction et de débogage manuellement :
 
 1. Ouvrez un terminal et activez les source maps :
    - **Linux/macOS** : `export OUTPUT_SOURCE_MAPS=1`
    - **Windows (PowerShell)** : `$env:OUTPUT_SOURCE_MAPS="1"`
    - **Windows (CMD)** : `set OUTPUT_SOURCE_MAPS=1`
-2. Dans le même terminal, recompilez le projet : `pnpm clean:dist && pnpm build`
-3. Dans l'IDE, sélectionnez l'option **Déboguer le Gateway** dans le menu déroulant de configuration **Exécuter et déboguer**, puis appuyez sur le bouton **Démarrer le débogage**
+2. Dans le même terminal, reconstruisez le projet : `pnpm clean:dist && pnpm build`
+3. Dans l'IDE, sélectionnez l'option **Déboguer Gateway** dans le menu déroulant de configuration **Exécuter et déboguer**, puis appuyez sur le bouton **Démarrer le débogage**
 
-Vous pouvez maintenant définir des points d'arrêt dans vos fichiers sources TypeScript (répertoire `src/`) et le débogueur mappera correctement les points d'arrêt vers le JavaScript compilé via les source maps. Vous pourrez inspecter les variables, parcourir le code et examiner les piles d'appels comme prévu.
+Vous pouvez maintenant définir des points d'arrêt dans vos fichiers sources TypeScript (répertoire `src/`) et le débogueur mappera correctement les points d'arrêt vers le JavaScript compilé via les source maps. Vous pourrez inspecter les variables, parcourir le code pas à pas et examiner les piles d'appels comme prévu.
 
-### Remarques
+### Notes
 
-- Si vous utilisez l'option **« Rebuild and Debug Gateway »** - à chaque lancement du débogueur, il supprimera complètement le dossier Gateway`/dist` et effectuera une `pnpm build`Gateway complète avec les source maps activées avant de démarrer le Gateway
-- Si vous utilisez l'option **« Debug Gateway »** - les sessions de débogage peuvent être démarrées et arrêtées à tout moment sans affecter le dossier Gateway`/dist`, mais vous devez utiliser un processus de terminal distinct pour activer le débogage et gérer le cycle de construction
+- Si vous utilisez l'option **« Rebuild and Debug Gateway »** - chaque fois que le débogueur est lancé, il supprimera complètement le dossier `/dist` et exécutera une complète `pnpm build` avec les source maps activés avant de démarrer le Gateway
+- Si vous utilisez l'option **« Debug Gateway »** - les sessions de débogage peuvent être démarrées et arrêtées à tout moment sans affecter le dossier `/dist`, mais vous devez utiliser un processus de terminal séparé pour activer le débogage et gérer le cycle de construction
 - Modifiez les paramètres `launch.json` pour `args` afin de déboguer d'autres sections du projet
-- Si vous devez utiliser le CLI OpenClaw construit pour d'autres tâches (c.-à-d. OpenClawCLI`dashboard --no-open` si votre session de débogage génère un nouveau jeton d'authentification), vous pouvez l'exécuter dans un autre terminal en tant que `node ./openclaw.mjs` ou créer un alias shell comme `alias openclaw-build="node $(pwd)/openclaw.mjs"`
+- Si vous devez utiliser le OpenClaw CLI construit pour d'autres tâches (c'est-à-dire `dashboard --no-open` si votre session de débogage génère un nouveau jeton d'authentification), vous pouvez l'exécuter dans un autre terminal en tant que `node ./openclaw.mjs` ou créer un alias de shell comme `alias openclaw-build="node $(pwd)/openclaw.mjs"`
 
-## Lié
+## Connexes
 
 - [Dépannage](/fr/help/troubleshooting)
 - [FAQ](/fr/help/faq)

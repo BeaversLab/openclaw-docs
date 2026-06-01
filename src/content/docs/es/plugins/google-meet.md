@@ -999,7 +999,7 @@ Overrides opcionales:
     introMessage: "Say exactly: I'm here.",
     providers: {
       google: {
-        voice: "Kore",
+        speakerVoice: "Kore",
       },
     },
   },
@@ -1016,7 +1016,7 @@ ElevenLabs tanto para el habla como para la escucha en modo agente:
       providers: {
         elevenlabs: {
           modelId: "eleven_v3",
-          voiceId: "pMsXgVXv3BLzUgSXRplE",
+          speakerVoiceId: "pMsXgVXv3BLzUgSXRplE",
         },
       },
     },
@@ -1044,12 +1044,12 @@ ElevenLabs tanto para el habla como para la escucha en modo agente:
 ```
 
 La voz persistente de Meet proviene de
-`messages.tts.providers.elevenlabs.voiceId`. Las respuestas del agente también pueden usar
-directivas `[[tts:voiceId=... model=eleven_v3]]` por respuesta cuando las
-sustituciones del modelo TTS están activadas, pero la configuración es el
-valor predeterminado determinista para las reuniones.
-Al unirse, los registros deberían mostrar `transcriptionProvider=elevenlabs` y cada
-respuesta hablada debería registrar `provider=elevenlabs model=eleven_v3 voice=<voiceId>`.
+`messages.tts.providers.elevenlabs.speakerVoiceId`. Las respuestas del agente también pueden usar
+directivas `[[tts:speakerVoiceId=... model=eleven_v3]]` por respuesta cuando las anulaciones
+del modelo TTS están habilitadas, pero la configuración es el valor predeterminado
+determinista para las reuniones.
+Al unirse, los registros deben mostrar `transcriptionProvider=elevenlabs` y cada
+respuesta hablada debe registrar `provider=elevenlabs model=eleven_v3 speakerVoiceId=<voiceId>`.
 
 Configuración solo para Twilio:
 

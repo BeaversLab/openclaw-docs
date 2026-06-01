@@ -9,7 +9,7 @@ title: "操作員範圍"
 
 操作員範圍定義了 Gateway 客戶端在通過驗證後可以執行的操作。它們是在單一受信任的 Gateway 操作員域內的控制平面防護措施，而非針對敵對多租戶的隔離機制。如果您需要人員、團隊或機器之間的強烈隔離，請在不同的作業系統使用者或主機下執行個別的 Gateway。
 
-相關主題：[安全性](/zh-Hant/gateway/security)、[Gateway 協定](/zh-Hant/gateway/protocol)、
+相關：[安全性](/zh-Hant/gateway/security)、[Gateway 協定](/zh-Hant/gateway/protocol)、
 [Gateway 配對](/zh-Hant/gateway/pairing)、[Devices CLI](/zh-Hant/cli/devices)。
 
 ## 角色
@@ -64,34 +64,45 @@ Gateway WebSocket 客戶端使用以下其中一種角色連線：
 批准裝置請求時：
 
 - 沒有運算子角色的請求不需要運算子權杖範圍批准。
+- 請求非操作員裝置角色（例如 `node`）需要
+  `operator.admin`，即使 `device.pair.approve` 可透過
+  `operator.pairing` 到達。
 - 請求 `operator.read`、`operator.write`、`operator.approvals`、
   `operator.pairing` 或 `operator.talk.secrets` 需要呼叫者持有
-  這些範圍，或者持有 `operator.admin`。
+  這些範圍，或 `operator.admin`。
 - 請求 `operator.admin` 需要 `operator.admin`。
-- 沒有明確範圍的修復請求可以繼承現有的運算子
-  權杖範圍。如果該現有權杖具有管理員範圍，批准仍然需要
+- 沒有明確範圍的修復請求可以繼承現有的操作員
+  權杖範圍。如果現有的權杖具有管理員範圍，批准仍然需要
   `operator.admin`。
 
-對於已配對裝置的權杖工作階段，除非呼叫者
-同時擁有 `operator.admin`，否則管理為自我範圍：非管理員呼叫者只能看到自己的配對項目，
-只能批准或拒絕自己的待處理請求，並且只能輪替、撤銷或
-移除自己的裝置項目。
+非管理員共享祕密和受信任代理程式會話只能在其自己宣告的操作員範圍內批准操作員-裝置
+請求。批准非操作員
+角色僅限管理員，即使這些會話在其他情況下可以使用
+`operator.pairing`。
 
-## 節點配對審核
+對於已配對裝置權杖會話，除非呼叫者擁有
+`operator.admin`，否則管理也是自我範圍的：非管理員呼叫者只能看到自己的配對
+項目，只能批准或拒絕自己的待處理請求，並且只能輪換、
+撤銷或移除自己的裝置項目。
 
-傳統 `node.pair.*` 使用獨立的 Gateway 擁有之節點配對存儲。WS 節點使用帶有 `role: node` 的裝置配對，但適用相同的審核級別詞彙。
+## 節點配對批准
 
-`node.pair.approve` 使用待處理請求指令清單來推導額外的所需範圍：
+舊版 `node.pair.*` 使用獨立的 Gateway 擁有的節點配對儲存。WS 節點
+使用帶有 `role: node` 的裝置配對，但適用相同的批准級別詞彙
+。
 
-- 無指令請求：`operator.pairing`
-- 非 exec 節點指令：`operator.pairing` + `operator.write`
+`node.pair.approve` 使用待處理請求命令列表來推導額外
+的必需範圍：
+
+- 無命令請求：`operator.pairing`
+- 非 exec 節點命令：`operator.pairing` + `operator.write`
 - `system.run`、`system.run.prepare` 或 `system.which`：
   `operator.pairing` + `operator.admin`
 
-節點配對建立身份與信任。它不會取代節點自己的 `system.run` exec 審核策略。
+節點配對建立身分與信任。它並不取代節點自身的 `system.run` exec 審核策略。
 
-## 共用金鑰驗證
+## 共享密鑰驗證
 
-共享的 gateway token/密碼驗證被視為對該 Gateway 的可信操作員存取權。OpenAI 相容的 HTTP 介面、`/tools/invoke` 以及 HTTP 會話歷史記錄端點會還原正常的完整操作員預設範圍集，適用於共用密碼承載驗證，即使呼叫方發送的宣告範圍較窄。
+共用閘道 token/密碼驗證被視為該閘道的受信任操作員存取。OpenAI 相容 HTTP 介面、`/tools/invoke` 以及 HTTP 會話歷史端點會恢復為共用密鑰 bearer 驗證設定的正常完整操作員預設範圍，即使呼叫方傳送了較窄的宣告範圍。
 
-承載身份的模式，例如信任的代理驗證或私有入口 `none`，仍可遵守明確聲明的範圍。請使用個別的 Gateway 以進行真正的信任邊界隔離。
+承載身分的模式，例如受信任的代理驗證或 private-ingress `none`，仍可遵守明確宣告的範圍。請使用獨立的閘道來達成真正的信任邊界隔離。

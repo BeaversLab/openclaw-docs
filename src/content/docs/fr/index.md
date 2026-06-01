@@ -34,7 +34,7 @@ title: "OpenClaw"
 
 ## Qu'est-ce que OpenClaw ?
 
-OpenClaw est une **passerelle auto-hébergée** qui connecte vos applications de chat préférées et les surfaces de canaux — canaux intégrés ainsi que plugins de canal groupés ou externes tels que Discord, Google Chat, iMessage, Matrix, Microsoft Teams, Signal, Slack, Telegram, WhatsApp, Zalo, et plus encore — aux agents de codage IA comme Pi. Vous exécutez un seul processus de passerelle (Gateway) sur votre propre machine (ou un serveur), et il devient le pont entre vos applications de messagerie et un assistant IA toujours disponible.
+OpenClaw est une ** passerelle auto-hébergée ** qui connecte vos applications de chat préférées et les surfaces de canaux — canaux intégrés ainsi que plugins de canaux fournis ou externes tels que Discord, Google Chat, iMessage, Matrix, Microsoft Teams, Signal, Slack, Telegram, WhatsApp, Zalo, et plus encore — aux agents de codage IA. Vous exécutez un seul processus Gateway sur votre propre machine (ou un serveur), et il devient le pont entre vos applications de messagerie et un assistant IA toujours disponible.
 
 **À qui est-ce destiné ?** Aux développeurs et aux utilisateurs expérimentés qui souhaitent un assistant IA personnel qu'ils peuvent contacter de n'importe où — sans sacrifier le contrôle de leurs données ni dépendre d'un service hébergé.
 
@@ -52,7 +52,7 @@ OpenClaw est une **passerelle auto-hébergée** qui connecte vos applications de
 ```mermaid
 flowchart LR
   A["Chat apps + plugins"] --> B["Gateway"]
-  B --> C["Pi agent"]
+  B --> C["OpenClaw agent"]
   B --> D["CLI"]
   B --> E["Web Control UI"]
   B --> F["macOS app"]
@@ -126,7 +126,7 @@ Ouvrez l'interface utilisateur de contrôle du navigateur une fois le Gateway d�
 
 La configuration se trouve dans `~/.openclaw/openclaw.json`.
 
-- Si vous **ne faites rien**, OpenClaw utilise le binaire Pi inclus en mode RPC avec des sessions par expéditeur.
+- Si vous ** ne faites rien **, OpenClaw utilise le runtime d'agent OpenClaw fourni avec des sessions par expéditeur.
 - Si vous souhaitez verrouiller l'accès, commencez par `channels.whatsapp.allowFrom` et (pour les groupes) les règles de mention.
 
 Exemple :

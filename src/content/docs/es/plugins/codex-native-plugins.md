@@ -25,9 +25,7 @@ Use esta página después de que el [arnés de Codex](/es/plugins/codex-harness)
 - El servidor de aplicaciones Codex de destino debe poder ver el mercado,
   el complemento y el inventario de aplicaciones esperados.
 
-`codexPlugins` no tiene efecto en las ejecuciones de PI, las ejecuciones normales del proveedor de OpenAI, los enlaces de conversación de ACP
-u otros arneses porque esas rutas no crean
-hilos de Codex app-server con configuración `apps` nativa.
+`codexPlugins` no tiene ningún efecto en las ejecuciones de OpenClaw, las ejecuciones normales del proveedor de OpenAI, los enlaces de conversación de ACP u otros arneses porque esas rutas no crean hilos del servidor de aplicaciones de Codex con configuración nativa `apps`.
 
 ## Inicio rápido
 

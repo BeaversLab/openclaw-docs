@@ -16,11 +16,11 @@ OpenClaw 會從 `~/.openclaw/openclaw.json` 讀取可選的 <Tooltip tip="JSON5 
 - 設定模型、工具、沙盒機制或自動化 (cron, hooks)
 - 調整工作階段、媒體、網路或 UI
 
-請參閱 [完整參考資料](/zh-Hant/gateway/configuration-reference) 以了解所有可用欄位。
+請參閱[完整參考](/zh-Hant/gateway/configuration-reference)以了解每個可用欄位。
 
-代理程式和自動化工具在編輯設定前應使用 `config.schema.lookup` 以取得確切的欄位層級文件。請使用本頁進行任務導向的指引，並參閱 [設定參考](/zh-Hant/gateway/configuration-reference) 以了解更廣泛的欄位對應和預設值。
+代理程式和自動化工具應在編輯配置前使用 `config.schema.lookup` 取得確切的欄位層級文件。請使用本頁面取得以任務為導向的指引，並參閱[Configuration reference](/zh-Hant/gateway/configuration-reference)以了解完整的欄位對映和預設值。
 
-<Tip>**剛接觸設定嗎？** 請從 `openclaw onboard` 開始進行互動式設定，或查看 [設定範例](/zh-Hant/gateway/configuration-examples) 指南以取得完整的複製貼上設定檔。</Tip>
+<Tip>**剛開始接觸設定？** 請從 `openclaw onboard` 開始進行互動式設定，或查看 [Configuration Examples](/zh-Hant/gateway/configuration-examples) 指南以取得完整的複製貼上設定。</Tip>
 
 ## 最精簡設定
 
@@ -37,8 +37,8 @@ OpenClaw 會從 `~/.openclaw/openclaw.json` 讀取可選的 <Tooltip tip="JSON5 
 <Tabs>
   <Tab title="Interactive wizard">```bash openclaw onboard # full onboarding flow openclaw configure # config wizard ```</Tab>
   <Tab title="CLI (one-liners)">```bash openclaw config get agents.defaults.workspace openclaw config set agents.defaults.heartbeat.every "2h" openclaw config unset plugins.entries.brave.config.webSearch.apiKey ```</Tab>
-  <Tab title="Control UI">開啟 [http://127.0.0.1:18789](http://127.0.0.1:18789) 並使用 **Config** 分頁。 Control UI 會根據即時設定架構呈現表單，包括欄位 `title` / `description` 文件元資料，以及在可用時的外掛和通道架構，並提供 **Raw JSON** 編輯器作為備用方案。對於深入層級的 UI 和其他工具，閘道也會公開 `config.schema.lookup` 以 取得單一路徑範圍的架構節點以及直接子摘要。</Tab>
-  <Tab title="Direct edit">直接編輯 `~/.openclaw/openclaw.json`。Gateway 會監看該檔案並自動套用變更（請參閱 [熱重載](#config-hot-reload)）。</Tab>
+  <Tab title="Control UI">開啟 [http://127.0.0.1:18789](http://127.0.0.1:18789) 並使用 **Config** 分頁。 Control UI 會根據即時設定架構呈現表單，包括欄位 `title` / `description` 文件中繼資料，以及外掛和通道架構（如果可用），並提供 **Raw JSON** 編輯器作為備選方案。對於下鑽式 UI 和其他工具，閘道也會公開 `config.schema.lookup` 以 取得單一路徑範圍的架構節點及其直接子項摘要。</Tab>
+  <Tab title="Direct edit">直接編輯 `~/.openclaw/openclaw.json`。Gateway 會監看該檔案並自動套用變更（請參閱 [hot reload](#config-hot-reload)）。</Tab>
 </Tabs>
 
 ## 嚴格驗證
@@ -60,7 +60,7 @@ Gateway 在每次成功啟動後會保留一份受信任的「最後已知良好
 
 <AccordionGroup>
   <Accordion title="設定頻道（WhatsApp、Telegram、Discord 等）">
-    每個頻道在 `channels.<provider>` 下都有自己的配置部分。請參閱專屬頻道頁面了解設定步驟：
+    每個頻道都在 `channels.<provider>` 下有自己的配置區段。請參閱專屬的頻道頁面以取得設定步驟：
 
     - [WhatsApp](/zh-Hant/channels/whatsapp) - `channels.whatsapp`
     - [Telegram](/zh-Hant/channels/telegram) - `channels.telegram`
@@ -91,7 +91,7 @@ Gateway 在每次成功啟動後會保留一份受信任的「最後已知良好
   </Accordion>
 
   <Accordion title="選擇並配置模型">
-    設定主要模型和可選的備用模型：
+    設定主要模型與可選的後備方案：
 
     ```json5
     {
@@ -110,31 +110,31 @@ Gateway 在每次成功啟動後會保留一份受信任的「最後已知良好
     }
     ```
 
-    - `agents.defaults.models` 定義模型目錄並作為 `/model` 的允許清單；`provider/*` 條目會過濾 `/model`、`/models` 和模型選擇器至選定的供應商，同時仍使用動態模型探索。
-    - 使用 `openclaw config set agents.defaults.models '<json>' --strict-json --merge` 新增允許清單條目而不移除現有模型。會移除條目的單純替換會被拒絕，除非您傳遞 `--replace`。
+    - `agents.defaults.models` 定義了型錄並充當 `/model` 的允許清單；`provider/*` 項目會將 `/model`、`/models` 和模型選擇器篩選為選定的供應商，同時仍使用動態模型探索。
+    - 使用 `openclaw config set agents.defaults.models '<json>' --strict-json --merge` 來新增允許清單項目，而不移除現有的模型。會移除項目的純替換操作會被拒絕，除非您傳遞了 `--replace`。
     - 模型參照使用 `provider/model` 格式（例如 `anthropic/claude-opus-4-6`）。
-    - `agents.defaults.imageMaxDimensionPx` 控制逐字稿/工具圖像的縮小比例（預設 `1200`）；較低的值通常會在螢幕截圖密集的執行中減少視覺 token 的使用量。
-    - 請參閱 [Models CLI](/zh-Hant/concepts/models) 以在聊天中切換模型，並參閱 [Model Failover](/zh-Hant/concepts/model-failover) 以了解認證輪替和備用行為。
-    - 對於自訂/自託管供應商，請參閱參考資料中的 [Custom providers](/zh-Hant/gateway/config-tools#custom-providers-and-base-urls)。
+    - `agents.defaults.imageMaxDimensionPx` 控制逐字稿/工具圖片的縮小比例（預設 `1200`）；較低的值通常會減少大量擷圖執行時的視覺 token 使用量。
+    - 請參閱 [Models CLI](/zh-Hant/concepts/models) 以在聊天中切換模型，並參閱 [Model Failover](/zh-Hant/concepts/model-failover) 以了解認證輪替和後備行為。
+    - 關於自訂/自託管的供應商，請參閱參考資料中的 [Custom providers](/zh-Hant/gateway/config-tools#custom-providers-and-base-urls)。
 
   </Accordion>
 
   <Accordion title="控制誰可以傳訊息給機器人">
     DM 存取權透過 `dmPolicy` 依管道控制：
 
-    - `"pairing"`（預設）：未知的發送者會收到一次性配對代碼以進行核准
-    - `"allowlist"`：僅限 `allowFrom` 中的發送者（或配對的允許儲存空間）
-    - `"open"`：允許所有傳入 DM（需要 `allowFrom: ["*"]`）
+    - `"pairing"`（預設）：未知發送者會收到一次性配對代碼以供核准
+    - `"allowlist"`：僅限 `allowFrom`（或已配對的允許儲存）中的發送者
+    - `"open"`：允許所有傳入的 DM（需要 `allowFrom: ["*"]`）
     - `"disabled"`：忽略所有 DM
 
     對於群組，請使用 `groupPolicy` + `groupAllowFrom` 或特定管道的允許清單。
 
-    請參閱 [完整參考](/zh-Hant/gateway/config-channels#dm-and-group-access) 以了解各管道的詳細資訊。
+    如需每個管道的詳細資訊，請參閱 [完整參考](/zh-Hant/gateway/config-channels#dm-and-group-access)。
 
   </Accordion>
 
-  <Accordion title="Set up group chat mention gating">
-    群組訊息預設為**需要提及**。請為每個代理程式設定觸發模式。一般的群組/頻道回覆會自動張貼；在代理程式應決定何時發言的共享聊天室中，選擇加入 message-tool 路徑：
+  <Accordion title="設定群組聊天提及閘門">
+    群組訊息預設為**需要提及**。請為每個代理設定觸發模式。一般的群組/頻道回覆會自動發布；對於代理應決定何時發言的共用聊天室，請選擇訊息工具路徑：
 
     ```json5
     {
@@ -163,15 +163,15 @@ Gateway 在每次成功啟動後會保留一份受信任的「最後已知良好
     }
     ```
 
-    - **中繼資料提及**：原生 @-提及（WhatsApp 點擊提及、Telegram @bot 等）
-    - **文字模式**：`mentionPatterns` 中的安全正規表示式模式
-    - **可見回覆**：`messages.visibleReplies` 可以全域要求使用 message-tool 傳送；`messages.groupChat.visibleReplies` 則會針對群組/頻道覆寫該設定。
-    - 請參閱[完整參考資料](/zh-Hant/gateway/config-channels#group-chat-mention-gating)以了解可見回覆模式、各頻道覆寫設定以及自聊模式。
+    - **中繼資料提及**：原生的 @-提及（WhatsApp 點擊提及、Telegram @bot 等）
+    - **文字模式**：`mentionPatterns` 中的安全 regex 模式
+    - **可見回覆**：`messages.visibleReplies` 可以全域要求使用訊息工具發送；`messages.groupChat.visibleReplies` 會針對群組/頻道覆寫該設定。
+    - 請參閱[完整參考資料](/zh-Hant/gateway/config-channels#group-chat-mention-gating)以了解可見回覆模式、各頻道覆寫以及自我聊天模式。
 
   </Accordion>
 
-  <Accordion title="限制每個代理程式的技能">
-    使用 `agents.defaults.skills` 作為共用基準，然後使用 `agents.list[].skills` 覆寫特定代理程式：
+  <Accordion title="限制各代理的技能">
+    使用 `agents.defaults.skills` 作為共用基準，然後使用 `agents.list[].skills` 覆寫特定代理：
 
     ```json5
     {
@@ -188,15 +188,15 @@ Gateway 在每次成功啟動後會保留一份受信任的「最後已知良好
     }
     ```
 
-    - 省略 `agents.defaults.skills` 以預設允許無限制的技能。
+    - 省略 `agents.defaults.skills` 以預設啟用無限制技能。
     - 省略 `agents.list[].skills` 以繼承預設值。
-    - 將 `agents.list[].skills: []` 設定為無技能。
-    - 請參閱 [技能](/zh-Hant/tools/skills)、[技能設定](/zh-Hant/tools/skills-config) 以及[組態參考](/zh-Hant/gateway/config-agents#agents-defaults-skills)。
+    - 設定 `agents.list[].skills: []` 以不使用任何技能。
+    - 請參閱[技能](/zh-Hant/tools/skills)、[技能設定](/zh-Hant/tools/skills-config)以及[設定參考資料](/zh-Hant/gateway/config-agents#agents-defaults-skills)。
 
   </Accordion>
 
   <Accordion title="調整閘道頻道健康監控">
-    控制閘道重啟看起來已失效的頻道之積極程度：
+    控制閘道以多積極的方式重新啟動看起來過時的頻道：
 
     ```json5
     {
@@ -218,10 +218,10 @@ Gateway 在每次成功啟動後會保留一份受信任的「最後已知良好
     }
     ```
 
-    - 設定 `gateway.channelHealthCheckMinutes: 0` 以全域停用健康監控重啟。
+    - 設定 `gateway.channelHealthCheckMinutes: 0` 以全域停用健康監控重新啟動。
     - `channelStaleEventThresholdMinutes` 應大於或等於檢查間隔。
-    - 使用 `channels.<provider>.healthMonitor.enabled` 或 `channels.<provider>.accounts.<id>.healthMonitor.enabled` 以停用單一頻道或帳戶的自動重啟，而無需停用全域監控器。
-    - 請參閱 [健康檢查](/zh-Hant/gateway/health) 以進行營運除錯，並參閱[完整參考資料](/zh-Hant/gateway/configuration-reference#gateway)以了解所有欄位。
+    - 使用 `channels.<provider>.healthMonitor.enabled` 或 `channels.<provider>.accounts.<id>.healthMonitor.enabled` 來停用單一頻道或帳戶的自動重新啟動，而無需停用全域監控器。
+    - 請參閱[健康檢查](/zh-Hant/gateway/health)以進行操作調試，並參閱[完整參考資料](/zh-Hant/gateway/configuration-reference#gateway)以了解所有欄位。
 
   </Accordion>
 
@@ -242,7 +242,7 @@ Gateway 在每次成功啟動後會保留一份受信任的「最後已知良好
 
   </Accordion>
 
-  <Accordion title="設定會話與重置">
+  <Accordion title="設定會話與重設">
     會話控制對話的連續性和隔離性：
 
     ```json5
@@ -263,15 +263,15 @@ Gateway 在每次成功啟動後會保留一份受信任的「最後已知良好
     }
     ```
 
-    - `dmScope`：`main` (共用) | `per-peer` | `per-channel-peer` | `per-account-channel-peer`
-    - `threadBindings`：執行緒綁定會話路由的全域預設值 (Discord 支援 `/focus`、`/unfocus`、`/agents`、`/session idle` 和 `/session max-age`)。
-    - 請參閱 [會話管理](/zh-Hant/concepts/session) 以了解範圍、身分連結和傳送原則。
-    - 請參閱 [完整參考](/zh-Hant/gateway/config-agents#session) 以了解所有欄位。
+    - `dmScope`: `main` (共用) | `per-peer` | `per-channel-peer` | `per-account-channel-peer`
+    - `threadBindings`: 繫結至執行緒之會話路由的全域預設值 (Discord 支援 `/focus`、`/unfocus`、`/agents`、`/session idle` 與 `/session max-age`)。
+    - 請參閱 [會話管理](/zh-Hant/concepts/session) 以了解範圍、身分連結與傳送原則。
+    - 請參閱 [完整參考](/zh-Hant/gateway/config-agents#session) 以查看所有欄位。
 
   </Accordion>
 
-  <Accordion title="啟用沙盒機制">
-    在隔離的沙盒執行時期中執行代理程式會話：
+  <Accordion title="啟用沙盒">
+    在隔離的沙盒執行環境中執行代理程式會話：
 
     ```json5
     {
@@ -286,16 +286,16 @@ Gateway 在每次成功啟動後會保留一份受信任的「最後已知良好
     }
     ```
 
-    請先建構映像檔——從原始碼检出執行 `scripts/sandbox-setup.sh`，或從 npm 安裝請參閱 [沙盒機制 § 映像檔與設定](/zh-Hant/gateway/sandboxing#images-and-setup) 中的內聯 `docker build` 指令。
+    請先建構映像檔 —— 從原始碼檢出執行 `scripts/sandbox-setup.sh`，或是從 npm 安裝查看 [沙盒 § 映像檔與設定](/zh-Hant/gateway/sandboxing#images-and-setup) 中內嵌的 `docker build` 指令。
 
-    請參閱 [沙盒機制](/zh-Hant/gateway/sandboxing) 了解完整指南，以及 [完整參考](/zh-Hant/gateway/config-agents#agentsdefaultssandbox) 了解所有選項。
+    請參閱 [沙盒](/zh-Hant/gateway/sandboxing) 取得完整指南，並參閱 [完整參考](/zh-Hant/gateway/config-agents#agentsdefaultssandbox) 以查看所有選項。
 
   </Accordion>
 
-  <Accordion title="為官方 iOS 版本啟用中繼支援的推送">
-    中繼支援的推送是在 `openclaw.json` 中配置的。
+  <Accordion title="為官方 iOS 版本啟用基於轉發的推送">
+    基於轉發的推送在 `openclaw.json` 中設定。
 
-    在 gateway config 中設定此項：
+    在閘道設定中設定此項：
 
     ```json5
     {
@@ -313,7 +313,7 @@ Gateway 在每次成功啟動後會保留一份受信任的「最後已知良好
     }
     ```
 
-    CLI 對應指令：
+    CLI 對等寫法：
 
     ```bash
     openclaw config set gateway.push.apns.relay.baseUrl https://relay.example.com
@@ -321,31 +321,31 @@ Gateway 在每次成功啟動後會保留一份受信任的「最後已知良好
 
     此設定的作用：
 
-    - 允許 gateway 透過外部中繼發送 `push.test`、喚醒輕推 (wake nudges) 和重新連線喚醒 (reconnect wakes)。
-    - 使用由配對的 iOS 應用程式轉發的註冊範圍發送授權 (registration-scoped send grant)。Gateway 不需要部署範圍的中繼權杖 (relay token)。
-    - 將每個中繼支援的註冊綁定到 iOS 應用程式配對的 gateway 身份，因此另一個 gateway 無法重複使用儲存的註冊資訊。
-    - 讓本地/手動的 iOS 版本保持使用直接 APNs。中繼支援的發送僅適用於透過中繼註冊的官方發行版本。
-    - 必須符合內建於官方/TestFlight iOS 版本中的中繼基礎 URL (relay base URL)，以便註冊和發送流量到達同一個中繼部署。
+    - 允許閘道透過外部轉發站發送 `push.test`、喚醒推撥和重連喚醒。
+    - 使用由配對的 iOS 應用程式轉發的註冊範圍發送授權。閘道不需要部署範圍的轉發權杖。
+    - 將每個基於轉發的註冊綁定到 iOS 應用程式所配對的閘道身份，因此另一個閘道無法重用儲存的註冊。
+    - 讓本機/手動 iOS 版本保持在直接 APNs 上。基於轉發的發送僅適用於透過轉發站註冊的官方發行版本。
+    - 必須與內建於官方/TestFlight iOS 版本中的轉發站基礎 URL 相符，以便註冊和發送流量抵達同一個轉發站部署。
 
-    端到端流程：
+    端對端流程：
 
-    1. 安裝使用相同中繼基礎 URL 編譯的官方/TestFlight iOS 版本。
-    2. 在 gateway 上設定 `gateway.push.apns.relay.baseUrl`。
-    3. 將 iOS 應用程式與 gateway 配對，並讓 node 和 operator 會話都進行連線。
-    4. iOS 應用程式會取得 gateway 身份，使用 App Attest 和應用程式收據向中繼註冊，然後將中繼支援的 `push.apns.register` payload 發布到配對的 gateway。
-    5. Gateway 儲存中繼控制代碼 (relay handle) 和發送授權，然後將其用於 `push.test`、喚醒輕推和重新連線喚醒。
+    1. 安裝使用相同轉發站基礎 URL 編譯的官方/TestFlight iOS 版本。
+    2. 在閘道上設定 `gateway.push.apns.relay.baseUrl`。
+    3. 將 iOS 應用程式與閘道配對，並讓節點和操作員工作階段都連線。
+    4. iOS 應用程式會取得閘道身份，使用 App Attest 加上應用程式收據向轉發站註冊，然後將基於轉發的 `push.apns.register` 載荷發布到配對的閘道。
+    5. 閘道會儲存轉發句柄和發送授權，然後將它們用於 `push.test`、喚醒推撥和重連喚醒。
 
-    營運注意事項：
+    操作備註：
 
-    - 如果您將 iOS 應用程式切換到不同的 gateway，請重新連線應用程式，使其能夠發布綁定到該 gateway 的新中繼註冊。
-    - 如果您發布指向不同中繼部署的新 iOS 版本，應用程式會重新整理其快取的中繼註冊，而不是重用舊的中繼來源 (relay origin)。
+    - 如果您將 iOS 應用程式切換到不同的閘道，請重新連線應用程式，以便它發布綁定到該閘道的新轉發註冊。
+    - 如果您發布指向不同轉發站部署的新 iOS 版本，應用程式會重新整理其快取的轉發註冊，而不是重用舊的轉發站來源。
 
-    相容性注意事項：
+    相容性備註：
 
-    - `OPENCLAW_APNS_RELAY_BASE_URL` 和 `OPENCLAW_APNS_RELAY_TIMEOUT_MS` 仍可作為臨時的環境變數覆寫。
-    - `OPENCLAW_APNS_RELAY_ALLOW_HTTP=true` 仍僅作為回送開發的緊急出口；請勿在設定中保存 HTTP 中繼 URL。
+    - `OPENCLAW_APNS_RELAY_BASE_URL` 和 `OPENCLAW_APNS_RELAY_TIMEOUT_MS` 仍可作為暫時的環境變數覆寫使用。
+    - `OPENCLAW_APNS_RELAY_ALLOW_HTTP=true` 僅保留為僅限回傳的開發逃生艙；請勿在設定中保存 HTTP 轉發站 URL。
 
-    請參閱 [iOS 應用程式](/zh-Hant/platforms/ios#relay-backed-push-for-official-builds) 以了解端到端流程，並參閱 [驗證與信任流程](/zh-Hant/platforms/ios#authentication-and-trust-flow) 以了解中繼安全性模型。
+    如需瞭解端對端流程，請參閱 [iOS App](/zh-Hant/platforms/ios#relay-backed-push-for-official-builds)；如需瞭解轉發站安全模型，請參閱 [Authentication and trust flow](/zh-Hant/platforms/ios#authentication-and-trust-flow)。
 
   </Accordion>
 
@@ -363,19 +363,19 @@ Gateway 在每次成功啟動後會保留一份受信任的「最後已知良好
     }
     ```
 
-    - `every`: 持續時間字串 (`30m`, `2h`)。設定為 `0m` 以停用。
+    - `every`: 持續時間字串 (`30m`, `2h`)。設定 `0m` 以停用。
     - `target`: `last` | `none` | `<channel-id>` (例如 `discord`, `matrix`, `telegram`, 或 `whatsapp`)
     - `directPolicy`: `allow` (預設) 或 `block` 用於 DM 風格的心跳目標
-    - 參閱 [Heartbeat](/zh-Hant/gateway/heartbeat) 以取得完整指南。
+    - 參閱 [Heartbeat](/zh-Hant/gateway/heartbeat) 取得完整指南。
 
   </Accordion>
 
-  <Accordion title="設定 cron jobs">
+  <Accordion title="設定 cron 工作">
     ```json5
     {
       cron: {
         enabled: true,
-        maxConcurrentRuns: 2, // cron dispatch + isolated cron agent-turn execution
+        maxConcurrentRuns: 8, // default; cron dispatch + isolated cron agent-turn execution
         sessionRetention: "24h",
         runLog: {
           maxBytes: "2mb",
@@ -385,13 +385,13 @@ Gateway 在每次成功啟動後會保留一份受信任的「最後已知良好
     }
     ```
 
-    - `sessionRetention`: 從 `sessions.json` 中修剪已完成的隔離執行工作階段 (預設 `24h`；設定 `false` 以停用)。
+    - `sessionRetention`: 從 `sessions.json` 中修剪已完成的獨立執行階段 (預設 `24h`；設定 `false` 以停用)。
     - `runLog`: 依大小和保留行數修剪 `cron/runs/<jobId>.jsonl`。
-    - 參閱 [Cron jobs](/zh-Hant/automation/cron-jobs) 以取得功能概述和 CLI 範例。
+    - 參閱 [Cron jobs](/zh-Hant/automation/cron-jobs) 了解功能概覽和 CLI 範例。
 
   </Accordion>
 
-  <Accordion title="設定 Webhooks (hooks)">
+  <Accordion title="設定 Webhook (hooks)">
     在 Gateway 上啟用 HTTP webhook 端點：
 
     ```json5
@@ -415,16 +415,16 @@ Gateway 在每次成功啟動後會保留一份受信任的「最後已知良好
     }
     ```
 
-    安全性備註：
+    安全性說明：
     - 將所有 hook/webhook payload 內容視為不受信任的輸入。
-    - 使用專用的 `hooks.token`；請勿重複使用共用的 Gateway 權杖。
-    - Hook 驗證僅限標頭（`Authorization: Bearer ...` 或 `x-openclaw-token`）；查詢字串權杖將被拒絕。
-    - `hooks.path` 無法被 `/`；請將 webhook 入口保留在專用子路徑上，例如 `/hooks`。
-    - 除非進行嚴格範圍的除錯，否則請停用不安全內容略過旗標（`hooks.gmail.allowUnsafeExternalContent`、`hooks.mappings[].allowUnsafeExternalContent`）。
-    - 如果您啟用 `hooks.allowRequestSessionKey`，請同時設定 `hooks.allowedSessionKeyPrefixes` 以限制呼叫者選擇的會話金鑰。
-    - 對於由 hook 驅動的代理程式，建議使用強大的現代模型層級和嚴格的工具政策（例如僅限訊息傳遞以及盡可能使用沙箱）。
+    - 使用專用的 `hooks.token`；切勿重複使用現有的 Gateway 驗證金鑰 (`gateway.auth.token` / `OPENCLAW_GATEWAY_TOKEN` 或 `gateway.auth.password` / `OPENCLAW_GATEWAY_PASSWORD`)。
+    - Hook 驗證僅限標頭 (`Authorization: Bearer ...` 或 `x-openclaw-token`)；查詢字串 token 將被拒絕。
+    - `hooks.path` 無法 `/`；請將 webhook 入口保留在專用子路徑，例如 `/hooks`。
+    - 除非進行嚴格範圍的除錯，否則請停用不安全內容略過旗標 (`hooks.gmail.allowUnsafeExternalContent`, `hooks.mappings[].allowUnsafeExternalContent`)。
+    - 如果您啟用 `hooks.allowRequestSessionKey`，也請設定 `hooks.allowedSessionKeyPrefixes` 以限制呼叫端選擇的 session keys。
+    - 對於由 hook 驅動的代理程式，建議使用強大的現代模型層級和嚴格的工具原則 (例如僅限訊息傳遞，並在可能的情況下使用沙箱)。
 
-    參閱[完整參考資料](/zh-Hant/gateway/configuration-reference#hooks)以了解所有對應選項和 Gmail 整合。
+    查閱 [完整參考資料](/zh-Hant/gateway/configuration-reference#hooks) 以了解所有對應選項和 Gmail 整合。
 
   </Accordion>
 
@@ -446,7 +446,7 @@ Gateway 在每次成功啟動後會保留一份受信任的「最後已知良好
     }
     ```
 
-    參閱 [Multi-Agent](/zh-Hant/concepts/multi-agent) 和 [完整參考資料](/zh-Hant/gateway/config-agents#multi-agent-routing) 以了解繫結規則和每個代理程式的存取設定檔。
+    查閱 [多代理程式](/zh-Hant/concepts/multi-agent) 和 [完整參考資料](/zh-Hant/gateway/config-agents#multi-agent-routing) 以了解綁定規則和個別代理程式的存取設定檔。
 
   </Accordion>
 
@@ -464,19 +464,20 @@ Gateway 在每次成功啟動後會保留一份受信任的「最後已知良好
     }
     ```
 
-    - **單個檔案**：替換包含的物件
+    - **單一檔案**：替換包含的物件
     - **檔案陣列**：按順序深度合併（後者優先）
-    - **同層級鍵 (Sibling keys)**：在包含之後合併（覆蓋包含的值）
-    - **巢狀包含**：最多支援 10 層深度
+    - **同層級鍵**：在包含之後合併（覆蓋包含的值）
+    - **巢狀包含**：支援最多 10 層深
     - **相對路徑**：相對於包含檔案解析
-    - **路徑格式**：包含路徑不得包含空位元組，且在解析前後必須嚴格短於 4096 個字元
-    - **OpenClaw 擁有的寫入**：當寫入操作僅變更由單一檔案包含支援的一個頂層區段（例如 `plugins: { $include: "./plugins.json5" }`）時，
-      OpenClaw 會更新該被包含的檔案並保持 `openclaw.json` 完整
-    - **不支援的寫透**：根包含、包含陣列，以及具有同層級覆蓋的包含，對於 OpenClaw 擁有的寫入將以封閉失敗處理，
-      而非扁平化配置
-    - **限制**：`$include` 路徑必須解析至持有 `openclaw.json` 的目錄下。若要跨機器或使用者共享樹狀結構，
-      請將 `OPENCLAW_INCLUDE_ROOTS` 設定為包含可能引用的其他目錄的路徑清單（POSIX 上為 `:`，Windows 上為 `;`）。
-      符號連結會被解析並重新檢查，因此詞法上位於配置目錄中但實際目標逃逸出所有允許根目錄的路徑仍會被拒絕。
+    - **路徑格式**：包含路徑不得包含空位元組，且在解析前後必須嚴格少於 4096 個字元
+    - **OpenClaw 擁有的寫入**：當寫入僅變更由單一檔案包含（例如 `plugins: { $include: "./plugins.json5" }`）支援的
+      一個頂層區段時，OpenClaw 會更新該包含檔案並保持 `openclaw.json` 完整
+    - **不支援的直寫**：根包含、包含陣列以及具有同層級覆寫的包含，在 OpenClaw 擁有的寫入中會
+      失敗關閉，而不是扁平化配置
+    - **限制**：`$include` 路徑必須解析在持有 `openclaw.json` 的目錄下。
+      若要跨機器或使用者共享樹狀結構，請將 `OPENCLAW_INCLUDE_ROOTS` 設定為包含可能參考之
+      額外目錄的路徑清單（POSIX 上為 `:`，Windows 上為 `;`）。
+      符號連結會被解析並重新檢查，因此詞法上位於配置目錄中但其實際目標逸出每個允許根目錄的路徑仍會被拒絕。
     - **錯誤處理**：針對檔案遺失、解析錯誤、循環包含、無效路徑格式和過長長度提供明確錯誤
 
   </Accordion>
@@ -484,17 +485,14 @@ Gateway 在每次成功啟動後會保留一份受信任的「最後已知良好
 
 ## 設定熱重新載入
 
-Gateway 會監看 `~/.openclaw/openclaw.json` 並自動套用變更 —— 大多數設定無需手動重新啟動。
+Gateway 會監視 `~/.openclaw/openclaw.json` 並自動套用變更 - 大多數設定無需手動重新啟動。
 
-直接檔案編輯在驗證前會被視為不受信任。監看器會等待編輯器的暫時寫入/重新命名
-混亂平息後，讀取最終檔案，並在不重寫 `openclaw.json` 的情況下
-拒絕無效的外部編輯。OpenClaw 擁有的設定寫入在寫入前也會使用相同的 schema 閘道；
-諸如捨棄 `gateway.mode` 或將檔案縮減超過一半等破壞性覆寫都會
-被拒絕，並另存為 `.rejected.*` 以供檢查。
+直接編輯檔案在通過驗證之前會被視為不受信任。監視器會等待編輯器暫存寫入/重新命名的混亂情況平息，讀取最終檔案，並且在不重寫 `openclaw.json` 的情況下拒絕無效的外部編輯。OpenClaw 擁有的配置寫入在寫入前使用相同的架構閘道；破壞性的覆寫，例如刪除 `gateway.mode` 或將檔案大小縮減超過一半，都會被拒絕並儲存為 `.rejected.*` 以供檢查。
 
-如果您看到 `config reload skipped (invalid config)` 或啟動時報告 `Invalid
+如果您看到 `config reload skipped (invalid config)` 或啟動時回報 `Invalid
 config`, inspect the config, run `openclaw config validate`, then run `openclaw
-doctor --fix` 進行修復。有關檢查清單，請參閱 [Gateway troubleshooting](/zh-Hant/gateway/troubleshooting#gateway-rejected-invalid-config)。
+doctor --fix` 以進行修復。請參閱 [Gateway troubleshooting](/zh-Hant/gateway/troubleshooting#gateway-rejected-invalid-config)
+查看檢查清單。
 
 ### 重載模式
 
@@ -515,42 +513,47 @@ doctor --fix` 進行修復。有關檢查清單，請參閱 [Gateway troubleshoo
 
 ### 何者可熱套用 vs 何者需要重新啟動
 
-大多數欄位可在無停機情況下熱套用。在 `hybrid` 模式下，需要重新啟動的變更會自動處理。
+大多數欄位會在無停機情況下熱套用。在 `hybrid` 模式下，需要重新啟動的變更會自動處理。
 
-| 類別           | 欄位                                                    | 需要重新啟動？ |
-| -------------- | ------------------------------------------------------- | -------------- |
-| 頻道           | `channels.*`、`web` (WhatsApp) - 所有內建和外掛程式頻道 | 否             |
-| 代理與模型     | `agent`、`agents`、`models`、`routing`                  | 否             |
-| 自動化         | `hooks`、`cron`、`agent.heartbeat`                      | 否             |
-| 會話與訊息     | `session`、`messages`                                   | 否             |
-| 工具與媒體     | `tools`、`browser`、`skills`、`mcp`、`audio`、`talk`    | 否             |
-| 介面與其他     | `ui`、`logging`、`identity`、`bindings`                 | 否             |
-| Gateway 伺服器 | `gateway.*` (port、bind、auth、tailscale、TLS、HTTP)    | **是**         |
-| 基礎架構       | `discovery`、`plugins`                                  | **是**         |
+| 類別           | 欄位                                                 | 需要重新啟動？ |
+| -------------- | ---------------------------------------------------- | -------------- |
+| 頻道           | `channels.*`, `web` (WhatsApp) - 所有內建和外掛頻道  | 否             |
+| 代理與模型     | `agent`, `agents`, `models`, `routing`               | 否             |
+| 自動化         | `hooks`, `cron`, `agent.heartbeat`                   | 否             |
+| 會話與訊息     | `session`, `messages`                                | 否             |
+| 工具與媒體     | `tools`, `browser`, `skills`, `mcp`, `audio`, `talk` | 否             |
+| 介面與其他     | `ui`, `logging`, `identity`, `bindings`              | 否             |
+| Gateway 伺服器 | `gateway.*` (port, bind, auth, tailscale, TLS, HTTP) | **是**         |
+| 基礎架構       | `discovery`, `plugins`                               | **是**         |
 
-<Note>`gateway.reload` 和 `gateway.remote` 是例外 - 更改它們 **不會** 觸發重新啟動。</Note>
+<Note>`gateway.reload` 和 `gateway.remote` 是例外——變更它們**不會**觸發重新啟動。</Note>
 
 ### 重新載入規劃
 
 當您編輯透過 `$include` 參照的來源檔案時，OpenClaw 會根據
-來源建立的佈局進行重新載入規劃，而不是扁平化的記憶體內檢視。
-這使得熱重新載入決策 (熱套用 vs 重新啟動) 即使在單一頂層區段位於其獨立的包含檔案 (例如
-`plugins: { $include: "./plugins.json5" }`) 中時也能保持可預測性。如果來源佈局不明確，重新載入規劃將會失敗關閉。
+來源撰寫的佈局規劃重新載入，而非扁平化的記憶體內檢視。
+這能讓熱重新載入決策（熱套用 vs 重啟）保持可預測，即使當
+單一頂層區段存在於其個別包含的檔案中，例如
+`plugins: { $include: "./plugins.json5" }`。如果來源佈局不明確，重新載入規劃將會失敗封閉（fails closed）。
 
 ## Config RPC（程式化更新）
 
 對於透過 Gateway API 寫入配置的工具，建議採用以下流程：
 
-- `config.schema.lookup` 用於檢查單一子樹（淺層架構節點 + 子摘要）
+- `config.schema.lookup` 用於檢查單一子樹（淺層架構節點 + 子
+  摘要）
 - `config.get` 用於擷取目前的快照加上 `hash`
-- `config.patch` 用於部分更新（JSON 合併修補：物件合併、`null` 刪除、陣列替換）
-- 僅當您打算替換整個設定時使用 `config.apply`
-- `update.run` 用於明確的自我更新加上重新啟動；當重新啟動後的工作階段應執行一次後續輪次時，包含 `continuationMessage`
-- `update.status` 用於檢查最新的更新重新啟動標記並在重新啟動後驗證執行版本
+- `config.patch` 用於部分更新（JSON 合併修補：物件合併，`null`
+  刪除，陣列替換）
+- 僅當您打算替換整個組態時才使用 `config.apply`
+- `update.run` 用於明確的自我更新加上重啟；當重啟後的工作階段應執行一次後續輪次時，包含 `continuationMessage`
+- `update.status` 用於檢查最新的更新重啟標記，並在重啟後驗證執行中的版本
 
-Agent 應將 `config.schema.lookup` 視為確切欄位層級文件與約束條件的首選。當它們需要更廣泛的設定對應、預設值或專用子系統參考的連結時，請使用 [Configuration reference](/zh-Hant/gateway/configuration-reference)
+代理程式應將 `config.schema.lookup` 視為取得精確
+欄位級文件與約束條件的首選。當它們需要更廣泛的組態對應、預設值，或連結至專用
+子系統參考資料時，請使用 [Configuration reference](/zh-Hant/gateway/configuration-reference)。
 
-<Note>控制平面寫入（`config.apply`、`config.patch`、`update.run`）限制速率為每個 `deviceId+clientIp` 每 60 秒 3 個請求。重新啟動請求會合併，然後在重新啟動週期之間強制執行 30 秒的冷卻時間。 `update.status` 是唯讀的，但是管理員範圍，因為重新啟動標記可以包含更新步驟摘要和命令輸出尾部。</Note>
+<Note>控制平面寫入（`config.apply`、`config.patch`、`update.run`）會 針對每個 `deviceId+clientIp` 限制為每 60 秒 3 個請求。重啟 請求會合併，然後在重啟週期之間執行 30 秒的冷卻時間。 `update.status` 是唯讀的，但屬於管理員範圍，因為重啟標記可能 包含更新步驟摘要和指令輸出尾部。</Note>
 
 部分修補範例：
 
@@ -563,14 +566,15 @@ openclaw gateway call config.patch --params '{
 ```
 
 `config.apply` 和 `config.patch` 都接受 `raw`、`baseHash`、`sessionKey`、
-`note` 和 `restartDelayMs`。當設定已存在時，這兩種方法都需要 `baseHash`。
+`note` 和 `restartDelayMs`。當組態
+已存在時，這兩種方法都需要 `baseHash`。
 
 ## 環境變數
 
 OpenClaw 從父程序以及以下來源讀取環境變數：
 
-- `.env` 來自目前工作目錄（如果存在）
-- `~/.openclaw/.env`（全域備援）
+- `.env` 從當前工作目錄（如果存在）
+- `~/.openclaw/.env`（全域後備）
 
 這兩個檔案都不會覆蓋既有的環境變數。您也可以在設定中設定內聯環境變數：
 
@@ -583,8 +587,8 @@ OpenClaw 從父程序以及以下來源讀取環境變數：
 }
 ```
 
-<Accordion title="Shell 環境變數匯入（選用）">
-  若啟用此功能且未設定預期的金鑰，OpenClaw 將執行您的登入 Shell 並僅匯入缺失的金鑰：
+<Accordion title="Shell env import (optional)">
+  如果啟用且未設定預期的金鑰，OpenClaw 會執行您的登入 shell 並僅匯入缺失的金鑰：
 
 ```json5
 {
@@ -594,12 +598,12 @@ OpenClaw 從父程序以及以下來源讀取環境變數：
 }
 ```
 
-同等環境變數：`OPENCLAW_LOAD_SHELL_ENV=1`
+Env var equivalent: `OPENCLAW_LOAD_SHELL_ENV=1`
 
 </Accordion>
 
-<Accordion title="設定值中的環境變數替換">
-  您可以在任何設定字串值中使用 `${VAR_NAME}` 參照環境變數：
+<Accordion title="Env var substitution in config values">
+  使用 `${VAR_NAME}` 在任何設定字串值中參照環境變數：
 
 ```json5
 {
@@ -611,14 +615,14 @@ OpenClaw 從父程序以及以下來源讀取環境變數：
 規則：
 
 - 僅匹配大寫名稱：`[A-Z_][A-Z0-9_]*`
-- 缺失/空的變數會在載入時擲回錯誤
-- 使用 `$${VAR}` 進行跳脫以取得字面輸出
-- 適用於 `$include` 檔案內部
+- 缺失/空的變數會在載入時拋出錯誤
+- 使用 `$${VAR}` 跳脫以取得字面輸出
+- 適用於 `$include` 檔案內
 - 內聯替換：`"${BASE}/v1"` → `"https://api.example.com/v1"`
 
 </Accordion>
 
-<Accordion title="Secret 參照（env、file、exec）">
+<Accordion title="Secret refs (env, file, exec)">
   對於支援 SecretRef 物件的欄位，您可以使用：
 
 ```json5
@@ -651,16 +655,16 @@ OpenClaw 從父程序以及以下來源讀取環境變數：
 }
 ```
 
-SecretRef 詳細資訊（包括 `env`/`file`/`exec` 的 `secrets.providers`）位於 [Secrets Management](/zh-Hant/gateway/secrets)。
+SecretRef 詳細資訊（包括用於 `env`/`file`/`exec` 的 `secrets.providers`）位於 [Secrets Management](/zh-Hant/gateway/secrets)。
 支援的憑證路徑列於 [SecretRef Credential Surface](/zh-Hant/reference/secretref-credential-surface)。
 
 </Accordion>
 
-如需完整的優先順序與來源，請參閱 [Environment](/zh-Hant/help/environment)。
+如需完整的優先順序和來源，請參閱 [Environment](/zh-Hant/help/environment)。
 
 ## 完整參考
 
-如需完整的逐欄位參考，請參閱 **[Configuration Reference](/zh-Hant/gateway/configuration-reference)**。
+有關完整的逐欄位參考，請參閱 **[Configuration Reference](/zh-Hant/gateway/configuration-reference)**。
 
 ---
 

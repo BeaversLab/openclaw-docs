@@ -1,5 +1,5 @@
 ---
-summary: "Microsoft TeamsOpenClaw添加用于发送和接收 OpenClaw 消息的 Microsoft Teams 渠道表面。"
+summary: "OpenClawMicrosoft Teams用于机器人对话的 OpenClaw Microsoft Teams 渠道插件。"
 read_when:
   - You are installing, configuring, or auditing the msteams plugin
 title: "Microsoft TeamsMicrosoft Teams 插件"
@@ -7,7 +7,7 @@ title: "Microsoft TeamsMicrosoft Teams 插件"
 
 # Microsoft Teams 插件
 
-添加用于发送和接收 OpenClaw 消息的 Microsoft Teams 渠道表面。
+用于机器人对话的 OpenClaw Microsoft Teams 渠道插件。
 
 ## 分发
 

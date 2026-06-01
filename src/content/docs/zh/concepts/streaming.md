@@ -176,16 +176,18 @@ Matrix：
 
 预览流式传输还可以包含 **工具-progress** 更新——例如“正在搜索网络”、“正在读取文件”或“正在调用工具”之类的简短状态行——这些内容会在工具运行期间显示在同一条预览消息中，且位于最终回复之前。在 Codex 应用服务器模式下，Codex 前言/评论消息也使用同一条预览路径，因此简短的“我正在检查...”进度说明可以流入可编辑的草稿，而不会成为最终答案的一部分。这使得多步工具调用在视觉上保持活跃，而不是在最初的思维预览和最终答案之间保持沉默。
 
+长时间运行的工具可能会在返回之前发出有类型的进度。例如，`web_fetch` 在启动时启动一个 5 秒计时器：如果获取仍处于挂起状态，预览可以显示 `Fetching page content...`；如果获取在那时之前完成或被取消，则不会发出进度行。随后的最终工具结果仍会正常传递给模型。
+
 支持的平台：
 
-- **Discord**、**Slack**、**Telegram** 和 **Matrix** 在激活预览流式传输时，默认会将 工具-progress 和 Codex 前言更新流式传输到实时预览编辑中。Microsoft Teams 在个人聊天中使用其原生进度流。
-- Telegram 自 `v2026.4.22` 版本发布以来默认启用了工具进度预览更新；保持启用状态可以保留该发布版本的行为。
-- **Mattermost** 已经将工具活动合并到其唯一的草稿预览帖子中（见上文）。
-- 工具进度编辑遵循活动的预览流式传输模式；当预览流式传输为 `off` 或分块流式传输已接管消息时，它们将被跳过。在 Telegram 上，`streaming.mode: "off"` 为仅限最终结果模式：普通的进度闲聊也会被抑制，而不是作为独立状态消息投递，而批准提示、媒体负载和错误仍会正常路由。
-- 要保留预览流但隐藏工具进度行，请针对该渠道将 `streaming.preview.toolProgress` 设置为 `false`。要在隐藏命令/exec 文本的同时保持工具进度行可见，请将 `streaming.preview.commandText` 设置为 `"status"` 或将 `streaming.progress.commandText` 设置为 `"status"`；默认值为 `"raw"`，以保留已发布的行为。此策略由使用 OpenClaw 紧凑进度渲染器的草稿/进度渠道共享，包括 Discord、Matrix、Microsoft Teams、Mattermost、Slack 草稿预览和 Telegram。要完全禁用预览编辑，请将 `streaming.mode` 设置为 `off`。
-- Telegram 选中的引用回复是一个例外：当 `replyToMode` 不为 `"off"` 且存在选中的引用文本时，OpenClaw 将跳过该回合的答案预览流，因此无法渲染工具进度预览行。没有选中引用文本的当前消息回复仍然保留预览流。详情请参阅 [Telegram 渠道文档](/zh/channels/telegram)。
+- **Discord**、**Slack**、**Telegram** 和 **Matrix** 在启用预览流式传输时，默认会将工具进度和 Codex 前言更新流式传输到实时预览编辑中。Microsoft Teams 在个人聊天中使用其原生进度流。
+- Telegram 自 `v2026.4.22` 版本起发布时启用了工具进度预览更新；保持启用状态可保留该发布行为。
+- **Mattermost** 已将工具活动合并到其单个草稿预览帖子中（见上文）。
+- 工具进度编辑遵循活动的预览流式传输模式；当预览流式传输为 `off` 或当分块流式传输已接管消息时，它们将被跳过。在 Telegram 上，`streaming.mode: "off"` 为最终版本：常规的进度闲聊也会被抑制，而不是作为独立状态消息传递，而审批提示、媒体负载和错误仍正常路由。
+- 若要保留预览流但隐藏工具进度行，请针对该渠道将 `streaming.preview.toolProgress` 设置为 `false`。若要在隐藏 command/exec 文本的同时保持工具进度行可见，请将 `streaming.preview.commandText` 设置为 `"status"` 或将 `streaming.progress.commandText` 设置为 `"status"`；默认为 `"raw"` 以保持既定行为。此策略由使用 OpenClaw 紧凑进度渲染器的草稿/进度渠道共享，包括 Discord、Matrix、Microsoft Teams、Mattermost、Slack 草稿预览和 Telegram。要完全禁用预览编辑，请将 `streaming.mode` 设置为 `off`。
+- Telegram 选定的引用回复是一个例外：当 `replyToMode` 不是 `"off"` 且存在选定的引用文本时，OpenClaw 将跳过该回合的答案预览流，因此无法渲染工具进度预览行。没有选定引用文本的当前消息回复仍会保留预览流。有关详细信息，请参阅 [Telegram 渠道文档](/zh/channels/telegram)。
 
-保持进度行可见但隐藏原始命令/exec 文本：
+保持进度行可见，但隐藏原始 command/exec 文本：
 
 ```json
 {
@@ -203,7 +205,7 @@ Matrix：
 }
 ```
 
-在其他紧凑进度渠道键下使用相同的结构，例如 `channels.discord`、`channels.matrix`、`channels.msteams`、`channels.mattermost` 或 Slack 草稿预览。对于进度草稿模式，请将相同的策略置于 `streaming.progress` 下：
+在另一个紧凑进度渠道键下使用相同的形状，例如 `channels.discord`、`channels.matrix`、`channels.msteams`、`channels.mattermost` 或 Slack 草稿预览。对于进度草稿模式，请在 `streaming.progress` 下放置相同的策略：
 
 ```json
 {
@@ -223,8 +225,8 @@ Matrix：
 
 ## 相关
 
-- [消息生命周期重构](/zh/concepts/message-lifecycle-refactor) - 目标共享预览、编辑、流和最终设计
-- [进度草稿](/zh/concepts/progress-drafts) - 在长回合期间更新的可见工作进度消息
-- [消息](/zh/concepts/messages) - 消息生命周期和传递
-- [重试](/zh/concepts/retry) - 传递失败时的重试行为
+- [Message lifecycle refactor](/zh/concepts/message-lifecycle-refactor) - 针对共享预览、编辑、流式传输和最终确定设计的目标
+- [Progress drafts](/zh/concepts/progress-drafts) - 在长回合期间更新的可见工作进行中消息
+- [Messages](/zh/concepts/messages) - 消息生命周期和传递
+- [Retry](/zh/concepts/retry) - 传递失败时的重试行为
 - [渠道](/zh/channels) - 每个渠道的流式传输支持

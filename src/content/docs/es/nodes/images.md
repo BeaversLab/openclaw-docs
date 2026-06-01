@@ -37,7 +37,7 @@ El canal de WhatsApp se ejecuta a través de **Baileys Web**. Este documento cap
 - Cuando hay medios presentes, el remitente web resuelve las rutas locales o las URL utilizando la misma canalización que `openclaw message send`.
 - Si se proporcionan varias entradas de medios, se envían secuencialmente.
 
-## Medios entrantes a comandos (Pi)
+## Medios entrantes a comandos
 
 - Cuando los mensajes web entrantes incluyen medios, OpenClaw los descarga en un archivo temporal y expone variables de plantilla:
   - `{{MediaUrl}}` pseudo-URL para los medios entrantes.

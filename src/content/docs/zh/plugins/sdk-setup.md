@@ -517,7 +517,7 @@ const setupWizard: ChannelSetupWizard = {
 openclaw plugins install <package-name>
 ```
 
-<Info>对于源自 npm 的安装，`openclaw plugins install` 会将软件包安装在 `~/.openclaw/npm` 下，并禁用生命周期脚本。请保持插件依赖树为纯 JS/TS，并避免需要 `postinstall` 构建的包。</Info>
+<Info>对于从 npm 源安装的情况，`openclaw plugins install` 会将软件包安装到 `~/.openclaw/npm/projects` 下的特定插件项目中，并禁用生命周期脚本。请保持插件依赖树为纯 JS/TS，并避免需要 `postinstall` 构建的软件包。</Info>
 
 <Note>Gateway(网关) 启动不会安装插件依赖。npm/git/ClawHub 安装流程负责依赖收敛；本地插件必须已安装其依赖。</Note>
 

@@ -11,21 +11,21 @@ read_when:
 
 ## Inicio rápido
 
-Si tienes una suscripción a GitHub Copilot, o una clave API de OpenAI, Gemini, Voyage o Mistral configurada, la búsqueda en memoria funciona automáticamente. Para establecer un proveedor explícitamente:
+La búsqueda de memoria utiliza incrustaciones de OpenAI de forma predeterminada. Para usar otro backend de incrustaciones, establezca un proveedor explícitamente:
 
 ```json5
 {
   agents: {
     defaults: {
       memorySearch: {
-        provider: "openai", // or "gemini", "local", "ollama", etc.
+        provider: "openai", // or "gemini", "local", "ollama", "openai-compatible", etc.
       },
     },
   },
 }
 ```
 
-Para configuraciones de múltiples puntos finales, `provider` también puede ser una entrada `models.providers.<id>` personalizada, como `ollama-5080`, cuando ese proveedor establece `api: "ollama"` u otro propietario de adaptador de incrustación.
+Para configuraciones de múltiples puntos finales con proveedores específicos de memoria, `provider` también puede ser una entrada personalizada de `models.providers.<id>`, como `ollama-5080`, cuando ese proveedor establece `api: "ollama"` u otro propietario de adaptador de incrustación de memoria.
 
 Para incrustaciones locales sin clave API, establezca `provider: "local"`. Las comprobaciones de fuente aún pueden requerir aprobación de compilación nativa: `pnpm approve-builds` luego `pnpm rebuild node-llama-cpp`.
 
@@ -33,16 +33,18 @@ Algunos puntos finales de incrustación compatibles con OpenAI requieren etiquet
 
 ## Proveedores compatibles
 
-| Proveedor      | ID               | Requiere clave API | Notas                                                                         |
-| -------------- | ---------------- | ------------------ | ----------------------------------------------------------------------------- |
-| Bedrock        | `bedrock`        | No                 | Detectado automáticamente cuando se resuelve la cadena de credenciales de AWS |
-| Gemini         | `gemini`         | Sí                 | Admite la indexación de imágenes/audio                                        |
-| GitHub Copilot | `github-copilot` | No                 | Detectado automáticamente, usa la suscripción Copilot                         |
-| Local          | `local`          | No                 | Modelo GGUF, descarga de ~0.6 GB                                              |
-| Mistral        | `mistral`        | Sí                 | Detectado automáticamente                                                     |
-| Ollama         | `ollama`         | No                 | Local, debe establecerse explícitamente                                       |
-| OpenAI         | `openai`         | Sí                 | Detectado automáticamente, rápido                                             |
-| Voyage         | `voyage`         | Sí                 | Detectado automáticamente                                                     |
+| Proveedor             | ID                  | Requiere clave API | Notas                                |
+| --------------------- | ------------------- | ------------------ | ------------------------------------ |
+| Bedrock               | `bedrock`           | No                 | Usa la cadena de credenciales de AWS |
+| DeepInfra             | `deepinfra`         | Sí                 | Predeterminado: `BAAI/bge-m3`        |
+| Gemini                | `gemini`            | Sí                 | Admite indexación de imagen/audio    |
+| GitHub Copilot        | `github-copilot`    | No                 | Usa la suscripción a Copilot         |
+| Local                 | `local`             | No                 | Modelo GGUF, descarga de ~0.6 GB     |
+| Mistral               | `mistral`           | Sí                 |                                      |
+| Ollama                | `ollama`            | No                 | Local/autoalojado                    |
+| OpenAI                | `openai`            | Sí                 | Predeterminado                       |
+| Compatible con OpenAI | `openai-compatible` | Generalmente       | `/v1/embeddings` genérico            |
+| Voyage                | `voyage`            | Sí                 |                                      |
 
 ## Cómo funciona la búsqueda
 
@@ -59,33 +61,33 @@ flowchart LR
     M --> R["Top Results"]
 ```
 
-- **Búsqueda vectorial** encuentra notas con un significado similar ("host de puerta de enlace" coincide con "la máquina que ejecuta OpenClaw").
+- **Búsqueda vectorial** encuentra notas con significado similar ("host de puerta de enlace" coincide con "la máquina que ejecuta OpenClaw").
 - **Búsqueda de palabras clave BM25** encuentra coincidencias exactas (ID, cadenas de error, claves de configuración).
 
 Si solo hay una ruta disponible (sin incrustaciones o sin FTS), la otra se ejecuta sola.
 
-Cuando las incrustaciones no están disponibles, OpenClaw aún utiliza la clasificación léxica sobre los resultados de FTS en lugar de recurrir solo al ordenamiento de coincidencia exacta sin procesar. Ese modo degradado impulsa los fragmentos con una mayor cobertura de términos de consulta y rutas de archivo relevantes, lo que mantiene la recuperación útil incluso sin `sqlite-vec` o un proveedor de incrustación.
+Cuando las incrustaciones no están disponibles, OpenClaw aún utiliza el ranking léxico sobre los resultados de FTS en lugar de recurrir solo al ordenamiento de coincidencia exacta bruta. Ese modo degradado impulsa los fragmentos con una mayor cobertura de términos de consulta y rutas de archivo relevantes, lo que mantiene la recuperación útil incluso sin `sqlite-vec` o un proveedor de incrustaciones.
 
-## Mejorar la calidad de búsqueda
+## Mejorar la calidad de la búsqueda
 
-Dos funciones opcionales ayudan cuando tienes un historial de notas grande:
+Dos características opcionales ayudan cuando tienes un historial grande de notas:
 
-### Decaimiento temporal
+### Decadencia temporal
 
 Las notas antiguas pierden gradualmente peso en la clasificación para que la información reciente aparezca primero.
-Con la vida media predeterminada de 30 días, una nota del mes pasado puntúa al 50% de
+Con la vida media predeterminada de 30 días, una nota del mes anterior puntúa el 50% de
 su peso original. Los archivos perennes como `MEMORY.md` nunca decaen.
 
-<Tip>Activa el decaimiento temporal si tu agente tiene meses de notas diarias y la información obsoleta sigue superando en clasificación al contexto reciente.</Tip>
+<Tip>Habilite la decadencia temporal si su agente tiene meses de notas diarias y la información obsoleta sigue superando en clasificación al contexto reciente.</Tip>
 
 ### MMR (diversidad)
 
-Reduce los resultados redundantes. Si cinco notas mencionan la misma configuración de enrutador, MMR
-asegura que los principales resultados cubran diferentes temas en lugar de repetirse.
+Reduce resultados redundantes. Si cinco notas mencionan la misma configuración del enrutador, MMR
+asegura que los mejores resultados cubran diferentes temas en lugar de repetirse.
 
-<Tip>Activa MMR si `memory_search` sigue devolviendo fragmentos casi duplicados de diferentes notas diarias.</Tip>
+<Tip>Habilite MMR si `memory_search` sigue devolviendo fragmentos casi duplicados de diferentes notas diarias.</Tip>
 
-### Activar ambos
+### Habilitar ambos
 
 ```json5
 {
@@ -106,35 +108,35 @@ asegura que los principales resultados cubran diferentes temas en lugar de repet
 
 ## Memoria multimodal
 
-Con Gemini Embedding 2, puedes indexar imágenes y archivos de audio junto con
-Markdown. Las consultas de búsqueda siguen siendo texto, pero coinciden con contenido visual y de audio.
-Consulta la [referencia de configuración de memoria](/es/reference/memory-config) para
+Con Gemini Embedding 2, puede indexar imágenes y archivos de audio junto con
+Markdown. Las consultas de búsqueda siguen siendo de texto, pero coinciden con el contenido visual y de audio.
+Vea la [referencia de configuración de Memory](/es/reference/memory-config) para
 la configuración.
 
-## Búsqueda de memoria de sesión
+## Búsqueda en memoria de sesión
 
-Opcionalmente, puedes indexar transcripciones de sesión para que `memory_search` pueda recordar
+Opcionalmente, puede indexar las transcripciones de la sesión para que `memory_search` pueda recordar
 conversaciones anteriores. Esto es opcional a través de
-`memorySearch.experimental.sessionMemory`. Consulta la
-[referencia de configuración](/es/reference/memory-config) para más detalles.
+`memorySearch.experimental.sessionMemory`. Vea la
+[referencia de configuración](/es/reference/memory-config) para obtener detalles.
 
 ## Solución de problemas
 
-**¿Sin resultados?** Ejecuta `openclaw memory status` para verificar el índice. Si está vacío, ejecuta
+**¿Sin resultados?** Ejecute `openclaw memory status` para verificar el índice. Si está vacío, ejecute
 `openclaw memory index --force`.
 
-**¿Solo coincidencias de palabras clave?** Es posible que tu proveedor de incrustaciones no esté configurado. Verifica
+**¿Solo coincidencias de palabras clave?** Es posible que su proveedor de incrustaciones no esté configurado. Verifique
 `openclaw memory status --deep`.
 
-**¿Las incrustaciones locales agotan el tiempo?** `ollama`, `lmstudio` y `local` usan un tiempo de espera
-de lote en línea más largo de forma predeterminada. Si el host simplemente es lento, establece
-`agents.defaults.memorySearch.sync.embeddingBatchTimeoutSeconds` y vuelve a ejecutar
+**¿Las incrustaciones locales agotan el tiempo de espera?** `ollama`, `lmstudio` y `local` usan un tiempo de espera
+de lote en línea más largo de forma predeterminada. Si el host es simplemente lento, configure
+`agents.defaults.memorySearch.sync.embeddingBatchTimeoutSeconds` y vuelva a ejecutar
 `openclaw memory index --force`.
 
-**¿No se encuentra texto CJK?** Reconstruye el índice FTS con
+**¿Texto CJK no encontrado?** Reconstruya el índice FTS con
 `openclaw memory index --force`.
 
-## Lectura adicional
+## Lecturas adicionales
 
 - [Active Memory](/es/concepts/active-memory) -- memoria de subagente para sesiones de chat interactivas
 - [Memory](/es/concepts/memory) -- diseño de archivos, backends, herramientas
@@ -144,4 +146,4 @@ de lote en línea más largo de forma predeterminada. Si el host simplemente es 
 
 - [Resumen de memoria](/es/concepts/memory)
 - [Memoria activa](/es/concepts/active-memory)
-- [Motor de memoria integrado](/es/concepts/memory-builtin)
+- [Motor de memoria incorporado](/es/concepts/memory-builtin)

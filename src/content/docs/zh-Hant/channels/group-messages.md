@@ -20,7 +20,7 @@ sidebarTitle: "WhatsApp 群組"
 - 群組原則：`channels.whatsapp.groupPolicy` 控制是否接受群組訊息（`open|disabled|allowlist`）。`allowlist` 使用 `channels.whatsapp.groupAllowFrom`（後備選項：明確的 `channels.whatsapp.allowFrom`）。預設為 `allowlist`（在您新增發送者之前封鎖）。
 - 每個群組的會話：會話金鑰看起來像 `agent:<agentId>:whatsapp:group:<jid>`，因此諸如 `/verbose on`、`/trace on` 或 `/think high` 之類的指令（作為獨立訊息發送）的範圍僅限於該群組；個人 DM 狀態保持不變。群組執行緒會跳過心跳檢測。
 - 上下文注入：*未*觸發執行的 **僅待處理** 群組訊息（預設為 50 條）會加前綴於 `[Chat messages since your last reply - for context]` 之下，觸發行則位於 `[Current message - respond to this]` 之下。會話中已有的訊息不會被重新注入。
-- 發送者顯示：現在每個群組批次都以 `[from: Sender Name (+E164)]` 結尾，以便 Pi 知道是誰在說話。
+- 发送者浮現：每個群組批次現在都以 `[from: Sender Name (+E164)]` 結尾，以便 OpenClaw 知道是誰在說話。
 - 閱後即焚/單次檢視：我們會在提取文字/提及之前將其解包，因此其中的 ping 仍會觸發。
 - 群組系統提示詞：在群組會話的第一輪（以及每當 `/activation` 變更模式時），我們會在系統提示詞中插入一段簡短的介紹，例如 `You are replying inside the WhatsApp group "<subject>". Group members: Alice (+44...), Bob (+43...), ... Activation: trigger-only ... Address the specific sender noted in the message context.`。如果無法取得元資料，我們仍會告知代理這是一個群組聊天。
 

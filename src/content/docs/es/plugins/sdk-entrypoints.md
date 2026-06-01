@@ -192,8 +192,8 @@ export default defineSetupPluginEntry(myChannelPlugin);
 ```
 
 OpenClaw carga esto en lugar de la entrada completa cuando un canal está deshabilitado,
-sin configurar o cuando la carga diferida está habilitada. Vea
-[Configuración y configuración](/es/plugins/sdk-setup#setup-entry) para saber cuándo esto importa.
+sin configurar o cuando la carga diferida está habilitada. Consulta
+[Configuración y ajustes](/es/plugins/sdk-setup#setup-entry) para saber cuándo es importante.
 
 En la práctica, empareje `defineSetupPluginEntry(...)` con las familias de ayudantes de configuración estrechos:
 
@@ -222,10 +222,22 @@ export default defineBundledChannelSetupEntry({
     specifier: "./runtime-api.js",
     exportName: "setMyChannelRuntime",
   },
+  registerSetupRuntime(api) {
+    api.registerHttpRoute({
+      path: "/my-channel/events",
+      auth: "plugin",
+      handler: async (req, res) => {
+        /* setup-safe route */
+      },
+    });
+  },
 });
 ```
 
-Use ese contrato empaquetado solo cuando los flujos de configuración realmente necesiten un definidor de tiempo de ejecución ligero antes de que se cargue la entrada completa del canal.
+Use ese contrato empaquetado solo cuando los flujos de configuración realmente necesiten un
+establecedor de tiempo de ejecución ligero o una superficie de puerta de enlace segura para la configuración antes de que se cargue la entrada completa del canal.
+`registerSetupRuntime` se ejecuta solo para cargas `"setup-runtime"`; manténgalo limitado a
+rutas o métodos solo de configuración que deben existir antes de la activación completa diferida.
 
 ## Modo de registro
 
@@ -263,21 +275,23 @@ register(api) {
 
 El modo de descubrimiento crea una instantánea de registro no activante. Aún puede evaluar la entrada del complemento y el objeto del complemento del canal para que OpenClaw pueda registrar capacidades del canal y descriptores CLI estáticos. Trate la evaluación de módulos en el descubrimiento como confiable pero ligera: sin clientes de red, subprocesos, escuchas, conexiones de base de datos, trabajadores en segundo plano, lecturas de credenciales u otros efectos secundarios de tiempo de ejecución en vivo en el nivel superior.
 
-Trate `"setup-runtime"` como la ventana donde deben existir las superficies de inicio solo de configuración sin volver a ingresar el tiempo de ejecución del canal completo agrupado. Las opciones adecuadas son el registro del canal, rutas HTTP seguras para la configuración, métodos de puerta de enlace seguros para la configuración y asistentes de configuración delegados. Los servicios pesados en segundo plano, los registradores de CLI y los arranques de SDK de proveedor/cliente aún pertenecen a `"full"`.
+Trate `"setup-runtime"` como la ventana donde las superficies de inicio solo de configuración deben
+existir sin volver a entrar en el tiempo de ejecución completo del canal empaquetado. Las opciones adecuadas son
+el registro del canal, rutas HTTP seguras para la configuración, métodos de puerta de enlace seguros para la configuración y
+ayudantes de configuración delegados. Los servicios pesados en segundo plano, registradores de CLI y
+arranques de SDK de proveedor/cliente aún pertenecen a `"full"`.
 
 Específicamente para los registradores de CLI:
 
-- use `descriptors` cuando el registrador posee uno o más comandos raíz y
-  quieres que OpenClaw cargue de forma diferida (lazy-load) el módulo real de CLI
-  en la primera invocación
+- use `descriptors` cuando el registrador posea uno o más comandos raíz y usted
+  quiera que OpenClaw cargue de forma diferida el módulo real de CLI en la primera invocación
 - asegúrate de que esos descriptores cubran cada raíz de comando de nivel superior
   expuesta por el registrador
 - mantén los nombres de los comandos del descriptor en letras, números, guiones y
   guiones bajos, comenzando con una letra o un número; OpenClaw rechaza los nombres
   de descriptores fuera de esa forma y elimina las secuencias de control de
   terminal de las descripciones antes de renderizar la ayuda
-- usa `commands` solo para rutas de compatibilidad de carga
-  inmediata (eager)
+- use `commands` solo para rutas de compatibilidad anticipada
 
 ## Formas de complementos (Plugin shapes)
 
@@ -294,8 +308,8 @@ Use `openclaw plugins inspect <id>` para ver la forma de un complemento.
 
 ## Relacionado
 
-- [Resumen del SDK](/es/plugins/sdk-overview) - API de registro y referencia de subrutas
-- [Asistentes de tiempo de ejecución](/es/plugins/sdk-runtime) - `api.runtime` y `createPluginRuntimeStore`
+- [Descripción general del SDK](/es/plugins/sdk-overview) - referencia de API de registro y subruta
+- [Auxiliares de tiempo de ejecución](/es/plugins/sdk-runtime) - `api.runtime` y `createPluginRuntimeStore`
 - [Configuración y ajustes](/es/plugins/sdk-setup) - manifiesto, entrada de configuración, carga diferida
 - [Complementos de canal](/es/plugins/sdk-channel-plugins) - construir el objeto `ChannelPlugin`
 - [Complementos de proveedor](/es/plugins/sdk-provider-plugins) - registro de proveedor y ganchos

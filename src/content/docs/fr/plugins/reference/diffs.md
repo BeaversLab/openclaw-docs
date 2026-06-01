@@ -1,5 +1,5 @@
 ---
-summary: "Visualiseur de différences en lecture seule et moteur de rendu de fichiers pour les agents."
+summary: "OpenClawOpenClaw plug-in de visionneuse de différences en lecture seule et de rendu de fichiers pour les agents."
 read_when:
   - You are installing, configuring, or auditing the diffs plugin
 title: "Plugin de différences"
@@ -7,7 +7,7 @@ title: "Plugin de différences"
 
 # Plugin de différences
 
-Visualiseur de différences en lecture seule et moteur de rendu de fichiers pour les agents.
+OpenClaw plug-in de visionneuse de différences en lecture seule et de rendu de fichiers pour les agents.
 
 ## Distribution
 

@@ -34,7 +34,7 @@ title: "OpenClaw"
 
 ## ¿Qué es OpenClaw?
 
-OpenClaw es una **puerta de enlace autohospedada** que conecta tus aplicaciones de chat favoritas y superficies de canal (canales integrados más complementos de canal incluidos o externos como Discord, Google Chat, iMessage, Matrix, Microsoft Teams, Signal, Slack, Telegram, WhatsApp, Zalo y más) con agentes de codificación de IA como Pi. Ejecutas un único proceso de puerta de enlace en tu propia máquina (o en un servidor) y este se convierte en el puente entre tus aplicaciones de mensajería y un asistente de IA siempre disponible.
+OpenClaw es un **puerto autoalojado** que conecta tus aplicaciones de chat favoritas y las superficies de los canales (canales integrados más complementos de canal incluidos o externos, como Discord, Google Chat, iMessage, Matrix, Microsoft Teams, Signal, Slack, Telegram, WhatsApp, Zalo y más) con agentes de IA de programación. Ejecutas un único proceso de Gateway en tu propia máquina (o en un servidor) y este se convierte en el puente entre tus aplicaciones de mensajería y un asistente de IA siempre disponible.
 
 **¿Para quién es?** Para desarrolladores y usuarios avanzados que desean un asistente de IA personal al que puedan enviar mensajes desde cualquier lugar, sin renunciar al control de sus datos ni depender de un servicio alojado.
 
@@ -52,7 +52,7 @@ OpenClaw es una **puerta de enlace autohospedada** que conecta tus aplicaciones 
 ```mermaid
 flowchart LR
   A["Chat apps + plugins"] --> B["Gateway"]
-  B --> C["Pi agent"]
+  B --> C["OpenClaw agent"]
   B --> D["CLI"]
   B --> E["Web Control UI"]
   B --> F["macOS app"]
@@ -126,7 +126,7 @@ Abre la interfaz de usuario de control en el navegador después de que se inicie
 
 La configuración se encuentra en `~/.openclaw/openclaw.json`.
 
-- Si **no haces nada**, OpenClaw usará el binario Pi incluido en modo RPC con sesiones por remitente.
+- Si **no haces nada**, OpenClaw utiliza el runtime del agente OpenClaw incluido con sesiones por remitente.
 - Si desea bloquearlo, comience con `channels.whatsapp.allowFrom` y (para grupos) reglas de mención.
 
 Ejemplo:

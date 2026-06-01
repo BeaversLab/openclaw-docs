@@ -29,20 +29,20 @@ Para instalar sin ejecutar el proceso de incorporación:
   <Tab title="Windows (PowerShell)">```powershell & ([scriptblock]::Create((iwr -useb https://openclaw.ai/install.ps1))) -NoOnboard ```</Tab>
 </Tabs>
 
-Para ver todas las opciones de indicadores y CI/automatización, consulte [Aspectos internos del instalador](/es/install/installer).
+Para todas las opciones de banderas y automatización de CI, consulte [Aspectos internos del instalador](/es/install/installer).
 
 ## Métodos de instalación alternativos
 
 ### Instalador de prefijo local (`install-cli.sh`)
 
-Úselo cuando desee que OpenClaw y Node se mantengan en un prefijo local como
+Use esto cuando desee que OpenClaw y Node se mantengan bajo un prefijo local como
 `~/.openclaw`, sin depender de una instalación de Node en todo el sistema:
 
 ```bash
 curl -fsSL https://openclaw.ai/install-cli.sh | bash
 ```
 
-Admite instalaciones con npm de forma predeterminada, además de instalaciones mediante git-checkout bajo el mismo flujo de prefijo. Referencia completa: [Aspectos internos del instalador](/es/install/installer#install-clish).
+Admite instalaciones npm de forma predeterminada, además de instalaciones de git-checkout bajo el mismo flujo de prefijo. Referencia completa: [Aspectos internos del instalador](/es/install/installer#install-clish).
 
 ¿Ya instalado? Cambie entre instalaciones de paquete y git con
 `openclaw update --channel dev` y `openclaw update --channel stable`. Consulte
@@ -60,9 +60,9 @@ Si ya administra Node usted mismo:
     ```
 
     <Note>
-    El instalador alojado borra los filtros de frescura de npm, como `min-release-age`
+    El instalador alojado borra los filtros de frescura de npm como `min-release-age`
     para la instalación del paquete OpenClaw. Si instala manualmente con npm, su propia
-    política de npm aún se aplica.
+    política de npm todavía se aplica.
     </Note>
 
   </Tab>
@@ -85,24 +85,15 @@ Si ya administra Node usted mismo:
     ```
 
     <Note>
-    Bun es compatible con la ruta de instalación de la CLI global. Para el tiempo de ejecución de Gateway, Node sigue siendo el tiempo de ejecución del demonio recomendado.
+    Bun es compatible con la ruta de instalación global de la CLI. Para el tiempo de ejecución de Gateway, Node sigue siendo el tiempo de ejecución del demonio recomendado.
     </Note>
 
   </Tab>
 </Tabs>
 
-<Accordion title="Solución de problemas: errores de compilación de sharp (npm)">
-  Si `sharp` falla debido a una libvips instalada globalmente:
+### Desde la fuente
 
-```bash
-SHARP_IGNORE_GLOBAL_LIBVIPS=1 npm install -g openclaw@latest
-```
-
-</Accordion>
-
-### Desde el código fuente
-
-Para colaboradores o cualquier persona que desee ejecutar desde una copia local:
+Para colaboradores o cualquiera que desee ejecutar desde una copia local:
 
 ```bash
 git clone https://github.com/openclaw/openclaw.git
@@ -112,7 +103,7 @@ pnpm link --global
 openclaw onboard --install-daemon
 ```
 
-O omita el enlace y use `pnpm openclaw ...` desde dentro del repositorio. Consulte [Configuración](/es/start/setup) para ver los flujos de trabajo de desarrollo completos.
+O omita el enlace y use `pnpm openclaw ...` desde dentro del repositorio. Consulte [Configuración](/es/start/setup) para ver los flujos de trabajo completos de desarrollo.
 
 ### Instalar desde la rama principal de GitHub
 
@@ -136,7 +127,7 @@ curl -fsSL --proto '=https' --tlsv1.2 https://openclaw.ai/install.sh | bash -s -
     Aprovisionamiento automatizado de flotas.
   </Card>
   <Card title="Bun" href="/es/install/bun" icon="zap">
-    Uso exclusivo de CLI mediante el tiempo de ejecución de Bun.
+    Uso exclusivo de CLI mediante el tiempo de ejecución Bun.
   </Card>
 </CardGroup>
 
@@ -151,63 +142,63 @@ openclaw gateway status # verify the Gateway is running
 Si desea un inicio administrado después de la instalación:
 
 - macOS: LaunchAgent a través de `openclaw onboard --install-daemon` o `openclaw gateway install`
-- Linux/WSL2: servicio de usuario de systemd mediante los mismos comandos
-- Windows nativo: Tarea programada primero, con un elemento de inicio de sesión de la carpeta de Inicio por usuario como alternativa si se deniega la creación de la tarea
+- Linux/WSL2: servicio de usuario systemd mediante los mismos comandos
+- Windows nativo: Tarea programada primero, con una alternativa de elemento de inicio de sesión en la carpeta de Inicio por usuario si se deniega la creación de la tarea
 
-## Alojamiento y despliegue
+## Alojamiento e implementación
 
-Despliega OpenClaw en un servidor en la nube o VPS:
+Implemente OpenClaw en un servidor en la nube o VPS:
 
 <CardGroup cols={3}>
   <Card title="VPS" href="/es/vps">
-    Cualquier VPS de Linux
+    Cualquier VPS de Linux.
   </Card>
   <Card title="Docker VM" href="/es/install/docker-vm-runtime">
-    Pasos compartidos de Docker
+    Pasos compartidos de Docker.
   </Card>
   <Card title="Kubernetes" href="/es/install/kubernetes">
-    K8s
+    Despliegue en K8s.
   </Card>
   <Card title="Fly.io" href="/es/install/fly">
-    Fly.io
+    Despliegue en Fly.io.
   </Card>
   <Card title="Hetzner" href="/es/install/hetzner">
-    Hetzner
+    Despliegue en Hetzner.
   </Card>
   <Card title="GCP" href="/es/install/gcp">
-    Google Cloud
+    Despliegue en Google Cloud.
   </Card>
   <Card title="Azure" href="/es/install/azure">
-    Azure
+    Despliegue en Azure.
   </Card>
   <Card title="Railway" href="/es/install/railway">
-    Railway
+    Despliegue en Railway.
   </Card>
   <Card title="Render" href="/es/install/render">
-    Render
+    Despliegue en Render.
   </Card>
   <Card title="Northflank" href="/es/install/northflank">
-    Northflank
+    Despliegue en Northflank.
   </Card>
 </CardGroup>
 
 ## Actualizar, migrar o desinstalar
 
 <CardGroup cols={3}>
-  <Card title="Actualización" href="/es/install/updating" icon="refresh-cw">
+  <Card title="Updating" href="/es/install/updating" icon="refresh-cw">
     Mantén OpenClaw actualizado.
   </Card>
-  <Card title="Migración" href="/es/install/migrating" icon="arrow-right">
+  <Card title="Migrating" href="/es/install/migrating" icon="arrow-right">
     Mover a una nueva máquina.
   </Card>
-  <Card title="Desinstalación" href="/es/install/uninstall" icon="trash-2">
-    Elimina OpenClaw por completo.
+  <Card title="Uninstall" href="/es/install/uninstall" icon="trash-2">
+    Eliminar OpenClaw completamente.
   </Card>
 </CardGroup>
 
 ## Solución de problemas: `openclaw` no encontrado
 
-Si la instalación se realizó correctamente pero `openclaw` no se encuentra en su terminal:
+Si la instalación se realizó correctamente pero `openclaw` no se encuentra en tu terminal:
 
 ```bash
 node -v           # Node installed?
@@ -215,10 +206,10 @@ npm prefix -g     # Where are global packages?
 echo "$PATH"      # Is the global bin dir in PATH?
 ```
 
-Si `$(npm prefix -g)/bin` no está en su `$PATH`, agréguelo a su archivo de inicio de shell (`~/.zshrc` o `~/.bashrc`):
+Si `$(npm prefix -g)/bin` no está en tu `$PATH`, agrégalo a tu archivo de inicio de shell (`~/.zshrc` o `~/.bashrc`):
 
 ```bash
 export PATH="$(npm prefix -g)/bin:$PATH"
 ```
 
-Luego abra una nueva terminal. Consulte [Configuración de Node](/es/install/node) para obtener más detalles.
+Luego, abre una nueva terminal. Consulta [Configuración de Node](/es/install/node) para más detalles.

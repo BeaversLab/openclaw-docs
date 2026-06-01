@@ -1,5 +1,5 @@
 ---
-summary: "Añade la superficie del canal Matrix para enviar y recibir mensajes de OpenClaw."
+summary: "Complemento de canal de Matrix OpenClaw para salas y mensajes directos."
 read_when:
   - You are installing, configuring, or auditing the matrix plugin
 title: "Plugin Matrix"
@@ -7,7 +7,7 @@ title: "Plugin Matrix"
 
 # Plugin Matrix
 
-Añade la superficie del canal Matrix para enviar y recibir mensajes de OpenClaw.
+Complemento de canal de Matrix OpenClaw para salas y mensajes directos.
 
 ## Distribución
 

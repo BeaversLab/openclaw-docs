@@ -16,7 +16,7 @@ Nous sérialisons les exécutions de réponses automatiques entrantes (tous les 
 ## Fonctionnement
 
 - Une file d'attente FIFO consciente des voies (lane-aware) draine chaque voie avec une limite de concurrence configurable (1 par défaut pour les voies non configurées ; main par défaut à 4, subagent à 8).
-- `runEmbeddedPiAgent` met en file d'attente par **clé de session** (voie `session:<key>`) pour garantir une seule exécution active par session.
+- `runEmbeddedAgent` met en file d'attente par **clé de session** (voie `session:<key>`) pour garantir qu'une seule exécution active est possible par session.
 - Chaque exécution de session est ensuite mise en file d'attente dans une **voie globale** (`main` par défaut), de sorte que le parallélisme global est plafonné par `agents.defaults.maxConcurrent`.
 - Lorsque la journalisation détaillée est activée, les exécutions en file d'attente émettent un court avis si elles ont attendu plus de ~2s avant de commencer.
 - Les indicateurs de frappe se déclenchent toujours immédiatement lors de la mise en file d'attente (lorsqu'ils sont pris en charge par le canal), de sorte que l'expérience utilisateur reste inchangée pendant que nous attendons notre tour.
@@ -36,7 +36,7 @@ La guidance au sein du même tour est la valeur par défaut. Un prompt qui arriv
 
 `/queue` contrôle le comportement des messages entrants normaux lorsqu'une session a déjà une exécution active :
 
-- `steer` : injecte les messages dans le runtime actif. Pi délivre tous les messages de guidance en attente **après que le tour de l'assistant actuel a terminé d'exécuter ses appels d'outils**, avant le prochain appel LLM ; le serveur d'application Codex reçoit un `turn/steer` groupé. Si l'exécution n'est pas en train de diffuser (streaming) ou si la guidance n'est pas disponible, OpenClaw attend la fin de l'exécution active avant de lancer le prompt.
+- `steer` : injecter des messages dans le runtime actif. OpenClaw délivre tous les messages de direction en attente **une fois que le tour de l'assistant actuel a terminé l'exécution de ses appels d'outils**, avant le prochain appel LLM ; le serveur d'application Codex reçoit un `turn/steer` groupé. Si l'exécution n'est pas en cours de streaming ou si la direction n'est pas disponible, OpenClaw attend la fin de l'exécution active avant de commencer le prompt.
 - `followup` : ne pas guider. Mettre en file d'attente chaque message pour un tour d'agent ultérieur après la fin de l'exécution actuelle.
 - `collect` : ne pas guider. Fusionner les messages en file d'attente en un tour de suivi **unique** après la fenêtre de silence. Si les messages ciblent différents canaux/fils de discussion, ils sont vidés individuellement pour préserver le routage.
 - `interrupt` : annule l'exécution active pour cette session, puis exécute le message le plus récent.
@@ -120,7 +120,7 @@ appliquées. `cap` et `drop` sont des options globales/session, pas des clés de
 - Si les commandes semblent bloquées, activez les journaux détaillés et recherchez les lignes "queued for ...ms" pour confirmer que la file se vide.
 - Si vous avez besoin de la profondeur de la file, activez les journaux détaillés et surveillez les lignes de timing de la file.
 - Les exécutions du serveur d'application Codex qui acceptent un tour puis cessent d'émettre des progrès sont interrompues par l'adaptateur Codex afin que la voie de session active puisse être libérée au lieu d'attendre le délai d'expiration de l'exécution externe.
-- Lorsque les diagnostics sont activés, les sessions qui restent dans `processing` au-delà de `diagnostics.stuckSessionWarnMs` sans réponse, tool, statut, bloc ou progrès ACP observé sont classées par activité actuelle. Le travail actif est journalisé comme `session.long_running` ; le travail actif sans progrès récent est journalisé comme `session.stalled` ; `session.stuck` est réservé pour la maintenance de session obsolète sans travail actif, et seul ce chemin peut libérer la voie de session affectée pour que le travail en file se vide. Les diagnostics `session.stuck` répétés se désengagent tant que la session reste inchangée.
+- Lorsque les diagnostics sont activés, les sessions qui restent dans `processing` après `diagnostics.stuckSessionWarnMs` sans réponse, outil, statut, blocage ou progression ACP observée sont classées selon leur activité actuelle. Le travail actif est enregistré sous `session.long_running` ; le travail actif sans progression récente est enregistré sous `session.stalled` ; `session.stuck` est réservé à la gestion des sessions périmées récupérables, y compris les sessions en file d'attente inactives avec une activité de modèle/outil périmée sans propriétaire, et seul ce chemin peut libérer la voie de session affectée afin que le travail en file d'attente soit écoulé. Les diagnostics `session.stuck` répétés se désactivent progressivement tant que la session reste inchangée.
 
 ## Connexes
 

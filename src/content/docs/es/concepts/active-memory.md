@@ -528,7 +528,8 @@ El complemento `memory-lancedb` incluido expone `memory_recall`. Seleccionar la 
 
 ### Lossless Claw
 
-Lossless Claw es un complemento de motor de contexto con sus propias herramientas de recuerdo. Instálelo y configúrelo primero como motor de contexto; consulte [Motor de contexto](/es/concepts/context-engine). Luego, permita que Active Memory utilice las herramientas de recuerdo de Lossless Claw:
+Lossless Claw es un complemento (plugin) del motor de contexto con sus propias herramientas de recuperación. Instálelo y configúrelo primero como un motor de contexto; consulte [Context engine](/es/concepts/context-engine).
+Luego, permita que Active Memory utilice las herramientas de recuperación de Lossless Claw:
 
 ```json5
 {
@@ -657,7 +658,7 @@ Los campos más importantes son:
 | `config.promptOverride`      | `string`                                                                                             | Reemplazo avanzado del prompt completo; no recomendado para uso normal                                                                                                                                                                                                                                                |
 | `config.promptAppend`        | `string`                                                                                             | Instrucciones adicionales avanzadas añadidas al prompt predeterminado o anulado                                                                                                                                                                                                                                       |
 | `config.timeoutMs`           | `number`                                                                                             | Tiempo de espera límite para el subagente de memoria bloqueante, limitado a 120000 ms                                                                                                                                                                                                                                 |
-| `config.setupGraceTimeoutMs` | `number`                                                                                             | Presupuesto adicional de configuración avanzada antes de que expire el tiempo de espera de recuperación; el valor predeterminado es 0 y está limitado a 30000 ms. Consulte [Cold-start grace](#cold-start-grace) para obtener instrucciones de actualización a v2026.4.x                                              |
+| `config.setupGraceTimeoutMs` | `number`                                                                                             | Presupuesto adicional de configuración avanzada antes de que venza el tiempo de espera de recuperación; el valor predeterminado es 0 y está limitado a 30000 ms. Consulte [Cold-start grace](#cold-start-grace) para obtener instrucciones de actualización para v2026.4.x                                            |
 | `config.maxSummaryChars`     | `number`                                                                                             | Número máximo de caracteres permitidos en el resumen de memoria activa                                                                                                                                                                                                                                                |
 | `config.logging`             | `boolean`                                                                                            | Emite registros de memoria activa durante el ajuste                                                                                                                                                                                                                                                                   |
 | `config.persistTranscripts`  | `boolean`                                                                                            | Mantiene las transcripciones del subagente de memoria bloqueante en el disco en lugar de eliminar archivos temporales                                                                                                                                                                                                 |
@@ -778,33 +779,38 @@ Si la memoria activa es demasiado lenta:
 La Memoria Activa se basa en la canalización de recuperación del complemento de memoria configurado, por lo que la mayoría de las sorpresas en la recuperación son problemas del proveedor de incrustaciones, no errores de la Memoria Activa. La ruta `memory-core` predeterminada utiliza `memory_search` y `memory_get`; el espacio `memory-lancedb` utiliza `memory_recall`. Si utilizas otro complemento de memoria, confirma que `config.toolsAllow` nombre las herramientas que ese complemento realmente registra.
 
 <AccordionGroup>
-  <Accordion title="El proveedor de incrustaciones cambió o dejó de funcionar">
-    Si `memorySearch.provider` no está configurado, OpenClaw detecta automáticamente el primer proveedor de incrustaciones disponible. Una nueva clave API, el agotamiento de la cuota o un proveedor alojado con limitaciones de velocidad pueden cambiar qué proveedor se resuelve entre ejecuciones. Si ningún proveedor se resuelve, `memory_search` puede degradarse a una recuperación solo léxica; los fallos en tiempo de ejecución después de que ya se haya seleccionado un proveedor no realizan una reserva automáticamente.
+  <Accordion title="Proveedor de incrustaciones cambiado o dejó de funcionar">
+    Si `memorySearch.provider` no está establecido, OpenClaw utiliza incrustaciones de OpenAI. Establezca
+    `memorySearch.provider` explícitamente para incrustaciones locales, Ollama, Gemini, Voyage,
+    Mistral, DeepInfra, Bedrock, GitHub Copilot o compatibles con OpenAI.
+    Si el proveedor configurado no puede ejecutarse, `memory_search` puede
+    degradarse a una recuperación solo léxica; las fallas en tiempo de ejecución después de que un proveedor ya ha sido seleccionado no retroceden automáticamente.
 
-    Fija el proveedor (y una reserva opcional) explícitamente para hacer que la selección sea determinista. Consulta [Búsqueda de memoria](/es/concepts/memory-search) para la lista completa de proveedores y ejemplos de fijación.
+    Establezca un `memorySearch.fallback` opcional solo cuando desee una alternativa única
+    deliberada. Consulte [Memory Search](/es/concepts/memory-search) para obtener la lista completa de proveedores y ejemplos.
 
   </Accordion>
 
-<Accordion title="Recall feels slow, empty, or inconsistent">
-  - Activa `/trace on` para mostrar el resumen de depuración de Active Memory propiedad del complemento en la sesión. - Activa `/verbose on` para ver también la línea de estado de `🧩 Active Memory: ...` después de cada respuesta. - Observa los registros de la puerta de enlace buscando `active-memory: ... start|done`, `memory sync failed (search-bootstrap)`, o errores de incrustación del
-  proveedor. - Ejecuta `openclaw memory status --deep` para inspeccionar el backend de búsqueda de memoria y el estado del índice. - Si usas `ollama`, confirma que el modelo de incrustación esté instalado (`ollama list`).
+<Accordion title="La recuperación parece lenta, vacía o inconsistente">
+  - Active `/trace on` para mostrar el resumen de depuración de Active Memory propiedad del complemento en la sesión. - Active `/verbose on` para ver también la línea de estado `🧩 Active Memory: ...` después de cada respuesta. - Vigile los registros de la puerta de enlace (gateway logs) para buscar `active-memory: ... start|done`, `memory sync failed (search-bootstrap)`, o errores de incrustación
+  del proveedor. - Ejecute `openclaw memory status --deep` para inspeccionar el backend de búsqueda de memoria y el estado del índice. - Si utiliza `ollama`, confirme que el modelo de incrustación esté instalado (`ollama list`).
 </Accordion>
 
-  <Accordion title="First recall after gateway restart returns `status=timeout`">
-    En v2026.5.2 y posteriores, si la configuración de inicio en frío (calentamiento del modelo + carga del índice de
-    incrustación) no ha finalizado para cuando se dispare la primera recuperación, la ejecución
+  <Accordion title="La primera recuperación después de reiniciar la puerta de enlace devuelve `status=timeout`">
+    En v2026.5.2 y versiones posteriores, si la configuración de inicio en frío (calentamiento del modelo + carga
+    del índice de incrustación) no ha terminado para cuando se dispara la primera recuperación, la ejecución
     puede alcanzar el presupuesto `timeoutMs` configurado y devolver `status=timeout`
     con una salida vacía. Los registros de la puerta de enlace muestran `active-memory timeout after Nms`
     alrededor de la primera respuesta elegible después de un reinicio.
 
-    Consulta [Cold-start grace](#cold-start-grace) en Configuración recomendada para el
-    valor `setupGraceTimeoutMs` recomendado.
+    Consulte [Cold-start grace](#cold-start-grace) en Configuración recomendada para conocer el valor
+    `setupGraceTimeoutMs` recomendado.
 
   </Accordion>
 </AccordionGroup>
 
 ## Páginas relacionadas
 
-- [Búsqueda de memoria](/es/concepts/memory-search)
+- [Memory Search](/es/concepts/memory-search)
 - [Referencia de configuración de memoria](/es/reference/memory-config)
-- [Configuración del SDK del complemento](/es/plugins/sdk-setup)
+- [Configuración del SDK de complementos](/es/plugins/sdk-setup)

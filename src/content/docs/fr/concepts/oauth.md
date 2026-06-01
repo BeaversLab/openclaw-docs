@@ -100,7 +100,7 @@ Claude locale sur l'hôte, onboarding/configure peut la réutiliser directement.
 
 ## Échange OAuth (fonctionnement de la connexion)
 
-Les flux de connexion interactifs d'OpenClaw sont implémentés dans `@earendil-works/pi-ai` et connectés aux assistants/commandes.
+Les flux de connexion interactifs d'OpenClaw sont implémentés dans `openclaw/plugin-sdk/llm` et intégrés aux assistants/commandes.
 
 ### Setup-token Anthropic
 

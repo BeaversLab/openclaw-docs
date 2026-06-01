@@ -1,5 +1,5 @@
 ---
-summary: "Añade la superficie del canal de Slack para enviar y recibir mensajes de OpenClaw."
+summary: "Complemento de canal de Slack de OpenClaw para canales, MD, comandos y eventos de aplicaciones."
 read_when:
   - You are installing, configuring, or auditing the slack plugin
 title: "Complemento de Slack"
@@ -7,7 +7,7 @@ title: "Complemento de Slack"
 
 # Complemento de Slack
 
-Añade la superficie del canal de Slack para enviar y recibir mensajes de OpenClaw.
+Complemento de canal de Slack de OpenClaw para canales, MD, comandos y eventos de aplicaciones.
 
 ## Distribución
 

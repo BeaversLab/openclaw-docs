@@ -7,7 +7,7 @@ read_when:
 title: "執行核准 — 進階"
 ---
 
-進階執行核准主題：`safeBins` 快速路徑、直譯器/執行時期綁定，以及將核准轉寄至聊天頻道（包括原生交付）。如需核心策略與核准流程，請參閱 [執行核准](/zh-Hant/tools/exec-approvals)。
+進階執行核准主題：`safeBins` 快速路徑、直譯器/執行階段綁定，以及將核准轉發到聊天頻道（包括原生傳遞）。關於核心原則和核准流程，請參閱 [Exec approvals](/zh-Hant/tools/exec-approvals)。
 
 ## 安全二進位檔（僅限 stdin）
 
@@ -168,8 +168,7 @@ Safe bins 必須從受信任的二進位目錄（系統預設值加上可選的 
 
 ### 外掛審核轉發
 
-外掛審批轉發使用與 exec 審批相同的傳遞管道，但在 `approvals.plugin` 下有其獨立的設定。
-啟用或停用其中一個不會影響另一個。
+外掛程式核准轉發使用與執行核准相同的傳遞管線，但在 `approvals.plugin` 下有其獨立的設定。啟用或停用其中一個不會影響另一個。關於外掛程式撰寫行為、請求欄位和決策語意，請參閱 [Plugin permission requests](/zh-Hant/plugins/plugin-permission-requests)。
 
 ```json5
 {
@@ -229,53 +228,65 @@ OpenClaw 會保持本地確定性 `/approve`
 
 - 主機執行政策仍然決定是否需要執行核准
 - `approvals.exec` 控制將審核提示轉發到其他聊天目的地
-- `channels.<channel>.execApprovals` 控制該頻道是否充當原生審核用戶端
+- `channels.<channel>.execApprovals` 控制是否啟用 Discord、Slack、Telegram 和類似的特定頻道原生用戶端
 - 當請求來自 Slack 且 Slack 外掛程式審批者解決時，Slack 外掛程式審批可以使用 Slack 的原生審批客戶端；`approvals.plugin` 也可以將外掛程式審批路由到 Slack 工作階段或目標，即使停用 Slack 執行審批
-- WhatsApp 表情符號審批傳遞由 `approvals.exec` 和 `approvals.plugin` 控制，而審批反應需要來自 `channels.whatsapp.allowFrom` 或 `"*"` 的明確 WhatsApp 審批者
+- WhatsApp 和 Signal 反應核准傳遞受 `approvals.exec` 和 `approvals.plugin` 限制；它們沒有 `channels.<channel>.execApprovals` 區塊
 
 當所有以下條件均符合時，原生審批客戶端會自動啟用「DM 優先」傳遞：
 
 - 頻道支援原生審批傳遞
-- 可以從明確的 `execApprovals.approvers` 或擁有者身分（例如 `commands.ownerAllowFrom`）解析審批者
-- `channels.<channel>.execApprovals.enabled` 未設定或 `"auto"`
+- 可以從明確的 `execApprovals.approvers` 或擁有者身分（例如 `commands.ownerAllowFrom`）解析核准者
+- `channels.<channel>.execApprovals.enabled` 未設定或為 `"auto"`
 
-設定 `enabled: false` 以明確停用原生審批客戶端。設定 `enabled: true` 以在解析出審批者時強制啟用它。公開原始頻道傳遞透過 `channels.<channel>.execApprovals.target` 保持明確狀態。
+設定 `enabled: false` 以明確停用原生核准用戶端。設定 `enabled: true` 以在解析出核准者時強制啟用它。公開原始聊天傳遞透過 `channels.<channel>.execApprovals.target` 保持明確狀態。
 
-常見問題：[為什麼聊天審批有兩個執行審批設定？](/zh-Hant/help/faq-first-run#why-are-there-two-exec-approval-configs-for-chat-approvals)
+常見問題：[Why are there two exec approval configs for chat approvals?](/zh-Hant/help/faq-first-run#why-are-there-two-exec-approval-configs-for-chat-approvals)
 
 - Discord：`channels.discord.execApprovals.*`
 - Slack：`channels.slack.execApprovals.*`
 - Telegram：`channels.telegram.execApprovals.*`
-- WhatsApp：使用 `approvals.exec` 和 `approvals.plugin` 將審批提示路由至 WhatsApp
+- WhatsApp：使用 `approvals.exec` 和 `approvals.plugin` 將核准提示路由到 WhatsApp
+- Signal：使用 `approvals.exec` 和 `approvals.plugin` 將核准提示路由到 Signal
 
-這些原生審批客戶端在共用的同頻道 `/approve` 流程和共用審批按鈕之上，新增了 DM 路由和可選的頻道分流。
+這些原生核准用戶端在共享的同聊天 `/approve` 流程和共享核准按鈕之上，新增了 DM 路由和可選的頻道擴散。
 
-共用行為：
+共享行為：
 
-- Slack、Matrix、Microsoft Teams 和類似的可傳遞聊天使用標準頻道授權模型進行同頻道 `/approve`
-- 當原生審批客戶端自動啟用時，預設的原生傳遞目標是審批者的 DM
-- 對於 Discord 和 Telegram，只有已解析的審批者可以批准或拒絕
-- Discord 審批者可以是明確指定的 (`execApprovals.approvers`)，也可以從 `commands.ownerAllowFrom` 推斷
-- Telegram 審批者可以是明確指定的 (`execApprovals.approvers`)，也可以從 `commands.ownerAllowFrom` 推斷
-- Slack 核准者可以是明確的 (`execApprovals.approvers`) 或是從 `commands.ownerAllowFrom` 推斷
-- Slack 外掛程式核准私人訊息使用來自 `allowFrom` 的 Slack 外掛程式核准者和帳戶預設路由，而非 Slack 執行核准者
-- Slack 原生按鈕會保留核准 ID 類型，因此 `plugin:` ID 可以解析外掛程式核准，而無需第二層 Slack 本機後援層
-- WhatsApp 表符核准僅當相符的頂層轉發系列已啟用並路由至 WhatsApp 時，才會處理執行和外掛程式提示；僅目標的 WhatsApp 轉發會保留在共用轉發路徑上，除非它符合相同的原生來源目標
-- Matrix 原生私人訊息/頻道路由和反應捷徑會處理執行和外掛程式核准；外掛程式授權仍來自 `channels.matrix.dm.allowFrom`
-- Matrix 原生提示在第一個提示事件上包含 `com.openclaw.approval` 自訂事件內容，因此支援 OpenClaw 的 Matrix 用戶端可以讀取結構化核准狀態，而標準用戶端則保留純文字 `/approve` 後援
-- 請求者不必是核准者
-- 當該聊天已支援指令和回覆時，原始聊天可以使用 `/approve` 直接進行核准
-- 原生 Discord 核准按鈕會根據核准 ID 類型進行路由：`plugin:` ID 直接前往外掛程式核准，其他所有內容則前往執行核准
-- 原生 Telegram 核准按鈕遵循與 `/approve` 相同的有界執行至外掛程式後援機制
-- 當原生 `target` 啟用來源聊天傳遞時，核准提示會包含指令文字
-- 待處理的執行核准預設在 30 分鐘後過期
-- 如果沒有操作者 UI 或設定的核准用戶端可以接受請求，提示會後援至 `askFallback`
+- Slack、Matrix、Microsoft Teams 和類似的可傳遞聊天使用正常的頻道授權模型進行同聊天 `/approve`
+- 當原生審批用戶端自動啟用時，預設的原生傳遞目標是審批者的私訊
+- 對於 Discord 和 Telegram，只有解析出的審批者可以批准或拒絕
+- Discord 審批者可以是明確指定的 (`execApprovals.approvers`) 或是從 `commands.ownerAllowFrom` 推斷得出的
+- Telegram 審批者可以是明確指定的 (`execApprovals.approvers`) 或是從 `commands.ownerAllowFrom` 推斷得出的
+- Slack 審批者可以是明確指定的 (`execApprovals.approvers`) 或是從 `commands.ownerAllowFrom` 推斷得出的
+- Slack 外掛程式審批私訊使用來自 `allowFrom` 的 Slack 外掛程式審批者和帳戶預設
+  路由，而非 Slack 執行 審批者
+- Slack 原生按鈕會保留審批 ID 類型，因此 `plugin:` ID 可以解析外掛程式審批
+  而不需要第二層 Slack 本地後援機制
+- WhatsApp 表情符號審批僅在當匹配的頂層
+  轉發系列已啟用並路由至 WhatsApp 時，才會處理執行 和外掛程式 提示；僅目標 WhatsApp 的轉發保持
+  在共享轉發路徑上，除非它匹配相同的原生來源目標
+- Signal 反應審批僅在當匹配的頂層
+  轉發系列已啟用並路由至 Signal 時，才會處理執行 和外掛程式 提示。直接的同一聊天 Signal 執行 審批可以
+  在沒有明確審批者的情況下抑制本地 `/approve` 後援；Signal 反應解析
+  仍然需要來自 `channels.signal.allowFrom` 或 `defaultTo` 的明確 Signal 審批者。
+- Matrix 原生私訊/頻道路由和反應捷徑處理執行 和外掛程式 審批；
+  外掛程式授權仍然來自 `channels.matrix.dm.allowFrom`
+- Matrix 原生提示在第一個提示
+  事件中包含 `com.openclaw.approval` 自訂事件內容，以便支援 OpenClaw 的 Matrix 用戶端可以讀取結構化審批狀態，而標準
+  用戶端則保留純文字 `/approve` 後援
+- 請求者不需要是審批者
+- 當該聊天已經支援指令和回覆時，來源聊天可以直接使用 `/approve` 進行審批
+- 原生 Discord 核准按鈕依據核准 ID 種類路由：`plugin:` ID 直接前往外掛程式核准，其他則前往 exec 核准
+- 原生 Telegram 核準按鈕遵循與 `/approve` 相同的受限 exec 至外掛程式後備邏輯
+- 當原生 `target` 啟用來源聊天遞送時，核准提示會包含指令文字
+- 待處理的 exec 核准預設在 30 分鐘後過期
+- 如果沒有操作員 UI 或已設定的核准用戶端可以接受請求，提示會後備至 `askFallback`
 
-敏感的僅限所有者的群組指令，例如 `/diagnostics` 和 `/export-trajectory`，會使用私人所有者路由來傳送審核提示和最終結果。OpenClaw 首先會嘗試在所有者執行指令的同一表面上使用私人路由。如果該表面沒有私人所有者路由，它會回退到 `commands.ownerAllowFrom` 中第一個可用的所有者路由，因此當 Telegram 設定為主要私人介面時，Discord 群組指令仍可將審核和結果傳送到所有者的 Telegram 私訊。群組聊天只會收到一個簡短的確認訊息。
+敏感的僅限擁有者群組指令（例如 `/diagnostics` 和 `/export-trajectory`）會使用私有擁有者路由來發送核准提示和最終結果。OpenClaw 會先嘗試在擁有者執行指令的相同表面上使用私有路由。如果該表面沒有私有擁有者路由，它會後備至 `commands.ownerAllowFrom` 中第一個可用的擁有者路由，因此當 Telegram 是設定的主要私有介面時，Discord 群組指令仍可將核准和結果發送給擁有者的 Telegram DM。群組聊天只會收到一個簡短的確認通知。
 
-Telegram 預設為審核者私訊 (`target: "dm"`)。當您希望審核提示也出現在原始 Telegram 聊天/主題中時，您可以切換到 `channel` 或 `both`。對於 Telegram 論壇主題，OpenClaw 會為審核提示和審核後的後續追蹤保留該主題。
+Telegram 預設為核准者 DM (`target: "dm"`)。當您希望核准提示也出現在原始 Telegram 聊天/主題中時，您可以切換至 `channel` 或 `both`。對於 Telegram 論壇主題，OpenClaw 會為核准提示和核准後的後續追蹤保留該主題。
 
-請參閱：
+參閱：
 
 - [Discord](/zh-Hant/channels/discord)
 - [Telegram](/zh-Hant/channels/telegram)
@@ -291,17 +302,17 @@ Gateway -> Node Service (WS)
 
 安全性備註：
 
-- Unix socket 模式 `0600`，token 儲存在 `exec-approvals.json` 中。
-- 相同 UID 對等端檢查。
-- 挑戰/回應 (nonce + HMAC token + 請求雜湊) + 短 TTL。
+- Unix socket 模式 `0600`，token 儲存在 `exec-approvals.json`。
+- 相同 UID 對端檢查。
+- 挑戰/回應 (nonce + HMAC token + 請求雜湊) + 短暫 TTL。
 
 ## 常見問題
 
-### 何時會在審核目標上使用 `accountId` 和 `threadId`？
+### 何時會在核准目標上使用 `accountId` 和 `threadId`？
 
-當頻道有多個設定的身分識別且審核提示必須透過特定帳號發出時，請使用 `accountId`。當目標支援主題或執行緒，且提示應留在該執行緒內而非頂層聊天時，請使用 `threadId`。
+當通道設定了多個身分，且核准提示必須透過特定帳號發送時，請使用 `accountId`。當目標支援主題或討論串，且提示應留在該討論串內而非頂層聊天時，請使用 `threadId`。
 
-一個具體的 Telegram 案例是一個具有論壇主題和兩個 Telegram 機器人帳號的營運超級群組。`to` 值指定超級群組名稱，`accountId` 選擇機器人帳號，而 `threadId` 選擇論壇主題：
+一個具體的 Telegram 範例是擁有論壇主題和兩個 Telegram 機器人帳號的營運超級群組。`to` 值指定超級群組名稱，`accountId` 選擇機器人帳號，而 `threadId` 選擇論壇主題：
 
 ```json5
 {
@@ -336,19 +347,19 @@ Gateway -> Node Service (WS)
 }
 ```
 
-透過該設置，轉發的 exec 審批會由 `ops-bot` Telegram 帳號發布至聊天 `-1001234567890` 的主題 `77` 中。沒有 `accountId` 的目標會使用頻道的預設帳號，而沒有 `threadId` 的目標則會發布至頂層目的地。
+在此設定下，轉發的 exec 核准會由 `ops-bot` Telegram 帳號發布至聊天 `-1001234567890` 的主題 `77` 中。沒有 `accountId` 的目標會使用通道的預設帳號，而沒有 `threadId` 的目標則會發布至頂層目的地。
 
-### 當審批發送至某個 session 時，該 session 中的任何人都可以核准嗎？
+### 當核准被發送到工作階段時，該工作階段中的任何人都可以核准嗎？
 
-不會。Session 傳遞僅控制提示顯示的位置。它本身並未授權該聊天中的每個參與者進行核准。
+不。工作階段傳送僅控制提示顯示的位置。它本身並未授權該聊天中的每個參與者進行核准。
 
-對於一般的相同聊天 `/approve`，發送者必須已獲授權可在該頻道 session 中執行指令。如果該頻道指定了明確的審批核准者，這些核准者即使未在該 session 中獲得指令授權，仍可授權 `/approve` 操作。
+對於一般的同頻道 `/approve`，發送者必須已獲得該通道工作階段中指令的授權。如果通道公開了明確的核准核准者，這些核准者即使未獲得該工作階段中的其他指令授權，也可以授權 `/approve` 動作。
 
-部分頻道有更嚴格的規定。Discord、Telegram、Matrix、Slack 原生審批 DM 及類似的原生審批用戶端會使用其解析出的核准者清單來處理審批授權。舉例來說，Telegram 論壇主題的審批提示可能對主題中的所有人都可見，但僅有從 `channels.telegram.execApprovals.approvers` 或 `commands.ownerAllowFrom` 解析出的 Telegram 數位使用者 ID 能夠核准或拒絕。
+部分通道較為嚴格。Discord、Telegram、Matrix、Slack 原生核准私訊和類似的原生核准用戶端會使用其解析出的核准者清單進行核准授權。例如，Telegram 論壇主題核准提示可能對主題中的所有人可見，但只有從 `channels.telegram.execApprovals.approvers` 或 `commands.ownerAllowFrom` 解析出的數位 Telegram 使用者 ID 才能核准或拒絕它。
 
 ## 相關
 
-- [Exec 審批](/zh-Hant/tools/exec-approvals) — 核心原則與審批流程
-- [Exec 工具](/zh-Hant/tools/exec)
-- [提權模式](/zh-Hant/tools/elevated)
-- [Skills](/zh-Hant/tools/skills) — 由 Skills 支援的自動允許行為
+- [Exec approvals](/zh-Hant/tools/exec-approvals) — 核心原則與核准流程
+- [Exec tool](/zh-Hant/tools/exec)
+- [Elevated mode](/zh-Hant/tools/elevated)
+- [Skills](/zh-Hant/tools/skills) — 技能支援的自動允許行為

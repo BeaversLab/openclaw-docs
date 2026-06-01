@@ -1,5 +1,5 @@
 ---
-summary: "新增用於傳送和接收 OpenClaw 訊息的 Zalo Personal 頻道介面。"
+summary: "透過原生 zca-js 整合的 OpenClaw Zalo 個人帳號外掛程式。"
 read_when:
   - You are installing, configuring, or auditing the zalouser plugin
 title: "Zalo Personal 外掛程式"
@@ -7,7 +7,7 @@ title: "Zalo Personal 外掛程式"
 
 # Zalo Personal 外掛程式
 
-新增用於傳送和接收 OpenClaw 訊息的 Zalo Personal 頻道介面。
+透過原生 zca-js 整合的 OpenClaw Zalo 個人帳號外掛程式。
 
 ## 發布
 

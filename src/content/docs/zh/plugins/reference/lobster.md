@@ -1,5 +1,5 @@
 ---
-summary: "具有可恢复批准的类型化工作流工具。"
+summary: "LobsterLobster 工作流工具插件，用于类型化流水线和可恢复审批。"
 read_when:
   - You are installing, configuring, or auditing the lobster plugin
 title: "Lobster 插件"
@@ -7,7 +7,7 @@ title: "Lobster 插件"
 
 # Lobster 插件
 
-具有可恢复批准的类型化工作流工具。
+Lobster 工作流工具插件，用于类型化流水线和可恢复审批。
 
 ## 分发
 

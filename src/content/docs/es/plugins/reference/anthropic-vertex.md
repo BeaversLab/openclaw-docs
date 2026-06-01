@@ -1,5 +1,5 @@
 ---
-summary: "Añade compatibilidad con el proveedor de modelos Anthropic Vertex a OpenClaw."
+summary: "Complemento del proveedor OpenClaw Anthropic Vertex para modelos Claude en Google Vertex AI."
 read_when:
   - You are installing, configuring, or auditing the anthropic-vertex plugin
 title: "Complemento Anthropic Vertex"
@@ -7,7 +7,7 @@ title: "Complemento Anthropic Vertex"
 
 # Complemento Anthropic Vertex
 
-Añade compatibilidad con el proveedor de modelos Anthropic Vertex a OpenClaw.
+Complemento del proveedor OpenClaw Anthropic Vertex para modelos Claude en Google Vertex AI.
 
 ## Distribución
 

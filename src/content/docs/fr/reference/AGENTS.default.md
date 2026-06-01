@@ -91,7 +91,7 @@ git commit -m "Add Clawd workspace"
 
 ## Ce que fait OpenClaw
 
-- Exécute la passerelle WhatsApp + l'agent de codage Pi pour que l'assistant puisse lire/écrire des discussions, récupérer le contexte et exécuter des Skills via l'hôte Mac.
+- Exécute la passerelle WhatsApp + l'agent OpenClaw intégré pour que l'assistant puisse lire/écrire des chats, récupérer du contexte et exécuter des compétences via l'hôte Mac.
 - L'application macOS gère les autorisations (enregistrement d'écran, notifications, microphone) et expose le `openclaw` CLI via son binaire inclus.
 - Les discussions directes sont réduites dans la session `main` de l'agent par défaut ; les groupes restent isolés en tant que `agent:<agentId>:<channel>:group:<id>` (salons/canaux : `agent:<agentId>:<channel>:channel:<id>`) ; les battements de cœur maintiennent les tâches d'arrière-plan en vie.
 

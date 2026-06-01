@@ -1,5 +1,5 @@
 ---
-summary: "新增 Zalo 頻道表面，用於傳送和接收 OpenClaw 訊息。"
+summary: "用於機器人和 Webhook 聊天的 OpenClaw Zalo 頻道外掛程式。"
 read_when:
   - You are installing, configuring, or auditing the zalo plugin
 title: "Zalo 外掛程式"
@@ -7,7 +7,7 @@ title: "Zalo 外掛程式"
 
 # Zalo 外掛程式
 
-新增 Zalo 頻道表面，用於傳送和接收 OpenClaw 訊息。
+用於機器人和 Webhook 聊天的 OpenClaw Zalo 頻道外掛程式。
 
 ## 發行版本
 

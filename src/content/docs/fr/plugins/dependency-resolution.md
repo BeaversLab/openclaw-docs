@@ -34,33 +34,36 @@ OpenClaw ne possède que le cycle de vie du plugin :
 
 OpenClaw utilise des racines stables par source :
 
-- les packages npm s'installent sous npm`~/.openclaw/npm`
+- Les packages npm sont installés dans des projets par plugin sous
+  `~/.openclaw/npm/projects/<encoded-package>`
 - les packages git sont clonés sous `~/.openclaw/git`
 - les installations local/path/archive sont copiées ou référencées sans réparation des dépendances
 
-les installations npm s'exécutent dans la racine npm avec :
+Les installations npm s'exécutent dans la racine du projet par plugin avec :
 
 ```bash
-cd ~/.openclaw/npm
+cd ~/.openclaw/npm/projects/<encoded-package>
 npm install --omit=dev --omit=peer --legacy-peer-deps --ignore-scripts --no-audit --no-fund
 ```
 
-`openclaw plugins install npm-pack:<path.tgz>`npmnpmOpenClawnpm utilise cette même racine npm gérée
-pour une archive tar locale npm-pack. OpenClaw lit les métadonnées npm de l'archive, l'ajoute
-à la racine gérée en tant que dépendance `file:`npm copiée, exécute l'installation npm normale,
-et vérifie ensuite les métadonnées du fichier de verrouillage installé avant de faire confiance au plugin.
-Cela est destiné à la validation des packages et aux preuves de candidat à la publication où un
-artefact de pack local doit se comporter comme l'artefact de registre qu'il simule.
+`openclaw plugins install npm-pack:<path.tgz>` utilise cette même racine de projet npm par plugin
+pour une archive tar locale npm-pack. OpenClaw lit les métadonnées npm
+de l'archive tar, l'ajoute au projet géré en tant que dépendance `file:` copiée, exécute
+l'installation npm normale, puis vérifie les métadonnées du lockfile installé avant
+de faire confiance au plugin.
+Ceci est prévu pour l'acceptation des packages et la preuve des candidats à la publication où
+un artefact de pack local doit se comporter comme l'artefact de registre qu'il simule.
 
-npm peut remonter les dépendances transitives vers npm`~/.openclaw/npm/node_modules`OpenClawnpmnpmnpm à côté
-du package de plugins. OpenClaw analyse la racine npm gérée avant de faire confiance à
-l'installation et utilise npm pour supprimer les packages gérés par npm lors de la désinstallation, de sorte que les dépendances d'exécution
-remontées restent à l'intérieur des limites du nettoyage géré.
+npm peut hisser les dépendances transitives dans le
+`node_modules` du projet par plugin à côté du package du plugin. OpenClaw analyse la racine du projet
+géré avant de faire confiance à l'installation et supprime ce projet lors de la désinstallation, de sorte que
+les dépendances d'exécution hissées restent à l'intérieur des limites de nettoyage de ce plugin.
 
-Les packages de plugins npm publiés peuvent inclure npm`npm-shrinkwrap.json`npmOpenClawnpmnpmOpenClaw. npm utilise ce
-fichier de verrouillage pouvant être publié lors de l'installation, et la racine npm gérée d'OpenClaw le prend en charge
-via le chemin d'installation npm normal. Les packages de plugins publiés appartenant à OpenClaw
-doivent inclure un shrinkwrap local au package généré à partir du graphe de dépendances publié de ce package de plugins :
+Les packages de plugin publiés npm peuvent inclure `npm-shrinkwrap.json`. npm utilise ce
+lockfile publiable lors de l'installation, et la racine du projet OpenClaw géré par npm
+la prend en charge via le chemin d'installation npm normal. Les packages de plugin
+publiables appartenant à OpenClaw doivent inclure un shrinkwrap local au package généré à partir du
+graphe de dépendances publié de ce package de plugin :
 
 ```bash
 pnpm deps:shrinkwrap:generate
@@ -71,7 +74,7 @@ Le générateur supprime `devDependencies` du plugin, applique la politique de r
 
 Les packages de plugins OpenClaw détenus par npm peuvent également être publiés avec un `bundledDependencies` explicite. Le chemin de publication npm superpose la liste des noms des dépendances d'exécution, supprime les métadonnées de l'espace de travail réservées au développement du manifeste du package publié, exécute une installation npm sans script pour les dépendances d'exécution locales au package, puis empaquette ou publie l'archive du plugin avec ces fichiers de dépendance inclus. Les packages très natifs, y compris les runtimes Codex et ACP, se désactivent avec `openclaw.release.bundleRuntimeDependencies: false` ; ces packages envoient toujours leur shrinkwrap, mais npm résout les dépendances d'exécution lors de l'installation au lieu d'intégrer chaque binaire de plateforme dans l'archive du plugin. Le package racine `openclaw` n'inclut pas son arbre de dépendances complet.
 
-Les plugins qui importent `openclaw/plugin-sdk/*` déclarent `openclaw` comme dépendance pair. OpenClaw ne permet pas à npm d'installer une copie de registre distincte du package hôte dans la racine gérée, car les packages hôtes obsolètes peuvent affecter la résolution des pairs npm lors des installations ultérieures de plugins. Les installations gérées npm ignorent la résolution/matérialation des pairs npm pour la racine partagée et OpenClaw rétablit les liens `node_modules/openclaw` locaux au plugin pour les packages installés qui déclarent l'hôte comme pair après l'installation, la mise à jour ou la désinstallation.
+Les plugins qui importent `openclaw/plugin-sdk/*` déclarent `openclaw`OpenClawnpmnpmnpmnpmOpenClaw comme dépendance pair (peer). OpenClaw ne permet pas à npm d'installer une copie distincte du registre du package hôte dans un projet géré, car les packages hôtes obsolètes peuvent affecter la résolution des pairs npm à l'intérieur de ce plugin. Les installations gérées par npm ignorent la résolution/matérialisation des pairs npm et OpenClaw réaffirme les liens `node_modules/openclaw` locaux au plugin pour les packages installés qui déclarent l'hôte comme pair après l'installation ou la mise à jour.
 
 Les installations git clonent ou actualisent le dépôt, puis exécutent :
 
@@ -105,7 +108,7 @@ openclaw doctor --fix
 
 Les plugins regroupés légers et critiques pour le cœur sont fournis dans le cadre de OpenClaw. Ils ne doivent pas avoir d'arbre de dépendances d'exécution volumineux, ou être déplacés vers un package téléchargeable sur ClawHub/npm.
 
-Pour la liste générée actuelle des plugins fournis dans le package principal, installés en externe, ou restant uniquement en source, voir [Inventaire des plugins](/fr/plugins/plugin-inventory).
+Pour la liste générée actuelle des plugins qui sont livrés dans le package principal, installés en externe ou qui restent uniquement au niveau source, voir [Plugin inventory](/fr/plugins/plugin-inventory).
 
 Les manifestes de plugins regroupés ne doivent pas demander de mise en place de dépendances. Les fonctionnalités de plugins volumineuses ou optionnelles doivent être empaquetées en tant que plugin normal et installées via le même chemin npm/git/ClawHub que les plugins tiers.
 
@@ -115,10 +118,11 @@ Dans les extraits de source, OpenClaw traite le référentiel comme un monorepo 
 | -------------------------------- | ---------------------------------------------------- | -------------------------------------------------------------------------------------------- |
 | `npm install -g openclaw`        | Arbre d'exécution construit à l'intérieur du package | Le package OpenClaw et les flux d'installation/mise à jour/réparation explicites des plugins |
 | Git checkout plus `pnpm install` | Packages de l'espace de travail `extensions/<id>`    | L'espace de travail pnpm, y compris les dépendances propres de chaque package de plugin      |
-| `openclaw plugins install ...`   | Racine de plugin gérée npm/git/ClawHub               | Le flux d'installation/mise à jour des plugins                                               |
+| `openclaw plugins install ...`   | Racine de projet géré npm/git/ClawHub                | Le flux d'installation/mise à jour des plugins                                               |
 
 ## Nettoyage de l'héritage
 
 Les anciennes versions de OpenClaw généraient des racines de dépendances de plugins groupés au démarrage ou pendant la réparation du doctor. Le nettoyage actuel du doctor supprime ces répertoires et liens symboliques obsolètes lorsque `--fix` est utilisé, y compris les anciennes racines `plugin-runtime-deps`, les liens symboliques de packages globaux avec préfixe Node qui pointent vers des cibles `plugin-runtime-deps` élaguées, les manifestes `.openclaw-runtime-deps*`, les `node_modules` de plugins générés, les répertoires de l'étape d'installation et les magasins pnpm locaux aux packages. Le postinstall conditionné supprime également ces liens symboliques globaux avant d'élaguer les racines cibles héritées afin que les mises à niveau ne laissent pas d'imports de packages ESM en suspens.
 
-Ces chemins ne sont que des débris hérités. Les nouvelles installations ne devraient pas les créer.
+Les anciennes installations npm utilisaient également une racine npm`~/.openclaw/npm/node_modules`npm partagée.
+Les flux d'installation, de mise à jour, de désinstallation et de diagnostic actuels reconnaissent toujours cette ancienne racine plate uniquement pour la récupération et le nettoyage. Les nouvelles installations npm devraient créer des racines de projet par plugin à la place.

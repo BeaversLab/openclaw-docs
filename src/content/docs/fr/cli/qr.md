@@ -36,7 +36,7 @@ openclaw qr --url wss://gateway.example/ws
 - `--token` et `--password` sont mutuellement exclusifs.
 - Le code de configuration lui-même contient désormais un `bootstrapToken` opaque et à courte durée de vie, et non le jeton/mot de passe de la passerelle partagé.
 - L'amorçage du code de configuration intégré renvoie un jeton `node` principal avec `scopes: []` plus un jeton de transfert `operator` limité pour un onboarding mobile de confiance.
-- Le jeton d'opérateur transféré est limité à `operator.approvals`, `operator.read` et `operator.write` ; `operator.admin`, `operator.pairing` et `operator.talk.secrets` nécessitent un flux distinct d'appariement ou de jeton d'opérateur approuvé.
+- Le jeton d'opérateur transmis est limité à `operator.approvals`, `operator.read`, `operator.talk.secrets` et `operator.write` ; `operator.admin` et `operator.pairing` nécessitent un flux d'appariement ou de jeton d'opérateur approuvé distinct.
 - L'appariement mobile échoue en mode fermé pour les URL de passerelle Tailscale/publiques Tailscale`ws://`. Les adresses LAN privées et les hôtes `.local`Bonjour Bonjour restent pris en charge via `ws://`TailscaleTailscale, mais les itinéraires mobiles Tailscale/publics doivent utiliser Tailscale Serve/Funnel ou une URL de passerelle `wss://`.
 - Avec `--remote`OpenClaw, OpenClaw nécessite `gateway.remote.url` ou
   `gateway.tailscale.mode=serve|funnel`.

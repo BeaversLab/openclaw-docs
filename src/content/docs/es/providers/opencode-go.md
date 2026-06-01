@@ -19,9 +19,9 @@ por modelo ascendente se mantenga correcto.
 
 ## Catálogo integrado
 
-OpenClaw obtiene la mayoría de las filas del catálogo de Go del registro de modelos pi incluido
-y complementa las filas ascendentes actuales mientras el registro se actualiza. Ejecute
-`openclaw models list --provider opencode-go` para ver la lista de modelos actual.
+OpenClaw obtiene la mayoría de las filas del catálogo de Go del registro de modelos de OpenClaw incluido y
+completa las filas ascendentes actuales mientras el registro se pone al día. Ejecute
+`openclaw models list --provider opencode-go` para obtener la lista de modelos actual.
 
 El proveedor incluye:
 

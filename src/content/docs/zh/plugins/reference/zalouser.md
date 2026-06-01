@@ -1,5 +1,5 @@
 ---
-summary: "ZaloOpenClaw添加用于发送和接收 OpenClaw 消息的 Zalo Personal 渠道表面。"
+summary: "OpenClawZalo通过原生 zca-js 集成的 OpenClaw Zalo 个人账号插件。"
 read_when:
   - You are installing, configuring, or auditing the zalouser plugin
 title: "ZaloZalo Personal 插件"
@@ -7,7 +7,7 @@ title: "ZaloZalo Personal 插件"
 
 # Zalo Personal 插件
 
-添加用于发送和接收 OpenClaw 消息的 Zalo Personal 渠道表面。
+通过原生 zca-js 集成的 OpenClaw Zalo 个人账号插件。
 
 ## 分发
 

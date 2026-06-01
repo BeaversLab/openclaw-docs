@@ -240,65 +240,62 @@ OPENCLAW_RAW_STREAM_PATH=~/.openclaw/logs/raw-stream.jsonl
 
 `~/.openclaw/logs/raw-stream.jsonl`
 
-## 原始数据块日志
+## 原始 OpenAI 兼容数据块日志
 
-为了捕获解析成块之前的**原始 OpenAI 兼容数据块**，
-pi-mono 公开了一个单独的记录器：
+要在将 **原始 OpenAI 兼容数据块** 解析为块之前捕获它们，
+请启用传输记录器：
 
 ```bash
-PI_RAW_STREAM=1
+OPENCLAW_RAW_STREAM=1
 ```
 
 可选路径：
 
 ```bash
-PI_RAW_STREAM_PATH=~/.pi-mono/logs/raw-openai-completions.jsonl
+OPENCLAW_RAW_STREAM_PATH=~/.openclaw/logs/raw-openai-completions.jsonl
 ```
 
 默认文件：
 
-`~/.pi-mono/logs/raw-openai-completions.jsonl`
-
-> 注意：这仅由使用 pi-mono 的
-> `openai-completions` 提供商的进程发出。
+`~/.openclaw/logs/raw-openai-completions.jsonl`
 
 ## 安全说明
 
-- 原始流日志可能包含完整的提示词、工具输出和用户数据。
-- 请将日志保留在本地，并在调试完成后将其删除。
-- 如果您共享日志，请先清除其中的机密信息和 PII。
+- 原始流日志可能包含完整的提示、工具输出和用户数据。
+- 请将日志保存在本地，并在调试后将其删除。
+- 如果您共享日志，请先清除密钥和个人身份信息 (PII)。
 
 ## 在 VSCode 中调试
 
-需要在基于 VSCode 的 IDE 中启用调试，因为作为构建过程的一部分，许多生成的文件最终会带有哈希名称。包含的 `launch.json` 配置针对 Gateway(网关) 服务，但可以快速适应其他用途：
+在基于 VSCode 的 IDE 中启用调试需要 Source maps，因为许多生成的文件在构建过程中最终会带有哈希名称。包含的 `launch.json` 配置以 Gateway(网关) 服务为目标，但可以快速调整用于其他目的：
 
-1. **重新构建并调试 Gateway** - 在创建新构建后调试 Gateway(网关)Gateway(网关) 服务
-2. **调试 Gateway** - 调试现有构建的 Gateway(网关)Gateway(网关) 服务
+1. **重新构建并调试 Gateway(网关)** - 创建新构建后调试 Gateway(网关) 服务
+2. **调试 Gateway(网关)** - 调试现有构建的 Gateway(网关) 服务
 
 ### 设置
 
-默认的 **重新构建并调试 Gateway** 配置是开箱即用的，它将自动删除 Gateway(网关)`/dist` 文件夹并在启用调试的情况下重新构建项目：
+默认的 **重新构建并调试 Gateway(网关)** 配置是开箱即用的，它会自动删除 `/dist` 文件夹并在启用调试的情况下重新构建项目：
 
-1. 从活动栏打开 **运行和调试** 面板或按 `Ctrl`+`Shift`+`D`
-2. 在 IDE 中，确保在配置下拉列表中选择了 **重新构建并调试 Gateway**，然后按 **开始调试** 按钮
+1. 从活动栏打开 **运行和调试** 面板，或按 `Ctrl`+`Shift`+`D`
+2. 在 IDE 中，确保在下拉列表中选择了 **重新构建并调试 Gateway(网关)**，然后按 **开始调试** 按钮
 
 或者 - 如果您更喜欢手动管理构建和调试过程：
 
-1. 打开终端并启用源映射：
-   - **Linux/macOS**: `export OUTPUT_SOURCE_MAPS=1`
-   - **Windows (PowerShell)**: `$env:OUTPUT_SOURCE_MAPS="1"`
-   - **Windows (CMD)**: `set OUTPUT_SOURCE_MAPS=1`
+1. 打开终端并启用 source maps：
+   - **Linux/macOS**：`export OUTPUT_SOURCE_MAPS=1`
+   - **Windows (PowerShell)**：`$env:OUTPUT_SOURCE_MAPS="1"`
+   - **Windows (CMD)**：`set OUTPUT_SOURCE_MAPS=1`
 2. 在同一终端中，重新构建项目：`pnpm clean:dist && pnpm build`
-3. 在 IDE 中，在 **运行和调试** 配置下拉列表中选择 **调试 Gateway** 选项，然后按 **开始调试** 按钮
+3. 在 IDE 中，在 **运行和调试** 配置下拉列表中选择 **调试 Gateway(网关)** 选项，然后按 **开始调试** 按钮
 
-您现在可以在 TypeScript 源文件（`src/` 目录）中设置断点，调试器将通过 source map 正确地将断点映射到编译后的 JavaScript 代码。您将能够按照预期检查变量、单步执行代码以及检查调用堆栈。
+您现在可以在 TypeScript 源文件（`src/` 目录）中设置断点，调试器将通过 source maps 正确地将断点映射到编译后的 JavaScript。您将能够检查变量、单步执行代码以及按预期检查调用堆栈。
 
 ### 注意
 
-- 如果使用 **“Rebuild and Debug Gateway(网关)”** 选项 - 每次启动调试器时，它将完全删除 `/dist` 文件夹，并在启动 Gateway(网关) 之前运行一次启用了 source map 的完整 `pnpm build`
-- 如果使用 **“Debug Gateway(网关)”** 选项 - 调试会话可以随时启动和停止，而不会影响 `/dist` 文件夹，但您必须使用单独的终端进程来启用调试并管理构建周期
-- 修改 `args` 的 `launch.json` 设置以调试项目的其他部分
-- 如果您需要使用构建的 OpenClaw CLI 执行其他任务（即 `dashboard --no-open` 如果您的调试会话生成了新的 auth token），您可以在另一个终端中将其作为 `node ./openclaw.mjs` 执行，或者创建一个 shell 别名，如 `alias openclaw-build="node $(pwd)/openclaw.mjs"`
+- 如果使用 **"Rebuild and Debug Gateway(网关)"** 选项 - 每次启动调试器时，它将完全删除 `/dist` 文件夹，并在启动 Gateway(网关) 之前运行启用了 source maps 的完整 `pnpm build`
+- 如果使用 **"Debug Gateway(网关)"** 选项 - 调试会话可以随时启动和停止，而不会影响 `/dist` 文件夹，但您必须使用单独的终端进程来启用调试和管理构建周期
+- 修改 `launch.json` 中的 `args` 设置以调试项目的其他部分
+- 如果您需要使用内置的 OpenClaw CLI 执行其他任务（即 `dashboard --no-open` 如果您的调试会话生成了新的 auth token），您可以在另一个终端中将其作为 `node ./openclaw.mjs` 执行，或者创建一个像 `alias openclaw-build="node $(pwd)/openclaw.mjs"` 这样的 shell 别名
 
 ## 相关
 

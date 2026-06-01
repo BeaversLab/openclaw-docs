@@ -1,5 +1,5 @@
 ---
-summary: "Amazon BedrockOpenClawAjoute la prise en charge du fournisseur de modèle Amazon Bedrock à OpenClaw."
+summary: "OpenClawAmazon BedrockPlugin fournisseur OpenClaw Amazon Bedrock avec découverte de modèle, embeddings et support de garde-corps."
 read_when:
   - You are installing, configuring, or auditing the amazon-bedrock plugin
 title: "Amazon BedrockPlugin Amazon Bedrock"
@@ -7,7 +7,7 @@ title: "Amazon BedrockPlugin Amazon Bedrock"
 
 # Plugin Amazon Bedrock
 
-Ajoute la prise en charge du fournisseur de modèle Amazon Bedrock à OpenClaw.
+Plugin fournisseur OpenClaw Amazon Bedrock avec découverte de modèle, embeddings et support de garde-corps.
 
 ## Distribution
 

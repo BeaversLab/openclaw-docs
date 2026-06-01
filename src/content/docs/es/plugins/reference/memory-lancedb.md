@@ -1,5 +1,5 @@
 ---
-summary: "Añade herramientas invocables por el agente."
+summary: "Plugin de memoria a largo plazo con respaldo de LanceDB de OpenClaw con recuperación automática, captura automática y búsqueda vectorial."
 read_when:
   - You are installing, configuring, or auditing the memory-lancedb plugin
 title: "Plugin Memory Lancedb"
@@ -7,7 +7,7 @@ title: "Plugin Memory Lancedb"
 
 # Plugin Memory Lancedb
 
-Añade herramientas invocables por el agente.
+Plugin de memoria a largo plazo con respaldo de LanceDB de OpenClaw con recuperación automática, captura automática y búsqueda vectorial.
 
 ## Distribución
 

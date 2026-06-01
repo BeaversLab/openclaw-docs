@@ -85,8 +85,8 @@ Vous pouvez également omettre `--auth-choice` ; le passage de `--github-copilot
     terminal, et non dans un script non interactif ou un pipeline CI.
   </Accordion>
 
-<Accordion title="Model availability depends on your plan">
-  La disponibilité des modèles Copilot dépend de votre plan GitHub. Si un modèle est rejeté, essayez un autre ID (par exemple `github-copilot/gpt-5.5`). Consultez la page sur les [modèles pris en charge par plan Copilot](https://docs.github.com/en/copilot/reference/ai-models/supported-models#supported-ai-models-per-copilot-plan) de GitHub pour obtenir la liste actuelle des modèles.
+<Accordion title="La disponibilité des modèles dépend de votre forfait">
+  La disponibilité des modèles Copilot dépend de votre forfait GitHub. Si un modèle est refusé, essayez un autre identifiant (par exemple `github-copilot/gpt-5.5`). Voir les [modèles pris en charge par forfait Copilot](https://docs.github.com/en/copilot/reference/ai-models/supported-models#supported-ai-models-per-copilot-plan) de GitHub pour la liste actuelle des modèles.
 </Accordion>
 
   <Accordion title="Actualisation du catalogue en direct depuis l'API Copilot">
@@ -150,18 +150,14 @@ Vous pouvez également omettre `--auth-choice` ; le passage de `--github-copilot
 
 ## Memory search embeddings
 
-GitHub Copilot peut également servir de fournisseur d'embeddings pour la
-[mémoire de recherche](GitHub/en/concepts/memory-searchOpenClawAPI). Si vous disposez d'un abonnement Copilot et
-que vous êtes connecté, OpenClaw peut l'utiliser pour les embeddings sans clé API séparée.
+GitHub Copilot peut également servir de fournisseur d'embeddings pour
+la [recherche mémoire](/fr/concepts/memory-search). Si vous disposez d'un abonnement Copilot et
+que vous êtes connecté, OpenClaw peut l'utiliser pour les embeddings sans clé API distincte.
 
-### Détection automatique
+### Config
 
-Lorsque `memorySearch.provider` est `"auto"`GitHubOpenAIGitHubOpenClawAPI (par défaut), GitHub Copilot est essayé
-avec la priorité 15 -- après les embeddings locaux mais avant OpenAI et les autres fournisseurs
-payants. Si un jeton GitHub est disponible, OpenClaw découvre les modèles
-d'embeddings disponibles depuis l'API Copilot et choisit automatiquement le meilleur.
-
-### Configuration explicite
+Définissez `memorySearch.provider` explicitement pour utiliser les embeddings Copilot de GitHub. Si un jeton GitHub est disponible, OpenClaw découvre les modèles d'embeddings disponibles depuis
+l'API Copilot et choisit automatiquement le meilleur.
 
 ```json5
 {
@@ -177,16 +173,15 @@ d'embeddings disponibles depuis l'API Copilot et choisit automatiquement le meil
 }
 ```
 
-### Fonctionnement
+### How it works
 
-1. OpenClaw résout votre jeton GitHub (à partir des env vars ou du profil d'authentification).
-2. L'échange contre un jeton API Copilot de courte durée.
+1. OpenClaw résout votre jeton GitHub (à partir des variables d'environnement ou du profil d'authentification).
+2. L'échange contre un jeton d'API Copilot à durée de vie limitée.
 3. Interroge le point de terminaison `/models` de Copilot pour découvrir les modèles d'embeddings disponibles.
 4. Choisit le meilleur modèle (préfère `text-embedding-3-small`).
 5. Envoie les requêtes d'embeddings au point de terminaison `/embeddings` de Copilot.
 
-La disponibilité des modèles dépend de votre offre GitHub. Si aucun modèle d'embeddings n'est
-disponible, OpenClaw ignore Copilot et essaie le fournisseur suivant.
+La disponibilité des modèles dépend de votre plan GitHub. Si aucun modèle d'intégration n'est disponible, OpenClaw ignore Copilot et essaie le provider suivant.
 
 ## Connexes
 
@@ -194,7 +189,7 @@ disponible, OpenClaw ignore Copilot et essaie le fournisseur suivant.
   <Card title="Sélection du modèle" href="/fr/concepts/model-providers" icon="layers">
     Choix des fournisseurs, références de modèles et comportement de basculement.
   </Card>
-  <Card title="OAuthOAuth et auth" href="/fr/gateway/authentication" icon="key">
-    Détails d'authentification et règles de réutilisation des informations d'identification.
+  <Card title="OAuth et auth" href="/fr/gateway/authentication" icon="key">
+    Détails d'authentification et règles de réutilisation des identifiants.
   </Card>
 </CardGroup>

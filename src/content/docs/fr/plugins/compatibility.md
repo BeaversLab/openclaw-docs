@@ -102,25 +102,21 @@ Les enregistrements de compatibilité actuels incluent :
 - hooks et alias de type de plugin provider hérités tandis que les providers passent à des hooks explicites de catalogue, d'authentification, de réflexion, de relecture et de transport
 - alias d'exécution hérités tels que `api.runtime.taskFlow`, `api.runtime.subagent.getSession`, `api.runtime.stt`, et `api.runtime.config.loadConfig()` / `api.runtime.config.writeConfigFile(...)` dépréciés
 - inscription fractionnée de plugin de mémoire héritée tandis que les plugins de mémoire passent à `registerMemoryCapability`
-- helpers de SDK de canal hérités pour les schémas de messages natifs, le filtrage des mentions, le formatage des enveloppes entrantes et l'imbrication des capacités d'approbation
-- alias de helpers de clé de routage de canal et de cible comparable tandis que les plugins passent à `openclaw/plugin-sdk/channel-route`
+- l'enregistrement legacy de fournisseur d'embedding spécifique à la mémoire pendant que les fournisseurs d'embedding migrent vers `api.registerEmbeddingProvider(...)` et `contracts.embeddingProviders`
+- helpers du SDK de canal legacy pour les schémas de messages natifs, le filtrage des mentions, le formatage des enveloppes entrantes et l'imbrication des capacités d'approbation
+- alias d'aide pour la clé de route de canal legacy et la cible comparable pendant que les plugins migrent vers `openclaw/plugin-sdk/channel-route`
 - indices d'activation qui sont remplacés par la propriété des contributions du manifeste
-- repli de l'exécution `setup-api` tandis que les descripteurs de configuration passent aux métadonnées `setup.requiresRuntime: false` à froid
-- hooks `discovery` du provider tandis que les hooks de catalogue de provider passent à `catalog.run(...)`
-- métadonnées `showConfigured` / `showInSetup` du canal tandis que les packages de canaux passent à `openclaw.channel.exposure`
-- clés de configuration de stratégie d'exécution héritées tandis que le doctor fait migrer les opérateurs vers `agentRuntime`
-- repli des métadonnées de configuration de canal groupé généré tandis que les métadonnées `channelConfigs` basées sur le registre arrivent
-- indicateurs d'environnement de désactivation du registre de plugins et de migration d'installation persistés tandis que les flux de réparation font migrer les opérateurs vers `openclaw plugins registry --refresh` et `openclaw doctor --fix`
-- les chemins de configuration de recherche web, de récupération web et x_search hérités appartenant au plugin
-  tandis que doctor les migre vers `plugins.entries.<plugin>.config`
-- les alias de configuration hérités créés par `plugins.installs` et de chemin de chargement de plugin groupé
-  tandis que les métadonnées d'installation sont déplacées vers le registre de plugins géré par l'état
+- le repli d'exécution `setup-api` pendant que les descripteurs de configuration migrent vers les métadonnées `setup.requiresRuntime: false` à froid
+- hooks `discovery` du fournisseur pendant que les hooks du catalogue de fournisseurs migrent vers `catalog.run(...)`
+- métadonnées `showConfigured` / `showInSetup` du canal pendant que les packages de canaux migrent vers `openclaw.channel.exposure`
+- clés de configuration de stratégie d'exécution legacy pendant que doctor migre les opérateurs vers `agentRuntime`
+- repli de métadonnées de configuration de canal regroupé généré pendant que les métadonnées `channelConfigs` basées sur le registre arrivent
+- indicateurs d'environnement de désactivation du registre de plugins persistants et de migration d'installation pendant que les flux de réparation migrent les opérateurs vers `openclaw plugins registry --refresh` et `openclaw doctor --fix`
+- chemins de configuration de recherche Web, de récupération Web et x_search détenus par le plugin legacy pendant que doctor les migre vers `plugins.entries.<plugin>.config`
+- configuration créée par `plugins.installs` legacy et alias de chemin de chargement de plugin regroupé pendant que les métadonnées d'installation migrent vers le registre de plugins géré par l'état
 
-Le nouveau code de plugin devrait préférer le remplacement répertorié dans le registre et dans le
-guide de migration spécifique. Les plugins existants peuvent continuer à utiliser un chemin de compatibilité
-jusqu'à ce que la documentation, les diagnostics et les notes de version annoncent une fenêtre de suppression.
+Le nouveau code de plugin devrait préférer le remplacement répertorié dans le registre et dans le guide de migration spécifique. Les plugins existants peuvent continuer à utiliser un chemin de compatibilité jusqu'à ce que la documentation, les diagnostics et les notes de version annoncent une fenêtre de suppression.
 
 ## Notes de version
 
-Les notes de version doivent inclure les prochaines suppressions de plugins avec des dates cibles et
-des liens vers la documentation de migration. Cet avertissement doit se produire avant qu'un chemin de compatibilité ne passe à `removal-pending` ou `removed`.
+Les notes de version doivent inclure les abandons de plugins à venir avec des dates cibles et des liens vers la documentation de migration. Cet avertissement doit se produire avant qu'un chemin de compatibilité ne passe à `removal-pending` ou `removed`.

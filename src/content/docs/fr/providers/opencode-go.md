@@ -18,9 +18,9 @@ provider d'exécution `opencode-go` afin que le routage en amont par modèle res
 
 ## Catalogue intégré
 
-OpenClaw source la plupart des lignes du catalogue Go à partir du registre de modèles pi groupé et
+OpenClaw source la plupart des lignes du catalogue Go à partir du registre de models OpenClaw inclus et
 complète les lignes en amont actuelles pendant que le registre se met à jour. Exécutez
-`openclaw models list --provider opencode-go` pour obtenir la liste actuelle des modèles.
+OpenClawOpenClaw`openclaw models list --provider opencode-go` pour obtenir la liste actuelle des models.
 
 Le provider inclut :
 

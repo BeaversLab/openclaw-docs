@@ -16,7 +16,7 @@ Serializamos las ejecuciones de autorespuestas entrantes (todos los canales) a t
 ## Cómo funciona
 
 - Una cola FIFO con conocimiento de carriles (lane-aware) drena cada carril con un límite de concurrencia configurable (por defecto 1 para carriles no configurados; el principal es 4 por defecto, el subagente es 8).
-- `runEmbeddedPiAgent` pone en cola por **clave de sesión** (carril `session:<key>`) para garantizar solo una ejecución activa por sesión.
+- `runEmbeddedAgent` pone en cola por **clave de sesión** (carril `session:<key>`) para garantizar solo una ejecución activa por sesión.
 - Cada ejecución de sesión se pone en cola en un **carril global** (`main` por defecto) para que el paralelismo general esté limitado por `agents.defaults.maxConcurrent`.
 - Cuando el registro detallado está habilitado, las ejecuciones en cola emiten un breve aviso si esperaron más de ~2s antes de comenzar.
 - Los indicadores de escritura (typing indicators) aún se activan inmediatamente al poner en cola (cuando el canal lo soporta) para que la experiencia del usuario no cambie mientras esperamos nuestro turno.
@@ -36,7 +36,7 @@ La dirección en el mismo turno (Same-turn steering) es el valor predeterminado.
 
 `/queue` controla lo que hacen los mensajes entrantes normales mientras una sesión ya tiene una ejecución activa:
 
-- `steer`: inyecta mensajes en el entorno de ejecución activo. Pi entrega todos los mensajes de dirección pendientes **después de que el turno del asistente actual termine de ejecutar sus llamadas a herramientas**, antes de la siguiente llamada al LLM; el servidor de aplicaciones Codex recibe un `turn/steer` por lotes. Si la ejecución no está transmitiendo activamente o la dirección no está disponible, OpenClaw espera hasta que termine la ejecución activa antes de iniciar el mensaje.
+- `steer`: inyecta mensajes en el tiempo de ejecución activo. OpenClaw entrega todos los mensajes de dirección pendientes **después de que el turno del asistente actual termine de ejecutar sus llamadas a herramientas**, antes de la siguiente llamada al LLM; el servidor de aplicaciones de Codex recibe un `turn/steer` por lotes. Si la ejecución no está transmitiendo activamente o la dirección no está disponible, OpenClaw espera hasta que la ejecución activa finalice antes de iniciar el mensaje.
 - `followup`: no dirigir. Poner en cola cada mensaje para un turno de agente posterior después de que finalice la ejecución actual.
 - `collect`: no dirigir. Combinar los mensajes en cola en un **único** turno de seguimiento después de la ventana de silencio. Si los mensajes tienen como objetivo diferentes canales/hilos, se drenan individualmente para preservar el enrutamiento.
 - `interrupt`: abortar la ejecución activa para esa sesión y luego ejecutar el mensaje más reciente.
@@ -120,7 +120,7 @@ de antirrebote del complemento, las opciones globales `messages.queue` y los val
 - Si los comandos parecen atascados, habilite los registros detallados y busque las líneas "queued for ...ms" para confirmar que la cola se está drenando.
 - Si necesita la profundidad de la cola, habilite los registros detallados y observe las líneas de tiempo de la cola.
 - Las ejecuciones del servidor de aplicaciones Codex que aceptan un turno y luego dejan de emitir progreso son interrumpidas por el adaptador Codex para que el carril de sesión activo pueda liberarse en lugar de esperar el tiempo de espera de la ejecución externa.
-- Cuando el diagnóstico está habilitado, las sesiones que permanecen en `processing` más allá de `diagnostics.stuckSessionWarnMs` sin progreso observado de respuesta, herramienta, estado, bloque o ACP se clasifican por actividad actual. El trabajo activo se registra como `session.long_running`; el trabajo activo sin progreso reciente se registra como `session.stalled`; `session.stuck` está reservado para la contabilidad de sesiones obsoletas sin trabajo activo, y solo esa ruta puede liberar el carril de sesión afectado para que se drene el trabajo en cola. Los diagnósticos `session.stuck` repetidos se reducen mientras la sesión permanece sin cambios.
+- Cuando el diagnóstico está habilitado, las sesiones que permanecen en `processing` pasado `diagnostics.stuckSessionWarnMs` sin respuesta observada, herramienta, estado, bloqueo o progreso de ACP se clasifican por actividad actual. El trabajo activo se registra como `session.long_running`; el trabajo activo sin progreso reciente se registra como `session.stalled`; `session.stuck` está reservado para la contabilidad de sesiones obsoletas recuperables, incluyendo sesiones en cola inactivas con actividad de modelo/herramienta obsoleta sin propietario, y solo esa ruta puede liberar el carril de sesión afectado para que se drene el trabajo en cola. Los diagnósticos `session.stuck` repetidos se espacian mientras la sesión permanece sin cambios.
 
 ## Relacionado
 

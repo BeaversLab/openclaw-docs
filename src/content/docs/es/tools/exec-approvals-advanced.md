@@ -7,9 +7,9 @@ read_when:
 title: "Aprobaciones de exec — avanzadas"
 ---
 
-Temas avanzados de aprobación de exec: la ruta rápida `safeBins`, enlace de intérprete/tiempo de ejecución
+Temas avanzados de aprobaciones de ejecución: la ruta rápida `safeBins`, vinculación de intérprete/runtime
 y reenvío de aprobaciones a canales de chat (incluida la entrega nativa).
-Para conocer la política principal y el flujo de aprobación, consulte [Aprobaciones de exec](/es/tools/exec-approvals).
+Para ver la política principal y el flujo de aprobación, consulte [Exec approvals](/es/tools/exec-approvals).
 
 ## Contenedores seguros (solo stdin)
 
@@ -193,8 +193,10 @@ El comando `/approve` maneja tanto las aprobaciones de exec como las aprobacione
 
 ### Reenvío de aprobaciones de complementos
 
-El reenvío de aprobaciones de complementos usa la misma canalización de entrega que las aprobaciones de exec, pero tiene su propia
+El reenvío de aprobaciones de complementos utiliza la misma canalización de entrega que las aprobaciones de ejecución, pero tiene su propia
 configuración independiente bajo `approvals.plugin`. Habilitar o deshabilitar uno no afecta al otro.
+Para el comportamiento de creación de complementos, los campos de solicitud y la semántica de decisión, consulte
+[Plugin permission requests](/es/plugins/plugin-permission-requests).
 
 ```json5
 {
@@ -241,22 +243,23 @@ Modelo genérico:
 
 - la política de ejecución del host todavía decide si se requiere la aprobación de ejecución
 - `approvals.exec` controla el reenvío de mensajes de aprobación a otros destinos de chat
-- `channels.<channel>.execApprovals` controla si ese canal actúa como un cliente de aprobación nativo
+- `channels.<channel>.execApprovals` controla si los clientes nativos específicos del canal, como Discord, Slack, Telegram y similares,
+  están habilitados
 - Las aprobaciones del complemento de Slack pueden usar el cliente de aprobación nativo de Slack cuando la solicitud proviene de Slack
   y los aprobadores del complemento de Slack resuelven; `approvals.plugin` también puede enrutar las aprobaciones del complemento a sesiones
   o destinos de Slack incluso cuando las aprobaciones de ejecución de Slack están deshabilitadas
-- La entrega de aprobaciones por emoji de WhatsApp está controlada por `approvals.exec` y `approvals.plugin`, mientras
-  que las reacciones de aprobación requieren aprobadores explícitos de WhatsApp de `channels.whatsapp.allowFrom` o `"*"`
+- La entrega de aprobación por reacción en WhatsApp y Signal está controlada por `approvals.exec` y
+  `approvals.plugin`; no tienen bloques `channels.<channel>.execApprovals`
 
 Los clientes de aprobación nativos habilitan automáticamente la entrega优先 como mensaje directo cuando se cumplen todos estos requisitos:
 
 - el canal admite la entrega de aprobación nativa
-- se pueden resolver los aprobadores a partir de `execApprovals.approvers` explícitos o de la identidad
+- los aprobadores se pueden resolver a partir de `execApprovals.approvers` explícitos o de la identidad
   del propietario, como `commands.ownerAllowFrom`
-- `channels.<channel>.execApprovals.enabled` no está definido o es `"auto"`
+- `channels.<channel>.execApprovals.enabled` no está establecido o es `"auto"`
 
-Establezca `enabled: false` para deshabilitar explícitamente un cliente de aprobación nativo. Establezca `enabled: true` para forzarlo
-cuando se resuelvan los aprobadores. La entrega pública al chat de origen permanece explícita a través de
+Establezca `enabled: false` para deshabilitar explícitamente un cliente de aprobación nativo. Establezca `enabled: true` para forzar
+su activación cuando se resuelvan los aprobadores. La entrega pública en el chat de origen se mantiene explícita a través de
 `channels.<channel>.execApprovals.target`.
 
 Preguntas frecuentes: [¿Por qué hay dos configuraciones de aprobación de ejecución para las aprobaciones de chat?](/es/help/faq-first-run#why-are-there-two-exec-approval-configs-for-chat-approvals)
@@ -264,42 +267,45 @@ Preguntas frecuentes: [¿Por qué hay dos configuraciones de aprobación de ejec
 - Discord: `channels.discord.execApprovals.*`
 - Slack: `channels.slack.execApprovals.*`
 - Telegram: `channels.telegram.execApprovals.*`
-- WhatsApp: use `approvals.exec` y `approvals.plugin` para enrutar los mensajes de solicitud de aprobación a WhatsApp
+- WhatsApp: use `approvals.exec` y `approvals.plugin` para enrutar las solicitudes de aprobación a WhatsApp
+- Signal: use `approvals.exec` y `approvals.plugin` para enrutar las solicitudes de aprobación a Signal
 
-Estos clientes de aprobación nativos agregan enrutamiento por mensaje directo y difusión opcional en el canal sobre el flujo compartido de `/approve` en el mismo chat y los botones de aprobación compartidos.
+Estos clientes de aprobación nativos añaden enrutamiento de MD y difusión opcional de canales encima del flujo compartido `/approve` del mismo chat y de los botones de aprobación compartidos.
 
 Comportamiento compartido:
 
-- Slack, Matrix, Microsoft Teams y chats entregables similares usan el modelo normal de autenticación del canal
-  para `/approve` en el mismo chat
-- cuando un cliente de aprobación nativo se habilita automáticamente, el destino de entrega nativo predeterminado son los mensajes directos de los aprobadores
+- Slack, Matrix, Microsoft Teams y chats entregables similares utilizan el modelo de autenticación de canal normal
+  para el mismo chat `/approve`
+- cuando un cliente de aprobación nativo se activa automáticamente, el objetivo de entrega nativo predeterminado son los MD de los aprobadores
 - para Discord y Telegram, solo los aprobadores resueltos pueden aprobar o denegar
 - los aprobadores de Discord pueden ser explícitos (`execApprovals.approvers`) o inferidos de `commands.ownerAllowFrom`
 - los aprobadores de Telegram pueden ser explícitos (`execApprovals.approvers`) o inferidos de `commands.ownerAllowFrom`
-- Los aprobadores de Slack pueden ser explícitos (`execApprovals.approvers`) o deducidos de `commands.ownerAllowFrom`
-- Los MD de aprobación de complementos de Slack utilizan los aprobadores de complementos de Slack de `allowFrom` y el enrutamiento predeterminado de la cuenta, no los aprobadores de ejecución de Slack
-- Los botones nativos de Slack conservan el tipo de id de aprobación, por lo que los ids `plugin:` pueden resolver aprobaciones de complementos sin una segunda capa de reserva local de Slack
-- Las aprobaciones con emojis de WhatsApp manejan tanto las solicitudes de ejecución como las de complementos solo cuando la familia de reenvío de nivel superior coincidente está habilitada y se enruta a WhatsApp; el reenvío de WhatsApp solo de destino permanece en la ruta de reenvío compartida a menos que coincida con el mismo objetivo de origen nativo
-- El enrutamiento nativo de DM/canal de Matrix y los accesos directos de reacción manejan tanto las aprobaciones de ejecución como las de complementos; la autorización del complemento aún proviene de `channels.matrix.dm.allowFrom`
-- Las solicitudes nativas de Matrix incluyen `com.openclaw.approval` contenido de evento personalizado en el primer evento de solicitud para que los clientes de Matrix compatibles con OpenClaw puedan leer el estado de aprobación estructurado, mientras que los clientes estándar mantienen el respaldo de texto plano `/approve`
+- los aprobadores de Slack pueden ser explícitos (`execApprovals.approvers`) o inferidos de `commands.ownerAllowFrom`
+- los MD de aprobación del complemento de Slack utilizan los aprobadores del complemento de Slack de `allowFrom` y el enrutamiento predeterminado de la cuenta, no los aprobadores de ejecución de Slack
+- los botones nativos de Slack conservan el tipo de ID de aprobación, por lo que los ID de `plugin:` pueden resolver las aprobaciones de complementos sin una segunda capa de reserva local de Slack
+- las aprobaciones con emoji de WhatsApp manejan tanto las solicitudes de ejecución como las de complemento solo cuando la familia de reenvío de nivel superior coincidente está habilitada y se enruta a WhatsApp; el reenvío de WhatsApp solo para el objetivo permanece en la ruta de reenvío compartida a menos que coincida con el mismo objetivo de origen nativo
+- las aprobaciones por reacción en Signal manejan tanto las solicitudes de ejecución como las de complemento solo cuando la familia de reenvío de nivel superior coincidente está habilitada y se enruta a Signal. Las aprobaciones de ejecución de Signal del mismo chat directo pueden suprimir la reserva local `/approve` sin aprobadores explícitos; la resolución de reacción en Signal aún requiere aprobadores de Signal explícitos de `channels.signal.allowFrom` o `defaultTo`.
+- el enrutamiento nativo de DM/canal de Matrix y los atajos de reacción manejan tanto las aprobaciones de ejecución como las de complemento; la autorización del complemento aún proviene de `channels.matrix.dm.allowFrom`
+- las solicitudes nativas de Matrix incluyen contenido de evento personalizado `com.openclaw.approval` en el primer evento de solicitud para que los clientes de Matrix compatibles con OpenClaw puedan leer el estado de aprobación estructurado mientras los clientes estándar mantienen la reserva de texto plano `/approve`
 - el solicitante no necesita ser un aprobador
 - el chat de origen puede aprobar directamente con `/approve` cuando ese chat ya admite comandos y respuestas
-- los botones nativos de aprobación de Discord se enrutan por tipo de id de aprobación: los ids `plugin:` van directamente a las aprobaciones de complementos, todo lo demás va a las aprobaciones de ejecución
-- los botones nativos de aprobación de Telegram siguen la misma reserva de ejecución a complemento limitada que `/approve`
+- los botones de aprobación nativos de Discord enrutan por tipo de id de aprobación: los id `plugin:` van
+  directamente a las aprobaciones de complementos, todo lo demás va a las aprobaciones de ejecución
+- los botones de aprobación nativos de Telegram siguen la misma alternativa acotada de ejecución a complemento que `/approve`
 - cuando `target` nativo habilita la entrega al chat de origen, las solicitudes de aprobación incluyen el texto del comando
 - las aprobaciones de ejecución pendientes caducan después de 30 minutos de forma predeterminada
-- si ninguna interfaz de usuario de operador o cliente de aprobación configurado puede aceptar la solicitud, la solicitud recurre a `askFallback`
+- si ninguna interfaz de usuario de operador o cliente de aprobación configurado puede aceptar la solicitud, el aviso vuelve a `askFallback`
 
-Los comandos de grupo confidenciales solo para propietario, como `/diagnostics` y `/export-trajectory`, utilizan un enrutamiento privado
-al propietario para los mensajes de aprobación y los resultados finales. OpenClaw primero intenta una ruta privada en la
-misma superficie donde el propietario ejecutó el comando. Si esa superficie no tiene ruta privada al propietario, recurre
-a la primera ruta de propietario disponible desde `commands.ownerAllowFrom`, de modo que un comando de grupo de Discord
-aún puede enviar la aprobación y el resultado al MD de Telegram del propietario cuando Telegram es la interfaz privada
-principal configurada. El chat de grupo solo recibe un breve acuse de recibo.
+Los comandos de grupo confidenciales solo para propietarios, como `/diagnostics` y `/export-trajectory`, utilizan el enrutamiento
+privado al propietario para las solicitudes de aprobación y los resultados finales. OpenClaw primero intenta una ruta privada en la
+misma superficie donde el propietario ejecutó el comando. Si esa superficie no tiene una ruta privada al propietario, recurre
+a la primera ruta de propietario disponible desde `commands.ownerAllowFrom`, por lo que un comando de grupo de Discord
+todavía puede enviar la aprobación y el resultado al MD de Telegram del propietario cuando Telegram es la interfaz
+privada principal configurada. El chat de grupo solo recibe un breve acuse de recibo.
 
-Telegram utiliza por defecto los MD del aprobador (`target: "dm"`). Puedes cambiar a `channel` o `both` cuando quieras
-que los mensajes de aprobación también aparezcan en el chat/tema de Telegram de origen. Para los temas de foro de
-Telegram, OpenClaw conserva el tema para el mensaje de aprobación y el seguimiento posterior a la aprobación.
+Telegram de forma predeterminada usa los MD del aprobador (`target: "dm"`). Puede cambiar a `channel` o `both` cuando
+desea que las solicitudes de aprobación también aparezcan en el chat/tema de Telegram de origen. Para los temas de foro
+de Telegram, OpenClaw conserva el tema para la solicitud de aprobación y el seguimiento posterior a la aprobación.
 
 Ver:
 
@@ -323,15 +329,11 @@ Notas de seguridad:
 
 ## Preguntas frecuentes
 
-### ¿Cuándo se utilizarían `accountId` y `threadId` en un objetivo de aprobación?
+### ¿Cuándo se usarían `accountId` y `threadId` en un objetivo de aprobación?
 
-Use `accountId` cuando el canal tenga múltiples identidades configuradas y el mensaje de aprobación deba
-salir a través de una cuenta específica. Use `threadId` cuando el destino admita temas o
-hilos y el mensaje debe permanecer dentro de ese hilo en lugar del chat de nivel superior.
+Use `accountId` cuando el canal tiene múltiples identidades configuradas y el mensaje de aprobación debe enviarse a través de una cuenta específica. Use `threadId` cuando el destino admite temas o hilos y el mensaje debe mantenerse dentro de ese hilo en lugar de en el chat de nivel superior.
 
-Un caso concreto de Telegram es un supergrupo de operaciones con temas de foro y dos cuentas de bot de
-Telegram. El valor `to` nombra el supergrupo, `accountId` selecciona la cuenta del bot y `threadId`
-selecciona el tema del foro:
+Un caso concreto de Telegram es un supergrupo de operaciones con temas de foro y dos cuentas de bot de Telegram. El valor `to` nombra al supergrupo, `accountId` selecciona la cuenta del bot y `threadId` selecciona el tema del foro:
 
 ```json5
 {
@@ -366,19 +368,19 @@ selecciona el tema del foro:
 }
 ```
 
-Con esa configuración, las aprobaciones de ejecución reenviadas son publicadas por la cuenta de `ops-bot` Telegram en el tema `77` del chat `-1001234567890`. Un objetivo sin `accountId` usa la cuenta predeterminada del canal, y un objetivo sin `threadId` publica en el destino de nivel superior.
+Con esa configuración, las aprobaciones de ejecución reenviadas se publican mediante la cuenta de Telegram `ops-bot` en el tema `77` del chat `-1001234567890`. Un destino sin `accountId` usa la cuenta predeterminada del canal y un destino sin `threadId` publica en el destino de nivel superior.
 
 ### Cuando se envían aprobaciones a una sesión, ¿cualquier persona en esa sesión puede aprobarlas?
 
-No. La entrega a la sesión solo controla dónde aparece el mensaje. No autoriza por sí sola a cada participante en ese chat para aprobar.
+No. La entrega a la sesión solo controla dónde aparece el mensaje. No autoriza por sí misma a todos los participantes en ese chat para aprobar.
 
-Para `/approve` genéricas del mismo chat, el remitente ya debe estar autorizado para comandos en esa sesión de canal. Si el canal expone aprobadores explícitos, esos aprobadores pueden autorizar la acción `/approve` incluso cuando no están autorizados para comandos de otra manera en esa sesión.
+Para `/approve` genéricos del mismo chat, el remitente ya debe estar autorizado para comandos en esa sesión de canal. Si el canal expone aprobadores explícitos, esos aprobadores pueden autorizar la acción `/approve` incluso cuando no están autorizados para comandos en esa sesión.
 
-Algunos canales son más estrictos. Discord, Telegram, Matrix, MD de aprobación nativa de Slack y clientes de aprobación nativa similares usan sus listas de aprobadores resueltas para la autorización de aprobación. Por ejemplo, un mensaje de aprobación de tema de foro de Telegram puede ser visible para todos en el tema, pero solo los IDs de usuario numéricos de Telegram resueltos de `channels.telegram.execApprovals.approvers` o `commands.ownerAllowFrom` pueden aprobarlo o denegarlo.
+Algunos canales son más estrictos. Discord, Telegram, Matrix, los MD de aprobación nativa de Slack y clientes de aprobación nativa similares usan sus listas de aprobadores resueltas para la autorización de aprobación. Por ejemplo, un mensaje de aprobación de tema de foro de Telegram puede ser visible para todos en el tema, pero solo los ID de usuario de Telegram numéricos resueltos desde `channels.telegram.execApprovals.approvers` o `commands.ownerAllowFrom` pueden aprobarlo o denegarlo.
 
 ## Relacionado
 
 - [Aprobaciones de ejecución](/es/tools/exec-approvals) — política principal y flujo de aprobación
-- [Herramienta Exec](/es/tools/exec)
+- [Herramienta de ejecución](/es/tools/exec)
 - [Modo elevado](/es/tools/elevated)
-- [Habilidades](/es/tools/skills) — comportamiento de autorpermiso automático respaldado por habilidades
+- [Habilidades](/es/tools/skills) — comportamiento de permitir automático respaldado por habilidades

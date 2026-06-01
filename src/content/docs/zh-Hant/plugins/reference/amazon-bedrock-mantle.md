@@ -1,5 +1,5 @@
 ---
-summary: "為 OpenClaw 新增 Amazon Bedrock Mantle 模型提供者支援。"
+summary: "用於 OpenAI 相容模型路由的 OpenClaw Amazon Bedrock Mantle 提供者外掛程式。"
 read_when:
   - You are installing, configuring, or auditing the amazon-bedrock-mantle plugin
 title: "Amazon Bedrock Mantle 外掛程式"
@@ -7,7 +7,7 @@ title: "Amazon Bedrock Mantle 外掛程式"
 
 # Amazon Bedrock Mantle 外掛程式
 
-為 OpenClaw 新增 Amazon Bedrock Mantle 模型提供者支援。
+用於 OpenAI 相容模型路由的 OpenClaw Amazon Bedrock Mantle 提供者外掛程式。
 
 ## 發布
 

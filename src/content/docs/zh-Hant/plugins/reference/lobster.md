@@ -1,5 +1,5 @@
 ---
-summary: "具有可恢復核准的類型化工作流程工具。"
+summary: "Lobster 工作流程工具插件，用於類型化管線和可恢復的核准。"
 read_when:
   - You are installing, configuring, or auditing the lobster plugin
 title: "Lobster 外掛程式"
@@ -7,7 +7,7 @@ title: "Lobster 外掛程式"
 
 # Lobster 外掛程式
 
-具有可恢復核准的類型化工作流程工具。
+Lobster 工作流程工具插件，用於類型化管線和可恢復的核准。
 
 ## 發行
 

@@ -50,8 +50,8 @@ Client                    Gateway
 
 ## Schema 存放位置
 
-- 來源：`src/gateway/protocol/schema.ts`
-- 執行時期驗證器 (AJV)：`src/gateway/protocol/index.ts`
+- 來源：`packages/gateway-protocol/src/schema.ts`
+- 執行時期驗證器 (AJV)：`packages/gateway-protocol/src/index.ts`
 - 公告的功能/探索註冊表：`src/gateway/server-methods-list.ts`
 - 伺服器握手 + 方法分派：`src/gateway/server.impl.ts`
 - Node 客戶端：`src/gateway/client.ts`
@@ -190,7 +190,7 @@ ws.on("message", (data) => {
 
 1. **Schema (單一真實來源)**
 
-新增到 `src/gateway/protocol/schema.ts`：
+新增至 `packages/gateway-protocol/src/schema.ts`：
 
 ```ts
 export const SystemEchoParamsSchema = Type.Object({ text: NonEmptyString }, { additionalProperties: false });
@@ -212,7 +212,7 @@ export type SystemEchoResult = Static<typeof SystemEchoResultSchema>;
 
 2. **驗證**
 
-在 `src/gateway/protocol/index.ts` 中，匯出一個 AJV 驗證器：
+在 `packages/gateway-protocol/src/index.ts` 中，匯出一個 AJV 驗證器：
 
 ```ts
 export const validateSystemEchoParams = ajv.compile<SystemEchoParams>(SystemEchoParamsSchema);
@@ -260,7 +260,7 @@ Swift 生成器會發出：
 
 ## 版本控制 + 兼容性
 
-- `PROTOCOL_VERSION` 位於 `src/gateway/protocol/version.ts`。
+- `PROTOCOL_VERSION` 位於 `packages/gateway-protocol/src/version.ts`。
 - 客戶端發送 `minProtocol` + `maxProtocol`；伺服器會拒絕不包含其目前協議的範圍。
 - Swift 模型會保留未知的幀類型，以避免破壞舊版客戶端。
 

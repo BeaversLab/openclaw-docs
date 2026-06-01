@@ -1,5 +1,5 @@
 ---
-summary: "Ajoute la surface de channel Feishu pour l'envoi et la réception de messages OpenClaw."
+summary: "OpenClawOpenClaw Feishu/Lark channel plugin pour les chats et les outils de travail (communauté maintenue par @m1heng)."
 read_when:
   - You are installing, configuring, or auditing the feishu plugin
 title: "Plugin Feishu"
@@ -7,7 +7,7 @@ title: "Plugin Feishu"
 
 # Plugin Feishu
 
-Ajoute la surface de channel Feishu pour l'envoi et la réception de messages OpenClaw.
+OpenClaw Feishu/Lark channel plugin pour les chats et les outils de travail (communauté maintenue par @m1heng).
 
 ## Distribution
 

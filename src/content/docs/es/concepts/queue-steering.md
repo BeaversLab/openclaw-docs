@@ -7,29 +7,22 @@ read_when:
 title: "Cola de dirección"
 ---
 
-Cuando llega un mensaje normal mientras una ejecución de sesión ya está transmitiendo, OpenClaw
-intenta enviar ese mensaje al tiempo de ejecución activo de forma predeterminada cuando el modo de cola
-es `steer`. No se requiere ninguna entrada de configuración ni ninguna directiva de cola para ese comportamiento
-predeterminado. Pi y el arnés del servidor de aplicaciones nativo de Codex implementan los detalles de entrega
-de manera diferente.
+Cuando llega un mensaje normal mientras una ejecución de sesión ya se está transmitiendo, OpenClaw intenta enviar ese mensaje al tiempo de ejecución activo de forma predeterminada cuando el modo de cola es `steer`. No se requiere ninguna entrada de configuración ni ninguna directiva de cola para ese comportamiento predeterminado. OpenClaw y el arnés nativo del servidor de aplicaciones Codex implementan los detalles de entrega de manera diferente.
 
 ## Límite de tiempo de ejecución
 
-La dirección no interrumpe una llamada a herramienta que ya se está ejecutando. Pi busca
-mensajes de dirección en cola en los límites del modelo:
+La guía no interrumpe una llamada a herramienta que ya se está ejecutando. OpenClaw busca mensajes de guía en cola en los límites del modelo:
 
 1. El asistente solicita llamadas a herramientas.
-2. Pi ejecuta el lote de llamadas a herramientas del mensaje del asistente actual.
-3. Pi emite el evento de fin de turno.
-4. Pi drena los mensajes de dirección en cola.
-5. Pi agrega esos mensajes como mensajes de usuario antes de la siguiente llamada al LLM.
+2. OpenClaw ejecuta el lote de llamadas a herramientas del mensaje del asistente actual.
+3. OpenClaw emite el evento de fin de turno.
+4. OpenClaw drena los mensajes de guía en cola.
+5. OpenClaw agrega esos mensajes como mensajes de usuario antes de la siguiente llamada al LLM.
 
 Esto mantiene los resultados de las herramientas emparejados con el mensaje del asistente que los solicitó,
 y luego permite que la siguiente llamada al modelo vea la última entrada del usuario.
 
-El arnés del servidor de aplicaciones nativo de Codex expone `turn/steer` en lugar de la cola de direccionamiento
-interna de Pi. OpenClaw agrupa los mensajes en cola para la ventana de inactividad configurada y luego envía una única solicitud `turn/steer` con toda la entrada del usuario
-recopilada en orden de llegada.
+El arnés nativo del servidor de aplicaciones Codex expone `turn/steer` en lugar de la cola de guía interna del tiempo de ejecución de OpenClaw. OpenClaw agrupa los mensajes en cola para la ventana de silencio configurada y luego envía una única solicitud `turn/steer` con toda la entrada del usuario recopilada en orden de llegada.
 
 La revisión de Codex y la compactación manual rechazan el direccionamiento del mismo turno. Cuando un
 tiempo de ejecución no puede aceptar direccionamiento en el modo `steer`, OpenClaw espera a que la ejecución
@@ -53,9 +46,7 @@ explícito `/steer <message>`, consulte [Steer](/es/tools/steer).
 
 Si cuatro usuarios envían mensajes mientras el agente está ejecutando una llamada a una herramienta:
 
-- Con el comportamiento predeterminado, el tiempo de ejecución activo recibe los cuatro mensajes en
-  orden de llegada antes de su siguiente decisión del modelo. Pi los drena en el siguiente límite
-  del modelo; Codex los recibe como un único `turn/steer` agrupado.
+- Con el comportamiento predeterminado, el tiempo de ejecución activo recibe los cuatro mensajes en orden de llegada antes de su próxima decisión del modelo. OpenClaw los drena en el siguiente límite del modelo; Codex los recibe como un único `turn/steer` agrupado.
 - Con `/queue collect`, OpenClaw no dirige. Espera hasta que la ejecución activa
   finalice y luego crea un turno de seguimiento con mensajes en cola compatibles después de la
   ventana de anti-rebote.
@@ -75,11 +66,7 @@ reemplazar la ejecución activa.
 
 ## Anti-rebote
 
-`messages.queue.debounceMs` se aplica a la entrega en cola de `followup` y `collect`.
-En el modo `steer` con el arnés nativo de Codex, también establece la ventana de silencio
-antes de enviar `turn/steer` por lotes. Para Pi, la dirección activa en sí no usa
-el temporizador de anti-rebote porque Pi agrupa naturalmente los mensajes hasta el siguiente límite
-del modelo.
+`messages.queue.debounceMs` se aplica a la entrega de `followup` y `collect` en cola. En el modo `steer` con el arnés nativo de Codex, también establece la ventana de silencio antes de enviar `turn/steer` agrupados. Para OpenClaw, la guía activa en sí no utiliza el temporizador de rebote (debounce) porque OpenClaw agrupa naturalmente los mensajes hasta el siguiente límite del modelo.
 
 ## Relacionado
 

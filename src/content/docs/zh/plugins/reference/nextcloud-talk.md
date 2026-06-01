@@ -1,5 +1,5 @@
 ---
-summary: "NextcloudOpenClaw添加用于发送和接收 OpenClaw 消息的 Nextcloud Talk 渠道表面。"
+summary: "OpenClawNextcloud用于对话的 OpenClaw Nextcloud Talk 渠道插件。"
 read_when:
   - You are installing, configuring, or auditing the nextcloud-talk plugin
 title: "NextcloudNextcloud Talk 插件"
@@ -7,7 +7,7 @@ title: "NextcloudNextcloud Talk 插件"
 
 # Nextcloud Talk 插件
 
-添加用于发送和接收 OpenClaw 消息的 Nextcloud Talk 渠道表面。
+用于对话的 OpenClaw Nextcloud Talk 渠道插件。
 
 ## 分发
 

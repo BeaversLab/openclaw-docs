@@ -42,10 +42,10 @@ Lors de la création de processus enfants longs en dehors des outils d'exécutio
 
 Remplacements d'environnement :
 
-- `PI_BASH_YIELD_MS` : cession par défaut (ms)
-- `PI_BASH_MAX_OUTPUT_CHARS` : limite de sortie en mémoire (caractères)
+- `OPENCLAW_BASH_YIELD_MS` : cédance par défaut (ms)
+- `OPENCLAW_BASH_MAX_OUTPUT_CHARS` : limite de sortie en mémoire (caractères)
 - `OPENCLAW_BASH_PENDING_MAX_OUTPUT_CHARS` : plafond de stdout/stderr en attente par flux (caractères)
-- `PI_BASH_JOB_TTL_MS` : TTL pour les sessions terminées (ms, borné à 1m–3h)
+- `OPENCLAW_BASH_JOB_TTL_MS` : TTL pour les sessions terminées (ms, limité à 1 min–3 h)
 - `OPENCLAW_PROCESS_INPUT_WAIT_IDLE_MS` : seuil de sortie inactive avant que les sessions d'arrière-plan inscriptibles ne soient marquées comme étant probablement en attente d'entrée (par défaut 15000 ms)
 
 Configuration (préférée) :

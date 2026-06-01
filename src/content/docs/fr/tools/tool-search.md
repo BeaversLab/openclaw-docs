@@ -1,17 +1,17 @@
 ---
-summary: "Recherche d'outils : compacter de vastes catalogues d'outils PI derrière la recherche, la description et l'appel"
+summary: "OpenClawRecherche d'outils : compacter les grands catalogues d'outils OpenClaw derrière la recherche, la description et l'appel"
 title: "Recherche d'outils"
 read_when:
-  - You want PI agents to use a large tool catalog without adding every tool schema to the prompt
-  - You want OpenClaw tools, MCP tools, and client tools exposed through one compact PI surface
-  - You are implementing or debugging tool discovery for PI runs
+  - You want OpenClaw agents to use a large tool catalog without adding every tool schema to the prompt
+  - You want OpenClaw tools, MCP tools, and client tools exposed through one compact runtime surface
+  - You are implementing or debugging tool discovery for OpenClaw runs
 ---
 
-La Recherche d'outils est une fonctionnalité expérimentale de l'agent PI OpenClaw. Elle offre aux agents PI un moyen compact de découvrir et d'appeler de vastes catalogues d'outils. Elle est utile lorsque l'exécution dispose de nombreux outils disponibles, mais que le model est susceptible de n'en avoir besoin que de quelques-uns.
+La recherche d'outils est une fonctionnalité expérimentale de l'exécution de l'agent OpenClaw. Elle offre aux agents un moyen compact de découvrir et d'appeler de vastes catalogues d'outils. C'est utile lorsque l'exécution dispose de nombreux outils disponibles, mais que le modèle n'en aura probablement besoin que de quelques-uns.
 
-Cette page documente la Recherche d'outils PI OpenClaw. Il ne s'agit pas de la recherche d'outils native Codex ou de la surface des outils dynamiques. Le mode de code natif Codex, la recherche d'outils, les outils dynamiques différés et les appels d'outils imbriqués sont des surfaces de harnais Codex stables et ne dépendent pas de `tools.toolSearch`.
+Cette page documente la recherche d'outils OpenClaw. Il ne s'agit pas de la recherche d'outils native Codex ni de la surface dynamic-tools. Le mode code natif Codex, la recherche d'outils, les outils dynamiques différés et les appels d'outils imbriqués sont des surfaces de harnais Codex stables et ne dépendent pas de `tools.toolSearch`.
 
-Lorsqu'elle est activée pour PI, le model reçoit par défaut un outil `tool_search_code`. Cet outil exécute un corps JavaScript court dans un sous-processus Node isolé avec un pont `openclaw.tools` :
+Lorsqu'elle est activée pour les exécutions OpenClaw, le modèle reçoit par défaut un outil `tool_search_code`. Cet outil exécute un corps JavaScript court dans un sous-processus Node isolé avec un pont `openclaw.tools` :
 
 ```js
 const hits = await openclaw.tools.search("create a GitHub issue");
@@ -28,14 +28,14 @@ Les exécutions du harnais Codex ne reçoivent pas ces contrôles expérimentaux
 
 ## Déroulement d'un tour
 
-Au moment de la planification, le runner intégré PI construit le catalogue effectif pour l'exécution :
+Au moment de la planification, le runner intégré OpenClaw construit le catalogue effectif pour l'exécution :
 
 1. Résoudre la stratégie d'outil active pour l'agent, le profil, le bac à sable et la session.
 2. Lister les outils OpenClaw et de plug-in éligibles.
 3. Lister les outils MCP éligibles via le runtime MCP de la session.
 4. Ajouter les outils client éligibles fournis pour l'exécution actuelle.
 5. Indexer les descripteurs compacts pour la recherche.
-6. Exposer soit le pont de code PI, soit les outils de repli structurés au model.
+6. Exposer soit le pont de code OpenClaw, soit les outils de repli structurés au modèle.
 
 Au moment de l'exécution, chaque appel de tool réel retourne à OpenClaw. L'environnement d'exécution Node isolé ne contient pas d'implémentations de plug-ins, d'objets client MCP ni de secrets. OpenClaw`openclaw.tools.call(...)`Gateway traverse le pont pour revenir vers la Gateway, où la stratégie normale, l'approbation, les hooks, la journalisation et la gestion des résultats s'appliquent toujours.
 
@@ -48,7 +48,7 @@ Au moment de l'exécution, chaque appel de tool réel retourne à OpenClaw. L'en
 
 Les deux modes utilisent le même catalogue et le même chemin d'exécution. La seule différence réside dans la forme que voit le model. Si l'environnement d'exécution actuel ne peut pas lancer le processus enfant en mode code Node isolé, le mode par défaut `code` revient au `tools` avant la compactage du catalogue.
 
-Les deux modes sont expérimentaux. Privilégiez l'exposition directe des tools pour les petits catalogues de tools PI, et privilégiez les surfaces stables natives de Codex pour les exécutions de harnais Codex.
+Les deux modes sont expérimentaux. Privilégiez l'exposition directe des outils pour les petits catalogues d'outils OpenClaw, et privilégiez les surfaces stables natives Codex pour les exécutions de harnais Codex.
 
 Il n'y a pas de configuration de sélection de source distincte. Lorsque Tool Search est activé, le catalogue inclut les tools éligibles OpenClaw, MCP et client après le filtrage normal de la stratégie.
 
@@ -122,7 +122,7 @@ Le comportement normal de OpenClaw s'applique toujours aux appels finaux :
 
 ## Configuration
 
-Activer Tool Search pour les exécutions PI avec le pont de code par défaut :
+Activer la recherche d'outils pour les exécutions OpenClaw avec le pont de code par défaut :
 
 ```bash
 openclaw config set tools.toolSearch true
@@ -138,7 +138,7 @@ JSON équivalent :
 }
 ```
 
-Utiliser plutôt les tools de repli structurés pour les exécutions PI :
+Utiliser plutôt les outils de repli structurés pour les exécutions OpenClaw :
 
 ```json5
 {
@@ -194,7 +194,7 @@ Les journaux de session doivent permettre de répondre :
 
 ## Validation de bout en bout
 
-Le lanceur E2E de la passerelle prouve les deux chemins avec le harnais PI :
+Le runner E2E de la passerelle prouve les deux chemins avec l'exécution OpenClaw :
 
 ```bash
 node --import tsx scripts/tool-search-gateway-e2e.ts

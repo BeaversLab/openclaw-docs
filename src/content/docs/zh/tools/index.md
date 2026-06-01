@@ -24,7 +24,7 @@ title: "概述"
 | 添加新的集成或运行时界面     | [插件](#extend-capabilities)                | [插件](/zh/tools/plugin) 和 [构建插件](/zh/plugins/building-plugins)   |
 | 稍后或后台运行工作           | [自动化](/zh/automation)                    | [自动化概述](/zh/automation)                                           |
 | 协调多个代理或进程           | [子代理](/zh/tools/subagents)               | [ACP 代理](/zh/tools/acp-agents)和 [代理发送](/zh/tools/agent-send)    |
-| 搜索大型 PI 工具目录         | [工具搜索](/zh/tools/tool-search)           | [工具搜索](/zh/tools/tool-search)                                      |
+| 搜索大型 OpenClaw 工具目录   | [工具搜索](/zh/tools/tool-search)           | [工具搜索](/zh/tools/tool-search)                                      |
 
 ## 选择工具、技能或插件
 
@@ -74,9 +74,9 @@ title: "概述"
 | 自动化               | 安排工作或响应后台事件                                   | `cron`, `heartbeat_respond`                                          | [自动化](/zh/automation)                                                         |
 | Gateway(网关) 和节点 | 检查 Gateway(网关) 状态或已配对的目标设备                | `gateway`, `nodes`                                                   | [Gateway(网关)配置](<Gateway(网关)/en/gateway/configuration>)、[节点](/zh/nodes) |
 | 媒体                 | 分析、生成或播放媒体                                     | `image`、`image_generate`、`music_generate`、`video_generate`、`tts` | [媒体概览](/zh/tools/media-overview)                                             |
-| 大型 PI 目录         | 搜索并调用许多符合条件的工具，而无需将每个架构发送给模型 | `tool_search_code`，`tool_search`，`tool_describe`                   | [工具搜索](/zh/tools/tool-search)                                                |
+| 大型 OpenClaw 目录   | 搜索并调用许多符合条件的工具，而无需将每个架构发送给模型 | `tool_search_code`，`tool_search`，`tool_describe`                   | [工具搜索](/zh/tools/tool-search)                                                |
 
-<Note>工具搜索是一个实验性的 PI 代理界面。Codex harness 运行使用 Codex 原生代码模式、原生工具搜索、延迟动态工具和嵌套 工具调用，而不是 `tools.toolSearch`。</Note>
+<Note>Tool Search 是一个实验性的 OpenClaw 代理界面。Codex harness 运行使用 Codex 原生代码模式、原生工具搜索、延迟动态工具和嵌套 工具调用，而不是 `tools.toolSearch`。</Note>
 
 ## 插件提供的工具
 
@@ -122,7 +122,8 @@ title: "概述"
 3. 请通过 [沙箱与工具策略与提权](/zh/gateway/sandbox-vs-tool-policy-vs-elevated) 和 [提权执行](/zh/tools/elevated) 检查渠道权限、沙箱状态以及提权访问。
 4. 请检查所属插件是否已在 [插件](/zh/tools/plugin) 中安装并启用。
 5. 对于委派运行，请在 [按代理划分的沙箱和工具限制](/zh/tools/multi-agent-sandbox-tools) 中检查每个代理的限制。
-6. 对于大型 PI 目录，请确认运行使用的是直接工具暴露还是[工具搜索](/zh/tools/tool-search)。
+6. 对于大型 OpenClaw 目录，请确认运行使用的是直接工具暴露还是
+   [Tool Search](/zh/tools/tool-search)。
 
 ## 相关
 
@@ -132,4 +133,4 @@ title: "概述"
 - 有关插件安装和管理，请参阅[Plugins](/zh/tools/plugin)
 - 有关插件作者参考，请参阅[Plugin SDK](/zh/plugins/sdk-overview)
 - 有关 Skills 加载顺序、准入机制和配置，请参阅[Skills](/zh/tools/skills)
-- 有关紧凑的 PI 工具目录发现，请参阅[Tool Search](/zh/tools/tool-search)
+- 用于发现紧凑型 OpenClaw 工具目录的 [Tool Search](/zh/tools/tool-search)

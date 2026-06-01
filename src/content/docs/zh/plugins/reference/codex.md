@@ -1,5 +1,5 @@
 ---
-summary: "Codex 应用服务器套件和 Codex 托管的 GPT 模型目录。"
+summary: "OpenClaw Codex 应用服务器套件以及具有 Codex 管理 GPT 目录的模型提供商插件。"
 read_when:
   - You are installing, configuring, or auditing the codex plugin
 title: "Codex 插件"
@@ -7,7 +7,7 @@ title: "Codex 插件"
 
 # Codex 插件
 
-Codex 应用服务器套件和 Codex 托管的 GPT 模型目录。
+OpenClaw Codex 应用服务器套件以及具有 Codex 管理 GPT 目录的模型提供商插件。
 
 ## 分发
 

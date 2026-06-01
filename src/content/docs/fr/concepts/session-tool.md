@@ -42,95 +42,102 @@ liste d'outils effective.
 
 ## Listage et lecture des sessions
 
-`sessions_list` renvoie les sessions avec leur clé, agentId, kind, channel, model, les comptes de jetons et les horodatages. Filtrez par kind (`main`, `group`, `cron`, `hook`, `node`), `label` exact, `agentId` exact, texte de recherche ou récence (`activeMinutes`). Lorsque vous avez besoin d'un tri style boîte de réception, il peut également demander un titre dérivé délimité par la visibilité, un extrait d'aperçu du dernier message ou des messages récents limités sur chaque ligne. Les titres dérivés et les aperçus sont produits uniquement pour les sessions que l'appelant peut déjà voir en vertu de la stratégie de visibilité des outils de session configurée, les sessions non liées restant donc masquées.
+`sessions_list` renvoie des sessions avec leur clé, agentId, kind, channel, model,
+les nombres de jetons et les horodatages. Filtrez par kind (`main`, `group`, `cron`, `hook`,
+`node`), `label` exact, `agentId` exact, texte de recherche ou récence
+(`activeMinutes`). Lorsque vous avez besoin d'un tri de type boîte de réception, il peut également demander un titre
+dérivé délimité par la visibilité, un extrait d'aperçu du dernier message ou des messages
+récents bornés sur chaque ligne. Les titres dérivés et les aperçus sont produits uniquement pour les sessions
+que l'appelant peut déjà voir en vertu de la stratégie de visibilité des outils de session configurée, de sorte que
+les sessions non liées restent masquées. Lorsque la visibilité est restreinte, `sessions_list`
+renvoie des métadonnées `visibility` optionnelles indiquant le mode effectif et un avertissement selon lequel
+les résultats peuvent être limités par la portée.
 
-`sessions_history` récupère la transcription de la conversation pour une session spécifique. Par défaut, les résultats des outils sont exclus -- passez `includeTools: true` pour les voir. La vue renvoyée est intentionnellement limitée et filtrée pour la sécurité :
+`sessions_history` récupère la transcription de la conversation pour une session spécifique.
+Par défaut, les résultats des outils sont exclus -- passez `includeTools: true` pour les voir.
+La vue renvoyée est intentionnellement bornée et filtrée pour la sécurité :
 
 - le texte de l'assistant est normalisé avant le rappel :
   - les balises de réflexion sont supprimées
   - les blocs d'échafaudage `<relevant-memories>` / `<relevant_memories>` sont supprimés
-  - les blocs de charge utile XML d'appel d'outil en texte brut tels que `<tool_call>...</tool_call>`, `<function_call>...</function_call>`, `<tool_calls>...</tool_calls>` et `<function_calls>...</function_calls>` sont supprimés, y compris les charges utiles tronquées qui ne se ferment jamais proprement
-  - l'échafaudage d'appel/résultat d'outil rétrogradé tel que `[Tool Call: ...]`, `[Tool Result ...]` et `[Historical context ...]` est supprimé
-  - les jetons de contrôle de modèle fuis tels que `<|assistant|>`, d'autres jetons ASCII `<|...|>` et les variantes de pleine largeur `<｜...｜>` sont supprimés
-  - les XML d'appel d'outil MiniMax malformés tels que `<invoke ...>` / `</minimax:tool_call>` sont supprimés
+  - les blocs de payload XML d'appel d'outil en texte brut tels que `<tool_call>...</tool_call>`,
+    `<function_call>...</function_call>`, `<tool_calls>...</tool_calls>` et
+    `<function_calls>...</function_calls>` sont supprimés, y compris les payloads
+    tronqués qui ne se ferment jamais proprement
+  - l'échafaudage d'appel/résultat d'outil rétrogradé tel que `[Tool Call: ...]`,
+    `[Tool Result ...]` et `[Historical context ...]` est supprimé
+  - les jetons de contrôle de modèle fuyants tels que `<|assistant|>`, d'autres jetons
+    ASCII `<|...|>` et les variantes de pleine chasse `<｜...｜>` sont supprimés
+  - les XML d'appel d'outil MiniMax malformés tels que `<invoke ...>` /
+    `</minimax:tool_call>` sont supprimés
 - le texte de type identifiant/jeton est rédigé avant d'être renvoyé
 - les blocs de texte long sont tronqués
-- les très grands historiques peuvent supprimer les anciennes lignes ou remplacer une ligne trop volumineuse par `[sessions_history omitted: message too large]`
-- l'outil signale des indicateurs de résumé tels que `truncated`, `droppedMessages`,
+- les historiques très volumineux peuvent supprimer les anciennes lignes ou remplacer une ligne trop
+  grande par `[sessions_history omitted: message too large]`
+- l'outil signale des indicateurs résumés tels que `truncated`, `droppedMessages`,
   `contentTruncated`, `contentRedacted` et `bytes`
 
 Les deux outils acceptent soit une **clé de session** (comme `"main"`) soit un **ID de session**
-issu d'un appel de liste précédent.
+provenant d'un appel de liste précédent.
 
 Si vous avez besoin de la transcription exacte octet par octet, inspectez le fichier de transcription sur
 le disque au lieu de traiter `sessions_history` comme une vidange brute.
 
 ## Envoi de messages inter-sessions
 
-`sessions_send` délivre un message à une autre session et attend facultativement
-la réponse :
+`sessions_send` envoie un message à une autre session et attend facultativement la
+réponse :
 
-- **Tirer et oublier :** définissez `timeoutSeconds: 0` pour mettre en file d'attente et revenir
+- **Tirer-et-oublier (Fire-and-forget) :** définissez `timeoutSeconds: 0` pour mettre en file d'attente et revenir
   immédiatement.
 - **Attendre la réponse :** définissez un délai d'attente et obtenez la réponse en ligne.
 
-Les sessions de chat limitées à un fil, telles que les clés Slack ou Discord se terminant par
+Les sessions de chat délimitées par un fil, telles que les clés Slack ou Discord se terminant par
 `:thread:<id>`, ne sont pas des cibles `sessions_send` valides. Utilisez la clé de session du canal parent
-pour la coordination inter-agent afin que les messages acheminés par outil n'apparaissent pas
-à l'intérieur d'un fil actif orienté vers l'humain.
+pour la coordination inter-agents afin que les messages routés par l'outil n'apparaissent pas
+à l'intérieur d'un fil actif orienté humain.
 
-Les messages et les réponses de suivi A2A sont marqués comme données intersession dans le
-prompt de réception (`[Inter-session message ... isUser=false]`) et dans la provenance de la transcription.
-L'agent récepteur doit les traiter comme des données acheminées par outil, et non comme une
+Les messages et les réponses de suivi A2A sont marqués comme données inter-sessions dans le
+prompt de réception (`[Inter-session message ... isUser=false]`) et dans la provenance de la transcription. L'agent récepteur doit les traiter comme des données routées par l'outil, et non comme une
 instruction directe rédigée par l'utilisateur final.
 
-Une fois la cible répondue, OpenClaw peut exécuter une **boucle de réponse** où
-les agents alternent les messages (jusqu'à `session.agentToAgent.maxPingPongTurns`, plage
+Après que la cible a répondu, OpenClaw peut exécuter une **boucle de retour de réponse** où les
+agents alternent les messages (jusqu'à `session.agentToAgent.maxPingPongTurns`, plage
 0-20, par défaut 5). L'agent cible peut répondre
-`REPLY_SKIP` pour arrêter plus tôt.
+`REPLY_SKIP` pour arrêter tôt.
 
 ## Assistants d'état et d'orchestration
 
 `session_status` est l'outil léger équivalent à `/status` pour la session
-courante ou une autre session visible. Il rapporte l'utilisation, l'heure, l'état du modèle/d'exécution, et
-le contexte de tâche en arrière-plan lié lorsqu'il est présent. Comme `/status`, il peut remplir rétroactivement
+actuelle ou une autre session visible. Il signale l'utilisation, l'heure, l'état du modèle/d'exécution et
+le contexte de la tâche d'arrière-plan lié lorsqu'il est présent. Comme `/status`, il peut remplir
 les compteurs de jetons/cache épars à partir de la dernière entrée d'utilisation de la transcription, et
 `model=default` efface une substitution par session. Utilisez `sessionKey="current"` pour
 la session actuelle de l'appelant ; les étiquettes de client visibles telles que `openclaw-tui` ne
 sont pas des clés de session.
 
-`sessions_yield` termine intentionnellement le tour actuel afin que le message suivant puisse être
-l'événement de suivi que vous attendez. Utilisez-le après avoir généré des sous-agents lorsque
-vous voulez que les résultats d'achèvement arrivent comme le message suivant au lieu de construire
-des boucles de sondage.
+`sessions_yield` termine intentionnellement le tour actuel afin que le message suivant puisse être l'événement de suivi que vous attendez. Utilisez-le après avoir généré des sous-agents lorsque vous souhaitez que les résultats d'achèvement arrivent comme le message suivant au lieu de construire des boucles de sondage.
 
 `subagents` est l'assistant de visibilité pour les sous-agents OpenClaw déjà générés. Il prend en charge `action: "list"` pour inspecter les exécutions actives/récentes.
 
 ## Génération de sous-agents
 
-`sessions_spawn` crée une session isolée pour une tâche d'arrière-plan par défaut. Il est toujours non bloquant -- il retourne immédiatement un `runId` et un `childSessionKey`. Les exécutions natives de sous-agents reçoivent la tâche déléguée dans le premier message visible `[Subagent Task]` de la session enfant, tandis que le prompt système ne contient que les règles d'exécution du sous-agent et le contexte de routage.
+`sessions_spawn` crée une session isolée pour une tâche d'arrière-plan par défaut. Elle est toujours non bloquante -- elle retourne immédiatement un `runId` et un `childSessionKey`. Les exécutions natives de sous-agents reçoivent la tâche déléguée dans le premier message visible `[Subagent Task]` de la session enfant, tandis que le prompt système ne contient que les règles d'exécution et le contexte de routage du sous-agent.
 
 Options clés :
 
-- `runtime: "subagent"` (par défaut) ou `"acp"` pour les agents de harnais externe.
-- `model` et remplacements `thinking` pour la session enfant.
+- `runtime: "subagent"` (par défaut) ou `"acp"` pour les agents de harnais externes.
+- `model` et `thinking` des remplacements pour la session enfant.
 - `thread: true` pour lier le génération à un fil de discussion (Discord, Slack, etc.).
-- `sandbox: "require"` pour appliquer le sandboxing sur l'enfant.
-- `context: "fork"` pour les sous-agents natifs lorsque l'enfant a besoin de la
-  transcription du demandeur actuel ; omettez-le ou utilisez `context: "isolated"` pour un enfant propre.
-  Les sous-agents natifs liés à un fil par défaut à `context: "fork"` sauf si
-  `threadBindings.defaultSpawnContext` indique le contraire.
+- `sandbox: "require"` pour appliquer le sandboxing à l'enfant.
+- `context: "fork"` pour les sous-agents natifs lorsque l'enfant a besoin de la transcription du demandeur actuel ; omettez-le ou utilisez `context: "isolated"` pour un enfant propre. Les sous-agents natifs liés à un fil par défaut à `context: "fork"` sauf si `threadBindings.defaultSpawnContext` indique le contraire.
 
-Les sous-agents feuilles par défaut n'obtiennent pas d'outils de session. Lorsque
-`maxSpawnDepth >= 2`, les sous-agents orchestrateurs de profondeur 1 reçoivent en outre
-`sessions_spawn`, `subagents`, `sessions_list` et `sessions_history` afin qu'ils
-puissent gérer leurs propres enfants. Les exécutions feuilles n'obtiennent toujours pas d'outils d'orchestration
-récursifs.
+Les sous-agents feuilles par défaut n'obtiennent pas d'outils de session. Lorsque `maxSpawnDepth >= 2`, les sous-agents orchestrateurs de profondeur 1 reçoivent également `sessions_spawn`, `subagents`, `sessions_list` et `sessions_history` afin qu'ils puissent gérer leurs propres enfants. Les exécutions feuilles n'obtiennent toujours pas d'outils d'orchestration récursifs.
 
-Après achèvement, une étape d'annonce publie le résultat sur le channel du demandeur.
-La livraison de l'achèvement préserve le routage de fil/sujet lié lorsqu'il est disponible, et si
-l'origine de l'achèvement n'identifie qu'un channel, OpenClaw peut toujours réutiliser
-la route stockée de la session du demandeur (`lastChannel` / `lastTo`) pour une livraison
+Après l'achèvement, une étape d'annonce publie le résultat sur la channel du demandeur.
+La livraison de l'achèvement préserve le routage thread/topic lié lorsque disponible, et si
+l'origine de l'achèvement identifie uniquement une channel, OpenClaw peut toujours réutiliser la
+route stockée de la session du demandeur (`lastChannel` / `lastTo`) pour une livraison
 directe.
 
 Pour un comportement spécifique à l'ACP, voir [ACP Agents](/fr/tools/acp-agents).
@@ -146,16 +153,17 @@ Les outils de session sont délimités pour limiter ce que l'agent peut voir :
 | `agent` | Toutes les sessions pour cet agent              |
 | `all`   | Toutes les sessions (inter-agents si configuré) |
 
-La valeur par défaut est `tree`. Les sessions sandboxed sont limitées à `tree` quelle que soit la configuration.
+La valeur par défaut est `tree`. Les sessions Sandboxed sont limitées à `tree` quelle que soit la
+configuration.
 
 ## Pour aller plus loin
 
 - [Gestion de session](/fr/concepts/session) -- routage, cycle de vie, maintenance
-- [Agents ACP](/fr/tools/acp-agents) -- génération de harnais externe
+- [ACP Agents](/fr/tools/acp-agents) -- génération de harnais externe
 - [Multi-agent](/fr/concepts/multi-agent) -- architecture multi-agent
-- [Configuration du Gateway](/fr/gateway/configuration) -- paramètres de configuration des outils de session
+- [Configuration Gateway](/fr/gateway/configuration) -- paramètres de configuration des outils de session
 
 ## Connexes
 
 - [Gestion de session](/fr/concepts/session)
-- [Nettoyage de session](/fr/concepts/session-pruning)
+- [Élagage de session](/fr/concepts/session-pruning)

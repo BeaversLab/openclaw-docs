@@ -143,15 +143,15 @@ sidebarTitle: "首次运行常见问题"
     需要 Node **>= 22**。推荐使用 `pnpm`。对于 Bun，**不推荐**使用 Gateway(网关)。
   </Accordion>
 
-  <Accordion title="Raspberry Pi它能在 Raspberry Pi 上运行吗？"Gateway(网关)Raspberry PiGateway(网关)>
-    是的。Gateway(网关) 是轻量级的——文档列出 **512MB-1GB RAM**、**1 核**和大约 **500MB**
-    磁盘空间就足够个人使用，并且请注意 **Raspberry Pi 4 可以运行它**。
+  <Accordion title="Raspberry Pi它能在 Raspberry Pi 上运行吗？"Gateway(网关)Raspberry PiRaspberry PiGateway(网关)>
+    是的。Gateway（网关）非常轻量——文档列明 **512MB-1GB RAM**、**1 个核心**和大约 **500MB**
+    磁盘空间对于个人使用已足够，请注意 **Raspberry Pi 4 也可以运行它**。
 
-    如果你想要额外的余量（日志、媒体、其他服务），**推荐 2GB**，但这并不是
+    如果您想要额外的余量（日志、媒体、其他服务），**建议使用 2GB**，但这不是
     硬性的最低要求。
 
-    提示：一个小型的 Pi/VPS 可以托管 Gateway(网关)，你可以在笔记本电脑/手机上配对 **节点** 以
-    进行本地屏幕/摄像头/画布或命令执行。请参阅 [节点](/zh/nodes)。
+    提示：一台小型 Raspberry Pi/VPS 可以托管 Gateway（网关），您可以将笔记本电脑/手机上的 **节点** 与其配对，以进行
+    本地屏幕/摄像头/画布或命令执行。请参阅 [节点](/zh/nodes)。
 
   </Accordion>
 
@@ -767,14 +767,14 @@ Gateway(网关)（这会断开活动会话），可能需要干净的 git checko
 
   </Accordion>
 
-  <Accordion title="OpenClaw在专用机器上运行 OpenClaw 有多重要？"Gateway(网关)>
-    非必需，但**为了可靠性和隔离性，建议这样做**。
+  <Accordion title="OpenClaw在专用机器上运行 OpenClaw 有多重要？"Raspberry PiGateway(网关)>
+    不是必需的，但 **为了可靠性和隔离性，建议这样做**。
 
-    - **专用主机（VPS/Mac mini/Pi）：** 始终在线，睡眠/重启中断更少，权限更清晰，更容易保持运行。
-    - **共享笔记本电脑/台式机：** 用于测试和主动使用完全没问题，但当机器休眠或更新时，预计会出现暂停。
+    - **专用主机（VPS/Mac mini/Raspberry Pi）：** 永远在线，睡眠/重启中断更少，权限更清晰，更容易保持运行。
+    - **共享笔记本电脑/台式机：** 对于测试和主动使用完全没有问题，但请注意机器睡眠或更新时会暂停。
 
-    如果你想要两全其美，请在专用主机上保留 Gateway(网关)，并将你的笔记本电脑作为**节点** 配对，用于本地屏幕/摄像头/exec工具。请参阅 [节点](/zh/nodes)。
-    有关安全指导，请阅读 [安全性](/zh/gateway/security)。
+    如果您想两全其美，请将 Gateway（网关）保留在专用主机上，并将您的笔记本电脑作为 **节点** 进行配对，以便使用本地屏幕/摄像头/执行工具。请参阅 [节点](/zh/nodes)。
+    如需安全指导，请阅读 [安全](/zh/gateway/security)。
 
   </Accordion>
 

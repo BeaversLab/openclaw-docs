@@ -161,9 +161,9 @@ dep nettoyage par défaut est de 10 000 ms. Sur des disques lents ou des magasin
 export OPENCLAW_TRAJECTORY_FLUSH_TIMEOUT_MS=30000
 ```
 
-Cela contrôle le moment où OpenClaw consigne un délai d'attente `pi-trajectory-flush` et continue.
-Cela ne modifie pas les limites de taille de la trajectoire. Pour ajuster toutes les étapes de nettoyage de l'agent
-qui ne transmettent pas de délai d'attente explicite, définissez `OPENCLAW_AGENT_CLEANUP_TIMEOUT_MS`.
+Cela contrôle quand OpenClaw journalise un `openclaw-trajectory-flush` délai d'attente et continue.
+Cela ne modifie pas les limites de taille de trajectoire. Pour ajuster toutes les étapes de nettoyage de l'agent
+qui ne passent pas un délai d'attente explicite, définissez `OPENCLAW_AGENT_CLEANUP_TIMEOUT_MS`.
 
 ## Confidentialité et limites
 

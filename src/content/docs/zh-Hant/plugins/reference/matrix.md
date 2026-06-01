@@ -1,5 +1,5 @@
 ---
-summary: "新增 Matrix 頻道介面，用於發送和接收 OpenClaw 訊息。"
+summary: "OpenClaw Matrix 頻道外掛，用於房間和直接訊息。"
 read_when:
   - You are installing, configuring, or auditing the matrix plugin
 title: "Matrix 外掛程式"
@@ -7,7 +7,7 @@ title: "Matrix 外掛程式"
 
 # Matrix 外掛程式
 
-新增 Matrix 頻道介面，用於發送和接收 OpenClaw 訊息。
+OpenClaw Matrix 頻道外掛，用於房間和直接訊息。
 
 ## 發布
 

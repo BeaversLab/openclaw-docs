@@ -8,7 +8,7 @@ title: "常见问题：模型和身份验证"
 sidebarTitle: "模型常见问题"
 ---
 
-模型和身份验证配置文件的问答。有关设置、会话、网关、渠道和
+模型和身份验证配置文件的常见问题解答。有关设置、会话、网关、通道和
 故障排除，请参阅主要的 [常见问题](/zh/help/faq)。
 
 ## 模型：默认值、选择、别名、切换
@@ -25,20 +25,20 @@ sidebarTitle: "模型常见问题"
 
   </Accordion>
 
-  <Accordion title="您推荐使用什么模型？"MiniMaxMiniMax>
-    **推荐的默认选项：** 使用您的提供商堆栈中可用的最强最新一代模型。
-    **对于启用工具或不受信任输入的代理：** 优先考虑模型强度而不是成本。
-    **对于常规/低风险聊天：** 使用更便宜的回退模型并按代理角色进行路由。
+  <Accordion title="您推荐使用哪个模型？">
+    **推荐的默认模型：** 使用提供商堆栈中可用的最强的最新一代模型。
+    **对于启用工具或不受信任输入的代理：** 优先考虑模型强度而非成本。
+    **对于常规/低风险聊天：** 使用更便宜的回退模型，并按代理角色进行路由。
 
     MiniMax 有自己的文档：[MiniMax](/zh/providers/minimax) 和
     [本地模型](/zh/gateway/local-models)。
 
-    经验法则：对于高风险工作，使用您能负担得起的**最佳模型**，对于常规聊天或摘要，使用更便宜的
-    模型。您可以按代理路由模型，并使用子代理来
-    并行处理长任务（每个子代理消耗令牌）。请参阅 [模型](/zh/concepts/models) 和
+    经验法则：对于高风险工作，请使用您能负担得起的**最佳模型**；对于常规聊天或摘要，使用
+    更便宜的模型。您可以根据代理路由模型，并使用子代理来
+    并行处理长任务（每个子代理都会消耗 Token）。请参阅 [模型](/zh/concepts/models) 和
     [子代理](/zh/tools/subagents)。
 
-    严重警告：较弱/过度量化的模型更容易受到提示
+    严重警告：较弱/过度量化的模型更容易受到提示词
     注入和不安全行为的影响。请参阅 [安全性](/zh/gateway/security)。
 
     更多背景信息：[模型](/zh/concepts/models)。
@@ -50,41 +50,41 @@ sidebarTitle: "模型常见问题"
 
     安全选项：
 
-    - 在聊天中使用 `/model`（快速，针对当前会话）
+    - 在聊天中使用 `/model`（快速，针对每个会话）
     - `openclaw models set ...`（仅更新模型配置）
     - `openclaw configure --section model`（交互式）
     - 在 `~/.openclaw/openclaw.json` 中编辑 `agents.defaults.model`
 
-    除非你打算替换整个配置，否则避免使用包含部分对象的 `config.apply`。
-    对于 RPC 编辑，请先使用 `config.schema.lookup` 检查，并优先使用 `config.patch`。查找载荷会提供标准化路径、浅层模式文档/约束以及直接子级摘要。
-    用于进行部分更新。
-    如果你覆盖了配置，请从备份恢复或重新运行 `openclaw doctor` 进行修复。
+    除非您打算替换整个配置，否则请避免使用带有部分对象的 `config.apply`。
+    对于 RPC 编辑，请先使用 `config.schema.lookup` 检查，并首选 `config.patch`。查找负载为您提供标准化路径、浅层模式文档/约束以及直接子项摘要。
+    用于部分更新。
+    如果您确实覆盖了配置，请从备份恢复或重新运行 `openclaw doctor` 进行修复。
 
-    文档：[模型](/zh/concepts/models)、[配置](/zh/cli/configure)、[Config](/zh/cli/config)、[医生](/zh/gateway/doctor)。
+    文档：[模型](/zh/concepts/models)、[配置](/zh/cli/configure)、[配置文件](/zh/cli/config)、[诊断](/zh/gateway/doctor)。
 
   </Accordion>
 
-  <Accordion title="我可以使用自托管模型（llama.cpp、vLLM、Ollama）吗？">
-    可以。对于本地模型，Ollama 是最简单的途径。
+  <Accordion title="我可以使用自托管的模型（llama.cpp、vLLM、Ollama）吗？">
+    可以。Ollama 是本地模型最简单的途径。
 
-    最快设置方法：
+    快速设置：
 
     1. 从 `https://ollama.com/download` 安装 Ollama
     2. 拉取一个本地模型，例如 `ollama pull gemma4`
-    3. 如果你同时也想要云端模型，请运行 `ollama signin`
+    3. 如果你也想要云端模型，请运行 `ollama signin`
     4. 运行 `openclaw onboard` 并选择 `Ollama`
     5. 选择 `Local` 或 `Cloud + Local`
 
     注意事项：
 
-    - `Cloud + Local` 提供云端模型以及你的本地 Ollama 模型
-    - 诸如 `kimi-k2.5:cloud` 等云端模型不需要本地拉取
+    - `Cloud + Local` 为你提供云端模型以及本地的 Ollama 模型
+    - 诸如 `kimi-k2.5:cloud` 之类的云端模型不需要本地拉取
     - 如需手动切换，请使用 `openclaw models list` 和 `openclaw models set ollama/<model>`
 
-    安全提示：较小或经过大量量化的模型更容易受到提示词注入攻击。我们强烈建议对于任何可以使用工具的机器人使用**大型模型**。如果你仍然想使用小模型，请启用沙箱隔离（沙箱隔离）并设置严格的工具允许列表。
+    安全提示：较小或重度量化的模型更容易受到提示词注入（prompt injection）攻击。我们强烈建议任何可以使用工具的机器人使用**大型模型**。如果你仍想使用小型模型，请启用沙箱隔离（沙箱隔离）并配置严格的工具允许列表。
 
-    文档：[Ollama](/zh/providers/ollama)，[本地模型](/zh/gateway/local-models)，
-    [模型提供商](/zh/concepts/model-providers)，[安全](/zh/gateway/security)，
+    文档：[Ollama](/zh/providers/ollama)、[本地模型](/zh/gateway/local-models)、
+    [模型提供商](/zh/concepts/model-providers)、[安全性](/zh/gateway/security)、
     [沙箱隔离](/zh/gateway/sandboxing)。
 
   </Accordion>
@@ -143,13 +143,13 @@ n 重新运行 `/model`，但**不带** `@profile` 后缀：
   </Accordion>
 
   <Accordion title="如果两个提供商公开了相同的模型 ID，/模型 会使用哪一个？">
-    `/model provider/model` 会为该会话选择那个确切的提供商路由。
+    `/model provider/model` 会为该会话选择确切的提供商路由。
 
-    例如，`qianfan/deepseek-v4-flash` 和 `deepseek/deepseek-v4-flash` 是不同的模型引用，即使两者都包含 `deepseek-v4-flash`OpenClaw。OpenClaw 不应仅仅因为基础模型 ID 匹配就悄无声息地从一个提供商切换到另一个。
+    例如，`qianfan/deepseek-v4-flash` 和 `deepseek/deepseek-v4-flash` 是不同的模型引用，即使两者都包含 `deepseek-v4-flash`OpenClaw。OpenClaw 不应仅仅因为裸露的模型 ID 匹配就静默地从一个提供商切换到另一个提供商。
 
-    用户选择的 `/model` 引用对于回退策略也是严格的。如果所选的提供商/模型不可用，回复将显式失败，而不是从 `agents.defaults.model.fallbacks`OpenClaw 进行回答。配置的回退链仍然适用于配置的默认值、定时任务主实例和自动选择的回退状态。
+    用户选择的 `/model` 引用在回退策略方面也是严格的。如果所选的提供商/模型不可用，回复将明显失败，而不是从 `agents.defaults.model.fallbacks`OpenClaw 进行回答。配置的回退链仍然适用于配置的默认值、定时作业主服务器和自动选择的回退状态。
 
-    如果允许从非会话覆盖启动的运行使用回退，OpenClaw 会首先尝试请求的提供商/模型，然后是配置的回退项，最后才是配置的主实例。这可以防止重复的基础模型 ID 直接跳回默认提供商。
+    如果允许从非会话覆盖开始的运行使用回退，OpenClaw 会先尝试请求的提供商/模型，然后是配置的回退项，最后才是配置的主服务器。这可以防止重复的裸模型 ID 直接跳回默认提供商。
 
     请参阅 [模型](/zh/concepts/models) 和 [模型故障转移](/zh/concepts/model-failover)。
 
@@ -158,10 +158,10 @@ n 重新运行 `/model`，但**不带** `@profile` 后缀：
   <Accordion title="我可以在日常任务中使用 GPT 5.5，在编码中使用 Codex 5.5 吗？">
     可以。请将模型选择和运行时选择分开处理：
 
-    - **原生 Codex 编码代理：** 将 `agents.defaults.model.primary` 设置为 `openai/gpt-5.5`。当您需要使用 ChatGPT/Codex 订阅身份验证时，请使用 `openclaw models auth login --provider openai-codex` 登录。
-    - **代理循环之外的直接 OpenAI API 任务：** 为图像、嵌入、语音、实时和其他非代理 OpenAI API 表面配置 `OPENAI_API_KEY`。
-    - **OpenAI 代理 API 密钥身份验证：** 使用带有有序 `openai-codex` API 密钥配置文件的 `/model openai/gpt-5.5`。
-    - **子代理：** 将编码任务路由到具有自己的 `openai/gpt-5.5` 模型的专注于 Codex 的代理。
+    - **原生 Codex 编码代理：** 将 `agents.defaults.model.primary` 设置为 `openai/gpt-5.5`。当您需要 ChatGPT/Codex 订阅认证时，使用 `openclaw models auth login --provider openai-codex`OpenAIAPI 登录。
+    - **代理循环之外的直接 OpenAI API 任务：** 为图像、嵌入、语音、实时以及其他非代理 OpenAI API 表面配置 `OPENAI_API_KEY`OpenAIAPIOpenAIAPI。
+    - **OpenAI 代理 API 密钥认证：** 使用 `/model openai/gpt-5.5` 并配合有序的 `openai-codex`API API 密钥配置文件。
+    - **子代理：** 将编码任务路由到专注于 Codex 的代理，该代理拥有自己的 `openai/gpt-5.5` 模型。
 
     参见 [模型](/zh/concepts/models) 和 [斜杠命令](/zh/tools/slash-commands)。
 
@@ -171,7 +171,7 @@ n 重新运行 `/model`，但**不带** `@profile` 后缀：
     使用会话切换开关或配置默认值：
 
     - **每次会话：** 当会话正在使用 `openai/gpt-5.5` 时，发送 `/fast on`。
-    - **每个模型默认值：** 将 `agents.defaults.models["openai/gpt-5.5"].params.fastMode` 设置为 `true`。
+    - **每种模型默认值：** 将 `agents.defaults.models["openai/gpt-5.5"].params.fastMode` 设置为 `true`。
 
     示例：
 
@@ -189,11 +189,11 @@ n 重新运行 `/model`，但**不带** `@profile` 后缀：
         },
       },
     }
-    ```
+    ```OpenAI
 
-    对于 OpenAI，快速模式在支持的原生 Responses 请求上映射到 `service_tier = "priority"`。会话 `/fast` 会覆盖 beat 配置默认值。
+    对于 OpenAI，快速模式在支持的原生 Responses 请求上映射为 `service_tier = "priority"`。会话 `/fast` 会覆盖 beat 配置默认值。
 
-    参见 [思考和快速模式](/zh/tools/thinking) 和 [OpenAI 快速模式](/zh/providers/openai#fast-mode)。
+    参见 [思考和快速模式](/en/tools/thinkingOpenAI) 和 [OpenAI 快速模式](/en/providers/openai#fast-mode)。
 
   </Accordion>
 
@@ -213,36 +213,34 @@ n 重新运行 `/model`，但**不带** `@profile` 后缀：
 
   </Accordion>
 
-  <Accordion title='MiniMax为什么我会看到“Unknown 模型: minimax/MiniMax-M2.7”？'MiniMaxOpenClaw>
-    这意味着 **未配置提供商**（未找到 MiniMax 提供商配置或身份验证
-    配置文件），因此无法解析该模型。
+  <Accordion title='为什么我会看到“Unknown 模型: minimax/MiniMax-M2.7”？'>
+    这意味着**提供商未配置**（未找到 MiniMax 提供商配置或身份验证配置文件），因此无法解析该模型。
 
     修复检查清单：
 
-    1. 升级到当前的 OpenClaw 版本（或从源 `main`MiniMaxMiniMax 运行），然后重启网关。
-    2. 确保 MiniMax 已配置（通过向导或 JSON），或者 MiniMax 身份验证
-       存在于 env/auth 配置文件中，以便注入匹配的提供商
-       （`MINIMAX_API_KEY` 用于 `minimax`，`MINIMAX_OAUTH_TOKEN`MiniMaxOAuth 或存储的 MiniMax
-       OAuth 用于 `minimax-portal`）。
+    1. 升级到当前的 OpenClaw 版本（或从源代码 `main` 运行），然后重启网关。
+    2. 确保 MiniMax 已配置（通过向导或 JSON），或者 env/auth 配置文件中存在 MiniMax 身份验证，以便注入匹配的提供商
+       （`MINIMAX_API_KEY` 用于 `minimax`、`MINIMAX_OAUTH_TOKEN` 或为 `minimax-portal` 存储的 MiniMax
+       OAuth）。
     3. 为您的身份验证路径使用确切的模型 ID（区分大小写）：
-       `minimax/MiniMax-M2.7` 或 `minimax/MiniMax-M2.7-highspeed`API 用于 API-key
+       `minimax/MiniMax-M2.7` 或 `minimax/MiniMax-M2.7-highspeed` 用于 API-key
        设置，或 `minimax-portal/MiniMax-M2.7` /
-       `minimax-portal/MiniMax-M2.7-highspeed`OAuth 用于 OAuth 设置。
+       `minimax-portal/MiniMax-M2.7-highspeed` 用于 OAuth 设置。
     4. 运行：
 
        ```bash
        openclaw models list
        ```
 
-       并从列表中选择（或在聊天中 `/model list`MiniMax）。
+       并从列表中选择（或在聊天中 `/model list`）。
 
     请参阅 [MiniMax](/zh/providers/minimax) 和 [模型](/zh/concepts/models)。
 
   </Accordion>
 
-  <Accordion title="MiniMaxOpenAI我可以将 MiniMax 设为默认，并在处理复杂任务时使用 OpenAI 吗？"MiniMax>
-    可以。将 **MiniMax 作为默认** 模型，并根据需要**按会话** 切换模型。
-    回退机制是针对**错误**的，而非“困难任务”，因此请使用 `/model` 或独立的代理。
+  <Accordion title="MiniMaxOpenAI我可以将 MiniMax 作为默认设置，而在处理复杂任务时使用 OpenAI 吗？"MiniMax>
+    可以。使用 **MiniMax 作为默认设置**，并根据需要**按会话**切换模型。
+    回退（Fallbacks）用于处理**错误**，而非“困难任务”，因此请使用 `/model` 或单独的代理（agent）。
 
     **选项 A：按会话切换**
 
@@ -267,29 +265,29 @@ n 重新运行 `/model`，但**不带** `@profile` 后缀：
     /model gpt
     ```MiniMaxOpenAI
 
-    **选项 B：独立的代理**
+    **选项 B：使用独立的代理**
 
-    - 代理 A 默认：MiniMax
-    - 代理 B 默认：OpenAI
+    - 代理 A 默认设置：MiniMax
+    - 代理 B 默认设置：OpenAI
     - 通过代理进行路由，或使用 `/agent` 进行切换
 
-    文档：[Models](/en/concepts/models)、[Multi-Agent Routing](/en/concepts/multi-agentMiniMax)、[MiniMax](/en/providers/minimaxOpenAI)、[OpenAI](/en/providers/openai)。
+    文档：[模型](/en/concepts/models)、[多代理路由](/en/concepts/multi-agentMiniMax)、[MiniMax](/en/providers/minimaxOpenAI)、[OpenAI](/en/providers/openai)。
 
   </Accordion>
 
   <Accordion title="opus / sonnet / gpt 是内置的快捷方式吗？"OpenClaw>
-    是的。OpenClaw 提供了一些默认的简写（仅当该模型存在于 `agents.defaults.models` 中时才适用）：
+    是的。OpenClaw 提供了一些默认的简写（仅当 `agents.defaults.models` 中存在该模型时才适用）：
 
-    - `opus` → `anthropic/claude-opus-4-7`
+    - `opus` → `anthropic/claude-opus-4-8`
     - `sonnet` → `anthropic/claude-sonnet-4-6`
     - `gpt` → `openai/gpt-5.4`
     - `gpt-mini` → `openai/gpt-5.4-mini`
     - `gpt-nano` → `openai/gpt-5.4-nano`
     - `gemini` → `google/gemini-3.1-pro-preview`
     - `gemini-flash` → `google/gemini-3-flash-preview`
-    - `gemini-flash-lite` → `google/gemini-3.1-flash-lite-preview`
+    - `gemini-flash-lite` → `google/gemini-3.1-flash-lite`
 
-    如果您设置了同名的自定义别名，则以您的值为准。
+    如果你设置了同名的自定义别名，则以你的设置为准。
 
   </Accordion>
 
@@ -462,17 +460,17 @@ n 重新运行 `/model`，但**不带** `@profile` 后缀：
 
 ## Auth profiles：它们是什么以及如何管理它们
 
-相关：[/concepts/oauth](/zh/concepts/oauthOAuth) (OAuth 流程、令牌存储、多账户模式)
+相关：[/concepts/oauth](/zh/concepts/oauthOAuth)（OAuth 流程、令牌存储、多账户模式）
 
 <AccordionGroup>
-  <Accordion title="什么是 auth profile？"OAuthAPI>
-    Auth profile 是绑定到提供商的命名凭证记录（OAuth 或 API 密钥）。Profile 存储在：
+  <Accordion title="什么是身份验证配置文件？"OAuthAPI>
+    身份验证配置文件是绑定到提供商的命名凭据记录（OAuth 或 API 密钥）。配置文件存储在：
 
     ```
     ~/.openclaw/agents/<agentId>/agent/auth-profiles.json
     ```
 
-    要检查已保存的 profile 而不转储机密信息，请运行 `openclaw models auth list`（可选择 `--provider <id>` 或 `--json`CLI）。详情请参阅 [Models CLI](/zh/cli/models#auth-profiles)。
+    要在不泄露密钥的情况下检查已保存的配置文件，请运行 `openclaw models auth list`（可选择 `--provider <id>` 或 `--json`CLI）。有关详细信息，请参阅 [模型 CLI](/zh/cli/models#auth-profiles)。
 
   </Accordion>
 
@@ -524,13 +522,13 @@ n 重新运行 `/model`，但**不带** `@profile` 后缀：
 
   </Accordion>
 
-  <Accordion title="OAuthAPIOAuth 与 API 密钥——有什么区别？"OpenClawOAuthAPIAnthropicCLIOpenAIOAuthAPI>
-    OpenClaw 支持两者：
+  <Accordion title="OAuthAPI 与 API 密钥——有什么区别？">
+    OpenClawOAuth 支持两者：
 
-    - **OAuth** 通常利用订阅访问（如适用）。
+    - **OAuth / CLI 登录** 通常在提供商支持时利用订阅访问权限。对于 Anthropic，OpenClaw 的 Claude CLI 后端使用 Claude Code `claude -p`；AnthropicAPI 目前将其视为 Agent SDK/编程用途，并从 2026 年 6 月 15 日起拥有单独的月度 Agent SDK 额度。
     - **API 密钥** 使用按令牌付费的计费方式。
 
-    向导明确支持 Anthropic Claude CLI、OpenAI Codex OAuth 和 API 密钥。
+    向导明确支持 Anthropic Claude CLI、OpenAI Codex OAuthAPI 和 API 密钥。
 
   </Accordion>
 </AccordionGroup>

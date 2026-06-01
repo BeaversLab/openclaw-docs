@@ -434,7 +434,7 @@ client:app:select_file
 
 ## Tool Search 互動
 
-對於啟用 code mode 的執行，Code mode 會取代 PI Tool Search 模型介面。
+代碼模式會取代在啟用該模式的執行過程中的 OpenClaw Tool Search 模型介面。
 
 當 `tools.codeMode.enabled` 為 true 且啟動 code mode 時：
 
@@ -443,7 +443,7 @@ client:app:select_file
 - 客體運行時接收精簡的 `ALL_TOOLS` 元數據以及搜尋、描述和呼叫輔助函式。
 - 巢狀呼叫會透過與 Tool Search 相同的 OpenClaw 執行器路徑進行分派。
 
-現有的 [Tool Search](/zh-Hant/tools/tool-search) 頁面描述了 PI 精簡目錄橋接器。程式碼模式是適用於可使用 `exec` 和 `wait` 之執行的通用 OpenClaw 替代方案。
+現有的 [Tool Search](/zh-Hant/tools/tool-search) 頁面描述了 OpenClaw 緊湊型目錄橋接器。代碼模式是能夠使用 `exec` 和 `wait` 的執行過程的通用 OpenClaw 替代方案。
 
 ## 工具名稱與衝突
 

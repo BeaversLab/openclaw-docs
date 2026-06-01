@@ -516,7 +516,7 @@ Le type `ChannelSetupWizard` prend en charge `credentials`, `textInputs`, `dmPol
 openclaw plugins install <package-name>
 ```
 
-<Info>Pour les installations issues de npm, `openclaw plugins install` installe le package sous `~/.openclaw/npm` avec les scripts de cycle de vie désactivés. Gardez les arbres de dépendances des plugins en JS/TS pur et évitez les packages qui nécessitent des builds `postinstall`.</Info>
+<Info>Pour les installations provenant de npm, `openclaw plugins install` installe le paquet dans un projet par plugin sous `~/.openclaw/npm/projects` avec les scripts de cycle de vie désactivés. Gardez les arbres de dépendances des plugins purs JS/TS et évitez les paquets qui nécessitent des builds `postinstall`.</Info>
 
 <Note>Gateway startup n'installe pas les dépendances des plugins. Les flux d'installation npm/git/ClawHub gèrent eux-mêmes la convergence des dépendances ; les plugins locaux doivent déjà avoir leurs dépendances installées.</Note>
 

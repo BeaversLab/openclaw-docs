@@ -1,5 +1,5 @@
 ---
-summary: "Rejoignez les appels Google Meet via les transports Chrome ou Twilio."
+summary: "OpenClawPlugin participant Google Meet OpenClaw pour rejoindre des appels via Chrome ou les transports Twilio."
 read_when:
   - You are installing, configuring, or auditing the google-meet plugin
 title: "Plugin Google Meet"
@@ -7,7 +7,7 @@ title: "Plugin Google Meet"
 
 # Plugin Google Meet
 
-Rejoignez les appels Google Meet via les transports Chrome ou Twilio.
+Plugin participant Google Meet OpenClaw pour rejoindre des appels via Chrome ou les transports Twilio.
 
 ## Distribution
 

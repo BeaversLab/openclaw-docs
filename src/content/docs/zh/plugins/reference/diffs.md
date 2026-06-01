@@ -1,5 +1,5 @@
 ---
-summary: "用于代理的只读差异查看器和文件渲染器。"
+summary: "OpenClawOpenClaw 代理只读差异查看器插件和文件渲染器。"
 read_when:
   - You are installing, configuring, or auditing the diffs plugin
 title: "Diffs 插件"
@@ -7,7 +7,7 @@ title: "Diffs 插件"
 
 # Diffs 插件
 
-用于代理的只读差异查看器和文件渲染器。
+OpenClaw 代理只读差异查看器插件和文件渲染器。
 
 ## 分发
 

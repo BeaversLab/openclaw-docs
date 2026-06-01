@@ -1,5 +1,5 @@
 ---
-summary: "為 OpenClaw 新增 Amazon Bedrock 模型提供者支援。"
+summary: "支援模型探索、嵌入和防護機制的 OpenClaw Amazon Bedrock 提供者外掛。"
 read_when:
   - You are installing, configuring, or auditing the amazon-bedrock plugin
 title: "Amazon Bedrock 外掛程式"
@@ -7,7 +7,7 @@ title: "Amazon Bedrock 外掛程式"
 
 # Amazon Bedrock 外掛程式
 
-為 OpenClaw 新增 Amazon Bedrock 模型提供者支援。
+支援模型探索、嵌入和防護機制的 OpenClaw Amazon Bedrock 提供者外掛。
 
 ## 發行
 

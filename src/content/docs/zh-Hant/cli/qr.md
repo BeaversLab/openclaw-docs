@@ -36,7 +36,7 @@ openclaw qr --url wss://gateway.example/ws
 - `--token` 和 `--password` 互斥。
 - 設定碼本身現在攜帶的是不透明的短期 `bootstrapToken`，而非共用的 Gateway 權杖/密碼。
 - 內建的 setup-code 啟動程式會傳回主要 `node` token，其中包含 `scopes: []` 加上一個受信任的移動裝置入職用有限 `operator` 移交 token。
-- 移交的操作員 token 僅限於 `operator.approvals`、`operator.read` 和 `operator.write`；`operator.admin`、`operator.pairing` 和 `operator.talk.secrets` 需要單獨的已核准操作員配對或 token 流程。
+- 移交的操作員 token 僅限於 `operator.approvals`、`operator.read`、`operator.talk.secrets` 和 `operator.write`；`operator.admin` 和 `operator.pairing` 需要單獨的已批准操作員配對或 token 流程。
 - 針對 Tailscale/公用 `ws://` gateway URL，移動裝置配對會以封閉式失敗。私用 LAN 位址和 `.local` Bonjour 主機在 `ws://` 上仍受支援，但 Tailscale/公用移動路由應使用 Tailscale Serve/Funnel 或 `wss://` gateway URL。
 - 使用 `--remote` 時，OpenClaw 需要 `gateway.remote.url` 或
   `gateway.tailscale.mode=serve|funnel`。

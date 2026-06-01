@@ -1,5 +1,5 @@
 ---
-summary: "Añade la superficie del canal Feishu para enviar y recibir mensajes de OpenClaw."
+summary: "Complemento de canal OpenClaw Feishu/Lark para chats y herramientas de lugar de trabajo (mantenido por la comunidad @m1heng)."
 read_when:
   - You are installing, configuring, or auditing the feishu plugin
 title: "Complemento Feishu"
@@ -7,7 +7,7 @@ title: "Complemento Feishu"
 
 # Complemento Feishu
 
-Añade la superficie del canal Feishu para enviar y recibir mensajes de OpenClaw.
+Complemento de canal OpenClaw Feishu/Lark para chats y herramientas de lugar de trabajo (mantenido por la comunidad @m1heng).
 
 ## Distribución
 

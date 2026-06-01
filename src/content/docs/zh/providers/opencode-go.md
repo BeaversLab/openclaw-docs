@@ -18,8 +18,7 @@ OpenCode Go 是 [OpenCode](/zh/providers/opencode) 中的 Go 目录。
 
 ## 内置目录
 
-OpenClaw 的大部分 Go 目录行来源于捆绑的 pi 模型注册表，并在注册表追赶进度时补充当前的上游行。运行
-`openclaw models list --provider opencode-go` 获取当前模型列表。
+OpenClaw 从捆绑的 OpenClaw 模型注册表中获取大多数 Go 目录行，并在注册表追赶进度时补充当前的上流行。运行 OpenClawOpenClaw`openclaw models list --provider opencode-go` 以获取当前模型列表。
 
 该提供商包括：
 

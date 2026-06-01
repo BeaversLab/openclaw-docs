@@ -2,12 +2,12 @@
 summary: "Plan de diseño para el ciclo de vida unificado de recepción, envío, vista previa, edición y transmisión de mensajes duraderos"
 read_when:
   - Refactoring channel send or receive behavior
-  - Changing channel turn, reply dispatch, outbound queue, preview streaming, or plugin SDK message APIs
+  - Changing channel inbound, reply dispatch, outbound queue, preview streaming, or plugin SDK message APIs
   - Designing a new channel plugin that needs durable sends, receipts, previews, edits, or retries
 title: "Refactorización del ciclo de vida del mensaje"
 ---
 
-Esta página es el diseño de destino para reemplazar los auxiliares dispersos de turno de canal, despacho de respuesta, transmisión de vista previa y entrega de salida con un ciclo de vida de mensaje duradero.
+Esta página es el diseño de destino para reemplazar los asistentes dispersos de entrada de canal, envío de respuesta, transmisión de vista previa y entrega de salida con un ciclo de vida de mensaje duradero.
 
 La versión corta:
 
@@ -16,14 +16,14 @@ La versión corta:
 - Un turno es una conveniencia de procesamiento de entrada, no el propietario de la entrega.
 - El envío debe basarse en el contexto: `begin`, renderizar, vista previa o transmisión, envío final, confirmar, fallar.
 - La recepción también debe basarse en el contexto: normalizar, deduplicar, enrutar, registrar, despachar, acuse de recibo de la plataforma, fallar.
-- El SDK público del complemento debe reducirse a una pequeña superficie de mensajes de canal.
+- El SDK público de complementos debe reducirse a una pequeña superficie de salida de canal.
 
 ## Problemas
 
 La pila de canales actual creció a partir de varias necesidades locales válidas:
 
-- Los adaptadores de entrada simples usan `runtime.channel.turn.run`.
-- Los adaptadores enriquecidos usan `runtime.channel.turn.runPrepared`.
+- Los adaptadores de entrada simples usan `runtime.channel.inbound.run`.
+- Los adaptadores enriquecidos usan `runtime.channel.inbound.runPreparedReply`.
 - Los auxiliares heredados usan `dispatchInboundReplyWithBase`, `recordInboundSessionAndDispatchReply`, auxiliares de carga útil de respuesta, fragmentación de respuesta, referencias de respuesta y auxiliares de tiempo de ejecución de salida.
 - La transmisión de vista previa reside en despachadores específicos del canal.
 - Se está agregando durabilidad de entrega final alrededor de las rutas de carga útil de respuesta existentes.
@@ -49,7 +49,7 @@ Ese es el estado final de esta refactorización, no una descripción de cada rut
 - Envíos finales durables por defecto en el nuevo ciclo de vida del mensaje después de que un adaptador declara un comportamiento seguro para repetición.
 - Semánticas compartidas de vista previa, edición, flujo, finalización, reintento, recuperación y confirmación de recibo.
 - Una pequeña superficie del SDK de complementos que los complementos de terceros puedan aprender y mantener.
-- Compatibilidad para los llamadores de `channel.turn` existentes durante la migración.
+- Compatibilidad para los llamadores de compatibilidad de respuesta de entrada existentes durante la migración.
 - Puntos de extensión claros para nuevas capacidades del canal.
 - Sin ramas específicas de la plataforma en el núcleo.
 - Sin mensajes de canal de delta de token. La transmisión del canal permanece como vista previa de mensaje, edición, anexo o entrega de bloque completado.
@@ -57,7 +57,7 @@ Ese es el estado final de esta refactorización, no una descripción de cada rut
 
 ## No objetivos
 
-- No eliminar `runtime.channel.turn.*` en la primera fase.
+- No fuerce cada canal existente a la entrega de mensajes duraderos en la primera fase.
 - No forzar a cada canal al mismo comportamiento de transporte nativo.
 - No enseñar al núcleo temas de Telegram, transmisiones nativas de Slack, redacciones de Matrix, tarjetas de Feishu, voz de QQ o actividades de Teams.
 - No publicar todos los asistentes de migración internos como API de SDK estable.
@@ -71,7 +71,8 @@ Vercel Chat tiene un buen modelo mental público:
 - `Thread`
 - `Channel`
 - `Message`
-- métodos de adaptador como `postMessage`, `editMessage`, `deleteMessage`, `stream`, `startTyping` y recuperaciones de historial
+- métodos de adaptador como `postMessage`, `editMessage`, `deleteMessage`,
+  `stream`, `startTyping` y recuperaciones de historial
 - un adaptador de estado para deduplicación, bloqueos, colas y persistencia
 
 OpenClaw debe tomar prestado el vocabulario, no copiar la superficie.
@@ -89,7 +90,7 @@ Lo que OpenClaw necesita más allá de ese modelo:
   de herramientas, aprobaciones, directivas de medios, respuestas silenciosas e historial de
   menciones grupales.
 
-Las promesas de estilo `thread.post()` no son suficientes para OpenClaw. Ocultan el
+Las promesas estilo `thread.post()` no son suficientes para OpenClaw. Ocultan el
 límite de la transacción que decide si un envío es recuperable.
 
 ## Modelo central
@@ -106,13 +107,13 @@ core.messages.live(...)
 core.messages.state(...)
 ```
 
-`receive` posee el ciclo de vida entrante.
+`receive` posee el ciclo de vida de entrada.
 
-`send` posee el ciclo de vida saliente.
+`send` posee el ciclo de vida de salida.
 
-`live` posee el estado de vista previa, edición, progreso y flujo.
+`live` posee el estado de vista previa, edición, progreso y transmisión.
 
-`state` posee el almacenamiento de intención duradera, recibos, idempotencia, recuperación, bloqueos y
+`state` posee el almacenamiento de intenciones duraderas, recibos, idempotencia, recuperación, bloqueos y
 deduplicación.
 
 ## Términos de mensaje
@@ -209,9 +210,9 @@ type MessageOrigin =
 Core posee el significado de la salida originada por OpenClaw. Los canales poseen cómo ese
 origen se codifica en su transporte.
 
-El primer uso requerido es la salida de fallo de la puerta de enlace. Los humanos aún deben ver
-mensajes como "El agente falló antes de responder" o "Falta la clave API", pero la salida operativa
-taggeada como de OpenClaw no debe aceptarse como entrada creada por el bot en salas
+El primer uso requerido es la salida de fallo de puerta de enlace. Los humanos aún deben ver
+mensajes como "Agente falló antes de la respuesta" o "Clave de API faltante", pero la salida
+operativa etiquetada de OpenClaw no debe aceptarse como entrada creada por el bot en salas
 compartidas cuando `allowBots` está habilitado.
 
 ### Recibo
@@ -297,7 +298,8 @@ El reconocimiento (ack) no es una sola cosa. El contrato de recepción debe mant
 - **Reconocimiento de registro de entrada:** confirma que OpenClaw guardó suficientes metadatos de entrada para deduplicar y enrutar una reentrega.
 - **Recibo visible para el usuario:** comportamiento opcional de lectura/estado/escritura; nunca es un límite de durabilidad.
 
-`ReceiveAckPolicy` controla solo el reconocimiento de transporte o de sondeo. No debe reutilizarse para recibos de lectura o reacciones de estado.
+`ReceiveAckPolicy` controla solo el reconocimiento de transporte o sondeo. No
+debe reutilizarse para recibos de lectura o reacciones de estado.
 
 Antes de la autorización del bot, la recepción debe aplicar la política de eco compartida de OpenClaw cuando el canal puede decodificar los metadatos de origen del mensaje:
 
@@ -307,7 +309,9 @@ function shouldDropOpenClawEcho(params: { origin?: MessageOrigin; isBotAuthor: b
 }
 ```
 
-Esta eliminación se basa en etiquetas, no en texto. Un mensaje de sala creado por un bot con el mismo texto de falla de puerta de enlace visible pero sin metadatos de origen de OpenClaw todavía pasa por la autorización normal de `allowBots`.
+Esta exclusión se basa en etiquetas, no en texto. Un mensaje de sala creado por el bot con el
+mismo texto visible de fallo de puerta de enlace pero sin metadatos de origen de OpenClaw aún
+pasa a través de la autorización normal `allowBots`.
 
 La política de reconocimiento es explícita:
 
@@ -315,7 +319,7 @@ La política de reconocimiento es explícita:
 type ReceiveAckPolicy = { kind: "immediate"; reason: "webhook-timeout" | "platform-contract" } | { kind: "after-record" } | { kind: "after-durable-send" } | { kind: "manual" };
 ```
 
-El sondeo de Telegram ahora utiliza la política de reconocimiento de contexto de recepción para su marca de agua de reinicio persistida. El rastreador todavía observa las actualizaciones de grammY a medida que entran en la cadena de middleware, pero OpenClaw solo guarda el id de actualización completada segura después de un envío exitoso, dejando las actualizaciones fallidas o pendientes más bajas reproducibles después de un reinicio. El desplazamiento de obtención `getUpdates` aguas arriba de Telegram todavía está controlado por la biblioteca de sondeo, por lo que el corte más profundo restante es una fuente de sondeo completamente duradera si necesitamos reentrega a nivel de plataforma más allá de la marca de agua de reinicio de OpenClaw. Las plataformas de webhook pueden necesitar un reconocimiento HTTP inmediato, pero todavía necesitan deduplicación de entrada e intenciones de envío de salida duraderas porque los webhooks pueden reentregar.
+El sondeo de Telegram ahora utiliza la política de acuse de recibo del contexto de recepción para su marca de agua de reinicio persistente. El rastreador aún observa las actualizaciones de grammY a medida que entran en la cadena de middleware, pero OpenClaw solo persiste el ID de actualización completada de forma segura después de un envío exitoso, dejando las actualizaciones fallidas o pendientes más bajas reproducibles después de un reinicio. El desplazamiento de obtención `getUpdates` ascendente de Telegram aún está controlado por la biblioteca de sondeo, por lo que el corte profundo restante es una fuente de sondeo totalmente duradera si necesitamos una reentrega a nivel de plataforma más allá de la marca de agua de reinicio de OpenClaw. Las plataformas de webhook pueden necesitar un acuse de recibo HTTP inmediato, pero aún necesitan deduplicación de entrada e intenciones de envío de salida duraderas porque los webhooks pueden reentregar.
 
 ## Contexto de envío
 
@@ -374,7 +378,7 @@ begin durable intent
 
 La intención debe existir antes de la E/S de transporte. Un reinicio después de comenzar pero antes de confirmar es recuperable.
 
-El límite peligroso es después del éxito de la plataforma y antes de la confirmación del recibo. Si un proceso muere allí, OpenClaw no puede saber si existe el mensaje de la plataforma a menos que el adaptador proporcione idempotencia nativa o una ruta de reconciliación de recibos. Esos intentos deben reanudarse en `unknown_after_send`, no repetirse a ciegas. Los canales sin reconciliación pueden elegir la repetición al menos una vez solo si los mensajes visibles duplicados son un compromiso aceptable y documentado para ese canal y relación. El puente de reconciliación actual del SDK requiere que el adaptador declare `reconcileUnknownSend`, luego le pide a `durableFinal.reconcileUnknownSend` que clasifique una entrada desconocida como `sent`, `not_sent`, o `unresolved`; solo `not_sent` permite la repetición, y las entradas sin resolver permanecen terminales o solo reintentan la verificación de reconciliación.
+El límite peligroso es después del éxito de la plataforma y antes de la confirmación del recibo. Si un proceso muere allí, OpenClaw no puede saber si el mensaje de la plataforma existe a menos que el adaptador proporcione idempotencia nativa o una ruta de conciliación de recibos. Esos intentos deben reanudarse en `unknown_after_send`, no repetir ciegamente. Los canales sin conciliación pueden optar por la repetición al menos una vez solo si los mensajes visibles duplicados son un compromiso aceptable y documentado para ese canal y relación. El puente de conciliación del SDK actual requiere que el adaptador declare `reconcileUnknownSend`, luego le pide a `durableFinal.reconcileUnknownSend` que clasifique una entrada desconocida como `sent`, `not_sent` o `unresolved`; solo `not_sent` permite la repetición, y las entradas no resueltas permanecen terminales o solo reintentan la verificación de conciliación.
 
 La política de durabilidad debe ser explícita:
 
@@ -382,11 +386,11 @@ La política de durabilidad debe ser explícita:
 type MessageDurabilityPolicy = "required" | "best_effort" | "disabled";
 ```
 
-`required` significa que el núcleo debe fallar cerrado cuando no puede escribir la intención duradera. `best_effort` puede continuar cuando la persistencia no está disponible. `disabled` mantiene el comportamiento de envío directo antiguo. Durante la migración, los envoltorios heredados y los asistentes de compatibilidad pública predeterminan a `disabled`; no deben inferir `required` del hecho de que un canal tiene un adaptador de salida genérico.
+`required` significa que el núcleo debe fallar cerrado cuando no puede escribir la intención duradera. `best_effort` puede continuar cuando la persistencia no está disponible. `disabled` mantiene el comportamiento de envío directo antiguo. Durante la migración, los envoltorios heredados y los asistentes de compatibilidad pública tienen como valor predeterminado `disabled`; no deben inferir `required` del hecho de que un canal tiene un adaptador de salida genérico.
 
 Los contextos de envío también poseen efectos posteriores al envío locales del canal. Una migración no es segura si la entrega duradera omite el comportamiento local que se adjuntó anteriormente a la ruta de envío directo del canal. Los ejemplos incluyen cachés de supresión de eco propio, marcadores de participación en hilos, anclajes de edición nativos, renderizado de firma de modelo y protecciones contra duplicados específicas de la plataforma. Esos efectos deben moverse al adaptador de envío, al adaptador de renderizado o a un enlace de contexto de envío con nombre antes de que ese canal pueda habilitar la entrega final genérica duradera.
 
-Los asistentes de envío deben devolver recibos de vuelta a su llamador. Los envoltorios duraderos no pueden tragarse los ids de los mensajes ni reemplazar un resultado de entrega del canal con `undefined`; los despachadores almacenados en búfer utilizan esos ids para anclajes de hilos, ediciones posteriores, finalización de vistas previas y supresión de duplicados.
+Los asistentes de envío deben devolver recibos directamente a su llamador. Los envoltorios duraderos no pueden tragarse los IDs de mensaje ni reemplazar un resultado de entrega de canal con `undefined`; los despachadores en búfer usan esos IDs como anclas de hilo, ediciones posteriores, finalización de vista previa y supresión de duplicados.
 
 Los envíos de reserva operan en lotes, no en cargas individuales. Las reescrituras de respuestas silenciosas, la reserva de medios, la reserva de tarjetas y la proyección de fragmentos pueden producir más de un mensaje entregable, por lo que un contexto de envío debe entregar todo el lote proyectado o documentar explícitamente por qué solo una carga es válida.
 
@@ -405,7 +409,7 @@ type RenderedMessageUnit = {
 };
 ```
 
-Cuando dicha reserva es duradera, todo el lote proyectado debe estar representado por una intención de envío duradera u otro plan de lote atómico. Registrar cada carga una por una no es suficiente: un fallo entre cargas puede dejar una reserva parcialmente visible sin un registro duradero para las cargas restantes. La recuperación debe saber qué unidades ya tienen recibos y reproducir solo las unidades faltantes o marcar el lote `unknown_after_send` hasta que el adaptador lo concilie.
+Cuando tal reserva es duradera, todo el lote proyectado debe estar representado por una intención de envío duradera u otro plan de lote atómico. Grabar cada carga útil uno por uno no es suficiente: un fallo entre cargas útiles puede dejar una reserva parcial visible sin ningún registro duradero para las cargas útiles restantes. La recuperación debe saber qué unidades ya tienen recibos y ya sea reproducir solo las unidades faltantes o marcar el lote como `unknown_after_send` hasta que el adaptador lo concilie.
 
 ## Contexto en vivo
 
@@ -448,7 +452,7 @@ Esto debería cubrir el comportamiento actual:
 El objetivo público del SDK debe ser una subruta:
 
 ```typescript
-import { defineChannelMessageAdapter } from "openclaw/plugin-sdk/channel-message";
+import { defineChannelMessageAdapter } from "openclaw/plugin-sdk/channel-outbound";
 ```
 
 Forma del objetivo:
@@ -489,7 +493,7 @@ type MessageReceiveAdapter<TRaw = unknown> = {
 };
 ```
 
-Antes de la autorización previa al vuelo, el núcleo debe ejecutar el predicado de eco compartido de OpenClaw siempre que `origin.decode` devuelva metadatos de origen OpenClaw. El adaptador de recepción proporciona datos de la plataforma, como el autor del bot y la forma de la sala; el núcleo posee la decisión de descarte y el ordenamiento para que los canales no reimplementen filtros de texto.
+Antes de la autorización de preflight, el núcleo debe ejecutar el predicado de eco OpenClaw compartido siempre que `origin.decode` devuelva metadatos de origen OpenClaw. El adaptador de recepción proporciona hechos de la plataforma como el autor del bot y la forma de la sala; el núcleo posee la decisión y el orden de descarte para que los canales no reimplementen filtros de texto.
 
 Adaptador de origen:
 
@@ -500,7 +504,7 @@ type MessageOriginAdapter<TRaw = unknown, TNative = unknown> = {
 };
 ```
 
-Core establece `MessageOrigin`. Los canales solo lo traducen a y desde metadatos de transporte nativos. Slack asigna esto a `chat.postMessage({ metadata })` e `message.metadata` entrante; Matrix puede asignarlo a contenido de evento adicional; los canales sin metadatos nativos pueden usar un registro de recibos/saliente cuando esa sea la mejor aproximación disponible.
+El núcleo establece `MessageOrigin`. Los canales solo lo traducen hacia y desde los metadatos de transporte nativos. Slack asigna esto a `chat.postMessage({ metadata })` y `message.metadata` entrante; Matrix puede asignarlo a contenido de evento extra; los canales sin metadatos nativos pueden usar un registro de recibos/saliente cuando esa sea la mejor aproximación disponible.
 
 Capacidades:
 
@@ -547,22 +551,22 @@ La nueva superficie pública debe absorber o dejar obsoletas estas áreas concep
 
 Las subrutas de compatibilidad pueden permanecer como contenedores, pero los nuevos complementos de terceros no deberían necesitarlos.
 
-Los complementos integrados pueden mantener importaciones internas de ayudantes a través de subrutas de tiempo de ejecución reservadas durante la migración. La documentación pública debe guiar a los autores de complementos hacia `plugin-sdk/channel-message` una vez que exista.
+Los complementos agrupados pueden mantener importaciones de asistentes internos a través de subrutas de tiempo de ejecución reservadas durante la migración. La documentación pública debería guiar a los autores de complementos hacia `plugin-sdk/channel-outbound` una vez que exista.
 
-## Relación con el turno del canal
+## Relación con la entrada del canal
 
-`runtime.channel.turn.*` debe mantenerse durante la migración.
+`runtime.channel.inbound.*` es el puente de tiempo de ejecución durante la migración.
 
 Debe convertirse en un adaptador de compatibilidad:
 
 ```text
-channel.turn.run
+channel.inbound.run
   -> messages.receive context
   -> session dispatch
   -> messages.send context for visible output
 ```
 
-`channel.turn.runPrepared` también debe permanecer inicialmente:
+`channel.inbound.runPreparedReply` también debe permanecer inicialmente:
 
 ```text
 channel-owned dispatcher
@@ -571,7 +575,7 @@ channel-owned dispatcher
   -> messages.send for final delivery
 ```
 
-Después de que se conecten todos los complementos integrados y las rutas de compatibilidad de terceros conocidas, `channel.turn` puede dejarse obsoleto. No debe eliminarse hasta que exista una ruta de migración del SDK publicada y pruebas de contrato que demuestren que los complementos antiguos aún funcionan o fallan con un error de versión claro.
+Se eliminó la antigua superficie de tiempo de ejecución `channel.turn`. Los llamadores en tiempo de ejecución usan `channel.inbound.*`; la documentación del canal y las subrutas del SDK usan sustantivos de mensaje entrante/message.
 
 ## Salvaguardas de compatibilidad
 
@@ -579,30 +583,20 @@ Durante la migración, la entrega duradera genérica es opcional para cualquier 
 
 Los puntos de entrada heredados no son duraderos de forma predeterminada:
 
-- `channel.turn.run` y `dispatchAssembledChannelTurn` usan la devolución de llamada de entrega del canal a menos que ese canal proporcione explícitamente un objeto de política/opciones duradero auditado.
-- `channel.turn.runPrepared` permanece propiedad del canal hasta que el despachador preparado llama explícitamente al contexto de envío.
-- Los ayudantes de compatibilidad pública como `recordInboundSessionAndDispatchReply`,
-  `dispatchInboundReplyWithBase` y los ayudantes de MD directo nunca inyectan entrega
-  duradera genérica antes de la devolución de llamada `deliver` o `reply` proporcionada por el llamador.
+- `channel.inbound.run` y `dispatchChannelInboundReply` usan la devolución de llamada de entrega del canal a menos que ese canal proporcione explícitamente un objeto de política/opciones duradera auditada.
+- `channel.inbound.runPreparedReply` permanece propiedad del canal hasta que el despachador preparado llama explícitamente al contexto de envío.
+- Los ayudantes de compatibilidad pública, como `recordInboundSessionAndDispatchReply`, `dispatchInboundReplyWithBase` y los ayudantes de MD directo, nunca inyectan una entrega genérica duradera antes de la devolución de llamada `deliver` o `reply` proporcionada por el llamador.
 
-Para los tipos de puente de migración, `durable: undefined` significa "no duradero". La
-ruta duradera se habilita solo mediante un valor de política/opciones explícito. `durable:
-  false` puede permanecer como una ortografía de compatibilidad, pero la implementación no debe
-requerir que cada canal no migrado lo agregue.
+Para los tipos de puente de migración, `durable: undefined` significa "no duradero". La ruta duradera se habilita solo mediante un valor explícito de política/opciones. `durable: false` puede permanecer como una ortografía de compatibilidad, pero la implementación no debe exigir que cada canal no migrado lo agregue.
 
 El código de puente actual debe mantener explícita la decisión de durabilidad:
 
-- La entrega final duradera devuelve un estado discriminado. `handled_visible` y
-  `handled_no_send` son terminales; `unsupported` y `not_applicable` pueden recurrir
-  a la entrega propiedad del canal; `failed` propaga el error de envío.
+- La entrega final duradera devuelve un estado discriminado. `handled_visible` y `handled_no_send` son terminales; `unsupported` y `not_applicable` pueden recurrir a la entrega propiedad del canal; `failed` propaga el error de envío.
 - La entrega final duradera genérica está limitada por las capacidades del adaptador, como la
   entrega silenciosa, la preservación del objetivo de respuesta, la preservación de citas nativas y los
   enlaces de envío de mensajes. La falta de paridad debe elegir la entrega propiedad del canal,
   no un envío genérico que cambie el comportamiento visible para el usuario.
-- Los envíos duraderos respaldados por cola exponen una referencia de intención de entrega. Los campos de
-  sesión `pendingFinalDelivery*` existentes pueden transportar el id de intención durante la
-  transición; el estado final es un almacén `MessageSendIntent` en lugar de texto de
-  respuesta congelado más campos de contexto ad hoc.
+- Los envíos duraderos respaldados por cola exponen una referencia de intención de entrega. Los campos de sesión `pendingFinalDelivery*` existentes pueden transportar el ID de intención durante la transición; el estado final es un almacén `MessageSendIntent` en lugar de texto de respuesta congelado más campos de contexto ad hoc.
 
 No habilite la ruta duradera genérica para un canal hasta que todos estos sean
 verdaderos:
@@ -640,16 +634,8 @@ Riesgos de migración concretos a preservar:
   enviados, limpieza de carga/estado, o destinos solo de devolución de llamada.
   Permanecen en la entrega propiedad del canal hasta que esos semánticos sean
   representados por el adaptador de envío y verificados por pruebas.
-- Los ayudantes de DM directo pueden tener una devolución de llamada de respuesta
-  que es el único objetivo de transporte correcto. El saliente genérico no debe
-  suponer a partir de `OriginatingTo` o `To` y omitir
-  esa devolución de llamada.
-- El resultado de falla de la puerta de enlace de OpenClaw debe permanecer visible
-  para los humanos, pero los ecos de sala creados por el bot etiquetados deben
-  descartarse antes de la autorización `allowBots`.
-  Los canales no deben implementar esto con filtros de prefijo de texto visible
-  excepto como una breve medida de emergencia; el contrato duradero son metadatos
-  de origen estructurados.
+- Los ayudantes de MD directo pueden tener una devolución de llamada de respuesta que es el único destino de transporte correcto. El genérico de salida no debe deducir de `OriginatingTo` o `To` y omitir esa devolución de llamada.
+- El resultado de falla de la puerta de enlace OpenClaw debe permanecer visible para los humanos, pero los ecos de sala creados por bots etiquetados deben descartarse antes de la autorización `allowBots`. Los canales no deben implementar esto con filtros de prefijo de texto visible, excepto como una solución de emergencia breve; el contrato duradero es metadatos de origen estructurados.
 
 ## Almacenamiento interno
 
@@ -702,49 +688,45 @@ type DeliveryFailureKind = "transient" | "rate_limit" | "auth" | "permission" | 
 Política principal:
 
 - Reintentar `transient` y `rate_limit`.
-- No reintentar `invalid_payload` a menos que exista una reserva de renderizado.
-- No reintentar `auth` ni `permission` hasta que cambie la configuración.
-- Para `not_found`, permitir que la finalización en vivo vuelva de la edición a un envío nuevo cuando el canal declare que es seguro.
-- Para `conflict`, usar las reglas de recibos/idempotencia para decidir si el mensaje ya existe.
-- Cualquier error después de que el adaptador podría haber completado la E/S de la plataforma pero antes de la confirmación del recibo se convierte en `unknown_after_send` a menos que el adaptador pueda probar que la operación de la plataforma no ocurrió.
+- No reintentar `invalid_payload` a menos que exista un respaldo de renderizado.
+- No reintentar `auth` o `permission` hasta que cambie la configuración.
+- Para `not_found`, permitir que la finalización en vivo pase de edición a envío nuevo cuando el canal declare que es seguro.
+- Para `conflict`, usar reglas de recepción/idempotencia para decidir si el mensaje ya existe.
+- Cualquier error después de que el adaptador pueda haber completado la E/S de la plataforma pero antes de la confirmación del recibo se convierte en `unknown_after_send` a menos que el adaptador pueda probar que la operación de la plataforma no ocurrió.
 
 ## Asignación de canal
 
-| Canal           | Migración de objetivo                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
-| --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Telegram        | Política de confirmación de recepción más envíos finales duraderos. El adaptador en vivo gestiona el envío más la edición de la vista previa, el envío final de la vista previa obsoleta, los temas, la omisión de la vista previa de respuesta-cita, la alternativa de medios y el manejo de reintentos posteriores.                                                                                                                                                                                     |
-| Discord         | El adaptador de envío envuelve la entrega duradera de carga útil existente. El adaptador en vivo gestiona la edición del borrador, el borrador de progreso, la cancelación de la vista previa de medios/error, la preservación del objetivo de respuesta y los recibos de ID de mensaje. Auditar los ecos de fallos de puerta de enlace creados por bots en salas compartidas; usar un registro de salida u otro equivalente nativo si Discord no puede llevar metadatos de origen en mensajes normales.  |
-| Slack           | El adaptador de envío maneja las publicaciones de chat normales. El adaptador en vivo elige la transmisión nativa cuando la forma del hilo lo soporta, de lo contrario, vista previa de borrador. Los recibos preservan las marcas de tiempo de los hilos. El adaptador de origen mapea los fallos de puerta de enlace de OpenClaw a Slack `chat.postMessage.metadata` y elimina los ecos de salas de bots etiquetados antes de la autorización `allowBots`.                                              |
-| WhatsApp        | El adaptador de envío gestiona el envío de texto/medios con intenciones finales duraderas. El adaptador de recepción maneja la mención del grupo y la identidad del remitente. En vivo puede permanecer ausente hasta que WhatsApp tenga un transporte editable.                                                                                                                                                                                                                                          |
-| Matrix          | El adaptador en vivo gestiona las ediciones de eventos de borrador, la finalización, la redacción, las restricciones de medios cifrados y la alternativa de discordancia del objetivo de respuesta. El adaptador de recepción gestiona la hidratación y deduplicación de eventos cifrados. El adaptador de origen debe codificar el origen del fallo de puerta de enlace de OpenClaw en el contenido del evento de Matrix y eliminar los ecos de salas de bots configurados antes del manejo `allowBots`. |
-| Mattermost      | El adaptador en vivo gestiona una publicación de borrador, el plegado de progreso/herramientas, la finalización en su lugar y la alternativa de envío nuevo.                                                                                                                                                                                                                                                                                                                                              |
-| Microsoft Teams | El adaptador en vivo posee el comportamiento nativo de progreso y flujo de bloques. El adaptador de envío posee las actividades y los recibos de archivos adjuntos/tarjetas.                                                                                                                                                                                                                                                                                                                              |
-| Feishu          | El adaptador de renderizado posee la representación de texto/tarjeta/sin formato. El adaptador en vivo posee las tarjetas de transmisión y la supresión final duplicada. El adaptador de envío posee los comentarios, las sesiones de temas, los medios y la supresión de voz.                                                                                                                                                                                                                            |
-| QQ Bot          | El adaptador en vivo posee la transmisión C2C, el tiempo de espera del acumulador y el envío final de reserva. El adaptador de renderizado posee las etiquetas de medios y el texto como voz.                                                                                                                                                                                                                                                                                                             |
-| Signal          | Adaptador de recepción más envío simple. Sin adaptador en vivo a menos que signal-cli agregue soporte de edición confiable.                                                                                                                                                                                                                                                                                                                                                                               |
-| iMessage        | Adaptador de recepción más envío simple. El envío de iMessage debe conservar la población del caché de eco del monitor antes de que los finales duraderos puedan omitir la entrega del monitor.                                                                                                                                                                                                                                                                                                           |
-| Google Chat     | Adaptador de recepción más envío simple con la relación de hilo asignada a espacios e IDs de hilo. Auditar el comportamiento de la sala `allowBots=true` para los ecos de falla de la puerta de enlace de OpenClaw etiquetados.                                                                                                                                                                                                                                                                           |
-| LINE            | Adaptador de recepción más envío simple con las restricciones del token de respuesta modeladas como capacidad de destino/relación.                                                                                                                                                                                                                                                                                                                                                                        |
-| Nextcloud Talk  | Puente de recepción del SDK más adaptador de envío.                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| IRC             | Adaptador de recepción más envío simple, sin recibos de edición duraderos.                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| Nostr           | Adaptador de recepción y envío para MD cifrados; los recibos son IDs de eventos.                                                                                                                                                                                                                                                                                                                                                                                                                          |
-| Canal de QA     | Adaptador de prueba de contrato para el comportamiento de recepción, envío, en vivo, reintento y recuperación.                                                                                                                                                                                                                                                                                                                                                                                            |
-| Synology Chat   | Adaptador de recepción más envío simple.                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| Tlon            | El adaptador de envío debe conservar la representación de la firma del modelo y el seguimiento de hilos participados antes de que se habilite la entrega final duradera genérica.                                                                                                                                                                                                                                                                                                                         |
-| Twitch          | Adaptador de recepción más envío simple con clasificación de límite de tasa.                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| Zalo            | Adaptador de recepción más envío simple.                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| Zalo Personal   | Adaptador de recepción más envío simple.                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| Canal           | Migración de objetivo                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Telegram        | Política de confirmación de recepción más envíos finales duraderos. El adaptador en vivo gestiona el envío más la edición de la vista previa, el envío final de la vista previa obsoleta, los temas, la omisión de la vista previa de respuesta-cita, la alternativa de medios y el manejo de reintentos posteriores.                                                                                                                                                                                      |
+| Discord         | El adaptador de envío envuelve la entrega duradera de carga útil existente. El adaptador en vivo gestiona la edición del borrador, el borrador de progreso, la cancelación de la vista previa de medios/error, la preservación del objetivo de respuesta y los recibos de ID de mensaje. Auditar los ecos de fallos de puerta de enlace creados por bots en salas compartidas; usar un registro de salida u otro equivalente nativo si Discord no puede llevar metadatos de origen en mensajes normales.   |
+| Slack           | El adaptador de envío maneja las publicaciones de chat normales. El adaptador en vivo elige el flujo nativo cuando la forma del hilo lo admite, de lo contrario, la vista previa del borrador. Los recibos preservan las marcas de tiempo de los hilos. El adaptador de origen mapea los fallos de la puerta de enlace de OpenClaw a `chat.postMessage.metadata` de Slack y descarta los ecos de salas de bots etiquetados antes de la autorización `allowBots`.                                           |
+| WhatsApp        | El adaptador de envío gestiona el envío de texto/medios con intenciones finales duraderas. El adaptador de recepción maneja la mención del grupo y la identidad del remitente. En vivo puede permanecer ausente hasta que WhatsApp tenga un transporte editable.                                                                                                                                                                                                                                           |
+| Matrix          | El adaptador en vivo es propietario de las ediciones de eventos de borrador, finalización, redacción, restricciones de medios cifrados y respaldo de desajuste de destino de respuesta. El adaptador de recepción es propietario de la hidratación y deduplicación de eventos cifrados. El adaptador de origen debe codificar el origen del fallo de la puerta de enlace de OpenClaw en el contenido del evento de Matrix y descartar los ecos de salas de bots configurados antes del manejo `allowBots`. |
+| Mattermost      | El adaptador en vivo gestiona una publicación de borrador, el plegado de progreso/herramientas, la finalización en su lugar y la alternativa de envío nuevo.                                                                                                                                                                                                                                                                                                                                               |
+| Microsoft Teams | El adaptador en vivo posee el comportamiento nativo de progreso y flujo de bloques. El adaptador de envío posee las actividades y los recibos de archivos adjuntos/tarjetas.                                                                                                                                                                                                                                                                                                                               |
+| Feishu          | El adaptador de renderizado posee la representación de texto/tarjeta/sin formato. El adaptador en vivo posee las tarjetas de transmisión y la supresión final duplicada. El adaptador de envío posee los comentarios, las sesiones de temas, los medios y la supresión de voz.                                                                                                                                                                                                                             |
+| QQ Bot          | El adaptador en vivo posee la transmisión C2C, el tiempo de espera del acumulador y el envío final de reserva. El adaptador de renderizado posee las etiquetas de medios y el texto como voz.                                                                                                                                                                                                                                                                                                              |
+| Signal          | Adaptador de recepción más envío simple. Sin adaptador en vivo a menos que signal-cli agregue soporte de edición confiable.                                                                                                                                                                                                                                                                                                                                                                                |
+| iMessage        | Adaptador de recepción más envío simple. El envío de iMessage debe conservar la población del caché de eco del monitor antes de que los finales duraderos puedan omitir la entrega del monitor.                                                                                                                                                                                                                                                                                                            |
+| Google Chat     | Adaptador de recepción simple más envío con la relación de hilo asignada a espacios e ids de hilo. Auditar el comportamiento de la sala `allowBots=true` para los ecos de fallos de la puerta de enlace de OpenClaw etiquetados.                                                                                                                                                                                                                                                                           |
+| LINE            | Adaptador de recepción más envío simple con las restricciones del token de respuesta modeladas como capacidad de destino/relación.                                                                                                                                                                                                                                                                                                                                                                         |
+| Nextcloud Talk  | Puente de recepción del SDK más adaptador de envío.                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| IRC             | Adaptador de recepción más envío simple, sin recibos de edición duraderos.                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| Nostr           | Adaptador de recepción y envío para MD cifrados; los recibos son IDs de eventos.                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| Canal de QA     | Adaptador de prueba de contrato para el comportamiento de recepción, envío, en vivo, reintento y recuperación.                                                                                                                                                                                                                                                                                                                                                                                             |
+| Synology Chat   | Adaptador de recepción más envío simple.                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| Tlon            | El adaptador de envío debe conservar la representación de la firma del modelo y el seguimiento de hilos participados antes de que se habilite la entrega final duradera genérica.                                                                                                                                                                                                                                                                                                                          |
+| Twitch          | Adaptador de recepción más envío simple con clasificación de límite de tasa.                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| Zalo            | Adaptador de recepción más envío simple.                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| Zalo Personal   | Adaptador de recepción más envío simple.                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
 
 ## Plan de migración
 
 ### Fase 1: Dominio de mensaje interno
 
-- Agregar tipos `src/channels/message/*` para mensajes, destinos, relaciones,
-  orígenes, recibos, capacidades, intenciones duraderas, contexto de recepción, contexto de envío,
-  contexto en vivo y clases de falla.
-- Agregar `origin?: MessageOrigin` al tipo de carga útil del puente de migración utilizado por
-  la entrega de respuesta actual, luego mover ese campo a `ChannelMessage` y tipos de mensaje renderizados
-  a medida que la refactorización reemplaza las cargas útiles de respuesta.
+- Añadir tipos `src/channels/message/*` para mensajes, objetivos, relaciones, orígenes, recibos, capacidades, intenciones duraderas, contexto de recepción, contexto de envío, contexto en vivo y clases de fallo.
+- Añadir `origin?: MessageOrigin` al tipo de carga útil del puente de migración utilizado por la entrega de respuesta actual, luego mover ese campo a `ChannelMessage` y tipos de mensaje renderizados a medida que la refactorización reemplaza las cargas útiles de respuesta.
 - Mantener esto interno hasta que los adaptadores y las pruebas confirmen la forma.
 - Agregar pruebas unitarias puras para transiciones de estado y serialización.
 
@@ -754,29 +736,26 @@ Política principal:
 - Permitir que una intención de envío durable lleve una matriz de payload proyectada o un plan por lotes, no solo un payload de respuesta.
 - Conservar el comportamiento actual de recuperación de la cola a través de una conversión de compatibilidad.
 - Hacer que `deliverOutboundPayloads` llame a `messages.send`.
-- Establecer la durabilidad del envío final como predeterminada y fallar de forma cerrada cuando la intención durable no se pueda escribir en el nuevo ciclo de vida del mensaje, después de que el adaptador declare la seguridad de repetición. Las rutas de compatibilidad existentes de turnos de canal y SDK siguen siendo de envío directo de forma predeterminada durante esta fase.
+- Establezca la durabilidad del envío final como predeterminada y falle cerrado cuando la intención duradera no se pueda escribir en el nuevo ciclo de vida del mensaje, después de que el adaptador declare la seguridad de reproducción. Las rutas de compatibilidad existentes del ejecutor de entrada y del SDK siguen siendo de envío directo de forma predeterminada durante esta fase.
 - Registrar los recibos de manera consistente.
 - Devolver los recibos y los resultados de entrega al llamador original del despachador en lugar de tratar el envío durable como un efecto secundario terminal.
 - Persistir el origen del mensaje a través de intenciones de envío duraderas para que la recuperación, la repetición y los envíos fragmentados preserven la procedencia operativa de OpenClaw.
 
-### Fase 3: Puente de Turno de Canal
+### Fase 3: Puente de entrada del canal (Channel Inbound Bridge)
 
-- Reimplementar `channel.turn.run` y `dispatchAssembledChannelTurn` sobre `messages.receive` y `messages.send`.
+- Reimplemente `channel.inbound.run` y `dispatchChannelInboundReply` sobre `messages.receive` y `messages.send`.
 - Mantener los tipos de hechos actuales estables.
 - Mantener el comportamiento heredado de forma predeterminada. Un canal de turnos ensamblados se vuelve durable solo cuando su adaptador opta explícitamente con una política de durabilidad segura para repetición.
-- Mantener `durable: false` como una escotilla de escape de compatibilidad para las rutas que finalizan ediciones nativas y aún no pueden repetirse de forma segura, pero no confiar en los marcadores `false` para proteger los canales no migrados.
+- Mantenga `durable: false` como una escotilla de escape de compatibilidad para las rutas que finalicen ediciones nativas y aún no puedan reproducirse de forma segura, pero no se base en los marcadores `false` para proteger los canales no migrados.
 - Establecer la durabilidad de turnos ensamblados de forma predeterminada solo en el nuevo ciclo de vida del mensaje, después de que la asignación de canal demuestre que la ruta de envío genérica preserva la semántica de entrega del canal antiguo.
 
 ### Fase 4: Puente de Despachador Preparado
 
-- Reemplazar `deliverDurableInboundReplyPayload` con un puente de contexto de envío.
+- Reemplace `deliverDurableInboundReplyPayload` con un puente de contexto de envío.
 - Mantener el asistente antiguo como un contenedor.
 - Portar Telegram, WhatsApp, Slack, Signal, iMessage y Discord primero porque ya tienen trabajo final durable o rutas de envío más simples.
 - Tratar cada despachador preparado como no cubierto hasta que acepte explícitamente el contexto de envío. La documentación y las entradas del registro de cambios deben decir "turnos de canal ensamblados" o nombrar las rutas de canal migradas en lugar de reclamar todas las respuestas finales automáticas.
-- Mantenga `recordInboundSessionAndDispatchReply`, los asistentes de DM directa y otros
-  asistentes públicos de compatibilidad preservando el comportamiento. Pueden exponer una
-  opción explícita de contexto de envío más adelante, pero no deben intentar automáticamente la entrega duradera
-  genérica antes de la devolución de llamada de entrega propiedad del llamador.
+- Mantenga `recordInboundSessionAndDispatchReply`, los ayudantes de MD directo y similares ayudantes de compatibilidad pública preservando el comportamiento. Pueden exponer una opción explícita de contexto de envío más adelante, pero no deben intentar automáticamente la entrega durabilidad genérica antes de la devolución de llamada de entrega propiedad del llamador.
 
 ### Fase 5: Ciclo de vida unificado en vivo
 
@@ -789,19 +768,18 @@ Política principal:
 
 ### Fase 6: SDK público
 
-- Agregue `openclaw/plugin-sdk/channel-message`.
+- Agregue `openclaw/plugin-sdk/channel-outbound`.
 - Documentarlo como la API preferida del complemento de canal.
 - Actualice las exportaciones de paquetes, el inventario de puntos de entrada, las líneas base de API generadas y
   la documentación del SDK de complementos.
-- Incluya `MessageOrigin`, los enlaces de codificación/descodificación de origen y el predicado compartido
-  `shouldDropOpenClawEcho` en la superficie del SDK de mensajes del canal.
+- Incluya `MessageOrigin`, los ganchos de codificación/descodificación de origen y el predicado compartido `shouldDropOpenClawEcho` en la superficie del SDK de salida del canal.
 - Mantenga los envoltorios de compatibilidad para las antiguas subrutas.
 - Marque los asistentes del SDK nombrados como respuesta como obsoletos en la documentación después de que los complementos incluidos sean
   migrados.
 
 ### Fase 7: Todos los remitentes
 
-Mueva todos los productores salientes que no sean de respuesta a `messages.send`:
+Mueva todos los productores de salida que no sean de respuesta a `messages.send`:
 
 - notificaciones de cron y latido
 - finalizaciones de tareas
@@ -815,9 +793,9 @@ Mueva todos los productores salientes que no sean de respuesta a `messages.send`
 Aquí es donde el modelo deja de ser "respuestas del agente" y se convierte en "OpenClaw envía
 mensajes".
 
-### Fase 8: Deprecar Turn
+### Fase 8: Eliminar la compatibilidad con nombres de turno (Turn-Named Compatibility)
 
-- Mantenga `channel.turn` como un envoltorio durante al menos una ventana de compatibilidad.
+- Mantenga los contenedores de entrada/nombrados por mensaje como la ventana de compatibilidad.
 - Publique notas de migración.
 - Ejecute pruebas de compatibilidad del SDK de complementos contra importaciones antiguas.
 - Elimine u oculte los asistentes internos antiguos solo después de que ningún complemento incluido los necesite
@@ -830,19 +808,18 @@ Pruebas unitarias:
 - Serialización y recuperación de la intención de envío duradera.
 - Reutilización de clave de idempotencia y supresión de duplicados.
 - Confirmación de recibo y omisión de repetición.
-- Recuperación de `unknown_after_send` que reconcilia antes de repetir cuando un adaptador
-  admite la conciliación.
+- Recuperación `unknown_after_send` que reconcilia antes de la reproducción cuando un adaptador admite la conciliación.
 - Política de clasificación de fallos.
 - Secuenciación de la política de acuse de recibo de recepción.
 - Mapeo de relaciones para envíos de respuesta, seguimiento, sistema y difusión.
-- Factoría de orígenes de fallo de puerta de enlace y predicado `shouldDropOpenClawEcho`.
+- Fábrica de origen de falla de puerta de enlace y predicado `shouldDropOpenClawEcho`.
 - Preservación del origen a través de la normalización de la carga útil, fragmentación, serialización de la cola duradera y recuperación.
 
 Pruebas de integración:
 
-- `channel.turn.run` adaptador simple todavía registra y envía.
+- El adaptador simple `channel.inbound.run` aún registra y envía.
 - La entrega de eventos ensamblados heredados no es duradera a menos que el canal lo active explícitamente.
-- `channel.turn.runPrepared` puente todavía registra y finaliza.
+- El puente `channel.inbound.runPreparedReply` aún registra y finaliza.
 - Los asistentes de compatibilidad pública llaman a las devoluciones de llamada de entrega propiedad del llamador por defecto y no realizan un envío genérico antes de esas devoluciones de llamada.
 - La entrega alternativa duradera reproduce toda la matriz de cargas útiles proyectadas después del reinicio y no puede dejar las cargas útiles posteriores sin registrar después de un bloqueo temprano.
 - La entrega duradera de eventos ensamblados devuelve los IDs de los mensajes de la plataforma al despachador almacenado en búfer.
@@ -865,11 +842,11 @@ Pruebas de canal:
 - Los envíos finales duraderos de iMessage completan el caché de eco de mensajes enviados del monitor.
 - Las rutas de entrega heredadas de LINE, Zalo y Nostr no se omiten mediante el envío genérico duradero hasta que existan sus pruebas de paridad de adaptador.
 - La entrega mediante devolución de llamada de Direct-DM/Nostr sigue siendo autoritativa a menos que se migre explícitamente a un destino de mensaje completo y un adaptador de envío seguro contra retransmisiones.
-- Los mensajes de error de puerta de enlace de OpenClaw etiquetados en Slack permanecen visibles en la salida, los ecos de salas de bot etiquetados se eliminan antes de `allowBots` y los mensajes de bot sin etiquetar con el mismo texto visible siguen la autorización de bot normal.
+- Los mensajes de falla de puerta de enlace de OpenClaw etiquetados en Slack permanecen visibles en la salida, los ecos de salas de bot etiquetados se eliminan antes de `allowBots`, y los mensajes de bot sin etiqueta con el mismo texto visible aún siguen la autorización normal del bot.
 - La alternativa de transmisión nativa de Slack a la vista previa de borrador en MD de nivel superior.
 - Finalización de la vista previa de Matrix y alternativa de redacción.
-- Los ecos de sala de error de puerta de enlace de OpenClaw etiquetados en Matrix desde cuentas de bot configuradas se eliminan antes del manejo de `allowBots`.
-- Las auditorías de cascada de errores de puerta de enlace de sala compartida de Discord y Google Chat cubren los modos `allowBots` antes de reclamar protección genérica allí.
+- Los ecos de sala de falla de puerta de enlace de OpenClaw etiquetados en Matrix desde cuentas de bot configuradas se eliminan antes del manejo de `allowBots`.
+- Las auditorías de la cascada de fallos de la puerta de enlace de la sala compartida de Discord y Google Chat cubren los modos `allowBots` antes de reclamar una protección genérica allí.
 - Finalización de borrador de Mattermost y alternativa de envío nuevo.
 - Finalización del progreso nativo de Teams.
 - Supresión final de duplicados de Feishu.
@@ -880,16 +857,16 @@ Pruebas de canal:
 Validación:
 
 - Archivos Vitest específicos durante el desarrollo.
-- `pnpm check:changed` en Testbox para toda la superficie cambiada.
-- `pnpm check` más amplio en Testbox antes de implementar la refactorización completa o después de cambios en el SDK público/exportaciones.
+- `pnpm check:changed` en Testbox para toda la superficie modificada.
+- `pnpm check` más amplia en Testbox antes de consolidar la refactorización completa o después de los cambios en el SDK público/exportación.
 - Prueba de humo en vivo o en canal qa para al menos un canal con capacidad de edición y un canal simple de solo envío antes de eliminar los envoltorios de compatibilidad.
 
 ## Preguntas abiertas
 
 - Si Telegram debería eventualmente reemplazar la fuente del ejecutor grammY con una fuente de sondeo completamente duradera que pueda controlar la reentrega a nivel de plataforma, no solo la marca de agua de reinicio persistente de OpenClaw.
 - Si el estado de vista previa en vivo duradero debe almacenarse en el mismo registro de cola que la intención de envío final o en un almacén de estado en vivo hermano.
-- Cuánto tiempo se mantienen documentados los envoltorios de compatibilidad después del lanzamiento de `plugin-sdk/channel-message`.
-- Si los complementos de terceros deben implementar adaptadores de recepción directamente o solo proporcionar enlaces de normalización/envío/en vivo a través de `defineChannelMessageAdapter`.
+- Cuánto tiempo permanecerán documentados los envoltorios de compatibilidad después del lanzamiento de `plugin-sdk/channel-outbound`.
+- Si los complementos de terceros deben implementar adaptadores de recepción directamente o solo proporcionar ganchos de normalización/envío/en vivo a través de `defineChannelMessageAdapter`.
 - Qué campos de recibo es seguro exponer en el SDK público frente al estado
   interno del tiempo de ejecución.
 - Si los efectos secundarios, como las cachés de eco propio y los marcadores de
@@ -901,13 +878,10 @@ Validación:
 
 ## Criterios de aceptación
 
-- Cada canal de mensajes incluido envía la salida visible final a través de
-  `messages.send`.
-- Cada canal de mensajes entrantes entra a través de `messages.receive` o un
-  contenedor de compatibilidad documentado.
-- Cada canal de vista previa/edición/transmisión utiliza `messages.live` para el estado del borrador y
-  la finalización.
-- `channel.turn` es solo un contenedor.
+- Cada canal de mensajes incluido envía la salida visible final a través de `messages.send`.
+- Cada canal de mensajes entrantes entra a través de `messages.receive` o un envoltorio de compatibilidad documentado.
+- Cada canal de vista previa/edición/transmisión usa `messages.live` para el estado de borrador y la finalización.
+- `channel.inbound` es solo un envoltorio.
 - Los auxiliares del SDK con nombre de respuesta son exportaciones de compatibilidad, no la ruta recomendada.
 - La recuperación duradera puede reproducir envíos finales pendientes después de un reinicio sin perder
   la respuesta final ni duplicar los envíos ya confirmados; los envíos cuyo
@@ -915,8 +889,7 @@ Validación:
   al menos una vez para ese adaptador.
 - Los envíos finales duraderos fallan de forma cerrada cuando no se puede escribir la intención
   duradera, a menos que la persona que llama seleccione explícitamente un modo no duradero documentado.
-- Los auxiliares de compatibilidad de turnos de canal heredados y del SDK tienen como valor predeterminado la entrega
-  directa propiedad del canal; el envío duradero genérico es solo una opción explícita.
+- Los ayudantes de compatibilidad del SDK heredado de forma predeterminada realizan la entrega directa propiedad del canal; el envío genérico duradero es solo una opción explícita (opt-in).
 - Los recibos conservan todos los ids de mensajes de la plataforma para entregas de varias partes y un
   id principal para comodidad de hilos/ediciones.
 - Los contenedores duraderos preservan los efectos secundarios locales del canal antes de reemplazar las devoluciones de llamada de
@@ -938,4 +911,4 @@ Validación:
 - [Transmisión y fragmentación](/es/concepts/streaming)
 - [Borradores de progreso](/es/concepts/progress-drafts)
 - [Política de reintentos](/es/concepts/retry)
-- [Núcleo de turno de canal](/es/plugins/sdk-channel-turn)
+- [API de entrada del canal](/es/plugins/sdk-channel-inbound)

@@ -156,7 +156,9 @@ OpenClaw vacía los sidecars de trayectoria en tiempo de ejecución durante la l
 export OPENCLAW_TRAJECTORY_FLUSH_TIMEOUT_MS=30000
 ```
 
-Esto controla cuándo OpenClaw registra un tiempo de espera de `pi-trajectory-flush` y continúa. No cambia los límites de tamaño de la trayectoria. Para ajustar todos los pasos de limpieza del agente que no pasan un tiempo de espera explícito, configure `OPENCLAW_AGENT_CLEANUP_TIMEOUT_MS`.
+Esto controla cuándo OpenClaw registra un `openclaw-trajectory-flush` tiempo de espera y continúa.
+No cambia los límites de tamaño de la trayectoria. Para ajustar todos los pasos de limpieza del agente
+que no pasan un tiempo de espera explícito, configure `OPENCLAW_AGENT_CLEANUP_TIMEOUT_MS`.
 
 ## Privacidad y límites
 

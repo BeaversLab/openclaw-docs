@@ -1,5 +1,5 @@
 ---
-summary: "添加网络搜索提供商支持。"
+summary: "OpenClawBraveOpenClaw Brave Search 提供商插件，用于网络搜索。"
 read_when:
   - You are installing, configuring, or auditing the brave plugin
 title: "Brave 插件"
@@ -7,7 +7,7 @@ title: "Brave 插件"
 
 # Brave 插件
 
-添加网络搜索提供商支持。
+OpenClaw Brave Search 提供商插件，用于网络搜索。
 
 ## 分发
 

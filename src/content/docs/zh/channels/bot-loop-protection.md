@@ -13,11 +13,7 @@ OpenClaw can accept messages written by other bots on channels that support `all
 When that path is enabled, pair loop protection prevents two bot identities from
 replying to each other indefinitely.
 
-The guard is enforced by the core 渠道-turn kernel. Each supporting 渠道
-maps its own inbound event into generic facts: account or scope, conversation id,
-sender bot id, and receiver bot id. Core then tracks the participant pair in both
-directions, applies a sliding-window budget, and suppresses the pair during a
-cooldown after the budget is exceeded.
+该保护措施由核心入站回复运行器强制执行。每个支持的渠道将其入站事件映射为通用事实：账户或范围、对话ID、发送方机器人ID和接收方机器人ID。核心随后双向跟踪参与者对，应用滑动窗口预算，并在预算超限后的冷却期间抑制该对。
 
 ## Defaults
 

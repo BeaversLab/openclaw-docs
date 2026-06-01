@@ -4,7 +4,7 @@ summary: "Spécification permettant au harnais du serveur d'application Codex in
 read_when:
   - You are wiring context-engine lifecycle behavior into the Codex harness
   - You need lossless-claw or another context-engine plugin to work with codex/* embedded harness sessions
-  - You are comparing embedded PI and Codex app-server context behavior
+  - You are comparing embedded OpenClaw and Codex app-server context behavior
 ---
 
 ## Statut
@@ -13,9 +13,12 @@ Spécification de mise en œuvre de l'ébauche.
 
 ## Objectif
 
-Faire en sorte que le harnais du serveur d'application Codex inclus respecte le même contrat de cycle de vie du moteur de contexte OpenClaw que les tours PI intégrés respectent déjà.
+Faire en sorte que le harnais intégré de l'application serveur Codex respecte le même contrat de cycle de vie du moteur de contexte OpenClaw que les tentatives intégrées OpenClaw respectent déjà.
 
-Une session utilisant `agents.defaults.embeddedHarness.runtime: "codex"` ou un modèle `codex/*` doit toujours permettre au plugin de moteur de contexte sélectionné, tel que `lossless-claw`, de contrôler l'assemblage du contexte, l'ingestion post-tour, la maintenance et la politique de compaction au niveau OpenClaw, dans la limite de ce qu'autorise la frontière du Codex app-server.
+Une session utilisant le provider/model `agentRuntime.id: "codex"` ou un modèle `codex/*`
+devrait toujours permettre au plugin de moteur de contexte sélectionné, tel que
+`lossless-claw`, de contrôler l'assemblage du contexte, l'ingestion post-tour, la maintenance et la
+politique de compactation au niveau OpenClaw, dans la mesure où les limites de l'application serveur Codex le permettent.
 
 ## Non-objectifs
 
@@ -32,7 +35,7 @@ Une session utilisant `agents.defaults.embeddedHarness.runtime: "codex"` ou un m
 La boucle d'exécution intégrée résout le moteur de contexte configuré une fois par exécution avant
 sélectionner un harnais de bas niveau concret :
 
-- `src/agents/pi-embedded-runner/run.ts`
+- `src/agents/embedded-agent-runner/run.ts`
   - initialise les plugins du moteur de contexte
   - appelle `resolveContextEngine(params.config)`
   - passe `contextEngine` et `contextTokenBudget` dans
@@ -40,7 +43,7 @@ sélectionner un harnais de bas niveau concret :
 
 `runEmbeddedAttemptWithBackend(...)` délègue au harnais d'agent sélectionné :
 
-- `src/agents/pi-embedded-runner/run/backend.ts`
+- `src/agents/embedded-agent-runner/run/backend.ts`
 - `src/agents/harness/selection.ts`
 
 Le harnais Codex app-server est enregistré par le plugin Codex groupé :
@@ -49,7 +52,7 @@ Le harnais Codex app-server est enregistré par le plugin Codex groupé :
 - `extensions/codex/harness.ts`
 
 L'implémentation du harnais Codex reçoit le même `EmbeddedRunAttemptParams`
-que les tentatives basées sur PI :
+que les tentatives intégrées OpenClaw :
 
 - `extensions/codex/src/app-server/run-attempt.ts`
 
@@ -57,7 +60,7 @@ Cela signifie que le point d'accroche requis se trouve dans le code contrôlé p
 
 ## Écart actuel
 
-Les tentatives du PE intégré appellent directement le cycle de vie du moteur de contexte :
+Les tentatives intégrées OpenClaw appellent directement le cycle de vie du moteur de contexte :
 
 - amorçage/maintenance avant la tentative
 - assembler avant l'appel au model
@@ -65,11 +68,11 @@ Les tentatives du PE intégré appellent directement le cycle de vie du moteur d
 - maintenance après un tour réussi
 - compactage du context-engine pour les moteurs qui possèdent le compactage
 
-Code PI pertinent :
+Code OpenClaw pertinent :
 
-- `src/agents/pi-embedded-runner/run/attempt.ts`
-- `src/agents/pi-embedded-runner/run/attempt.context-engine-helpers.ts`
-- `src/agents/pi-embedded-runner/context-engine-maintenance.ts`
+- `src/agents/embedded-agent-runner/run/attempt.ts`
+- `src/agents/embedded-agent-runner/run/attempt.context-engine-helpers.ts`
+- `src/agents/embedded-agent-runner/context-engine-maintenance.ts`
 
 Les tentatives du Codex app-server exécutent actuellement des hooks génériques de agent-harness et reflètent la transcription, mais n'appellent pas `params.contextEngine.bootstrap`, `params.contextEngine.assemble`, `params.contextEngine.afterTurn`, `params.contextEngine.ingestBatch`, `params.contextEngine.ingest` ou `params.contextEngine.maintain`.
 
@@ -128,10 +131,10 @@ Pour les moteurs tels que lossless-claw, le contexte assemblé doit être déter
 
 La sélection du harnais reste telle quelle :
 
-- `runtime: "pi"` force PI
+- `runtime: "openclaw"` sélectionne le harnais intégré OpenClaw
 - `runtime: "codex"` sélectionne le harnais Codex enregistré
 - `runtime: "auto"` permet aux harnais de plugins de revendiquer les fournisseurs pris en charge
-- les exécutions `auto` sans correspondance utilisent PI
+- les exécutions `auto` non correspondantes utilisent le harnais intégré OpenClaw
 
 Ce travail modifie ce qui se passe après la sélection du harnais Codex.
 
@@ -139,13 +142,13 @@ Ce travail modifie ce qui se passe après la sélection du harnais Codex.
 
 ### 1. Exporter ou déplacer les assistants de tentative de moteur de contexte réutilisables
 
-Aujourd'hui, les assistants de cycle de vie réutilisables se trouvent sous le runner PI :
+Aujourd'hui, les assistants de cycle de vie réutilisables se trouvent sous le lanceur d'agent intégré :
 
-- `src/agents/pi-embedded-runner/run/attempt.context-engine-helpers.ts`
-- `src/agents/pi-embedded-runner/run/attempt.prompt-helpers.ts`
-- `src/agents/pi-embedded-runner/context-engine-maintenance.ts`
+- `src/agents/embedded-agent-runner/run/attempt.context-engine-helpers.ts`
+- `src/agents/embedded-agent-runner/run/attempt.prompt-helpers.ts`
+- `src/agents/embedded-agent-runner/context-engine-maintenance.ts`
 
-Codex ne devrait pas importer depuis un chemin d'implémentation dont le nom implique PI si nous pouvons l'éviter.
+Codex devrait importer des assistants neutres par rapport au harnais plutôt que d'aller chercher dans les détails d'implémentation du lanceur.
 
 Créez un module neutre par rapport au harnais, par exemple :
 
@@ -160,9 +163,9 @@ Déplacez ou ré-exportez :
 - `buildAfterTurnRuntimeContextFromUsage`
 - un petit wrapper autour de `runContextEngineMaintenance`
 
-Maintenir les imports PI fonctionnels soit en réexportant depuis les anciens fichiers, soit en mettant à jour les sites d'appel PI dans la même PR.
+Mettre à jour les sites d'appel du harnais intégré dans la même PR.
 
-Les noms des helpers neutres ne doivent pas mentionner PI.
+Les noms des assistants neutres ne devraient pas mentionner le harnais intégré.
 
 Noms suggérés :
 
@@ -294,7 +297,10 @@ doit devenir contextuel :
 2. appliquer l'assemblage/projection du moteur de contexte
 3. exécuter `before_prompt_build` avec l'invite/instructions du développeur projetées
 
-Cet ordre permet aux hooks de prompt génériques de voir le même prompt que Codex recevra. Si nous avons besoin d'une stricte parité PI, exécutez l'assemblage du contexte-engine avant la composition des hooks, car PI applique le contexte-engine `systemPromptAddition` au prompt système final après son pipeline de prompt. L'invariant important est que le contexte-engine et les hooks obtiennent tous deux un ordre déterministe et documenté.
+Cet ordre permet aux hooks de prompt génériques de voir le même prompt que Codex recevra. Si
+nous avons besoin d'une parité stricte avec OpenClaw, exécutez l'assemblage du moteur de contexte avant la composition
+des hooks, car le harnais intégré applique le `systemPromptAddition` du moteur de contexte
+au prompt système final après son pipeline de prompt. L'invariant important est que le moteur de contexte et les hooks aient tous deux un ordre déterministe et documenté.
 
 Ordre recommandé pour la première implémentation :
 
@@ -432,7 +438,7 @@ Assurez-vous également que le nettoyage de l'état du moteur de contexte contin
 
 ### 10. Gestion des erreurs
 
-Suivre la sémantique PI :
+Suivre la sémantique intégrée OpenClaw :
 
 - les échecs de l'amorçage (bootstrap) avertissent et continuent
 - les échecs de l'assemblage avertissent et reviennent aux messages/invites de pipeline non assemblés
@@ -486,7 +492,7 @@ Ajouter des tests sous `extensions/codex/src/app-server` :
   de compactage changent.
 - `src/agents/harness/selection.test.ts` ne devrait pas nécessiter de modifications sauf si le comportement
   de la configuration change ; il doit rester stable.
-- Les tests du moteur de contexte PI doivent continuer à réussir sans modification.
+- Les tests de moteur de contexte du harnais intégré doivent continuer à réussir sans modification.
 
 ### Tests d'intégration / en direct
 
@@ -494,7 +500,7 @@ Ajouter ou étendre les tests de fumaison du harnais Codex en direct :
 
 - configure `plugins.slots.contextEngine` to a test engine
 - configure `agents.defaults.model` to a `codex/*` model
-- configure `agents.defaults.embeddedHarness.runtime = "codex"`
+- configurer le provider/model `agentRuntime.id = "codex"`
 - assert test engine observed:
   - bootstrap
   - assemble
@@ -550,7 +556,7 @@ Cela devrait être rétrocompatible :
 
 3. Est-ce que `before_prompt_build` doit s'exécuter avant ou après l'assemblage du moteur de contexte ?
 
-   Recommandation : après la projection du contexte-engine pour Codex, afin que les crochets génériques du harnais voient l'invite/instructions du développeur réelles que Codex recevra. Si la parité PI exige l'inverse, encodez l'ordre choisi dans les tests et documentez-le ici.
+   Recommandation : après la projection du moteur de contexte pour Codex, afin que les points d'ancrage génériques du harnais voient l'invite réelle et les instructions du développeur que Codex recevra. Si la parité du harnais intégré nécessite l'inverse, encodez l'ordre choisi dans les tests et documentez-le ici.
 
 4. Le serveur d'application Codex peut-il accepter une future substitution structurée de contexte/historique ?
 
@@ -566,5 +572,5 @@ Cela devrait être rétrocompatible :
 - Les tours échoués/avortés/abandonnés-yield n'exécutent pas la maintenance de tour.
 - La compactage appartenant au moteur de contexte reste principal pour l'état OpenClaw/du plugin.
 - Le compactage natif Codex reste auditable en tant que comportement natif de Codex.
-- Le comportement existant du moteur de contexte PI est inchangé.
+- Le comportement existant du moteur de contexte pour le harnais intégré reste inchangé.
 - Le comportement existant du harnais Codex est inchangé lorsqu'aucun moteur de contexte non hérité n'est sélectionné ou lorsque l'assemblage échoue.

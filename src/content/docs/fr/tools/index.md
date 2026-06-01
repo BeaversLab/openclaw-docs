@@ -24,7 +24,7 @@ Pour la plupart des agents, commencez par les catégories d'outils intégrés, p
 | Ajouter une nouvelle intégration ou une nouvelle interface d'exécution | [Plugins](#extend-capabilities)                      | [Plugins](/fr/tools/plugin) et [Créer des plugins](/fr/plugins/building-plugins)        |
 | Exécuter du travail plus tard ou en arrière-plan                       | [Automatisation](/fr/automation)                     | [Aperçu de l'automatisation](/fr/automation)                                            |
 | Coordonner plusieurs agents ou harnais                                 | [Sous-agents](/fr/tools/subagents)                   | [Agents ACP](/fr/tools/acp-agents) et [Envoi d'agent](/fr/tools/agent-send)             |
-| Rechercher dans un grand catalogue d'outils PI                         | [Recherche d'outils](/fr/tools/tool-search)          | [Recherche d'outils](/fr/tools/tool-search)                                             |
+| Rechercher dans un vaste catalogue d'outils OpenClaw                   | [Recherche d'outils](/fr/tools/tool-search)          | [Recherche d'outils](/fr/tools/tool-search)                                             |
 
 ## Choisir des outils, des compétences ou des plugins
 
@@ -70,20 +70,20 @@ Pour la plupart des agents, commencez par les catégories d'outils intégrés, p
 
 Le tableau répertorie des outils représentatifs afin que vous puissiez reconnaître la surface. Il ne s'agit pas de la référence complète de la stratégie. Pour les groupes exacts, les valeurs par défaut et la sémantique d'autorisation/refus, consultez [Outils et fournisseurs personnalisés](/fr/gateway/config-tools).
 
-| Catégorie              | Utiliser lorsque l'agent a besoin de...                                                                     | Outils représentatifs                                                | À lire ensuite                                                                    |
-| ---------------------- | ----------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
-| Runtime                | Exécuter des commandes, gérer des processus ou utiliser l'analyse Python prise en charge par un fournisseur | `exec`, `process`, `code_execution`                                  | [Exec](/fr/tools/exec), [Exécution de code](/fr/tools/code-execution)             |
-| Fichiers               | Lire et modifier les fichiers de l'espace de travail                                                        | `read`, `write`, `edit`, `apply_patch`                               | [Appliquer un patch](/fr/tools/apply-patch)                                       |
-| Web                    | Rechercher sur le web, rechercher des publications X ou récupérer le contenu lisible d'une page             | `web_search`, `x_search`, `web_fetch`                                | [Outils Web](/fr/tools/web), [Récupération Web](/fr/tools/web-fetch)              |
-| Navigateur             | Gérer une session de navigateur                                                                             | `browser`                                                            | [Navigateur](/fr/tools/browser)                                                   |
-| Messagerie et channels | Envoyer des réponses ou des actions de channel                                                              | `message`                                                            | [Envoi par l'agent](/fr/tools/agent-send)                                         |
-| Sessions et agents     | Inspecter les sessions, déléguer le travail, orienter une autre exécution ou signaler le statut             | `sessions_*`, `subagents`, `agents_list`, `session_status`           | [Sous-agents](/fr/tools/subagents), [Outil de session](/fr/concepts/session-tool) |
-| Automatisation         | Planifier le travail ou répondre aux événements en arrière-plan                                             | `cron`, `heartbeat_respond`                                          | [Automatisation](/fr/automation)                                                  |
-| Gateway et nœuds       | Inspecter l'état du Gateway ou des appareils cibles jumelés                                                 | `gateway`, `nodes`                                                   | [Configuration du Gateway](/fr/gateway/configuration), [Nœuds](/fr/nodes)         |
-| Médias                 | Analyser, générer ou prononcer des médias                                                                   | `image`, `image_generate`, `music_generate`, `video_generate`, `tts` | [Aperçu des médias](/fr/tools/media-overview)                                     |
-| Grands catalogues PI   | Rechercher et appeler de nombreux outils éligibles sans envoyer chaque schéma au model                      | `tool_search_code`, `tool_search`, `tool_describe`                   | [Recherche d'outils](/fr/tools/tool-search)                                       |
+| Catégorie                  | Utiliser lorsque l'agent a besoin de...                                                                     | Outils représentatifs                                                | À lire ensuite                                                                    |
+| -------------------------- | ----------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| Runtime                    | Exécuter des commandes, gérer des processus ou utiliser l'analyse Python prise en charge par un fournisseur | `exec`, `process`, `code_execution`                                  | [Exec](/fr/tools/exec), [Exécution de code](/fr/tools/code-execution)             |
+| Fichiers                   | Lire et modifier les fichiers de l'espace de travail                                                        | `read`, `write`, `edit`, `apply_patch`                               | [Appliquer un patch](/fr/tools/apply-patch)                                       |
+| Web                        | Rechercher sur le web, rechercher des publications X ou récupérer le contenu lisible d'une page             | `web_search`, `x_search`, `web_fetch`                                | [Outils Web](/fr/tools/web), [Récupération Web](/fr/tools/web-fetch)              |
+| Navigateur                 | Gérer une session de navigateur                                                                             | `browser`                                                            | [Navigateur](/fr/tools/browser)                                                   |
+| Messagerie et channels     | Envoyer des réponses ou des actions de channel                                                              | `message`                                                            | [Envoi par l'agent](/fr/tools/agent-send)                                         |
+| Sessions et agents         | Inspecter les sessions, déléguer le travail, orienter une autre exécution ou signaler le statut             | `sessions_*`, `subagents`, `agents_list`, `session_status`           | [Sous-agents](/fr/tools/subagents), [Outil de session](/fr/concepts/session-tool) |
+| Automatisation             | Planifier le travail ou répondre aux événements en arrière-plan                                             | `cron`, `heartbeat_respond`                                          | [Automatisation](/fr/automation)                                                  |
+| Gateway et nœuds           | Inspecter l'état du Gateway ou des appareils cibles jumelés                                                 | `gateway`, `nodes`                                                   | [Configuration du Gateway](/fr/gateway/configuration), [Nœuds](/fr/nodes)         |
+| Médias                     | Analyser, générer ou prononcer des médias                                                                   | `image`, `image_generate`, `music_generate`, `video_generate`, `tts` | [Aperçu des médias](/fr/tools/media-overview)                                     |
+| Vastes catalogues OpenClaw | Rechercher et appeler de nombreux outils éligibles sans envoyer chaque schéma au model                      | `tool_search_code`, `tool_search`, `tool_describe`                   | [Recherche d'outils](/fr/tools/tool-search)                                       |
 
-<Note>La recherche d'outils est une surface expérimentale d'agent PI. Les exécutions de harnais Codex utilisent le mode de code natif Codex, la recherche d'outils native, les outils dynamiques différés et les appels d'outils imbriqués au lieu de `tools.toolSearch`.</Note>
+<Note>La recherche d'outils est une surface expérimentale d'agent OpenClaw. Les exécutions du harnais Codex utilisent le mode de code natif Codex, la recherche d'outils native, les outils dynamiques différés et les appels d'outils imbriqués au lieu de `tools.toolSearch`.</Note>
 
 ## Outils fournis par des plugins
 
@@ -147,8 +147,8 @@ tour actuel :
    [Plugins](/fr/tools/plugin).
 5. Pour les exécutions déléguées, vérifiez les restrictions par agent dans
    [Restrictions de bac à sable et d'outils par agent](/fr/tools/multi-agent-sandbox-tools).
-6. Pour les catalogues PI volumineux, confirmez si l'exécution utilise une exposition directe des outils ou
-   [Recherche d'outils](/fr/tools/tool-search).
+6. Pour les vastes catalogues OpenClaw, vérifiez si l'exécution utilise une exposition directe des outils ou
+   [la recherche d'outils](/fr/tools/tool-search).
 
 ## Connexes
 
@@ -158,4 +158,4 @@ tour actuel :
 - [Plugins](/fr/tools/plugin) pour l'installation et la gestion des plugins
 - [Plugin SDK](/fr/plugins/sdk-overview) pour la référence de l'auteur de plugin
 - [Skills](/fr/tools/skills) pour l'ordre de chargement, le filtrage et la configuration des compétences
-- [Recherche d'outils](/fr/tools/tool-search) pour la découverte compacte du catalogue d'outils PI
+- [Recherche d'outils](/fr/tools/tool-search) pour la découverte de catalogues d'outils OpenClaw compacts

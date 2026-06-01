@@ -50,7 +50,7 @@ pipeline standard de réponse audio.
           provider: "inworld",
           providers: {
             inworld: {
-              voiceId: "Sarah",
+              speakerVoiceId: "Sarah",
               modelId: "inworld-tts-1.5-max",
             },
           },
@@ -68,13 +68,13 @@ pipeline standard de réponse audio.
 
 ## Options de configuration
 
-| Option        | Chemin                                       | Description                                                                     |
-| ------------- | -------------------------------------------- | ------------------------------------------------------------------------------- |
-| `apiKey`      | `messages.tts.providers.inworld.apiKey`      | Identifiant du tableau de bord en Base64. Se rabat sur `INWORLD_API_KEY`.       |
-| `baseUrl`     | `messages.tts.providers.inworld.baseUrl`     | Remplacer l'URL de base de l'API Inworld (par défaut `https://api.inworld.ai`). |
-| `voiceId`     | `messages.tts.providers.inworld.voiceId`     | Identifiant de voix (par défaut `Sarah`).                                       |
-| `modelId`     | `messages.tts.providers.inworld.modelId`     | ID de modèle TTS (par défaut `inworld-tts-1.5-max`).                            |
-| `temperature` | `messages.tts.providers.inworld.temperature` | Température d'échantillonnage `0..2` (facultatif).                              |
+| Option           | Chemin                                          | Description                                                                     |
+| ---------------- | ----------------------------------------------- | ------------------------------------------------------------------------------- |
+| `apiKey`         | `messages.tts.providers.inworld.apiKey`         | Identifiant du tableau de bord en Base64. Se rabat sur `INWORLD_API_KEY`.       |
+| `baseUrl`        | `messages.tts.providers.inworld.baseUrl`        | Remplacer l'URL de base de l'API Inworld (par défaut `https://api.inworld.ai`). |
+| `speakerVoiceId` | `messages.tts.providers.inworld.speakerVoiceId` | Identifiant de voix (par défaut `Sarah`).                                       |
+| `modelId`        | `messages.tts.providers.inworld.modelId`        | ID de modèle TTS (par défaut `inworld-tts-1.5-max`).                            |
+| `temperature`    | `messages.tts.providers.inworld.temperature`    | Température d'échantillonnage `0..2` (facultatif).                              |
 
 ## Notes
 

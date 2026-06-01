@@ -1,5 +1,5 @@
 ---
-summary: "Harnais de serveur d'application Codex et catalogue de modèles GPT gérés par Codex."
+summary: "OpenClaw Codex app-server harness et plugin de model provider avec un catalogue GPT géré par Codex."
 read_when:
   - You are installing, configuring, or auditing the codex plugin
 title: "Plugin Codex"
@@ -7,7 +7,7 @@ title: "Plugin Codex"
 
 # Plugin Codex
 
-Harnais de serveur d'application Codex et catalogue de modèles GPT gérés par Codex.
+OpenClaw Codex app-server harness et plugin de model provider avec un catalogue GPT géré par Codex.
 
 ## Distribution
 

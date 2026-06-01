@@ -134,7 +134,7 @@ OpenClaw utilise la même `VYDRA_API_KEY` pour ces trois capacités.
   </Accordion>
 
   <Accordion title="Synthèse vocale">
-    Définir Vydra comme le fournisseur vocal :
+    Définir Vydra comme le fournisseur de synthèse vocale :
 
     ```json5
     {
@@ -144,7 +144,7 @@ OpenClaw utilise la même `VYDRA_API_KEY` pour ces trois capacités.
           providers: {
             vydra: {
               apiKey: "${VYDRA_API_KEY}",
-              voiceId: "21m00Tcm4TlvDq8ikWAM",
+              speakerVoiceId: "21m00Tcm4TlvDq8ikWAM",
             },
           },
         },
@@ -157,7 +157,7 @@ OpenClaw utilise la même `VYDRA_API_KEY` pour ces trois capacités.
     - Modèle : `elevenlabs/tts`
     - ID de voix : `21m00Tcm4TlvDq8ikWAM`
 
-    Le plugin fourni expose actuellement une voix par défaut connue pour fonctionner et renvoie des fichiers audio MP3.
+    Le plugin intégré expose actuellement une voix par défaut fiable et renvoie des fichiers audio MP3.
 
   </Accordion>
 </AccordionGroup>

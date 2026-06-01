@@ -67,15 +67,20 @@ las IP de cliente coincidentes pueden aprobarse antes de que aparezcan en esta l
 está deshabilitada de forma predeterminada y nunca se aplica a clientes de operador/navegador o solicitudes
 de actualización.
 
+Aprobar roles de dispositivo de nodo u otros no operadores requiere `operator.admin`.
+`operator.pairing` es suficiente para las aprobaciones de dispositivos operadores solo cuando los
+alcances del operador solicitados se mantienen dentro de los propios alcances del llamador. Vea
+[Operator scopes](/es/gateway/operator-scopes) para las comprobaciones en el momento de la aprobación.
+
 ```
 openclaw devices approve
 openclaw devices approve <requestId>
 openclaw devices approve --latest
 ```
 
-## Paperclip / Aprobación de primera ejecución de `openclaw_gateway`
+## Paperclip / `openclaw_gateway` aprobación de primera ejecución
 
-Cuando un nuevo agente de Paperclip se conecta a través del adaptador `openclaw_gateway` por primera vez, el Gateway puede requerir una aprobación de emparejamiento de dispositivo única antes de que las ejecuciones puedan tener éxito. Si Paperclip informa `openclaw_gateway_pairing_required`, apruebe el dispositivo pendiente y vuelva a intentarlo.
+Cuando un nuevo agente Paperclip se conecta a través del adaptador `openclaw_gateway` por primera vez, la Gateway puede requerir una aprobación de emparejamiento de dispositivo única antes de que las ejecuciones puedan tener éxito. Si Paperclip reporta `openclaw_gateway_pairing_required`, apruebe el dispositivo pendiente y reintente.
 
 Para gateways locales, previsualice la última solicitud pendiente:
 
@@ -85,13 +90,13 @@ openclaw devices approve --latest
 
 La vista previa imprime el comando exacto `openclaw devices approve <requestId>`. Verifique los detalles de la solicitud y luego vuelva a ejecutar ese comando con el ID de la solicitud para aprobarlo.
 
-Para gateways remotos o credenciales explícitas, pase las mismas opciones mientras se obtiene la vista previa y se aprueba:
+Para gateways remotos o credenciales explícitas, pase las mismas opciones mientras previsualiza y aprueba:
 
 ```bash
 openclaw devices approve --latest --url <gateway-ws-url> --token <gateway-token>
 ```
 
-Para evitar volver a aprobar después de los reinicios, mantenga una clave de dispositivo persistente en la configuración del adaptador de Paperclip en lugar de generar una nueva identidad efímera cada vez que se ejecute:
+Para evitar reaprobar después de los reinicios, mantenga una clave de dispositivo persistente en la configuración del adaptador Paperclip en lugar de generar una nueva identidad efímera en cada ejecución:
 
 ```json
 {
@@ -113,34 +118,30 @@ openclaw devices reject <requestId>
 
 ### `openclaw devices rotate --device <id> --role <role> [--scope <scope...>]`
 
-Rotar un token de dispositivo para un rol específico (opcionalmente actualizando los ámbitos).
-El rol de destino ya debe existir en el contrato de emparejamiento aprobado de ese dispositivo;
+Rotar un token de dispositivo para un rol específico (opcionalmente actualizando alcances).
+El rol objetivo ya debe existir en el contrato de emparejamiento aprobado de ese dispositivo;
 la rotación no puede crear un nuevo rol no aprobado.
 Si omite `--scope`, las reconexiones posteriores con el token rotado almacenado reutilizan los
-ámbitos aprobados en caché de ese token. Si pasa valores `--scope` explícitos, esos
-se convierten en el conjunto de ámbitos almacenados para reconexiones futuras con token en caché.
+alcances aprobados en caché de ese token. Si pasa valores explícitos de `--scope`, esos
+se convierten en el conjunto de alcances almacenado para futuras reconexiones con token en caché.
 Los llamadores de dispositivos emparejados que no son administradores solo pueden rotar su **propio** token de dispositivo.
-El conjunto de ámbitos del token de destino debe mantenerse dentro de los ámbitos de operador
-propios de la sesión del llamador; la rotación no puede crear ni conservar un token de operador más amplio del que
+El conjunto de alcances del token objetivo debe mantenerse dentro de los propios alcances de operador
+de la sesión del llamador; la rotación no puede crear ni conservar un token de operador más amplio del que
 el llamador ya tiene.
 
 ```
 openclaw devices rotate --device <deviceId> --role operator --scope operator.read --scope operator.write
 ```
 
-Devuelve los metadatos de rotación como JSON. Si el llamador está rotando su propio token mientras
-está autenticado con ese token de dispositivo, la respuesta también incluye el token de
-reemplazo para que el cliente pueda guardarlo antes de volver a conectarse. Las rotaciones compartidas/de administradores
-no repiten el token de portador (bearer token).
+Devuelve los metadatos de rotación como JSON. Si el autor de la llamada está rotando su propio token mientras está autenticado con ese token de dispositivo, la respuesta también incluye el token de reemplazo para que el cliente pueda guardarlo antes de volver a conectarse. Las rotaciones compartidas/de administrador no repiten el token de portador.
 
 ### `openclaw devices revoke --device <id> --role <role>`
 
-Revocar un token de dispositivo para un rol específico.
+Revoca un token de dispositivo para un rol específico.
 
-Los llamadores de dispositivos emparejados que no son administradores solo pueden revocar su **propio** token de dispositivo.
+Los autores de llamada de dispositivos emparejados que no son administradores solo pueden revocar su **propio** token de dispositivo.
 Revocar el token de algún otro dispositivo requiere `operator.admin`.
-El conjunto de ámbitos del token de destino también debe ajustarse a los propios
-ámbitos de operador de la sesión del llamador; los llamadores con solo permisos de emparejamiento no pueden revocar tokens de operador de administrador/escritura.
+El conjunto de ámbitos del token de destino también debe ajustarse a los ámbitos de operador propios de la sesión del autor de la llamada; los autores de llamada solo de emparejamiento no pueden revocar tokens de operador de administrador/escritura.
 
 ```
 openclaw devices revoke --device <deviceId> --role node
@@ -150,58 +151,59 @@ Devuelve el resultado de la revocación como JSON.
 
 ## Opciones comunes
 
-- `--url <url>`: URL de WebSocket del Gateway (por defecto es `gateway.remote.url` cuando está configurado).
-- `--token <token>`: Token del Gateway (si es necesario).
-- `--password <password>`: Contraseña del Gateway (autenticación por contraseña).
-- `--timeout <ms>`: tiempo de espera de RPC.
-- `--json`: salida JSON (recomendado para scripts).
+- `--url <url>`: URL de WebSocket de Gateway (por defecto es `gateway.remote.url` cuando está configurado).
+- `--token <token>`: Token de Gateway (si es necesario).
+- `--password <password>`: Contraseña de Gateway (autenticación por contraseña).
+- `--timeout <ms>`: Tiempo de espera de RPC.
+- `--json`: Salida JSON (recomendado para secuencias de comandos).
 
-<Warning>Cuando establece `--url`, la CLI no recurre a las credenciales de configuración o del entorno. Pase `--token` o `--password` explícitamente. La falta de credenciales explícitas es un error.</Warning>
+<Warning>Cuando establece `--url`, la CLI no recurre a credenciales de configuración o de entorno. Pase `--token` o `--password` explícitamente. La falta de credenciales explícitas es un error.</Warning>
 
 ## Notas
 
 - La rotación de tokens devuelve un nuevo token (sensible). Trátelo como un secreto.
-- Estos comandos requieren el alcance `operator.pairing` (o `operator.admin`). Algunas
-  aprobaciones también requieren que la persona que llama tenga los alcances del operador que el dispositivo
-  objetivo acuñaría o heredaría; consulte [Alcances del operador](/es/gateway/operator-scopes).
+- Estos comandos requieren el ámbito `operator.pairing` (o `operator.admin`). Algunas
+  aprobaciones también requieren que el autor de la llamada posea los ámbitos de operador que el dispositivo
+  objetivo acuñaría o heredaría. Los roles de dispositivo que no son operadores requieren
+  `operator.admin`; consulte [Ámbitos de operador](/es/gateway/operator-scopes).
 - `gateway.nodes.pairing.autoApproveCidrs` es una política opcional de Gateway para
   el emparejamiento de dispositivos de nodos nuevos únicamente; no cambia la autoridad de aprobación de la CLI.
-- La rotación y revocación de tokens se mantienen dentro del conjunto de roles de emparejamiento aprobados y la
-  línea base de alcance aprobado para ese dispositivo. Una entrada de token en caché aleatoria no
+- La rotación y revocación de tokens se mantienen dentro del conjunto de roles de emparejamiento aprobados y
+  la línea base de ámbito aprobado para ese dispositivo. Una entrada de token en caché extraviada no
   otorga un objetivo de gestión de tokens.
-- Para las sesiones de tokens de dispositivos emparejados, la gestión entre dispositivos es solo para administradores:
-  `remove`, `rotate` y `revoke` son solo para sí mismos a menos que la persona que llamada tenga
+- Para las sesiones de token de dispositivo emparejado, la administración entre dispositivos es exclusiva de administradores:
+  `remove`, `rotate` y `revoke` son exclusivos del propio dispositivo a menos que el autor de la llamada tenga
   `operator.admin`.
-- La mutación de tokens también está contenida en el alcance de la persona que llama: una sesión de solo emparejamiento no puede
-  rotar ni revocar un token que actualmente lleve `operator.admin` o
+- La mutación de tokens también está limitada al ámbito del autor de la llamada: una sesión exclusiva de emparejamiento no puede
+  rotar ni revocar un token que actualmente tenga `operator.admin` o
   `operator.write`.
 - `devices clear` está intencionalmente limitado por `--yes`.
-- Si el alcance de emparejamiento no está disponible en el bucle local (y no se pasa un `--url` explícito), la lista/aprobación puede utilizar una alternativa de emparejamiento local.
-- `devices approve` requiere un ID de solicitud explícito antes de acuñar tokens; omitir `requestId` o pasar `--latest` solo previsualiza la solicitud pendiente más reciente.
+- Si el ámbito de emparejamiento no está disponible en el bucle local (y no se pasa ningún `--url` explícito), listar/aprobar puede usar una alternativa de emparejamiento local.
+- `devices approve` requiere un ID de solicitud explícito antes de crear tokens; omitir `requestId` o pasar `--latest` solo previsualiza la solicitud pendiente más reciente.
 
 ## Lista de verificación para la recuperación de desviación de tokens
 
-Úselo cuando Control UI u otros clientes sigan fallando con `AUTH_TOKEN_MISMATCH`, `AUTH_DEVICE_TOKEN_MISMATCH` o `AUTH_SCOPE_MISMATCH`.
+Use esto cuando la interfaz de usuario de Control u otros clientes sigan fallando con `AUTH_TOKEN_MISMATCH`, `AUTH_DEVICE_TOKEN_MISMATCH` o `AUTH_SCOPE_MISMATCH`.
 
-1. Confirme la fuente del token de puerta de enlace actual:
+1. Confirmar la fuente actual del token de puerta de enlace:
 
 ```bash
 openclaw config get gateway.auth.token
 ```
 
-2. Lista los dispositivos emparejados e identifica el ID del dispositivo afectado:
+2. Listar los dispositivos emparejados e identificar el id del dispositivo afectado:
 
 ```bash
 openclaw devices list
 ```
 
-3. Rotate el token de operador para el dispositivo afectado:
+3. Rotar el token de operador para el dispositivo afectado:
 
 ```bash
 openclaw devices rotate --device <deviceId> --role operator
 ```
 
-4. Si la rotación no es suficiente, elimine el emparejamiento obsoleto y apruebe de nuevo:
+4. Si la rotación no es suficiente, elimine el emparejamiento obsoleto y apruebe nuevamente:
 
 ```bash
 openclaw devices remove <deviceId>
@@ -209,17 +211,17 @@ openclaw devices list
 openclaw devices approve <requestId>
 ```
 
-5. Reintente la conexión del cliente con el token/contraseña compartido actual.
+5. Reintentar la conexión del cliente con el token/contraseña compartido actual.
 
 Notas:
 
-- La precedencia de autenticación de reconexión normal es primero token/contraseña compartido explícito, luego `deviceToken` explícito, luego token de dispositivo almacenado, luego token de arranque.
-- La recuperación de `AUTH_TOKEN_MISMATCH` de confianza puede enviar temporalmente tanto el token compartido como el token de dispositivo almacenado juntos para el único reintento limitado.
-- `AUTH_SCOPE_MISMATCH` significa que el token del dispositivo fue reconocido pero no lleva el conjunto de alcance solicitado; corrija el contrato de aprobación de emparejamiento/alcance antes de cambiar la autenticación de la puerta de enlace compartida.
+- La precedencia de autenticación de reconexión normal es primero el token/contraseña compartido explícito, luego `deviceToken` explícito, luego el token de dispositivo almacenado y finalmente el token de arranque.
+- La recuperación confiable de `AUTH_TOKEN_MISMATCH` puede enviar temporalmente tanto el token compartido como el token de dispositivo almacenado juntos para el único reintento limitado.
+- `AUTH_SCOPE_MISMATCH` significa que el token del dispositivo fue reconocido pero no lleva el conjunto de ámbitos solicitado; corrija el contrato de aprobación de emparejamiento/ámbito antes de cambiar la autenticación compartida de la puerta de enlace.
 
 Relacionado:
 
-- [Solución de problemas de autenticación del Dashboard](/es/web/dashboard#if-you-see-unauthorized-1008)
+- [Solución de problemas de autenticación del panel](/es/web/dashboard#if-you-see-unauthorized-1008)
 - [Solución de problemas de la puerta de enlace](/es/gateway/troubleshooting#dashboard-control-ui-connectivity)
 
 ## Relacionado

@@ -118,31 +118,21 @@ OpenClaw 不應在引入取代方案的同一個版本中
   `api.runtime.config.loadConfig()` / `api.runtime.config.writeConfigFile(...)`
 - 傳統記憶體外掛程式分冊註冊，同時記憶體外掛程式轉移至
   `registerMemoryCapability`
-- 傳統通道 SDK 輔助程式，用於原生訊息架構、提及閘道、
-  進行信封格式設定與核准功能巢狀結構
-- 傳統通道路由金鑰與可比較目標輔助程式別名，同時外掛程式
-  轉移至 `openclaw/plugin-sdk/channel-route`
-- 即將被清單貢獻擁有權取代的啟用提示
-- `setup-api` 執行時後備機制，同時設定描述子轉移至冷
-  `setup.requiresRuntime: false` 元資料
-- 提供者 `discovery` 掛鉤，同時提供者目錄掛鉤轉移至
-  `catalog.run(...)`
-- 通道 `showConfigured` / `showInSetup` 元資料，同時通道套件轉移
-  至 `openclaw.channel.exposure`
-- 傳統執行時原則設定金鑰，同時 doctor 將操作員遷移至
-  `agentRuntime`
-- 產生的隨附通道設定元資料後備機制，同時以登錄優先的
-  `channelConfigs` 元資料落地
-- 持續性外掛程式登錄停用與安裝遷移環境旗標，同時
-  修復流程將操作員遷移至 `openclaw plugins registry --refresh` 與
-  `openclaw doctor --fix`
-- 舊版外掛擁有的 web 搜尋、web 擷取和 x_search 設定路徑，
-  同時 doctor 會將它們遷移至 `plugins.entries.<plugin>.config`
-- 舊版 `plugins.installs` 撰寫的設定和套件外掛載入路徑
-  別名，同時安裝中繼資料會移至狀態管理的外掛總帳
+- 在嵌入提供者遷移至 `api.registerEmbeddingProvider(...)` 和 `contracts.embeddingProviders` 時，傳統的記憶體特定嵌入提供者註冊
+- 用於原生訊息架構、提及閘控、入站信封格式設定及核准功能巢狀結構的傳統通道 SDK 輔助程式
+- 在插件遷移至 `openclaw/plugin-sdk/channel-route` 時的傳統通道路由鍵及可比較目標輔助別名
+- 即將由資訊清單貢獻所有權取代的啟用提示
+- 在設定描述項移至冷 `setup.requiresRuntime: false` 中繼資料時的 `setup-api` 執行時期後援
+- 在提供者目錄掛鉤移至 `catalog.run(...)` 時的提供者 `discovery` 掛鉤
+- 在通道套件移至 `openclaw.channel.exposure` 時的通道 `showConfigured` / `showInSetup` 中繼資料
+- 在 doctor 將操作員遷移至 `agentRuntime` 時的傳統執行時期原則設定金鑰
+- 在登錄優先 `channelConfigs` 中繼資料落地時的產生套件組合通道設定中繼資料後援
+- 在修復流程將操作員遷移至 `openclaw plugins registry --refresh` 和 `openclaw doctor --fix` 時的持續性外掛程式登錄停用及安裝遷移環境旗標
+- 在 doctor 將傳統外掛程式擁有的網路搜尋、網路擷取和 x_search 設定路徑遷移至 `plugins.entries.<plugin>.config` 時
+- 在安裝中繼資料移至狀態管理的外掛程式分類帳時，傳統 `plugins.installs` 撰寫的設定及套件組合外掛程式載入路徑別名
 
-新外掛程式碼應優先採用註冊表中列出及特定遷移指南中提及的取代項目。現有外掛可繼續使用相容性路徑，直到文件、診斷和發行說明公告移除期限為止。
+新的外掛程式碼應優先採用登錄中及特定遷移指南中列出的取代項目。現有外掛程式可繼續使用相容性路徑，直到文件、診斷和版本資訊宣布移除時間窗為止。
 
-## 發行說明
+## 版本資訊
 
-發行說明應包含即將進行的外掛棄用事項，並註明目標日期和遷移文件連結。該警告必須在相容性路徑移至 `removal-pending` 或 `removed` 之前發出。
+版本資訊應包含即將推出的外掛程式淘汰，並附上目標日期和遷移文件的連結。該警告必須在相容性路徑移至 `removal-pending` 或 `removed` 之前發出。

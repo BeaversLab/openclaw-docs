@@ -98,7 +98,7 @@ OpenClaw vuelve a admitir la reutilización de Anthropic Claude CLI. Si ya tiene
 
 ## Intercambio de OAuth (cómo funciona el inicio de sesión)
 
-Los flujos de inicio de sesión interactivo de OpenClaw se implementan en `@earendil-works/pi-ai` y se conectan a los asistentes/comandos.
+Los flujos de inicio de sesión interactivo de OpenClaw se implementan en `openclaw/plugin-sdk/llm` y se conectan a los asistentes/comandos.
 
 ### setup-token de Anthropic
 

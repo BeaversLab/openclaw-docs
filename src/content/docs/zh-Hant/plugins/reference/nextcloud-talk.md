@@ -1,5 +1,5 @@
 ---
-summary: "新增 Nextcloud Talk 頻道介面，用於傳送和接收 OpenClaw 訊息。"
+summary: "OpenClaw Nextcloud Talk 頻道外掛，用於對話。"
 read_when:
   - You are installing, configuring, or auditing the nextcloud-talk plugin
 title: "Nextcloud Talk 外掛程式"
@@ -7,7 +7,7 @@ title: "Nextcloud Talk 外掛程式"
 
 # Nextcloud Talk 外掛程式
 
-新增 Nextcloud Talk 頻道介面，用於傳送和接收 OpenClaw 訊息。
+OpenClaw Nextcloud Talk 頻道外掛，用於對話。
 
 ## 發布
 

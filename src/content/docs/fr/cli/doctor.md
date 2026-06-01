@@ -40,6 +40,7 @@ openclaw doctor
 openclaw doctor --lint
 openclaw doctor --lint --json
 openclaw doctor --lint --severity-min warning
+openclaw doctor --lint --allow-exec
 openclaw doctor --deep
 openclaw doctor --fix
 openclaw doctor --fix --non-interactive
@@ -64,26 +65,28 @@ La sonde ciblée des capacités Discord signale les autorisations effectives de 
 - `--force` : appliquer des réparations agressives, y compris en écrasant la configuration de service personnalisée si nécessaire
 - `--non-interactive` : exécuter sans invites ; uniquement les migrations sûres et les réparations non-service
 - `--generate-gateway-token` : générer et configurer un jeton de passerelle
-- `--deep` : rechercher des services système supplémentaires pour les installations de passerelle et signaler les transferts de redémarrage récents du superviseur Gateway
+- `--allow-exec` : autoriser le docteur à exécuter les exec SecretRefs configurés lors de la vérification des secrets
+- `--deep` : rechercher des services système pour des installations supplémentaires de Gateway et signaler les transferts de redémarrage récents du superviseur Gateway
 - `--lint` : exécuter des contrôles de santé modernisés en mode lecture seule et émettre des résultats de diagnostic
-- `--json` : avec `--lint`, émettre des résultats JSON au lieu d'une sortie pour humains
+- `--json` : avec `--lint`, émettre les résultats au format JSON au lieu d'une sortie humaine
 - `--severity-min <level>` : avec `--lint`, ignorer les résultats inférieurs à `info`, `warning` ou `error`
-- `--skip <id>` : avec `--lint`, ignorer un ID de contrôle ; répéter pour en ignorer plusieurs
-- `--only <id>` : avec `--lint`, n'exécuter qu'un ID de contrôle ; répéter pour exécuter un petit ensemble sélectionné
+- `--skip <id>` : avec `--lint`, ignorer un id de contrôle ; répéter pour en ignorer plusieurs
+- `--only <id>` : avec `--lint`, exécuter uniquement un id de contrôle ; répéter pour exécuter un petit ensemble sélectionné
 
 ## Mode Lint
 
-`openclaw doctor --lint` est la posture d'automatisation en lecture seule pour les vérifications du doctor.
-Elle utilise le chemin de vérification de santé structuré, ne demande rien, et ne répare
-ni ne réécrit la configuration/l'état. Utilisez-la dans l'CI, les scripts de pré-vol et les workflows de révision
-lorsque vous souhaitez des résultats lisibles par machine au lieu de invites de réparation guidées.
-Les options de sortie de Lint telles que `--json`, `--severity-min`, `--only` et `--skip`
-sont uniquement acceptées avec `--lint`.
+`openclaw doctor --lint` est la posture d'automatisation en lecture seule pour les contrôles du docteur.
+Il utilise le chemin de contrôle de santé structuré, ne demande pas de confirmation, et ne répare
+ni ne réécrit la configuration/l'état. Utilisez-le dans l'intégration continue, les scripts pré-vol et les workflows de révision
+lorsque vous souhaitez des résultats lisibles par la machine au lieu d'invites de réparation guidées.
+Les options de sortie Lint telles que `--json`, `--severity-min`, `--only` et `--skip`
+ne sont acceptées qu'avec `--lint`.
 
 ```bash
 openclaw doctor --lint
 openclaw doctor --lint --severity-min warning
 openclaw doctor --lint --json
+openclaw doctor --lint --allow-exec
 openclaw doctor --lint --only core/doctor/gateway-config --json
 ```
 
@@ -95,7 +98,7 @@ doctor --lint: ran 6 check(s), 1 finding(s)
     fix: Run `openclaw configure` and set Gateway mode (local/remote), or `openclaw config set gateway.mode local`.
 ```
 
-La sortie JSON est la surface de scriptage pour les exécutions de lint :
+La sortie JSON est l'interface de script pour les exécutions de lint :
 
 ```json
 {
@@ -116,11 +119,11 @@ La sortie JSON est la surface de scriptage pour les exécutions de lint :
 
 Comportement de sortie :
 
-- `0` : aucun résultat au-dessus ou au seuil de gravité sélectionné
-- `1` : au moins un résultat répond au seuil sélectionné
+- `0` : aucun résultat au-dessus du seuil de gravité sélectionné
+- `1` : au moins un résultat atteint le seuil sélectionné
 - `2` : échec de la commande/exécution avant que les résultats de lint ne puissent être produits
 
-`--severity-min` contrôle à la fois les résultats visibles et le seuil de sortie. Par exemple, `openclaw doctor --lint --severity-min error` peut n'afficher aucun résultat et quitter avec `0` même lorsque des résultats `info` ou `warning` de moindre gravité existent.
+`--severity-min` contrôle à la fois les résultats visibles et le seuil de sortie. Par exemple, `openclaw doctor --lint --severity-min error` peut n'afficher aucun résultat et quitter avec `0` même lorsque des résultats de `info` ou `warning` de moindre gravité existent.
 
 ## Contrôles de santé structurés
 
@@ -131,40 +134,28 @@ detect(ctx, scope?) -> HealthFinding[]
 repair?(ctx, findings) -> HealthRepairResult
 ```
 
-`detect()` alimente `doctor --lint`. `repair()` est facultatif et n'est pris en compte
-que par `doctor --fix` / `doctor --repair`. Les vérifications qui n'ont pas migré vers ce
-format continuent d'utiliser l'ancien flux de contribution doctor.
+`detect()` alimente `doctor --lint`. `repair()` est facultatif et n'est pris en compte que par `doctor --fix` / `doctor --repair`. Les contrôles qui n'ont pas migré vers ce format continuent d'utiliser l'ancien flux de contribution doctor.
 
-La séparation est intentionnelle : `detect()` gère le diagnostic, tandis que `repair()` gère
-le rapport de ce qu'il a modifié ou modifierait. Les contextes de réparation peuvent transporter
-des requêtes `dryRun`/`diff`, et les résultats de réparation peuvent renvoyer des `diffs` structurés pour
-les modifications de config/fichier ainsi que `effects` pour les services, processus, packages, états ou autres
-effets secondaires. Cela permet aux vérifications converties d'évoluer vers `doctor --fix --dry-run`
-et le rapport de différences sans déplacer la planification des mutations dans `detect()`.
+Cette séparation est intentionnelle : `detect()` gère le diagnostic, tandis que `repair()` gère le rapport de ce qu'il a modifié ou modifierait. Les contextes de réparation peuvent porter des requêtes `dryRun`/`diff`, et les résultats de réparation peuvent renvoyer des `diffs` structurés pour les modifications de configuration/fichier, ainsi que des `effects` pour les effets secondaires de service, de processus, de package, d'état ou autres. Cela permet aux contrôles convertis d'évoluer vers `doctor --fix --dry-run` et la création de rapports de différences sans déplacer la planification des mutations dans `detect()`.
 
 `repair()` indique s'il a tenté la réparation demandée avec `status:
-"repaired" | "skipped" | "failed"`. Omitted status means `repaired`, donc les vérifications
-de réparation simples n'ont besoin que de renvoyer les modifications. Lorsque la réparation renvoie `skipped` ou
-`failed`, doctor rapporte la raison et n'exécute pas la validation pour cette vérification.
+"repaired" | "skipped" | "failed"`. Omitted status means `repaired`, de sorte que les contrôles de réparation simples n'ont besoin que de renvoyer les modifications. Lorsque la réparation renvoie `skipped` ou `failed`, doctor signale la raison et n'exécute pas la validation pour ce contrôle.
 
-Après une réparation structurée réussie, doctor relance `detect()` avec
-les résultats réparés comme portée. Les vérifications peuvent utiliser les résultats, chemins ou valeurs `ocPath`
-sélectionnés pour une validation ciblée. Si le résultat est toujours présent, doctor signale un
-avertissement de réparation au lieu de traiter le changement comme terminé silencieusement.
+Après une réparation structurée réussie, doctor réexécute `detect()` avec les résultats réparés comme portée. Les contrôles peuvent utiliser les résultats, les chemins ou les valeurs `ocPath` sélectionnés pour une validation ciblée. Si le résultat est toujours présent, doctor signale un avertissement de réparation au lieu de traiter le changement comme silencieusement terminé.
 
 Un résultat inclut :
 
-| Champ             | Objet                                                                 |
-| ----------------- | --------------------------------------------------------------------- |
-| `checkId`         | ID stable pour les filtres skip/only et les listes d'autorisation CI. |
-| `severity`        | `info`, `warning`, ou `error`.                                        |
-| `message`         | Déclaration du problème lisible par l'homme.                          |
-| `path`            | Chemin de configuration, de fichier ou logique si disponible.         |
-| `line` / `column` | Emplacement source si disponible.                                     |
-| `ocPath`          | Adresse `oc://` précise lorsqu'une vérification peut en pointer une.  |
-| `fixHint`         | Action suggérée pour l'opérateur ou résumé de la réparation.          |
+| Champ             | Objectif                                                                   |
+| ----------------- | -------------------------------------------------------------------------- |
+| `checkId`         | Identifiant stable pour les filtres skip/only et les listes autorisées CI. |
+| `severity`        | `info`, `warning` ou `error`.                                              |
+| `message`         | Déclaration du problème lisible par un humain.                             |
+| `path`            | Chemin de configuration, de fichier ou logique lorsque disponible.         |
+| `line` / `column` | Emplacement de la source lorsque disponible.                               |
+| `ocPath`          | Adresse `oc://` précise lorsqu'une vérification peut en indiquer une.      |
+| `fixHint`         | Action suggérée pour l'opérateur ou résumé de la réparation.               |
 
-Cette version enregistre les vérifications principales du doctor modernisées sur le chemin de santé structuré. Le sous-chemin `openclaw/plugin-sdk/health` expose le même contrat pour les consommateurs de suivi groupés, mais les vérifications soutenues par des plugins ne s'exécutent qu'après que leur package propriétaire les a enregistrées dans le chemin de commande actif.
+Cette version enregistre les vérifications principales modernisées du médecin sur le chemin de santé structuré. Le sous-chemin `openclaw/plugin-sdk/health` expose le même contrat pour les consommateurs de suivi intégrés, mais les vérifications basées sur des plugins ne s'exécutent qu'après l'enregistrement de leur package propriétaire dans le chemin de commande actif.
 
 ## Sélection des vérifications
 
@@ -175,45 +166,46 @@ openclaw doctor --lint --only core/doctor/gateway-config --json
 openclaw doctor --lint --skip core/doctor/skills-readiness
 ```
 
-`--only` et `--skip` acceptent les identifiants complets des vérifications et peuvent être répétés. Si un identifiant `--only` n'est pas enregistré, aucune vérification ne s'exécute pour cet identifiant ; utilisez les champs `checksRun` et `checksSkipped` de la commande pour vérifier qu'une porte ciblée sélectionne bien les vérifications que vous attendez.
+`--only` et `--skip` acceptent les identifiants complets des vérifications et peuvent être répétés. Si un identifiant `--only` n'est pas enregistré, aucune vérification ne s'exécute pour cet identifiant ; utilisez les champs `checksRun` et `checksSkipped` de la commande pour vérifier qu'une porte ciblée sélectionne bien les vérifications attendues.
 
 Notes :
 
-- En mode Nix (`OPENCLAW_NIX_MODE=1`), les vérifications du doctor en lecture seule fonctionnent toujours, mais `doctor --fix`, `doctor --repair`, `doctor --yes` et `doctor --generate-gateway-token` sont désactivés car `openclaw.json` est immuable. Modifiez plutôt la source Nix pour cette installation ; pour nix-openclaw, utilisez le [Quick Start](https://github.com/openclaw/nix-openclaw#quick-start) orienté agent.
+- En mode Nix (`OPENCLAW_NIX_MODE=1`), les vérifications du médecin en lecture seule fonctionnent toujours, mais `doctor --fix`, `doctor --repair`, `doctor --yes` et `doctor --generate-gateway-token` sont désactivés car `openclaw.json` est immuable. Modifiez plutôt la source Nix pour cette installation ; pour nix-openclaw, utilisez le [Quick Start](https://github.com/openclaw/nix-openclaw#quick-start) prioritaire à l'agent.
 - Les invites interactives (comme les correctifs de trousseau de clés/OAuth) ne s'exécutent que lorsque stdin est un TTY et que `--non-interactive` n'est **pas** défini. Les exécutions sans tête (cron, Telegram, sans terminal) ignoreront les invites.
-- Performance : les exécutions `doctor` non interactives ignorent le chargement impatient des plugins afin que les vérifications de santé sans tête restent rapides. Les sessions interactives du doctor chargent toujours les surfaces de plugin nécessaires au flux de santé et de réparation hérité.
-- `--lint` est plus strict que `--non-interactive` : il est toujours en lecture seule, ne demande jamais et n'applique jamais de migrations sûres. Exécutez `doctor --fix` ou `doctor --repair` lorsque vous voulez que le doctor apporte des modifications.
-- `--fix` (alias for `--repair`) écrit une sauvegarde dans `~/.openclaw/openclaw.json.bak` et supprime les clés de configuration inconnues, en listant chaque suppression.
+- Performances : les exécutions non interactives de `doctor` ignorent le chargement impatient des plugins afin que les vérifications de santé sans interface restent rapides. Les sessions interactives du doctor chargent toujours les surfaces de plugin nécessaires pour le flux de santé et de réparation hérité.
+- `--lint` est plus strict que `--non-interactive` : il est toujours en lecture seule, ne demande jamais de confirmation et n'applique jamais de migrations sûres. Exécutez `doctor --fix` ou `doctor --repair` lorsque vous voulez que le doctor apporte des modifications.
+- Par défaut, le doctor n'exécute pas les `exec` SecretRefs lors de la vérification des secrets. Utilisez `openclaw doctor --allow-exec` ou `openclaw doctor --lint --allow-exec` uniquement lorsque vous souhaitez intentionnellement que le doctor exécute ces résolveurs de secrets configurés.
+- `--fix` (alias pour `--repair`) écrit une sauvegarde dans `~/.openclaw/openclaw.json.bak` et supprime les clés de configuration inconnues, en listant chaque suppression.
 - Les vérifications de santé modernisées peuvent exposer un chemin `repair()` pour `doctor --fix` ; les vérifications qui n'en exposent pas continuent via le flux de réparation doctor existant.
-- `doctor --fix --non-interactive` signale les définitions de service de gateway manquantes ou obsolètes mais ne les installe pas ou ne les réécrit pas en dehors du mode de réparation de mise à jour. Exécutez `openclaw gateway install` pour un service manquant, ou `openclaw gateway install --force` lorsque vous souhaitez intentionnellement remplacer le lanceur.
-- Les vérifications d'intégrité de l'état détectent désormais les fichiers de transcription orphelins dans le répertoire des sessions. Les archiver sous forme de `.deleted.<timestamp>` nécessite une confirmation interactive ; les exécutions `--fix`, `--yes` et sans tête les laissent en place.
-- Doctor analyse également `~/.openclaw/cron/jobs.json` (ou `cron.store`) pour les formes de tâches cron héritées et peut les réécrire sur place avant que le planificateur n'ait à les normaliser automatiquement lors de l'exécution.
-- Doctor signale les tâches cron avec des substitutions `payload.model` explicites, y compris les comptes d'espaces de noms de fournisseur et les incohérences avec `agents.defaults.model`, afin que les tâches planifiées qui n'héritent pas du modèle par défaut soient visibles lors des investigations d'authentification ou de facturation.
-- Sur Linux, doctor avertit lorsque la crontab de l'utilisateur exécute encore le `~/.openclaw/bin/ensure-whatsapp.sh` hérité ; ce script n'est plus maintenu et peut enregistrer de fausses pannes de gateway WhatsApp lorsque cron manque de l'environnement de bus utilisateur systemd.
-- Lorsque WhatsApp est activé, doctor vérifie la présence d'une boucle d'événements du Gateway dégradée avec des clients `openclaw-tui` locaux toujours en cours d'exécution. `doctor --fix` n'arrête que les clients TUI locaux vérifiés afin que les réponses WhatsApp ne soient pas mises en file d'attente derrière des boucles de rafraîchissement TUI obsolètes.
-- Doctor réécrit les références de modèle `openai-codex/*` héritées en références `openai/*` canoniques pour les modèles principaux, les replis, les remplacements de heartbeat/subagent/compaction, les hooks, les remplacements de modèle de canal, et les épinglements d'itinéraire de session obsolètes. `--fix` déplace l'intention Codex vers les entrées `agentRuntime.id: "codex"` étendues au fournisseur/au modèle, préserve les épinglements de profil d'authentification de session tels que `openai-codex:...`, supprime les épinglements d'exécution obsolètes de l'agent/session entière, et conserve les références d'agent OpenAI réparées sur le routage d'authentification Codex au lieu de l'authentification directe par clé OpenAI de l'API.
-- Doctor nettoie l'état de mise en zone de préparation des dépendances de plugins hérité créé par d'anciennes versions OpenClaw et relie le package hôte `openclaw` pour les plugins npm gérés qui le déclarent comme dépendance homologue. Il répare également les plugins téléchargeables manquants qui sont référencés par la configuration, tels que `plugins.entries`, les canaux configurés, les paramètres de fournisseur/recherche configurés, ou les runtimes d'agent configurés. Pendant les mises à jour de packages, doctor saute la réparation des plugins de gestionnaire de packages jusqu'à ce que l'échange de packages soit terminé ; relancez `openclaw doctor --fix` par la suite si un plugin configuré a toujours besoin de récupération. Si le téléchargement échoue, doctor signale l'erreur d'installation et conserve l'entrée de plugin configurée pour la prochaine tentative de réparation.
-- Doctor répare la configuration obsolète des plugins en supprimant les ids de plugins manquants de `plugins.allow`/`plugins.deny`/`plugins.entries`, ainsi que la configuration de canal en suspens correspondante, les cibles de heartbeat et les remplacements de modèle de canal lorsque la découverte de plugins est saine.
-- Doctor met en quarantaine la configuration de plugin invalide en désactivant l'entrée `plugins.entries.<id>` affectée et en supprimant sa charge utile `config` invalide. Le démarrage du Gateway ignore déjà uniquement ce mauvais plugin afin que les autres plugins et canaux puissent continuer à fonctionner.
-- Définissez `OPENCLAW_SERVICE_REPAIR_POLICY=external` lorsqu'un autre superviseur possède le cycle de vie de la passerelle. Doctor signale toujours l'état de santé de la passerelle/du service et applique des réparations non liées au service, mais ignore l'installation/le démarrage/le redémarrage/l'amorçage du service et le nettoyage des services hérités.
-- Sur Linux, doctor ignore les unités systemd supplémentaires inactives de type passerelle et ne réécrit pas les métadonnées de commande/point d'entrée pour un service de passerelle systemd en cours d'exécution pendant la réparation. Arrêtez d'abord le service ou utilisez `openclaw gateway install --force` lorsque vous souhaitez intentionnellement remplacer le lanceur actif.
-- Doctor migre automatiquement l'ancienne configuration plate de Talk (`talk.voiceId`, `talk.modelId`, etc.) vers `talk.provider` + `talk.providers.<provider>`.
-- Les exécutions répétées de `doctor --fix` ne signalent plus et n'appliquent plus la normalisation Talk lorsque la seule différence réside dans l'ordre des clés d'objet.
-- Doctor inclut une vérification de disponibilité de la recherche en mémoire et peut recommander `openclaw configure --section model` lorsque les informations d'identification d'intégration sont manquantes.
-- Doctor avertit lorsqu'aucun propriétaire de commande n'est configuré. Le propriétaire de commande est le compte d'opérateur humain autorisé à exécuter des commandes réservées au propriétaire et à approuver des actions dangereuses. Le jumelage DM permet seulement à quelqu'un de parler au bot ; si vous avez approuvé un expéditeur avant l'existence de l'amorçage par le premier propriétaire, définissez `commands.ownerAllowFrom` explicitement.
-- Doctor signale une note d'information lorsque les agents en mode Codex sont configurés et que des ressources personnelles Codex CLI existent dans le répertoire Codex de l'opérateur. Les lancements locaux de serveur d'application Codex utilisent des répertoires isolés par agent, installez donc le plugin Codex au préalable si nécessaire, puis utilisez `openclaw migrate plan codex` pour inventorier les ressources qui doivent être promues délibérément.
-- Doctor supprime les `plugins.entries.codex.config.codexDynamicToolsProfile` retirés ; le serveur d'application Codex garde toujours les outils d'espace de travail natifs Codex natifs.
-- Doctor avertit lorsque les compétences autorisées pour l'agent par défaut ne sont pas disponibles dans l'environnement d'exécution actuel car des exécutables, des variables d'environnement, une configuration ou des exigences OS sont manquants. `doctor --fix` peut désactiver ces compétences indisponibles avec `skills.entries.<skill>.enabled=false` ; installez/configurez plutôt la exigence manquante lorsque vous souhaitez garder la compétence active.
-- Si le mode sandbox est activé mais que Docker n'est pas disponible, doctor signale un avertissement prioritaire avec des actions correctives (`install Docker` ou `openclaw config set agents.defaults.sandbox.mode off`).
-- Si des fichiers de registre sandbox hérités (`~/.openclaw/sandbox/containers.json` ou `~/.openclaw/sandbox/browsers.json`) sont présents, doctor les signale ; `openclaw doctor --fix` migre les entrées valides vers des répertoires de registre partitionnés et met en quarantaine les fichiers hérités non valides.
-- Si `gateway.auth.token`/`gateway.auth.password` sont gérés par SecretRef et indisponibles dans le chemin de commande actuel, doctor signale un avertissement en lecture seule et n'écrit pas d'informations d'identification de repli en clair.
-- Si l'inspection SecretRef du canal échoue dans un chemin de correction, doctor continue et signale un avertissement au lieu de quitter prématurément.
-- Après les migrations de répertoires d'état, doctor avertit lorsque les comptes Telegram ou Discord activés par défaut dépendent du repli de variables d'environnement et que `TELEGRAM_BOT_TOKEN` ou `DISCORD_BOT_TOKEN` est indisponible pour le processus doctor.
-- La résolution automatique du nom d'utilisateur Telegram `allowFrom` (`doctor --fix`) nécessite un jeton Telegram résoluble dans le chemin de commande actuel. Si l'inspection du jeton n'est pas disponible, doctor signale un avertissement et ignore la résolution automatique pour cette passe.
+- `doctor --fix --non-interactive` signale les définitions de service de passerelle manquantes ou obsolètes, mais ne les installe ou ne les réécrit pas en dehors du mode de réparation de mise à jour. Exécutez `openclaw gateway install` pour un service manquant, ou `openclaw gateway install --force` lorsque vous souhaitez intentionnellement remplacer le lanceur.
+- Les vérifications d'intégrité de l'état détectent désormais les fichiers de transcription orphelins dans le répertoire des sessions. Les archiver sous la forme `.deleted.<timestamp>` nécessite une confirmation interactive ; `--fix`, `--yes` et les exécutions sans interface les laissent en place.
+- Le doctor analyse également `~/.openclaw/cron/jobs.json` (ou `cron.store`) pour détecter les formes de tâches cron héritées et peut les réécrire sur place avant que le planificateur n'ait à les normaliser automatiquement lors de l'exécution.
+- Le doctor signale les tâches cron avec des substitutions `payload.model` explicites, y compris les nombres d'espaces de noms du provider et les inadéquations avec `agents.defaults.model`, afin que les tâches planifiées qui n'héritent pas du model par défaut soient visibles lors des investigations d'authentification ou de facturation.
+- Sur Linux, doctor avertit lorsque la crontab de l'utilisateur exécute encore des scripts `~/.openclaw/bin/ensure-whatsapp.sh` hérités ; ce script n'est plus maintenu et peut enregistrer de fausses pannes de la passerelle WhatsApp lorsque cron manque de l'environnement de bus utilisateur systemd.
+- Lorsque WhatsApp est activé, doctor vérifie la présence d'une boucle d'événements dégradée du Gateway avec des clients locaux `openclaw-tui` toujours en cours d'exécution. `doctor --fix` arrête uniquement les clients locaux TUI vérifiés afin que les réponses WhatsApp ne soient pas mises en file d'attente derrière des boucles de rafraîchissement TUI obsolètes.
+- Doctor réécrit les références de modèle `openai-codex/*` héritées en références `openai/*` canoniques pour les modèles principaux, les replis, les priorités de heartbeat/subagent/compaction, les hooks, les priorités de modèle de channel, et les épingles de route de session obsolètes. `--fix` déplace l'intention Codex vers les entrées `agentRuntime.id: "codex"` scope fournisseur/modèle, préserve les épingles de profil d'authentification de session tels que `openai-codex:...`, supprime les épingles d'exécution obsolètes de l'agent entier/session, et conserve les références d'agent OpenAI réparées sur le routage d'authentification Codex au lieu de l'authentification directe par clé OpenAI API.
+- Doctor nettoie l'état de préparation des dépendances de plugins hérités créé par d'anciennes versions de OpenClaw et relie le package hôte `openclaw` pour les plugins gérés npm qui le déclarent comme dépendance homologue. Il répare également les plugins téléchargeables manquants référencés par la configuration, tels que `plugins.entries`, les channels configurés, les paramètres de fournisseur/recherche configurés, ou les runtimes d'agent configurés. Durant les mises à jour de packages, doctor saute la réparation des plugins du gestionnaire de packages jusqu'à ce que l'échange de package soit complet ; relancez `openclaw doctor --fix` ensuite si un plugin configuré a encore besoin de récupération. Si le téléchargement échoue, doctor signale l'erreur d'installation et préserve l'entrée de plugin configurée pour la prochaine tentative de réparation.
+- Doctor répare la configuration obsolète des plugins en supprimant les identifiants de plugins manquants de `plugins.allow`/`plugins.deny`/`plugins.entries`, ainsi que la configuration des canaux orphelins correspondante, les cibles de heartbeat et les remplacements de modèle de canal lorsque la découverte de plugins est saine.
+- Doctor met en quarantaine la configuration invalide des plugins en désactivant l'entrée `plugins.entries.<id>` concernée et en supprimant sa charge utile `config` invalide. Le démarrage du Gateway saute déjà uniquement ce plugin défectueux afin que les autres plugins et canaux puissent continuer à fonctionner.
+- Définissez `OPENCLAW_SERVICE_REPAIR_POLICY=external` lorsqu'un autre superviseur possède le cycle de vie de la passerelle. Doctor signale toujours l'état de santé de la passerelle/service et applique les réparations non liées au service, mais évite l'installation/le démarrage/le redémarrage/le bootstrap du service ainsi que le nettoyage des services hérités.
+- Sur Linux, doctor ignore les unités systemd inactives supplémentaires de type passerelle et ne réécrit pas les métadonnées de commande/point d'entrée pour un service de passerelle systemd en cours d'exécution pendant la réparation. Arrêtez d'abord le service ou utilisez `openclaw gateway install --force` lorsque vous souhaitez intentionnellement remplacer le lanceur actif.
+- Doctor migre automatiquement l'ancienne configuration plate de Talk (`talk.voiceId`, `talk.modelId`, et autres) vers `talk.provider` + `talk.providers.<provider>`.
+- Les exécutions répétées de `doctor --fix` ne signalent plus n'appliquent plus la normalisation Talk lorsque la seule différence est l'ordre des clés d'objet.
+- Doctor inclut une vérification de préparation de la recherche mémoire et peut recommander `openclaw configure --section model` lorsque les identifiants d'intégration sont manquants.
+- Doctor avertit lorsqu'aucun propriétaire de commande n'est configuré. Le propriétaire de commande est le compte d'opérateur humain autorisé à exécuter des commandes réservées au propriétaire et à approuver des actions dangereuses. L'appariement DM permet seulement à quelqu'un de parler au bot ; si vous avez approuvé un expéditeur avant l'existence du bootstrap du premier propriétaire, définissez `commands.ownerAllowFrom` explicitement.
+- Doctor signale une note d'information lorsque les agents en mode Codex sont configurés et que les ressources personnelles du CLI Codex existent dans le répertoire personnel Codex de l'opérateur. Les lancements locaux du serveur d'application Codex utilisent des répertoires personnels isolés par agent, installez donc d'abord le plugin Codex si nécessaire, puis utilisez `openclaw migrate plan codex` pour inventorier les ressources qui doivent être promues délibérément.
+- Doctor supprime les `plugins.entries.codex.config.codexDynamicToolsProfile` retirés ; le serveur d'application Codex garde toujours les outils d'espace de travail natifs de Codex natifs.
+- Doctor avertit lorsque les compétences autorisées pour l'agent par défaut ne sont pas disponibles dans l'environnement d'exécution actuel car des binaires, des variables d'environnement, une configuration ou des exigences OS sont manquants. `doctor --fix` peut désactiver ces compétences indisponibles avec `skills.entries.<skill>.enabled=false` ; installez ou configurez plutôt l'exigence manquante lorsque vous souhaitez garder la compétence active.
+- Si le mode bac à sable est activé mais que Docker est indisponible, Doctor signale un avertissement de haute priorité avec une solution (`install Docker` ou `openclaw config set agents.defaults.sandbox.mode off`).
+- Si les fichiers de registre de bac à sable hérités (`~/.openclaw/sandbox/containers.json` ou `~/.openclaw/sandbox/browsers.json`) sont présents, Doctor les signale ; `openclaw doctor --fix` migre les entrées valides vers des répertoires de registre partitionnés et met en quarantaine les fichiers hérités invalides.
+- Si `gateway.auth.token`/`gateway.auth.password` sont gérés par SecretRef et indisponibles dans le chemin de commande actuel, Doctor signale un avertissement en lecture seule et n'écrit pas d'identifiants de repli en texte clair. Pour les SecretRefs soutenus par exec, Doctor saute l'exécution sauf si `--allow-exec` est présent.
+- Si l'inspection de SecretRef du channel échoue dans un chemin de correction, Doctor continue et signale un avertissement au lieu de quitter prématurément.
+- Après les migrations de répertoires d'état, Doctor avertit lorsque les comptes Telegram ou Discord activés par défaut dépendent d'un replai d'environnement et que `TELEGRAM_BOT_TOKEN` ou `DISCORD_BOT_TOKEN` est indisponible pour le processus Doctor.
+- La résolution automatique du nom d'utilisateur Telegram Telegram`allowFrom` (`doctor --fix`Telegram) nécessite un jeton Telegram résolvable dans le chemin de commande actuel. Si l'inspection du jeton n'est pas disponible, le docteur signale un avertissement et ignore la résolution automatique pour cette passe.
 
-## macOS : Remplacements d'env `launchctl`
+## macOS : macOS`launchctl` remplacements de l'environnement
 
-Si vous avez précédemment exécuté `launchctl setenv OPENCLAW_GATEWAY_TOKEN ...` (ou `...PASSWORD`), cette valeur remplace votre fichier de configuration et peut provoquer des erreurs persistantes « non autorisé ».
+Si vous avez précédemment exécuté `launchctl setenv OPENCLAW_GATEWAY_TOKEN ...` (ou `...PASSWORD`), cette valeur remplace votre fichier de configuration et peut provoquer des erreurs persistantes de type « non autorisé ».
 
 ```bash
 launchctl getenv OPENCLAW_GATEWAY_TOKEN
@@ -225,5 +217,5 @@ launchctl unsetenv OPENCLAW_GATEWAY_PASSWORD
 
 ## Connexes
 
-- [Référence CLI](/fr/cli)
-- [Doctor Gateway](/fr/gateway/doctor)
+- [Référence CLI](CLI/en/cli)
+- [Docteur Gateway](Gateway/en/gateway/doctor)

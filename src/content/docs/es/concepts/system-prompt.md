@@ -6,7 +6,7 @@ read_when:
 title: "System prompt"
 ---
 
-OpenClaw construye un sistema de indicaciones personalizado (system prompt) para cada ejecución del agente. La indicación es de **propiedad de OpenClaw** y no utiliza la indicación predeterminada de pi-coding-agent.
+OpenClaw genera un mensaje del sistema personalizado para cada ejecución del agente. El mensaje es **propiedad de OpenClaw** y no utiliza un mensaje predeterminado en tiempo de ejecución.
 
 La indicación es ensamblada por OpenClaw e inyectada en cada ejecución del agente.
 
@@ -165,53 +165,60 @@ superficie del mensaje que coincida con su vida útil:
 - `MEMORY.md` cuando está presente
 
 En el arnés nativo de Codex, OpenClaw evita repetir archivos estables del espacio de trabajo
-en cada turno del usuario. Codex carga `AGENTS.md` a través de su propio descubrimiento de
-documentos del proyecto. `SOUL.md`, `IDENTITY.md`, `TOOLS.md` y `USER.md` se reenvían como
-instrucciones de desarrollador de Codex. El contenido de `HEARTBEAT.md` no se inyecta; los
-turnos de latido (heartbeat) reciben una nota en modo de colaboración que apunta al archivo cuando existe y no
-está vacío. El contenido de `MEMORY.md` y `BOOTSTRAP.md` activos mantiene por ahora el rol normal
-del contexto del turno.
+durante cada turno del usuario. Codex carga `AGENTS.md` a través de su propio descubrimiento de documentos del proyecto.
+`SOUL.md`, `IDENTITY.md`, `TOOLS.md` y `USER.md` se reenvían como
+instrucciones para desarrolladores de Codex. El contenido de `HEARTBEAT.md` no se inyecta; los turnos de
+latido reciben una nota en modo de colaboración que apunta al archivo cuando existe y no
+está vacío. El contenido de `MEMORY.md` del espacio de trabajo del agente configurado no se pega
+en cada turno nativo de Codex; cuando las herramientas de memoria están disponibles para ese espacio de trabajo,
+los turnos de Codex reciben una pequeña nota sobre la memoria del espacio de trabajo y deben usar `memory_search` o
+`memory_get` cuando la memoria duradera sea relevante. Si las herramientas están desactivadas, la búsqueda de
+memoria no está disponible, o el espacio de trabajo activo difiere del espacio de trabajo de memoria del agente,
+`MEMORY.md` vuelve a la ruta normal de contexto de turno delimitado. El contenido activo de
+`BOOTSTRAP.md` mantiene el rol de contexto de turno normal por ahora.
 
-En arneses que no son Codex, los archivos de arranque siguen componiéndose en el
-mensaje de OpenClaw según sus puertas existentes. `HEARTBEAT.md` se omite en
-las ejecuciones normales cuando los latidos están deshabilitados para el agente predeterminado o
+En arneses que no son Codex, los archivos de arranque continúan componiéndose en el
+mensaje de OpenClaw según sus compuertas existentes. `HEARTBEAT.md` se omite en
+las ejecuciones normales cuando los latidos están desactivados para el agente predeterminado o
 `agents.defaults.heartbeat.includeSystemPromptSection` es falso. Mantenga los archivos inyectados
-concisos, especialmente `MEMORY.md`. `MEMORY.md` está destinado a permanecer como un resumen
-a largo plazo curado; las notas diarias detalladas pertenecen a `memory/*.md`, donde
-`memory_search` y `memory_get` pueden recuperarlas bajo demanda. Los archivos `MEMORY.md`
-demasiado grandes aumentan el uso del mensaje y pueden inyectarse parcialmente debido a
-los límites de archivos de arranque a continuación.
+concisos, especialmente el `MEMORY.md` que no sea de Codex. `MEMORY.md` está destinado a mantenerse
+como un resumen a largo plazo curado; las notas diarias detalladas pertenecen a `memory/*.md` donde
+`memory_search` y `memory_get` pueden recuperarlas bajo demanda. Los archivos
+`MEMORY.md` que no sean de Codex y de tamaño excesivo aumentan el uso del mensaje y pueden inyectarse parcialmente
+debido a los límites de archivos de arranque a continuación.
 
 <Note>
-  Los archivos diarios `memory/*.md` **no** son parte del Contexto del Proyecto de arranque normal. En turnos ordinarios se accede a ellos bajo demanda a través de las herramientas `memory_search` y `memory_get`, por lo que no cuentan contra la ventana de contexto a menos que el modelo los lea explícitamente. Los turnos `/new` y `/reset` simples son la excepción: el tiempo de ejecución puede
-  anteponer la memoria diaria reciente como un bloque de contexto de inicio único para ese primer turno.
+  `memory/*.md` Los archivos diarios **no** son parte del contexto de Proyecto de arranque normal. En turnos ordinarios, se accede a ellos bajo demanda mediante las herramientas `memory_search` y `memory_get`, por lo que no cuentan contra la ventana de contexto a menos que el modelo los lea explícitamente. Los turnos `/new` y `/reset` básicos son la excepción: el tiempo de ejecución puede
+  anteponer la memoria diaria reciente como un bloque de contexto de inicio de uso único para ese primer turno.
 </Note>
 
-Los archivos grandes se truncan con un marcador. El tamaño máximo por archivo está controlado por
+Los archivos grandes se truncan con un marcador. El tamaño máximo por archivo se controla mediante
 `agents.defaults.bootstrapMaxChars` (predeterminado: 12000). El contenido total de arranque inyectado
 entre archivos se limita mediante `agents.defaults.bootstrapTotalMaxChars`
-(predeterminado: 60000). Los archivos faltantes inyectan un marcador corto de archivo faltante. Cuando se produce el truncamiento,
-OpenClaw puede inyectar un aviso conciso de advertencia en el prompt del sistema; controle esto con
+(predeterminado: 60000). Los archivos faltantes inyectan un marcador breve de archivo faltante. Cuando ocurre el truncamiento,
+OpenClaw puede inyectar un aviso conciso de advertencia en el mensaje del sistema; controle esto con
 `agents.defaults.bootstrapPromptTruncationWarning` (`off`, `once`, `always`;
-predeterminado: `always`). Los conteos detallados (sin procesar/inyectados) permanecen en diagnósticos como
+predeterminado: `always`). Los recuentos detallados brutos/inyectados permanecen en diagnósticos como
 `/context`, `/status`, doctor y registros.
 
-Para los archivos de memoria, el truncamiento no es una pérdida de datos: el archivo permanece intacto en el disco,
-pero el modelo solo ve la copia inyectada abreviada hasta que lee o busca
-en la memoria directamente. Si `MEMORY.md` se trunca repetidamente, destílelo en un
-resumen duradero más corto y mueva el historial detallado a `memory/*.md`, o
-aumente intencionalmente los límites de arranque.
+Para los archivos de memoria, el truncamiento no es una pérdida de datos: el archivo permanece intacto en el disco.
+En Codex nativo, `MEMORY.md` se lee bajo demanda a través de herramientas de memoria cuando
+está disponible, con retroceso al mensaje acotado cuando las herramientas no pueden ejecutarse. En otros
+arneses, el modelo solo ve la copia inyectada y acortada hasta que lee o
+busca en la memoria directamente. Si `MEMORY.md` se trunca repetidamente allí, destile
+lo en un resumen duradero más breve y mueva el historial detallado a `memory/*.md`,
+o aumente intencionalmente los límites de arranque.
 
-Las sesiones de sub-agentes solo inyectan `AGENTS.md` y `TOOLS.md` (otros archivos de arranque
-se filtran para mantener el contexto del sub-agente pequeño).
+Las sesiones de subagentes solo inyectan `AGENTS.md` y `TOOLS.md` (otros archivos de arranque
+se filtran para mantener el contexto del subagente pequeño).
 
-Los enlaces internos pueden interceptar este paso a través de `agent:bootstrap` para mutar o reemplazar
+Los enlaces internos pueden interceptar este paso mediante `agent:bootstrap` para modificar o reemplazar
 los archivos de arranque inyectados (por ejemplo, intercambiar `SOUL.md` por una personalidad alternativa).
 
-Si desea que el agente suene menos genérico, comience con la
+Si quieres que el agente suene menos genérico, comienza con
 [Guía de personalidad SOUL.md](/es/concepts/soul).
 
-Para inspeccionar cuánto contribuye cada archivo inyectado (sin procesar frente a inyectado, truncamiento, más sobrecarga del esquema de herramientas), use `/context list` o `/context detail`. Consulte [Contexto](/es/concepts/context).
+Para inspeccionar cuánto contribuye cada archivo inyectado (sin procesar vs inyectado, truncamiento, más la sobrecarga del esquema de herramientas), usa `/context list` o `/context detail`. Consulta [Contexto](/es/concepts/context).
 
 ## Manejo del tiempo
 
@@ -219,32 +226,36 @@ El sistema de instrucciones incluye una sección dedicada de **Fecha y hora actu
 zona horaria del usuario es conocida. Para mantener el caché del sistema estable, ahora solo incluye
 la **zona horaria** (sin reloj dinámico ni formato de hora).
 
-Use `session_status` cuando el agente necesite la hora actual; la tarjeta de estado
-incluye una línea de marca de tiempo. La misma herramienta puede establecer opcionalmente una invalidación del modelo por sesión
-(`model=default` la borra).
+Usa `session_status` cuando el agente necesita la hora actual; la tarjeta de estado
+incluye una línea de marca de tiempo. La misma herramienta opcionalmente puede establecer una
+anulación de modelo por sesión (`model=default` la borra).
 
 Configurar con:
 
 - `agents.defaults.userTimezone`
 - `agents.defaults.timeFormat` (`auto` | `12` | `24`)
 
-Consulte [Fecha y hora](/es/date-time) para obtener detalles completos del comportamiento.
+Consulta [Fecha y hora](/es/date-time) para detalles completos del comportamiento.
 
 ## Habilidades
 
-Cuando existen habilidades elegibles, OpenClaw inyecta una **lista de habilidades disponibles** compacta
-(`formatSkillsForPrompt`) que incluye la **ruta de archivo** para cada habilidad. El
+Cuando existen habilidades elegibles, OpenClaw inyecta una **lista de habilidades disponibles**
+compacta (`formatSkillsForPrompt`) que incluye la **ruta de archivo** para cada habilidad. El
 prompt instruye al modelo a usar `read` para cargar el SKILL.md en la ubicación
-listada (workspace, gestionado o empaquetado). Si no hay habilidades elegibles, la
+listada (espacio de trabajo, gestionada o empaquetada). Si no hay habilidades elegibles, la
 sección de Habilidades se omite.
 
-La elegibilidad incluye puertas de metadatos de habilidades, verificaciones de entorno/configuración en tiempo de ejecución,
+La ubicación puede apuntar a una habilidad anidada, tal como
+`skills/personal/foo/SKILL.md`. El anidamiento es solo organizativo; el prompt todavía
+usa el nombre de habilidad plano del frontmatter `SKILL.md`.
+
+La elegibilidad incluye las puertas de metadatos de habilidades, las comprobaciones de configuración/entorno de ejecución,
 y la lista blanca efectiva de habilidades del agente cuando `agents.defaults.skills` o
 `agents.list[].skills` están configurados.
 
-Las habilidades empaquetadas en complementos solo son elegibles cuando su complemento propietario está habilitado.
-Esto permite que los complementos de herramientas expongan guías de operación más profundas sin incrustar
-toda esa guía directamente en cada descripción de herramienta.
+Las habilidades empaquetadas por complementos son elegibles solo cuando el complemento propietario está habilitado.
+Esto permite que los complementos de herramientas exponguen guías operativas más profundas sin incrustar toda
+esa guía directamente en cada descripción de herramienta.
 
 ```
 <available_skills>
@@ -256,39 +267,26 @@ toda esa guía directamente en cada descripción de herramienta.
 </available_skills>
 ```
 
-Esto mantiene el mensaje base pequeño y al mismo tiempo permite el uso dirigido de habilidades.
+Esto mantiene el prompt base pequeño mientras todavía permite el uso dirigido de habilidades.
 
 El presupuesto de la lista de habilidades es propiedad del subsistema de habilidades:
 
 - Predeterminado global: `skills.limits.maxSkillsPromptChars`
 - Anulación por agente: `agents.list[].skillsLimits.maxSkillsPromptChars`
 
-Los extractos de tiempo de ejecución delimitados genéricos usan una superficie diferente:
+Los extractos de tiempo de ejecución genéricos y delimitados usan una superficie diferente:
 
 - `agents.defaults.contextLimits.*`
 - `agents.list[].contextLimits.*`
 
-Esa división mantiene el tamaño de las habilidades separado del tamaño de lectura/inyección en tiempo de ejecución, tal
-como `memory_get`, resultados en vivo de herramientas y actualizaciones de AGENTS.md después de la compactación.
+Esa división mantiene el tamaño de las habilidades separado del tamaño de lectura/inyección en tiempo de ejecución, como `memory_get`, resultados en vivo de herramientas y actualizaciones de AGENTS.md después de la compactación.
 
 ## Documentación
 
-El prompt del sistema incluye una sección **Documentación**. Cuando hay documentos locales disponibles, apunta
-al directorio de documentos de OpenClaw local (`docs/` en un repositorio Git o los documentos del paquete
-npm incluido). Si los documentos locales no están disponibles, recurre a
-[https://docs.openclaw.ai](https://docs.openclaw.ai).
+El prompt del sistema incluye una sección de **Documentación**. Cuando hay documentación local disponible, apunta al directorio de documentación local de OpenClaw (`docs/` en una copia de trabajo de Git o la documentación del paquete npm incluido). Si la documentación local no está disponible, recurre a [https://docs.openclaw.ai](https://docs.openclaw.ai).
 
-La misma sección también incluye la ubicación de origen de OpenClaw. Las copias de Git exponen la raíz de
-origen local para que el agente pueda inspeccionar el código directamente. Las instalaciones del paquete incluyen la URL de
-origen de GitHub e indican al agente que revise el origen allí siempre que los documentos estén incompletos o
-obsoletos. El prompt también nota el espejo de documentos públicos, el Discord de la comunidad y ClawHub
-([https://clawhub.ai](https://clawhub.ai)) para el descubrimiento de habilidades. Indica al modelo que
-consulte primero los documentos sobre el comportamiento, comandos, configuración o arquitectura de OpenClaw, y que
-ejecute `openclaw status` por sí mismo cuando sea posible (solicitando al usuario solo cuando no tenga acceso).
-Específicamente para la configuración, señala a los agentes a la acción de herramienta `gateway`
-`config.schema.lookup` para obtener documentos y restricciones exactos a nivel de campo, y luego a
-`docs/gateway/configuration.md` y `docs/gateway/configuration-reference.md`
-para obtener orientación más amplia.
+La misma sección también incluye la ubicación de la fuente de OpenClaw. Las copias de trabajo de Git exponen la raíz de la fuente local para que el agente pueda inspeccionar el código directamente. Las instalaciones de paquetes incluyen la URL de la fuente de GitHub e indican al agente que revise la fuente allí siempre que la documentación esté incompleta o obsoleta. El prompt también indica el espejo de la documentación pública, el Discord de la comunidad y ClawHub ([https://clawhub.ai](https://clawhub.ai)) para el descubrimiento de habilidades. Indica al modelo que consulte primero la documentación sobre el comportamiento, comandos, configuración o arquitectura de OpenClaw, y que ejecute `openclaw status` por sí mismo cuando sea posible (preguntando al usuario solo cuando no tenga acceso).
+Específicamente para la configuración, dirige a los agentes a la acción de herramienta `gateway` `config.schema.lookup` para obtener documentación y restricciones exactas a nivel de campo, y luego a `docs/gateway/configuration.md` y `docs/gateway/configuration-reference.md` para obtener una orientación más amplia.
 
 ## Relacionado
 

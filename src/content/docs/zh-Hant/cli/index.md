@@ -27,12 +27,12 @@ title: "CLI 參考資料"
 | 模型與推論         | [`models`](/zh-Hant/cli/models) · [`infer`](/zh-Hant/cli/infer) · `capability` (別名為 [`infer`](/zh-Hant/cli/infer)) · [`memory`](/zh-Hant/cli/memory) · [`commitments`](/zh-Hant/cli/commitments) · [`wiki`](/zh-Hant/cli/wiki)                                                               |
 | 網路與節點         | [`directory`](/zh-Hant/cli/directory) · [`nodes`](/zh-Hant/cli/nodes) · [`devices`](/zh-Hant/cli/devices) · [`node`](/zh-Hant/cli/node)                                                                                                                                               |
 | 執行時期與沙箱     | [`approvals`](/zh-Hant/cli/approvals) · `exec-policy` (see [`approvals`](/zh-Hant/cli/approvals)) · [`sandbox`](/zh-Hant/cli/sandbox) · [`tui`](/zh-Hant/cli/tui) · `chat`/`terminal` (aliases for [`tui --local`](/zh-Hant/cli/tui)) · [`browser`](/zh-Hant/cli/browser)                       |
-| 自動化             | [`cron`](/zh-Hant/cli/cron) · [`tasks`](/zh-Hant/cli/tasks) · [`hooks`](/zh-Hant/cli/hooks) · [`webhooks`](/zh-Hant/cli/webhooks)                                                                                                                                                     |
+| 自動化             | [`cron`](/zh-Hant/cli/cron) · [`tasks`](/zh-Hant/cli/tasks) · [`hooks`](/zh-Hant/cli/hooks) · [`webhooks`](/zh-Hant/cli/webhooks) · [`transcripts`](/zh-Hant/cli/transcripts)                                                                                                              |
 | 探索與文件         | [`dns`](/zh-Hant/cli/dns) · [`docs`](/zh-Hant/cli/docs)                                                                                                                                                                                                                     |
 | 配對與頻道         | [`pairing`](/zh-Hant/cli/pairing) · [`qr`](/zh-Hant/cli/qr) · [`channels`](/zh-Hant/cli/channels)                                                                                                                                                                                |
 | 安全性和外掛程式   | [`security`](/zh-Hant/cli/security) · [`secrets`](/zh-Hant/cli/secrets) · [`skills`](/zh-Hant/cli/skills) · [`plugins`](/zh-Hant/cli/plugins) · [`proxy`](/zh-Hant/cli/proxy)                                                                                                              |
 | 舊版別名           | [`daemon`](/zh-Hant/cli/daemon) (gateway service) · [`clawbot`](/zh-Hant/cli/clawbot) (namespace)                                                                                                                                                                           |
-| 外掛程式（選用）   | [`meeting-notes`](/zh-Hant/cli/meeting-notes) · [`path`](/zh-Hant/cli/path) · [`policy`](/zh-Hant/cli/policy) · [`voicecall`](/zh-Hant/cli/voicecall) (如果已安裝)                                                                                                                    |
+| 外掛程式（選用）   | [`path`](/zh-Hant/cli/path) · [`policy`](/zh-Hant/cli/policy) · [`voicecall`](/zh-Hant/cli/voicecall) (if installed)                                                                                                                                                             |
 
 ## 全域旗標
 
@@ -56,7 +56,7 @@ title: "CLI 參考資料"
 
 ## 指令樹
 
-<Accordion title="完整指令樹">
+<Accordion title="Full command tree">
 
 ```
 openclaw [--dev] [--profile <name>] <command>
@@ -124,7 +124,7 @@ openclaw [--dev] [--profile <name>] <command>
     status
     index
     search
-  meeting-notes
+  transcripts
     list
     show
     path
@@ -364,7 +364,7 @@ openclaw [--dev] [--profile <name>] <command>
   terminal (alias: tui --local)
 ```
 
-外掛程式可以新增額外的頂層指令 (例如 `openclaw voicecall`)。
+外掛程式可以新增額外的頂層指令（例如 `openclaw voicecall`）。
 
 </Accordion>
 

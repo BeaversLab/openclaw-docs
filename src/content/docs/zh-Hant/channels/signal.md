@@ -100,7 +100,7 @@ title: "Signal"
 }
 ```
 
-多重帳號支援：使用 `channels.signal.accounts` 搭配各帳號配置及選用的 `name`。請參閱 [`gateway/configuration`](/zh-Hant/gateway/config-channels#multi-account-all-channels) 了解共用模式。
+多帳號支援：使用 `channels.signal.accounts` 搭配每個帳號的設定與選用的 `name`。請參閱 [`gateway/configuration`](/zh-Hant/gateway/config-channels#multi-account-all-channels) 以了解共用模式。
 
 ## 設定路徑 B：註冊專用 bot 號碼（SMS，Linux）
 
@@ -182,7 +182,7 @@ openclaw channels status --probe
 
 ## 容器模式 (bbernhard/signal-cli-rest-api)
 
-除了原生執行 `signal-cli`，您也可以使用 [bbernhard/signal-cli-rest-api](https://github.com/bbernhard/signal-cli-rest-api) Docker 容器。這會將 `signal-cli` 包裝在 REST API 和 WebSocket 介面之後。
+除了原生執行 `signal-cli`，您也可以使用 [bbernhard/signal-cli-rest-api](https://github.com/bbernhard/signal-cli-rest-api) Docker 容器。這會將 `signal-cli` 包裝在 REST API 與 WebSocket 介面之後。
 
 需求：
 
@@ -246,7 +246,7 @@ OpenClaw 設定：
 - 透過以下方式核准：
   - `openclaw pairing list signal`
   - `openclaw pairing approve signal <CODE>`
-- 配對是 Signal 私訊的預設權杖交換方式。詳細資訊：[配對](/zh-Hant/channels/pairing)
+- 配對是 Signal 私訊 (DM) 的預設權杖交換方式。詳情：[配對](/zh-Hant/channels/pairing)
 - 僅含 UUID 的發送者（來自 `sourceUuid`）會被儲存為 `uuid:<id>` 在 `channels.signal.allowFrom` 中。
 
 群組：
@@ -304,16 +304,31 @@ message action=react channel=signal target=signal:group:<groupId> targetAuthor=u
   - `minimal`/`extensive` 啟用 Agent 回應並設定指導層級。
 - 每個帳號的覆寫：`channels.signal.accounts.<id>.actions.reactions`、`channels.signal.accounts.<id>.reactionLevel`。
 
+## 核准回應
+
+Signal 執行與插件核准提示使用頂層 `approvals.exec` 和
+`approvals.plugin` 路由區塊。Signal 沒有
+`channels.signal.execApprovals` 區塊。
+
+- `👍` 核准一次。
+- `👎` 拒絕。
+- 當請求提供持久性核准時，請使用 `/approve <id> allow-always`。
+
+核准回應解析需要來自
+`channels.signal.allowFrom`、`channels.signal.defaultTo` 或相符帳號層級欄位的明確 Signal 核准者。
+直接的相同聊天執行核准提示仍可隱藏重複的本地 `/approve` 後援
+而無需明確核准者；無核准者的群組核准則會讓本地後援保持可見。
+
 ## 傳送目標 (CLI/cron)
 
-- 私人訊息 (DM)：`signal:+15551234567` (或純 E.164)。
-- UUID 私人訊息：`uuid:<id>` (或純 UUID)。
+- 私訊 (DM)：`signal:+15551234567` (或純 E.164)。
+- UUID 私訊：`uuid:<id>` (或純 UUID)。
 - 群組：`signal:group:<groupId>`。
 - 使用者名稱：`username:<name>` (如果您的 Signal 帳號支援)。
 
 ## 疑難排解
 
-先執行此檢查步驟：
+請先執行此階段：
 
 ```bash
 openclaw status
@@ -323,7 +338,7 @@ openclaw doctor
 openclaw channels status --probe
 ```
 
-然後確認私人訊息配對狀態（如需要）：
+然後在需要時確認私訊配對狀態：
 
 ```bash
 openclaw pairing list signal
@@ -331,9 +346,9 @@ openclaw pairing list signal
 
 常見失敗：
 
-- 可連線至 Daemon 但無回應：驗證帳號/Daemon 設定 (`httpUrl`、`account`) 及接收模式。
-- 私人訊息被忽略：發送者正在等待配對批准。
-- 群組訊息被忽略：群組發送者/提及閘門阻擋了傳送。
+- 可連接 Daemon 但無回應：請驗證帳號/Daemon 設定 (`httpUrl`、`account`) 與接收模式。
+- 私訊被忽略：傳送者正等待配對核准。
+- 群組訊息被忽略：群組傳送者/提及門控阻擋了傳遞。
 - 編輯後出現設定驗證錯誤：請執行 `openclaw doctor --fix`。
 - 診斷中缺少 Signal：請確認 `channels.signal.enabled: true`。
 
@@ -345,14 +360,14 @@ pgrep -af signal-cli
 grep -i "signal" "/tmp/openclaw/openclaw-$(date +%Y-%m-%d).log" | tail -20
 ```
 
-用於排查流程：[/channels/troubleshooting](/zh-Hant/channels/troubleshooting)。
+如需分診流程：[/channels/troubleshooting](/zh-Hant/channels/troubleshooting)。
 
-## 安全性注意事項
+## 安全注意事項
 
-- `signal-cli` 會在本機儲存帳戶金鑰（通常為 `~/.local/share/signal-cli/data/`）。
+- `signal-cli` 會在本機儲存帳戶金鑰（通常是 `~/.local/share/signal-cli/data/`）。
 - 在伺服器遷移或重建之前，請備份 Signal 帳戶狀態。
-- 請保留 `channels.signal.dmPolicy: "pairing"`，除非您明確想要更廣泛的 DM 存取權。
-- SMS 驗證僅在註冊或復原流程時需要，但失去對號碼/帳戶的控制可能會使重新註冊變得複雜。
+- 除非您明確想要更廣泛的私人訊息 (DM) 存取權限，否則請保持 `channels.signal.dmPolicy: "pairing"` 不變。
+- SMS 驗證僅在註冊或恢復流程時需要，但失去對號碼/帳戶的控制可能會使重新註冊變得複雜。
 
 ## 組態參考 (Signal)
 
@@ -360,41 +375,41 @@ grep -i "signal" "/tmp/openclaw/openclaw-$(date +%Y-%m-%d).log" | tail -20
 
 提供者選項：
 
-- `channels.signal.enabled`：啟用/停用頻道啟動。
-- `channels.signal.apiMode`：`auto | native | container`（預設：auto）。請參閱 [Container mode](#container-mode-bbernhardsignal-cli-rest-api)。
-- `channels.signal.account`：機器人帳戶的 E.164 格式。
+- `channels.signal.enabled`：啟用/停用通道啟動。
+- `channels.signal.apiMode`：`auto | native | container` (預設：auto)。請參閱 [Container mode](#container-mode-bbernhardsignal-cli-rest-api)。
+- `channels.signal.account`：機器人帳戶的 E.164 格式號碼。
 - `channels.signal.cliPath`：`signal-cli` 的路徑。
 - `channels.signal.configPath`：選用的 `signal-cli --config` 目錄。
-- `channels.signal.httpUrl`：完整的 daemon URL（會覆寫 host/port）。
-- `channels.signal.httpHost`、`channels.signal.httpPort`：daemon 綁定（預設 127.0.0.1:8080）。
-- `channels.signal.autoStart`：自動產生 daemon（若未設定 `httpUrl` 則預設為 true）。
-- `channels.signal.startupTimeoutMs`：啟動等待逾時時間，單位為毫秒（上限 120000）。
+- `channels.signal.httpUrl`：完整的守護程式 URL (會覆寫 host/port)。
+- `channels.signal.httpHost`, `channels.signal.httpPort`：守護程式綁定位址 (預設 127.0.0.1:8080)。
+- `channels.signal.autoStart`：自動產生守護程式 (若未設定 `httpUrl` 則預設為 true)。
+- `channels.signal.startupTimeoutMs`：啟動等待逾時時間，單位為毫秒 (上限 120000)。
 - `channels.signal.receiveMode`：`on-start | manual`。
 - `channels.signal.ignoreAttachments`：跳過附件下載。
-- `channels.signal.ignoreStories`：忽略來自 daemon 的動態。
-- `channels.signal.sendReadReceipts`：轉傳已讀回執。
-- `channels.signal.dmPolicy`：`pairing | allowlist | open | disabled`（預設：pairing）。
-- `channels.signal.allowFrom`：DM 白名單（E.164 或 `uuid:<id>`）。`open` 需要 `"*"`。Signal 沒有使用者名稱；請使用電話/UUID ID。
-- `channels.signal.groupPolicy`：`open | allowlist | disabled`（預設：allowlist）。
-- `channels.signal.groupAllowFrom`：群組允許名單；接受 Signal 群組 ID（原始、`group:<id>` 或 `signal:group:<id>`）、發送者 E.164 編號，或 `uuid:<id>` 值。
-- `channels.signal.groups`：以 Signal 群組 ID（或 `"*"`）為鍵的每群組覆寫。支援欄位：`requireMention`、`tools`、`toolsBySender`。
-- `channels.signal.accounts.<id>.groups`：多帳號設定的 `channels.signal.groups` 每帳號版本。
-- `channels.signal.historyLimit`：作為上下文包含的群組訊息上限（0 表示停用）。
-- `channels.signal.dmHistoryLimit`：以使用者輪次為單位的 DM 歷史記錄限制。每使用者覆寫：`channels.signal.dms["<phone_or_uuid>"].historyLimit`。
-- `channels.signal.textChunkLimit`：輸出區塊大小（字元）。
-- `channels.signal.chunkMode`：`length`（預設）或 `newline` 在按長度切割前先依空白行（段落邊界）分割。
-- `channels.signal.mediaMaxMb`：輸入/輸出媒體上限（MB）。
+- `channels.signal.ignoreStories`：忽略來自守護程式的故事 (Stories)。
+- `channels.signal.sendReadReceipts`：轉送已讀回執。
+- `channels.signal.dmPolicy`：`pairing | allowlist | open | disabled` (預設：pairing)。
+- `channels.signal.allowFrom`：私人訊息 (DM) 許可清單 (E.164 或 `uuid:<id>`)。`open` 需要 `"*"`。Signal 沒有使用者名稱；請使用電話/UUID ID。
+- `channels.signal.groupPolicy`：`open | allowlist | disabled` (預設：allowlist)。
+- `channels.signal.groupAllowFrom`：群組允許清單；接受 Signal 群組 ID（原始、`group:<id>` 或 `signal:group:<id>`）、發送者 E.164 號碼或 `uuid:<id>` 值。
+- `channels.signal.groups`：以 Signal 群組 ID（或 `"*"`）為鍵的逐群組覆寫。支援的欄位：`requireMention`、`tools`、`toolsBySender`。
+- `channels.signal.accounts.<id>.groups`：用於多帳號設定的 `channels.signal.groups` 逐帳號版本。
+- `channels.signal.historyLimit`：要包含為上下文的群組訊息最大數量（0 表示停用）。
+- `channels.signal.dmHistoryLimit`：以使用者輪次為單位的 DM 歷史記錄限制。逐使用者覆寫：`channels.signal.dms["<phone_or_uuid>"].historyLimit`。
+- `channels.signal.textChunkLimit`：傳出區塊大小（字元數）。
+- `channels.signal.chunkMode`：`length`（預設值）或 `newline`，以便在長度分割前於空白行（段落邊界）進行分割。
+- `channels.signal.mediaMaxMb`：傳入/傳出媒體上限（MB）。
 
 相關的全域選項：
 
 - `agents.list[].groupChat.mentionPatterns`（Signal 不支援原生提及）。
-- `messages.groupChat.mentionPatterns`（全域備援）。
+- `messages.groupChat.mentionPatterns`（全域後備）。
 - `messages.responsePrefix`。
 
 ## 相關
 
 - [頻道總覽](/zh-Hant/channels) — 所有支援的頻道
-- [配對](/zh-Hant/channels/pairing) — DM 認證與配對流程
-- [群組](/zh-Hant/channels/groups) — 群組聊天行為與提及閘控
+- [配對](/zh-Hant/channels/pairing) — DM 認證和配對流程
+- [群組](/zh-Hant/channels/groups) — 群組聊天行為和提及閘門
 - [頻道路由](/zh-Hant/channels/channel-routing) — 訊息的會話路由
-- [安全性](/zh-Hant/gateway/security) — 存取模型與強化
+- [安全性](/zh-Hant/gateway/security) — 存取模型和加固

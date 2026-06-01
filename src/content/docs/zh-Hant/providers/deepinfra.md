@@ -33,7 +33,7 @@ export DEEPINFRA_API_KEY="<your-deepinfra-api-key>" # pragma: allowlist secret
   env: { DEEPINFRA_API_KEY: "<your-deepinfra-api-key>" }, // pragma: allowlist secret
   agents: {
     defaults: {
-      model: { primary: "deepinfra/deepseek-ai/DeepSeek-V3.2" },
+      model: { primary: "deepinfra/deepseek-ai/DeepSeek-V4-Flash" },
     },
   },
 }
@@ -41,18 +41,17 @@ export DEEPINFRA_API_KEY="<your-deepinfra-api-key>" # pragma: allowlist secret
 
 ## 支援的 OpenClaw 介面
 
-隨附的外掛程式會註冊所有符合目前
-OpenClaw 提供者合約的 DeepInfra 介面：
+內建外掛程式會註冊所有符合目前 OpenClaw 提供者合約的 DeepInfra 介面。聊天、影像生成和視訊生成會在 `DEEPINFRA_API_KEY` 已設定時，從 `/v1/openai/models?sort_by=openclaw&filter=with_meta` 即時更新其型錄；其他介面則使用以下策劃的靜態預設值。
 
-| 介面                  | 預設模型                           | OpenClaw config/tool                                     |
-| --------------------- | ---------------------------------- | -------------------------------------------------------- |
-| Chat / model provider | `deepseek-ai/DeepSeek-V3.2`        | `agents.defaults.model`                                  |
-| 圖片產生/編輯         | `black-forest-labs/FLUX-1-schnell` | `image_generate`, `agents.defaults.imageGenerationModel` |
-| 媒體理解              | `moonshotai/Kimi-K2.5` 用於圖片    | 輸入圖片理解                                             |
-| 語音轉文字            | `openai/whisper-large-v3-turbo`    | 輸入音訊轉錄                                             |
-| 文字轉語音            | `hexgrad/Kokoro-82M`               | `messages.tts.provider: "deepinfra"`                     |
-| 影片產生              | `Pixverse/Pixverse-T2V`            | `video_generate`, `agents.defaults.videoGenerationModel` |
-| 記憶嵌入              | `BAAI/bge-m3`                      | `agents.defaults.memorySearch.provider: "deepinfra"`     |
+| 介面                  | 預設模型                                                                                | OpenClaw config/tool                                     |
+| --------------------- | --------------------------------------------------------------------------------------- | -------------------------------------------------------- |
+| Chat / model provider | 來自即時型錄的第一個聊天標記項目 (資訊清單後備 `deepseek-ai/DeepSeek-V4-Flash`)         | `agents.defaults.model`                                  |
+| 圖片產生/編輯         | 來自即時型錄的第一個 `image-gen` 標記項目 (靜態後備 `black-forest-labs/FLUX-1-schnell`) | `image_generate`, `agents.defaults.imageGenerationModel` |
+| 媒體理解              | `moonshotai/Kimi-K2.5` 用於影像                                                         | 輸入圖片理解                                             |
+| 語音轉文字            | `openai/whisper-large-v3-turbo`                                                         | 輸入音訊轉錄                                             |
+| 文字轉語音            | `hexgrad/Kokoro-82M`                                                                    | `messages.tts.provider: "deepinfra"`                     |
+| 影片產生              | 來自即時型錄的第一個 `video-gen` 標記項目 (靜態後備 `Pixverse/Pixverse-T2V`)            | `video_generate`, `agents.defaults.videoGenerationModel` |
+| 記憶嵌入              | `BAAI/bge-m3`                                                                           | `agents.defaults.memorySearch.provider: "deepinfra"`     |
 
 DeepInfra 也公開了重新排序、分類、物件偵測和其他
 原生模型類型。OpenClaw 目前對於這些類別沒有一等的提供者
@@ -60,15 +59,16 @@ DeepInfra 也公開了重新排序、分類、物件偵測和其他
 
 ## 可用模型
 
-OpenClaw 會在啟動時動態探索可用的 DeepInfra 模型。使用
-`/models deepinfra` 來查看可用的完整模型列表。
+OpenClaw 會在啟動時動態探索可用的 DeepInfra 模型。使用 `/models deepinfra` 來查看可用模型的完整清單。
 
-[DeepInfra.com](https://deepinfra.com/) 上可用的任何模型都可以使用 `deepinfra/` 前綴：
+[DeepInfra.com](https://deepinfra.com/) 上可用的任何模型都可以搭配 `deepinfra/` 前綴使用：
 
 ```
-deepinfra/MiniMaxAI/MiniMax-M2.5
+deepinfra/deepseek-ai/DeepSeek-V4-Flash
 deepinfra/deepseek-ai/DeepSeek-V3.2
+deepinfra/MiniMaxAI/MiniMax-M2.5
 deepinfra/moonshotai/Kimi-K2.5
+deepinfra/nvidia/NVIDIA-Nemotron-3-Super-120B-A12B
 deepinfra/zai-org/GLM-5.1
 ...and many more
 ```
@@ -76,11 +76,11 @@ deepinfra/zai-org/GLM-5.1
 ## 註記
 
 - 模型參照為 `deepinfra/<provider>/<model>` (例如 `deepinfra/Qwen/Qwen3-Max`)。
-- 預設模型：`deepinfra/deepseek-ai/DeepSeek-V3.2`
-- 基礎 URL：`https://api.deepinfra.com/v1/openai`
-- 原生影片生成使用 `https://api.deepinfra.com/v1/inference/<model>`。
+- 預設模型：`deepinfra/deepseek-ai/DeepSeek-V4-Flash`
+- 基底 URL：`https://api.deepinfra.com/v1/openai`
+- 原生視訊生成使用 `https://api.deepinfra.com/v1/inference/<model>`。
 
 ## 相關
 
-- [模型供應商](/zh-Hant/concepts/model-providers)
-- [所有供應商](/zh-Hant/providers/index)
+- [模型提供者](/zh-Hant/concepts/model-providers)
+- [所有提供者](/zh-Hant/providers/index)

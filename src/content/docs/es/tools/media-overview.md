@@ -81,13 +81,14 @@ El habla en vivo utiliza el contrato de sesión Talk en lugar de la ruta de la h
 | Música                    | Asíncrono | La misma característica de procesamiento del proveedor que el vídeo.                                                                           |
 
 Para herramientas asíncronas, OpenClaw envía la solicitud al proveedor, devuelve un
-identificador de tarea inmediatamente y rastrea el trabajo en el registro de tareas. El agente continúa
+di de tarea inmediatamente y rastrea el trabajo en el libro mayor de tareas. El agente continúa
 respondiendo a otros mensajes mientras se ejecuta el trabajo. Cuando el proveedor termina,
 OpenClaw despierta al agente con las rutas de los medios generados para que pueda informar al
-usuario y retransmitir el resultado a través de la herramienta de mensajes. Si la sesión solicitante
-está inactiva y faltan algunos medios generados de la entrega de la herramienta de
-mensajes, OpenClaw envía una alternativa directa idempotente solo con los medios
-que faltan. Los medios ya entregados a través de la herramienta de mensajes no se publican de nuevo.
+usuario y retransmitir el resultado a través de la herramienta de mensaje. Si la sesión solicitante
+está inactiva o su activación falla, y falta algún medio generado
+del envío de la herramienta de mensaje, OpenClaw envía un retorno directo
+dempotente con solo los medios faltantes. Los medios ya enviados a través de la
+herramienta de mensaje no se publican nuevamente.
 
 ## Conversión de voz a texto y llamada de voz
 

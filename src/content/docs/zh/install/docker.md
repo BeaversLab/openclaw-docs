@@ -105,7 +105,7 @@ docker compose run --rm --no-deps --entrypoint node openclaw-gateway \
 docker compose up -d openclaw-gateway
 ```
 
-<Note>从仓库根目录运行 `docker compose`。如果您启用了 `OPENCLAW_EXTRA_MOUNTS` 或 `OPENCLAW_HOME_VOLUME`，设置脚本将写入 `docker-compose.extra.yml`； 请使用 `-f docker-compose.yml -f docker-compose.extra.yml` 将其包含在内。</Note>
+<Note>从代码库根目录运行 `docker compose`。如果您启用了 `OPENCLAW_EXTRA_MOUNTS` 或 `OPENCLAW_HOME_VOLUME`，设置脚本将写入 `docker-compose.extra.yml`； 请在任何标准覆盖文件之后包含它，例如 `-f docker-compose.yml -f docker-compose.override.yml -f docker-compose.extra.yml` （当两个覆盖文件都存在时）。</Note>
 
 <Note>由于 `openclaw-cli` 共享 `openclaw-gateway` 的网络命名空间，因此它是一个 启动后工具。在 `docker compose up -d openclaw-gateway` 之前，请通过 `openclaw-gateway` 使用 `--no-deps --entrypoint node` 运行新手引导 和设置时配置写入。</Note>
 

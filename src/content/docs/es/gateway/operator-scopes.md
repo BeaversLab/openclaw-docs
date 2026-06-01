@@ -69,34 +69,44 @@ un rol más amplio o alcances más amplios crean una nueva solicitud de actualiz
 Al aprobar una solicitud de dispositivo:
 
 - Una solicitud sin rol de operador no necesita aprobación de alcance de token de operador.
+- Una solicitud para un rol de dispositivo que no es de operador, como `node`, requiere
+  `operator.admin`, incluso cuando `device.pair.approve` es accesible con
+  `operator.pairing`.
 - Una solicitud para `operator.read`, `operator.write`, `operator.approvals`,
-  `operator.pairing` o `operator.talk.secrets` requiere que la persona que llamada posea
-  esos alcances, o `operator.admin`.
+  `operator.pairing` o `operator.talk.secrets` requiere que la persona que llama tenga
+  esos ámbitos, o `operator.admin`.
 - Una solicitud para `operator.admin` requiere `operator.admin`.
-- Una solicitud de reparación sin alcances explícitos puede heredar los alcances del token de
-  operador existente. Si ese token existente tiene alcance de administrador, la aprobación aún requiere
+- Una solicitud de reparación sin ámbitos explícitos puede heredar los ámbitos del
+  token de operador existente. Si ese token existente tiene ámbito de administrador, la aprobación aún requiere
   `operator.admin`.
 
-Para las sesiones de token de dispositivo emparejado, la gestión es de autoalcance (self-scoped) a menos que la persona que llama
-también tenga `operator.admin`: las personas que no son administradores solo ven sus propias entradas de emparejamiento,
-pueden aprobar o rechazar solo su propia solicitud pendiente, y pueden rotar, revocar o
-eliminar solo su propia entrada de dispositivo.
+Las sesiones de shared-secret y trusted-proxy que no son de administrador pueden aprobar solicitudes
+de operador-dispositivo solo dentro de sus propios ámbitos de operador declarados. Aprobar roles
+que no son de operador es exclusivo del administrador, incluso cuando esas sesiones pueden usar de otro modo
+`operator.pairing`.
+
+Para las sesiones de token de dispositivo emparejado, la gestión también tiene ámbito propio a menos que la
+persona que llamada tenga `operator.admin`: las personas que no son administradores solo ven sus propias entradas de
+emparejamiento, pueden aprobar o rechazar solo su propia solicitud pendiente, y pueden rotar,
+revocar o eliminar solo su propia entrada de dispositivo.
 
 ## Aprobaciones de emparejamiento de nodos
 
-El `node.pair.*` heredado utiliza un almacén de emparejamiento de nodos propiedad del Gateway separado. Los nodos WS utilizan el emparejamiento de dispositivos con `role: node`, pero se aplica el mismo vocabulario de nivel de aprobación.
+El `node.pair.*` heredado utiliza un almacén de emparejamiento de nodos propiedad de Gateway separado. Los nodos WS
+utilizan el emparejamiento de dispositivos con `role: node`, pero se aplica el mismo vocabulario de nivel de aprobación.
 
-`node.pair.approve` utiliza la lista de comandos de solicitud pendiente para derivar alcances adicionales requeridos:
+`node.pair.approve` utiliza la lista de comandos de solicitud pendiente para derivar ámbitos
+requeridos adicionales:
 
 - Solicitud sin comandos: `operator.pairing`
-- Comandos de nodo no exec: `operator.pairing` + `operator.write`
+- Comandos de nodo que no son de ejecución: `operator.pairing` + `operator.write`
 - `system.run`, `system.run.prepare` o `system.which`:
   `operator.pairing` + `operator.admin`
 
-El emparejamiento de nodos establece la identidad y la confianza. No reemplaza la política de aprobación exec `system.run` propia del nodo.
+El emparejamiento de nodos establece la identidad y la confianza. No reemplaza la política de aprobación de ejecución `system.run` del propio nodo.
 
 ## Autenticación de secreto compartido
 
-La autenticación mediante token/contraseña de puerta de enlace compartida se trata como acceso de operador de confianza para esa puerta de enlace. Las superficies HTTP compatibles con OpenAI, `/tools/invoke`, y los puntos finales del historial de sesiones HTTP restauran el conjunto de ámbitos predeterminados de operador completo normal para la autenticación de portador mediante secreto compartido, incluso si un remitente envía ámbitos declarados más estrechos.
+La autenticación mediante token/contraseña compartida de Gateway se trata como acceso de operador de confianza para ese Gateway. Las superficies HTTP compatibles con OpenAI, `/tools/invoke` y los puntos finales de historial de sesiones HTTP restauran el conjunto normal de alcances predeterminados de operador completo para la autenticación de portador de secreto compartido, incluso si un remitente envía alcances declarados más limitados.
 
-Los modos con identidad, como la autenticación de proxy de confianza o `none` de ingreso privado, aún pueden respetar los alcances declarados explícitos. Utilice Gateways separados para una separación real de los límites de confianza.
+Los modos con identidad, como la autenticación de proxy de confianza o la entrada privada `none`, aún pueden respetar los alcances declarados explícitos. Utilice Gateways separados para una separación real de los límites de confianza.

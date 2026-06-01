@@ -16,34 +16,34 @@ sidebarTitle: "CLIModels CLI"
     Aperçu rapide des fournisseurs et exemples.
   </Card>
   <Card title="Agent runtimes" href="/fr/concepts/agent-runtimes">
-    PI, Codex et autres runtimes de boucle d'agent.
+    OpenClaw, Codex et autres runtimes de boucle d'agent.
   </Card>
   <Card title="Configuration reference" href="/fr/gateway/config-agents#agent-defaults">
     Clés de configuration du modèle.
   </Card>
 </CardGroup>
 
-Les références de modèle choisissent un fournisseur et un modèle. Elles ne choisissent généralement pas le runtime d'agent de bas niveau. Les références d'agent OpenAI sont l'exception principale : `openai/gpt-5.5` s'exécute via le runtime du serveur d'application Codex par défaut sur le fournisseur OpenAI officiel. Les substitutions explicites de runtime appartiennent à la stratégie fournisseur/modèle, et non à l'agent entier ou à la session. En mode runtime Codex, la référence `openai/gpt-*` n'implique pas la facturation par clé API ; l'authentification peut provenir d'un compte Codex ou d'un profil d'authentification `openai-codex`. Voir [Runtimes d'agent](/fr/concepts/agent-runtimes).
+Les références de modèle choisissent un fournisseur et un modèle. Elles ne choisissent généralement pas le runtime d'agent de bas niveau. Les références d'agent OpenAI constituent l'exception principale : `openai/gpt-5.5` s'exécute via le runtime du serveur d'application Codex par défaut sur le fournisseur officiel OpenAI. Les références d'abonnement Copilot (`github-copilot/*`) peuvent en outre être activées pour le runtime d'agent Copilot GitHub intégré — ce chemin reste explicite (pas de repli `auto`). Les substitutions explicites de runtime appartiennent à la politique fournisseur/modèle, et non à l'agent ou à la session dans son ensemble. En mode runtime Codex, la référence `openai/gpt-*` n'implique pas la facturation par clé API ; l'authentification peut provenir d'un compte Codex ou d'un profil d'authentification `openai-codex`. Voir [Agent runtimes](/fr/concepts/agent-runtimes) et [GitHub Copilot agent runtime](/fr/plugins/copilot).
 
 ## Fonctionnement de la sélection de modèle
 
 OpenClaw sélectionne les modèles dans cet ordre :
 
 <Steps>
-  <Step title="Primary model">`agents.defaults.model.primary` (ou `agents.defaults.model`).</Step>
-  <Step title="Fallbacks">`agents.defaults.model.fallbacks` (dans l'ordre).</Step>
+  <Step title="Modèle principal">`agents.defaults.model.primary` (ou `agents.defaults.model`).</Step>
+  <Step title="Replis">`agents.defaults.model.fallbacks` (dans l'ordre).</Step>
   <Step title="Provider auth failover">Le basculement d'authentification se produit à l'intérieur d'un fournisseur avant de passer au modèle suivant.</Step>
 </Steps>
 
 <AccordionGroup>
   <Accordion title="Surfaces de modèles associés">
-    - `agents.defaults.models` est la liste d'autorisation/catalogue des modèles que OpenClaw peut utiliser (plus les alias). Utilisez les entrées `provider/*` pour limiter les fournisseurs visibles tout en gardant la découverte de fournisseurs dynamique.
+    - `agents.defaults.models` est la liste d'autorisation/le catalogue des modèles que OpenClaw peut utiliser (plus les alias). Utilisez les entrées `provider/*` pour limiter les fournisseurs visibles tout en gardant la découverte de fournisseurs dynamique.
     - `agents.defaults.imageModel` est utilisé **uniquement lorsque** le modèle principal ne peut pas accepter d'images.
-    - `agents.defaults.pdfModel` est utilisé par l'outil `pdf`. S'il est omis, l'outil se rabat sur `agents.defaults.imageModel`, puis sur le modèle de session/défaut résolu.
-    - `agents.defaults.imageGenerationModel` est utilisé par la capacité partagée de génération d'images. S'il est omis, `image_generate` peut quand même déduire un fournisseur par défaut pris en charge par une authentification. Il essaie d'abord le fournisseur par défaut actuel, puis les fournisseurs de génération d'images restants dans l'ordre des ID de fournisseur. Si vous définissez un fournisseur/modèle spécifique, configurez également la clé d'authentification/API de ce fournisseur.
-    - `agents.defaults.musicGenerationModel` est utilisé par la capacité partagée de génération de musique. S'il est omis, `music_generate` peut quand même déduire un fournisseur par défaut pris en charge par une authentification. Il essaie d'abord le fournisseur par défaut actuel, puis les fournisseurs de génération de musique restants dans l'ordre des ID de fournisseur. Si vous définissez un fournisseur/modèle spécifique, configurez également la clé d'authentification/API de ce fournisseur.
-    - `agents.defaults.videoGenerationModel` est utilisé par la capacité partagée de génération de vidéo. S'il est omis, `video_generate` peut quand même déduire un fournisseur par défaut pris en charge par une authentification. Il essaie d'abord le fournisseur par défaut actuel, puis les fournisseurs de génération de vidéo restants dans l'ordre des ID de fournisseur. Si vous définissez un fournisseur/modèle spécifique, configurez également la clé d'authentification/API de ce fournisseur.
-    - Les valeurs par défaut par agent peuvent remplacer `agents.defaults.model` via `agents.list[].model` plus les liaisons (voir [Routage multi-agent](/fr/concepts/multi-agent)).
+    - `agents.defaults.pdfModel` est utilisé par l'outil `pdf`. S'il est omis, l'outil revient à `agents.defaults.imageModel`, puis au modèle de session/défaut résolu.
+    - `agents.defaults.imageGenerationModel` est utilisé par la capacité partagée de génération d'images. S'il est omis, `image_generate` peut quand même déduire un fournisseur par défaut avec authentification. Il essaie d'abord le fournisseur par défaut actuel, puis les fournisseurs de génération d'images enregistrés restants dans l'ordre des ID de fournisseur. Si vous définissez un fournisseur/modèle spécifique, configurez également la clé d'auth/API de ce fournisseur.
+    - `agents.defaults.musicGenerationModel` est utilisé par la capacité partagée de génération de musique. S'il est omis, `music_generate` peut quand même déduire un fournisseur par défaut avec authentification. Il essaie d'abord le fournisseur par défaut actuel, puis les fournisseurs de génération de musique enregistrés restants dans l'ordre des ID de fournisseur. Si vous définissez un fournisseur/modèle spécifique, configurez également la clé d'auth/API de ce fournisseur.
+    - `agents.defaults.videoGenerationModel` est utilisé par la capacité partagée de génération de vidéo. S'il est omis, `video_generate` peut quand même déduire un fournisseur par défaut avec authentification. Il essaie d'abord le fournisseur par défaut actuel, puis les fournisseurs de génération de vidéo enregistrés restants dans l'ordre des ID de fournisseur. Si vous définissez un fournisseur/modèle spécifique, configurez également la clé d'auth/API de ce fournisseur.
+    - Les valeurs par défaut par agent peuvent remplacer `agents.defaults.model` via `agents.list[].model` plus des liaisons (voir [Multi-agent routing](/fr/concepts/multi-agent)).
 
   </Accordion>
 </AccordionGroup>
@@ -52,13 +52,13 @@ OpenClaw sélectionne les modèles dans cet ordre :
 
 Le même `provider/model` peut signifier différentes choses selon sa provenance :
 
-- Les valeurs par défaut configurées (`agents.defaults.model.primary` et les principaux spécifiques aux agents) constituent le point de départ normal et utilisent `agents.defaults.model.fallbacks`.
-- Les sélections de repli automatique sont des états de récupération temporaires. Elles sont stockées avec `modelOverrideSource: "auto"` afin que les tours suivants puissent continuer à utiliser la chaîne de repli sans sonder à chaque fois un principal défaillant connu ; OpenClaw sonde périodiquement le principal d'origine, efface la sélection automatique lorsqu'il récupère et annonce les transitions de repli/récupération une fois par changement d'état.
-- Les sélections de session utilisateur sont exactes. `/model`, le sélecteur de modèle, `session_status(model=...)` et `sessions.patch` stockent `modelOverrideSource: "user"` ; si le fournisseur/modèle sélectionné est inaccessible, OpenClaw échoue visiblement au lieu de passer à un autre modèle configuré.
-- Changer `agents.defaults.model.primary` ne réécrit pas les sélections de session existantes. Si le statut indique `This session is pinned to X; config primary Y will apply to new/unpinned sessions.`, basculez la session actuelle avec `/model Y` ou effacez l'état de session obsolète avec `/reset`.
-- Cron `--model` / payload `model` est un principal par tâche. Il utilise toujours les replis configurés, sauf si la tâche fournit un payload explicite `fallbacks` (utilisez `fallbacks: []` pour une exécution cron stricte).
-- Les sélecteurs default-model et allowlist de la CLI respectent `models.mode: "replace"` en listant les `models.providers.*.models` explicites au lieu de charger le catalogue intégré complet.
-- Le sélecteur de modèle de l'interface de contrôle demande au Gateway sa vue de modèle configurée : `agents.defaults.models` si présent, y compris les entrées `provider/*` à l'échelle du provider, sinon `models.providers.*.models` explicites plus les providers avec une auth utilisable. Le catalogue intégré complet est réservé aux vues de navigation explicites telles que `models.list` avec `view: "all"` ou `openclaw models list --all`.
+- Les valeurs par défaut configurées (`agents.defaults.model.primary` et les principaux spécifiques aux agents) sont le point de départ normal et utilisent `agents.defaults.model.fallbacks`.
+- Les sélections de repli automatique sont un état de récupération temporaire. Elles sont stockées avec `modelOverrideSource: "auto"` afin que les tours suivants puissent continuer à utiliser la chaîne de repli sans sonder un principal défaillant à chaque fois ; OpenClaw sonde périodiquement le principal original à nouveau, efface la sélection automatique lorsqu'il récupère, et annonce les transitions de repli/récupération une fois par changement d'état.
+- Les sélections de session utilisateur sont exactes. `/model`, le sélecteur de modèle, `session_status(model=...)` et `sessions.patch` stockent `modelOverrideSource: "user"` ; si le provider/modèle sélectionné est inaccessible, OpenClaw échoue visiblement au lieu de basculer vers un autre modèle configuré.
+- Modifier `agents.defaults.model.primary` ne réécrit pas les sélections de session existantes. Si le statut indique `This session is pinned to X; config primary Y will apply to new/unpinned sessions.`, basculez la session actuelle avec `/model Y` ou effacez l'état de session obsolète avec `/reset`.
+- Le Cron `--model` / le payload `model` est un principal par tâche. Il utilise toujours les replis configurés, sauf si la tâche fournit un payload explicite `fallbacks` (utilisez `fallbacks: []` pour une exécution Cron stricte).
+- Les sélecteurs de modèle par défaut et de liste d'autorisation CLI respectent `models.mode: "replace"` en listant les `models.providers.*.models` explicites au lieu de charger le catalogue intégré complet.
+- Le sélecteur de modèle de l'interface de contrôle demande au Gateway sa vue de modèles configurée : `agents.defaults.models` si présent, y compris les entrées `provider/*` à l'échelle du provider, sinon `models.providers.*.models` explicites plus les providers avec une auth utilisable. Le catalogue intégré complet est réservé aux vues de navigation explicites telles que `models.list` avec `view: "all"` ou `openclaw models list --all`.
 
 ## Politique rapide de modèle
 
@@ -83,13 +83,13 @@ Il peut configurer le modèle + l'auth pour les providers courants, y compris l'
 - `agents.defaults.pdfModel.primary` et `agents.defaults.pdfModel.fallbacks`
 - `agents.defaults.imageGenerationModel.primary` et `agents.defaults.imageGenerationModel.fallbacks`
 - `agents.defaults.videoGenerationModel.primary` et `agents.defaults.videoGenerationModel.fallbacks`
-- `agents.defaults.models` (allowlist + aliases + provider params + `provider/*` dynamic provider entries)
-- `models.providers` (custom providers written into `models.json`)
+- `agents.defaults.models` (allowlist + alias + paramètres de provider + entrées de provider dynamiques `provider/*`)
+- `models.providers` (providers personnalisés écrits dans `models.json`)
 
 <Note>
-Model refs are normalized to lowercase. Provider aliases like `z.ai/*` normalize to `zai/*`.
+Les références de modèle sont normalisées en minuscules. Les IDs de provider sont par ailleurs exacts ; utilisez l'ID de provider annoncé par le plugin.
 
-Provider configuration examples (including OpenCode) live in [OpenCode](/fr/providers/opencode).
+Des exemples de configuration de provider (y compris OpenCode) sont disponibles dans [OpenCode](/fr/providers/opencode).
 
 </Note>
 
@@ -213,7 +213,7 @@ Vous pouvez changer de modèle pour la session en cours sans redémarrer :
   </Accordion>
 </AccordionGroup>
 
-Comportement/configuration complète de la commande : [Slash commands](/fr/tools/slash-commands).
+Comportement/configuration complète des commandes : [Slash commands](/fr/tools/slash-commands).
 
 ## Commandes CLI
 
@@ -325,7 +325,7 @@ Les résultats de l'analyse sont classés par :
 Entrée :
 
 - Liste OpenRouter `/models` (filtre `:free`)
-- Les sondages en direct nécessitent une clé OpenRouter API issue des profils d'authentification ou de `OPENROUTER_API_KEY` (voir [Variables d'environnement](/fr/help/environment))
+- Les sondes en direct nécessitent une clé API OpenRouterAPI des profils d'authentification ou `OPENROUTER_API_KEY` (voir [Environment variables](/fr/help/environment))
 - Filtres optionnels : `--max-age-days`, `--min-params`, `--provider`, `--max-candidates`
 - Contrôles de requête/sondage : `--timeout`, `--concurrency`
 
@@ -333,7 +333,7 @@ Lorsque les sondes en direct s'exécutent dans un TTY, vous pouvez sélectionner
 
 ## Registre des modèles (`models.json`)
 
-Les fournisseurs personnalisés dans `models.providers` sont écrits dans `models.json` sous le répertoire de l'agent (par défaut `~/.openclaw/agents/<agentId>/agent/models.json`). Ce fichier est fusionné par défaut, sauf si `models.mode` est défini sur `replace`.
+Les providers personnalisés dans `models.providers` sont écrits dans `models.json` sous le répertoire de l'agent (par défaut `~/.openclaw/agents/<agentId>/agent/models.json`). Les catalogues de plugins de provider sont stockés sous forme de fragments de catalogue appartenant au plugin générés sous l'état du plugin de l'agent et chargés automatiquement. Ce fichier est fusionné par défaut, sauf si `models.mode` est défini sur `replace`.
 
 <AccordionGroup>
   <Accordion title="Priorité du mode de fusion">
@@ -353,10 +353,10 @@ Les fournisseurs personnalisés dans `models.providers` sont écrits dans `model
 
 ## Connexes
 
-- [Runtimes d'agents](/fr/concepts/agent-runtimes) — PI, Codex et autres runtimes de boucle d'agent
-- [Référence de configuration](/fr/gateway/config-agents#agent-defaults) — clés de configuration de modèle
-- [Génération d'images](/fr/tools/image-generation) — configuration de modèle d'image
-- [Basculement de modèle](/fr/concepts/model-failover) — chaînes de secours
-- [Fournisseurs de modèles](/fr/concepts/model-providers) — routage et authentification des fournisseurs
-- [Génération de musique](/fr/tools/music-generation) — configuration de modèle de musique
-- [Génération de vidéo](/fr/tools/video-generation) — configuration de modèle de vidéo
+- [Agent runtimes](/fr/concepts/agent-runtimes) — OpenClaw, Codex et autres runtimes de boucle d'agent
+- [Configuration reference](/fr/gateway/config-agents#agent-defaults) — clés de configuration de modèle
+- [Image generation](/fr/tools/image-generation) — configuration du modèle d'image
+- [Model failover](/fr/concepts/model-failover) — chaînes de repli
+- [Model providers](/fr/concepts/model-providers) — routage et authentification des providers
+- [Music generation](/fr/tools/music-generation) — configuration du modèle de musique
+- [Video generation](/fr/tools/video-generation) — configuration du modèle vidéo

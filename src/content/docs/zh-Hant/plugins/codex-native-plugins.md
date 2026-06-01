@@ -24,9 +24,7 @@ Codex app-server 擁有應用程式支援的 MCP 執行。
   已來源安裝的 `openai-curated` 外掛程式。
 - 目標 Codex 應用程式伺服器必須能夠看到預期的 marketplace、外掛程式和應用程式清單。
 
-`codexPlugins` 對 PI 執行、一般 OpenAI 提供者執行、ACP
-交談繫結或其他套件沒有影響，因為這些路徑不會建立
-具有原生 `apps` 設定的 Codex app-server 執行緒。
+`codexPlugins` 對 OpenClaw 執行、一般 OpenAI 提供者執行、ACP 對話繫結或其他線程沒有影響，因為這些路徑不會建立具有原生 `apps` 設定的 Codex 應用伺服器執行緒。
 
 ## 快速入門
 

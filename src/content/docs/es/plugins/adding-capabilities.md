@@ -9,8 +9,7 @@ sidebarTitle: "Añadir capacidades"
 ---
 
 <Info>
-  Esta es una **guía para contribuidores** para desarrolladores principales de OpenClaw. Si está construyendo un complemento externo, consulte [Construcción de complementos](/es/plugins/building-plugins) en su lugar. Para la referencia de arquitectura profunda (modelo de capacidad, propiedad, canalización de carga, asistentes de tiempo de ejecución), consulte [Internos del
-  complemento](/es/plugins/architecture).
+  Esta es una **guía para colaboradores** para los desarrolladores del núcleo de OpenClaw. Si está construyendo un plugin externo, consulte [Construcción de plugins](/es/plugins/building-plugins) en su lugar. Para la referencia de arquitectura profunda (modelo de capacidad, propiedad, canalización de carga, asistentes de ejecución), consulte [Internos del plugin](/es/plugins/architecture).
 </Info>
 
 Use esto cuando OpenClaw necesite un dominio compartido nuevo como incrustaciones, generación
@@ -119,11 +118,10 @@ es intencionalmente más amplio que la memoria: herramientas, búsqueda, recuper
 complementos de características futuras pueden consumir incrustaciones sin depender del motor
 de memoria.
 
-Para adaptadores específicos del motor de memoria, siga usando `memoryEmbeddingProviders`.
-Esos adaptadores son dueños de los detalles de indexación de memoria como la división consulta/documento,
-metadatos de tiempo de ejecución y configuración local del motor de memoria. No haga que un proveedor
-genérico de incrustaciones dependa de módulos propiedad de la memoria a menos que el proveedor sea solo
-utilizable por la memoria.
+La búsqueda de memoria puede consumir `embeddingProviders` genérico. El contrato
+`memoryEmbeddingProviders` anterior está obsoleto por compatibilidad mientras los proveedores
+existentes específicos de memoria migran; los nuevos proveedores de incrustaciones reutilizables deben usar
+`embeddingProviders`.
 
 ## Lista de verificación de revisión
 
@@ -139,7 +137,7 @@ Si un PR se salta la capa de capacidad y codifica el comportamiento del proveedo
 
 ## Relacionado
 
-- [Internos del complemento](/es/plugins/architecture) — modelo de capacidad, propiedad, canalización de carga, asistentes de tiempo de ejecución.
-- [Construcción de complementos](/es/plugins/building-plugins) — tutorial del primer complemento.
-- [Resumen del SDK](/es/plugins/sdk-overview) — referencia de mapa de importación y API de registro.
-- [Creación de habilidades](/es/tools/creating-skills) — superficie de contribuidor complementaria.
+- [Internos del plugin](/es/plugins/architecture) — modelo de capacidad, propiedad, canalización de carga, asistentes de ejecución.
+- [Construcción de plugins](/es/plugins/building-plugins) — tutorial del primer plugin.
+- [Descripción general del SDK](/es/plugins/sdk-overview) — mapa de importación y referencia de la API de registro.
+- [Creación de habilidades](/es/tools/creating-skills) — superficie de colaboradores complementaria.

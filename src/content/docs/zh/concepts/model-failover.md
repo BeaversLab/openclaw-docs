@@ -155,14 +155,14 @@ OpenClaw 会在 Codex 提供时记录确切的重置时间，尝试下一个
 当配置文件由于身份验证/速率限制错误（或看起来像速率限制的超时）而失败时，OpenClaw 会将其标记为冷却并移动到下一个配置文件。
 
 <AccordionGroup>
-  <Accordion title="哪些情况属于速率限制/超时桶">
-    该速率限制桶的范围比单纯的 `429` 更广：它还包括提供商消息，例如 `Too many concurrent requests`、`ThrottlingException`、`concurrency limit reached`、`workers_ai ... quota limit exceeded`、`throttled`、`resource exhausted`，以及周期性使用窗口限制，如 `weekly/monthly limit reached`。
+  <Accordion title="归类到速率限制/超时桶的情况">
+    该速率限制桶比单纯的 `429` 更广泛：它还包括提供商消息，例如 `Too many concurrent requests`、`ThrottlingException`、`concurrency limit reached`、`workers_ai ... quota limit exceeded`、`throttled`、`resource exhausted`，以及周期性使用窗口限制，例如 `weekly/monthly limit reached`。
 
-    格式/无效请求错误通常是致命的，因为重试相同的负载会以相同的方式失败，因此 OpenClaw 会将这些错误直接抛出，而不是轮换身份验证配置文件。已知的重试修复路径可以显式选择加入：例如，Cloud Code Assist 工具调用 ID 验证失败会被清理，并通过 `allowFormatRetry` 策略重试一次。OpenAI 兼容的停止原因错误（如 `Unhandled stop reason: error`、`stop reason: error` 和 `reason: error`）被归类为超时/故障转移信号。
+    格式/无效请求错误通常是致命的，因为重试相同的负载会以同样的方式失败，因此 OpenClaw 会直接显示这些错误，而不是轮换身份验证配置文件。已知的重试修复路径可以显式选择加入：例如，Cloud Code Assist 工具调用 ID 验证失败会经过清理，并通过 `allowFormatRetry` 策略重试一次。与 OpenAI 兼容的停止原因错误（例如 `Unhandled stop reason: error`、`stop reason: error` 和 `reason: error`）被归类为超时/故障转移信号。
 
-    当来源匹配已知的瞬态模式时，通用的服务器文本也可能落入该超时桶。例如，裸露的 pi-ai 流包装器消息 `An unknown error occurred` 对每个提供商都被视为值得故障转移，因为当提供商流以 `stopReason: "aborted"` 或 `stopReason: "error"` 结尾且没有具体细节时，pi-ai 会发出此消息。包含瞬态服务器文本（如 `internal server error`、`unknown error, 520`、`upstream error` 或 `backend error`）的 JSON `api_error` 负载也被视为值得故障转移的超时。
+    当源匹配已知的瞬态模式时，通用服务器文本也可能落入该超时桶。例如，裸露的模型运行时流包装器消息 `An unknown error occurred` 对每个提供商都被视为值得故障转移，因为共享模型运行时在提供商流以 `stopReason: "aborted"` 或 `stopReason: "error"` 结束且没有具体细节时会发出此消息。包含瞬态服务器文本（例如 `internal server error`、`unknown error, 520`、`upstream error` 或 `backend error`）的 JSON `api_error` 负载也被视为值得故障转移的超时。
 
-    OpenRouter 特有的通用上游文本（如裸露的 `Provider returned error`）仅在提供商上下文确实是 OpenRouter 时才被视为超时。通用的内部回退文本（如 `LLM request failed with an unknown error.`）保持保守，本身不会触发故障转移。
+    特定于 OpenRouter 的通用上游文本（例如裸露的 `Provider returned error`）仅在提供商上下文确实是 OpenRouter 时才被视为超时。通用内部回退文本（例如 `LLM request failed with an unknown error.`）保持保守，不会单独触发故障转移。
 
   </Accordion>
   <Accordion title="SDK 重试上限">

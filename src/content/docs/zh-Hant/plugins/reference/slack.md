@@ -1,5 +1,5 @@
 ---
-summary: "新增 Slack 頻道介面，用於傳送和接收 OpenClaw 訊息。"
+summary: "OpenClaw Slack 頻道外掛程式，用於頻道、DM、指令和應用程式事件。"
 read_when:
   - You are installing, configuring, or auditing the slack plugin
 title: "Slack 外掛程式"
@@ -7,7 +7,7 @@ title: "Slack 外掛程式"
 
 # Slack 外掛程式
 
-新增 Slack 頻道介面，用於傳送和接收 OpenClaw 訊息。
+OpenClaw Slack 頻道外掛程式，用於頻道、DM、指令和應用程式事件。
 
 ## 發行
 

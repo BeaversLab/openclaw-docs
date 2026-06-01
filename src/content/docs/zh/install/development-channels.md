@@ -30,16 +30,22 @@ openclaw update --channel dev
 - **`stable`**（包安装）：通过 npm dist-tag `latest` 更新。
 - **`beta`**（包安装）：首选 npm dist-tag `beta`，但当 `beta` 缺失或比当前 stable tag 旧时，回退到
   `latest`。
-- **`stable`**（git 安装）：检出最新的 stable git tag。
-- **`beta`**（git 安装）：首选最新的 beta git tag，但当 beta 缺失或较旧时，回退到
-  最新的 stable git tag。
-- **`dev`**：确保 git 检出（默认 `~/openclaw`，或在设置了 `OPENCLAW_HOME` 时为 `$OPENCLAW_HOME/openclaw`；可通过 `OPENCLAW_GIT_DIR` 覆盖），切换到 `main`CLI，基于上游进行变基，构建，并从该检出安装全局 CLI。
+- **`stable`** (git 安装)：检出最新的稳定 git 标签，排除
+  诸如 `-alpha.N`、`-beta.N`、`-rc.N`、`-dev.N`、
+  `-next.N`、`-preview.N`、`-canary.N`、`-nightly.N` 以及其他预发布
+  后缀之类的 semver 预发布标签。
+- **`beta`** (git 安装)：首选最新的 beta git 标签，但当 beta 缺失或较旧时回退到
+  最新的稳定 git 标签。
+- **`dev`**：确保 git 检出（默认为 `~/openclaw`，或在设置了
+  `OPENCLAW_HOME` 时为 `$OPENCLAW_HOME/openclaw`；可通过
+  `OPENCLAW_GIT_DIR` 覆盖），切换到 `main`，在 upstream 上变基，构建，并
+  从该检出安装全局 CLI。
 
 <Tip>如果您想同时使用稳定版和开发版，请保留两个克隆并将您的网关指向稳定版。</Tip>
 
 ## 一次性指定版本或标签
 
-使用 `--tag` 在单次更新中指定特定的 dist-tag、版本或包规范，而**不**更改您持久化的渠道：
+使用 `--tag` 来指定特定的 dist-tag、版本或包规范，以进行单次更新，而**不**更改您持久化的渠道：
 
 ```bash
 # Install a specific version
@@ -60,11 +66,17 @@ openclaw update --tag main
 
 注意：
 
-- `--tag`npm **仅适用于包 安装**。Git 安装会忽略它。
+- `--tag` **仅适用于包 (npm) 安装**。Git 安装会忽略它。
 - 该标签不会被持久化。您的下一次 `openclaw update` 将照常使用您配置的渠道。
-- 对于包安装，OpenClaw 会在暂存的 npm 安装之前将 GitHub/git 源规范预打包到临时 tarball 中。当您希望将 `main` 的动态检出作为持久化安装时，请使用 OpenClawGitHubnpm`--channel dev` 或 `--install-method git --version main`。
-- 降级保护：如果目标版本比您的当前版本旧，OpenClaw 会提示确认（使用 OpenClaw`--yes` 跳过）。
-- `--channel beta` 与 `--tag beta` 不同：渠道流可以在 beta 缺失或较旧时回退到 stable/latest，而 `--tag beta` 仅针对该次运行定位原始的 `beta` dist-tag。
+- 对于包安装，OpenClaw 会在分阶段 GitHub 安装之前将 npm/git 源规范预打包到
+  临时 tarball 中。当您希望将动态的 `main`
+  检出作为持久化安装时，请使用 `--channel dev` 或
+  `--install-method git --version main`。
+- 降级保护：如果目标版本低于您当前的版本，
+  OpenClaw 会提示确认（使用 `--yes` 跳过）。
+- `--channel beta` 与 `--tag beta` 不同：渠道流程可以在 beta 缺失或较旧时回退
+  到 stable/latest，而 `--tag beta` 针对那一次运行定位
+  原始的 `beta` dist-tag。
 
 ## 试运行
 
@@ -81,9 +93,10 @@ openclaw update --dry-run --json
 
 ## 插件和渠道
 
-当您使用 `openclaw update`OpenClaw 切换渠道时，OpenClaw 也会同步插件源：
+当您使用 `openclaw update`OpenClaw 切换频道时，OpenClaw 还会同步插件
+源：
 
-- `dev` 优先使用来自 git 检出的捆绑插件。
+- `dev` 优先使用 git checkout 中的捆绑插件。
 - `stable` 和 `beta`npm 会恢复通过 npm 安装的插件包。
 - 核心更新完成后，npm 安装的插件会被更新。
 
@@ -97,13 +110,16 @@ openclaw update status
 
 ## 标记最佳实践
 
-- 为您希望 git 检出定位到的版本打标签（stable 版使用 `vYYYY.M.D`，beta 版使用 `vYYYY.M.D-beta.N`）。
-- `vYYYY.M.D.beta.N` 出于兼容性目的也会被识别，但建议优先使用 `-beta.N`。
-- 传统的 `vYYYY.M.D-<patch>` 标签仍被视为稳定版（非 Beta 版）。
+- 为您希望 git checkout 指向的版本打上标签（stable 版为 `vYYYY.M.D`，
+  beta 版为 `vYYYY.M.D-beta.N`；命名的 semver 预发布后缀，如
+  `-alpha.N`、`-rc.N` 和 `-next.N`，不是稳定的目标）。
+- 出于兼容性考虑，传统的数字稳定标签（如 `vYYYY.M.D-1` 和 `v1.0.1-1`）仍
+  被视为稳定的 git 标签。
+- 出于兼容性考虑，`vYYYY.M.D.beta.N` 也被识别，但建议使用 `-beta.N`。
 - 保持标签不可变：切勿移动或重用标签。
 - npm dist-tags 仍然是 npm 安装的事实来源：
   - `latest` -> stable
-  - `beta` -> 候选构建或 Beta 首发的稳定构建
+  - `beta` -> 候选构建或 beta 优先的稳定构建
   - `dev` -> main 快照（可选）
 
 ## macOS 应用可用性
@@ -116,4 +132,4 @@ Beta 和 dev 构建可能**不**包含 macOS 应用版本。这是正常的：
 ## 相关
 
 - [更新](/zh/install/updating)
-- [安装程序内部机制](/zh/install/installer)
+- [安装程序内部原理](/zh/install/installer)

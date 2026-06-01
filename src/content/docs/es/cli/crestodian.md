@@ -139,8 +139,8 @@ orden y te indica lo que eligió:
 
 - modelo explícito existente, si ya está configurado
 - `OPENAI_API_KEY` -> `openai/gpt-5.5`
-- `ANTHROPIC_API_KEY` -> `anthropic/claude-opus-4-7`
-- Claude Code CLI -> `claude-cli/claude-opus-4-7`
+- `ANTHROPIC_API_KEY` -> `anthropic/claude-opus-4-8`
+- Claude Code CLI -> `claude-cli/claude-opus-4-8`
 - Codex -> `openai/gpt-5.5` a través del arnés del servidor de aplicaciones Codex
 
 Si ninguno está disponible, la configuración aún escribe el espacio de trabajo predeterminado y deja el modelo sin configurar. Instale o inicie sesión en Codex/Claude Code, o exponga `OPENAI_API_KEY`/`ANTHROPIC_API_KEY`, luego ejecute la configuración nuevamente.
@@ -149,7 +149,7 @@ Si ninguno está disponible, la configuración aún escribe el espacio de trabaj
 
 Crestodian siempre se inicia en modo determinista. Para comandos difusos que el analizador determinista no entiende, el Crestodian local puede realizar un ciclo limitado del planificador a través de las rutas de tiempo de ejecución normales de OpenClaw. Primero utiliza el modelo OpenClaw configurado. Si aún no hay ningún modelo configurado utilizable, puede recurrir a los tiempos de ejecución locales ya presentes en la máquina:
 
-- Claude Code CLI: `claude-cli/claude-opus-4-7`
+- Claude Code CLI: `claude-cli/claude-opus-4-8`
 - Arnés del servidor de aplicaciones Codex: `openai/gpt-5.5`
 
 El planificador asistido por modelo no puede mutar la configuración directamente. Debe traducir la solicitud en uno de los comandos tipificados de Crestodian, y luego se aplican las reglas normales de aprobación y auditoría. Crestodian imprime el modelo que utilizó y el comando interpretado antes de ejecutar cualquier cosa. Los turnos del planificador de respaldo sin configuración son temporales, con herramientas deshabilitadas donde el tiempo de ejecución lo admite, y utilizan un espacio de trabajo/sesión temporal.

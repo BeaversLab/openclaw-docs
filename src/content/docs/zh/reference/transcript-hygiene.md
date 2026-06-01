@@ -25,17 +25,13 @@ OpenClaw 在运行之前（构建模型上下文时）对脚本应用**提供商
 
 如果您需要记录存储的详细信息，请参阅：
 
-- [会话管理深入探讨](/zh/reference/session-management-compaction)
+- [Session management deep dive](/zh/reference/session-management-compaction)
 
 ---
 
 ## 全局规则：运行时上下文不是用户记录
 
-运行时/系统上下文可以添加到某一轮的模型提示中，但它不是
-最终用户编写的内容。OpenClaw 为 Gateway(网关) 回复、
-排队的后续跟进、ACP、CLI 和嵌入式 Pi 运行保留单独的
-面向记录的提示主体。存储的可见用户轮次使用该记录主体，
-而不是运行时增强的提示。
+运行时/系统上下文可以添加到某个轮次的模型提示词中，但它不是由最终用户编写的内容。OpenClaw 为 Gateway(网关) 回复、排队后续跟进、ACP、CLI 和嵌入式 OpenClaw 运行保留了一个单独的面向对话记录的提示词主体。存储的可见用户轮次使用该对话记录主体，而不是经过运行时增强的提示词。
 
 对于已经持久化了运行时包装器的旧会话，Gateway(网关) 历史
 表面在将消息返回给 WebChat、TUI、REST 或 SSE 客户端之前
@@ -48,7 +44,7 @@ OpenClaw 在运行之前（构建模型上下文时）对脚本应用**提供商
 所有记录清理都集中在嵌入式运行器中：
 
 - 策略选择：`src/agents/transcript-policy.ts`
-- 清理/修复应用：`sanitizeSessionHistory` 在 `src/agents/pi-embedded-runner/replay-history.ts` 中
+- 清理/修复应用：位于 `src/agents/embedded-agent-runner/replay-history.ts` 中的 `sanitizeSessionHistory`
 
 该策略使用 `provider`、`modelApi` 和 `modelId` 来决定应用什么。
 
@@ -67,7 +63,7 @@ OpenClaw 在运行之前（构建模型上下文时）对脚本应用**提供商
 
 实现：
 
-- `sanitizeSessionMessagesImages` 在 `src/agents/pi-embedded-helpers/images.ts` 中
+- 位于 `src/agents/embedded-agent-helpers/images.ts` 中的 `sanitizeSessionMessagesImages`
 - `sanitizeContentBlocksImages` 在 `src/agents/tool-images.ts` 中
 - 最大图像边长可通过 `agents.defaults.imageMaxDimensionPx` 配置（默认值：`1200`）。
 - 在此遍历重放内容时，空白文本块将被移除。变为空的助手轮次将从重放副本中删除；变为空的用户和工具结果轮次将收到一个非空的省略内容占位符。
@@ -81,7 +77,7 @@ OpenClaw 在运行之前（构建模型上下文时）对脚本应用**提供商
 实现：
 
 - `sanitizeToolCallInputs` 在 `src/agents/session-transcript-repair.ts` 中
-- 应用于 `sanitizeSessionHistory` 中的 `src/agents/pi-embedded-runner/replay-history.ts`
+- 应用在 `src/agents/embedded-agent-runner/replay-history.ts` 中的 `sanitizeSessionHistory`
 
 ---
 
@@ -105,15 +101,15 @@ OpenClaw 还会在路由提示文本之前添加一个同轮 OpenClaw`[Inter-ses
 - 对于 OpenAI Responses/Codex 记录，丢弃孤立的推理签名（没有后续内容块的独立推理项）；在模型路由切换后，丢弃可重放的 OpenAI 推理。
 - 保留可重放的 OpenAI Responses 推理项载荷，包括加密的空摘要项，以便手动/WebSocket 重放时将所需的 OpenAI`rs_*` 状态与助手输出项保持配对。
 - 原生 ChatGPT Codex Responses 遵循 Codex 线路奇偶校验，通过重放先前的 Responses 推理/消息/功能载荷且不使用先前的项 ID，同时保留会话 `prompt_cache_key`。
-- 不进行工具调用 ID 清理。
-- 工具结果配对修复可能会移动实际匹配的输出，并为缺失的工具调用合成 Codex 风格的 `aborted` 输出。
+- OpenAI Responses 系列重放保留了规范的 `call_*|fc_*` 同模型推理对，但在进行 pi-ai 载荷转换之前，会确定性地规范化格式错误或过长的 `call_id` / 函数调用项 ID。
+- 工具结果配对修复可能会移动真实匹配的输出，并为缺失的工具调用合成 Codex 风格的 `aborted` 输出。
 - 不进行回合验证或重新排序。
-- 缺失的 OpenAI Responses 系列工具输出会被合成为 OpenAI`aborted`，以匹配 Codex 重放标准化。
+- 缺失的 OpenAI Responses 系列工具输出会被合成为 `aborted`，以匹配 Codex 重放规范化。
 - 不剥离思维签名。
 
 **OpenAI 兼容的聊天补全**
 
-- 历史助手思考/推理块会在重放前被剥离，因此本地和代理风格的 OpenAI 兼容服务器不会收到先前的推理字段，例如 OpenAI`reasoning` 或 `reasoning_content`。
+- 历史助手思考/推理块会在重放之前被剥离，因此本地和代理风格的 OpenAI 兼容服务器不会收到诸如 `reasoning` 或 `reasoning_content` 之类的先前轮次推理字段。
 - 当前同回合工具调用延续会将助手推理块
   附加到工具调用上，直到工具结果被重放为止。
 - 提供商拥有的例外可以在其线路协议需要重放推理元数据时选择退出。
@@ -140,7 +136,7 @@ OpenClaw 还会在路由提示文本之前添加一个同轮 OpenClaw`[Inter-ses
 
 **Amazon Bedrock (Converse API)**
 
-- 空的助手流错误轮次会在重放前被修复为非空的回退文本块。Bedrock Converse 会拒绝带有 `content: []` 的助手消息，因此在加载之前，磁盘上带有 `stopReason: "error"` 且内容为空的持久化助手轮次也会被修复。
+- 空的助手流错误轮次在重放之前会被修复为非空的回退文本块。Bedrock Converse 会拒绝带有 `content: []` 的助手消息，因此在加载之前，具有 `stopReason: "error"` 和空内容的持久化助手轮次也会在磁盘上被修复。
 - 仅包含空白文本块的助手流错误轮次将从内存中的重放副本中删除，
   而不是重放无效的空白块。
 - 缺少、为空或空白重放签名的 Claude 思考块会在 Converse 重放之前被剥离。如果这导致助手轮次变空，OpenClaw 会保留非空的 omitted-reasoning 文本以维持轮次形状。
@@ -154,7 +150,7 @@ OpenClaw 还会在路由提示文本之前添加一个同轮 OpenClaw`[Inter-ses
 
 **OpenRouter Gemini**
 
-- 思考签名清理：剥离非 base64 的 `thought_signature` 值（保留 base64）。
+- 思维签名清理：去除非 base64 的 `thought_signature` 值（保留 base64）。
 
 **OpenRouter Anthropic**
 
@@ -172,15 +168,15 @@ OpenClaw 还会在路由提示文本之前添加一个同轮 OpenClaw`[Inter-ses
 
 - 一个 **transcript-sanitize 扩展** 在每次构建上下文时运行，并且可以：
   - 修复工具使用/结果配对。
-  - 清理工具调用 ID（包括保留 `_`/`-` 的非严格模式）。
+  - 清理工具调用 ID（包括一种保留了 `_`/`-` 的非严格模式）。
 - 运行器还执行了特定于提供商的清理，这导致了工作重复。
 - 在提供商策略之外还发生了额外的变更，包括：
-  - 在持久化之前从助手文本中剥离 `<final>` 标签。
+  - 在持久化之前从助手文本中去除 `<final>` 标签。
   - 删除空的助手错误轮次。
   - 在工具调用之后修剪助手内容。
 
-这种复杂性导致了跨提供商的回归（特别是 `openai-responses`
-`call_id|fc_id` 配对）。2026.1.22 的清理工作移除了该扩展，将逻辑集中到运行器中，并使 OpenAI 在图像清理之外保持**不干预**（no-touch）。
+这种复杂性导致了跨提供商回归（特别是 `openai-responses`
+`call_id|fc_id` 配对）。2026.1.22 的清理工作移除了该扩展，将逻辑集中在运行器中，并使 OpenAI 除了图像清理外保持**不干预**（no-touch）。
 
 ## 相关
 

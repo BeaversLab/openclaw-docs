@@ -1,5 +1,5 @@
 ---
-summary: "添加用于发送和接收 OpenClaw 消息的 Feishu 渠道界面。"
+summary: "OpenClawOpenClaw Feishu/Lark 渠道插件，用于聊天和职场工具（由 @m1heng 社区维护）。"
 read_when:
   - You are installing, configuring, or auditing the feishu plugin
 title: "Feishu 插件"
@@ -7,7 +7,7 @@ title: "Feishu 插件"
 
 # Feishu 插件
 
-添加用于发送和接收 OpenClaw 消息的 Feishu 渠道界面。
+OpenClaw Feishu/Lark 渠道插件，用于聊天和职场工具（由 @m1heng 社区维护）。
 
 ## 分发
 

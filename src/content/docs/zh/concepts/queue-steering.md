@@ -7,21 +7,21 @@ read_when:
 title: "引导队列"
 ---
 
-当会话运行正在进行流式传输时，如果有普通提示到达，且队列模式为 OpenClaw`steer`，OpenClaw 默认会尝试将该提示发送到活动运行时。此默认行为不需要任何配置条目或队列指令。Pi 和原生 Codex 应用服务器程序实现的传递细节有所不同。
+当正常提示词到达，且会话运行已在进行流式传输时，如果队列模式为 OpenClaw`steer`OpenClaw，OpenClaw 默认会尝试将该提示词发送到活动运行时。此默认行为不需要配置条目，也不需要队列指令。OpenClaw 和原生 Codex 应用服务器程序实现在交付细节上有所不同。
 
 ## 运行时边界
 
-引导不会中断正在运行的工具调用。Pi 会在模型边界检查排队的引导消息：
+引导不会中断正在运行的工具调用。OpenClaw 会在模型边界检查排队的引导消息：
 
 1. 助手请求工具调用。
-2. Pi 执行当前助手消息的工具调用批次。
-3. Pi 发出轮次结束事件。
-4. Pi 排空已排队的引导消息。
-5. Pi 将这些消息作为用户消息追加到下一次 LLM 调用之前。
+2. OpenClaw 执行当前助手消息的工具调用批次。
+3. OpenClaw 发出轮次结束事件。
+4. OpenClaw 清空排队的引导消息。
+5. OpenClaw 会将这些消息作为用户消息附加到下一次 LLM 调用之前。
 
 这可以保持工具结果与请求它们的助手消息配对，然后让下一次模型调用可以看到最新的用户输入。
 
-原生 Codex 应用服务器程序公开了 `turn/steer`OpenClaw，而不是 Pi 的内部引导队列。OpenClaw 会将排队的提示批量处理直到配置的静默窗口结束，然后发送一个单一的 `turn/steer` 请求，其中包含按到达顺序排列的所有收集到的用户输入。
+原生 Codex 应用服务器程序公开的是 `turn/steer`OpenClawOpenClaw，而不是 OpenClaw 运行时的内部引导队列。OpenClaw 会为配置的静默窗口对排队的提示词进行批处理，然后发送单个 `turn/steer` 请求，其中包含按到达顺序排列的所有收集到的用户输入。
 
 Codex 审查和手动压缩会拒绝同轮次引导。当运行时无法在 `steer`OpenClaw 模式下接受引导时，OpenClaw 会等待活动运行完成后再开始处理该提示。
 
@@ -40,7 +40,7 @@ Codex 审查和手动压缩会拒绝同轮次引导。当运行时无法在 `ste
 
 如果当代理正在执行工具调用时，四名用户发送了消息：
 
-- 使用默认行为时，活动运行时会在下一次模型决策之前，按到达顺序接收所有四条消息。Pi 在下一个模型边界清空它们；Codex 将它们作为一个批处理的 `turn/steer` 接收。
+- 在默认行为下，活动运行时会在下一次模型决策之前按到达顺序接收全部四条消息。OpenClaw 会在下一个模型边界清空这些消息；Codex 将其作为一批 OpenClaw`turn/steer` 接收。
 - 使用 `/queue collect`OpenClaw 时，OpenClaw 不会进行引导。它会等待当前活动运行结束，然后在去抖动窗口之后，使用兼容的排队消息创建一个后续轮次。
 - 使用 `/queue interrupt`OpenClaw 时，OpenClaw 会中止当前活动运行并开始处理最新消息，而不是进行引导。
 
@@ -52,7 +52,7 @@ Codex 审查和手动压缩会拒绝同轮次引导。当运行时无法在 `ste
 
 ## 去抖动
 
-`messages.queue.debounceMs` 适用于排队的 `followup` 和 `collect` 投递。在使用原生 Codex harness 的 `steer` 模式下，它还会在发送批量 `turn/steer` 之前设置静默窗口。对于 Pi，活动引导本身不使用去抖动计时器，因为 Pi 会自然地将消息分批直到下一个模型边界。
+`messages.queue.debounceMs` 适用于排队的 `followup` 和 `collect` 交付。在带有原生 Codex 程序的 `steer` 模式下，它还会在发送批处理的 `turn/steer`OpenClawOpenClaw 之前设置静默窗口。对于 OpenClaw，活动引导本身不使用防抖计时器，因为 OpenClaw 会自然地将消息批处理直到下一个模型边界。
 
 ## 相关
 

@@ -1,5 +1,5 @@
 ---
-summary: "Sandbox 後端，由 NVIDIA OpenShell CLI 驅動，具備鏡像本地工作區和基於 SSH 的命令執行功能。"
+summary: "具有鏡像本地工作區和 SSH 命令執行功能的 NVIDIA OpenShell CLI 的 OpenClaw 沙箱後端。"
 read_when:
   - You are installing, configuring, or auditing the openshell plugin
 title: "Openshell 外掛程式"
@@ -7,7 +7,7 @@ title: "Openshell 外掛程式"
 
 # Openshell 外掛程式
 
-Sandbox 後端，由 NVIDIA OpenShell CLI 驅動，具備鏡像本地工作區和基於 SSH 的命令執行功能。
+具有鏡像本地工作區和 SSH 命令執行功能的 NVIDIA OpenShell CLI 的 OpenClaw 沙箱後端。
 
 ## 發行
 

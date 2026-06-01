@@ -25,13 +25,13 @@ OpenClaw 在運行（建立模型上下文）之前會對記錄套用**供應商
 
 如果您需要關於文字記錄儲存的詳細資訊，請參閱：
 
-- [會話管理深入解析](/zh-Hant/reference/session-management-compaction)
+- [會話管理深度剖析](/zh-Hant/reference/session-management-compaction)
 
 ---
 
 ## 全域規則：執行時內容非使用者文字記錄
 
-執行時/系統內容可以被加入至某個輪次的模型提示詞中，但它並非最終使用者所撰寫的內容。OpenClaw 會為 Gateway 回覆、排程的後續追蹤、ACP、CLI 和嵌入式 Pi 執行保留一份獨立的面對文字記錄的提示詞主體。已儲存的可見使用者輪次使用該文字記錄主體，而非經過執行時增強的提示詞。
+運行時/系統上下文可以添加到該輪次的模型提示中，但它並非終端用戶撰寫的內容。OpenClaw 為 Gateway 回覆、排隊的後續操作、ACP、CLI 和嵌入式 OpenClaw 運行保留了一個單獨的面向對話的提示主體。存儲的可見用戶輪次使用該對話主體，而不是運行時增強的提示。
 
 對於已經持久化執行時包裝器的舊版會話，Gateway 歷史紀錄介面會在將訊息返回給 WebChat、TUI、REST 或 SSE 用戶端之前套用顯示投影。
 
@@ -42,7 +42,7 @@ OpenClaw 在運行（建立模型上下文）之前會對記錄套用**供應商
 所有的文字記錄衛生處理都集中在嵌入式執行器中：
 
 - 策略選擇：`src/agents/transcript-policy.ts`
-- 清理/修復應用：`sanitizeSessionHistory` 於 `src/agents/pi-embedded-runner/replay-history.ts`
+- 清理/修復應用：`sanitizeSessionHistory` 中的 `src/agents/embedded-agent-runner/replay-history.ts`
 
 該策略使用 `provider`、`modelApi` 和 `modelId` 來決定套用什麼。
 
@@ -62,7 +62,7 @@ OpenClaw 在運行（建立模型上下文）之前會對記錄套用**供應商
 
 實作：
 
-- `sanitizeSessionMessagesImages` 於 `src/agents/pi-embedded-helpers/images.ts`
+- `src/agents/embedded-agent-helpers/images.ts` 中的 `sanitizeSessionMessagesImages`
 - `sanitizeContentBlocksImages` 於 `src/agents/tool-images.ts`
 - 最大影像邊長可透過 `agents.defaults.imageMaxDimensionPx` 設定（預設值：`1200`）。
 - 當此過程檢查重播內容時，會移除空白文字區塊。在重播副本中，
@@ -79,7 +79,7 @@ OpenClaw 在運行（建立模型上下文）之前會對記錄套用**供應商
 實作：
 
 - `sanitizeToolCallInputs` 於 `src/agents/session-transcript-repair.ts`
-- 應用於 `sanitizeSessionHistory` 於 `src/agents/pi-embedded-runner/replay-history.ts`
+- 應用於 `src/agents/embedded-agent-runner/replay-history.ts` 中的 `sanitizeSessionHistory`
 
 ---
 
@@ -105,15 +105,15 @@ OpenClaw 也會在路由提示文字前面加上一個同輪次的 `[Inter-sessi
 - 針對 OpenAI Responses/Codex 轉錄內容，捨棄孤立的推理簽章（獨立的推理項目，其後沒有內容區塊），並在模型路由切換後捨棄可重播的 OpenAI 推理。
 - 保留可重播的 OpenAI Responses 推理項目內容，包括加密的空摘要項目，以便手動/WebSocket 重播時能讓所需的 `rs_*` 狀態與助理輸出項目保持配對。
 - 原生 ChatGPT Codex Responses 遵循 Codex 線上對等性，在沒有先前項目 ID 的情況下重播先前的 Responses 推理/訊息/函式內容，同時保留會話 `prompt_cache_key`。
-- 不進行工具呼叫 ID 清理。
-- 工具結果配對修復可能會移動真實的相符輸出，並為遺失的工具呼叫合成 Codex 風格的 `aborted` 輸出。
+- OpenAI Responses 系列的重放會保留規範的 `call_*|fc_*` 同模型推理對，但在進行 pi-ai 轉換之前，會確定性地將格式錯誤或過長的 `call_id` / 函數調用項目 ID 標準化。
+- 工具結果配對修復可能會移動真實的匹配輸出，並為缺失的工具調用合成 Codex 風格的 `aborted` 輸出。
 - 不進行輪次驗證或重新排序。
-- 遺失的 OpenAI Responses 系列工具輸出會被合成為 `aborted`，以符合 Codex 重播正規化。
+- 缺失的 OpenAI Responses 系列工具輸出將被合成為 `aborted`，以符合 Codex 重放標準化。
 - 不移除思考簽章。
 
 **OpenAI 相容的聊天完成 (Chat Completions)**
 
-- 歷史助理思考/推理區塊會在重播前移除，讓本機與 Proxy 風格的 OpenAI 相容伺服器不會收到先前的推理欄位，例如 `reasoning` 或 `reasoning_content`。
+- 歷史助手思考/推理區塊會在重放之前被剝離，以便本地和代理風格的 OpenAI 兼容伺服器不會收到先前的推理字段，例如 `reasoning` 或 `reasoning_content`。
 - 目前的同輪次工具呼叫延續會將助理推理區塊附加到工具呼叫上，直到工具結果被重播為止。
 - 當提供者的線上協定要求
   重播推理元資料時，提供者擁有的例外可以選擇不加入。
@@ -141,7 +141,7 @@ OpenClaw 也會在路由提示文字前面加上一個同輪次的 `[Inter-sessi
 
 **Amazon Bedrock (Converse API)**
 
-- 空的串流錯誤助理輪次會在重播前修復為非空白的後備文字區塊。Bedrock Converse 會拒絕含有 `content: []` 的助理訊息，因此持久化並帶有 `stopReason: "error"` 且內容為空的助理輪次，也會在載入前於磁碟上修復。
+- 空的助手串流錯誤輪次會在重放之前被修復為非空的後備文字區塊。Bedrock Converse 會拒絕包含 `content: []` 的助手訊息，因此在載入之前，磁碟上包含 `stopReason: "error"` 且內容為空的已持久化助手輪次也會被修復。
 - 若助理串流錯誤輪次僅包含空白文字區塊，將會從
   記憶體中的重播副本中移除，而不是重播無效的空白區塊。
 - 缺少、空白或僅含空白字元重播簽章的 Claude 思考區塊會
@@ -157,7 +157,7 @@ OpenClaw 也會在路由提示文字前面加上一個同輪次的 `[Inter-sessi
 
 **OpenRouter Gemini**
 
-- 思考簽章清理：移除非 base64 的 `thought_signature` 值（保留 base64）。
+- 思考簽名清理：剝除非 base64 的 `thought_signature` 值（保留 base64）。
 
 **OpenRouter Anthropic**
 
@@ -175,15 +175,15 @@ OpenClaw 也會在路由提示文字前面加上一個同輪次的 `[Inter-sessi
 
 - 每個情境建置時都會執行 **transcript-sanitize 擴充功能**，並且可以：
   - 修復工具使用/結果配對。
-  - 清理工具呼叫 ID（包括保留 `_`/`-` 的非嚴格模式）。
+  - 清理工具調用 ID（包括保留了 `_`/`-` 的非嚴格模式）。
 - 執行器也會執行特定提供者的清理，這導致了工作重複。
 - 在提供者原則之外發生了額外的變異，包括：
-  - 在持久化前從助理文字中移除 `<final>` 標籤。
+  - 在持久化之前從助手文字中剝離 `<final>` 標籤。
   - 捨棄空的助理錯誤輪次。
   - 在工具呼叫之後修剪助理內容。
 
-這種複雜性導致了跨供應商的迴歸（特別是 `openai-responses`
-`call_id|fc_id` 配對）。2026.1.22 的清理工作移除了該擴充功能，將邏輯集中在運行器中，並使 OpenAI 除了圖像清理外變為 **no-touch**（不變更）。
+這種複雜性導致了跨供應商的回歸（特別是 `openai-responses`
+`call_id|fc_id` 配對）。2026.1.22 的清理工作移除了該擴充功能，將邏輯集中在執行器中，並使得 OpenAI 在圖片清理之外保持 **no-touch**（不干预）。
 
 ## 相關
 

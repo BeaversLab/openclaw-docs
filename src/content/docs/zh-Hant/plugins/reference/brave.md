@@ -1,5 +1,5 @@
 ---
-summary: "新增網頁搜尋供應商支援。"
+summary: "用於網路搜尋的 OpenClaw Brave 搜尋提供者外掛程式。"
 read_when:
   - You are installing, configuring, or auditing the brave plugin
 title: "Brave 外掛程式"
@@ -7,7 +7,7 @@ title: "Brave 外掛程式"
 
 # Brave 外掛程式
 
-新增網頁搜尋供應商支援。
+用於網路搜尋的 OpenClaw Brave 搜尋提供者外掛程式。
 
 ## 發布
 

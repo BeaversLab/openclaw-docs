@@ -131,7 +131,7 @@ OpenRouter 也可以透過其 OpenAI 相容的 `/audio/speech` 端點用作 TTS 
       providers: {
         openrouter: {
           model: "hexgrad/kokoro-82m",
-          voice: "af_alloy",
+          speakerVoice: "af_alloy",
           responseFormat: "mp3",
         },
       },

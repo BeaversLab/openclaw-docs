@@ -126,39 +126,40 @@ solo de observación.
 **Mensajes y entrega**
 
 - **`inbound_claim`** - reclamar un mensaje entrante antes del enrutamiento del agente (respuestas sintéticas)
-- `message_received` - observar el contenido entrante, el remitente, el hilo y los metadatos
-- **`message_sending`** - reescribir el contenido saliente o cancelar la entrega
-- `message_sent` - observar el éxito o el fracaso de la entrega saliente
-- **`before_dispatch`** - inspeccionar o reescribir un envío saliente antes de la transferencia del canal
-- **`reply_dispatch`** - participar en la canalización final de envío de respuestas
+- `message_received` — observe inbound content, sender, thread, and metadata
+- **`message_sending`** — rewrite outbound content or cancel delivery
+- **`reply_payload_sending`** — mutate or cancel normalized reply payloads before delivery
+- `message_sent` — observe outbound delivery success or failure
+- **`before_dispatch`** - inspect or rewrite an outbound dispatch before channel handoff
+- **`reply_dispatch`** - participate in the final reply-dispatch pipeline
 
-**Sesiones y compactación**
+**Sessions and compaction**
 
-- `session_start` / `session_end` - rastrea los límites del ciclo de vida de la sesión. El `reason` del evento es uno de `new`, `reset`, `idle`, `daily`, `compaction`, `deleted`, `shutdown`, `restart` o `unknown`. Los valores `shutdown` y `restart` se disparan desde el finalizador de apagado de la puerta de enlace (gateway) cuando el proceso se detiene o reinicia mientras las sesiones aún están activas, para que los complementos (plugins) posteriores (como los de memoria o almacenamiento de transcripciones) puedan finalizar las filas fantasma que de otro modo quedarían en un estado abierto tras los reinicios. El finalizador tiene un límite de tiempo, por lo que un complemento lento no puede bloquear SIGTERM/SIGINT.
-- `before_compaction` / `after_compaction` - observar o anotar ciclos de compactación
-- `before_reset` - observar eventos de restablecimiento de sesión (`/reset`, restablecimientos programáticos)
+- `session_start` / `session_end` - track session lifecycle boundaries. The event's `reason` is one of `new`, `reset`, `idle`, `daily`, `compaction`, `deleted`, `shutdown`, `restart`, or `unknown`. The `shutdown` and `restart` values fire from the gateway shutdown finalizer when the process is stopped or restarted while sessions are still active, so downstream plugins (such as memory or transcript stores) can finalize ghost rows that would otherwise be left in an open state across restarts. The finalizer is bounded so a slow plugin cannot block SIGTERM/SIGINT.
+- `before_compaction` / `after_compaction` - observe or annotate compaction cycles
+- `before_reset` - observe session-reset events (`/reset`, programmatic resets)
 
-**Subagentes**
+**Subagents**
 
-- `subagent_spawning` / `subagent_delivery_target` / `subagent_spawned` / `subagent_ended` - coordinar el enrutamiento de subagentes y la entrega de finalización
+- `subagent_spawning` / `subagent_delivery_target` / `subagent_spawned` / `subagent_ended` - coordinar el enrutamiento de subagentes y la entrega de finalizaciones
 
 **Ciclo de vida**
 
-- `gateway_start` / `gateway_stop` - iniciar o detener servicios propiedad del complemento con la puerta de enlace (Gateway)
-- `deactivate` - alias de compatibilidad en desuso para `gateway_stop`; use `gateway_stop` en nuevos complementos
-- `cron_changed` - observar cambios en el ciclo de vida del cron propiedad de la puerta de enlace (agregado, actualizado, eliminado, iniciado, finalizado, programado)
-- **`before_install`** - inspeccionar escaneos de instalación de habilidades (skills) o complementos y bloquearlos opcionalmente
+- `gateway_start` / `gateway_stop` - iniciar o detener servicios propiedad del complemento con el Gateway
+- `deactivate` - alias de compatibilidad en desuso para `gateway_stop`; use `gateway_stop` en complementos nuevos
+- `cron_changed` - observar cambios en el ciclo de vida de cron propiedad del gateway (agregado, actualizado, eliminado, iniciado, finalizado, programado)
+- **`before_install`** - inspeccionar escaneos de instalación de habilidades o complementos y opcionalmente bloquear
 
-## Depurar hooks en tiempo de ejecución
+## Depurar hooks de tiempo de ejecución
 
 Use `before_model_resolve` cuando un complemento necesite cambiar el proveedor o el modelo
 para un turno de agente. Se ejecuta antes de la resolución del modelo; `llm_output` solo se ejecuta después
-de que un intento de modelo produce una salida del asistente.
+de que un intento de modelo produce salida del asistente.
 
 Para verificar el modelo de sesión efectivo, inspeccione los registros en tiempo de ejecución y luego
 use `openclaw sessions` o las superficies de sesión/estado del Gateway. Al depurar
-cargas útiles del proveedor, inicie el Gateway con `--raw-stream` y
-`--raw-stream-path <path>`; esos indicadores escriben eventos de flujo de modelo sin procesar en un archivo
+las cargas útiles del proveedor, inicie el Gateway con `--raw-stream` y
+`--raw-stream-path <path>`; esas banderas escriben eventos de flujo de modelo sin procesar en un archivo
 l.
 
 ## Política de llamadas a herramientas
@@ -167,13 +168,13 @@ l.
 
 - `event.toolName`
 - `event.params`
-- opcional `event.toolKind` y `event.toolInputKind`, discriminadores autoritativos
-  del host para herramientas que comparten intencionalmente nombres; por ejemplo, las llamadas
-  `exec` del modo de código externo usan `toolKind: "code_mode_exec"` e
-  incluyen `toolInputKind: "javascript" | "typescript"` cuando se conoce el idioma
-  de entrada
-- opcional `event.derivedPaths`, que contiene sugerencias de ruta de destino derivadas
-  del host con el mejor esfuerzo para contenedores de herramientas conocidas como `apply_patch`; cuando están presentes,
+- opcional `event.toolKind` y `event.toolInputKind`, discriminadores
+  autoritativos del host para herramientas que comparten intencionalmente nombres; por ejemplo, las llamadas
+  `exec` en modo de código externo usan `toolKind: "code_mode_exec"` e
+  incluyen `toolInputKind: "javascript" | "typescript"` cuando se conoce
+  el idioma de entrada
+- opcional `event.derivedPaths`, que contiene sugerencias de ruta de destino
+  derivadas del host con el mejor esfuerzo para envoltorios de herramientas conocidas como `apply_patch`; cuando están presentes,
   estas rutas pueden estar incompletas o pueden sobrestimar lo que la herramienta
   realmente tocará (por ejemplo, con entradas malformadas o parciales)
 - opcional `event.runId`
@@ -195,96 +196,90 @@ type BeforeToolCallResult = {
     severity?: "info" | "warning" | "critical";
     timeoutMs?: number;
     timeoutBehavior?: "allow" | "deny";
+    allowedDecisions?: Array<"allow-once" | "allow-always" | "deny">;
     pluginId?: string;
     onResolution?: (decision: "allow-once" | "allow-always" | "deny" | "timeout" | "cancelled") => Promise<void> | void;
   };
 };
 ```
 
-Comportamiento de guarda del enlace para enlaces de ciclo de vida tipificados:
+Comportamiento de protección de gancho para ganchos de ciclo de vida tipados:
 
-- `block: true` es terminal y omite los manejadores de menor prioridad.
+- `block: true` es terminal y omite los controladores de menor prioridad.
 - `block: false` se trata como sin decisión.
-- `params` reescribe los parámetros de la herramienta para la ejecución.
+- `params` reescribe los parámetros de la herramienta para su ejecución.
 - `requireApproval` pausa la ejecución del agente y pregunta al usuario a través de aprobaciones
-  de complementos. El comando `/approve` puede aprobar tanto las aprobaciones de ejecución como las de complementos.
-- Un `block: true` de menor prioridad aún puede bloquear después de que un enlace
+  de complementos. El comando `/approve` puede aprobar tanto las aprobaciones de ejecución como de complementos.
+  En los relés nativos `PreToolUse` del modo de informe del servidor de aplicaciones de Codex, esto se difiere
+  a la solicitud de aprobación del servidor de aplicaciones correspondiente; consulte [Tiempo de ejecución del arnés de Codex](/es/plugins/codex-harness-runtime#hook-boundaries).
+- Un `block: true` de menor prioridad aún puede bloquear después de que un gancho
   de mayor prioridad haya solicitado aprobación.
-- `onResolution` recibe la decisión de aprobación resuelta: `allow-once`,
-  `allow-always`, `deny`, `timeout` o `cancelled`.
+- `onResolution` recibe la decisión de aprobación resuelta - `allow-once`,
+  `allow-always`, `deny`, `timeout`, o `cancelled`.
 
-Los complementos empaquetados que necesiten políticas a nivel de host pueden registrar políticas de herramientas de confianza
-con `api.registerTrustedToolPolicy(...)`. Estos se ejecutan antes que los enganches (hooks)
-`before_tool_call` ordinarios y antes de las decisiones de complementos externos. Úselos solo
-para puertas de confianza del host, como la política del espacio de trabajo, la aplicación del presupuesto o
-la seguridad de flujo de trabajo reservada. Los complementos externos deben usar los enganches `before_tool_call`
+Consulte [Solicitudes de permiso de complementos](/es/plugins/plugin-permission-requests) para obtener
+información sobre el enrutamiento de aprobaciones, el comportamiento de decisión y cuándo usar `requireApproval` en lugar
+de herramientas opcionales o aprobaciones de ejecución.
+
+Los complementos integrados que necesitan políticas a nivel de host pueden registrar políticas de herramientas confiables
+con `api.registerTrustedToolPolicy(...)`. Estas se ejecutan antes que los ganchos `before_tool_call`
+ordinarios y antes que las decisiones de complementos externos. Úselos solo
+para puertas confiables del host, como la política del espacio de trabajo, la aplicación del presupuesto o
+la seguridad del flujo de trabajo reservado. Los complementos externos deben usar ganchos `before_tool_call`
 normales.
 
 ### Persistencia del resultado de la herramienta
 
-Los resultados de las herramientas pueden incluir `details` estructurados para la representación de la interfaz de usuario, diagnósticos,
-enrutamiento de medios o metadatos propiedad del complemento. Trate `details` como metadatos de tiempo de ejecución,
-no como contenido del prompt:
+Los resultados de las herramientas pueden incluir `details` estructurados para la representación de la interfaz de usuario, diagnósticos, enrutamiento de medios o metadatos propiedad del complemento. Trate `details` como metadatos de tiempo de ejecución, no como contenido del prompt:
 
-- OpenClaw elimina `toolResult.details` antes de la reproducción del proveedor y la entrada de compactación
-  para que los metadatos no se conviertan en contexto del modelo.
-- Las entradas de sesión persistentes mantienen solo `details` limitados. Los detalles excesivos se
-  reemplazan con un resumen compacto y `persistedDetailsTruncated: true`.
-- `tool_result_persist` y `before_message_write` se ejecutan antes del límite final
-  de persistencia. Los enganches aun deben mantener los `details` devueltos pequeños y evitar
-  colocar texto relevante para el prompt solo en `details`; coloque la salida de la herramienta visible para el modelo
-  en `content`.
+- OpenClaw elimina `toolResult.details` antes de la repetición del proveedor y la entrada de compactación para que los metadatos no se conviertan en contexto del modelo.
+- Las entradas de sesión persistidas mantienen solo `details` delimitado. Los detalles excesivamente grandes se reemplazan con un resumen compacto y `persistedDetailsTruncated: true`.
+- `tool_result_persist` y `before_message_write` se ejecutan antes del límite final de persistencia. Los ganchos aún deben mantener los `details` devueltos pequeños y evitar colocar texto relevante para el prompt solo en `details`; coloque la salida de la herramienta visible para el modelo en `content`.
 
-## Enganches de prompt y modelo
+## Ganchos de prompt y modelo
 
-Use los enganches específicos de la fase para nuevos complementos:
+Use los ganchos específicos de la fase para nuevos complementos:
 
-- `before_model_resolve`: recibe solo el prompt actual y los metadatos de los
-  adjuntos. Devuelva `providerOverride` o `modelOverride`.
-- `agent_turn_prepare`: recibe el prompt actual, los mensajes de sesión preparados
-  y cualquier inyección en cola de exactamente una vez drenada para esta sesión. Devuelva
-  `prependContext` o `appendContext`.
-- `before_prompt_build`: recibe el mensaje y los mensajes de sesión actuales.
-  Devuelve `prependContext`, `appendContext`, `systemPrompt`,
-  `prependSystemContext`, o `appendSystemContext`.
-- `heartbeat_prompt_contribution`: se ejecuta solo para turnos de latido y devuelve
-  `prependContext` o `appendContext`. Está destinado a monitores en segundo plano
-  que necesitan resumir el estado actual sin cambiar los turnos iniciados por el usuario.
+- `before_model_resolve`: recibe solo el prompt actual y los metadatos de los archivos adjuntos. Devuelva `providerOverride` o `modelOverride`.
+- `agent_turn_prepare`: recibe el prompt actual, los mensajes de sesión preparados y cualquier inyección en cola de una sola vez drenada para esta sesión. Devuelva `prependContext` o `appendContext`.
+- `before_prompt_build`: recibe el prompt actual y los mensajes de sesión. Devuelva `prependContext`, `appendContext`, `systemPrompt`, `prependSystemContext` o `appendSystemContext`.
+- `heartbeat_prompt_contribution`: se ejecuta solo para turnos de latido y devuelve `prependContext` o `appendContext`. Está destinado a monitores en segundo plano que necesitan resumir el estado actual sin cambiar los turnos iniciados por el usuario.
 
-`before_agent_start` permanece por compatibilidad. Prefiera los ganchos explícitos anteriores
-para que su complemento no dependa de una fase combinada heredada.
+`before_agent_start` permanece por compatibilidad. Prefiera los ganchos explícitos anteriores para que su complemento no dependa de una fase combinada heredada.
 
-`before_agent_run` se ejecuta después de la construcción del mensaje y antes de cualquier entrada del modelo,
-incluida la carga de imágenes locales del mensaje y la observación `llm_input`. Recibe
-la entrada del usuario actual como `prompt`, además del historial de sesión cargado en `messages`
-y el mensaje del sistema activo. Devuelva `{ outcome: "block", reason, message? }`
-para detener la ejecución antes de que el modelo pueda leer el mensaje. `reason` es interno;
+`before_agent_run` se ejecuta después de la construcción del aviso y antes de cualquier entrada del modelo,
+incluida la carga de imágenes locales del aviso y la observación `llm_input`. Recibe
+la entrada del usuario actual como `prompt`, más el historial de sesión cargado en `messages`
+y el aviso del sistema activo. Devuelva `{ outcome: "block", reason, message? }`
+para detener la ejecución antes de que el modelo pueda leer el aviso. `reason` es interno;
 `message` es el reemplazo orientado al usuario. Los únicos resultados admitidos son
 `pass` y `block`; las formas de decisión no admitidas fallan de forma cerrada.
 
 Cuando se bloquea una ejecución, OpenClaw almacena solo el texto de reemplazo en
-`message.content` además de metadatos de bloqueo no sensibles, como el id del complemento bloqueante
+`message.content` más metadatos de bloqueo no confidenciales, como el id del complemento que bloquea
 y la marca de tiempo. El texto original del usuario no se conserva en la transcripción ni en el contexto
-futuro. Los motivos de bloqueo internos se tratan como sensibles y se excluyen de
-las cargas de transcripción, historial, difusión, registro y diagnósticos. La observabilidad
-debiera usar campos saneados como el id del bloqueador, el resultado, la marca de tiempo o una categoría
+futuro. Los motivos internos de bloqueo se tratan como confidenciales y se excluyen de
+la transcripción, el historial, la transmisión, el registro y las cargas de diagnóstico. La observabilidad
+debe usar campos saneados, como el id del bloqueador, el resultado, la marca de tiempo o una categoría
 segura.
 
 `before_agent_start` y `agent_end` incluyen `event.runId` cuando OpenClaw puede
 identificar la ejecución activa. El mismo valor también está disponible en `ctx.runId`.
 Las ejecuciones impulsadas por cron también exponen `ctx.jobId` (el id del trabajo cron de origen) para que
-los ganchos de complementos puedan limitar métricas, efectos secundarios o estado a un trabajo
+los ganchos del complemento puedan limitar métricas, efectos secundarios o estado a un trabajo
 programado específico.
 
-Para las ejecuciones originadas en el canal, `ctx.messageProvider` es la superficie del proveedor, como `discord` o `telegram`, mientras que `ctx.channelId` es el identificador de destino de la conversación cuando OpenClaw puede derivar uno de la clave de sesión o los metadatos de entrega.
+Para las ejecuciones originadas en un canal, `ctx.messageProvider` es la superficie del proveedor, tal
+como `discord` o `telegram`, mientras que `ctx.channelId` es el identificador de destino de la conversación
+cuando OpenClaw puede derivar uno de la clave de sesión o los metadatos de entrega.
 
-`agent_end` es un hook de observación. Las rutas de Gateway y del harness persistente lo ejecutan en modo "fire-and-forget" después del turno, mientras que las rutas de CLI de un solo uso de corta duración esperan a la promesa del hook antes de la limpieza del proceso para que los complementos de confianza puedan vaciar la observabilidad de la terminal o capturar el estado. El ejecutor de hooks aplica un tiempo de espera de 30 segundos para que un complemento bloqueado o un punto final de incrustación no pueda dejar la promesa del hook pendiente para siempre. Se registra un tiempo de espera y OpenClaw continúa; no cancela el trabajo de red propiedad del complemento a menos que el complemento también use su propia señal de aborto.
+`agent_end` es un hook de observación. Las rutas de Gateway y de arnes persistente lo ejecutan de forma asíncrona después del turno, mientras que las rutas de CLI de un solo uso de corta duración esperan a la promesa del hook antes de la limpieza del proceso para que los plugins de confianza puedan vaciar la observabilidad de la terminal o capturar el estado. El ejecutor de hooks aplica un tiempo de espera de 30 segundos para que un plugin bloqueado o un endpoint de incrustación no pueda dejar la promesa del hook pendiente para siempre. Se registra un tiempo de espera y OpenClaw continúa; no cancela el trabajo de red propiedad del plugin a menos que el plugin también use su propia señal de cancelación.
 
-Use `model_call_started` y `model_call_ended` para la telemetría de llamadas al proveedor que no debe recibir avisos sin procesar, historial, respuestas, encabezados, cuerpos de solicitud o IDs de solicitud del proveedor. Estos hooks incluyen metadatos estables como `runId`, `callId`, `provider`, `model`, `api`/`transport` opcional, `durationMs`/`outcome` terminal, y `upstreamRequestIdHash` cuando OpenClaw puede derivar un hash de ID de solicitud del proveedor limitado. Cuando el tiempo de ejecución ha resuelto los metadatos de la ventana de contexto, el evento y el contexto del hook también incluyen `contextTokenBudget`, el presupuesto efectivo de tokens después de los límites del modelo/configuración/agente, más `contextWindowSource` y `contextWindowReferenceTokens` cuando se aplicó un límite inferior.
+Use `model_call_started` y `model_call_ended` para la telemetría de llamadas al proveedor que no debe recibir prompts sin procesar, historial, respuestas, encabezados, cuerpos de solicitud o ID de solicitud del proveedor. Estos hooks incluyen metadatos estables como `runId`, `callId`, `provider`, `model`, `api`/`transport` opcionales, `durationMs`/`outcome` de terminal, y `upstreamRequestIdHash` cuando OpenClaw puede derivar un hash de ID de solicitud de proveedor delimitado. Cuando el tiempo de ejecución ha resuelto los metadatos de la ventana de contexto, el evento y el contexto del hook también incluyen `contextTokenBudget`, el presupuesto de tokens efectivo después de los límites de modelo/configuración/agente, más `contextWindowSource` y `contextWindowReferenceTokens` cuando se aplicó un límite inferior.
 
-`before_agent_finalize` se ejecuta solo cuando un arnés está a punto de aceptar una respuesta final natural del asistente. No es la ruta de cancelación de `/stop` y no se ejecuta cuando el usuario aborta un turno. Devuelva `{ action: "revise", reason }` para pedir al arnés un pase más del modelo antes de la finalización, `{ action: "finalize", reason? }` para forzar la finalización, u omita un resultado para continuar. Los ganchos nativos de Codex `Stop` se retransmiten a este gancho como decisiones de OpenClaw `before_agent_finalize`.
+`before_agent_finalize` se ejecuta solo cuando un arnes está a punto de aceptar una respuesta final natural del asistente. No es la ruta de cancelación de `/stop` y no se ejecuta cuando el usuario aborta un turno. Devuelva `{ action: "revise", reason }` para pedirle al arnes un pase más del modelo antes de la finalización, `{ action: "finalize", reason? }` para forzar la finalización, u omita un resultado para continuar. Los hooks nativos `Stop` de Codex se retransmiten a este hook como decisiones `before_agent_finalize` de OpenClaw.
 
-Al devolver `action: "revise"`, los plugins pueden incluir metadatos `retry` para que el pase adicional del modelo sea limitado y seguro para repetición:
+Al devolver `action: "revise"`, los plugins pueden incluir metadatos `retry` para hacer que el pase adicional del modelo sea delimitado y seguro para repetición:
 
 ```typescript
 type BeforeAgentFinalizeRetry = {
@@ -294,9 +289,14 @@ type BeforeAgentFinalizeRetry = {
 };
 ```
 
-`instruction` se añade al motivo de revisión enviado al arnés. `idempotencyKey` permite al host contar reintentos para la misma solicitud de plugin a través de decisiones de finalización equivalentes, y `maxAttempts` limita cuántos pases adicionales permitirá el host antes de continuar con la respuesta final natural.
+`instruction` se anexa al motivo de revisión enviado al arnés.
+`idempotencyKey` permite al host contar reintentos para la misma solicitud de plugin en
+decisiones de finalización equivalentes, y `maxAttempts` limita cuántos pases adicionales permitirá
+el host antes de continuar con la respuesta final natural.
 
-Los plugins no empaquetados que necesiten ganchos de conversación sin procesar (`before_model_resolve`, `before_agent_reply`, `llm_input`, `llm_output`, `before_agent_finalize`, `agent_end` o `before_agent_run`) deben establecer:
+Los plugins no empaquetados que necesiten hooks de conversación sin procesar (`before_model_resolve`,
+`before_agent_reply`, `llm_input`, `llm_output`, `before_agent_finalize`,
+`agent_end`, o `before_agent_run`) deben establecer:
 
 ```json
 {
@@ -312,97 +312,121 @@ Los plugins no empaquetados que necesiten ganchos de conversación sin procesar 
 }
 ```
 
-Los ganchos de modificación de prompts y las inyecciones duraderas de siguiente turno se pueden desactivar por plugin con `plugins.entries.<id>.hooks.allowPromptInjection=false`.
+Los hooks que modifican el prompt y las inyecciones persistentes de siguiente turno se pueden desactivar por plugin
+con `plugins.entries.<id>.hooks.allowPromptInjection=false`.
 
 ### Extensiones de sesión e inyecciones de siguiente turno
 
-Los plugins de flujo de trabajo pueden persistir un pequeño estado de sesión compatible con JSON con `api.registerSessionExtension(...)` y actualizarlo a través del método `sessions.pluginPatch` del Gateway. Las filas de sesión proyectan el estado de extensión registrado a través de `pluginExtensions`, lo que permite a la interfaz de Control y otros clientes representar el estado propiedad del plugin sin conocer los detalles internos del plugin.
+Los plugins de flujo de trabajo pueden mantener un estado de sesión pequeño y compatible con JSON con
+`api.registerSessionExtension(...)` y actualizarlo a través del método
+`sessions.pluginPatch` del Gateway. Las filas de sesión proyectan el estado de extensión registrado
+a través de `pluginExtensions`, permitiendo que la interfaz de Control y otros clientes muestren
+el estado propiedad del plugin sin conocer los detalles internos del plugin.
 
-Use `api.enqueueNextTurnInjection(...)` cuando un complemento necesita un contexto duradero para
+Use `api.enqueueNextTurnInjection(...)` cuando un plugin necesite un contexto duradero para
 alcanzar el siguiente turno del modelo exactamente una vez. OpenClaw drena las inyecciones en cola antes de
-los hooks de solicitud, elimina las inyecciones caducadas y deduplica por `idempotencyKey`
-por complemento. Este es el lugar indicado para reanudaciones de aprobación, resúmenes de políticas,
-deltas de monitores en segundo plano y continuaciones de comandos que deben ser visibles para
-el modelo en el siguiente turno pero que no deben convertirse en texto de solicitud del sistema permanente.
+los hooks de prompt, descarta las inyecciones caducadas y deduplica por `idempotencyKey`
+por plugin. Este es el punto adecuado para reanudaciones de aprobación, resúmenes de políticas,
+deltas de monitoreo en segundo plano y continuaciones de comandos que deben ser visibles para
+el modelo en el siguiente turno pero no deben convertirse en texto de prompt del sistema permanente.
 
-Las semánticas de limpieza son parte del contrato. Las devoluciones de llamada de limpieza de extensión de sesión
-y de ciclo de vida de tiempo de ejecución reciben `reset`, `delete`, `disable`, o
-`restart`. El host elimina el estado persistente de extensión de sesión
-y las inyecciones pendientes de siguiente turno del complemento propietario para reset/delete/disable; restart mantiene
-el estado duradero de la sesión mientras que las devoluciones de llamada de limpieza permiten a los complementos liberar trabajos
-del programador, contexto de ejecución y otros recursos fuera de banda para la generación de tiempo de
-ejecución antigua.
+La semántica de limpieza es parte del contrato. Las devoluciones de llamada de limpieza de extensiones de sesión y
+del ciclo de vida de tiempo de ejecución reciben `reset`, `delete`, `disable` o
+`restart`. El host elimina el estado de extensión de sesión persistente del plugin propietario
+y las inyecciones pendientes de siguiente turno para restablecimiento/eliminación/deshabilitación; el reinicio mantiene
+el estado de sesión duradero mientras que las devoluciones de llamada de limpieza permiten que los plugins liberen trabajos
+del programador, contexto de ejecución y otros recursos fuera de banda para la antigua generación
+de tiempo de ejecución.
 
-## Message hooks
+## Hooks de mensaje
 
-Use los hooks de mensajes para el enrutamiento a nivel de canal y la política de entrega:
+Use message hooks for channel-level routing and delivery policy:
 
-- `message_received`: observe el contenido entrante, remitente, `threadId`, `messageId`,
-  `senderId`, correlación opcional de ejecución/sesión y metadatos.
-- `message_sending`: reescriba `content` o devuelva `{ cancel: true }`.
-- `message_sent`: observe el éxito o fallo final.
+- `message_received`: observe inbound content, sender, `threadId`, `messageId`,
+  `senderId`, optional run/session correlation, and metadata.
+- `message_sending`: rewrite `content` or return `{ cancel: true }`.
+- `reply_payload_sending`: rewrite normalized `ReplyPayload` objects (including
+  `presentation`, `delivery`, media refs, and text) or return `{ cancel: true }`.
+- `message_sent`: observe final success or failure.
 
-Para respuestas TTS solo de audio, `content` puede contener la transcripción hablada oculta\incluso cuando la carga útil del canal no tiene texto/subtítulo visible. Reescribir ese
-`content` actualiza solo la transcripción visible para el hook; no se representa como un
-subtítulo de medios.
+For audio-only TTS replies, `content` may contain the hidden spoken transcript
+even when the channel payload has no visible text/caption. Rewriting that
+`content` updates the hook-visible transcript only; it is not rendered as a
+media caption.
 
-Los contextos de los hooks de mensaje exponen campos de correlación estables cuando están disponibles:
+Message hook contexts expose stable correlation fields when available:
 `ctx.sessionKey`, `ctx.runId`, `ctx.messageId`, `ctx.senderId`, `ctx.trace`,
-`ctx.traceId`, `ctx.spanId`, `ctx.parentSpanId` y `ctx.callDepth`. Prefiera
-estos campos de primera clase antes de leer los metadatos heredados.
+`ctx.traceId`, `ctx.spanId`, `ctx.parentSpanId`, and `ctx.callDepth`. Prefer
+these first-class fields before reading legacy metadata.
 
-Prefiera los campos tipados `threadId` y `replyToId` antes de utilizar metadatos
-específicos del canal.
+Prefer typed `threadId` and `replyToId` fields before using channel-specific
+metadata.
 
-Reglas de decisión:
+Decision rules:
 
-- `message_sending` con `cancel: true` es terminal.
-- `message_sending` con `cancel: false` se trata como sin decisión.
-- El `content` reescrito continúa con los hooks de menor prioridad a menos que un hook posterior
-  cancele la entrega.
-- `message_sending` puede devolver `cancelReason` y `metadata` delimitados con una
-  cancelación. Las nuevas API del ciclo de vida de mensajes exponen esto como un resultado de entrega
-  suprimido con el motivo `cancelled_by_message_sending_hook`; la entrega directa heredada
-  sigue devolviendo una matriz de resultados vacía para la compatibilidad.
-- `message_sent` es solo de observación. Los fallos del controlador se registran y no
-  cambian el resultado de la entrega.
+- `message_sending` with `cancel: true` is terminal.
+- `message_sending` with `cancel: false` is treated as no decision.
+- Rewritten `content` continues to lower-priority hooks unless a later hook
+  cancels delivery.
+- `reply_payload_sending` runs after payload normalization and before channel
+  delivery, including replies routed back to the originating channel. Handlers
+  run sequentially and each handler sees the latest payload produced by
+  higher-priority handlers.
+- Las cargas útiles de `reply_payload_sending` no exponen marcadores de confianza de tiempo de ejecución como `trustedLocalMedia`; los complementos pueden editar la forma de la carga útil pero no pueden otorgar confianza de medios locales.
+- `message_sending` puede devolver `cancelReason` y `metadata` delimitado con una cancelación. Las nuevas API del ciclo de vida de mensajes exponen esto como un resultado de entrega suprimido con el motivo `cancelled_by_message_sending_hook`; la entrega directa heredada sigue devolviendo una matriz de resultados vacía por compatibilidad.
+- `message_sent` es solo de observación. Los fallos del controlador se registran y no cambian el resultado de la entrega.
 
-## Hooks de instalación
+## Ganchos de instalación
 
-`before_install` se ejecuta después del escaneo integrado de instalaciones de habilidades y plugins.
-Devuelva hallazgos adicionales o `{ block: true, blockReason }` para detener la
-instalación.
+`before_install` se ejecuta después del análisis integrado de instalaciones de habilidades y complementos. Devuelve hallazgos adicionales o `{ block: true, blockReason }` para detener la instalación.
 
 `block: true` es terminal. `block: false` se trata como sin decisión.
 
 ## Ciclo de vida de Gateway
 
-Use `gateway_start` para servicios de complemento que necesitan estado propiedad de Gateway. El
-contexto expone `ctx.config`, `ctx.workspaceDir` y `ctx.getCron?.()` para
-la inspección y actualización de cron. Use `gateway_stop` para limpiar recursos
-de larga ejecución.
+Use `gateway_start` para servicios de complementos que necesitan un estado propiedad de Gateway. El contexto expone `ctx.config`, `ctx.workspaceDir` y `ctx.getCron?.()` para inspección y actualizaciones de cron. Use `gateway_stop` para limpiar recursos de larga duración.
 
-No confíe en el hook interno `gateway:startup` para servicios de ejecución
-propiedad del complemento.
+No confíe en el gancho interno `gateway:startup` para servicios de tiempo de ejecución propiedad de complementos.
 
-`cron_changed` se dispara para eventos del ciclo de vida de cron propiedad de la pasarela con una carga útil de evento tipificada que cubre las razones `added`, `updated`, `removed`, `started`, `finished` y `scheduled`. El evento lleva una instantánea `PluginHookGatewayCronJob` (incluyendo `state.nextRunAtMs`, `state.lastRunStatus` y `state.lastError` cuando están presentes) más una `PluginHookGatewayCronDeliveryStatus` de `not-requested` | `delivered` | `not-delivered` | `unknown`. Los eventos eliminados todavía llevan la instantánea del trabajo eliminado para que los programadores externos puedan conciliar el estado. Use `ctx.getCron?.()` y `ctx.config` del contexto de ejecución al sincronizar los programadores de activación externos, y mantenga a OpenClaw como la fuente de verdad para las comprobaciones de vencimiento y la ejecución.
+`cron_changed` se activa para eventos del ciclo de vida de cron propiedad del gateway con una carga útil de evento tipificada que cubre `added`, `updated`, `removed`, `started`, `finished`
+y razones `scheduled`. El evento lleva una instantánea `PluginHookGatewayCronJob`
+(incluyendo `state.nextRunAtMs`, `state.lastRunStatus` y
+`state.lastError` cuando están presentes) más un `PluginHookGatewayCronDeliveryStatus`
+de `not-requested` | `delivered` | `not-delivered` | `unknown`. Los eventos de eliminación
+todavía llevan la instantánea del trabajo eliminado para que los planificadores externos puedan
+conciliar el estado. Use `ctx.getCron?.()` y `ctx.config` del contexto
+de ejecución al sincronizar los planificadores de activación externos, y mantenga a OpenClaw como la
+fuente de verdad para las comprobaciones de vencimiento y la ejecución.
 
-## Próximas desaprobaciones
+## Próximas depreciaciones
 
-Algunas superficies adyacentes a los hooks están desaprobadas pero aún son compatibles. Migre antes de la próxima versión mayor:
+Algunas superficies adyacentes a los hooks están en desuso pero aún son compatibles. Migre
+antes de la próxima versión principal:
 
-- **Sobres de canales de texto plano** en los controladores `inbound_claim` y `message_received`. Lea `BodyForAgent` y los bloques de contexto de usuario estructurados en lugar de analizar el texto de sobre plano. Consulte [Sobres de canales de texto plano → BodyForAgent](/es/plugins/sdk-migration#active-deprecations).
-- **`before_agent_start`** permanece por compatibilidad. Los nuevos complementos deben usar `before_model_resolve` y `before_prompt_build` en lugar de la fase combinada.
-- **`deactivate`** permanece como un alias de compatibilidad de limpieza desaprobado hasta después del 2026-08-16. Los nuevos complementos deben usar `gateway_stop`.
-- **`onResolution` en `before_tool_call`** ahora usa la unión tipificada `PluginApprovalResolution` (`allow-once` / `allow-always` / `deny` / `timeout` / `cancelled`) en lugar de un `string` de forma libre.
+- **Sobres de canal de texto plano** en los controladores `inbound_claim` y `message_received`.
+  Lea `BodyForAgent` y los bloques de contexto de usuario estructurados
+  en lugar de analizar el texto del sobre plano. Vea
+  [Sobres de canal de texto plano → BodyForAgent](/es/plugins/sdk-migration#active-deprecations).
+- **`before_agent_start`** permanece por compatibilidad. Los nuevos plugins deben usar
+  `before_model_resolve` y `before_prompt_build` en lugar de la fase
+  combinada.
+- **`deactivate`** permanece como un alias de compatibilidad de limpieza en desuso hasta
+  después del 2026-08-16. Los nuevos plugins deben usar `gateway_stop`.
+- **`onResolution` en `before_tool_call`** ahora usa la unión tipificada
+  `PluginApprovalResolution` (`allow-once` / `allow-always` / `deny` /
+  `timeout` / `cancelled`) en lugar de un `string` de forma libre.
 
-Para la lista completa - registro de capacidades de memoria, perfil de pensamiento del proveedor, proveedores de autenticación externos, tipos de descubrimiento de proveedores, accesores del tiempo de ejecución de tareas y el cambio de nombre de `command-auth` → `command-status` - consulte [Migración del SDK de plugins → Deprecaciones activas](/es/plugins/sdk-migration#active-deprecations).
+Para ver la lista completa: registro de capacidades de memoria, perfil de
+pensamiento del proveedor, proveedores de autenticación externos, tipos de
+descubrimiento de proveedores, accesos de tiempo de ejecución de tareas y el
+cambio de nombre de `command-auth` → `command-status`,
+consulte [Migración del SDK de complementos → Deprecaciones activas](/es/plugins/sdk-migration#active-deprecations).
 
 ## Relacionado
 
-- [Migración del SDK de plugins](/es/plugins/sdk-migration) - deprecaciones activas y cronograma de eliminación
-- [Construcción de plugins](/es/plugins/building-plugins)
-- [Descripción general del SDK de plugins](/es/plugins/sdk-overview)
-- [Puntos de entrada del plugin](/es/plugins/sdk-entrypoints)
+- [Migración del SDK de complementos](/es/plugins/sdk-migration) - deprecaciones activas y calendario de eliminación
+- [Crear complementos](/es/plugins/building-plugins)
+- [Descripción general del SDK de complementos](/es/plugins/sdk-overview)
+- [Puntos de entrada de complementos](/es/plugins/sdk-entrypoints)
 - [Ganchos internos](/es/automation/hooks)
-- [Aspectos internos de la arquitectura de plugins](/es/plugins/architecture-internals)
+- [Aspectos internos de la arquitectura de complementos](/es/plugins/architecture-internals)

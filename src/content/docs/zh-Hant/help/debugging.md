@@ -275,65 +275,62 @@ OPENCLAW_RAW_STREAM_PATH=~/.openclaw/logs/raw-stream.jsonl
 
 `~/.openclaw/logs/raw-stream.jsonl`
 
-## 原始區塊記錄 (pi-mono)
+## 原始 OpenAI 相容區塊記錄
 
-為了在 **原始 OpenAI 相容區塊** 被解析為區塊之前進行捕獲，
-pi-mono 公開了一個獨立的記錄器：
+若要在將區塊解析為區塊之前擷取**原始 OpenAI 相容區塊**，
+請啟用傳輸記錄器：
 
 ```bash
-PI_RAW_STREAM=1
+OPENCLAW_RAW_STREAM=1
 ```
 
 可選路徑：
 
 ```bash
-PI_RAW_STREAM_PATH=~/.pi-mono/logs/raw-openai-completions.jsonl
+OPENCLAW_RAW_STREAM_PATH=~/.openclaw/logs/raw-openai-completions.jsonl
 ```
 
 預設檔案：
 
-`~/.pi-mono/logs/raw-openai-completions.jsonl`
-
-> 注意：這僅由使用 pi-mono 的
-> `openai-completions` provider 的程序發出。
+`~/.openclaw/logs/raw-openai-completions.jsonl`
 
 ## 安全注意事項
 
-- 原始串流日誌可能包含完整的提示、工具輸出和用戶數據。
-- 請將日誌保留在本地，並在除錯後刪除。
-- 如果您分享日誌，請先清除機密和個人資訊 (PII)。
+- 原始串流記錄可能包含完整的提示詞、工具輸出和使用者資料。
+- 請將記錄保留在本地，並在除錯後將其刪除。
+- 如果您分享記錄，請先清除機密和個人識別資訊 (PII)。
 
 ## 在 VSCode 中除錯
 
-由於在建置過程中許多生成的檔案最終會帶有雜湊名稱，因此需要在基於 VSCode 的 IDE 中啟用偵錯功能必須要有 Source maps。包含的 `launch.json` 設定以 Gateway 服務為目標，但可以快速調整以用於其他用途：
+需要來源映射 才能在基於 VSCode 的 IDE 中啟用除錯，因為許多生成的檔案在建置過程中最終會具有雜湊名稱。包含的 `launch.json` 組態以 Gateway 服務為目標，但可以快速調整用於其他用途：
 
-1. **重新建置並偵錯 Gateway (Rebuild and Debug Gateway)** - 在建立新建置後對 Gateway 服務進行偵錯
-2. **偵錯 Gateway (Debug Gateway)** - 對既有的建置之 Gateway 服務進行偵錯
+1. **重新建置並對 Gateway 進行除錯** - 在建立新建置後對 Gateway 服務進行除錯
+2. **對 Gateway 進行除錯** - 對現有建置的 Gateway 服務進行除錯
 
 ### 設定
 
-預設的 **重新建置並偵錯 Gateway** 設定是功能齊全的，它會自動刪除 `/dist` 資料夾並在啟用偵錯的情況下重新建置專案：
+預設的 **重新建置並對 Gateway 進行除錯** 組態是完備的，它會自動刪除 `/dist` 資料夾並在建置時啟用除錯功能來重建專案：
 
-1. 從活動列 開啟 **執行和偵錯** 面板或按下 `Ctrl`+`Shift`+`D`
-2. 在 IDE 中，確保在下拉選單中選取了 **重新建置並偵錯 Gateway**，然後按下 **開始偵錯** 按鈕
+1. 從活動列 開啟 **執行和除錯** 面板，或按 `Ctrl`+`Shift`+`D`
+2. 在 IDE 中，請確保在下拉式選單中選取了 **重新建置並對 Gateway 進行除錯**，然後按下 **開始除錯** 按鈕
 
-或者 - 如果您偏好手動管理建置和偵錯程序：
+或者 - 如果您想要手動管理建置和除錯程序：
 
-1. 開啟終端機並啟用 source maps：
+1. 開啟終端機並啟用來源映射：
    - **Linux/macOS**：`export OUTPUT_SOURCE_MAPS=1`
    - **Windows (PowerShell)**：`$env:OUTPUT_SOURCE_MAPS="1"`
    - **Windows (CMD)**：`set OUTPUT_SOURCE_MAPS=1`
-2. 在同一個終端機中，重新建置專案：`pnpm clean:dist && pnpm build`
-3. 在 IDE 中，於 **執行和偵錯** 設定下拉選單中選取 **偵錯 Gateway** 選項，然後按下 **開始偵錯** 按鈕
+2. 在同一個終端機中，重建專案：`pnpm clean:dist && pnpm build`
+3. 在 IDE 中，在 **執行和除錯** 組態下拉式選單中選取 **對 Gateway 進行除錯** 選項，然後按下 **開始除錯** 按鈕
 
-您現在可以在 TypeScript 原始碼檔案 (`src/` 目錄) 中設定中斷點，偵錯工具將會透過 source maps 正確地將中斷點對應到編譯後的 JavaScript。您將能夠檢查變數、逐步執行程式碼，並檢視呼叫堆疊，如同預期般運作。
+您現在可以在 TypeScript 原始檔案 (`src/` 目錄) 中設定中斷點，除錯器將透過來源映射將中斷點正確對應到編譯後的 JavaScript。您將能夠檢查變數、逐步執行程式碼，並檢查呼叫堆疊。
 
 ### 備註
 
-- 如果使用 **「重新建置並偵錯 Gateway」** 選項 - 每次啟動偵錯工具時，它將會完全刪除 `/dist` 資料夾，並在啟動 Gateway 之前執行啟用 source maps 的完整 `pnpm build`
-- 如果使用 **「偵錯 Gateway」** 選項 - 偵錯工作階段可以隨時啟動和停止而不影響 `/dist` 資料夾，但您必須使用獨立的終端機程序來啟用偵錯和管理建置週期
-- 修改 `launch.json` 的 `args` 設定，以專案除錯其他部分
-- 如果您需要使用建置好的 OpenClaw CLI 來執行其他工作（例如 `dashboard --no-open`，如果您的除錯工作階段產生了新的 auth token），您可以在另一個終端機中將其執行為 `node ./openclaw.mjs` 或建立如 `alias openclaw-build="node $(pwd)/openclaw.mjs"` 的 shell 別名
+- 如果使用 **"Rebuild and Debug Gateway"** 選項 - 每次啟動調試器時，它將完全刪除 `/dist` 資料夾，並在啟動 Gateway 之前執行完整的 `pnpm build` 且啟用 source maps
+- 如果使用 **"Debug Gateway"** 選項 - 調試會話可以隨時啟動和停止，而不會影響 `/dist` 資料夾，但您必須使用單獨的終端機程序來啟用調試和管理建構週期
+- 修改 `args` 的 `launch.json` 設定以調試專案的其他部分
+- 如果您需要將建置好的 OpenClaw CLI 用於其他任務（即 `dashboard --no-open`，如果您的調試會話產生了一個新的 auth token），您可以在另一個終端機中將其執行為 `node ./openclaw.mjs` 或建立一個 shell 別名，例如 `alias openclaw-build="node $(pwd)/openclaw.mjs"`
 
 ## 相關
 

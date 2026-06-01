@@ -1,5 +1,5 @@
 ---
-summary: "新增代理可呼叫的工具。"
+summary: "具有自動召回、自動擷取和向量搜尋功能的 OpenClaw LanceDB 長期記憶外掛程式。"
 read_when:
   - You are installing, configuring, or auditing the memory-lancedb plugin
 title: "Memory Lancedb 插件"
@@ -7,7 +7,7 @@ title: "Memory Lancedb 插件"
 
 # Memory Lancedb 插件
 
-新增代理可呼叫的工具。
+具有自動召回、自動擷取和向量搜尋功能的 OpenClaw LanceDB 長期記憶外掛程式。
 
 ## 發行版
 

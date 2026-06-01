@@ -65,10 +65,10 @@ el agente de destino inicie sesión por separado y cree su propio perfil local.
 ## Rutas de autenticación solo de configuración
 
 Las entradas `auth.profiles` con `mode: "aws-sdk"` son metadatos de enrutamiento, no credenciales
-almacenadas. Son válidas cuando el proveedor de destino utiliza
-`models.providers.<id>.auth: "aws-sdk"` o la ruta predeterminada del SDK de AWS
-integrada de Amazon Bedrock. Estos identificadores de perfil pueden aparecer en `auth.order` y en las
-anulaciones de sesión incluso cuando no existe ninguna entrada coincidente en `auth-profiles.json`.
+almacenadas. Son válidas cuando el proveedor de destino usa
+`models.providers.<id>.auth: "aws-sdk"` o la configuración de Amazon Bedrock propiedad del complemento
+ruta del AWS SDK. Estos identificadores de perfil pueden aparecer en `auth.order` y anulaciones
+de sesión incluso cuando no existe una entrada coincidente en `auth-profiles.json`.
 
 No escriba `type: "aws-sdk"` en `auth-profiles.json`. Si una instalación heredada
 tiene dicho marcador, `openclaw doctor --fix` lo mueve a `auth.profiles` y

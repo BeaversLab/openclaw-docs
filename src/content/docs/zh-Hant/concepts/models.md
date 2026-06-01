@@ -16,49 +16,49 @@ sidebarTitle: "Models CLI"
     提供者快速概覽與範例。
   </Card>
   <Card title="Agent runtimes" href="/zh-Hant/concepts/agent-runtimes">
-    PI、Codex 及其他 Agent 迴圈執行環境。
+    OpenClaw、Codex 和其他代理循行時。
   </Card>
   <Card title="Configuration reference" href="/zh-Hant/gateway/config-agents#agent-defaults">
     模型設定鍵值。
   </Card>
 </CardGroup>
 
-模型參照會選擇供應商和模型。它們通常不會選擇底層的代理執行時。OpenAI 代理參照是主要的例外：在官方 OpenAI 供應商上，`openai/gpt-5.5` 預設會透過 Codex 應用伺服器執行時來執行。明確的執行時覆寫應屬於供應商/模型政策，而非整個代理或會話。在 Codex 執行時模式下，`openai/gpt-*` 參照並不意味著 API 金鑰計費；認證可以來自 Codex 帳戶或 `openai-codex` 認證設定檔。請參閱 [代理執行時](/zh-Hant/concepts/agent-runtimes)。
+模型參照（Model refs）選擇一個供應商和模型。它們通常不選擇底層代理運行時。OpenAI 代理參照是主要的例外：`openai/gpt-5.5` 在官方 OpenAI 供應商上預設透過 Codex 應用程式伺服器運行時執行。訂閱版 Copilot 參照（`github-copilot/*`）還可以選擇加入內建的 GitHub Copilot 代理運行時 — 該路徑保持顯式（沒有 `auto` 備援）。明確的運行時覆蓋屬於供應商/模型策略，不屬於整個代理或會話。在 Codex 運行時模式下，`openai/gpt-*` 參照並不意味著 API 金鑰計費；身份驗證可以來自 Codex 帳戶或 `openai-codex` 身份驗證設定檔。參閱 [代理運行時](/zh-Hant/concepts/agent-runtimes) 和 [GitHub Copilot 代理運行時](/zh-Hant/plugins/copilot)。
 
 ## 模型選擇機制
 
 OpenClaw 依照以下順序選擇模型：
 
 <Steps>
-  <Step title="Primary model">`agents.defaults.model.primary` (或 `agents.defaults.model`)。</Step>
-  <Step title="Fallbacks">`agents.defaults.model.fallbacks` (依順序)。</Step>
+  <Step title="Primary model">`agents.defaults.model.primary`（或 `agents.defaults.model`）。</Step>
+  <Step title="Fallbacks">`agents.defaults.model.fallbacks`（按順序）。</Step>
   <Step title="Provider auth failover">提供者驗證後備機制會在移至下一個模型之前，於該提供者內部發生。</Step>
 </Steps>
 
 <AccordionGroup>
   <Accordion title="相關模型介面">
-    - `agents.defaults.models` 是 OpenClaw 可使用的模型允許清單/目錄（包含別名）。使用 `provider/*` 項目來限制可見的供應商，同時保持供應商探索的動態性。
-    - `agents.defaults.imageModel` **僅在** 主要模型無法接受圖片時使用。
-    - `agents.defaults.pdfModel` 由 `pdf` 工具使用。如果省略，該工具會回退到 `agents.defaults.imageModel`，然後是解析出的會話/預設模型。
-    - `agents.defaults.imageGenerationModel` 由共享的圖片生成功能使用。如果省略，`image_generate` 仍可推斷出支援驗證的供應商預設值。它會先嘗試目前的預設供應商，然後按照供應商 ID 順序嘗試剩餘的已註冊圖片生成供應商。如果您設定了特定的供應商/模型，請同時設定該供應商的驗證/API 金鑰。
-    - `agents.defaults.musicGenerationModel` 由共享的音樂生成功能使用。如果省略，`music_generate` 仍可推斷出支援驗證的供應商預設值。它會先嘗試目前的預設供應商，然後按照供應商 ID 順序嘗試剩餘的已註冊音樂生成供應商。如果您設定了特定的供應商/模型，請同時設定該供應商的驗證/API 金鑰。
-    - `agents.defaults.videoGenerationModel` 由共享的影片生成功能使用。如果省略，`video_generate` 仍可推斷出支援驗證的供應商預設值。它會先嘗試目前的預設供應商，然後按照供應商 ID 順序嘗試剩餘的已註冊影片生成供應商。如果您設定了特定的供應商/模型，請同時設定該供應商的驗證/API 金鑰。
-    - 每個代理的預設值可以透過 `agents.list[].model` 加上綁定來覆寫 `agents.defaults.model`（請參閱[多代理路由](/zh-Hant/concepts/multi-agent)）。
+    - `agents.defaults.models` 是 OpenClaw 可使用的模型允許清單/目錄（加上別名）。使用 `provider/*` 項目來限制可見的供應商，同時保持供應商探索的動態性。
+    - `agents.defaults.imageModel` **僅當** 主要模型無法接受圖片時才會使用。
+    - `agents.defaults.pdfModel` 由 `pdf` 工具使用。如果省略，該工具會回退到 `agents.defaults.imageModel`，然後是解析出的工作階段/預設模型。
+    - `agents.defaults.imageGenerationModel` 由共享的圖片生成功能使用。如果省略，`image_generate` 仍可以推斷出由支援驗證的供應商預設值。它會先嘗試目前的預設供應商，然後按照供應商 ID 的順序嘗試剩餘的已註冊圖片生成供應商。如果您設定了特定的供應商/模型，請同時設定該供應商的驗證/API 金鑰。
+    - `agents.defaults.musicGenerationModel` 由共享的音樂生成功能使用。如果省略，`music_generate` 仍可以推斷出由支援驗證的供應商預設值。它會先嘗試目前的預設供應商，然後按照供應商 ID 的順序嘗試剩餘的已註冊音樂生成供應商。如果您設定了特定的供應商/模型，請同時設定該供應商的驗證/API 金鑰。
+    - `agents.defaults.videoGenerationModel` 由共享的影片生成功能使用。如果省略，`video_generate` 仍可以推斷出由支援驗證的供應商預設值。它會先嘗試目前的預設供應商，然後按照供應商 ID 的順序嘗試剩餘的已註冊影片生成供應商。如果您設定了特定的供應商/模型，請同時設定該供應商的驗證/API 金鑰。
+    - 每個代理程式的預設值可以透過 `agents.list[].model` 加上綁定來覆寫 `agents.defaults.model`（請參閱[多代理路由](/zh-Hant/concepts/multi-agent)）。
 
   </Accordion>
 </AccordionGroup>
 
 ## 選擇來源與回退行為
 
-同一個 `provider/model` 根據其來源可能代表不同的意義：
+相同的 `provider/model` 根據其來源可能代表不同的意義：
 
-- 設定的預設值（`agents.defaults.model.primary` 和特定於代理的主要模型）是正常的起點，並使用 `agents.defaults.model.fallbacks`。
-- 自動備援選取是暫時的復原狀態。它們與 `modelOverrideSource: "auto"` 一起儲存，以便後續輪次能繼續使用備援鏈，而無需每次都探測已知為故障的主要模型；OpenClaw 會定期再次探測原始主要模型，在其恢復時清除自動選取，並在每次狀態變更時公告備援/復原過渡。
-- 使用者工作階段選擇是精確的。`/model`（模型選擇器）、`session_status(model=...)` 和 `sessions.patch` 會儲存 `modelOverrideSource: "user"`；如果所選的提供者/模型無法連線，OpenClaw 會明確地顯示失敗，而不是轉向另一個已設定的模型。
-- 變更 `agents.defaults.model.primary` 不會重寫現有的會話選擇。如果狀態顯示 `This session is pinned to X; config primary Y will apply to new/unpinned sessions.`，請使用 `/model Y` 切換目前的會話，或使用 `/reset` 清除過時的會話狀態。
-- Cron `--model` / payload `model` 是每個工作的首要選擇。除非工作提供了明確的 payload `fallbacks`（否則請使用 `fallbacks: []` 進行嚴格的 cron 執行），否則它仍會使用設定的後備選項。
-- CLI default-model 和 allowlist 選擇器會透過列出明確的 `models.providers.*.models` 而非載入完整的內建目錄來尊重 `models.mode: "replace"`。
-- Control UI 模型選擇器會向 Gateway 請求其設定的模型視圖：如果存在，則為 `agents.defaults.models`，包括供應商範圍的 `provider/*` 項目，否則為明確的 `models.providers.*.models` 加上具有可用驗證的供應商。完整的內建目錄保留給明確的瀏覽視圖，例如帶有 `view: "all"` 或 `openclaw models list --all` 的 `models.list`。
+- 設定的預設值（`agents.defaults.model.primary` 和特定代理程式的主要模型）是正常的起點，並使用 `agents.defaults.model.fallbacks`。
+- 自動故障轉移選擇是暫時的恢復狀態。它們隨 `modelOverrideSource: "auto"` 一起儲存，以便後續輪次可以繼續使用故障轉移鏈，而無需每次都探測已知的不良主選；OpenClaw 會定期再次探測原始主選，當其恢復時清除自動選擇，並在每次狀態變更時宣佈故障轉移/恢復轉換。
+- 使用者工作階段選擇是精確的。`/model`（模型選擇器）、`session_status(model=...)` 和 `sessions.patch` 會儲存 `modelOverrideSource: "user"`；如果所選的供應商/模型無法連線，OpenClaw 會明確失敗，而不是回退到另一個已設定的模型。
+- 變更 `agents.defaults.model.primary` 不會重寫現有的工作階段選擇。如果狀態顯示 `This session is pinned to X; config primary Y will apply to new/unpinned sessions.`，請使用 `/model Y` 切換目前的工作階段，或使用 `/reset` 清除過時的工作階段狀態。
+- Cron `--model` / payload `model` 是每個工作的主選。它仍然使用已設定的故障轉移，除非工作提供了明確的 payload `fallbacks`（若要執行嚴格的 cron 排程，請使用 `fallbacks: []`）。
+- CLI 預設模型和允許清單選擇器會透過列出明確的 `models.providers.*.models` 來尊重 `models.mode: "replace"`，而不是載入完整的內建目錄。
+- Control UI 模型選擇器會向 Gateway 請求其已設定的模型視圖：如果存在，則為 `agents.defaults.models`，包括供應商範圍的 `provider/*` 項目；否則為明確的 `models.providers.*.models` 加上具有可用驗證的供應商。完整的內建目錄保留給明確的瀏覽視圖，例如具有 `view: "all"` 或 `openclaw models list --all` 的 `models.list`。
 
 ## 快速模型政策
 
@@ -87,9 +87,10 @@ openclaw onboard
 - `models.providers` (寫入 `models.json` 的自訂供應商)
 
 <Note>
-Model refs 會被正規化為小寫。提供者別名如 `z.ai/*` 會正規化為 `zai/*`。
+Model refs 會被正規化為小寫。Provider IDs 則完全區分大小寫；請使用
+插件宣傳的 provider ID。
 
-提供者設定範例（包含 OpenCode）位於 [OpenCode](/zh-Hant/providers/opencode)。
+供應商配置範例（包括 OpenCode）位於 [OpenCode](/zh-Hant/providers/opencode)。
 
 </Note>
 
@@ -211,7 +212,7 @@ Add it with: openclaw config set agents.defaults.models '{"provider/model":{}}' 
   </Accordion>
 </AccordionGroup>
 
-完整指令行為/設定：[斜線指令](/zh-Hant/tools/slash-commands)。
+完整指令行為/配置：[Slash commands](/zh-Hant/tools/slash-commands)。
 
 ## CLI 指令
 
@@ -320,7 +321,7 @@ openclaw models status
 輸入：
 
 - OpenRouter `/models` 列表（過濾器 `:free`）
-- 即時探測需要來自 auth profiles 或 `OPENROUTER_API_KEY` 的 OpenRouter API 金鑰（請參閱 [環境變數](/zh-Hant/help/environment)）
+- 即時探測需要來自 auth profiles 或 `OPENROUTER_API_KEY` 的 OpenRouter API 金鑰（請參閱 [Environment variables](/zh-Hant/help/environment)）
 - 選用過濾器：`--max-age-days`、`--min-params`、`--provider`、`--max-candidates`
 - 請求/探測控制：`--timeout`、`--concurrency`
 
@@ -328,7 +329,7 @@ openclaw models status
 
 ## 模型登錄表 (`models.json`)
 
-`models.providers` 中的自訂提供者會寫入代理程式目錄下的 `models.json`（預設為 `~/.openclaw/agents/<agentId>/agent/models.json`）。除非將 `models.mode` 設定為 `replace`，否則此檔案預設會被合併。
+`models.providers` 中的自訂供應商會寫入到 agent 目錄（預設為 `~/.openclaw/agents/<agentId>/agent/models.json`）下的 `models.json` 中。Provider-plugin catalogs 會以生成的 plugin-owned catalog shards 形式儲存在 agent 的 plugin state 下並自動載入。除非將 `models.mode` 設定為 `replace`，否則此檔案預設會被合併。
 
 <AccordionGroup>
   <Accordion title="合併模式優先順序">
@@ -348,10 +349,10 @@ openclaw models status
 
 ## 相關
 
-- [Agent runtimes](/zh-Hant/concepts/agent-runtimes) — PI、Codex 和其他代理程式迴圈執行時期
-- [Configuration reference](/zh-Hant/gateway/config-agents#agent-defaults) — 模型配置鍵
-- [Image generation](/zh-Hant/tools/image-generation) — 影像模型配置
-- [Model failover](/zh-Hant/concepts/model-failover) — 容錯鏈
-- [Model providers](/zh-Hant/concepts/model-providers) — 提供者路由與驗證
-- [Music generation](/zh-Hant/tools/music-generation) — 音樂模型配置
-- [Video generation](/zh-Hant/tools/video-generation) — 影片模型配置
+- [Agent runtimes](/zh-Hant/concepts/agent-runtimes) — OpenClaw、Codex 和其他 agent loop runtimes
+- [Configuration reference](/zh-Hant/gateway/config-agents#agent-defaults) — model config keys
+- [Image generation](/zh-Hant/tools/image-generation) — image model configuration
+- [Model failover](/zh-Hant/concepts/model-failover) — fallback chains
+- [Model providers](/zh-Hant/concepts/model-providers) — provider routing and auth
+- [Music generation](/zh-Hant/tools/music-generation) — music model configuration
+- [Video generation](/zh-Hant/tools/video-generation) — video model configuration

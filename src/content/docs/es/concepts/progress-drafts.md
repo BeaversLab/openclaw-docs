@@ -1,5 +1,5 @@
 ---
-summary: "Progress drafts: one visible work-in-progress message that updates while an agent runs"
+summary: "Borradores de progreso: un mensaje visible de trabajo en curso que se actualiza mientras se ejecuta un agente"
 read_when:
   - Configuring visible progress updates for long-running chat turns
   - Choosing between partial, block, and progress streaming modes
@@ -53,18 +53,18 @@ Un borrador de progreso tiene dos partes:
 
 | Parte              | Propósito                                                                                                                               |
 | ------------------ | --------------------------------------------------------------------------------------------------------------------------------------- |
-| Etiqueta           | Una línea corta de inicio/estado como `Working` o `Shelling`.                                                                           |
+| Etiqueta           | Una línea de inicio/estado corta como `Working` o `Shelling`.                                                                           |
 | Líneas de progreso | Actualizaciones de ejecución compactas que utilizan los mismos iconos de herramienta y formateador de detalles que la salida detallada. |
 
-La etiqueta aparece después de que el agente inicia un trabajo significativo y permanece ocupado
-durante cinco segundos o emite un segundo evento de trabajo. Es parte de la lista de líneas de
-progreso continuo, por lo que el estado de inicio se desplaza una vez que aparece suficiente trabajo concreto.
+La etiqueta aparece después de que el agente comienza un trabajo significativo y permanece ocupado
+durante cinco segundos o emite un segundo evento de trabajo. Es parte de la lista de líneas de progreso
+continuo, por lo que el estado inicial se desplaza una vez que aparece suficiente trabajo concreto.
 Las respuestas de solo texto plano no muestran un borrador de progreso. Las líneas de progreso se agregan
 solo cuando el agente emite actualizaciones de trabajo útiles, por ejemplo `🛠️ Bash: run tests`,
 `🔎 Web Search: for "discord edit message"` o `✍️ Write: to /tmp/file`.
 De forma predeterminada, utilizan el mismo modo de explicación compacta que `/verbose`; configure
-`agents.defaults.toolProgressDetail: "raw"` cuando esté depurando y también desee que se agreguen
-comandos/detalles sin procesar.
+`agents.defaults.toolProgressDetail: "raw"` cuando depure y también desee que se agreguen comandos/raw
+detalles.
 La respuesta final reemplaza el borrador cuando es posible; de lo contrario,
 OpenClaw envía la respuesta final normalmente y limpia o deja de actualizar el
 borrador de acuerdo con el transporte del canal.
@@ -81,20 +81,21 @@ borrador de acuerdo con el transporte del canal.
 | `progress` | Turnos intensivos en herramientas o de larga duración | Un borrador de estado y luego la respuesta final.                 |
 
 Elija `progress` cuando a los usuarios les importe más "qué está sucediendo" que ver
-el texto de la respuesta fluir token por token.
+la transmisión del texto de la respuesta token por token.
 
-Elija `partial` cuando la respuesta en sí sea la señal de progreso.
+Elija `partial` cuando la respuesta misma sea la señal de progreso.
 
 Elija `block` cuando desee actualizaciones de vista previa del borrador en fragmentos de texto más grandes. En
 Discord y Telegram, `streaming.mode: "block"` sigue siendo transmisión de vista previa, no
-entrega en bloque normal. Use `streaming.block.enabled` o el legado
+entrega de bloques normal. Use `streaming.block.enabled` o el heredado
 `blockStreaming` cuando desee respuestas de bloque normales.
 
 ## Configurar etiquetas
 
 Las etiquetas de progreso se encuentran en `channels.<channel>.streaming.progress`.
 
-La etiqueta predeterminada es `auto`, la cual elige del grupo de etiquetas de una sola palabra integradas en OpenClaw:
+La etiqueta predeterminada es `auto`, que elige del conjunto de etiquetas
+de una sola palabra integradas de OpenClaw:
 
 ```text
 Working
@@ -177,7 +178,46 @@ Las líneas de progreso están habilitadas de forma predeterminada en el modo de
 ejecución reales: inicios de herramientas, actualizaciones de elementos, planes de tareas, aprobaciones, resultados de comandos, resúmenes
 de parches y actividad de agente similar.
 
-OpenClaw utiliza el mismo formateador para los borradores de progreso y para `/verbose`:
+Las herramientas también pueden emitir un progreso tipado mientras una sola llamada a la herramienta aún se está ejecutando.
+Así es como una obtención o búsqueda lenta puede actualizar el borrador visible antes de que la herramienta
+devuelva su resultado final. La actualización de progreso es un resultado parcial de la herramienta con
+contenido de modelo vacío y metadatos explícitos del canal público:
+
+```json
+{
+  "content": [],
+  "progress": {
+    "text": "Fetching page content...",
+    "visibility": "channel",
+    "privacy": "public",
+    "id": "web_fetch:fetching"
+  }
+}
+```
+
+OpenClaw renderiza solo el `progress.text` en la interfaz de usuario de progreso del canal. El
+resultado normal de la herramienta aún llega más tarde como `content` y `details`, y es la
+única parte devuelta al modelo.
+
+Al agregar progreso a una herramienta, use un mensaje breve y genérico y retráselo hasta
+que la operación haya estado pendiente el tiempo suficiente para ser útil:
+
+```typescript
+const clearProgressTimer = scheduleToolProgress(onUpdate, { text: "Fetching page content...", id: "web_fetch:fetching" }, 5_000, { signal });
+
+try {
+  return await runToolWork();
+} finally {
+  clearProgressTimer();
+}
+```
+
+Este patrón significa que las llamadas rápidas no muestran una línea de progreso, las llamadas largas muestran una
+mientras aún están pendientes, y las llamadas canceladas borran el temporizador antes de que el progreso
+obsoleto pueda aparecer. El texto de progreso es un canal lateral público de la interfaz de usuario, por lo que no debe
+incluir secretos, argumentos sin procesar, contenido obtenido, salida de comandos o texto de página.
+
+OpenClaw usa el mismo formateador para los borradores de progreso y `/verbose`:
 
 ```json5
 {
@@ -190,18 +230,18 @@ OpenClaw utiliza el mismo formateador para los borradores de progreso y para `/v
 ```
 
 `"explain"` es el predeterminado y mantiene los borradores estables con etiquetas concisas como
-`🛠️ check JS syntax for /tmp/app.js`. `"raw"` añade el comando/detalle
-subyacente cuando está disponible, lo cual es útil durante la depuración pero más ruidoso
-en el chat.
+`🛠️ check JS syntax for /tmp/app.js`. `"raw"` agrega el comando/detalle
+subyacente cuando está disponible, lo cual es útil durante la depuración pero más ruidoso en
+el chat.
 
-Por ejemplo, el mismo comando aparece de manera diferente según el modo de detalle:
+Por ejemplo, el mismo comando aparece de manera diferente dependiendo del modo de detalle:
 
 | Modo      | Línea de progreso                                              |
 | --------- | -------------------------------------------------------------- |
 | `explain` | `🛠️ check JS syntax for /tmp/app.js`                           |
 | `raw`     | `🛠️ check JS syntax for /tmp/app.js, node --check /tmp/app.js` |
 
-Limitar cuántas líneas permanecen visibles:
+Limite cuántas líneas permanecen visibles:
 
 ```json5
 {
@@ -218,14 +258,14 @@ Limitar cuántas líneas permanecen visibles:
 }
 ```
 
-Las líneas de progreso se compactan automáticamente para reducir el reflujo de los burbujas de chat mientras se edita el borrador.
+Las líneas de progreso se compactan automáticamente para reducir el reflujo de la burbuja de chat mientras se edita el borrador.
 
-De forma predeterminada, OpenClaw trunca las líneas de progreso largas para que las ediciones repetidas de los borradores no
+OpenClaw trunca las líneas de progreso largas de manera predeterminada para que las ediciones repetidas del borrador no
 se ajusten de manera diferente en cada actualización. El presupuesto predeterminado por línea es de 120 caracteres.
-El texto se corta en un límite de palabras, mientras que los detalles largos, como rutas o comandos sin procesar,
+La prosa se corta en un límite de palabras, mientras que los detalles largos, como rutas o comandos sin procesar,
 se acortan con puntos suspensivos en el medio para que el sufijo permanezca visible.
 
-Ajustar el presupuesto por línea:
+Ajuste el presupuesto por línea:
 
 ```json5
 {
@@ -242,8 +282,8 @@ Ajustar el presupuesto por línea:
 }
 ```
 
-Slack puede representar las líneas de progreso como campos estructurados de Block Kit en lugar de
-un solo cuerpo de texto:
+Slack puede renderizar las líneas de progreso como campos estructurados de Block Kit en lugar de un
+solo cuerpo de texto:
 
 ```json5
 {
@@ -260,10 +300,10 @@ un solo cuerpo de texto:
 }
 ```
 
-La representación enriquecida mantiene la misma alternativa de texto sin formato, de modo que los canales y clientes que
-no admiten la forma enriquecida aún puedan mostrar el texto de progreso compacto.
+La renderización enriquecida mantiene la misma reserva de texto sin formato para que los canales y clientes que
+no admiten la forma más enriquecida aún puedan mostrar el texto de progreso compacto.
 
-Mantener el único borrador de progreso pero ocultar las líneas de herramientas y tareas:
+Mantén el único borrador de progreso pero oculta las líneas de herramientas y tareas:
 
 ```json5
 {
@@ -280,80 +320,68 @@ Mantener el único borrador de progreso pero ocultar las líneas de herramientas
 }
 ```
 
-Con `toolProgress: false`, OpenClaw sigue suprimiendo los antiguos mensajes independientes
-de progreso de herramientas para ese turno. El canal se mantiene visualmente silencioso hasta la
-respuesta final, excepto por la etiqueta si se ha configurado una.
+Con `toolProgress: false`, OpenClaw todavía suprime los mensajes independientes más antiguos de progreso de herramientas para ese turno. El canal se mantiene visualmente silencioso hasta la respuesta final, excepto por la etiqueta si se configura una.
 
 ## Comportamiento del canal
 
 Cada canal utiliza el transporte más limpio que admite:
 
-| Canal           | Transporte de progreso                                 | Notas                                                                                                           |
-| --------------- | ------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------- |
-| Discord         | Enviar un mensaje y luego editarlo.                    | Las ediciones finales del texto se realizan en su lugar cuando caben en un solo mensaje de vista previa seguro. |
-| Matrix          | Enviar un evento y luego editarlo.                     | La configuración de transmisión a nivel de cuenta controla los borradores a nivel de cuenta.                    |
-| Microsoft Teams | Transmisión nativa de Teams en chats personales.       | `streaming.mode: "block"` se asigna a la entrega de bloques de Teams.                                           |
-| Slack           | Transmisión nativa o publicación de borrador editable. | La disponibilidad de hilos afecta si se puede utilizar la transmisión nativa.                                   |
-| Telegram        | Enviar un mensaje y luego editarlo.                    | Los borradores visibles antiguos pueden reemplazarse para que las marcas de tiempo finales sigan siendo útiles. |
-| Mattermost      | Publicación de borrador editable.                      | La actividad de las herramientas se pliega en la misma publicación de estilo borrador.                          |
+| Canal           | Transporte de progreso                           | Notas                                                                                                           |
+| --------------- | ------------------------------------------------ | --------------------------------------------------------------------------------------------------------------- |
+| Discord         | Envía un mensaje y luego lo edita.               | Las ediciones de texto finales se realizan en su lugar cuando caben en un único mensaje de vista previa seguro. |
+| Matrix          | Envía un evento y luego lo edita.                | La configuración de transmisión a nivel de cuenta controla los borradores a nivel de cuenta.                    |
+| Microsoft Teams | Flujo nativo de Teams en chats personales.       | `streaming.mode: "block"` se asigna a la entrega en bloque de Teams.                                            |
+| Slack           | Flujo nativo o publicación de borrador editable. | La disponibilidad de hilos afecta si se puede utilizar la transmisión nativa.                                   |
+| Telegram        | Envía un mensaje y luego lo edita.               | Los borradores visibles antiguos pueden reemplazarse para que las marcas de tiempo finales sigan siendo útiles. |
+| Mattermost      | Publicación de borrador editable.                | La actividad de las herramientas se incluye en la misma publicación estilo borrador.                            |
 
-Los canales sin soporte de edición segura generalmente recurren a indicadores de escritura o
-entrega solo final.
+Los canales sin soporte de edición seguro generalmente recurren a indicadores de escritura o entrega solo final.
 
 ## Finalización
 
 Cuando la respuesta final está lista, OpenClaw intenta mantener el chat limpio:
 
-- Si el borrador puede convertirse con seguridad en la respuesta final, OpenClaw lo edita en su lugar.
-- Si el canal utiliza transmisión de progreso nativa, OpenClaw finaliza esa transmisión
-  cuando el transporte nativo acepta el texto final.
-- Si la respuesta final tiene contenido multimedia, un mensaje de aprobación, un objetivo de respuesta explícito,
-  demasiados fragmentos o una edición/envío fallido, OpenClaw envía la respuesta final a través
-  de la ruta de entrega normal del canal.
+- Si el borrador puede convertirse de forma segura en la respuesta final, OpenClaw lo edita en su lugar.
+- Si el canal utiliza transmisión de progreso nativa, OpenClaw finaliza esa transmisión cuando el transporte nativo acepta el texto final.
+- Si la respuesta final tiene medios, una solicitud de aprobación, un objetivo de respuesta explícito, demasiados fragmentos o una edición/envío fallido, OpenClaw envía la respuesta final a través de la ruta de entrega normal del canal.
 
-La ruta alternativa es intencional. Es mejor enviar una respuesta final nueva que
-perder texto, malencadenar una respuesta o sobrescribir un borrador con una carga que el canal
-no pueda representar de forma segura.
+La ruta de alternancia es intencional. Es mejor enviar una respuesta final nueva que perder texto, hilos mal colocados en una respuesta o sobrescribir un borrador con una carga que el canal no puede representar de forma segura.
 
 ## Solución de problemas
 
 **Solo veo la respuesta final.**
 
-Compruebe que `channels.<channel>.streaming.mode` esté configurado en `progress` para la
-cuenta o el canal que manejó el mensaje. Algunas rutas de grupo o respuesta de cita pueden
-deshabilitar las vistas previas de borrador para un turno cuando el canal no puede editar de forma segura el mensaje
-correcto.
+Verifica que `channels.<channel>.streaming.mode` esté establecido en `progress` para la cuenta o canal que manejó el mensaje. Algunas rutas de grupo o respuesta citada pueden deshabilitar las vistas previas de borradores para un turno cuando el canal no puede editar de forma segura el mensaje correcto.
 
 **Veo la etiqueta pero no las líneas de herramientas.**
 
-Compruebe `streaming.progress.toolProgress`. Si es `false`, OpenClaw mantiene el
-comportamiento de borrador único pero oculta las líneas de progreso de herramientas y tareas.
+Verifica `streaming.progress.toolProgress`. Si es `false`, OpenClaw mantiene el comportamiento de borrador único pero oculta las líneas de progreso de herramientas y tareas.
 
 **Veo un mensaje final nuevo en lugar de un borrador editado.**
 
-Esa es una alternativa de seguridad. Puede ocurrir para respuestas multimedia, respuestas largas,
-objetivos de respuesta explícitos, borradores antiguos de Telegram, objetivos de hilo de Slack faltantes,
-mensajes de vista previa eliminados o finalización fallida de la transmisión nativa.
+Ese es un mecanismo de seguridad de reserva. Puede ocurrir para respuestas multimedia, respuestas largas,
+destinos de respuesta explícitos, borradores antiguos de Telegram, destinos de hilos de Slack faltantes,
+mensajes de vista previa eliminados o una finalización fallida de la transmisión nativa.
 
 **Sigo viendo mensajes de progreso independientes.**
 
-El modo de progreso suprime los mensajes de progreso de herramientas independientes predeterminados cuando un borrador
-está activo. Si siguen apareciendo mensajes independientes, verifique que el turno esté usando realmente
-el modo de progreso y no `streaming.mode: "off"` o una ruta de canal que
+El modo de progreso suprime los mensajes predeterminados de progreso de herramientas independientes cuando un borrador
+está activo. Si los mensajes independientes aún aparecen, verifique que el turno realmente
+esté usando el modo de progreso y no `streaming.mode: "off"` o una ruta de canal que
 no pueda crear un borrador para ese mensaje.
 
 **Teams se comporta de manera diferente a Discord o Telegram.**
 
-Microsoft Teams utiliza una transmisión nativa en chats personales en lugar del transporte de vista previa genérico
-de enviar y editar. Teams también trata `streaming.mode: "block"` como
-entrega en bloque de Teams porque no tiene el mismo modo de bloque de vista previa de borrador
-utilizado por Discord y Telegram.
+Microsoft Teams usa una transmisión nativa en chats personales en lugar del transporte de
+envío y edición de vista previa genérico. Teams también trata `streaming.mode: "block"` como
+entrega de bloque de Teams porque no tiene el mismo modo de bloque de vista previa de borrador
+usado por Discord y Telegram.
 
 ## Relacionado
 
 - [Transmisión y fragmentación](/es/concepts/streaming)
 - [Mensajes](/es/concepts/messages)
-- [Configuración del canal](/es/gateway/config-channels)
+- [Configuración de canal](/es/gateway/config-channels)
 - [Discord](/es/channels/discord)
 - [Matrix](/es/channels/matrix)
 - [Microsoft Teams](/es/channels/msteams)

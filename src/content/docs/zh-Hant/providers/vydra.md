@@ -132,7 +132,7 @@ OpenClaw 針對這三種功能皆使用相同的 `VYDRA_API_KEY`。
   </Accordion>
 
   <Accordion title="語音合成">
-    將 Vydra 設為語音提供者：
+    將 Vydra 設定為語音提供商：
 
     ```json5
     {
@@ -142,7 +142,7 @@ OpenClaw 針對這三種功能皆使用相同的 `VYDRA_API_KEY`。
           providers: {
             vydra: {
               apiKey: "${VYDRA_API_KEY}",
-              voiceId: "21m00Tcm4TlvDq8ikWAM",
+              speakerVoiceId: "21m00Tcm4TlvDq8ikWAM",
             },
           },
         },
@@ -152,10 +152,10 @@ OpenClaw 針對這三種功能皆使用相同的 `VYDRA_API_KEY`。
 
     預設值：
 
-    - 模型：`elevenlabs/tts`
-    - 語音 ID：`21m00Tcm4TlvDq8ikWAM`
+    - 模型： `elevenlabs/tts`
+    - 語音 ID： `21m00Tcm4TlvDq8ikWAM`
 
-    內建的外掛目前公開一個已知良好的預設語音，並傳回 MP3 音訊檔案。
+    內建的插件目前公開了一個已知可用的預設語音，並傳回 MP3 音訊檔案。
 
   </Accordion>
 </AccordionGroup>

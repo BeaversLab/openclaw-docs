@@ -1,5 +1,5 @@
 ---
-summary: "Añade la superficie del canal Nextcloud Talk para enviar y recibir mensajes de OpenClaw."
+summary: "OpenClaw Nextcloud Talk channel plugin for conversations."
 read_when:
   - You are installing, configuring, or auditing the nextcloud-talk plugin
 title: "Complemento Nextcloud Talk"
@@ -7,7 +7,7 @@ title: "Complemento Nextcloud Talk"
 
 # Complemento Nextcloud Talk
 
-Añade la superficie del canal Nextcloud Talk para enviar y recibir mensajes de OpenClaw.
+OpenClaw Nextcloud Talk channel plugin for conversations.
 
 ## Distribución
 

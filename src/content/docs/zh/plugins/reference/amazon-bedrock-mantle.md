@@ -1,5 +1,5 @@
 ---
-summary: "Amazon BedrockOpenClaw为 OpenClaw 添加 Amazon Bedrock Mantle 模型提供商支持。"
+summary: "OpenClawAmazon BedrockOpenAIOpenClaw Amazon Bedrock Mantle 提供商插件，用于兼容 OpenAI 的模型路由。"
 read_when:
   - You are installing, configuring, or auditing the amazon-bedrock-mantle plugin
 title: "Amazon BedrockAmazon Bedrock Mantle 插件"
@@ -7,7 +7,7 @@ title: "Amazon BedrockAmazon Bedrock Mantle 插件"
 
 # Amazon Bedrock Mantle 插件
 
-为 OpenClaw 添加 Amazon Bedrock Mantle 模型提供商支持。
+OpenClaw Amazon Bedrock Mantle 提供商插件，用于兼容 OpenAI 的模型路由。
 
 ## 分发
 

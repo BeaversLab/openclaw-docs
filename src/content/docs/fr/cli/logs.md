@@ -24,18 +24,19 @@ Related:
 - `--json` : émettre des événements JSON délimités par des lignes
 - `--plain` : sortie en texte brut sans formatage de style
 - `--no-color` : désactiver les couleurs ANSI
-- `--local-time` : afficher les horodatages dans votre fuseau horaire local
+- `--local-time` : afficher les horodatages dans votre fuseau horaire local (par défaut)
+- `--utc` : afficher les horodatages en UTC
 
-## Options Gateway RPC partagées
+## Options partagées RPC Gateway
 
-`openclaw logs` accepte également les indicateurs client standard Gateway :
+`openclaw logs`Gateway accepte également les indicateurs de client Gateway standard :
 
-- `--url <url>` : URL WebSocket Gateway
-- `--token <token>` : jeton Gateway
+- `--url <url>`Gateway : URL WebSocket Gateway
+- `--token <token>`Gateway : jeton Gateway
 - `--timeout <ms>` : délai d'attente en ms (par défaut `30000`)
-- `--expect-final` : attendre une réponse finale lorsque l'appel Gateway est assuré par un agent
+- `--expect-final`Gateway : attendre une réponse finale lorsque l'appel Gateway est géré par l'agent
 
-Lorsque vous transmettez `--url`, le CLI n'applique pas automatiquement la configuration ou les informations d'identification de l'environnement. Incluez `--token` explicitement si le Gateway cible nécessite une authentification.
+Lorsque vous passez `--url`CLI, la CLI n'applique pas automatiquement les informations d'identification de la configuration ou de l'environnement. Incluez `--token`Gateway explicitement si le Gateway cible nécessite une authentification.
 
 ## Exemples
 
@@ -49,18 +50,19 @@ openclaw logs --plain
 openclaw logs --no-color
 openclaw logs --limit 500
 openclaw logs --local-time
+openclaw logs --utc
 openclaw logs --follow --local-time
 openclaw logs --url ws://127.0.0.1:18789 --token "$OPENCLAW_GATEWAY_TOKEN"
 ```
 
 ## Notes
 
-- Utilisez `--local-time` pour afficher les horodatages dans votre fuseau horaire local.
-- Si le Gateway local loopback implicite demande un appairage, se ferme pendant la connexion ou expire avant que Gateway`logs.tail` ne réponde, `openclaw logs`Gateway revient automatiquement au fichier journal du Gateway configuré. Les cibles `--url` explicites n'utilisent pas ce repli.
-- `openclaw logs --follow`GatewayRPCLinuxGatewayGateway ne suit pas les fichiers de repli configurés après des échecs implicites du RPC Gateway local. Sur Linux, il utilise le journal Gateway systemd actif de l'utilisateur par PID lorsque disponible et imprime la source de journal sélectionnée ; sinon, il continue de réessayer le Gateway en direct au lieu de suivre un fichier côte à côte potentiellement périmé.
-- Lors de l'utilisation de `--follow`, les déconnexions transitoires du gateway (fermeture WebSocket, expiration, interruption de connexion) déclenchent une reconnexion automatique avec un backoff exponentiel (jusqu'à 8 tentatives, plafonnées à 30 s entre les tentatives). Un avertissement est imprimé sur stderr à chaque nouvelle tentative, et un avis `[logs] gateway reconnected` est imprimé dès qu'un sondage réussit. En mode `--json`, l'avertissement de nouvelle tentative et la transition de reconnexion sont tous deux émis sous forme d'enregistrements `{"type":"notice"}` sur stderr. Les erreurs non récupérables (échec d'authentification, mauvaise configuration) provoquent toujours une sortie immédiate.
+- Par défaut, les horodatages s'affichent dans votre fuseau horaire local. Utilisez `--utc` pour une sortie UTC.
+- Si le local loopback Gateway implicite demande un appairage, se ferme pendant la connexion ou expire avant que Gateway`logs.tail` ne réponde, `openclaw logs`Gateway revient automatiquement au fichier journal Gateway configuré. Les cibles `--url` explicites n'utilisent pas ce repli.
+- `openclaw logs --follow`GatewayRPCLinuxGatewayGateway ne suit pas les replis de fichiers configurés après des échecs RPC Gateway local implicites. Sur Linux, il utilise le journal Gateway utilisateur-systemd actif par PID lorsque disponible et imprime la source de journal sélectionnée ; sinon, il continue à réessayer le Gateway en direct au lieu de faire un suivi d'un fichier côte à côte potentiellement obsolète.
+- Lors de l'utilisation de `--follow`, les déconnexions transitoires du Gateway (fermeture WebSocket, expiration du délai d'attente, rupture de connexion) déclenchent une reconnexion automatique avec un temporisateur exponentiel (jusqu'à 8 tentatives, plafonnées à 30 s entre chaque tentative). Un avertissement est imprimé sur stderr à chaque nouvelle tentative, et un avis `[logs] gateway reconnected` est imprimé une fois qu'un sondage réussit. En mode `--json`, l'avertissement de tentative et la transition de reconnexion sont tous deux émis sous forme d'enregistrements `{"type":"notice"}` sur stderr. Les erreurs non récupérables (échec de l'authentification, mauvaise configuration) entraînent toujours une sortie immédiate.
 
 ## Connexes
 
-- [Référence CLI](CLI/en/cli)
-- [Journalisation Gateway](Gateway/en/gateway/logging)
+- [Référence CLI](/fr/cli)
+- [Journalisation du Gateway](/fr/gateway/logging)

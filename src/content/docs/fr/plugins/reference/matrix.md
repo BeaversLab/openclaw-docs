@@ -1,5 +1,5 @@
 ---
-summary: "MatrixOpenClawAjoute la surface de channel Matrix pour l'envoi et la réception de messages OpenClaw."
+summary: "OpenClawMatrixExtension de canal OpenClaw Matrix pour les salons et les messages directs."
 read_when:
   - You are installing, configuring, or auditing the matrix plugin
 title: "MatrixPlugin Matrix"
@@ -7,7 +7,7 @@ title: "MatrixPlugin Matrix"
 
 # Plugin Matrix
 
-Ajoute la surface de channel Matrix pour l'envoi et la réception de messages OpenClaw.
+Extension de canal OpenClaw Matrix pour les salons et les messages directs.
 
 ## Distribution
 

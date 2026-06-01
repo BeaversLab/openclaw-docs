@@ -1,5 +1,5 @@
 ---
-summary: "OpenClaw添加用于发送和接收 OpenClaw 消息的 QQ Bot 渠道表面。"
+summary: "OpenClawOpenClaw QQ Bot 渠道插件，用于群组和直接消息工作流。"
 read_when:
   - You are installing, configuring, or auditing the qqbot plugin
 title: "QQ Bot 插件"
@@ -7,7 +7,7 @@ title: "QQ Bot 插件"
 
 # QQ Bot 插件
 
-添加用于发送和接收 OpenClaw 消息的 QQ Bot 渠道表面。
+OpenClaw QQ Bot 渠道插件，用于群组和直接消息工作流。
 
 ## 分发
 

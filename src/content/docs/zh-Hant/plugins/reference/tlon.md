@@ -1,5 +1,5 @@
 ---
-summary: "新增 Tlon 頻道介面，用於傳送與接收 OpenClaw 訊息。"
+summary: "OpenClaw Tlon/Urbit 頻道外掛程式，用於聊天工作流程。"
 read_when:
   - You are installing, configuring, or auditing the tlon plugin
 title: "Tlon 外掛程式"
@@ -7,7 +7,7 @@ title: "Tlon 外掛程式"
 
 # Tlon 外掛程式
 
-新增 Tlon 頻道介面，用於傳送與接收 OpenClaw 訊息。
+OpenClaw Tlon/Urbit 頻道外掛程式，用於聊天工作流程。
 
 ## 發行版本
 

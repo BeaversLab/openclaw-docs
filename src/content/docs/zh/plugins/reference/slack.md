@@ -1,5 +1,5 @@
 ---
-summary: "SlackOpenClaw添加用于发送和接收 OpenClaw 消息的 Slack 渠道表面。"
+summary: "OpenClawSlack用于渠道、私信、命令和应用事件的 OpenClaw Slack 渠道插件。"
 read_when:
   - You are installing, configuring, or auditing the slack plugin
 title: "SlackSlack 插件"
@@ -7,7 +7,7 @@ title: "SlackSlack 插件"
 
 # Slack 插件
 
-添加用于发送和接收 OpenClaw 消息的 Slack 渠道表面。
+用于渠道、私信、命令和应用事件的 OpenClaw Slack 渠道插件。
 
 ## 分发
 

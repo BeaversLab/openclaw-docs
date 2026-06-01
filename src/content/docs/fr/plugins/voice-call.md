@@ -107,7 +107,7 @@ renvoient toujours la configuration exacte du fournisseur manquant lors de leur 
               responseSystemPrompt: "You are a concise baseball card specialist.",
               tts: {
                 providers: {
-                  openai: { voice: "alloy" },
+                  openai: { speakerVoice: "alloy" },
                 },
               },
             },
@@ -212,7 +212,7 @@ Comportement d'exécution actuel :
 - La configuration brute détenue par le fournisseur se trouve sous `realtime.providers.<providerId>`.
 - Voice Call expose l'outil partagé `openclaw_agent_consult` de temps réel par défaut. Le modèle temps réel peut l'appeler lorsque l'appelant demande un raisonnement plus approfondi, des informations actuelles ou les outils normaux d'OpenClaw.
 - `realtime.consultPolicy` ajoute facultativement des conseils sur le moment où le modèle temps réel doit appeler `openclaw_agent_consult`.
-- `realtime.agentContext.enabled` est désactivé par défaut. Lorsqu'il est activé, Voice Call injecte une identité d'agent délimitée, une substitution de prompt système et une capsule de fichier d'espace de travail sélectionnée dans les instructions du fournisseur temps réel lors de la configuration de la session.
+- `realtime.agentContext.enabled` est désactivé par défaut. Lorsqu'il est activé, Voice Call injecte une identité d'agent limitée et une capsule de fichier d'espace de travail sélectionnée dans les instructions du provider temps réel lors de la configuration de la session.
 - `realtime.fastContext.enabled` est désactivé par défaut. Lorsqu'il est activé, Voice Call recherche d'abord dans la mémoire indexée/le contexte de session pour la question de consultation et renvoie ces extraits au modèle temps réel dans `realtime.fastContext.timeoutMs` avant de revenir à l'agent de consultation complet uniquement si `realtime.fastContext.fallbackToConsult` est vrai.
 - Si `realtime.provider` pointe vers un fournisseur non enregistré, ou si aucun fournisseur de voix temps réel n'est enregistré du tout, Voice Call enregistre un avertissement et ignore les médias temps réel au lieu de faire échouer l'ensemble du plugin.
 - Les clés de session de consultation réutilisent la session d'appel stockée lorsqu'elle est disponible, puis reviennent au `sessionScope` configuré (`per-phone` par défaut, ou `per-call` pour les appels isolés).
@@ -255,7 +255,6 @@ Activez `realtime.agentContext` lorsque le pont vocal doit sonner comme l'agent 
               enabled: true,
               maxChars: 6000,
               includeIdentity: true,
-              includeSystemPrompt: true,
               includeWorkspaceFiles: true,
               files: ["SOUL.md", "IDENTITY.md", "USER.md"],
             },
@@ -271,10 +270,10 @@ Activez `realtime.agentContext` lorsque le pont vocal doit sonner comme l'agent 
 
 <Tabs>
   <Tab title="Google Gemini Live">
-    Valeurs par défaut : clé API issue de `realtime.providers.google.apiKey`,
-    `GEMINI_API_KEY`, ou `GOOGLE_GENERATIVE_AI_API_KEY` ; modèle
+    Valeurs par défaut : clé API provenant de `realtime.providers.google.apiKey`,
+    `GEMINI_API_KEY` ou `GOOGLE_GENERATIVE_AI_API_KEY` ; modèle
     `gemini-2.5-flash-native-audio-preview-12-2025` ; voix `Kore`.
-    `sessionResumption` et `contextWindowCompression` sont activés par défaut pour les appels plus longs
+    `sessionResumption` et `contextWindowCompression` sont activés par défaut pour des appels plus longs
     et reconnectables. Utilisez `silenceDurationMs`, `startSensitivity` et
     `endSensitivity` pour régler l'échange de tours plus rapide sur l'audio téléphonique.
 
@@ -300,7 +299,7 @@ Activez `realtime.agentContext` lorsque le pont vocal doit sonner comme l'agent 
                   google: {
                     apiKey: "${GEMINI_API_KEY}",
                     model: "gemini-2.5-flash-native-audio-preview-12-2025",
-                    voice: "Kore",
+                    speakerVoice: "Kore",
                     silenceDurationMs: 500,
                     startSensitivity: "high",
                   },
@@ -430,7 +429,7 @@ Voice Call utilise la configuration principale `messages.tts` pour la synthèse 
     provider: "elevenlabs",
     providers: {
       elevenlabs: {
-        voiceId: "pMsXgVXv3BLzUgSXRplE",
+        speakerVoiceId: "pMsXgVXv3BLzUgSXRplE",
         modelId: "eleven_multilingual_v2",
       },
     },
@@ -451,14 +450,14 @@ Notes de comportement :
 ### Exemples TTS
 
 <Tabs>
-  <Tab title="TTS Core uniquement">
+  <Tab title="Core TTS uniquement">
 ```json5
 {
   messages: {
     tts: {
       provider: "openai",
       providers: {
-        openai: { voice: "alloy" },
+        openai: { speakerVoice: "alloy" },
       },
     },
   },
@@ -477,7 +476,7 @@ Notes de comportement :
             providers: {
               elevenlabs: {
                 apiKey: "elevenlabs_key",
-                voiceId: "pMsXgVXv3BLzUgSXRplE",
+                speakerVoiceId: "pMsXgVXv3BLzUgSXRplE",
                 modelId: "eleven_multilingual_v2",
               },
             },
@@ -489,7 +488,7 @@ Notes de comportement :
 }
 ```
   </Tab>
-  <Tab title="OpenAIRemplacement du model OpenAI (fusion approfondie)">
+  <Tab title="Remplacement du modèle OpenAI (fusion approfondie)">
 ```json5
 {
   plugins: {
@@ -500,7 +499,7 @@ Notes de comportement :
             providers: {
               openai: {
                 model: "gpt-4o-mini-tts",
-                voice: "marin",
+                speakerVoice: "marin",
               },
             },
           },
@@ -557,7 +556,7 @@ La valeur d'itinéraire `tts` fusionne en profondeur avec la configuration `tts`
   tts: {
     provider: "openai",
     providers: {
-      openai: { voice: "coral" },
+      openai: { speakerVoice: "coral" },
     },
   },
   numbers: {
@@ -566,7 +565,7 @@ La valeur d'itinéraire `tts` fusionne en profondeur avec la configuration `tts`
       responseSystemPrompt: "You are a concise baseball card specialist.",
       tts: {
         providers: {
-          openai: { voice: "alloy" },
+          openai: { speakerVoice: "alloy" },
         },
       },
     },

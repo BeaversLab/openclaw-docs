@@ -1,5 +1,5 @@
 ---
-summary: "Ajoute la prise en charge du provider de recherche web."
+summary: "OpenClawBraveOpenClaw Brave Search provider plugin pour la recherche web."
 read_when:
   - You are installing, configuring, or auditing the brave plugin
 title: "Plugin Brave"
@@ -7,7 +7,7 @@ title: "Plugin Brave"
 
 # Plugin Brave
 
-Ajoute la prise en charge du provider de recherche web.
+OpenClaw Brave Search provider plugin pour la recherche web.
 
 ## Distribution
 

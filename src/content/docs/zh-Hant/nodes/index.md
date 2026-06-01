@@ -7,10 +7,10 @@ read_when:
 title: "節點"
 ---
 
-**節點** 是一個伴隨裝置（macOS/iOS/Android/headless），使用 `role: "node"` 連接到 Gateway **WebSocket**（與操作員相同的連接埠），並透過 `node.invoke` 暴露指令介面（例如 `canvas.*`、`camera.*`、`device.*`、`notifications.*`、`system.*`）。協議詳情：[Gateway protocol](/zh-Hant/gateway/protocol)。
+**節點** 是一個配套裝置（macOS/iOS/Android/headless），它使用 `role: "node"` 連接到閘道器 **WebSocket**（與操作員使用相同的連接埠），並透過 `node.invoke` 暴露指令介面（例如 `canvas.*`、`camera.*`、`device.*`、`notifications.*`、`system.*`）。協議詳細資訊：[Gateway protocol](/zh-Hant/gateway/protocol)。
 
-舊版傳輸：[Bridge protocol](/zh-Hant/gateway/bridge-protocol) (TCP JSONL;
-僅供當前節點參考歷史使用)。
+舊版傳輸：[Bridge protocol](/zh-Hant/gateway/bridge-protocol) (TCP JSONL；
+對於目前的節點僅作歷史用途)。
 
 macOS 也可以在 **節點模式** 下運行：選單列應用程式連接到 Gateway 的
 WS 伺服器，並將其本機的 canvas/camera 指令作為節點暴露（因此
@@ -370,15 +370,15 @@ openclaw nodes invoke --node <idOrNameOrIp> --command system.which --params '{"n
 - 在允許清單模式下，對於始終允許的決策，已知的分發包裝器 (`env`, `nice`, `nohup`, `stdbuf`, `timeout`) 會保留內部可執行檔路徑而非包裝器路徑。如果解包不安全，則不會自動保留允許清單條目。
 - 在允許清單模式下的 Windows 節點主機上，透過 `cmd.exe /c` 執行的 shell 包裝器需要核准（僅有允許清單條目不會自動允許包裝器形式）。
 - `system.notify` 支援 `--priority <passive|active|timeSensitive>` 和 `--delivery <system|overlay|auto>`。
-- 節點主機會忽略 `PATH` 覆蓋設定，並移除危險的啟動/shell 金鑰 (`DYLD_*`, `LD_*`, `NODE_OPTIONS`, `PYTHON*`, `PERL*`, `RUBYOPT`, `SHELLOPTS`, `PS4`)。如果您需要額外的 PATH 項目，請設定節點主機服務環境（或將工具安裝在標準位置），而不是透過 `--env` 傳遞 `PATH`。
-- 在 macOS 節點模式下，`system.run` 受 macOS 應用程式中的執行核准限制（設定 → 執行核准）。
-  詢問/允許清單/完整 的行為與無頭節點主機相同；拒絕的提示會傳回 `SYSTEM_RUN_DENIED`。
-- 在無頭節點主機上，`system.run` 受執行核准限制 (`~/.openclaw/exec-approvals.json`)。
+- 節點主機會忽略 `PATH` 覆蓋值，並移除危險的啟動/Shell 金鑰（`DYLD_*`、`LD_*`、`NODE_OPTIONS`、`NODE_REDIRECT_WARNINGS`、`NODE_REPL_EXTERNAL_MODULE`、`NODE_REPL_HISTORY`、`NODE_V8_COVERAGE`、`PYTHON*`、`PERL*`、`RUBYOPT`、`SHELLOPTS`、`PS4`）。如果您需要額外的 PATH 項目，請設定節點主機服務環境（或將工具安裝在標準位置），而不是透過 `--env` 傳遞 `PATH`。
+- 在 macOS 節點模式下，`system.run` 受 macOS 應用程式中的執行核准（Settings → Exec approvals）限制。
+  Ask/allowlist/full 的行為與無頭節點主機相同；被拒絕的提示會返回 `SYSTEM_RUN_DENIED`。
+- 在無頭節點主機上，`system.run` 受執行核准（`~/.openclaw/exec-approvals.json`）限制。
 
 ## Exec 節點綁定
 
 當有多個節點可用時，您可以將 exec 綁定到特定節點。
-這會設定 `exec host=node` 的預設節點（並且可以針對每個代理程式進行覆蓋）。
+這會為 `exec host=node` 設定預設節點（並且可以針對每個代理進行覆蓋）。
 
 全域預設值：
 
@@ -402,11 +402,11 @@ openclaw config unset 'agents.list[0].tools.exec.node'
 
 ## 權限映射
 
-節點可以在 `node.list` / `node.describe` 中包含 `permissions` 映射，以權限名稱為鍵（例如 `screenRecording`, `accessibility`），值為布林值（`true` = 已授予）。
+節點可能包含一個位於 `node.list` / `node.describe` 中的 `permissions` 映射，以權限名稱（例如 `screenRecording`、`accessibility`）作為鍵，並具有布林值（`true` = 已授權）。
 
 ## 無頭節點主機（跨平台）
 
-OpenClaw 可以運行一個 **無頭節點主機**（無 UI），它連接到 Gateway WebSocket 並暴露 `system.run` / `system.which`。這在 Linux/Windows 上很有用，或者用於在伺服器旁運行一個最小化的節點。
+OpenClaw 可以運行一個連接到 Gateway WebSocket 並公開 `system.run` / `system.which` 的 **無頭節點主機**（無 UI）。這在 Linux/Windows 上或與伺服器並行運行最小節點時非常有用。
 
 啟動它：
 
@@ -417,15 +417,15 @@ openclaw node run --host <gateway-host> --port 18789
 注意：
 
 - 仍然需要配對（Gateway 將顯示設備配對提示）。
-- 節點主機將其節點 ID、令牌、顯示名稱和 Gateway 連接資訊存儲在 `~/.openclaw/node.json` 中。
-- 執行批准通過 `~/.openclaw/exec-approvals.json` 在本地執行
-  （請參閱 [執行批准](/zh-Hant/tools/exec-approvals)）。
-- 在 macOS 上，無頭節點主機預設在本地執行 `system.run`。設置
-  `OPENCLAW_NODE_EXEC_HOST=app` 以通過配套應用程式執行主機路由 `system.run`；添加
-  `OPENCLAW_NODE_EXEC_FALLBACK=0` 以要求應用程式主機，並在不可用時以封閉模式失敗。
-- 當 Gateway WS 使用 TLS 時，添加 `--tls` / `--tls-fingerprint`。
+- 節點主機會將其節點 ID、權杖、顯示名稱和 Gateway 連線資訊儲存在 `~/.openclaw/node.json` 中。
+- 執行審核是透過 `~/.openclaw/exec-approvals.json` 在本機強制執行的
+  （請參閱 [Exec approvals](/zh-Hant/tools/exec-approvals)）。
+- 在 macOS 上，無頭節點主機預設會在本機執行 `system.run`。設定
+  `OPENCLAW_NODE_EXEC_HOST=app` 以將 `system.run` 透過伴隨應用程式的執行主機進行路由；新增
+  `OPENCLAW_NODE_EXEC_FALLBACK=0` 以要求應用程式主機，並在其無法使用時以安全封閉模式失敗。
+- 當 Gateway WS 使用 TLS 時，新增 `--tls` / `--tls-fingerprint`。
 
 ## Mac 節點模式
 
-- macOS 選單列應用程式作為節點連接到 Gateway WS 伺服器（因此 `openclaw nodes …` 可以針對此 Mac 運作）。
-- 在遠端模式下，應用程式會為 Gateway 埠打開 SSH 隧道並連接到 `localhost`。
+- macOS 功能表列應用程式會作為節點連接到 Gateway WS 伺服器（因此 `openclaw nodes …` 可對此 Mac 進行操作）。
+- 在遠端模式下，應用程式會為 Gateway 連接埠開啟 SSH 隧道，並連接到 `localhost`。

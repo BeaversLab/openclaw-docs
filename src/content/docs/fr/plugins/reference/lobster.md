@@ -1,5 +1,5 @@
 ---
-summary: "Tool de workflow typé avec des approbations reprise."
+summary: "LobsterPlug-in de l'outil de workflow Lobster pour les pipelines typés et les approvations reproductibles."
 read_when:
   - You are installing, configuring, or auditing the lobster plugin
 title: "Plugin Lobster"
@@ -7,7 +7,7 @@ title: "Plugin Lobster"
 
 # Plugin Lobster
 
-Tool de workflow typé avec des approbations reprise.
+Plug-in de l'outil de workflow Lobster pour les pipelines typés et les approvations reproductibles.
 
 ## Distribution
 

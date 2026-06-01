@@ -1,5 +1,5 @@
 ---
-summary: "Ajoute la prise en charge du fournisseur de modèles Amazon Bedrock Mantle à OpenClaw."
+summary: "OpenClawAmazon BedrockOpenAIPlug-in de fournisseur OpenClaw Amazon Bedrock Mantle pour le routage de modèle compatible OpenAI."
 read_when:
   - You are installing, configuring, or auditing the amazon-bedrock-mantle plugin
 title: "Plugin Amazon Bedrock Mantle"
@@ -7,7 +7,7 @@ title: "Plugin Amazon Bedrock Mantle"
 
 # Plugin Amazon Bedrock Mantle
 
-Ajoute la prise en charge du fournisseur de modèles Amazon Bedrock Mantle à OpenClaw.
+Plug-in de fournisseur OpenClaw Amazon Bedrock Mantle pour le routage de modèle compatible OpenAI.
 
 ## Distribution
 

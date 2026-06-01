@@ -24,7 +24,7 @@ title: "WebChat"
 - UI 连接到 Gateway(网关) WebSocket 并使用 `chat.history`、`chat.send` 和 `chat.inject`。
 - `chat.history` 为了稳定性是有界的：Gateway(网关) 可能会截断长文本字段，省略繁重的元数据，并用 `[chat.history omitted: message too large]` 替换过大的条目。
 - `chat.history` 遵循现代仅追加会话文件的活动记录分支，因此被放弃的重写分支和被取代的提示词副本不会在 WebChat 中呈现。
-- 压缩条目呈现为显式的压缩历史记录分隔符。该分隔符解释了早期的轮次保存在检查点中，并链接到会话检查点控制，操作员可以在其权限允许时从中分支或恢复压缩前的视图。
+- 压缩条目呈现为一个明确的压缩历史记录分隔符。该分隔符说明了压缩的记录作为检查点被保留，并链接到会话检查点控件，操作员在其中获得权限许可时可以从该压缩视图进行分支或还原。
 - 控制 UI 会记住由 `chat.history` 返回的支持 Gateway(网关) `sessionId`，并将其包含在后续的 `chat.send` 调用中，因此除非用户启动或重置会话，否则重新连接和页面刷新将继续进行相同的已存储对话。
 - 控制 UI 在为同一会话、消息和附件生成新的 `chat.send` 运行 ID 之前，会合并重复的进行中提交；Gateway(网关) 仍会对重复使用同一幂等性键的重复请求进行去重。
 - 工作区启动文件和挂起的 `BOOTSTRAP.md` 指令是通过代理系统提示词的项目上下文提供的，而不是复制到 WebChat 用户消息中。引导截断仅添加简明的系统提示词恢复通知；详细的计数和配置旋钮保留在诊断表面上。
@@ -40,20 +40,20 @@ title: "WebChat"
 
 WebChat 有两个独立的数据路径：
 
-- 会话 JSONL 文件是持久的模型/运行时记录。对于正常的 agent 运行，Pi 通过其会话管理器持久化模型可见的 `user`、`assistant` 和 `toolResult`WebChat 消息。WebChat 不会将任意的交付、状态或辅助文本写入该记录中。
+- 会话 JSONL 文件是持久的模型/运行时记录。对于正常的代理运行，嵌入的 OpenClaw 运行时通过其会话管理器持久化模型可见的 OpenClaw`user`、`assistant` 和 `toolResult`WebChat 消息。WebChat 不会将任意的投递、状态或帮助文本写入该记录。
 - Gateway Gateway(网关)`ReplyPayload`WebChat 事件是实时的交付投影。它们可以针对 WebChat/渠道显示、分块流式传输、指令标签、媒体嵌入、TTS/音频标志和 UI 回退行为进行规范化。它们本身不是规范化的会话日志。
 - 需要通过 `tools.message` 获得可见回复的 Harness 仍将 WebChat 用作当前运行的内部源回复接收器。来自该活动 WebChat 运行的无目标 `message.send` 会被投影到同一个聊天中并镜像到会话记录；WebChat 不会成为可重用的出站渠道，也从不继承 `lastChannel`。
-- 仅当 Gateway 拥有显示在正常 Pi 助手轮次之外的消息时，WebChat 才会注入助手对话条目：WebChatGateway(网关)`chat.inject`WebChat、非代理命令回复、已中止的部分输出以及 WebChat 管理的媒体对话补充。
+- 仅当 Gateway 拥有正常嵌入式代理轮次之外显示的消息时，WebChat 才会注入助手记录条目：WebChatGateway(网关)`chat.inject`WebChat、非代理命令回复、中止的部分输出以及 WebChat 管理的媒体记录补充。
 - `chat.history`WebChat 读取存储的会话记录并应用 WebChat 显示投影。如果实时助手文本在运行期间出现但在重新加载历史记录后消失，首先检查原始 JSONL 是否包含助手文本，然后检查 `chat.history` 投影是否将其剥离，最后检查控制 UI 的乐观尾部合并是否用持久化快照替换了本地传递状态。
 
-正常的代理运行最终答案应该是持久的，因为 Pi 会编写助手 `message_end`。任何将已传递的最终有效负载镜像到转录的后备方案，都必须首先避免重复 Pi 已经编写的助手轮次。
+正常的代理运行最终答案应该是持久的，因为嵌入的运行时会写入助手 `message_end`。任何将投递的最终有效负载镜像到记录的回退机制，必须首先避免复制嵌入运行时已写入的助手轮次。
 
 ## 控制 UI 代理工具面板
 
 - 控制 UI `/agents` 工具面板有两个单独的视图：
-  - **Available Right Now** 使用 `tools.effective(sessionKey=...)` 并显示当前会话在运行时实际可用的内容，包括核心、插件和渠道拥有的工具。
+  - **Available Right Now** 使用 `tools.effective(sessionKey=...)` 并显示当前会话清单的服务器派生只读投影，包括核心、插件、渠道拥有以及已发现的 MCP 服务器工具。
   - **Tool Configuration** 使用 `tools.catalog` 并专注于配置文件、覆盖和目录语义。
-- 运行时可用性是会话范围的。在同一代理上切换会话可以更改 **Available Right Now** 列表。
+- 运行时可用性是会话范围的。在同一代理上切换会话可以更改 **Available Right Now** 列表。如果配置的 MCP 服务器尚未连接或自上次发现以来已更改，该面板将显示通知，而不是从读取路径静默启动 MCP 传输。
 - 配置编辑器并不代表运行时可用性；有效访问仍遵循策略优先级（`allow`/`deny`，以及按代理和提供商/渠道覆盖设置）。
 
 ## 远程使用

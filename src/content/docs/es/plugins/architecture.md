@@ -42,7 +42,7 @@ Las capacidades son el modelo de **complemento nativo** público dentro de OpenC
 | Transcripción en tiempo real       | `api.registerRealtimeTranscriptionProvider(...)` | `openai`                                         |
 | Voz en tiempo real                 | `api.registerRealtimeVoiceProvider(...)`         | `openai`                                         |
 | Comprensión de medios              | `api.registerMediaUnderstandingProvider(...)`    | `openai`, `google`                               |
-| Fuente de notas de reunión         | `api.registerMeetingNotesSourceProvider(...)`    | `discord`, `meeting-notes`                       |
+| Origen de las transcripciones      | `api.registerTranscriptSourceProvider(...)`      | `discord`                                        |
 | Generación de imágenes             | `api.registerImageGenerationProvider(...)`       | `openai`, `google`, `fal`, `minimax`             |
 | Generación de música               | `api.registerMusicGenerationProvider(...)`       | `google`, `minimax`                              |
 | Generación de video                | `api.registerVideoGenerationProvider(...)`       | `qwen`                                           |
@@ -76,39 +76,39 @@ OpenClaw clasifica cada complemento cargado en una forma según su comportamient
   <Accordion title="non-capability">Registra herramientas, comandos, servicios o rutas, pero no capacidades.</Accordion>
 </AccordionGroup>
 
-Usa `openclaw plugins inspect <id>` para ver la forma de un complemento y el desglose de capacidades. Consulta [CLI reference](/es/cli/plugins#inspect) para obtener más detalles.
+Use `openclaw plugins inspect <id>` para ver la forma y el desglose de capacidades de un complemento. Consulte la [referencia de la CLI](/es/cli/plugins#inspect) para obtener más detalles.
 
 ### Hooks heredados
 
-El hook `before_agent_start` sigue siendo compatible como ruta de compatibilidad para complementos solo de hook. Los complementos heredados del mundo real todavía dependen de él.
+El enlace `before_agent_start` sigue siendo compatible como una ruta de compatibilidad para complementos que solo usan enlaces. Los complementos reales heredados aún dependen de él.
 
 Dirección:
 
 - mantenerlo funcionando
 - documentarlo como heredado
-- preferir `before_model_resolve` para el trabajo de anulación de modelo/proveedor
-- preferir `before_prompt_build` para el trabajo de mutación de mensajes
+- prefiera `before_model_resolve` para el trabajo de anulación de modelo/proveedor
+- prefiera `before_prompt_build` para el trabajo de mutación de indicaciones
 - eliminar solo después de que el uso real disminuya y la cobertura de dispositivos demuestre la seguridad de la migración
 
 ### Señales de compatibilidad
 
-Al ejecutar `openclaw doctor` o `openclaw plugins inspect <id>`, es posible que veas una de estas etiquetas:
+Cuando ejecute `openclaw doctor` o `openclaw plugins inspect <id>`, es posible que vea una de estas etiquetas:
 
-| Señal                       | Significado                                                                   |
-| --------------------------- | ----------------------------------------------------------------------------- |
-| **config válida**           | La configuración se analiza bien y los complementos se resuelven              |
-| **aviso de compatibilidad** | El complemento usa un patrón admitido pero antiguo (por ejemplo, `hook-only`) |
-| **advertencia de legado**   | El complemento usa `before_agent_start`, que está obsoleto                    |
-| **error grave**             | La configuración no es válida o el complemento falló al cargarse              |
+| Señal                       | Significado                                                                     |
+| --------------------------- | ------------------------------------------------------------------------------- |
+| **config válida**           | La configuración se analiza bien y los complementos se resuelven                |
+| **aviso de compatibilidad** | El complemento usa un patrón compatible pero antiguo (por ejemplo, `hook-only`) |
+| **advertencia de legado**   | El complemento usa `before_agent_start`, que está obsoleto                      |
+| **error grave**             | La configuración no es válida o el complemento falló al cargarse                |
 
-Ni `hook-only` ni `before_agent_start` romperán su complemento hoy: `hook-only` es consultivo y `before_agent_start` solo activa una advertencia. Estas señales también aparecen en `openclaw status --all` y `openclaw plugins doctor`.
+Ni `hook-only` ni `before_agent_start` romperán tu complemento hoy: `hook-only` es consultivo y `before_agent_start` solo activa una advertencia. Estas señales también aparecen en `openclaw status --all` y `openclaw plugins doctor`.
 
 ## Resumen de arquitectura
 
 El sistema de complementos de OpenClaw tiene cuatro capas:
 
 <Steps>
-  <Step title="Manifiesto + descubrimiento">OpenClaw encuentra complementos candidatos desde las rutas configuradas, raíces del espacio de trabajo, raíces globales de complementos y complementos empaquetados. El descubrimiento lee primero los manifiestos nativos `openclaw.plugin.json` además de los manifiestos de paquetes compatibles.</Step>
+  <Step title="Manifiesto + descubrimiento">OpenClaw encuentra complementos candidatos desde las rutas configuradas, raíces del espacio de trabajo, raíces globales de complementos y complementos empaquetados. El descubrimiento lee los manifiestos nativos de `openclaw.plugin.json` más los manifiestos de paquetes compatibles primero.</Step>
   <Step title="Habilitación + validación">Core decide si un complemento descubierto está habilitado, deshabilitado, bloqueado o seleccionado para un espacio exclusivo como la memoria.</Step>
   <Step title="Carga en tiempo de ejecución">
     Los complementos nativos de OpenClaw se cargan en proceso y registran capacidades en un registro central. El JavaScript empaquetado se carga a través de `require` nativo; el TypeScript de fuente local de terceros es el respaldo de emergencia de Jiti. Los paquetes compatibles se normalizan en registros del registro sin importar código de tiempo de ejecución.
@@ -127,17 +127,17 @@ El límite de diseño importante:
 
 - la validación de manifiesto/configuración debería funcionar desde **metadatos de manifiesto/esquema** sin ejecutar código del complemento
 - el descubrimiento de capacidades nativas puede cargar código de entrada de complemento de confianza para crear una instantánea de registro no activante
-- el comportamiento del tiempo de ejecución nativo proviene de la ruta `register(api)` del módulo del complemento con `api.registrationMode === "full"`
+- el comportamiento de tiempo de ejecución nativo proviene de la ruta `register(api)` del módulo del complemento con `api.registrationMode === "full"`
 
 Esa división permite que OpenClaw valide la configuración, explique los complementos faltantes/desactivados y construya sugerencias de interfaz de usuario/esquema antes de que el tiempo de ejecución completo esté activo.
 
 ### Instantánea y tabla de búsqueda de metadatos del complemento
 
-El inicio de Gateway crea una `PluginMetadataSnapshot` para la instantánea de configuración actual. La instantánea es solo de metadatos: almacena el índice de complementos instalados, el registro de manifiestos, el diagnóstico de manifiestos, los mapas de propietarios, un normalizador de ID de complemento y registros de manifiestos. No contiene módulos de complemento cargados, SDK de proveedores, contenidos de paquetes o exportaciones de tiempo de ejecución.
+El inicio de Gateway construye una `PluginMetadataSnapshot` para la instantánea de configuración actual. La instantánea es solo de metadatos: almacena el índice de complementos instalados, el registro de manifiestos, el diagnóstico de manifiestos, mapas de propietarios, un normalizador de ID de complemento y registros de manifiestos. No contiene módulos de complementos cargados, SDKs de proveedores, contenidos de paquetes o exportaciones de tiempo de ejecución.
 
-La validación de configuración compatible con complementos, la activación automática en el inicio y el arranque de complementos de Gateway consumen esa instantánea en lugar de reconstruir los metadatos de manifiesto/índice de forma independiente. `PluginLookUpTable` se deriva de la misma instantánea y agrega el plan de complementos de inicio para la configuración de tiempo de ejecución actual.
+La validación de configuración consciente de complementos, la habilitación automática al inicio y el arranque de complementos de Gateway consumen esa instantánea en lugar de reconstruir metadatos de manifiesto/índice de forma independiente. `PluginLookUpTable` se deriva de la misma instantánea y agrega el plan de complementos de inicio para la configuración de tiempo de ejecución actual.
 
-Después del inicio, Gateway mantiene la instantánea de metadatos actual como un producto de tiempo de ejecución reemplazable. El descubrimiento repetido de proveedores en tiempo de ejecución puede tomar prestada esa instantánea en lugar de reconstruir el índice instalado y el registro de manifiestos para cada paso del catálogo de proveedores. La instantánea se borra o reemplaza al cerrar Gateway, cambiar el inventario de configuración/complementos y escribir en el índice instalado; los llamadores recurren a la ruta de manifiesto/índice en frío cuando no existe una instantánea actual compatible. Las verificaciones de compatibilidad deben incluir raíces de descubrimiento de complementos como `plugins.load.paths` y el espacio de trabajo del agente predeterminado, porque los complementos del espacio de trabajo son parte del alcance de los metadatos.
+Tras el inicio, Gateway mantiene la instantánea de metadatos actual como un producto reemplazable en tiempo de ejecución. El descubrimiento repetido de proveedores en tiempo de ejecución puede tomar prestada esa instantánea en lugar de reconstruir el índice instalado y el registro de manifiestos para cada pasada del catálogo de proveedores. La instantánea se borra o reemplaza al apagar Gateway, cambios en el inventario de configuración/complementos y escrituras en el índice instalado; los emisores vuelven a la ruta de manifiesto/índice en frío cuando no existe una instantánea actual compatible. Las verificaciones de compatibilidad deben incluir raíces de descubrimiento de complementos como `plugins.load.paths` y el espacio de trabajo del agente predeterminado, ya que los complementos del espacio de trabajo forman parte del alcance de los metadatos.
 
 La instantánea y la tabla de búsqueda mantienen las decisiones de inicio repetidas en la ruta rápida:
 
@@ -151,9 +151,9 @@ La instantánea y la tabla de búsqueda mantienen las decisiones de inicio repet
 
 El límite de seguridad es el reemplazo de la instantánea, no la mutación. Reconstruya la instantánea cuando cambie la configuración, el inventario de complementos, los registros de instalación o la política de índice persistente. No lo trate como un registro global mutable amplio y no mantenga instantáneas históricas ilimitadas. La carga de complementos en tiempo de ejecución permanece separada de las instantáneas de metadatos, por lo que el estado obsoleto del tiempo de ejecución no puede ocultarse detrás de una memoria caché de metadatos.
 
-La regla de la memoria caché está documentada en [Plugin architecture internals](/es/plugins/architecture-internals#plugin-cache-boundary): los metadatos de manifiesto y descubrimiento están actualizados a menos que quien llama mantenga una instantánea explícita, una tabla de búsqueda o un registro de manifiesto para el flujo actual. Las memorias caché de metadatos ocultas y los TTL de reloj de pared no son parte de la carga de complementos. Solo las memorias caché del cargador de tiempo de ejecución, el módulo y los artefactos de dependencia pueden persistir después de que el código o los artefactos instalados se carguen realmente.
+La regla de caché está documentada en [Plugin architecture internals](/es/plugins/architecture-internals#plugin-cache-boundary): los metadatos de manifiesto y descubrimiento están actualizados a menos que un emisor conserve una instantánea explícita, una tabla de búsqueda o un registro de manifiesto para el flujo actual. Las cachés de metadatos ocultos y los TTL de reloj de pared no forman parte de la carga de complementos. Solo las cachés del cargador en tiempo de ejecución, módulo y artefactos de dependencia pueden persistir después de que se cargue realmente el código o los artefactos instalados.
 
-Algunos llamadores de ruta de acceso en frío todavía reconstruyen los registros de manifiesto directamente desde el índice persistente de complementos instalados en lugar de recibir un Gateway `PluginLookUpTable`. Esa ruta ahora reconstruye el registro bajo demanda; se prefieren pasar la tabla de búsqueda actual o un registro de manifiesto explícito a través de los flujos de tiempo de ejecución cuando quien llama ya tiene uno.
+Algunos emisores de ruta en frío todavía reconstruyen registros de manifiestos directamente desde el índice persistente de complementos instalados en lugar de recibir un Gateway `PluginLookUpTable`. Esa ruta ahora reconstruye el registro bajo demanda; se prefiere pasar la tabla de búsqueda actual o un registro de manifiestos explícito a través de los flujos de tiempo de ejecución cuando un emisor ya tiene uno.
 
 ### Planificación de la activación
 
@@ -161,27 +161,27 @@ La planificación de la activación es parte del plano de control. Los llamadore
 
 El planificador mantiene el comportamiento del manifiesto actual compatible:
 
-- los campos `activation.*` son sugerencias explícitas del planificador
+- Los campos `activation.*` son sugerencias explícitas del planificador
 - `providers`, `channels`, `commandAliases`, `setup.providers`, `contracts.tools` y los ganchos siguen siendo el respaldo de propiedad del manifiesto
 - la API del planificador solo de IDs permanece disponible para los llamadores existentes
 - la API del plan informa etiquetas de razón para que los diagnósticos puedan distinguir las sugerencias explícitas del respaldo de propiedad
 
-<Warning>No trate `activation` como un gancho del ciclo de vida ni un reemplazo de `register(...)`. Son metadatos utilizados para limitar la carga. Prefiera los campos de propiedad cuando ya describan la relación; use `activation` solo para sugerencias adicionales del planificador.</Warning>
+<Warning>No trate `activation` como un gancho de ciclo de vida ni un reemplazo de `register(...)`. Son metadatos utilizados para acotar la carga. Prefiera los campos de propiedad cuando ya describan la relación; use `activation` solo para sugerencias adicionales del planificador.</Warning>
 
 ### Complementos de canal y la herramienta de mensajes compartidos
 
-Los complementos de canal no necesitan registrar una herramienta de envío/edición/reacción separada para las acciones de chat normales. OpenClaw mantiene una herramienta `message` compartida en el núcleo, y los complementos de canal son propietarios del descubrimiento y ejecución específicos del canal detrás de ella.
+Los complementos de canal no necesitan registrar una herramienta de envío/edición/reacción separada para las acciones de chat normales. OpenClaw mantiene una herramienta compartida `message` en el núcleo, y los complementos de canal son propietarios del descubrimiento y ejecución específicos del canal detrás de ella.
 
 El límite actual es:
 
-- el núcleo es propietario del host de la herramienta `message` compartida, el cableado del prompt, la contabilidad de la sesión/hilo y el despacho de ejecución
+- el núcleo es propietario del host de la herramienta compartida `message`, el cableado del prompt, la contabilidad de sesión/hilo y el envío de la ejecución
 - los complementos de canal son propietarios del descubrimiento de acciones con ámbito, el descubrimiento de capacidades y cualquier fragmento de esquema específico del canal
 - los complementos de canal son propietarios de la gramática de conversación de sesión específica del proveedor, tal como cómo los IDs de conversación codifican los IDs de hilo o se heredan de conversaciones principales
 - los complementos de canal ejecutan la acción final a través de su adaptador de acción
 
 Para los complementos de canal, la superficie del SDK es `ChannelMessageActionAdapter.describeMessageTool(...)`. Esa llamada de descubrimiento unificada permite que un complemento devuelva sus acciones visibles, capacidades y contribuciones de esquema juntas para que esas piezas no se separen.
 
-Cuando un parámetro de herramienta de mensaje específico del canal lleva una fuente de medios, como una ruta local o una URL de medios remota, el complemento también debe devolver `mediaSourceParams` de `describeMessageTool(...)`. El núcleo usa esa lista explícita para aplicar la normalización de ruta de sandbox y sugerencias de acceso a medios salientes sin codificar nombres de parámetros propiedad del complemento. Se prefieren mapas con ámbito de acción allí, no una lista plana para todo el canal, de modo que un parámetro de media solo para perfil no se normalice en acciones no relacionadas como `send`.
+Cuando un parámetro de herramienta de mensaje específico del canal lleva una fuente multimedia como una ruta local o una URL multimedia remota, el complemento también debe devolver `mediaSourceParams` desde `describeMessageTool(...)`. El núcleo usa esa lista explícita para aplicar la normalización de rutas de sandbox y pistas de acceso a medios salientes sin codificar nombres de parámetros propiedad del complemento. Prefiera mapas con ámbito de acción allí, no una lista plana para todo el canal, para que un parámetro multimedia solo de perfil no se normalice en acciones no relacionadas como `send`.
 
 El núcleo pasa el ámbito de tiempo de ejecución a ese paso de descubrimiento. Los campos importantes incluyen:
 
@@ -194,24 +194,24 @@ El núcleo pasa el ámbito de tiempo de ejecución a ese paso de descubrimiento.
 - `agentId`
 - entrada confiable `requesterSenderId`
 
-Esto es importante para los complementos sensibles al contexto. Un canal puede ocultar o exponer acciones de mensaje basándose en la cuenta activa, la sala/hilo/mensaje actual, o la identidad del solicitante confiable sin codificar ramas específicas del canal en la herramienta `message` del núcleo.
+Eso es importante para los complementos sensibles al contexto. Un canal puede ocultar o exponer acciones de mensaje según la cuenta activa, la sala/hilo/mensaje actual, o la identidad del solicitante confiable sin codificar ramas específicas del canal en la herramienta `message` del núcleo.
 
-Esta es la razón por la que los cambios de enrutamiento del ejecutor integrado (embedded-runner) siguen siendo trabajo del complemento: el ejecutor es responsable de reenviar la identidad actual del chat/sesión al límite de descubrimiento del complemento para que la herramienta compartida `message` exponga la superficie propiedad del canal correcta para el turno actual.
+Es por eso que los cambios de enrutamiento del ejecutor integrado siguen siendo trabajo del complemento: el ejecutor es responsable de reenviar la identidad de chat/sesión actual hacia el límite de descubrimiento del complemento para que la herramienta compartida `message` exponga la superficie correcta propiedad del canal para el turno actual.
 
-Para los asistentes de ejecución propiedad del canal, los complementos integrados deben mantener el tiempo de ejecución de ejecución dentro de sus propios módulos de extensión. Core ya no es propietario de los tiempos de ejecución de acciones de mensaje de Discord, Slack, Telegram o WhatsApp en `src/agents/tools`. No publicamos subrutas `plugin-sdk/*-action-runtime` separadas, y los complementos integrados deben importar su propio código de tiempo de ejecución local directamente desde sus módulos propiedad de la extensión.
+Para los asistentes de ejecución propiedad del canal, los complementos empaquetados deben mantener el tiempo de ejecución de ejecución dentro de sus propios módulos de extensión. Core ya no es propietario de los tiempos de ejecución de acción de mensajes de Discord, Slack, Telegram o WhatsApp bajo `src/agents/tools`. No publicamos subrutas `plugin-sdk/*-action-runtime` separadas, y los complementos empaquetados deben importar su propio código de tiempo de ejecución local directamente desde sus módulos propiedad de la extensión.
 
-El mismo límite se aplica a las costuras del SDK nombradas por el proveedor en general: core no debe importar barriles de convenencia específicos del canal para Slack, Discord, Signal, WhatsApp o extensiones similares. Si core necesita un comportamiento, consuma el barril `api.ts` / `runtime-api.ts` del propio complemento integrado o promueva la necesidad a una capacidad genérica estrecha en el SDK compartido.
+El mismo límite se aplica a las costuras del SDK nombradas por el proveedor en general: Core no debe importar barriles de convenencia específicos del canal para Slack, Discord, Signal, WhatsApp o extensiones similares. Si Core necesita un comportamiento, consuma el barril `api.ts` / `runtime-api.ts` del propio complemento empaquetado o promueva la necesidad a una capacidad genérica estrecha en el SDK compartido.
 
-Los complementos integrados siguen la misma regla. El `runtime-api.ts` de un complemento integrado no debe volver a exportar su propia fachada `openclaw/plugin-sdk/<plugin-id>` con marca. Esas fachadas con marca siguen siendo shims de compatibilidad para complementos externos y consumidores más antiguos, pero los complementos integrados deben usar exportaciones locales más subrutas de SDK genéricas estrechas como `openclaw/plugin-sdk/channel-policy`, `openclaw/plugin-sdk/runtime-store` o `openclaw/plugin-sdk/webhook-ingress`. El código nuevo no debe agregar fachadas de SDK específicas del ID del complemento a menos que el límite de compatibilidad para un ecosistema externo existente lo requiera.
+Los complementos empaquetados siguen la misma regla. El `runtime-api.ts` de un complemento empaquetado no debe reexportar su propia fachada `openclaw/plugin-sdk/<plugin-id>` con marca. Esas fachadas con marca siguen siendo capas de compatibilidad para complementos externos y consumidores antiguos, pero los complementos empaquetados deben usar exportaciones locales más subrutas genéricas estrechas del SDK como `openclaw/plugin-sdk/channel-policy`, `openclaw/plugin-sdk/runtime-store` o `openclaw/plugin-sdk/webhook-ingress`. El código nuevo no debe agregar fachadas de SDK específicas del ID de complemento a menos que el límite de compatibilidad para un ecosistema externo existente lo requiera.
 
 Para las encuestas específicamente, hay dos rutas de ejecución:
 
 - `outbound.sendPoll` es la línea base compartida para los canales que se ajustan al modelo de encuesta común
-- `actions.handleAction("poll")` es la ruta preferida para la semántica de encuesta específica del canal o parámetros de encuesta adicionales
+- `actions.handleAction("poll")` es la ruta preferida para semánticas de encuesta específicas del canal o parámetros de encuesta adicionales
 
 Core ahora difiere el análisis compartido de encuestas hasta después de que el envío de encuestas del complemento decline la acción, para que los controladores de encuesta propiedad del complemento puedan aceptar campos de encuesta específicos del canal sin ser bloqueados primero por el analizador de encuestas genérico.
 
-Consulte [Elementos internos de la arquitectura de complementos](/es/plugins/architecture-internals) para conocer la secuencia de inicio completa.
+Consulte [Plugin architecture internals](/es/plugins/architecture-internals) para obtener la secuencia de inicio completa.
 
 ## Modelo de propiedad de capacidades
 
@@ -224,11 +224,9 @@ Esto significa:
 - los canales deben consumir capacidades centrales compartidas en lugar de volver a implementar el comportamiento del proveedor ad hoc
 
 <AccordionGroup>
-  <Accordion title="Proveedor de múltiples capacidades">
-    `openai` es propietario de la inferencia de texto, voz, voz en tiempo real, comprensión de medios y generación de imágenes. `google` es propietario de la inferencia de texto, además de la comprensión de medios, la generación de imágenes y la búsqueda web. `qwen` es propietario de la inferencia de texto, además de la comprensión de medios y la generación de video.
-  </Accordion>
-  <Accordion title="Proveedor de capacidad única">`elevenlabs` y `microsoft` son propietarios de la voz; `firecrawl` es propietario de la obtención web; `minimax` / `mistral` / `moonshot` / `zai` son propietarios de los backends de comprensión de medios.</Accordion>
-  <Accordion title="Complemento de característica">`voice-call` es propietario del transporte de llamadas, herramientas, CLI, rutas y puente de flujo de medios de Twilio, pero consume capacidades compartidas de voz, transcripción en tiempo real y voz en tiempo real en lugar de importar complementos de proveedor directamente.</Accordion>
+  <Accordion title="Capacidad múltiple del proveedor">`openai` posee inferencia de texto, voz, voz en tiempo real, comprensión de medios y generación de imágenes. `google` posee inferencia de texto más comprensión de medios, generación de imágenes y búsqueda web. `qwen` posee inferencia de texto más comprensión de medios y generación de video.</Accordion>
+  <Accordion title="Proveedor de capacidad única">`elevenlabs` y `microsoft` son propietarios de speech; `firecrawl` es propietario de web-fetch; `minimax` / `mistral` / `moonshot` / `zai` son propietarios de backends de comprensión de medios.</Accordion>
+  <Accordion title="Plugin de características">`voice-call` es propietario del transporte de llamadas, las herramientas, la CLI, las rutas y el puente de flujo de medios de Twilio, pero consume capacidades compartidas de voz, transcripción en tiempo real y voz en tiempo real en lugar de importar complementos del proveedor directamente.</Accordion>
 </AccordionGroup>
 
 El estado final deseado es:
@@ -268,8 +266,8 @@ Use este modelo mental al decidir a dónde pertenece el código:
 Por ejemplo, TTS sigue esta forma:
 
 - el núcleo posee la política de TTS en el momento de la respuesta, el orden de respaldo, las preferencias y la entrega del canal
-- `openai`, `elevenlabs` y `microsoft` poseen implementaciones de síntesis
-- `voice-call` consume el asistente de tiempo de ejecución de TTS de telefonía
+- `openai`, `elevenlabs` y `microsoft` son propietarios de implementaciones de síntesis
+- `voice-call` consume el auxiliar de tiempo de ejecución de TTS de telefonía
 
 Ese mismo patrón debe preferirse para futuras capacidades.
 
@@ -330,7 +328,7 @@ Lo que importa no son los nombres exactos de los auxiliares. Lo que importa es l
 
 - un complemento posee la superficie del proveedor
 - el núcleo sigue siendo el propietario de los contratos de capacidad
-- los canales y los complementos de funciones consumen los auxiliares `api.runtime.*`, no el código del proveedor
+- los canales y los plugins de características consumen auxiliares `api.runtime.*`, no código de proveedor
 - las pruebas de contrato pueden asegurar que el complemento registró las capacidades que afirma poseer
 
 ### Ejemplo de capacidad: comprensión de video
@@ -339,19 +337,19 @@ OpenClaw ya trata la comprensión de imagen/audio/video como una capacidad compa
 
 <Steps>
   <Step title="Core defines the contract">El núcleo define el contrato de comprensión de medios.</Step>
-  <Step title="Vendor plugins register">Los complementos del proveedor registran `describeImage`, `transcribeAudio` y `describeVideo` según corresponda.</Step>
+  <Step title="Registro de plugins de proveedor">Los plugins de proveedor registran `describeImage`, `transcribeAudio` y `describeVideo` según corresponda.</Step>
   <Step title="Consumers use the shared behavior">Los canales y los complementos de funciones consumen el comportamiento central compartido en lugar de conectarse directamente al código del proveedor.</Step>
 </Steps>
 
 Eso evita incorporar los supuestos de video de un proveedor en el núcleo. El complemento posee la superficie del proveedor; el núcleo posee el contrato de capacidad y el comportamiento de reserva.
 
-La generación de video ya usa esa misma secuencia: el núcleo posee el contrato de capacidad tipificado y el auxiliar de tiempo de ejecución, y los complementos del proveedor registran implementaciones `api.registerVideoGenerationProvider(...)` contra él.
+La generación de video ya usa esa misma secuencia: core es propietario del contrato de capacidad tipificado y el auxiliar de tiempo de ejecución, y los plugins de proveedor registran implementaciones `api.registerVideoGenerationProvider(...)` contra él.
 
-¿Necesita una lista de verificación de implementación concreta? Consulte el [Libro de recetas de capacidades](/es/tools/capability-cookbook).
+¿Necesitas una lista de verificación de implementación concreta? Consulta [Capability Cookbook](/es/tools/capability-cookbook).
 
 ## Contratos y cumplimiento
 
-La superficie de la API del complemento está tipificada intencionalmente y centralizada en `OpenClawPluginApi`. Ese contrato define los puntos de registro admitidos y los auxiliares de tiempo de ejecución en los que un complemento puede confiar.
+La superficie de la API del plugin está intencionalmente tipificada y centralizada en `OpenClawPluginApi`. Ese contrato define los puntos de registro admitidos y los auxiliares de tiempo de ejecución en los que un plugin puede confiar.
 
 Por qué esto importa:
 
@@ -381,9 +379,9 @@ El efecto práctico es que OpenClaw sabe, de antemano, qué complemento posee qu
     - consumibles por canales/características sin conocimiento del proveedor
 
   </Tab>
-  <Tab title="Malos contratos">
-    - política específica del proveedor oculta en el núcleo
-    - salidas de emergencia de complementos únicas que evitan el registro
+  <Tab title="Contratos incorrectos">
+    - políticas específicas del proveedor ocultas en core
+    - salidas de emergencia de plugins puntuales que omiten el registro
     - código de canal que llega directamente a una implementación de proveedor
     - objetos de tiempo de ejecución ad hoc que no forman parte de `OpenClawPluginApi` o `api.runtime`
 
@@ -402,12 +400,11 @@ Los paquetes compatibles son más seguros de manera predeterminada porque OpenCl
 
 Utilice listas de permitidos (allowlists) y rutas de instalación/carga explícitas para complementos no agrupados. Trate los complementos del espacio de trabajo como código de tiempo de desarrollo, no como valores predeterminados de producción.
 
-Para los nombres de paquetes del espacio de trabajo agrupados, mantenga el identificador del complemento anclado en el nombre de npm: `@openclaw/<id>` de manera predeterminada, o un sufijo de tipo aprobado como `-provider`, `-plugin`, `-speech`, `-sandbox`, o `-media-understanding` cuando el paquete expone intencionalmente una función de complemento más estrecha.
+Para los nombres de paquetes incluidos en el espacio de trabajo, mantenga el id del complemento anclado en el nombre de npm: `@openclaw/<id>` de forma predeterminada, o un sufijo de tipo aprobado como `-provider`, `-plugin`, `-speech`, `-sandbox` o `-media-understanding` cuando el paquete expone intencionalmente un rol de complemento más limitado.
 
 <Note>
-  **Nota de confianza:** `plugins.allow` confía en los **identificadores de complementos**, no en el origen de la fuente. Un complemento del espacio de trabajo con el mismo identificador que un complemento agrupado oculta intencionalmente la copia agrupada cuando ese complemento del espacio de trabajo está habilitado/en la lista de permitidos. Esto es normal y útil para el desarrollo local, las
-  pruebas de parches y las revisiones urgentes. La confianza de los complementos agrupados se resuelve a partir de la instantánea de la fuente (el manifiesto y el código en el disco en el momento de la carga) en lugar de los metadatos de instalación. Un registro de instalación corrupto o sustituido no puede ampliar silenciosamente la superficie de confianza de un complemento agrupado más allá de
-  lo que reclama la fuente real.
+  **Nota de confianza:** `plugins.allow` confía en los **ids de complementos**, no en el origen de la fuente. Un complemento del espacio de trabajo con el mismo id que un complemento incluido sombrea intencionalmente la copia incluida cuando ese complemento del espacio de trabajo está habilitado/en la lista de permitidos. Esto es normal y útil para el desarrollo local, las pruebas de parches y las
+  correcciones urgentes. La confianza del complemento incluido se resuelve a partir de la instantánea de origen: el manifiesto y el código en el disco en el momento de la carga, en lugar de los metadatos de instalación. Un registro de instalación corrupto o sustituido no puede ampliar silenciosamente la superficie de confianza de un complemento incluido más allá de lo que afirma la fuente real.
 </Note>
 
 ## Límite de exportación
@@ -421,7 +418,7 @@ Mantenga el registro de capacidades público. Reduzca las exportaciones de ayuda
 - ayudas auxiliares de conveniencia específicas del proveedor
 - ayudas auxiliares de configuración/incorporación que son detalles de implementación
 
-Las subrutas de ayuda auxiliares reservadas para complementos agrupados se han retirado del mapa de exportación del SDK generado. Mantenga las ayudas auxiliares específicas del propietario dentro del paquete del complemento propietario; promueva solo el comportamiento reutilizable del host a contratos genéricos del SDK como `plugin-sdk/gateway-runtime`, `plugin-sdk/security-runtime` y `plugin-sdk/plugin-config-runtime`.
+Las subrutas de ayuda reservadas para complementos incluidos se han retirado del mapa de exportación del SDK generado. Mantenga las ayudas específicas del propietario dentro del paquete del complemento propietario; promueva solo el comportamiento reutilizable del host a contratos genéricos del SDK como `plugin-sdk/gateway-runtime`, `plugin-sdk/security-runtime` y `plugin-sdk/plugin-config-runtime`.
 
 ## Interno y referencia
 

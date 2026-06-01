@@ -259,14 +259,14 @@ El complemento incluido `minimax` registra MiniMax T2A v2 como proveedor de voz 
 - Los objetivos de notas de voz como Feishu y Telegram se transcodifican de MiniMax MP3 a Opus de 48 kHz con `ffmpeg`, porque la API de archivos de Feishu/Lark solo acepta `file_type: "opus"` para mensajes de audio nativos.
 - MiniMax T2A acepta `speed` y `vol` fraccionarios, pero `pitch` se envía como un entero; OpenClaw trunca los valores `pitch` fraccionarios antes de la solicitud a la API.
 
-| Configuración                            | Var. de entorno        | Predeterminado                | Descripción                                  |
-| ---------------------------------------- | ---------------------- | ----------------------------- | -------------------------------------------- |
-| `messages.tts.providers.minimax.baseUrl` | `MINIMAX_API_HOST`     | `https://api.minimax.io`      | Host de la API T2A de MiniMax.               |
-| `messages.tts.providers.minimax.model`   | `MINIMAX_TTS_MODEL`    | `speech-2.8-hd`               | ID del modelo TTS.                           |
-| `messages.tts.providers.minimax.voiceId` | `MINIMAX_TTS_VOICE_ID` | `English_expressive_narrator` | ID de voz utilizada para la salida de audio. |
-| `messages.tts.providers.minimax.speed`   |                        | `1.0`                         | Velocidad de reproducción, `0.5..2.0`.       |
-| `messages.tts.providers.minimax.vol`     |                        | `1.0`                         | Volumen, `(0, 10]`.                          |
-| `messages.tts.providers.minimax.pitch`   |                        | `0`                           | Cambio de tono entero, `-12..12`.            |
+| Configuración                                   | Var. de entorno        | Predeterminado                | Descripción                                  |
+| ----------------------------------------------- | ---------------------- | ----------------------------- | -------------------------------------------- |
+| `messages.tts.providers.minimax.baseUrl`        | `MINIMAX_API_HOST`     | `https://api.minimax.io`      | Host de la API T2A de MiniMax.               |
+| `messages.tts.providers.minimax.model`          | `MINIMAX_TTS_MODEL`    | `speech-2.8-hd`               | ID del modelo TTS.                           |
+| `messages.tts.providers.minimax.speakerVoiceId` | `MINIMAX_TTS_VOICE_ID` | `English_expressive_narrator` | ID de voz utilizada para la salida de audio. |
+| `messages.tts.providers.minimax.speed`          |                        | `1.0`                         | Velocidad de reproducción, `0.5..2.0`.       |
+| `messages.tts.providers.minimax.vol`            |                        | `1.0`                         | Volumen, `(0, 10]`.                          |
+| `messages.tts.providers.minimax.pitch`          |                        | `0`                           | Cambio de tono entero, `-12..12`.            |
 
 ### Generación de música
 

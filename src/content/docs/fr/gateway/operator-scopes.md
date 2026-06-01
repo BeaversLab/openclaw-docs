@@ -12,7 +12,7 @@ Elles constituent un garde-fou du plan de contrôle à l'intérieur d'un domaine
 et non une isolation multitenante hostile. Si vous avez besoin d'une séparation forte entre
 les personnes, les équipes ou les machines, exécutez des Gateways distincts sous des utilisateurs ou des hôtes OS distincts.
 
-Connexes : [Sécurité](/fr/gateway/securityGateway), [Protocole Gateway](/fr/gateway/protocolGateway),
+Voir aussi : [Sécurité](/fr/gateway/securityGateway), [Protocole Gateway](/fr/gateway/protocolGateway),
 [Jumelage Gateway](/fr/gateway/pairingCLI), [CLI des appareils](/fr/cli/devices).
 
 ## Rôles
@@ -68,29 +68,52 @@ un rôle plus large ou des étendues plus larges créent une nouvelle demande de
 Lors de l'approbation d'une demande d'appareil :
 
 - Une demande sans rôle d'opérateur ne nécessite pas d'approbation de l'étendue du jeton d'opérateur.
+- Une demande pour un rôle d'appareil non-opérateur, tel que `node`, nécessite
+  `operator.admin`, même lorsque `device.pair.approve` est accessible avec
+  `operator.pairing`.
 - Une demande pour `operator.read`, `operator.write`, `operator.approvals`,
-  `operator.pairing` ou `operator.talk.secrets` exige que l'appelant possède
-  ces étendues, ou `operator.admin`.
+  `operator.pairing`, ou `operator.talk.secrets` exige que l'appelant détienne
+  ces portées, ou `operator.admin`.
 - Une demande pour `operator.admin` nécessite `operator.admin`.
-- Une demande de réparation sans portées explicites peut hériter des portées du jeton d'opérateur existant. Si ce jeton existant a une portée d'administrateur, l'approbation nécessite toujours `operator.admin`.
+- Une demande de réparation sans portées explicites peut hériter des portées du jeton
+  d'opérateur existant. Si ce jeton existant a une portée admin, l'approbation nécessite quand même
+  `operator.admin`.
 
-Pour les sessions de jetons d'appareil appariés, la gestion est auto-portée, sauf si l'appelant possède également `operator.admin` : les appelants non-administrateurs ne voient que leurs propres entrées d'appariement, ne peuvent approuver ou rejeter que leur propre demande en attente, et ne peuvent faire pivoter, révoquer ou supprimer que leur propre entrée d'appareil.
+Les sessions de secret partagé et de proxy de confiance non-admin peuvent approuver les demandes opérateur-appareil
+uniquement à l'intérieur de leurs propres portées d'opérateur déclarées. L'approbation de rôles non-opérateur
+est réservée aux administrateurs, même lorsque ces sessions peuvent autrement utiliser
+`operator.pairing`.
 
-## Approbations d'appariement de nœud
+Pour les sessions de jeton d'appareil jumelé, la gestion est également à portée restreinte (self-scoped) sauf si l'appelant
+a `operator.admin` : les appelants non-admin ne voient que leurs propres entrées de jumelage,
+ne peuvent approuver ou rejeter que leur propre demande en attente, et ne peuvent faire pivoter,
+révoquer ou supprimer que leur propre entrée d'appareil.
 
-L'ancien `node.pair.*` utilise un magasin d'appariement de nœud distinct et propriétaire du Gateway. Les nœuds WS utilisent l'appariement d'appareil avec `role: node`, mais le même vocabulaire de niveau d'approbation s'applique.
+## Approbations de jumelage de nœud
 
-`node.pair.approve` utilise la liste de commandes de demande en attente pour dériver des portées supplémentaires requises :
+Le `node.pair.*`Gateway hérité utilise un magasin de jumelage de nœud distinct appartenant au Gateway. Les nœuds WS
+utilisent le jumelage d'appareil avec `role: node`, mais le même vocabulaire de niveau d'approbation
+s'applique.
+
+`node.pair.approve` utilise la liste des commandes de demande en attente pour dériver des portées
+requises supplémentaires :
 
 - Demande sans commande : `operator.pairing`
-- Commandes de nœud non-exéc : `operator.pairing` + `operator.write`
-- `system.run`, `system.run.prepare` ou `system.which` :
+- Commandes de nœud non-exec : `operator.pairing` + `operator.write`
+- `system.run`, `system.run.prepare`, ou `system.which` :
   `operator.pairing` + `operator.admin`
 
-L'appariement de nœud établit l'identité et la confiance. Il ne remplace pas la propre stratégie d'approbation d'exécution `system.run` du nœud.
+L'appairage de nœuds établit l'identité et la confiance. Il ne remplace pas
+la propre stratégie d'approbation d'exécution `system.run` du nœud.
 
 ## Authentification par secret partagé
 
-L'authentification par jeton/mot de passe de passerelle partagé est traitée comme un accès opérateur de confiance pour ce Gateway. Les surfaces HTTP compatibles OpenAI, `/tools/invoke`, et les points de terminaison de l'historique des sessions HTTP restaurent le jeu normal de portées par défaut complet de l'opérateur pour l'authentification par porteur via secret partagé, même si un appelant envoie des portées déclarées plus restreintes.
+L'authentification par jeton/mot de passe partagé de la passerelle est traitée comme un accès
+opérateur de confiance pour ce Gateway. Les surfaces HTTP compatibles OpenAI, `/tools/invoke`, et les points de terminaison
+l'historique des sessions HTTP restaurent l'ensemble normal complet des étendues par défaut
+de l'opérateur pour l'authentification du porteur par secret partagé, même si l'appelant
+envoie des étendues déclarées plus étroites.
 
-Les modes porteurs d'identité, tels que l'authentification par proxy de confiance ou `none` d'entrée privée, peuvent toujours honorer les portées déclarées explicites. Utilisez des Gateways distincts pour une véritable séparation des limites de confiance.
+Les modes porteurs d'identité, tels que l'authentification par proxy de confiance ou l'entrée privée `none`,
+peuvent toujours honorer les étendues déclarées explicites. Utilisez des passerelles distinctes pour une
+séparation réelle des limites de confiance.

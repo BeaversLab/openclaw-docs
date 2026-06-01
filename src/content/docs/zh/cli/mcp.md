@@ -18,7 +18,7 @@ sidebarTitle: "MCP"
 - `serve` 是作为 MCP 服务器运行的 OpenClaw
 - `list` / `show` / `set` / `unset` 是作为 MCP 客户端注册表运行的 OpenClaw，用于其运行时稍后可能使用的其他 MCP 服务器
 
-当 OpenClaw 应自行托管编码 harness 会话并通过 ACP 路由该运行时时，请使用 [`openclaw acp`](/zh/cli/acpOpenClaw)。
+当 OpenClaw 应该自行托管编码工具会话并通过 ACP 路由该运行时时，请使用 [`openclaw acp`](/zh/cli/acpOpenClaw)。
 
 ## OpenClaw 作为 MCP 服务器
 
@@ -32,7 +32,7 @@ sidebarTitle: "MCP"
 - 您已经拥有一个本地或远程的带有路由会话的 OpenClaw Gateway(网关)
 - 你需要一个在 OpenClaw 的渠道后端中工作的 MCP 服务器，而不是运行单独的每个渠道的桥接器
 
-当 OpenClaw 应自行托管编码运行时并将代理会话保留在 OpenClaw 内部时，请改用 [`openclaw acp`](/zh/cli/acpOpenClawOpenClaw)。
+当 OpenClaw 应该自行托管编码运行时并将代理会话保留在 OpenClaw 内部时，请改为使用 [`openclaw acp`](/zh/cli/acpOpenClawOpenClaw)。
 
 ### 工作原理
 
@@ -304,21 +304,21 @@ pnpm test:docker:mcp-channels
 
 这些命令不会通过 MCP 暴露 OpenClaw。它们用于管理 OpenClaw 配置中 `mcp.servers` 下的 OpenClaw 拥有的 MCP 服务器定义。
 
-这些保存的定义供 OpenClaw 稍后启动或配置的运行时使用，例如嵌入式 Pi 和其他运行时适配器。OpenClaw 集中存储这些定义，以便这些运行时无需维护自己的重复 MCP 服务器列表。
+这些保存的定义适用于 OpenClaw 稍后启动或配置的运行时，例如嵌入式 OpenClaw 和其他运行时适配器。OpenClaw 集中存储这些定义，以便这些运行时无需维护自己重复的 MCP 服务器列表。
 
 <AccordionGroup>
-  <Accordion title="重要行为">
+  <Accordion title="重要行为"OpenClawOpenClaw>
     - 这些命令仅读取或写入 OpenClaw 配置
     - 它们不连接到目标 MCP 服务器
     - 它们不验证命令、URL 或远程传输当前是否可达
-    - 运行时适配器在执行时决定其实际支持的传输形式
-    - 嵌入式 Pi 在正常的 `coding` 和 `messaging` 工具配置文件中暴露已配置的 MCP 工具；`minimal` 仍然隐藏它们，而 `tools.deny: ["bundle-mcp"]` 则显式禁用它们
-    - 会话范围的捆绑 MCP 运行时在空闲 `mcp.sessionIdleTtlMs` 毫秒后（默认为 10 分钟；设置 `0` 以禁用）被回收，而一次性嵌入式运行则在运行结束时清理它们
+    - 运行时适配器在执行时决定它们实际支持的传输形式
+    - 嵌入式 OpenClaw 在正常的 `coding` 和 `messaging` 工具配置文件中暴露配置的 MCP 工具；`minimal` 仍然隐藏它们，而 `tools.deny: ["bundle-mcp"]` 显式禁用它们
+    - 会话范围的捆绑 MCP 运行时在空闲 `mcp.sessionIdleTtlMs` 毫秒（默认 10 分钟；设置 `0` 以禁用）后被回收，而一次性嵌入式运行会在运行结束时清理它们
 
   </Accordion>
 </AccordionGroup>
 
-运行时适配器可能会将此共享注册表规范化为其下游客户端所期望的形状。例如，嵌入式 Pi 直接消耗 OpenClaw `transport` 值，而 Claude Code 和 Gemini 接收 CLI 原生 `type` 值，如 `http`、`sse` 或 `stdio`。
+运行时适配器可能会将此共享注册表规范化为其下游客户端期望的形式。例如，嵌入式 OpenClaw 直接使用 OpenClaw OpenClawOpenClaw`transport`CLI 值，而 Claude Code 和 Gemini 接收 CLI 原生的 `type` 值，如 `http`、`sse` 或 `stdio`。
 
 Codex app-server 还会遵守每个服务器上可选的 `codex`OpenClaw 块。这是仅用于 Codex app-server 线程的 OpenClaw 投影元数据；它不会更改 ACP 会话、通用 Codex harness 配置或其他运行时适配器。使用非空的 `codex.agents`OpenClaw 将服务器仅投影到特定的 OpenClaw 代理 ID。配置验证会拒绝空、空白或无效的代理列表，并且运行时投影路径会将其忽略，而不是将其设为全局。使用 `codex.defaultToolsApprovalMode`（`auto`、`prompt` 或 `approve`）为受信任的服务器发出 Codex 的原生 `default_tools_approval_mode`OpenClaw。OpenClaw 会在将原生 `mcp_servers` 配置移交给 Codex 之前去除 `codex` 元数据。
 
@@ -384,9 +384,9 @@ openclaw mcp unset context7
 <Warning>
 **Stdio 环境安全过滤器**
 
-即使某些解释器启动的环境键出现在服务器的 `env` 块中，OpenClaw 也会拒绝这些键，以防止它们在第一次 RPC 之前改变 stdio MCP 服务器的启动方式。被阻止的键包括 `NODE_OPTIONS`、`PYTHONSTARTUP`、`PYTHONPATH`、`PERL5OPT`、`RUBYOPT`、`SHELLOPTS`、`PS4` 及类似的运行时控制变量。启动过程会因配置错误而拒绝这些变量，从而防止它们注入隐式前言、交换解释器或针对 stdio 进程启用调试器。普通的凭证、代理和服务器特定的环境变量（`GITHUB_TOKEN`、`HTTP_PROXY`、自定义 `*_API_KEY` 等）不受影响。
+OpenClaw 会拒绝那些可能在第一次 RPC 之前改变 stdio MCP 服务器启动方式的解释器启动环境键，即使它们出现在服务器的 OpenClawRPC`env` 块中。被阻止的键包括 `NODE_OPTIONS`、`NODE_REDIRECT_WARNINGS`、`NODE_REPL_EXTERNAL_MODULE`、`NODE_REPL_HISTORY`、`NODE_V8_COVERAGE`、`PYTHONSTARTUP`、`PYTHONPATH`、`PERL5OPT`、`RUBYOPT`、`SHELLOPTS`、`PS4` 以及类似的运行时控制变量。启动时会因配置错误而拒绝这些变量，以防止它们注入隐式前言、交换解释器、启用调试器或针对 stdio 进程重定向运行时输出。普通的凭证、代理和服务器特定的环境变量（`GITHUB_TOKEN`、`HTTP_PROXY`、自定义 `*_API_KEY` 等）不受影响。
 
-如果您的 MCP 服务器确实需要使用某个被阻止的变量，请将其设置在网关主机进程上，而不是在 stdio 服务器的 `env` 下。
+如果您的 MCP 服务器确实需要其中一个被阻止的变量，请将其设置在网关主机进程上，而不是在 stdio 服务器的 `env` 下。
 
 </Warning>
 
@@ -417,20 +417,20 @@ openclaw mcp unset context7
 }
 ```
 
-`url` (userinfo) 和 `headers` 中的敏感值会在日志和状态输出中被编辑。
+`url`（用户信息）和 `headers` 中的敏感值在日志和状态输出中会被隐藏。
 
 ### 可流式传输的 HTTP 传输
 
-`streamable-http` 是除 `sse` 和 `stdio` 之外的另一种传输选项。它使用 HTTP 流与远程 MCP 服务器进行双向通信。
+`streamable-http` 是 `sse` 和 `stdio` 之外的附加传输选项。它使用 HTTP 流式传输与远程 MCP 服务器进行双向通信。
 
-| 字段                  | 描述                                                                         |
-| --------------------- | ---------------------------------------------------------------------------- |
-| `url`                 | 远程服务器的 HTTP 或 HTTPS URL（必需）                                       |
-| `transport`           | 设置为 `"streamable-http"` 以选择此传输方式；如果省略，OpenClaw 将使用 `sse` |
-| `headers`             | 可选的 HTTP 标头键值对映射（例如身份验证令牌）                               |
-| `connectionTimeoutMs` | 每个服务器的连接超时时间，以毫秒为单位（可选）                               |
+| 字段                  | 描述                                                                                 |
+| --------------------- | ------------------------------------------------------------------------------------ |
+| `url`                 | 远程服务器的 HTTP 或 HTTPS URL（必需）                                               |
+| `transport`           | 设置为 `"streamable-http"`OpenClaw 以选择此传输方式；如果省略，OpenClaw 将使用 `sse` |
+| `headers`             | 可选的 HTTP 标头键值对映射（例如身份验证令牌）                                       |
+| `connectionTimeoutMs` | 每个服务器的连接超时时间，以毫秒为单位（可选）                                       |
 
-OpenClaw 配置使用 `transport: "streamable-http"` 作为标准拼写。通过 `openclaw mcp set` 保存时接受 CLI 原生的 MCP `type: "http"` 值，并由 `openclaw doctor --fix` 在现有配置中修复，但嵌入式 Pi 直接使用的是 `transport`。
+OpenClaw 配置使用 OpenClaw`transport: "streamable-http"`CLI 作为标准拼写形式。通过 `openclaw mcp set` 保存时接受 CLI 原生的 MCP `type: "http"` 值，并由 `openclaw doctor --fix` 在现有配置中修复，但嵌入式 OpenClaw 直接使用的是 `transport`OpenClaw。
 
 示例：
 
@@ -463,9 +463,9 @@ OpenClaw 配置使用 `transport: "streamable-http"` 作为标准拼写。通过
 - 除了 Claude 专用适配器外，没有通用的推送协议
 - 尚无消息编辑或反应工具
 - HTTP/SSE/streamable-http 传输连接到单个远程服务器；尚不支持多路复用上游
-- `permissions_list_open` 仅包含桥接连接时观察到的审批信息
+- `permissions_list_open` 仅包含在桥接连接时观察到的批准
 
 ## 相关
 
-- [CLI 参考](/zh/cli)
+- [CLI 参考](CLI/en/cli)
 - [插件](/zh/cli/plugins)

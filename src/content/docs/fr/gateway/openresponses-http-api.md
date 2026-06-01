@@ -17,7 +17,7 @@ En coulisses, les requêtes sont exécutées en tant qu'exécution d'agent Gatew
 
 ## Authentification, sécurité et routage
 
-Le comportement opérationnel correspond à [OpenAI Chat Completions](OpenAI/en/gateway/openai-http-api) :
+Le comportement opérationnel correspond à [OpenAI Chat Completions](/fr/gateway/openai-http-api) :
 
 - utilisez le chemin d'authentification HTTP de la Gateway correspondant :
   - authentification par secret partagé (`gateway.auth.mode="token"` ou `"password"`) : `Authorization: Bearer <token-or-password>`
@@ -55,7 +55,7 @@ La même surface de compatibilité inclut également :
 - `POST /v1/embeddings`
 - `POST /v1/chat/completions`
 
-Pour l'explication canonique de la manière dont les modèles ciblés par l'agent, `openclaw/default`, le passage direct des embeddings et les remplacements de modèle backend s'articulent, consultez [OpenAI Chat Completions](/fr/gateway/openai-http-api#agent-first-model-contract) et [Model list and agent routing](/fr/gateway/openai-http-api#model-list-and-agent-routing).
+Pour l'explication canonique de la manière dont les modèles ciblés par les agents, `openclaw/default`, le transfert d'embeddings et les substitutions de modèles backend s'articulent, consultez [OpenAI Chat Completions](/fr/gateway/openai-http-api#agent-first-model-contract) et [Model list and agent routing](/fr/gateway/openai-http-api#model-list-and-agent-routing).
 
 ## Comportement de la session
 
@@ -174,7 +174,9 @@ Comportement actuel :
   converties en images et transmises au modèle, et le bloc de fichier injecté utilise
   l'espace réservé `[PDF content rendered to images]`.
 
-L'analyse PDF est fournie par le plugin intégré `document-extract`, qui utilise la version héritée `pdfjs-dist` compatible avec Node (sans worker). La version moderne de PDF.js s'attend à des workers de navigateur ou à des globaux DOM, elle n'est donc pas utilisée dans le Gateway.
+L'analyse PDF est fournie par le plugin `document-extract` inclus, qui utilise
+`clawpdf` et son runtime PDFium WebAssembly empaqueté pour l'extraction de texte et
+le rendu de page.
 
 Valeurs par défaut de récupération d'URL :
 
@@ -244,18 +246,18 @@ Valeurs par défaut en cas d'omission :
 - `images.maxBytes` : 10 Mo
 - `images.maxRedirects` : 3
 - `images.timeoutMs` : 10 s
-- Les sources `input_image` HEIC/HEIF sont acceptées et normalisées en JPEG avant la livraison au provider.
+- Les sources `input_image` HEIC/HEIF sont acceptées lorsqu'un convertisseur système est disponible et sont normalisées en JPEG avant la livraison par le provider. Les convertisseurs pris en charge sont macOS `sips`, ImageMagick, GraphicsMagick ou ffmpeg.
 
 Note de sécurité :
 
 - Les listes d'autorisation d'URL sont appliquées avant la récupération et lors des sauts de redirection.
 - L'autorisation d'un nom d'hôte ne contourne pas le blocage des IP privées/internes.
-- Pour les passerelles exposées sur Internet, appliquez des contrôles de sortie réseau (egress controls) en plus des gardes au niveau de l'application.
+- Pour les passerelles exposées à Internet, appliquez des contrôles de sortie réseau en plus des gardes au niveau de l'application.
   Voir [Sécurité](/fr/gateway/security).
 
 ## Streaming (SSE)
 
-Définissez `stream: true` pour recevoir des événements envoyés par le serveur (SSE) :
+Définissez `stream: true` pour recevoir les événements Server-Sent (SSE) :
 
 - `Content-Type: text/event-stream`
 - Chaque ligne d'événement est `event: <type>` et `data: <json>`
@@ -276,8 +278,8 @@ Types d'événements actuellement émis :
 
 ## Utilisation
 
-`usage`OpenClawOpenAI est renseigné lorsque le provider sous-jacent signale les comptes de jetons.
-OpenClaw normalise les alias communs de style OpenAI avant que ces compteurs n'atteignent
+`usage` est renseigné lorsque le provider sous-jacent signale les comptes de jetons.
+OpenClaw normalise les alias courants de type OpenAI avant que ces compteurs n'atteignent
 les surfaces de statut/session en aval, y compris `input_tokens` / `output_tokens`
 et `prompt_tokens` / `completion_tokens`.
 
@@ -326,5 +328,5 @@ curl -N http://127.0.0.1:18789/v1/responses \
 
 ## Connexes
 
-- [Complétions de chat OpenAI](OpenAI/en/gateway/openai-http-api)
-- [OpenAI](OpenAI/en/providers/openai)
+- [complétions de chat OpenAI](/fr/gateway/openai-http-api)
+- [OpenAI](/fr/providers/openai)

@@ -1,5 +1,5 @@
 ---
-summary: "Añade compatibilidad con el proveedor de modelos Amazon Bedrock Mantle a OpenClaw."
+summary: "Complemento del proveedor OpenClaw Amazon Bedrock Mantle para el enrutamiento de modelos compatibles con OpenAI."
 read_when:
   - You are installing, configuring, or auditing the amazon-bedrock-mantle plugin
 title: "Complemento Amazon Bedrock Mantle"
@@ -7,7 +7,7 @@ title: "Complemento Amazon Bedrock Mantle"
 
 # Complemento Amazon Bedrock Mantle
 
-Añade compatibilidad con el proveedor de modelos Amazon Bedrock Mantle a OpenClaw.
+Complemento del proveedor OpenClaw Amazon Bedrock Mantle para el enrutamiento de modelos compatibles con OpenAI.
 
 ## Distribución
 

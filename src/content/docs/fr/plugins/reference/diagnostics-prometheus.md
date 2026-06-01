@@ -1,5 +1,5 @@
 ---
-summary: "OpenClawExportateur de diagnostics Prometheus OpenClaw."
+summary: "OpenClawExportateur Prometheus Diagnostics OpenClaw pour les métriques d'exécution."
 read_when:
   - You are installing, configuring, or auditing the diagnostics-prometheus plugin
 title: "Plugin Prometheus de diagnostics"
@@ -7,7 +7,7 @@ title: "Plugin Prometheus de diagnostics"
 
 # Plugin Prometheus de diagnostics
 
-Exportateur de diagnostics Prometheus OpenClaw.
+Exportateur Prometheus Diagnostics OpenClaw pour les métriques d'exécution.
 
 ## Distribution
 

@@ -21,7 +21,7 @@ openclaw status --usage
 - 純 `openclaw status` 維持在快速唯讀路徑上，並在跳過記憶體檢查時將記憶體標記為 `not checked` 而非不可用。繁重的安全性稽核、外掛程式相容性和記憶體向量探測則交由 `openclaw status --all`、`openclaw status --deep`、`openclaw security audit` 和 `openclaw memory status --deep` 處理。
 - `status --json --all` 會回報由 `plugins.slots.memory` 選取的作用中記憶體外掛程式執行時期的記憶體詳細資訊。自訂記憶體外掛程式可以停用內建 `agents.defaults.memorySearch.enabled` 並仍然回報它們自己的檔案、區塊、向量和 FTS 狀態。
 - `--usage` 會將標準化的供應商使用視窗列印為 `X% left`。
-- Session 狀態輸出會區分 `Execution:` 和 `Runtime:`。`Execution` 是沙箱路徑（`direct`、`docker/*`），而 `Runtime` 則告訴您 Session 是否正在使用 `OpenClaw Pi Default`、`OpenAI Codex`、CLI 後端，或 ACP 後端（例如 `codex (acp/acpx)`）。關於供應商/模型/執行時的區別，請參閱 [Agent runtimes](/zh-Hant/concepts/agent-runtimes)。
+- 會話狀態輸出將 `Execution:` 與 `Runtime:` 分開。`Execution` 是沙箱路徑（`direct`、`docker/*`），而 `Runtime` 則告訴您會話正在使用 `OpenClaw Default`、`OpenAI Codex`、CLI 後端，還是 ACP 後端（例如 `codex (acp/acpx)`）。請參閱 [Agent runtimes](/zh-Hant/concepts/agent-runtimes) 以了解供應商/模型/執行時的區別。
 - MiniMax 的原始 `usage_percent` / `usagePercent` 欄位是剩餘配額，因此 OpenClaw 會在顯示前將其反轉；如果存在計數型欄位則優先採用。`model_remains` 回應偏好採用聊天模型條目，並在需要時從時間戳記衍生視窗標籤，以及在方案標籤中包含模型名稱。
 - 當目前會話快照稀疏時，`/status` 可以從最新的逐字稿使用紀錄中回填權杖和快取計數器。既有的非零即時值仍優先於逐字稿後援值。
 - `/status` 包含精簡的 Gateway 程序運作時間和主機系統運作時間。

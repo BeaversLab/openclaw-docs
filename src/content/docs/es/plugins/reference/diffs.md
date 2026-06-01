@@ -1,5 +1,5 @@
 ---
-summary: "Visor de diferencias de solo lectura y renderizador de archivos para agentes."
+summary: "Complemento de visor de diferencias de solo lectura y renderizador de archivos para agentes de OpenClaw."
 read_when:
   - You are installing, configuring, or auditing the diffs plugin
 title: "Plugin de diferencias"
@@ -7,7 +7,7 @@ title: "Plugin de diferencias"
 
 # Plugin de diferencias
 
-Visor de diferencias de solo lectura y renderizador de archivos para agentes.
+Complemento de visor de diferencias de solo lectura y renderizador de archivos para agentes de OpenClaw.
 
 ## Distribución
 

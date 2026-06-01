@@ -512,9 +512,9 @@ memory-core 預設允許清單中包含 `memory_recall`。當 `plugins.slots.mem
 
 ### Lossless Claw
 
-Lossless Claw 是一個擁有自己回憶工具的 context-engine 外掛。請先
-將其安裝並設定為 context engine；請參閱 [Context engine](/zh-Hant/concepts/context-engine)。
-然後讓主動記憶使用 Lossless Claw 的回憶工具：
+Lossless Claw 是一個具有專屬檢索工具的 context-engine 外掛。請先將其作為 context engine 安裝並
+配置；請參閱 [Context engine](/zh-Hant/concepts/context-engine)。
+然後讓 Active Memory 使用 Lossless Claw 的檢索工具：
 
 ```json5
 {
@@ -650,7 +650,7 @@ plugins.entries.active-memory
 | `config.promptOverride`      | `string`                                                                                             | 高階完整提示詞替換；不建議一般用途使用                                                                                                                                                                               |
 | `config.promptAppend`        | `string`                                                                                             | 附加至預設或覆寫提示詞的高階額外指令                                                                                                                                                                                 |
 | `config.timeoutMs`           | `number`                                                                                             | 阻斷式記憶子代理的硬式逾時，上限為 120000 毫秒                                                                                                                                                                       |
-| `config.setupGraceTimeoutMs` | `number`                                                                                             | 在檢索逾時到期前額外的高級設定預算；預設為 0，上限為 30000 毫秒。請參閱 [Cold-start grace](#cold-start-grace) 以取得 v2026.4.x 升級指引                                                                              |
+| `config.setupGraceTimeoutMs` | `number`                                                                                             | 在檢索逾時到期之前進行進階額外設置預算；預設值為 0，且上限為 30000 毫秒。請參閱 [Cold-start grace](#cold-start-grace) 以取得 v2026.4.x 升級指引                                                                      |
 | `config.maxSummaryChars`     | `number`                                                                                             | 主動記憶摘要中允許的最大總字元數                                                                                                                                                                                     |
 | `config.logging`             | `boolean`                                                                                            | 在調整時輸出主動記憶日誌                                                                                                                                                                                             |
 | `config.persistTranscripts`  | `boolean`                                                                                            | 將阻斷式記憶子代理的逐字稿保留在磁碟上，而不是刪除暫存檔案                                                                                                                                                           |
@@ -770,28 +770,26 @@ plugins.entries.active-memory
 主動記憶體依賴於已配置的記憶體外掛程式的召回管道，因此大多數召回異常通常是嵌入提供者的問題，而非主動記憶體的錯誤。預設的 `memory-core` 路徑使用 `memory_search` 和 `memory_get`；`memory-lancedb` 插槽使用 `memory_recall`。如果您使用其他記憶體外掛程式，請確認 `config.toolsAllow` 是否命名了該外掛程式實際註冊的工具。
 
 <AccordionGroup>
-  <Accordion title="嵌入提供者已切換或停止運作">
-    如果未設定 `memorySearch.provider`，OpenClaw 會自動偵測第一個
-    可用的嵌入提供者。新的 API 金鑰、配額耗盡，或
-    受到速率限制的託管提供者都可能改變不同執行之間解析出的提供者。如果沒有提供者被解析，`memory_search` 可能會降級為僅詞彙檢索；
-    在已選擇提供者後發生的執行階段失敗不會自動回退。
+  <Accordion title="Embedding provider switched or stopped working">
+    如果未設定 `memorySearch.provider`，OpenClaw 會使用 OpenAI embeddings。請為 local、Ollama、
+    Gemini、Voyage、Mistral、DeepInfra、Bedrock、GitHub Copilot 或相容 OpenAI 的 embeddings
+    明確設定 `memorySearch.provider`。如果已設定的供應商無法運作，`memory_search` 可能會
+    降級為僅詞彙檢索；在選擇供應商之後發生的執行時期失敗不會自動回退。
 
-    明確鎖定提供者（以及可選的後備提供者），以使選擇具有確定性。請參閱 [記憶體搜尋](/zh-Hant/concepts/memory-search) 以了解
-    提供者的完整清單和鎖定範例。
+    僅在您需要刻意設定單一回退時，才設定選用的 `memorySearch.fallback`。請參閱 [Memory Search](/zh-Hant/concepts/memory-search) 以取得
+    供應商完整清單和範例。
 
   </Accordion>
 
 <Accordion title="Recall feels slow, empty, or inconsistent">
-  - 開啟 `/trace on` 以在對話中顯示外掛擁有的 Active Memory 除錯摘要。 - 開啟 `/verbose on` 以在每次回覆後查看 `🧩 Active Memory: ...` 狀態列。 - 監控閘道日誌中的 `active-memory: ... start|done`、 `memory sync failed (search-bootstrap)` 或提供者嵌入錯誤。 - 執行 `openclaw memory status --deep` 以檢查記憶體搜尋後端 和索引健康狀況。 - 如果您使用 `ollama`，請確認已安裝嵌入模型 (`ollama list`)。
+  - 開啟 `/trace on` 以在會話中顯示外掛擁有的 Active Memory 除錯 摘要。 - 開啟 `/verbose on` 以在每次回覆後一併查看 `🧩 Active Memory: ...` 狀態列。 - 監看 gateway 日志中的 `active-memory: ... start|done`、 `memory sync failed (search-bootstrap)` 或供應商嵌入錯誤。 - 執行 `openclaw memory status --deep` 以檢查記憶體搜尋後端 和索引健康狀況。 - 如果您使用 `ollama`，請確認嵌入模型已安裝 (`ollama
+  list`)。
 </Accordion>
 
-  <Accordion title="First recall after gateway restart returns `status=timeout`">
-    在 v2026.5.2 及更新版本中，如果在首次觸發召回時冷啟動設定（模型預熱 + 嵌入
-    索引載入）尚未完成，執行過程可能會達到設定的 `timeoutMs` 預算並傳回 `status=timeout`
-    且輸出為空。閘道日誌會在重新啟動後首次合適的回覆周圍顯示 `active-memory timeout after Nms`。
+  <Accordion title="閘道重啟後首次召回傳回 `status=timeout`">
+    在 v2026.5.2 及更新版本中，如果在首次召回觸發時冷啟動設定（模型預熱 + 嵌入索引載入）尚未完成，執行可能會達到設定的 `timeoutMs` 預算並傳回 `status=timeout` 且輸出為空。閘道日誌會在重啟後首次符合資格的回覆附近顯示 `active-memory timeout after Nms`。
 
-    請參閱「建議設定」下的 [Cold-start grace](#cold-start-grace) 以了解建議的
-    `setupGraceTimeoutMs` 值。
+    請參閱「建議設定」下的 [Cold-start grace](#cold-start-grace) 以取得建議的 `setupGraceTimeoutMs` 數值。
 
   </Accordion>
 </AccordionGroup>
@@ -800,4 +798,4 @@ plugins.entries.active-memory
 
 - [記憶體搜尋](/zh-Hant/concepts/memory-search)
 - [記憶體設定參考](/zh-Hant/reference/memory-config)
-- [外掛 SDK 設定](/zh-Hant/plugins/sdk-setup)
+- [外掛程式 SDK 設定](/zh-Hant/plugins/sdk-setup)

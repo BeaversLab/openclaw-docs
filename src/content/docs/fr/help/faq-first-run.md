@@ -144,15 +144,15 @@ Q&A sur le démarrage rapide et la première exécution. Pour les opérations qu
     Node **>= 22** est requis. `pnpm` est recommandé. Bun n'est **pas recommandé** pour le Gateway.
   </Accordion>
 
-  <Accordion title="Raspberry PiEst-ce que cela fonctionne sur Raspberry Pi ?"GatewayRaspberry PiGateway>
+  <Accordion title="Raspberry PiEst-ce que cela fonctionne sur Raspberry Pi ?"GatewayRaspberry PiRaspberry PiGateway>
     Oui. Le Gateway est léger - la documentation indique que **512 Mo à 1 Go de RAM**, **1 cœur**, et environ **500 Mo**
     d'espace disque suffisent pour un usage personnel, et notez qu'un **Raspberry Pi 4 peut l'exécuter**.
 
     Si vous souhaitez une marge supplémentaire (journaux, médias, autres services), **2 Go sont recommandés**, mais ce n'est
     pas un minimum strict.
 
-    Astuce : un petit Pi/VPS peut héberger le Gateway, et vous pouvez associer des **nœuds** sur votre ordinateur portable/téléphone pour
-    un écran/local/canvas local ou une exécution de commandes. Voir [Nœuds](/fr/nodes).
+    Astuce : un petit Raspberry Pi/VPS peut héberger le Gateway, et vous pouvez associer des **nœuds** sur votre ordinateur portable/téléphone pour
+    l'écran/caméra/toile locale ou l'exécution de commandes. Voir [Nœuds](/fr/nodes).
 
   </Accordion>
 
@@ -805,14 +805,14 @@ Q&A sur le démarrage rapide et la première exécution. Pour les opérations qu
 
   </Accordion>
 
-  <Accordion title="OpenClawQuelle est l'importance d'exécuter OpenClaw sur une machine dédiée ?"Gateway>
+  <Accordion title="OpenClawQuelle est l'importance d'exécuter OpenClaw sur une machine dédiée ?"Raspberry PiGateway>
     Non requis, mais **recommandé pour la fiabilité et l'isolement**.
 
-    - **Hôte dédié (VPS/Mac mini/Pi) :** toujours allumé, moins d'interruptions dues à la mise en veille ou aux redémarrages, autorisations plus propres, plus facile à maintenir en fonctionnement.
-    - **Ordinateur portable/de bureau partagé :** tout à fait adapté pour les tests et une utilisation active, mais attendez-vous à des pauses lorsque la machine se met en veille ou effectue des mises à jour.
+    - **Hôte dédié (VPS/Mac mini/Raspberry Pi) :** toujours allumé, moins d'interruptions dues à la mise en veille/redémarrage, permissions plus propres, plus facile à maintenir en marche.
+    - **Ordinateur portable/de bureau partagé :** tout à fait correct pour les tests et l'usage actif, mais attendez-vous à des pauses lorsque la machine se met en veille ou effectue des mises à jour.
 
-    Si vous voulez le meilleur des deux mondes, gardez le Gateway sur un hôte dédié et associez votre ordinateur portable en tant que **nœud** pour les outils d'écran/caméra/exécution locaux. Voir [Nodes](/fr/nodes).
-    Pour des conseils de sécurité, lisez [Security](/fr/gateway/security).
+    Si vous voulez le meilleur des deux mondes, gardez le Gateway sur un hôte dédié et associez votre ordinateur portable en tant que **nœud** pour les outils d'écran/caméra/exécution locaux. Voir [Nœuds](/fr/nodes).
+    Pour des conseils de sécurité, lisez [Sécurité](/fr/gateway/security).
 
   </Accordion>
 

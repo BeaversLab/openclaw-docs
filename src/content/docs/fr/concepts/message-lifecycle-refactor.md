@@ -2,12 +2,12 @@
 summary: "Plan de conception pour le cycle de vie unifié et durable des messages : réception, envoi, prévisualisation, modification et diffusion"
 read_when:
   - Refactoring channel send or receive behavior
-  - Changing channel turn, reply dispatch, outbound queue, preview streaming, or plugin SDK message APIs
+  - Changing channel inbound, reply dispatch, outbound queue, preview streaming, or plugin SDK message APIs
   - Designing a new channel plugin that needs durable sends, receipts, previews, edits, or retries
 title: "Refactorisation du cycle de vie des messages"
 ---
 
-Cette page présente la conception cible pour remplacer les assistants dispersés de tour de channel, d'envoi de réponse, de diffusion de prévisualisation et de livraison sortante par un cycle de vie de message durable.
+Cette page représente la conception cible pour remplacer les assistants dispersés de réception de channel, de distribution de réponses, de diffusion de prévisualisation et de livraison sortante par un cycle de vie de message durable.
 
 La version courte :
 
@@ -16,14 +16,14 @@ La version courte :
 - Un tour est une commodité de traitement entrant, et non le propriétaire de la livraison.
 - L'envoi doit être basé sur le contexte : `begin`, rendu, prévisualisation ou diffusion, envoi final, validation (commit), échec.
 - La réception doit également être basée sur le contexte : normalisation, déduplication, routage, enregistrement, distribution, accusé de réception de la plateforme, échec.
-- Le SDK public de plugin devrait se réduire à une petite surface de message de channel.
+- Le SDK public de plugins doit se réduire à une petite interface de sortie de channel.
 
 ## Problèmes
 
 La pile de channels actuelle a grandi à partir de plusieurs besoins locaux valides :
 
-- Les adaptateurs entrants simples utilisent `runtime.channel.turn.run`.
-- Les adaptateurs riches utilisent `runtime.channel.turn.runPrepared`.
+- Les adaptateurs entrants simples utilisent `runtime.channel.inbound.run`.
+- Les adaptateurs riches utilisent `runtime.channel.inbound.runPreparedReply`.
 - Les assistants hérités utilisent `dispatchInboundReplyWithBase`, `recordInboundSessionAndDispatchReply`, les assistants de payload de réponse, le découpage en chunks de réponse, les références de réponse et les assistants d'exécution sortante.
 - La diffusion de prévisualisation réside dans les répartiteurs spécifiques aux channels.
 - La durabilité de la livraison finale est en cours d'ajout autour des chemins de payload de réponse existants.
@@ -49,7 +49,7 @@ C'est l'état final de cette refactorisation, et non une description de chaque c
 - Envois finaux durables par défaut dans le nouveau cycle de vie des messages après qu'un adaptateur a déclaré un comportement sécurisé pour la relecture.
 - Sémantiques partagées pour l'aperçu, l'édition, le flux, la finalisation, la nouvelle tentative, la récupération et les accusés de réception.
 - Une petite surface SDK de plugin que les plugins tiers peuvent apprendre et maintenir.
-- Compatibilité pour les appelants `channel.turn` existants pendant la migration.
+- Compatibilité pour les appelants existants de compatibilité de réponse entrante pendant la migration.
 - Des points d'extension clairs pour les nouvelles capacités de channel.
 - Aucune branche spécifique à la plateforme dans le cœur.
 - Pas de messages de channel à delta de jetons. Le streaming de channel reste un aperçu de message, une édition, un ajout ou une livraison de bloc terminé.
@@ -57,7 +57,7 @@ C'est l'état final de cette refactorisation, et non une description de chaque c
 
 ## Non-objectifs
 
-- Ne pas supprimer `runtime.channel.turn.*` dans la première phase.
+- Ne forcer pas chaque channel existant vers une livraison de message durable dès la première phase.
 - Ne pas forcer chaque channel dans le même comportement de transport natif.
 - Ne pas apprendre au cœur les sujets Telegram, les flux natifs Slack, les rétractations Matrix, les cartes Feishu, la voix QQ ou les activités Teams.
 - Ne pas publier tous les assistants de migration internes en tant qu'API SDK stable.
@@ -72,7 +72,7 @@ Le Chat Vercel a un bon modèle mental public :
 - `Channel`
 - `Message`
 - méthodes d'adaptateur telles que `postMessage`, `editMessage`, `deleteMessage`,
-  `stream`, `startTyping`, et les récupérations d'historique
+  `stream`, `startTyping`, et la récupération de l'historique
 - un adaptateur d'état pour la déduplication, les verrous, les files d'attente et la persistance
 
 OpenClaw devrait emprunter le vocabulaire, et non copier la surface.
@@ -89,12 +89,12 @@ Ce dont OpenClaw a besoin au-delà de ce modèle :
 - Comportement spécifique à l'agent : sessions, transcriptions, block streaming, progression de l'outil,
   approbations, directives média, réponses silencieuses et historique des mentions de groupe.
 
-Les promesses de style `thread.post()`OpenClaw ne suffisent pas pour OpenClaw. Elles masquent la
-limite de la transaction qui décide si un envoi est récupérable.
+Les promesses de style `thread.post()` ne suffisent pas pour OpenClaw. Elles masquent la
+limite de transaction qui décide si un envoi est récupérable.
 
 ## Modèle principal
 
-Le nouveau domaine devrait vivre dans un espace de noms principal interne tel que
+Le nouveau domaine doit résider sous un espace de noms interne principal tel que
 `src/channels/message/*`.
 
 Il a quatre concepts :
@@ -110,10 +110,10 @@ core.messages.state(...)
 
 `send` possède le cycle de vie sortant.
 
-`live` possède l'aperçu, la modification, la progression et l'état du flux.
+`live` possède l'état de prévisualisation, de modification, de progression et de flux.
 
-`state` possède le stockage durable des intentions, les reçus, l'idempotence, la récupération, les verrous et
-la déduplication.
+`state` possède le stockage durable des intentions, les reçus, l'idempotence, la récupération, les verrous et la
+déduplication.
 
 ## Termes de message
 
@@ -209,7 +209,10 @@ type MessageOrigin =
 Core possède la signification de la sortie provenant d'OpenClaw. Les canaux possèdent la manière dont cette
 origine est encodée dans leur transport.
 
-La première utilisation requise est la sortie de défaillance de la passerelle. Les utilisateurs humains doivent toujours voir des messages tels que "Agent a échoué avant la réponse" ou "Clé API manquante", mais la sortie opérationnelle APIOpenClaw étiquetée ne doit pas être acceptée en tant que saisie provenant du bot dans les salons partagés lorsque `allowBots` est activé.
+La première utilisation requise est la sortie d'échec de passerelle. Les humains doivent toujours voir
+les messages tels que "Agent échoué avant réponse" ou "Clé API manquante", mais la sortie
+opérationnelle OpenClaw étiquetée ne doit pas être acceptée comme entrée générée par le bot dans les salons
+partagés lorsque `allowBots` est activé.
 
 ### Accusé de réception
 
@@ -293,7 +296,8 @@ L'accusé de réception (Ack) n'est pas une chose unique. Le contrat de récepti
 - **Accusé de réception de l'enregistrement entrant (Inbound record ack) :** confirme que OpenClaw a persisté suffisamment de métadonnées entrantes pour dédupliquer et router une nouvelle livraison.
 - **Accusé de réception visible par l'utilisateur :** comportement facultatif de lecture/état/frappe ; n'est jamais une limite de durabilité.
 
-`ReceiveAckPolicy` contrôle uniquement l'accusé de réception du transport ou du sondage. Il ne doit pas être réutilisé pour les accusés de réception de lecture ou les réactions d'état.
+`ReceiveAckPolicy` contrôle uniquement l'accusé de réception du transport ou du sondage. Il ne
+ne doit pas être réutilisé pour les reçus de lecture ou les réactions de statut.
 
 Avant l'autorisation du bot, la réception doit appliquer la stratégie d'écho partagée OpenClaw lorsque le canal peut décoder les métadonnées d'origine du message :
 
@@ -303,7 +307,9 @@ function shouldDropOpenClawEcho(params: { origin?: MessageOrigin; isBotAuthor: b
 }
 ```
 
-Ce rejet est basé sur les balises, non sur le texte. Un message de salon créé par le bot avec le même texte visible de défaillance de la passerelle mais sans les métadonnées d'origine OpenClaw passe toujours par l'autorisation normale `allowBots`.
+Ce rejet est basé sur les balises, pas sur le texte. Un message de salon généré par le bot avec le
+même texte visible d'échec de passerelle mais sans les métadonnées d'origine OpenClaw passe
+toujours par l'autorisation normale `allowBots`.
 
 La stratégie d'accusé de réception est explicite :
 
@@ -311,7 +317,7 @@ La stratégie d'accusé de réception est explicite :
 type ReceiveAckPolicy = { kind: "immediate"; reason: "webhook-timeout" | "platform-contract" } | { kind: "after-record" } | { kind: "after-durable-send" } | { kind: "manual" };
 ```
 
-Le polling Telegram utilise désormais la stratégie d'accusé de réception du contexte de réception (receive-context ack policy) pour son filigrane de redémarrage persistant. Le tracker observe toujours les mises à jour grammY lorsqu'elles entrent dans la chaîne de middleware, mais OpenClaw ne persiste que l'identifiant de mise à jour complétée en sécurité après répartition réussie, laissant les mises à jour échouées ou en attente de priorité inférieure rejouables après un redémarrage. Le décalage de récupération (fetch offset) en amont de TelegramgrammYOpenClawTelegram`getUpdates`OpenClaw est toujours contrôlé par la bibliothèque de polling, la coupure plus profonde restante consiste donc en une source de polling entièrement durable si nous avons besoin d'une nouvelle livraison au niveau de la plate-forme au-delà du filigrane de redémarrage d'OpenClaw. Les plates-formes de webhook peuvent avoir besoin d'un accusé de réception HTTP immédiat, mais elles ont toujours besoin d'une déduplication entrante et d'intentions d'envoi sortantes durables car les webhooks peuvent livrer à nouveau.
+Le polling Telegram utilise désormais la politique d'accusé de réception du contexte de réception pour son filigrane de redémarrage persisté. Le traqueur observe toujours les mises à jour grammY lorsqu'elles entrent dans la chaîne de middleware, mais OpenClaw ne persiste que l'identifiant de mise à jour terminée sûre après répartition réussie, laissant les mises à jour échouées ou en attente de niveau inférieur rejouables après un redémarrage. Le décalage (offset) de récupération en amont TelegramgrammYOpenClawTelegram`getUpdates`OpenClaw de Telegram est toujours contrôlé par la bibliothèque de polling, donc la coupure plus profonde restante est une source de polling entièrement durable si nous avons besoin d'une nouvelle livraison au niveau de la plate-forme au-delà du filigrane de redémarrage d'OpenClaw. Les plates-formes Webhook peuvent avoir besoin d'un accusé de réception HTTP immédiat, mais elles ont toujours besoin d'une déduplication entrante et d'intentions d'envoi sortant durables car les webhooks peuvent livrer à nouveau.
 
 ## Contexte d'envoi
 
@@ -370,7 +376,7 @@ begin durable intent
 
 L'intention doit exister avant l'E/S de transport. Un redémarrage après le début mais avant la validation est récupérable.
 
-La limite dangereuse se situe après le succès de la plate-forme et avant la validation du reçu. Si un processus meurt à ce moment-là, OpenClaw ne peut pas savoir si le message de la plate-forme existe, à moins que l'adaptateur ne fournisse une idempotence native ou un chemin de réconciliation des reçus. Ces tentatives doivent reprendre dans OpenClaw`unknown_after_send`, et non un rejeu aveugle. Les canaux sans réconciliation peuvent choisir un rejeu au moins une fois uniquement si les messages visibles en double sont un compromis acceptable et documenté pour ce canal et cette relation. Le pont de réconciliation du SDK actuel exige de l'adaptateur de déclarer `reconcileUnknownSend`, puis demande à `durableFinal.reconcileUnknownSend` de classer une entrée inconnue comme `sent`, `not_sent`, ou `unresolved` ; seul `not_sent` autorise le rejeu, et les entrées non résolues restent terminales ou ne réessaient que la vérification de réconciliation.
+La frontière dangereuse se situe après le succès de la plate-forme et avant la validation du reçu. Si un processus meurt à cet endroit, OpenClaw ne peut pas savoir si le message de la plate-forme existe, sauf si l'adaptateur fournit une idempotence native ou un chemin de réconciliation des reçus. Ces tentatives doivent reprendre dans OpenClaw`unknown_after_send`, et non être rejouées aveuglément. Les channels sans réconciliation peuvent choisir un rejeu au moins une fois uniquement si les messages visibles en double sont un compromis acceptable et documenté pour ce channel et cette relation. Le pont de réconciliation SDK actuel exige que l'adaptateur déclare `reconcileUnknownSend`, puis demande à `durableFinal.reconcileUnknownSend` de classer une entrée inconnue comme `sent`, `not_sent` ou `unresolved` ; seul `not_sent` autorise le rejeu, et les entrées non résolues restent terminales ou ne réessaient que la vérification de réconciliation.
 
 La politique de durabilité doit être explicite :
 
@@ -378,11 +384,11 @@ La politique de durabilité doit être explicite :
 type MessageDurabilityPolicy = "required" | "best_effort" | "disabled";
 ```
 
-`required` signifie que le composant principal doit échouer de manière sécurisée (fail closed) lorsqu'il ne peut pas écrire l'intention durable. `best_effort` peut être utilisé par défaut lorsque la persistance n'est pas disponible. `disabled` conserve l'ancien comportement d'envoi direct. Pendant la migration, les wrappers legacy et les aides de compatibilité publique utilisent `disabled` par défaut ; ils ne doivent pas déduire `required` du fait qu'un channel possède un adaptateur de sortie générique.
+`required` signifie que le cœur doit échouer en mode fermé lorsqu'il ne peut pas écrire l'intention durable. `best_effort` peut continuer lorsque la persistance est indisponible. `disabled` conserve l'ancien comportement d'envoi direct. Lors de la migration, les wrappers hérités et les assistants de compatibilité publique sont par défaut `disabled` ; ils ne doivent pas déduire `required` du fait qu'un channel possède un adaptateur sortant générique.
 
 Les contextes d'envoi possèdent également les effets post-envoi locaux au channel. Une migration n'est pas sûre si la livraison durable contourne le comportement local qui était précédemment attaché au chemin d'envoi direct du channel. Les exemples incluent les caches de suppression d'écho de soi, les marqueurs de participation aux fils de discussion, les ancres d'édition natives, le rendu des signatures de model, et les gardes contre les doublons spécifiques à la plateforme. Ces effets doivent soit être déplacés vers l'adaptateur d'envoi, l'adaptateur de rendu, ou un hook de contexte d'envoi nommé avant que ce channel puisse activer la livraison finale générique durable.
 
-Les helpers d'envoi doivent renvoyer des reçus jusqu'à leur appelant. Les wrappers durables ne peuvent pas avaler les ids de message ou remplacer un résultat de livraison de channel par `undefined` ; les répartiteurs tamponnés utilisent ces ids pour les ancres de fils de discussion, les modifications ultérieures, la finalisation des aperçus et la suppression des doublons.
+Les assistants d'envoi doivent renvoyer des reçus jusqu'à leur appelant. Les wrappers durables ne peuvent pas avaler les identifiants de message ou remplacer un résultat de livraison de channel par `undefined` ; les répartiteurs tamponnés utilisent ces identifiants pour les ancres de fil de discussion, les modifications ultérieures, la finalisation des aperçus et la suppression des doublons.
 
 Les envois de repli (fallback) opèrent sur des lots, pas sur des charges utiles uniques. Les réécritures de réponse silencieuse, le repli média, le repli carte et la projection de chunk peuvent tous produire plus d'un message livrable, donc un contexte d'envoi doit soit livrer le lot projeté entier, soit documenter explicitement pourquoi une seule charge utile est valide.
 
@@ -401,7 +407,7 @@ type RenderedMessageUnit = {
 };
 ```
 
-Lorsqu'un tel repli est durable, tout le lot projeté doit être représenté par une intention d'envoi durable ou un autre plan de lot atomique. Enregistrer chaque charge utile une par une ne suffit pas : un plantage entre les charges utiles peut laisser un repli partiel visible sans enregistrement durable pour les charges utiles restantes. La récupération doit savoir quelles unités ont déjà des reçus et soit rejouer uniquement les unités manquantes, soit marquer le lot `unknown_after_send` jusqu'à ce que l'adaptateur le réconcilie.
+Lorsqu'un tel repli est durable, l'ensemble du lot projeté doit être représenté par une intention d'envoi durable ou un autre plan de lot atomique. Enregistrer chaque charge utile une par une ne suffit pas : un plantage entre les charges utiles peut laisser un repli partiel visible sans enregistrement durable pour les charges utiles restantes. La récupération doit savoir quelles unités ont déjà des reçus et soit rejouer uniquement les unités manquantes, soit marquer le lot comme `unknown_after_send` jusqu'à ce que l'adaptateur le réconcilie.
 
 ## Live context
 
@@ -444,7 +450,7 @@ Cela devrait couvrir le comportement actuel :
 La cible du SDK public doit être un sous-chemin :
 
 ```typescript
-import { defineChannelMessageAdapter } from "openclaw/plugin-sdk/channel-message";
+import { defineChannelMessageAdapter } from "openclaw/plugin-sdk/channel-outbound";
 ```
 
 Forme de la cible :
@@ -485,10 +491,7 @@ type MessageReceiveAdapter<TRaw = unknown> = {
 };
 ```
 
-Avant l'autorisation préalable au vol, le cœur doit exécuter le prédicat d'écho partagé OpenClaw
-chaque fois que `origin.decode` renvoie des métadonnées d'origine OpenClaw. L'adaptateur de réception
-fournit des faits sur la plate-forme tels que l'auteur du bot et la forme de la salle ; le cœur possède la décision
-de suppression et l'ordonnancement afin que les canaux ne réimplémentent pas les filtres de texte.
+Avant l'autorisation préliminaire, le cœur doit exécuter le prédicat d'écho partagé OpenClaw chaque fois que `origin.decode` renvoie des métadonnées d'origine OpenClaw. L'adaptateur de réception fournit des faits sur la plate-forme tels que l'auteur du bot et la forme de la salle ; le cœur possède la décision et l'ordre de suppression afin que les channels ne réimplémentent pas les filtres de texte.
 
 Adaptateur d'origine :
 
@@ -499,11 +502,7 @@ type MessageOriginAdapter<TRaw = unknown, TNative = unknown> = {
 };
 ```
 
-Le cœur définit `MessageOrigin`. Les canaux le traduisent uniquement vers et depuis les métadonnées de
-transport natif. Slack mappe ceci vers `chat.postMessage({ metadata })` et
-`message.metadata` entrant ; Matrix peut le mapper vers du contenu d'événement supplémentaire ; les canaux
-sans métadonnées natives peuvent utiliser un registre de réception/sortant lorsque c'est la
-meilleure approximation disponible.
+Le cœur définit `MessageOrigin`. Les channels ne le traduisent qu'à partir et vers les métadonnées de transport natives. Slack mappe ceci à `chat.postMessage({ metadata })` et à `message.metadata` entrant ; Matrix peut le mapper au contenu d'événement supplémentaire ; les channels sans métadonnées natives peuvent utiliser un registre de reçus/sortants lorsque c'est la meilleure approximation disponible.
 
 Capacités :
 
@@ -551,24 +550,22 @@ La nouvelle surface publique devrait absorber ou déprécier ces zones conceptue
 Les sous-chemins de compatibilité peuvent rester en tant que wrappers, mais les nouveaux plugins tiers
 ne devraient pas en avoir besoin.
 
-Les plugins groupés peuvent conserver des importations d'assistants internes via des sous-chemins
-d'exécution réservés lors de la migration. La documentation publique devrait orienter les auteurs de plugins
-vers `plugin-sdk/channel-message` une fois qu'il existe.
+Les plugins groupés peuvent conserver les imports d'assistants internes via des sous-chemins d'exécution réservés lors de la migration. La documentation publique doit orienter les auteurs de plugins vers `plugin-sdk/channel-outbound` une fois qu'il existe.
 
-## Relation avec le tour de canal
+## Relation avec le channel entrant
 
-`runtime.channel.turn.*` doit rester pendant la migration.
+`runtime.channel.inbound.*` est le pont d'exécution pendant la migration.
 
 Il doit devenir un adaptateur de compatibilité :
 
 ```text
-channel.turn.run
+channel.inbound.run
   -> messages.receive context
   -> session dispatch
   -> messages.send context for visible output
 ```
 
-`channel.turn.runPrepared` doit également rester initialement :
+`channel.inbound.runPreparedReply` doit également rester initialement :
 
 ```text
 channel-owned dispatcher
@@ -577,10 +574,7 @@ channel-owned dispatcher
   -> messages.send for final delivery
 ```
 
-Une fois que tous les plugins groupés et les chemins de compatibilité tiers connus sont pontés,
-`channel.turn` peut être déprécié. Il ne doit pas être supprimé tant qu'il n'existe pas
-un chemin de migration SDK publié et des tests de contrat prouvant que les anciens plugins fonctionnent toujours
-ou échouent avec une erreur de version claire.
+L'ancienne surface de `channel.turn` runtime a été supprimée. Les appelants runtime utilisent `channel.inbound.*` ; la documentation des channels et les sous-chemins du SDK utilisent les noms inbound/message.
 
 ## Garanties de compatibilité
 
@@ -589,30 +583,20 @@ le rappel de livraison existant a des effets secondaires au-delà de « envoyer 
 
 Les points d'entrée hérités sont non durables par défaut :
 
-- `channel.turn.run` et `dispatchAssembledChannelTurn` utilisent le
-  rappel de livraison du channel sauf si ce channel fournit explicitement un objet de stratégie/options
-  durable audité.
-- `channel.turn.runPrepared` reste la propriété du channel jusqu'à ce que le
-  répartiteur préparé appelle explicitement le contexte d'envoi.
-- Les aides de compatibilité publiques telles que `recordInboundSessionAndDispatchReply`,
-  `dispatchInboundReplyWithBase` et les aides de DM direct n'injectent jamais de livraison
-  générique durable avant le rappel `deliver` ou `reply` fourni par l'appelant.
+- `channel.inbound.run` et `dispatchChannelInboundReply` utilisent le callback de livraison du channel, sauf si ce channel fournit explicitement un objet de stratégie/options durable audité.
+- `channel.inbound.runPreparedReply` reste la propriété du channel jusqu'à ce que le répartiteur préparé appelle explicitement le contexte d'envoi.
+- Les helpers de compatibilité publique tels que `recordInboundSessionAndDispatchReply`, `dispatchInboundReplyWithBase` et les helpers de DM direct n'injectent jamais de livraison durable générique avant le callback `deliver` ou `reply` fourni par l'appelant.
 
-Pour les types de pont de migration, `durable: undefined` signifie « non durable ». Le
-chemin durable est activé uniquement par une valeur de stratégie/options explicite. `durable:
-false` peut rester comme une orthographe de compatibilité, mais l'implémentation ne doit pas
-obliger chaque channel non migré à l'ajouter.
+Pour les types de pont de migration, `durable: undefined` signifie « non durable ». Le chemin durable est activé uniquement par une valeur de stratégie/options explicite. `durable: false` peut rester une orthographe de compatibilité, mais l'implémentation ne doit pas exiger que chaque channel non migré l'ajoute.
 
 Le code de pont actuel doit garder la décision de durabilité explicite :
 
-- La livraison finale durable renvoie un statut discriminé. `handled_visible` et
-  `handled_no_send` sont terminaux ; `unsupported` et `not_applicable` peuvent revenir
-  à la livraison propriétaire du channel ; `failed` propage l'échec de l'envoi.
+- La livraison finale durable renvoie un statut discriminé. `handled_visible` et `handled_no_send` sont terminaux ; `unsupported` et `not_applicable` peuvent revenir à une livraison propriétaire du channel ; `failed` propage l'échec de l'envoi.
 - La livraison finale générique durable est conditionnée par des capacités d'adaptateur telles que
   la livraison silencieuse, la préservation de la cible de réponse, la préservation des citations natives, et
   les crochets (hooks) d'envoi de messages. Le manque de parité doit choisir la livraison propriétaire du channel,
   et non un envoi générique qui modifie le comportement visible par l'utilisateur.
-- Les envois durables soutenus par une file exposent une référence d'intention de livraison. Les champs de `pendingFinalDelivery*` session existants peuvent porter l'identifiant de l'intention pendant la transition ; l'état final est un `MessageSendIntent` store au lieu du texte de réponse gelé plus des champs de contexte ad hoc.
+- Les envois durables soutenus par une file d'attente exposent une référence d'intention de livraison. Les champs de session `pendingFinalDelivery*` existants peuvent porter l'identifiant de l'intention pendant la transition ; l'état final est un magasin `MessageSendIntent` au lieu du texte de réponse gelé plus des champs de contexte ad hoc.
 
 N'activez pas le chemin durable générique pour un channel tant que toutes les conditions suivantes ne sont pas vraies :
 
@@ -633,13 +617,8 @@ Risques concrets de migration à préserver :
   avoir une gestion des reply-tokens, un proxy média, des caches de messages envoyés, un nettoyage du chargement/du statut
   ou des cibles callback uniquement. Ils restent sur une livraison détenue par le canal jusqu'à ce que
   ces sémantiques soient représentées par l'adaptateur d'envoi et vérifiées par les tests.
-- Les helpers Direct-DM peuvent avoir un callback de réponse qui est la seule cible de transport
-  correcte. La sortie générique ne doit pas deviner à partir de `OriginatingTo` ou `To` et ignorer
-  ce callback.
-- La sortie d'échec de la passerelle OpenClaw doit rester visible pour les humains, mais les échos de salle
-  créés par des bots balisés doivent être supprimés avant l'autorisation `allowBots`.
-  Les canaux ne doivent pas implémenter cela avec des filtres de préfixe de texte visible, sauf comme
-  mesure d'urgence de courte durée ; le contrat durable est les métadonnées d'origine structurées.
+- Les helpers de DM direct peuvent avoir un callback de réponse qui est la seule cible de transport correcte. La sortie générique ne doit pas deviner à partir de `OriginatingTo` ou `To` et ignorer ce callback.
+- La sortie d'échec de la passerelle OpenClaw doit rester visible pour les humains, mais les échos de salle créés par des robots balisés doivent être supprimés avant l'autorisation `allowBots`. Les channels ne doivent pas implémenter cela avec des filtres de préfixe de texte visible, sauf en guise de mesure d'urgence de courte durée ; le contrat durable est des métadonnées d'origine structurées.
 
 ## Stockage interne
 
@@ -691,16 +670,12 @@ type DeliveryFailureKind = "transient" | "rate_limit" | "auth" | "permission" | 
 
 Politique principale :
 
-- Réessayer `transient` et `rate_limit`.
-- Ne pas réessayer `invalid_payload` sauf si un repli de rendu existe.
-- Ne pas réessayer `auth` ou `permission` jusqu'à ce que la configuration change.
-- Pour `not_found`, laisser la finalisation en direct revenir de l'édition à un nouvel envoi lorsque
-  le canal déclare cela sûr.
-- Pour `conflict`, utiliser les règles de reçu/d'idempotence pour décider si le message
-  existe déjà.
-- Toute erreur après que l'adaptateur peut avoir terminé les E/S de la plate-forme mais avant le commit
-  du reçu devient `unknown_after_send` à moins que l'adaptateur ne puisse prouver que l'opération
-  de la plate-forme n'a pas eu lieu.
+- Réessayez `transient` et `rate_limit`.
+- Ne réessayez pas `invalid_payload` à moins qu'un repli de rendu n'existe.
+- Ne réessayez pas `auth` ou `permission` jusqu'à ce que la configuration change.
+- Pour `not_found`, laissez la finalisation en direct revenir de l'édition à un nouvel envoi lorsque le channel déclare que c'est sans risque.
+- Pour `conflict`, utilisez les règles de reçus/idempotence pour décider si le message existe déjà.
+- Toute erreur après l'adaptateur qui a peut-être terminé les E/S de la plateforme mais avant le commit du reçu devient `unknown_after_send`, sauf si l'adaptateur peut prouver que l'opération de la plateforme n'a pas eu lieu.
 
 ## Mappage de canal
 
@@ -708,16 +683,16 @@ Politique principale :
 | --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | Telegram        | Politique d'accusé de réception de réception plus envois finaux durables. L'adaptateur en direct possède l'envoi plus l'aperçu d'édition, l'envoi final de l'aperçu périmé, les sujets, le saut de l'aperçu de réponse quote-reply, le repli média et la gestion du retry-after.                                                                                                                                                                                                                                                                             |
 | Discord         | L'adaptateur d'envoi encapsule la livraison durable de la charge utile existante. L'adaptateur en direct gère la modification du brouillon, le brouillon de progression, l'annulation de l'aperçu des médias/erreurs, la conservation de la cible de réponse et les accusés de réception de l'identifiant du message. Auditer les échos d'échec de passerelle générés par le bot dans les salons partagés ; utiliser un registre sortant ou un autre équivalent natif si Discord ne peut pas transporter les métadonnées d'origine sur les messages normaux. |
-| Slack           | L'adaptateur d'envoi gère les publications de chat normales. L'adaptateur en direct choisit le flux natif lorsque la forme du fil le prend en charge, sinon l'aperçu du brouillon. Les accusés de réception préservent les horodatages des fils. L'adaptateur d'origine mappe les échecs de passerelle OpenClaw sur le Slack `chat.postMessage.metadata` et supprime les échos de salon de bot étiquetés avant l'autorisation `allowBots`.                                                                                                                   |
+| Slack           | L'adaptateur d'envoi gère les publications de chat normales. L'adaptateur en direct choisit le flux natif lorsque la forme du thread le prend en charge, sinon l'aperçu de brouillon. Les reçus préservent les horodatages des threads. L'adaptateur d'origine mappe les échecs de passerelle OpenClaw sur Slack `chat.postMessage.metadata` et supprime les échos de salon de bot étiquetés avant l'autorisation `allowBots`.                                                                                                                               |
 | WhatsApp        | L'adaptateur d'envoi gère l'envoi de texte/médias avec des intentions finales durables. L'adaptateur de réception gère les mentions de groupe et l'identité de l'expéditeur. L'adaptateur en direct peut rester absent jusqu'à ce que WhatsApp dispose d'un transport modifiable.                                                                                                                                                                                                                                                                            |
-| Matrix          | L'adaptateur en direct gère les modifications des événements de brouillon, la finalisation, la radiation, les contraintes des médias chiffrés et le secours en cas de non-concordance de la cible de réponse. L'adaptateur de réception gère l'hydratation et la déduplication des événements chiffrés. L'adaptateur d'origine devrait encoder l'origine de l'échec de passerelle OpenClaw dans le contenu de l'événement Matrix et supprimer les échos de salon de bot configurés avant le traitement `allowBots`.                                          |
+| Matrix          | L'adaptateur en direct gère les modifications d'événements de brouillon, la finalisation, la radiation, les contraintes de média chiffré et le repli en cas d'inadéquation de la cible de réponse. L'adaptateur de réception gère l'hydratation et la déduplication des événements chiffrés. L'adaptateur d'origine devrait encoder l'origine de l'échec de passerelle OpenClaw dans le contenu de l'événement Matrix et supprimer les échos de salon de bot configurés avant le traitement `allowBots`.                                                     |
 | Mattermost      | L'adaptateur en direct gère une publication de brouillon, le repli progression/outil, la finalisation sur place et le secours d'envoi frais.                                                                                                                                                                                                                                                                                                                                                                                                                 |
 | Microsoft Teams | L'adaptateur en direct gère le comportement de flux de progression et de bloc natif. L'adaptateur d'envoi gère les activités et les accusés de réception des pièces jointes/cartes.                                                                                                                                                                                                                                                                                                                                                                          |
 | Feishu          | L'adaptateur de rendu gère le rendu texte/carte/brut. L'adaptateur en direct gère le flux continu des cartes et la suppression des doublons finaux. L'adaptateur d'envoi gère les commentaires, les sessions de sujet, les médias et la suppression vocale.                                                                                                                                                                                                                                                                                                  |
 | Bot QQ          | L'adaptateur en direct gère le flux continu C2C, le délai d'attente de l'accumulateur et l'envoi final de secours. L'adaptateur de rendu gère les balises médias et le texte-voix.                                                                                                                                                                                                                                                                                                                                                                           |
 | Signal          | Simple adaptateur de réception et d'envoi. Pas d'adaptateur en direct sauf si signal-cli ajoute une prise en charge fiable de la modification.                                                                                                                                                                                                                                                                                                                                                                                                               |
 | iMessage        | Adaptateur de réception et d'envoi simple. L'envoi iMessage doit préserver la population du cache d'écho du moniteur avant que les éléments durables finaux puissent contourner la livraison par le moniteur.                                                                                                                                                                                                                                                                                                                                                |
-| Google Chat     | Adaptateur de réception et d'envoi simple avec la relation de thread mappée aux espaces et aux identifiants de thread. Vérifier le comportement de la salle `allowBots=true`OpenClaw pour les échos d'échec de passerelle OpenClaw étiquetés.                                                                                                                                                                                                                                                                                                                |
+| Google Chat     | Adaptateur de réception simple plus adaptateur d'envoi avec la relation de thread mappée aux espaces et aux identifiants de thread. Auditer le comportement du salon `allowBots=true` pour les échos d'échec de passerelle OpenClaw étiquetés.                                                                                                                                                                                                                                                                                                               |
 | LINE            | Adaptateur de réception et d'envoi simple avec les contraintes de jeton de réponse modélisées comme une capacité cible/relation.                                                                                                                                                                                                                                                                                                                                                                                                                             |
 | Nextcloud Talk  | Pont de réception SDK plus adaptateur d'envoi.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
 | IRC             | Adaptateur de réception et d'envoi simple, pas d'accusés de réception d'édition durables.                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
@@ -733,12 +708,8 @@ Politique principale :
 
 ### Phase 1 : Domaine de message interne
 
-- Ajouter les types `src/channels/message/*` pour les messages, les cibles, les relations,
-  les origines, les accusés de réception, les capacités, les intentions durables, le contexte de réception, le contexte d'envoi,
-  le contexte en direct et les classes d'échec.
-- Ajouter `origin?: MessageOrigin` au type de charge utile du pont de migration utilisé par
-  la livraison de réponse actuelle, puis déplacer ce champ vers `ChannelMessage` et les types de messages
-  rendus au fur et à mesure que la refactorisation remplace les charges utiles de réponse.
+- Ajoutez les types `src/channels/message/*` pour les messages, les cibles, les relations, les origines, les reçus, les capacités, les intentions durables, le contexte de réception, le contexte d'envoi, le contexte en direct et les classes d'échec.
+- Ajoutez `origin?: MessageOrigin` au type de charge utile du pont de migration utilisé par la livraison de réponse actuelle, puis déplacez ce champ vers `ChannelMessage` et les types de messages rendus à mesure que la refactorisation remplace les charges utiles de réponse.
 - Garder ceci interne jusqu'à ce que les adaptateurs et les tests prouvent la forme.
 - Ajouter des tests unitaires purs pour les transitions d'état et la sérialisation.
 
@@ -749,18 +720,18 @@ Politique principale :
 - Permettre à une intention d'envoi durable de porter un tableau de charges utiles projetées ou un plan de lot, et non
   une seule charge utile de réponse.
 - Préserver le comportement de récupération de file d'attente actuel via une conversion de compatibilité.
-- Faire en sorte que `deliverOutboundPayloads` appelle `messages.send`.
-- Rendre la durabilité de l'envoi final par défaut et échouer de manière fermée lorsque l'intention durable ne peut pas être écrite dans le nouveau cycle de vie des messages, après que l'adaptateur a déclaré la sécurité de la relecture. Les chemins de compatibilité existants des tours de channel et du SDK restent en envoi direct par défaut pendant cette phase.
+- Faites en sorte que `deliverOutboundPayloads` appelle `messages.send`.
+- Rendre la durabilité de l'envoi final par défaut et échouer de manière sécurisée lorsque l'intention durable ne peut pas être écrite dans le nouveau cycle de vie des messages, après que l'adaptateur a déclaré la sécurité de la relecture. Les chemins de compatibilité du inbound runner et du SDK existants restent en envoi direct par défaut au cours de cette phase.
 - Enregistrer les reçus de manière cohérente.
 - Renvoyer les reçus et les résultats de livraison à l'appelant du répartiteur d'origine au lieu de traiter l'envoi durable comme un effet secondaire terminal.
 - Persister l'origine du message via les intentions d'envoi durables afin que la récupération, la relecture et les envois fragmentés préservent la provenance opérationnelle OpenClaw.
 
-### Phase 3 : Pont de tour de channel
+### Phase 3 : Pont d'entrée de canal (Channel Inbound Bridge)
 
-- Réimplémenter `channel.turn.run` et `dispatchAssembledChannelTurn` sur la base de `messages.receive` et `messages.send`.
+- Réimplémenter `channel.inbound.run` et `dispatchChannelInboundReply` sur la base de `messages.receive` et `messages.send`.
 - Garder les types de faits actuels stables.
 - Conserver le comportement hérité par défaut. Un channel à tour assemblé ne devient durable que lorsque son adaptateur opte explicitement pour une politique de durabilité sûre en relecture.
-- Conserver `durable: false` comme une échappatoire de compatibilité pour les chemins qui finalisent les modifications natives et ne peuvent pas encore relire en toute sécurité, mais ne pas compter sur les marqueurs `false` pour protéger les channels non migrés.
+- Conserver `durable: false` comme une échappatoire de compatibilité pour les chemins qui finalisent les modifications natives et ne peuvent pas encore relire en toute sécurité, mais ne pas s'appuyer sur les marqueurs `false` pour protéger les canaux non migrés.
 - Durabilité par défaut du tour assemblé uniquement dans le nouveau cycle de vie des messages, une fois que le mappage du channel prouve que le chemin d'envoi générique préserve l'ancienne sémantique de livraison du channel.
 
 ### Phase 4 : Pont du répartiteur préparé
@@ -769,10 +740,7 @@ Politique principale :
 - Garder l'ancien assistant comme wrapper.
 - Porter Telegram, WhatsApp, Slack, Signal, iMessage et Discord en premier car ils possèdent déjà un travail final durable ou des chemins d'envoi plus simples.
 - Traiter chaque répartiteur préparé comme non couvert jusqu'à ce qu'il opte explicitement pour le contexte d'envoi. La documentation et les entrées de journal des modifications doivent indiquer « tours de channel assemblés » ou nommer les chemins de channel migrés plutôt que de revendiquer toutes les réponses finales automatiques.
-- Conserver `recordInboundSessionAndDispatchReply`, les assistants de DM directs et autres
-  assistants de compatibilité publics préservant le comportement. Ils pourront exposer une option
-  d'adhésion explicite au contexte d'envoi plus tard, mais ne doivent pas tenter automatiquement une livraison
-  générique durable avant le rappel de livraison détenu par l'appelant.
+- Conserver `recordInboundSessionAndDispatchReply`, les helpers directs de DM et les helpers de compatibilité publique similaires tout en préservant leur comportement. Ils peuvent exposer une option explicite de contexte d'envoi plus tard, mais ne doivent pas tenter automatiquement une livraison générique durable avant le rappel de livraison détenu par l'appelant.
 
 ### Phase 5 : Cycle de vie unifié en direct
 
@@ -785,12 +753,11 @@ Politique principale :
 
 ### Phase 6 : SDK public
 
-- Ajouter `openclaw/plugin-sdk/channel-message`.
+- Ajouter `openclaw/plugin-sdk/channel-outbound`.
 - Documenter cela comme l'API de plugin de channel préférée.
 - Mettre à jour les exportations de packages, l'inventaire des points d'entrée, les lignes de base de l'API générées et
   la documentation du SDK de plugin.
-- Inclure `MessageOrigin`, les hooks d'encodage/décodage d'origine et le prédicat partagé
-  `shouldDropOpenClawEcho` dans la surface du SDK de messages de channel.
+- Inclure `MessageOrigin`, les hooks d'encodage/décodage d'origine et le prédicat partagé `shouldDropOpenClawEcho` dans la surface du SDK sortant de canal.
 - Conserver les wrappers de compatibilité pour les anciens sous-chemins.
 - Marquer les assistants du SDK nommés reply comme obsolètes dans la documentation une fois que les plugins groupés sont
   migrés.
@@ -811,9 +778,9 @@ Déplacer tous les producteurs sortants non-réponse vers `messages.send` :
 C'est ici que le modèle cesse d'être des "réponses d'agent" et devient "OpenClaw envoie
 des messages".
 
-### Phase 8 : Déprécier le tour
+### Phase 8 : Supprimer la compatibilité nommée par tour
 
-- Conserver `channel.turn` comme wrapper pendant au moins une fenêtre de compatibilité.
+- Conserver les wrappers entrants/nommés par message comme fenêtre de compatibilité.
 - Publier des notes de migration.
 - Exécuter les tests de compatibilité du SDK de plugin sur les anciens imports.
 - Supprimer ou masquer les anciens assistants internes seulement après qu'aucun plugin groupé n'en ait besoin
@@ -826,19 +793,18 @@ Tests unitaires :
 - Sérialisation et récupération de l'intention d'envoi durable.
 - Réutilisation de la clé d'idempotence et suppression des doublons.
 - Validation de réception et saut de relecture.
-- Récupération `unknown_after_send` qui réconcilie avant la relecture lorsqu'un adaptateur
-  prend en charge la réconciliation.
+- Récupération `unknown_after_send` qui réconcilie avant la relecture lorsqu'un adaptateur prend en charge la réconciliation.
 - Stratégie de classification des échecs.
 - Séquencement de la stratégie d'accusé de réception de réception.
 - Mappage des relations pour les envois de réponse, de suivi, système et de diffusion.
-- Fabrique d'origine en cas d'échec du Gateway et prédicat `shouldDropOpenClawEcho`.
+- Fabrique d'origine en cas d'échec Gateway et prédicat `shouldDropOpenClawEcho`.
 - Préservation de l'origine via la normalisation de la charge utile, le découpage, la sérialisation de la file d'attente durable et la récupération.
 
 Tests d'intégration :
 
-- L'adaptateur simple `channel.turn.run` enregistre et envoie toujours.
+- L'adaptateur simple `channel.inbound.run` enregistre et envoie toujours.
 - La livraison d'événements assemblés hérités ne devient pas durable sauf si le channel y opte explicitement.
-- Le pont `channel.turn.runPrepared` enregistre et finalise toujours.
+- Le pont `channel.inbound.runPreparedReply` enregistre et finalise toujours.
 - Les assistants de compatibilité publique appellent par défaut les rappels de livraison détenus par l'appelant et n'effectuent pas d'envoi générique avant ces rappels.
 - La livraison de repli durable rejoue l'ensemble du tableau de charges utiles projetées après redémarrage et ne peut pas laisser les charges utiles ultérieures non enregistrées après un plantage précoce.
 - La livraison durable d'événements assemblés renvoie les identifiants de message de plateforme au répartiteur tamponné.
@@ -864,15 +830,11 @@ Tests de channel :
   l'envoi durable générique jusqu'à ce que leurs tests de parité d'adaptateur existent.
 - La livraison par rappel Direct-DM/Nostr reste autoritaire sauf si elle est explicitement
   migrée vers une cible de message complète et un adaptateur d'envoi sécurisé contre les relectures.
-- Les messages d'échec de passerelle Slack balisés OpenClaw restent visibles en sortie, les échos
-  de salle de bot balisés sont abandonnés avant `allowBots`, et les messages de bot non balisés avec le
-  même texte visible suivent toujours l'autorisation normale du bot.
+- Les messages d'échec de la passerelle Slack balisés OpenClaw restent visibles en sortie, les échos balisés de salle bot sont supprimés avant `allowBots`, et les messages de bot non balisés avec le même texte visible suivent toujours l'autorisation normale du bot.
 - Retour du flux natif Slack à l'aperçu de brouillon dans les DM de premier niveau.
 - Finalisation de l'aperçu Matrix et retour de suppression.
-- Les échos de salle d'échec de passerelle Matrix balisés OpenClaw à partir des comptes bot configurés
-  sont abandonnés avant le traitement `allowBots`.
-- Les audits de cascade d'échec de passerelle en salle partagée Discord et Google Chat couvrent
-  les modes `allowBots` avant de revendiquer une protection générique.
+- Les échos de salle d'échec de passerelle Matrix marqués OpenClaw provenant de comptes de bot configurés sont abandonnés avant le traitement `allowBots`.
+- Les audits de cascade d'échec de passerelle de salle partagée Discord et Google Chat couvrent les modes `allowBots` avant de réclamer une protection générique à cet endroit.
 - Finalisation du brouillon Mattermost et retour de nouvel envoi.
 - Finalisation de la progression native Teams.
 - Suppression des finaux en double Feishu.
@@ -885,9 +847,8 @@ Tests de channel :
 Validation :
 
 - Fichiers Vitest ciblés pendant le développement.
-- `pnpm check:changed` dans Testbox pour l'ensemble de la surface modifiée.
-- `pnpm check` plus large dans Testbox avant d'intégrer la refactorisation complète ou après
-  les modifications du SDK public/export.
+- `pnpm check:changed` dans Testbox pour la totalité de la surface modifiée.
+- `pnpm check` plus large dans Testbox avant de livrer la refactorisation complète ou après les modifications du SDK public / des exports.
 - Test de fumée en direct ou sur le channel qa pour au moins un channel capable d'édition et un
   simple channel d'envoi uniquement avant de supprimer les wrappers de compatibilité.
 
@@ -898,10 +859,8 @@ Validation :
   seulement le filigrane de redémarrage persisté de OpenClaw.
 - Si l'état durable de l'aperçu en direct doit être stocké dans le même enregistrement de file
   que l'intention d'envoi finale ou dans un magasin d'état de live frère.
-- Combien de temps les wrappers de compatibilité restent documentés après
-  la sortie de `plugin-sdk/channel-message`.
-- Si les plugins tiers doivent implémenter des adaptateurs de réception directement ou fournir
-  uniquement des crochets (hooks) normalize/send/live via `defineChannelMessageAdapter`.
+- Combien de temps les wrappers de compatibilité restent documentés après la sortie de `plugin-sdk/channel-outbound`.
+- Si les plugins tiers doivent implémenter des adaptateurs de réception directement ou fournir uniquement des crochets (hooks) de normalisation/envoi/live via `defineChannelMessageAdapter`.
 - Quels champs de reçu sont sûrs à exposer dans le SDK public par rapport à l'état
   du runtime interne.
 - Si les effets secondaires tels que les caches de self-echo et les marqueurs de thread participé
@@ -912,13 +871,10 @@ Validation :
 
 ## Critères d'acceptation
 
-- Chaque channel de message groupé envoie la sortie visible finale via
-  `messages.send`.
-- Chaque channel de message entrant passe par `messages.receive` ou un
-  wrapper de compatibilité documenté.
-- Chaque channel d'aperçu/édition/stream utilise `messages.live` pour l'état de brouillon et
-  la finalisation.
-- `channel.turn` est uniquement un wrapper.
+- Chaque channel de message groupé envoie la sortie visible finale via `messages.send`.
+- Chaque channel de message entrant passe par `messages.receive` ou un wrapper de compatibilité documenté.
+- Chaque channel de prévisualisation/modification/streaming utilise `messages.live` pour l'état de brouillon et la finalisation.
+- `channel.inbound` n'est qu'un wrapper.
 - Les helpers du SDK nommés Reply sont des exports de compatibilité, pas le chemin recommandé.
 - La récupération durable peut rejouer les envois finaux en attente après redémarrage sans perdre
   la réponse finale ni dupliquer les envois déjà validés ; les envois dont
@@ -926,8 +882,7 @@ Validation :
   au-moins-une-fois pour cet adaptateur.
 - Les envois finaux durables échouent de manière fermée lorsque l'intention durable ne peut pas être écrite,
   sauf si un appelant a explicitement sélectionné un mode non durable documenté.
-- Les helpers de compatibilité pour le tour de channel (channel-turn) et le SDK utilisent par défaut la livraison directe
-  propriétaire du channel ; l'envoi générique durable est un choix explicite uniquement.
+- Les aides de compatibilité du SDK hérité sont par défaut en livraison directe détenue par le channel ; l'envoi durable générique est un opt-in explicite uniquement.
 - Les reçus (receipts) préservent tous les identifiants de message de la plateforme pour les livraisons en plusieurs parties et un
   identifiant principal pour la commodité du fil de discussion/édition.
 - Les wrappers durables préservent les effets secondaires locaux au channel avant de remplacer les rappels (callbacks)
@@ -946,7 +901,7 @@ Validation :
 ## Connexes
 
 - [Messages](/fr/concepts/messages)
-- [Streaming et découpage](/fr/concepts/streaming)
+- [Streaming et chunking](/fr/concepts/streaming)
 - [Brouillons de progression](/fr/concepts/progress-drafts)
 - [Politique de réessai](/fr/concepts/retry)
-- [Noyau de tour de channel](/fr/plugins/sdk-channel-turn)
+- [API entrante du channel](/fr/plugins/sdk-channel-inbound)

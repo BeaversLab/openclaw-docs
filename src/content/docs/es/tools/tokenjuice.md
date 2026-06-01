@@ -11,7 +11,7 @@ read_when:
 
 Cambia el `tool_result` devuelto, no el comando en sí. Tokenjuice no reescribe la entrada del shell, no vuelve a ejecutar comandos ni cambia los códigos de salida.
 
-Hoy esto se aplica a ejecuciones integradas de PI y herramientas dinámicas de OpenClaw en el arnés del servidor de aplicaciones Codex. Tokenjuice se engancha al middleware de resultados de herramientas de OpenClaw y recorta la salida antes de que vuelva a la sesión activa del arnés.
+Hoy esto se aplica a las ejecuciones integradas de OpenClaw y las herramientas dinámicas de OpenClaw en el arnés del servidor de aplicaciones Codex. Tokenjuice se engancha al middleware de resultados de herramientas de OpenClaw y recorta la salida antes de que regrese a la sesión activa del arnés.
 
 ## Habilitar el complemento
 

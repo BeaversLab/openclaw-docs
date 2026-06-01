@@ -1,5 +1,5 @@
 ---
-summary: "TwitchOpenClaw添加用于发送和接收 OpenClaw 消息的 Twitch 渠道表面。"
+summary: "OpenClawTwitch OpenClaw Twitch 渠道插件，用于聊天和审核工作流。"
 read_when:
   - You are installing, configuring, or auditing the twitch plugin
 title: "TwitchTwitch 插件"
@@ -7,7 +7,7 @@ title: "TwitchTwitch 插件"
 
 # Twitch 插件
 
-添加用于发送和接收 OpenClaw 消息的 Twitch 渠道表面。
+OpenClaw Twitch 渠道插件，用于聊天和审核工作流。
 
 ## 分发
 

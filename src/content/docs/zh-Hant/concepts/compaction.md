@@ -28,7 +28,7 @@ title: "壓縮"
 - `🧹 Auto-compaction complete` 在詳細模式中。
 - `/status` 顯示 `🧹 Compactions: <count>`。
 
-<Info>在進行壓縮之前，OpenClaw 會自動提醒代理將重要筆記儲存到 [記憶](/zh-Hant/concepts/memory) 檔案中。這可以防止內容遺失。</Info>
+<Info>在壓縮之前，OpenClaw 會自動提醒代理將重要筆記儲存到 [memory](/zh-Hant/concepts/memory) 檔案中。這可以防止上下文遺失。</Info>
 
 <AccordionGroup>
   <Accordion title="可識別的溢出特徵">
@@ -52,11 +52,11 @@ title: "壓縮"
 /compact Focus on the API design decisions
 ```
 
-當設定 `agents.defaults.compaction.keepRecentTokens` 時，手動壓縮會遵循該 Pi 切割點，並在重建的內容中保留最近的尾部。如果沒有明確的保留預算，手動壓縮會作為硬式檢查點，並僅從新的摘要繼續。
+當設定了 `agents.defaults.compaction.keepRecentTokens` 時，手動壓縮會遵循該 OpenClaw 切割點，並將最近的尾部保留在重建的上下文中。如果沒有明確的保留預算，手動壓縮將作為硬檢查點，僅從新的摘要繼續。
 
 ## 設定
 
-在您的 `openclaw.json` 中的 `agents.defaults.compaction` 下設定壓縮。以下列出了最常見的調整選項；完整參考請參閱 [會話管理深度解析](/zh-Hant/reference/session-management-compaction)。
+在您的 `openclaw.json` 中的 `agents.defaults.compaction` 下設定壓縮。下面列出了最常見的選項；如需完整參考，請參閱[會話管理深入探討](/zh-Hant/reference/session-management-compaction)。
 
 ### 使用不同的模型
 
@@ -102,14 +102,14 @@ title: "壓縮"
 
 ### 後續文字記錄
 
-當啟用 `agents.defaults.compaction.truncateAfterCompaction` 時，OpenClaw 不會就地重寫現有的文字記錄。它會從壓縮摘要、保留的狀態和未摘要的尾部建立一個新的作用中後續文字記錄，然後將先前的 JSONL 保留為已封存的檢查點來源。
-後續文字記錄也會捨棄在短暫重試視窗內抵達的完全重複長使用者輪次，因此通道重試風暴不會在壓縮後被帶入下一個作用中文字記錄。
+啟用 `agents.defaults.compaction.truncateAfterCompaction` 後，OpenClaw 不會就地重寫現有文字記錄。它會根據壓縮摘要、保留的狀態和未摘要的尾部建立一個新的使用中繼任文字記錄，然後記錄檢查點中繼資料，將分支/還原流程指向該壓縮後的繼任者。
+繼任文字記錄也會捨棄在短暫重試視窗內到達的完全重複的長使用者輪次，因此通道重試風暴不會被帶入壓縮後的下一個使用中文字記錄。
 
-預壓縮檢查點只有在低於 OpenClaw 的檢查點大小上限時才會被保留；過大的作用中文字記錄仍會壓縮，但 OpenClaw 會跳過大型偵錯快照，而不是讓磁碟使用量加倍。
+OpenClaw 不再為新的壓縮作業撰寫個別的 `.checkpoint.*.jsonl` 副本。現有的舊版檢查點檔案在被參照時仍可使用，並會透過正常的會話清理進行修剪。
 
 ### 壓縮通知
 
-預設情況下，壓縮會靜默執行。設定 `notifyUser` 以在壓縮開始和完成時顯示簡短的狀態訊息：
+預設情況下，壓縮會靜默執行。設定 `notifyUser` 可在壓縮開始和完成時顯示簡短的狀態訊息：
 
 ```json5
 {
@@ -125,7 +125,7 @@ title: "壓縮"
 
 ### 記憶體清除
 
-在壓縮之前，OpenClaw 可以執行 **靜默記憶體清除** 輪次，將持久的筆記儲存到磁碟。當此維護輪次應該使用本機模型而不是作用中的對話模型時，設定 `agents.defaults.compaction.memoryFlush.model`：
+在進行壓縮之前，OpenClaw 可以執行一次**無聲記憶體刷新**回合，將持久化筆記儲存到磁碟。當此維護回合應使用本機模型而非目前對話模型時，請設定 `agents.defaults.compaction.memoryFlush.model`：
 
 ```json
 {
@@ -141,11 +141,11 @@ title: "壓縮"
 }
 ```
 
-記憶體清除模型覆寫是精確的，並且不會繼承作用中階段的後援鏈。詳情和設定請參閱 [記憶體](/zh-Hant/concepts/memory)。
+記憶體刷新模型覆寫是精確的，不會繼承目前會話的備援鏈。詳情與設定請參閱 [記憶體](/zh-Hant/concepts/memory)。
 
 ## 可插拔壓縮提供者
 
-外掛程式可以透過外掛程式 API 上的 `registerCompactionProvider()` 註冊自訂壓縮提供者。當註冊並配置了提供者時，OpenClaw 會將摘要工作委派給它，而不是使用內建的 LLM 管線。
+外掛程式可以透過插件 API 上的 `registerCompactionProvider()` 註冊自訂壓縮提供者。當提供者註冊並設定後，OpenClaw 會將摘要工作委派給它，而不是使用內建的 LLM 管線。
 
 若要使用已註冊的提供者，請在您的設定中設定其 id：
 
@@ -161,7 +161,7 @@ title: "壓縮"
 }
 ```
 
-設定 `provider` 會自動強制啟用 `mode: "safeguard"`。提供者會收到與內建路徑相同的壓縮指令和識別碼保留政策，且 OpenClaw 在提供者輸出後仍會保留最近輪次和分割輪次的後綴內容。
+設定 `provider` 會自動強制執行 `mode: "safeguard"`。提供者會收到與內建路徑相同的壓縮指示和識別符保留政策，且 OpenClaw 仍會在提供者輸出後保留最近輪次和分割輪次的後綴上下文。
 
 <Note>如果提供者失敗或傳回空結果，OpenClaw 將會回退到內建的 LLM 摘要。</Note>
 
@@ -173,21 +173,21 @@ title: "壓縮"
 | **是否儲存？** | 是（在工作階段紀錄中） | 否（僅在記憶體中，每次請求） |
 | **範圍**       | 整個對話               | 僅限工具結果                 |
 
-[工作階段修剪](/zh-Hant/concepts/session-pruning) 是一個更輕量的補充機制，它會修剪工具輸出而不進行摘要。
+[Session pruning](/zh-Hant/concepts/session-pruning) 是一個更輕量的補充機制，它會修剪工具輸出而不進行摘要。
 
 ## 疑難排解
 
-**壓縮太頻繁？** 模型的上下文視窗可能太小，或是工具輸出可能太大。嘗試啟用 [工作階段修剪](/zh-Hant/concepts/session-pruning)。
+**壓縮太頻繁？** 模型的上下文視窗可能太小，或是工具輸出太大。請嘗試啟用 [session pruning](/zh-Hant/concepts/session-pruning)。
 
-**壓縮後內容感覺過時？** 使用 `/compact Focus on <topic>` 來引導摘要，或啟用 [記憶體排空](/zh-Hant/concepts/memory) 以保留筆記。
+**壓縮後上下文感覺過時？** 使用 `/compact Focus on <topic>` 來引導摘要，或啟用 [memory flush](/zh-Hant/concepts/memory) 以便保留筆記。
 
-**需要全新的開始？** `/new` 會啟動一個新的工作階段而不進行壓縮。
+**需要重新開始？** `/new` 會啟動一個新的對話階段而不進行壓縮。
 
-若需進階設定（保留 Token、識別碼保留、自訂上下文引擎、OpenAI 伺服器端壓縮），請參閱 [工作階段管理深度解析](/zh-Hant/reference/session-management-compaction)。
+如需進階設定（保留 token、識別符保留、自訂上下文引擎、OpenAI 伺服器端壓縮），請參閱 [Session management deep dive](/zh-Hant/reference/session-management-compaction)。
 
 ## 相關
 
-- [工作階段](/zh-Hant/concepts/session)：工作階段管理與生命週期。
-- [工作階段修剪](/zh-Hant/concepts/session-pruning)：修剪工具結果。
-- [上下文](/zh-Hant/concepts/context)：如何為代理輪次建立上下文。
-- [鉤子](/zh-Hant/automation/hooks)：壓縮生命週期鉤子（`before_compaction`、`after_compaction`）。
+- [Session](/zh-Hant/concepts/session)：對話階段管理與生命週期。
+- [Session pruning](/zh-Hant/concepts/session-pruning)：修剪工具結果。
+- [Context](/zh-Hant/concepts/context)：如何為代理人的輪次建構上下文。
+- [Hooks](/zh-Hant/automation/hooks)：壓縮生命週期掛鉤 (`before_compaction`, `after_compaction`)。

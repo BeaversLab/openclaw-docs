@@ -105,7 +105,7 @@ docker compose run --rm --no-deps --entrypoint node openclaw-gateway \
 docker compose up -d openclaw-gateway
 ```
 
-<Note>請從 repo 根目錄執行 `docker compose`。如果您啟用了 `OPENCLAW_EXTRA_MOUNTS` 或 `OPENCLAW_HOME_VOLUME`，設定腳本會寫入 `docker-compose.extra.yml`； 請使用 `-f docker-compose.yml -f docker-compose.extra.yml` 將其包含在內。</Note>
+<Note>請從儲存庫根目錄執行 `docker compose`。如果您啟用了 `OPENCLAW_EXTRA_MOUNTS` 或 `OPENCLAW_HOME_VOLUME`，安裝指令碼會寫入 `docker-compose.extra.yml`； 請將其包含在任何標準覆寫檔案之後，例如當兩個覆寫檔案都存在時使用 `-f docker-compose.yml -f docker-compose.override.yml -f docker-compose.extra.yml`。</Note>
 
 <Note>因為 `openclaw-cli` 共用 `openclaw-gateway` 的網路命名空間，它是 一個啟動後工具。在 `docker compose up -d openclaw-gateway` 之前，請透過 `openclaw-gateway` 使用 `--no-deps --entrypoint node` 來執行上架和設定時間的設定寫入。</Note>
 

@@ -1,5 +1,5 @@
 ---
-summary: "Añade compatibilidad con el proveedor de modelos de Amazon Bedrock a OpenClaw."
+summary: "Complemento del proveedor OpenClaw Amazon Bedrock con descubrimiento de modelos, incrustaciones y soporte para guardrail."
 read_when:
   - You are installing, configuring, or auditing the amazon-bedrock plugin
 title: "Complemento de Amazon Bedrock"
@@ -7,7 +7,7 @@ title: "Complemento de Amazon Bedrock"
 
 # Complemento de Amazon Bedrock
 
-Añade compatibilidad con el proveedor de modelos de Amazon Bedrock a OpenClaw.
+Complemento del proveedor OpenClaw Amazon Bedrock con descubrimiento de modelos, incrustaciones y soporte para guardrail.
 
 ## Distribución
 

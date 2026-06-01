@@ -78,7 +78,7 @@ Le plugin `xiaomi`Xiaomi inclus enregistre également Xiaomi MiMo en tant que fo
         xiaomi: {
           apiKey: "xiaomi_api_key",
           model: "mimo-v2.5-tts",
-          voice: "mimo_default",
+          speakerVoice: "mimo_default",
           format: "mp3",
           style: "Bright, natural, conversational tone.",
         },

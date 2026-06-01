@@ -936,7 +936,7 @@ export GEMINI_API_KEY=...
     introMessage: "Say exactly: I'm here.",
     providers: {
       google: {
-        voice: "Kore",
+        speakerVoice: "Kore",
       },
     },
   },
@@ -953,7 +953,7 @@ export GEMINI_API_KEY=...
       providers: {
         elevenlabs: {
           modelId: "eleven_v3",
-          voiceId: "pMsXgVXv3BLzUgSXRplE",
+          speakerVoiceId: "pMsXgVXv3BLzUgSXRplE",
         },
       },
     },
@@ -981,10 +981,11 @@ export GEMINI_API_KEY=...
 ```
 
 持久的 Meet 语音来自
-`messages.tts.providers.elevenlabs.voiceId`。当启用 TTS 模型覆盖时，代理回复也可以使用
-针对每次回复的 `[[tts:voiceId=... model=eleven_v3]]` 指令，但配置是会议的确定性默认值。
-加入时，日志应显示 `transcriptionProvider=elevenlabs`，且每次
-语音回复应记录 `provider=elevenlabs model=eleven_v3 voice=<voiceId>`。
+`messages.tts.providers.elevenlabs.speakerVoiceId`。当启用 TTS 模型
+覆盖时，Agent 回复也可以使用
+按回复设置的 `[[tts:speakerVoiceId=... model=eleven_v3]]` 指令，但配置是会议的确定性默认值。
+加入时，日志应显示 `transcriptionProvider=elevenlabs`，并且每个
+口语回复都应记录 `provider=elevenlabs model=eleven_v3 speakerVoiceId=<voiceId>`。
 
 Twilio 专用配置：
 

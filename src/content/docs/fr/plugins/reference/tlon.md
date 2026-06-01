@@ -1,5 +1,5 @@
 ---
-summary: "TlonOpenClawAjoute la surface du canal Tlon pour l'envoi et la réception de messages OpenClaw."
+summary: "OpenClawTlonPlugin de canal OpenClaw Tlon/Urbit pour les flux de travail de chat."
 read_when:
   - You are installing, configuring, or auditing the tlon plugin
 title: "TlonPlugin Tlon"
@@ -7,7 +7,7 @@ title: "TlonPlugin Tlon"
 
 # Plugin Tlon
 
-Ajoute la surface du canal Tlon pour l'envoi et la réception de messages OpenClaw.
+Plugin de canal OpenClaw Tlon/Urbit pour les flux de travail de chat.
 
 ## Distribution
 

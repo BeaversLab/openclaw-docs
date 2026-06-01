@@ -94,8 +94,8 @@ a `COPILOT_GITHUB_TOKEN`, `GH_TOKEN` y luego `GITHUB_TOKEN`. Usa
     terminal, no en un script no interactivo ni en una canalización de CI.
   </Accordion>
 
-<Accordion title="La disponibilidad del modelo depende de su plan">
-  La disponibilidad del modelo Copilot depende de su plan de GitHub. Si un modelo es rechazado, pruebe con otro ID (por ejemplo `github-copilot/gpt-5.5`). Consulte los [modelos admitidos por plan de Copilot](https://docs.github.com/en/copilot/reference/ai-models/supported-models#supported-ai-models-per-copilot-plan) de GitHub para ver la lista actual de modelos.
+<Accordion title="La disponibilidad del modelo depende de tu plan">
+  La disponibilidad del modelo Copilot depende de tu plan de GitHub. Si un modelo es rechazado, prueba con otro ID (por ejemplo `github-copilot/gpt-5.5`). Consulta los [modelos compatibles por plan de Copilot](https://docs.github.com/en/copilot/reference/ai-models/supported-models#supported-ai-models-per-copilot-plan) de GitHub para ver la lista actual de modelos.
 </Accordion>
 
   <Accordion title="Actualización en vivo del catálogo desde la API de Copilot">
@@ -161,18 +161,15 @@ a `COPILOT_GITHUB_TOKEN`, `GH_TOKEN` y luego `GITHUB_TOKEN`. Usa
 
 ## Incrustaciones de búsqueda de memoria
 
-GitHub Copilot también puede actuar como proveedor de incrustaciones para
-[búsqueda de memoria](/es/concepts/memory-search). Si tiene una suscripción a Copilot y
-ha iniciado sesión, OpenClaw puede utilizarlo para incrustaciones sin una clave API separada.
+GitHub Copilot también puede actuar como un proveedor de incrustaciones (embeddings) para
+la [búsqueda en memoria](/es/concepts/memory-search). Si tienes una suscripción a Copilot y
+has iniciado sesión, OpenClaw puede usarlo para incrustaciones sin una clave de API separada.
 
-### Detección automática
+### Configuración
 
-Cuando `memorySearch.provider` es `"auto"` (el valor predeterminado), se intenta con GitHub Copilot
-en la prioridad 15 -- después de las incrustaciones locales pero antes de OpenAI y otros proveedores
-de pago. Si hay un token de GitHub disponible, OpenClaw descubre los modelos de
-incrustación disponibles desde la API de Copilot y selecciona el mejor automáticamente.
-
-### Configuración explícita
+Establezca `memorySearch.provider` explícitamente para usar las incrustaciones de GitHub Copilot. Si un
+token de GitHub está disponible, OpenClaw descubre los modelos de incrustación disponibles desde
+la API de Copilot y elige el mejor automáticamente.
 
 ```json5
 {
@@ -190,19 +187,20 @@ incrustación disponibles desde la API de Copilot y selecciona el mejor automát
 
 ### Cómo funciona
 
-1. OpenClaw resuelve su token de GitHub (desde variables de entorno o perfil de autenticación).
-2. Lo intercambia por un token de API de Copilot de corta duración.
-3. Consulta el endpoint `/models` de Copilot para descubrir los modelos de incrustación disponibles.
-4. Selecciona el mejor modelo (prefiere `text-embedding-3-small`).
-5. Envía solicitudes de incrustación al endpoint `/embeddings` de Copilot.
+1. OpenClaw resuelve tu token de GitHub (desde variables de entorno o perfil de autenticación).
+2. Lo cambia por un token de API de Copilot de corta duración.
+3. Consulta el punto final `/models` de Copilot para descubrir los modelos de incrustación disponibles.
+4. Elige el mejor modelo (prefiere `text-embedding-3-small`).
+5. Envía solicitudes de incrustación al punto final `/embeddings` de Copilot.
 
-La disponibilidad de modelos depende de su plan de GitHub. Si no hay modelos de incrustación disponibles, OpenClaw omite Copilot e intenta con el siguiente proveedor.
+La disponibilidad del modelo depende de tu plan de GitHub. Si no hay modelos de incrustación
+disponibles, OpenClaw omite Copilot y prueba con el siguiente proveedor.
 
 ## Relacionado
 
 <CardGroup cols={2}>
-  <Card title="Selección de modelos" href="/es/concepts/model-providers" icon="layers">
-    Cómo elegir proveedores, referencias de modelos y el comportamiento de conmutación por error.
+  <Card title="Selección de modelo" href="/es/concepts/model-providers" icon="layers">
+    Elección de proveedores, referencias de modelos y comportamiento de conmutación por error.
   </Card>
   <Card title="OAuth y autenticación" href="/es/gateway/authentication" icon="key">
     Detalles de autenticación y reglas de reutilización de credenciales.

@@ -1,5 +1,5 @@
 ---
-summary: "OpenClaw 診斷 Prometheus 匯出器。"
+summary: "OpenClaw 診斷 Prometheus 匯出器，用於執行時期指標。"
 read_when:
   - You are installing, configuring, or auditing the diagnostics-prometheus plugin
 title: "診斷 Prometheus 外掛程式"
@@ -7,7 +7,7 @@ title: "診斷 Prometheus 外掛程式"
 
 # 診斷 Prometheus 外掛程式
 
-OpenClaw 診斷 Prometheus 匯出器。
+OpenClaw 診斷 Prometheus 匯出器，用於執行時期指標。
 
 ## 發行版本
 

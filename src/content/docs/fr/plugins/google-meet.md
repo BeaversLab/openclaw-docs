@@ -987,7 +987,7 @@ Remplacements facultatifs :
     introMessage: "Say exactly: I'm here.",
     providers: {
       google: {
-        voice: "Kore",
+        speakerVoice: "Kore",
       },
     },
   },
@@ -1004,7 +1004,7 @@ ElevenLabs pour l'écoute et la parole en mode agent :
       providers: {
         elevenlabs: {
           modelId: "eleven_v3",
-          voiceId: "pMsXgVXv3BLzUgSXRplE",
+          speakerVoiceId: "pMsXgVXv3BLzUgSXRplE",
         },
       },
     },
@@ -1031,7 +1031,12 @@ ElevenLabs pour l'écoute et la parole en mode agent :
 }
 ```
 
-La voix persistante de Meet provient de `messages.tts.providers.elevenlabs.voiceId`. Les réponses de l'agent peuvent également utiliser des directives `[[tts:voiceId=... model=eleven_v3]]` par réponse lorsque les remplacements du modèle TTS sont activés, mais la configuration est la valeur par défaut déterministe pour les réunions. Lors de la connexion, les journaux doivent afficher `transcriptionProvider=elevenlabs` et chaque réponse parlée doit enregistrer `provider=elevenlabs model=eleven_v3 voice=<voiceId>`.
+La voix Meet persistante provient de
+`messages.tts.providers.elevenlabs.speakerVoiceId`. Les réponses de l'agent peuvent également utiliser
+des directives `[[tts:speakerVoiceId=... model=eleven_v3]]` par réponse lorsque les
+remplacements du modèle TTS sont activés, mais la configuration est la valeur par défaut déterministe pour les réunions.
+Lors de la jonction, les journaux doivent afficher `transcriptionProvider=elevenlabs` et chaque
+réponse parlée doit journaliser `provider=elevenlabs model=eleven_v3 speakerVoiceId=<voiceId>`.
 
 Configuration Twilio uniquement :
 

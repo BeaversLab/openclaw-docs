@@ -273,7 +273,7 @@ Ce test de fumée :
 
 C'est le moyen le plus rapide de prouver que le pont fonctionne sans câbler un compte Telegram, Discord ou iMessage réel dans le test.
 
-Pour un contexte de test plus large, consultez [Tests](/fr/help/testing).
+Pour un contexte de test plus large, consultez la section [Testing](/fr/help/testing).
 
 ### Dépannage
 
@@ -304,21 +304,21 @@ C'est le chemin `openclaw mcp list`, `show`, `set` et `unset`.
 
 Ces commandes n'exposent pas OpenClaw via MCP. Elles gèrent les définitions de serveur MCP détenues par OpenClaw sous `mcp.servers` dans la configuration OpenClaw.
 
-Ces définitions enregistrées sont destinées aux runtimes que OpenClaw lance ou configure plus tard, tels que Pi intégré et autres adaptateurs de runtime. OpenClaw stocke les définitions de manière centralisée pour que ces runtimes n'aient pas besoin de conserver leurs propres listes de serveurs MCP en double.
+Ces définitions enregistrées sont destinées aux runtimes qu'OpenClaw lance ou configure ultérieurement, tels qu'OpenClaw intégré et autres adaptateurs de runtime. OpenClaw stocke les définitions de manière centralisée afin que ces runtimes n'aient pas besoin de conserver leurs propres listes de serveurs MCP en double.
 
 <AccordionGroup>
-  <Accordion title="Comportement important"OpenClaw>
-    - ces commandes ne font que lire ou écrire la configuration OpenClaw
+  <Accordion title="Comportement important"OpenClawOpenClaw>
+    - ces commandes lisent ou écrivent uniquement la configuration d'OpenClaw
     - elles ne se connectent pas au serveur MCP cible
-    - elles ne valident pas si la commande, l'URL ou le transport distant est accessible pour le moment
-    - les adaptateurs d'exécution décident quelles formes de transport ils supportent réellement au moment de l'exécution
-    - Pi intégré expose les outils MCP configurés dans les profils d'outils normaux `coding` et `messaging` ; `minimal` les masque toujours, et `tools.deny: ["bundle-mcp"]` les désactive explicitement
-    - les runtimes MCP regroupés avec portée de session sont récoltés après `mcp.sessionIdleTtlMs` millisecondes d'inactivité (par défaut 10 minutes ; définissez `0` pour désactiver) et les exécutions intégrées ponctuelles les nettoient à la fin de l'exécution
+    - elles ne valident pas si la commande, l'URL ou le transport distant est accessible dès maintenant
+    - les adaptateurs de runtime décident des formes de transport qu'ils prennent en charge réellement au moment de l'exécution
+    - OpenClaw intégré expose les outils MCP configurés dans les profils d'outils `coding` et `messaging` normaux ; `minimal` les masque toujours, et `tools.deny: ["bundle-mcp"]` les désactive explicitement
+    - les runtimes MCP regroupés limités à la session sont nettoyés après `mcp.sessionIdleTtlMs` millisecondes d'inactivité (par défaut 10 minutes ; définissez `0` pour désactiver) et les exécutions intégrées ponctuelles les nettoient à la fin de l'exécution
 
   </Accordion>
 </AccordionGroup>
 
-Les adaptateurs d'exécution peuvent normaliser ce registre partagé dans la forme attendue par leur client en aval. Par exemple, Pi intégré consomme directement les valeurs `transport` d'OpenClaw, tandis que Claude Code et Gemini reçoivent les valeurs `type` natives CLI telles que `http`, `sse` ou `stdio`.
+Les adaptateurs de runtime peuvent normaliser ce registre partagé dans la forme attendue par leur client en aval. Par exemple, OpenClaw intégré consomme directement les valeurs OpenClawOpenClaw`transport`CLI d'OpenClaw, tandis que Claude Code et Gemini reçoivent les valeurs `type` natives du CLI telles que `http`, `sse`, ou `stdio`.
 
 Le Codex app-server respecte également un bloc optionnel `codex`OpenClaw sur chaque serveur. Il s'agit
 de métadonnées de projection OpenClaw uniquement pour les fils du Codex app-server ; cela ne modifie
@@ -391,11 +391,11 @@ Lance un processus enfant local et communique via stdin/stdout.
 | `cwd` / `workingDirectory` | Répertoire de travail pour le processus   |
 
 <Warning>
-**Filtre de sécurité des variables d'environnement Stdio**
+**Filtre de sécurité pour les variables d'environnement Stdio**
 
-OpenClaw rejette les clés d'environnement de démarrage de l'interpréteur qui peuvent modifier le démarrage d'un serveur MCP stdio avant le premier RPC, même si elles apparaissent dans le bloc `env` d'un serveur. Les clés bloquées incluent `NODE_OPTIONS`, `PYTHONSTARTUP`, `PYTHONPATH`, `PERL5OPT`, `RUBYOPT`, `SHELLOPTS`, `PS4` et d'autres variables de contrôle similaires. Le démarrage rejette celles-ci avec une erreur de configuration afin qu'elles ne puissent pas injecter un prélude implicite, échanger l'interpréteur ou activer un débogueur contre le processus stdio. Les variables d'environnement ordinaires d'identification, de proxy et spécifiques au serveur (`GITHUB_TOKEN`, `HTTP_PROXY`, `*_API_KEY` personnalisés, etc.) ne sont pas affectées.
+OpenClaw rejette les clés d'environnement de démarrage de l'interpréteur qui peuvent modifier le démarrage d'un serveur MCP stdio avant le premier RPC, même si elles apparaissent dans le bloc OpenClawRPC`env` d'un serveur. Les clés bloquées incluent `NODE_OPTIONS`, `NODE_REDIRECT_WARNINGS`, `NODE_REPL_EXTERNAL_MODULE`, `NODE_REPL_HISTORY`, `NODE_V8_COVERAGE`, `PYTHONSTARTUP`, `PYTHONPATH`, `PERL5OPT`, `RUBYOPT`, `SHELLOPTS`, `PS4` et d'autres variables de contrôle d'exécution similaires. Le démarrage rejette celles-ci avec une erreur de configuration afin qu'elles ne puissent pas injecter un prélude implicite, échanger l'interpréteur, activer un débogueur ou rediriger la sortie d'exécution contre le processus stdio. Les variables d'environnement ordinaires pour les identifiants, les proxies et spécifiques au serveur (`GITHUB_TOKEN`, `HTTP_PROXY`, `*_API_KEY` personnalisées, etc.) ne sont pas affectées.
 
-Si votre serveur MCP a réellement besoin de l'une des variables bloquées, définissez-la sur le processus hôte de la passerelle au lieu de sous le `env` du serveur stdio.
+Si votre serveur MCP a réellement besoin de l'une des variables bloquées, définissez-la sur le processus hôte de la passerelle plutôt que sous le `env` du serveur stdio.
 
 </Warning>
 
@@ -432,14 +432,14 @@ Les valeurs sensibles dans `url` (userinfo) et `headers` sont masquées dans les
 
 `streamable-http` est une option de transport supplémentaire à côté de `sse` et `stdio`. Il utilise le flux HTTP pour la communication bidirectionnelle avec les serveurs MCP distants.
 
-| Champ                 | Description                                                                                                |
-| --------------------- | ---------------------------------------------------------------------------------------------------------- |
-| `url`                 | URL HTTP ou HTTPS du serveur distant (requis)                                                              |
-| `transport`           | Définir sur `"streamable-http"` pour sélectionner ce transport ; en cas d'omission, OpenClaw utilise `sse` |
-| `headers`             | Carte clé-valeur facultative d'en-têtes HTTP (par exemple, les jetons d'authentification)                  |
-| `connectionTimeoutMs` | Délai de connexion par serveur en ms (facultatif)                                                          |
+| Champ                 | Description                                                                                                           |
+| --------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| `url`                 | URL HTTP ou HTTPS du serveur distant (requis)                                                                         |
+| `transport`           | Définissez sur `"streamable-http"`OpenClaw pour sélectionner ce transport ; en cas d'omission, OpenClaw utilise `sse` |
+| `headers`             | Carte clé-valeur facultative d'en-têtes HTTP (par exemple, les jetons d'authentification)                             |
+| `connectionTimeoutMs` | Délai de connexion par serveur en ms (facultatif)                                                                     |
 
-La configuration de OpenClaw utilise `transport: "streamable-http"` comme orthographe canonique. Les valeurs MCP natives CLI `type: "http"` sont acceptées lorsqu'elles sont enregistrées via `openclaw mcp set` et réparées par `openclaw doctor --fix` dans la configuration existante, mais `transport` est ce que le Pi intégré consomme directement.
+La configuration d'OpenClaw utilise `transport: "streamable-http"` comme orthographe canonique. Les valeurs MCP natives de la CLI `type: "http"` sont acceptées lorsqu'elles sont enregistrées via `openclaw mcp set` et réparées par `openclaw doctor --fix` dans la configuration existante, mais `transport` est ce que l'OpenClaw intégré consomme directement.
 
 Exemple :
 
@@ -472,9 +472,9 @@ Limites actuelles :
 - aucun protocole de push générique au-delà de l'adaptateur spécifique à Claude
 - pas encore d'outils de modification ou de réaction aux messages
 - le transport HTTP/SSE/streamable-http se connecte à un seul serveur distant ; pas encore d'amont multiplexé
-- `permissions_list_open` n'inclut que les approbations observées pendant que le pont est connecté
+- `permissions_list_open` inclut uniquement les approbations observées alors que le pont est connecté
 
 ## Connexes
 
-- [Référence CLI](/fr/cli)
+- [Référence de la CLI](/fr/cli)
 - [Plugins](/fr/cli/plugins)

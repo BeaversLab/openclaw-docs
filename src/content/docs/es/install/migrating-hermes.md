@@ -29,14 +29,14 @@ OpenClaw importa el estado de Hermes a través de un proveedor de migración inc
 
   </Tab>
   <Tab title="CLI">
-    Usa `openclaw migrate` para ejecuciones programadas o repetibles. Consulta [`openclaw migrate`](/es/cli/migrate) para obtener la referencia completa.
+    Use `openclaw migrate` para ejecuciones con script o repetibles. Consulte [`openclaw migrate`](/es/cli/migrate) para obtener la referencia completa.
 
     ```bash
     openclaw migrate hermes --dry-run    # preview only
     openclaw migrate apply hermes --yes  # apply with confirmation skipped
     ```
 
-    Añade `--from <path>` cuando Hermes se encuentre fuera de `~/.hermes`.
+    Agregue `--from <path>` cuando Hermes se encuentre fuera de `~/.hermes`.
 
   </Tab>
 </Tabs>
@@ -63,8 +63,8 @@ OpenClaw importa el estado de Hermes a través de un proveedor de migración inc
   <Accordion title="Habilidades">
     Las habilidades con un archivo `SKILL.md` bajo `skills/<name>/` se copian, junto con los valores de configuración por habilidad de `skills.config`.
   </Accordion>
-  <Accordion title="Claves de API (opcional)">
-    Establezca `--include-secrets` para importar las claves `.env` admitidas: `OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, `OPENROUTER_API_KEY`, `GOOGLE_API_KEY`, `GEMINI_API_KEY`, `GROQ_API_KEY`, `XAI_API_KEY`, `MISTRAL_API_KEY`, `DEEPSEEK_API_KEY`. Sin el indicador, los secretos nunca se copian.
+  <Accordion title="Credenciales de autenticación">
+    El `openclaw migrate` interactivo pregunta antes de importar las credenciales de autenticación, con sí seleccionado por defecto. Las importaciones aceptadas incluyen las credenciales OAuth compatibles de Hermes `auth.json`, las credenciales OAuth de OpenAI de OpenCode de OpenCode `auth.json`, las entradas de OpenCode y GitHub Copilot de OpenCode `auth.json` y las [claves `.env` compatibles](/es/cli/migrate#supported-env-keys). Use `--include-secrets` para la importación de credenciales `openclaw migrate` no interactiva, `--no-auth-credentials` para omitirla o la incorporación `--import-secrets` al importar desde el asistente de incorporación.
   </Accordion>
 </AccordionGroup>
 
@@ -77,10 +77,9 @@ El proveedor copia estos elementos en el directorio del informe de migración pa
 - `logs/`
 - `cron/`
 - `mcp-tokens/`
-- `auth.json`
 - `state.db`
 
-OpenClaw se niega a ejecutar o confiar en este estado automáticamente porque los formatos y las suposiciones de confianza pueden variar entre sistemas. Mueva lo que necesite manualmente después de revisar el archivo.
+OpenClaw se niega a ejecutar o confiar en este estado automáticamente porque los formatos y las suposiciones de confianza pueden derivar entre sistemas. Mueva manualmente lo que necesite después de revisar el archivo.
 
 ## Flujo recomendado
 
@@ -90,7 +89,7 @@ OpenClaw se niega a ejecutar o confiar en este estado automáticamente porque lo
     openclaw migrate hermes --dry-run
     ```
 
-    El plan lista todo lo que cambiará, incluidos los conflictos, elementos omitidos y cualquier elemento sensible. La salida del plan oculta las claves anidadas que parezcan secretos.
+    El plan enumera todo lo que cambiará, incluidos los conflictos, los elementos omitidos y cualquier elemento sensible. La salida del plan oculta las claves anidadas que parezcan secretos.
 
   </Step>
   <Step title="Aplicar con copia de seguridad">
@@ -98,7 +97,7 @@ OpenClaw se niega a ejecutar o confiar en este estado automáticamente porque lo
     openclaw migrate apply hermes --yes
     ```
 
-    OpenClaw crea y verifica una copia de seguridad antes de aplicar. Si necesitas que se importen las claves de API, añade `--include-secrets`.
+    OpenClaw crea y verifica una copia de seguridad antes de aplicar. Este ejemplo no interactivo importa el estado que no es secreto. Ejecute sin `--yes` para responder al indicador de credenciales, o añada `--include-secrets` para incluir las credenciales compatibles en ejecuciones desatendidas.
 
   </Step>
   <Step title="Ejecutar doctor">
@@ -115,7 +114,7 @@ OpenClaw se niega a ejecutar o confiar en este estado automáticamente porque lo
     openclaw status
     ```
 
-    Confirma que la puerta de enlace está sana y que tu modelo, memoria y habilidades importados están cargados.
+    Confirme que la puerta de enlace está sana y que su modelo, memoria y habilidades importados están cargados.
 
   </Step>
 </Steps>
@@ -124,19 +123,21 @@ OpenClaw se niega a ejecutar o confiar en este estado automáticamente porque lo
 
 Apply se niega a continuar cuando el plan reporta conflictos (un archivo o valor de configuración ya existe en el destino).
 
-<Warning>Vuelve a ejecutar con `--overwrite` solo cuando reemplazar el destino existente sea intencional. Los proveedores aún pueden escribir copias de seguridad a nivel de elemento para los archivos sobrescritos en el directorio de reportes de migración.</Warning>
+<Warning>Vuelva a ejecutar con `--overwrite` solo cuando reemplazar el destino existente sea intencional. Los proveedores aún pueden escribir copias de seguridad a nivel de elemento para los archivos sobrescritos en el directorio de informes de migración.</Warning>
 
 Para una instalación fresca de OpenClaw, los conflictos son inusuales. Típicamente aparecen cuando vuelves a ejecutar la importación en una configuración que ya tiene ediciones de usuario.
 
-Si surge un conflicto a mitad de la aplicación (por ejemplo, una condición inesperada en un archivo de configuración), Hermes marca los elementos de configuración dependientes restantes como `skipped` con la razón `blocked by earlier apply conflict` en lugar de escribirlos parcialmente. El reporte de migración registra cada elemento bloqueado para que puedas resolver el conflicto original y volver a ejecutar la importación.
+Si surge un conflicto durante la aplicación (por ejemplo, una carrera inesperada en un archivo de configuración), Hermes marca los elementos de configuración dependientes restantes como `skipped` con la razón `blocked by earlier apply conflict` en lugar de escribirlos parcialmente. El informe de migración registra cada elemento bloqueado para que puedas resolver el conflicto original y volver a ejecutar la importación.
 
 ## Secretos
 
-Los secretos nunca se importan de manera predeterminada.
+El `openclaw migrate` interactivo pregunta si se deben importar las credenciales de autenticación detectadas, con sí seleccionado de forma predeterminada.
 
-- Ejecuta `openclaw migrate apply hermes --yes` primero para importar el estado que no es secreto.
-- Si también quieres que las claves `.env` compatibles se copien, vuelve a ejecutar con `--include-secrets`.
-- Para las credenciales administradas por SecretRef, configura la fuente de SecretRef después de que la importación se complete.
+- Aceptar la sugerencia importa las credenciales OAuth compatibles desde Hermes `auth.json`, las credenciales OAuth de OpenAI de OpenCode desde OpenCode `auth.json`, las entradas de OpenCode y GitHub Copilot desde OpenCode `auth.json`, y las [claves `.env` compatibles](/es/cli/migrate#supported-env-keys).
+- Use `--no-auth-credentials` o elija no en la sugerencia para importar solo el estado que no sea secreto.
+- Use `--include-secrets` cuando se ejecute desatendido con `--yes`.
+- Use el `--import-secrets` de incorporación al importar credenciales desde el asistente de incorporación.
+- Para las credenciales administradas por SecretRef, configure el origen de SecretRef después de que se complete la importación.
 
 ## Salida JSON para automatización
 
@@ -151,15 +152,17 @@ Con `--json` y sin `--yes`, apply imprime el plan y no muta el estado. Este es e
 
 <AccordionGroup>
   <Accordion title="Apply se niega con conflictos">Inspeccione la salida del plan. Cada conflicto identifica la ruta de origen y el destino existente. Decida por elemento si omitir, editar el destino o volver a ejecutar con `--overwrite`.</Accordion>
-  <Accordion title="Hermes se encuentra fuera de ~/.hermes">Pase `--from /actual/path` (CLI) o `--import-source /actual/path` (incorporación).</Accordion>
-  <Accordion title="La incorporación se niega a importar en una configuración existente">Las importaciones de incorporación requieren una configuración nueva. Restablezca el estado y vuelva a realizar la incorporación, o use `openclaw migrate apply hermes` directamente, que admite `--overwrite` y control explícito de copias de seguridad.</Accordion>
-  <Accordion title="Las claves API no se importaron">Se requiere `--include-secrets` y solo se reconocen las claves enumeradas anteriormente. Otras variables en `.env` se ignoran.</Accordion>
+  <Accordion title="Hermes reside fuera de ~/.hermes">Pase `--from /actual/path` (CLI) o `--import-source /actual/path` (incorporación).</Accordion>
+  <Accordion title="Onboarding se niega a importar en una configuración existente">La importación de Onboarding requiere una configuración nueva. Restablezca el estado y vuelva a realizar el onboarding, o use `openclaw migrate apply hermes` directamente, que admite `--overwrite` y control explícito de copias de seguridad.</Accordion>
+  <Accordion title="Las claves de API no se importaron">
+    `openclaw migrate` interactivo importa las claves de API solo cuando acepta el aviso de credenciales. Las ejecuciones no interactivas de `--yes` requieren `--include-secrets`; las importaciones de onboarding requieren `--import-secrets`. Solo se reconocen las [claves `.env` compatibles](/es/cli/migrate#supported-env-keys); se ignoran otras variables en `.env`.
+  </Accordion>
 </AccordionGroup>
 
 ## Relacionado
 
-- [`openclaw migrate`](/es/cli/migrate): referencia completa de la CLI, contrato de complemento y formas JSON.
-- [Incorporación](/es/cli/onboard): flujo del asistente y marcas no interactivas.
-- [Migración](/es/install/migrating): mover una instalación de OpenClaw entre máquinas.
+- [`openclaw migrate`](/es/cli/migrate): referencia completa de la CLI, contrato del complemento y formas JSON.
+- [Onboarding](/es/cli/onboard): flujo del asistente y marcas no interactivas.
+- [Migrating](/es/install/migrating): mover una instalación de OpenClaw entre máquinas.
 - [Doctor](/es/gateway/doctor): verificación de salud posterior a la migración.
-- [Espacio de trabajo del agente](/es/concepts/agent-workspace): donde residen `SOUL.md`, `AGENTS.md` y los archivos de memoria.
+- [Agent workspace](/es/concepts/agent-workspace): donde residen `SOUL.md`, `AGENTS.md` y los archivos de memoria.

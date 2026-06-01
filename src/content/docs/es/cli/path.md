@@ -193,23 +193,25 @@ la forma del AST específica de cada tipo.
 - Los valores de frontmatter de Markdown y los campos de elementos `- key: value` son hojas de cadena.
   Las inserciones de Markdown añaden secciones, claves de frontmatter o elementos de sección y
   representan una forma canónica de Markdown para el archivo modificado.
-- Las escrituras de hojas JSONC coercen el valor de cadena al tipo de hoja existente
-  (`string`, `number` finito, `true`/`false`, o `null`). Las inserciones de objetos y matrices
-  JSONC analizan `<value>` como JSON y usan la ruta de edición `jsonc-parser` para
-  escrituras de hojas ordinarias, preservando comentarios y formato cercano.
-- Las escrituras de hojas JSONL coercen como JSONC dentro de una línea. El reemplazo de línea completa y
-  la adición analizan `<value>` como JSON. El JSONL renderizado conserva la convención dominante
-  de finales de línea LF/CRLF del archivo.
-- Las escrituras de hojas YAML coercen al tipo escalar existente (`string`, `number` finito,
-  `true`/`false`, o `null`). Las inserciones YAML usan la API de documentos del paquete
-  `yaml` incluido para actualizaciones de mapa/secuencia. Los documentos YAML malformados
+- Las escrituras de hojas JSONC fuerzan el valor de cadena al tipo de hoja existente
+  (`string`, `number` finito, `true`/`false`, o `null`). Use `--value-json`
+  cuando un reemplazo de hoja JSONC/JSON/JSONL deba analizar `<value>` como JSON y
+  pueda cambiar de forma, como reemplazar un atajo de cadena SecretRef con un
+  objeto. Las inserciones de objetos y matrices JSONC analizan `<value>` como JSON y usan la
+  ruta de edición `jsonc-parser` para escrituras de hojas ordinarias, preservando comentarios y
+  formato cercano.
+- Las escrituras de hojas JSONL fuerzan como JSONC dentro de una línea. El reemplazo de línea completa y
+  el anexo analizan `<value>` como JSON. El JSONL renderizado preserva la convención dominante
+  de final de línea LF/CRLF del archivo.
+- Las escrituras de hojas YAML fuerzan al tipo escalar existente (`string`, `number` finito,
+  `true`/`false`, o `null`). Las inserciones YAML usan la API de documentos del paquete incluido
+  `yaml` para actualizaciones de mapas/secuencias. Los documentos YAML malformados
   con errores de análisis se rechazan antes de la mutación con `parse-error`.
 
-Use `--dry-run` antes de las escrituras visibles para el usuario cuando los bytes exactos importan. El
-sustrato conserva una salida idéntica a bytes para las rondas de análisis/emisión, pero una
-mutación puede canonificar la región o el archivo editado dependiendo del tipo.
-Agregue `--diff` cuando desee la vista previa como un parche enfocado antes/después en lugar
-
+Use `--dry-run` antes de las escrituras visibles para el usuario cuando los bytes exactos importen. El
+sustrato preserva una salida idéntica a bytes para viajes de ida y vuelta de análisis/emisión, pero una
+mutación puede canonificar la región editada o el archivo dependiendo del tipo.
+Agregue `--diff` cuando desee la vista previa como un parche antes/después enfocado en lugar
 del archivo renderizado completo.
 
 ## Ejemplos
@@ -242,6 +244,12 @@ Más ejemplos de gramática:
 ```bash
 # Quote keys containing / or .
 openclaw path resolve 'oc://config.jsonc/agents.defaults.models/"anthropic/claude-opus-4-7"/alias'
+
+# Deep JSON/JSONC paths can use slash segments; they normalize to dotted subsegments
+openclaw path set 'oc://openclaw.json/agents/list/0/tools/exec/security' 'allowlist' --dry-run
+
+# Replace a JSONC leaf with a parsed object
+openclaw path set 'oc://openclaw.json/gateway/auth/token' '{"source":"file","provider":"secrets","id":"/test"}' --value-json --dry-run
 
 # Predicate search over JSONC children
 openclaw path find 'oc://config.jsonc/plugins/[enabled=true]/id'
@@ -341,7 +349,7 @@ $ openclaw path set 'oc://config.jsonc/plugins/slack/enabled' 'true' --file conf
 }
 ```
 
-Las ediciones de JSONC pasan a través de `jsonc-parser`, por lo que los comentarios y los espacios en blanco sobreviven a un
+Las ediciones JSONC pasan a través de `jsonc-parser`, por lo que los comentarios y los espacios en blanco sobreviven a un
 `set`. Ejecute primero con `--dry-run` para inspeccionar los bytes antes de confirmar.
 
 ### JSONL
@@ -361,8 +369,8 @@ $ openclaw path resolve 'oc://session.jsonl/L2/ts' --file session.jsonl --human
 leaf @ L2: "2" (number)
 ```
 
-Cada línea es un registro. Direccione por predicado (`[event=action]`) cuando no
-conozca el número de línea, o por el segmento canónico `LN` cuando sí lo conozca.
+Cada línea es un registro. Diríjase por predicado (`[event=action]`) cuando no
+conozca el número de línea, o por el segmento canónico `LN` cuando lo conozca.
 
 ### YAML
 
@@ -390,17 +398,19 @@ steps:
     command: openclaw.invoke
 ```
 
-YAML utiliza la API `Document` del paquete `yaml` en lugar de un analizador personalizado,
-por lo que los ciclos de análisis/emisión ordinarios preservan los comentarios y la forma de autoría, mientras
-que las rutas resueltas utilizan el mismo modelo de clave de mapa / índice de secuencia que JSONC. El mismo
-adaptador maneja archivos `.yaml`, `.yml` y `.lobster`.
+YAML utiliza la API `Document` del paquete `yaml` en lugar de un analizador (parser)
+hecho a mano, por lo que los viajes de ida y vuelta (round-trips) de análisis/emisión ordinarios
+conservan los comentarios y la forma de creación, mientras que las rutas resueltas utilizan el
+mismo modelo de clave de mapa / índice de secuencia que JSONC. El mismo adaptador maneja archivos
+`.yaml`, `.yml` y `.lobster`.
 
 ## Referencia de subcomandos
 
 ### `resolve <oc-path>`
 
-Lee una sola hoja o nodo. Los comodines son rechazados: use `find` para eso.
-Sale con `0` si hay coincidencia, con `1` en una falta limpia, y con `2` en caso de error de análisis o patrón rechazado.
+Leer una sola hoja o nodo. Los comodines son rechazados; use `find` para ellos.
+Sale con `0` si hay coincidencia, con `1` si no hay coincidencia limpia y con
+`2` en caso de error de análisis o patrón rechazado.
 
 ```bash
 openclaw path resolve 'oc://AGENTS.md/tools/gh/risk' --human
@@ -409,10 +419,10 @@ openclaw path resolve 'oc://gateway.jsonc/server/port' --json
 
 ### `find <pattern>`
 
-Enumera cada coincidencia para un patrón de comodín/predicado/unión. Sale con `0`
-si hay al menos una coincidencia y con `1` si es cero. Los comodines de espacio de archivo son rechazados con
-`OC_PATH_FILE_WILDCARD_UNSUPPORTED`: pase un archivo concreto (la expansión de archivos múltiples
-es una función futura).
+Enumerar cada coincidencia para un patrón de comodín / predicado / unión. Sale con `0`
+si hay al menos una coincidencia y con `1` si hay cero. Los comodines de ranura de archivo se
+rechazan con `OC_PATH_FILE_WILDCARD_UNSUPPORTED`; pase un archivo concreto (la búsqueda global
+multi-archivo es una característica futura).
 
 ```bash
 openclaw path find 'oc://AGENTS.md/tools/**/risk'
@@ -422,10 +432,10 @@ openclaw path find 'oc://config.jsonc/plugins/{github,slack}/enabled'
 
 ### `set <oc-path> <value>`
 
-Escribe una hoja. Combine con `--dry-run` para previsualizar los bytes que se
-escribirían sin tocar el archivo. Agregue `--diff` para obtener una vista previa de diff unificada.
-Sale con `0` en una escritura exitosa, con `1` si el sustrato se niega (por ejemplo, si se golpea
-un guardián centinela), y con `2` en errores de análisis.
+Escribir una hoja. Combine con `--dry-run` para obtener una vista previa de los bytes que se
+escribirían sin tocar el archivo. Agregue `--diff` para una vista previa de diff unificada.
+Sale con `0` en una escritura exitosa, con `1` si el sustrato se niega (por ejemplo,
+golpe de guardia centinela), con `2` en errores de análisis.
 
 ```bash
 openclaw path set 'oc://gateway.jsonc/version' '2.0' --dry-run
@@ -435,7 +445,8 @@ openclaw path set 'oc://AGENTS.md/Tools/+gh/risk' 'low'
 ```
 
 El marcador de inserción `+key` crea el hijo con nombre si aún no
-existe; `+nnn` y el `+` simple funcionan para la inserción indexada y anexar respectivamente.
+existe; `+nnn` y el `+` simple funcionan para la inserción indexada
+y de adición respectivamente.
 
 ### `validate <oc-path>`
 
@@ -451,8 +462,8 @@ valid: oc://AGENTS.md/tools/gh
   item:    gh
 ```
 
-Sale con `0` cuando es válido, `1` cuando no es válido (con un `code` estructurado y
-`message`), `2` en errores de argumentos.
+Sale con `0` cuando es válido, con `1` cuando no es válido (con un `code` estructurado y
+`message`), con `2` en errores de argumento.
 
 ### `emit <file>`
 
@@ -468,11 +479,11 @@ openclaw path emit ./gateway.jsonc --json
 
 ## Códigos de salida
 
-| Código | Significado                                                                           |
-| ------ | ------------------------------------------------------------------------------------- |
-| `0`    | Éxito. (`resolve` / `find`: al menos una coincidencia. `set`: escritura exitosa.)     |
-| `1`    | Sin coincidencias, o `set` rechazado por el sustrato (sin error a nivel del sistema). |
-| `2`    | Error de argumento o de análisis.                                                     |
+| Código | Significado                                                                          |
+| ------ | ------------------------------------------------------------------------------------ |
+| `0`    | Éxito. (`resolve` / `find`: al menos una coincidencia. `set`: escritura exitosa.)    |
+| `1`    | Sin coincidencias, o `set` rechazada por el sustrato (sin error a nivel de sistema). |
+| `2`    | Error de argumento o de análisis.                                                    |
 
 ## Modo de salida
 
@@ -483,14 +494,14 @@ detección automática.
 ## Notas
 
 - `set` escribe bytes a través de la ruta de emisión del sustrato, que aplica la
-  protección de centinela de redacción automáticamente. Se rechaza en el momento de la escritura una hoja que contenga
-  `__OPENCLAW_REDACTED__` (literalmente o como subcadena).
-- El análisis de JSONC y las ediciones de hojas usan la dependencia `jsonc-parser`
-  local del complemento, por lo que los comentarios y el formato se conservan en las escrituras de hojas
-  ordinarias en lugar de pasar por una ruta de analizador/renderizado hecho a mano.
+  protección de redacción-sentinela automáticamente. Una hoja que contenga
+  `__OPENCLAW_REDACTED__` (literalmente o como una subcadena) se rechaza en el momento de la escritura.
+- El análisis JSONC y las ediciones de hojas utilizan la dependencia `jsonc-parser`
+  local del complemento, por lo que los comentarios y el formato se conservan en las escrituras
+  de hojas ordinarias en lugar de pasar por una ruta de análisis/re-renderizado personalizado.
 - `path` no conoce LKG. Si el archivo está rastreado por LKG, la siguiente
-  llamada observe decide si promover / recuperar. `set --batch` para
-  un conjunto múltiple atómico a través del ciclo de vida de promoción/recuperación de LKG está planificado
+  llamada de observación decide si promover/recuperar. `set --batch` para
+  un conjunto múltiple atómico a través del ciclo de vida de promoción/recuperación de LKG está planeado
   junto con el sustrato de recuperación de LKG.
 
 ## Relacionado

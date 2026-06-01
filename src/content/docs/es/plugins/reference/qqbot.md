@@ -1,5 +1,5 @@
 ---
-summary: "Añade la superficie del canal QQ Bot para enviar y recibir mensajes de OpenClaw."
+summary: "Complemento de canal OpenClaw QQ Bot para flujos de trabajo de grupo y mensajes directos."
 read_when:
   - You are installing, configuring, or auditing the qqbot plugin
 title: "Complemento QQ Bot"
@@ -7,7 +7,7 @@ title: "Complemento QQ Bot"
 
 # Complemento QQ Bot
 
-Añade la superficie del canal QQ Bot para enviar y recibir mensajes de OpenClaw.
+Complemento de canal OpenClaw QQ Bot para flujos de trabajo de grupo y mensajes directos.
 
 ## Distribución
 

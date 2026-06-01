@@ -14,7 +14,7 @@ OpenClaw 插件的测试工具、模式和 Lint 强制执行的参考。
 
 ## 测试工具
 
-这些测试助手子路径是 OpenClaw 自己的捆绑插件测试的仓库本地源入口点。它们不是第三方插件的包导出。
+这些测试辅助子路径是 OpenClaw 自有捆绑插件测试的仓库本地源入口。它们不是第三方插件的包导出，并且它们可能会导入 Vitest 或其他仅限仓库的测试依赖项。
 
 **插件 API 模拟导入：** API`openclaw/plugin-sdk/plugin-test-api`
 
@@ -40,7 +40,7 @@ OpenClaw 插件的测试工具、模式和 Lint 强制执行的参考。
 
 **Node 内置模拟导入：** `openclaw/plugin-sdk/test-node-mocks`
 
-对于新的插件测试，请优先使用下面特定的子路径。广泛的 `openclaw/plugin-sdk/testing` 桶仅用于旧版兼容性。仓库防护机制拒绝从 `plugin-sdk/testing` 和 `plugin-sdk/test-utils` 进行新的真实导入；这些名称仅保留为兼容性记录测试的已弃用兼容性表面。
+在 OpenClaw 仓库内，对于新的捆绑插件测试，请优先使用以下专注的子路径。宽泛的 `openclaw/plugin-sdk/testing` 桶导出仅用于遗留兼容性。仓库防护机制会拒绝从 `plugin-sdk/testing` 和 `plugin-sdk/test-utils` 进行新的实际导入；这些名称仅作为弃用的兼容性表面，用于兼容性记录测试。
 
 ```typescript
 import { shouldAckReaction, removeAckReactionAfterReply } from "openclaw/plugin-sdk/channel-feedback";

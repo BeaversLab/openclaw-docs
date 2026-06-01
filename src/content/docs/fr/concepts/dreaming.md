@@ -8,7 +8,7 @@ read_when:
   - You want to tune consolidation without polluting MEMORY.md
 ---
 
-Dreaming est le système de consolidation de la mémoire en arrière-plan dans `memory-core`. Il aide OpenClaw à transférer des signaux à court terme forts vers une mémoire durable tout en gardant le processus explicable et révisable.
+Dreaming est le système de consolidation de la mémoire en arrière-plan dans `memory-core`. Il aide OpenClaw à déplacer les signaux à court terme forts vers une mémoire durable tout en gardant le processus explicite et vérifiable.
 
 <Note>Dreaming est **optionnel** et désactivé par défaut.</Note>
 
@@ -17,9 +17,9 @@ Dreaming est le système de consolidation de la mémoire en arrière-plan dans `
 Dreaming conserve deux types de sortie :
 
 - **État de la machine** dans `memory/.dreams/` (magasin de rappel, signaux de phase, points de contrôle d'ingestion, verrous).
-- **Sortie lisible par l'homme** dans `DREAMS.md` (ou le `dreams.md` existant) et fichiers de rapport de phase optionnels sous `memory/dreaming/<phase>/YYYY-MM-DD.md`.
+- **Sortie lisible par l'homme** dans `DREAMS.md` (ou `dreams.md` existant) et fichiers de rapport de phase facultatifs sous `memory/dreaming/<phase>/YYYY-MM-DD.md`.
 
-La promotion à long terme n'écrit toujours que dans `MEMORY.md`.
+La promotion à long terme écrit encore uniquement dans `MEMORY.md`.
 
 ## Modèle de phase
 
@@ -34,31 +34,31 @@ Dreaming utilise trois phases coopératives :
 Ces phases sont des détails d'implémentation internes, et non des « modes » distincts configurés par l'utilisateur.
 
 <AccordionGroup>
-  <Accordion title="Phase légère">
-    La phase légère ingère les signaux de mémoire quotidienne récents et les traces de rappel, les déduplique et met en scène les lignes candidates.
+  <Accordion title="Light phase">
+    La phase légère ingère les signaux de mémoire quotidiens récents et les traces de rappel, les déduplique et met en scène les lignes candidates.
 
-    - Lit à partir de l'état de rappel à court terme, des fichiers de mémoire quotidienne récents et des transcriptions de session expurgées si disponibles.
+    - Lit à partir de l'état de rappel à court terme, des fichiers de mémoire quotidienne récents et des transcriptions de session expurgées si elles sont disponibles.
     - Écrit un bloc `## Light Sleep` géré lorsque le stockage inclut une sortie en ligne.
     - Enregistre les signaux de renforcement pour le classement profond ultérieur.
     - N'écrit jamais dans `MEMORY.md`.
 
   </Accordion>
-  <Accordion title="Phase profonde">
+  <Accordion title="Deep phase">
     La phase profonde décide de ce qui devient une mémoire à long terme.
 
     - Classe les candidats en utilisant un score pondéré et des seuils.
     - Nécessite que `minScore`, `minRecallCount` et `minUniqueQueries` soient réussis.
-    - Réhydrate les extraits des fichiers quotidiens en direct avant l'écriture, afin que les extraits obsolètes/supprimés soient ignorés.
+    - Réhydrate les extraits à partir des fichiers quotidiens actifs avant l'écriture, afin que les extraits périmés/supprimés soient ignorés.
     - Ajoute les entrées promues à `MEMORY.md`.
-    - Écrit un résumé `## Deep Sleep` dans `DREAMS.md` et écrit éventuellement `memory/dreaming/deep/YYYY-MM-DD.md`.
+    - Écrit un résumé `## Deep Sleep` dans `DREAMS.md` et écrit facultativement `memory/dreaming/deep/YYYY-MM-DD.md`.
 
   </Accordion>
-  <Accordion title="Phase REM">
+  <Accordion title="REM phase">
     La phase REM extrait des modèles et des signaux réflexifs.
 
     - Construit des résumés de thèmes et de réflexions à partir des traces à court terme récentes.
     - Écrit un bloc `## REM Sleep` géré lorsque le stockage inclut une sortie en ligne.
-    - Enregistre les signaux de renforcement REM utilisés par le classement approfondi.
+    - Enregistre les signaux de renforcement REM utilisés par le classement profond.
     - N'écrit jamais dans `MEMORY.md`.
 
   </Accordion>
@@ -70,18 +70,18 @@ Le rêve peut ingérer des transcripts de session expurgés dans le corpus de r�
 
 ## Journal de rêve
 
-Dreaming tient également un **Dream Diary** narratif dans `DREAMS.md`. Une fois que chaque phase dispose de suffisamment de matière, `memory-core` lance au mieux un tour de sous-agent en arrière-plan et ajoute une courte entrée de journal. Il utilise le modèle d'exécution par défaut, sauf si `dreaming.model` est configuré. Si le modèle configuré n'est pas disponible, le Dream Diary réessaie une fois avec le modèle par défaut de la session.
+Le dreaming tient également un **journal de rêve** narratif dans `DREAMS.md`. Une fois que chaque phase dispose de suffisamment de matière, `memory-core` lance au mieux un tour de sous-agent en arrière-plan et ajoute une courte entrée de journal. Il utilise le modèle d'exécution par défaut, sauf si `dreaming.model` est configuré. Si le modèle configuré n'est pas disponible, le journal de rêve réessaie une fois avec le modèle par défaut de la session.
 
-<Note>Ce journal est destiné à la lecture humaine dans l'interface utilisateur des rêves, et non comme source de promotion. Les artefacts de journal/rapport générés par le rêve sont exclus de la promotion à court terme. Seuls les extraits de mémoire fondés sont éligibles pour être promus dans `MEMORY.md`.</Note>
+<Note>Ce journal est destiné à être lu par des humains dans l'interface Dreams, et non comme source de promotion. Les artefacts de journal/rapport générés par le dreaming sont exclus de la promotion à court terme. Seuls les extraits de mémoire ancrés (grounded) sont éligibles pour être promus dans `MEMORY.md`.</Note>
 
 Il existe également une voie de remplissage historique fondée pour le travail de révision et de récupération :
 
 <AccordionGroup>
-  <Accordion title="Commandes de rétrochargement">
+  <Accordion title="Commandes de remplissage (Backfill)">
     - `memory rem-harness --path ... --grounded` prévisualise la sortie du journal ancrée à partir des notes historiques `YYYY-MM-DD.md`.
     - `memory rem-backfill --path ...` écrit des entrées de journal ancrées réversibles dans `DREAMS.md`.
     - `memory rem-backfill --path ... --stage-short-term` met en scène des candidats durables ancrés dans le même magasin de preuves à court terme que la phase profonde normale utilise déjà.
-    - `memory rem-backfill --rollback` et `--rollback-short-term` suppriment ces artefacts de rétrochargement mis en scène sans toucher aux entrées de journal ordinaires ni au rappel à court terme en direct.
+    - `memory rem-backfill --rollback` et `--rollback-short-term` suppriment ces artefacts de remplissage mis en scène sans toucher aux entrées de journal ordinaires ni au rappel à court terme en direct.
 
   </Accordion>
 </AccordionGroup>
@@ -101,19 +101,22 @@ Le classement profond utilise six signaux de base pondérés plus le renforcemen
 | Consolidation          | 0.10  | Force de récurrence multi-jours                               |
 | Richesse conceptuelle  | 0.06  | Densité de balises conceptuelles à partir de l'extrait/chemin |
 
-Les résultats des phases légères et REM ajoutent un petit boost dégradé par la récence à partir de `memory/.dreams/phase-signals.json`.
+Les correspondances (hits) des phases Light et REM ajoutent un petit boost déclinant en fonction de la récence à partir de `memory/.dreams/phase-signals.json`.
 
 ## Couverture du rapport d'essai parallèle QA
 
 QA Lab comprend un scénario de rapport uniquement pour explorer comment un futur essai parallèle de rêve pourrait examiner une mémoire candidate avant sa promotion. Le scénario demande à un agent de comparer une réponse de base avec une réponse pouvant utiliser la mémoire candidate, puis de rédiger un rapport local avec un verdict, une raison et des indicateurs de risque.
 
-Cette couverture est volontairement limitée à la QA. Elle vérifie que l'artefact de rapport reste séparé de `MEMORY.md` et que l'agent ne prétend pas que la candidate a été promue. Elle n'ajoute pas de comportement d'essai parallèle en production ni ne modifie le moteur de promotion de phase profonde.
+Cette couverture est volontairement limitée à la QA. Elle vérifie que l'artefact de rapport
+reste séparé de `MEMORY.md` et que l'agent ne prétend pas que le candidat
+a été promu. Elle n'ajoute pas de comportement de production d'essai fantôme (shadow-trial) ni ne modifie le
+moteur de promotion de phase profonde.
 
 ## Planification
 
-Lorsqu'il est activé, `memory-core` gère automatiquement une tâche cron pour un balayage complet de rêve. Chaque balayage exécute les phases dans l'ordre : light → REM → deep.
+Lorsqu'il est activé, `memory-core` gère automatiquement une tâche cron pour un balayage complet de dreaming. Chaque balayage exécute les phases dans l'ordre : light → REM → deep.
 
-Le balayage comprend l'espace de travail d'exécution principal et tous les espaces de travail d'agents configurés, dédupliqués par chemin, afin que l'éclatement de l'espace de travail des sous-agents n'exclue pas le `DREAMS.md` et l'état de la mémoire de l'agent principal.
+Le balayage inclut l'espace de travail d'exécution principal et tous les espaces de travail d'agents configurés, dédupliqués par chemin, afin que l'éventail (fan-out) des espaces de travail des sous-agents n'exclue pas le `DREAMS.md` et l'état de la mémoire de l'agent principal.
 
 Comportement de cadence par défaut :
 
@@ -175,7 +178,7 @@ Comportement de cadence par défaut :
 ## Workflow CLI
 
 <Tabs>
-  <Tab title="Aperçu / Application de la promotion">
+  <Tab title="Promotion preview / apply">
     ```bash
     openclaw memory promote
     openclaw memory promote --apply
@@ -183,7 +186,7 @@ Comportement de cadence par défaut :
     openclaw memory status --deep
     ```
 
-    Le `memory promote` manuel utilise les seuils de phase profonde par défaut, sauf s'ils sont remplacés par des indicateurs CLI.
+    Le `memory promote` manuel utilise par défaut les seuils de phase profonde, sauf s'ils sont remplacés par des drapeaux CLI.
 
   </Tab>
   <Tab title="Expliquer la promotion">
@@ -217,14 +220,15 @@ Tous les paramètres se trouvent sous `plugins.entries.memory-core.config.dreami
   Cadence Cron pour le balayage complet de rêve.
 </ParamField>
 <ParamField path="model" type="string">
-  Remplacement facultatif du model de sous-agent Dream Diary. Utilisez une valeur `provider/model` canonique lors de la définition d'une liste autorisée (allowlist) de sous-agent `allowedModels`.
+  Remplacement facultatif du modèle du sous-agent Dream Diary. Utilisez une valeur `provider/model` canonique lors de la définition d'une liste d'autorisation de sous-agent `allowedModels`.
+</ParamField>
+<ParamField path="phases.deep.maxPromotedSnippetTokens" type="number" default="160">
+  Nombre maximum estimé de jetons conservés de chaque extrait de rappel à court terme promu dans `MEMORY.md`. La provenance du classement reste visible.
 </ParamField>
 
-<Warning>
-  `dreaming.model` nécessite `plugins.entries.memory-core.subagent.allowModelOverride: true`. Pour le restreindre, définissez également `plugins.entries.memory-core.subagent.allowedModels`. Les échecs de confiance ou de liste autorisée restent visibles au lieu de revenir silencieusement à une valeur par défaut ; la nouvelle tentative ne couvre que les erreurs de model indisponible.
-</Warning>
+<Warning>`dreaming.model` nécessite `plugins.entries.memory-core.subagent.allowModelOverride: true`. Pour le restreindre, définissez également `plugins.entries.memory-core.subagent.allowedModels`. Les échecs de confiance ou de liste d'autorisation restent visibles au lieu de revenir silencieusement ; la nouvelle tentative couvre uniquement les erreurs de modèle indisponible.</Warning>
 
-<Note>La stratégie de phase, les seuils et le comportement de stockage sont des détails de mise en œuvre internes (pas une configuration utilisateur). Consultez [Référence de configuration de la mémoire](/fr/reference/memory-config#dreaming) pour la liste complète des clés.</Note>
+<Note>La plupart des politiques de phase, des seuils et des comportements de stockage sont des détails d'implémentation internes. Consultez [Référence de configuration de la mémoire](/fr/reference/memory-config#dreaming) pour la liste complète des clés.</Note>
 
 ## Interface utilisateur des rêves
 
@@ -244,6 +248,6 @@ Si `openclaw memory status` signale `Dreaming status: blocked`, la cron gérée 
 ## Connexes
 
 - [Mémoire](/fr/concepts/memory)
-- [CLI Memory](/fr/cli/memory)
+- [Mémoire CLI](/fr/cli/memory)
 - [Référence de configuration de la mémoire](/fr/reference/memory-config)
-- [Recherche dans la mémoire](/fr/concepts/memory-search)
+- [Recherche de mémoire](/fr/concepts/memory-search)

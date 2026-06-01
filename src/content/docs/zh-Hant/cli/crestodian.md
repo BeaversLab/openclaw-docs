@@ -136,8 +136,8 @@ setup workspace ~/Projects/work model openai/gpt-5.5
 
 - 現有的明確模型（如果已配置）
 - `OPENAI_API_KEY` -> `openai/gpt-5.5`
-- `ANTHROPIC_API_KEY` -> `anthropic/claude-opus-4-7`
-- Claude Code CLI -> `claude-cli/claude-opus-4-7`
+- `ANTHROPIC_API_KEY` -> `anthropic/claude-opus-4-8`
+- Claude Code CLI -> `claude-cli/claude-opus-4-8`
 - Codex -> `openai/gpt-5.5` 透過 Codex app-server harness
 
 如果都無法使用，安裝程式仍會寫入預設工作區並保持模型未設定。請安裝或登入 Codex/Claude Code，或暴露 `OPENAI_API_KEY`/`ANTHROPIC_API_KEY`，然後再次執行安裝程式。
@@ -146,7 +146,7 @@ setup workspace ~/Projects/work model openai/gpt-5.5
 
 Crestodian 始終以確定性模式啟動。對於確定性解析器無法理解的模糊指令，本機 Crestodian 可以透過 OpenClaw 的正常執行路徑進行一次有限的規劃器運轉。它首先使用已設定的 OpenClaw 模型。如果尚未有可用的已設定模型，它可以回退到機器上已存在的本機執行環境：
 
-- Claude Code CLI：`claude-cli/claude-opus-4-7`
+- Claude Code CLI：`claude-cli/claude-opus-4-8`
 - Codex app-server harness：`openai/gpt-5.5`
 
 模型輔助規劃器無法直接修改配置。它必須將請求轉換為 Crestodian 的類型化指令之一，然後適用正常的審批和稽核規則。Crestodian 在執行任何操作之前會列印它使用的模型和解釋後的指令。無配置後備規劃器的輪次是臨時的，在執行時支援的情況下會停用工具，並使用臨時工作區/工作階段。

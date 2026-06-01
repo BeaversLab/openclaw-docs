@@ -57,8 +57,8 @@ pnpm openclaw onboard --mode local
 驗證狀態目錄下已安裝的套件：
 
 ```bash
-find "$OPENCLAW_STATE_DIR/npm/node_modules" -maxdepth 3 -name package.json -print
-grep -R '"@openclaw/codex"' "$OPENCLAW_STATE_DIR/npm/package-lock.json"
+find "$OPENCLAW_STATE_DIR/npm/projects" -path '*/node_modules/@openclaw/codex/package.json' -print
+grep -R '"@openclaw/codex"' "$OPENCLAW_STATE_DIR/npm/projects"/*/package-lock.json
 ```
 
 針對即時供應商 E2E，請在啟動測試指令之前，從受信任的 shell 或 CI secret 引入真實的 API 金鑰。不要列印金鑰；僅回報來源以及金鑰是否存在。

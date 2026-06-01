@@ -1,5 +1,5 @@
 ---
-summary: "Arnés del servidor de aplicaciones de Codex y catálogo de modelos GPT administrados por Codex."
+summary: "OpenClaw Codex arnés de servidor de aplicaciones y complemento de proveedor de modelos con un catálogo GPT gestionado por Codex."
 read_when:
   - You are installing, configuring, or auditing the codex plugin
 title: "Complemento Codex"
@@ -7,7 +7,7 @@ title: "Complemento Codex"
 
 # Complemento Codex
 
-Arnés del servidor de aplicaciones de Codex y catálogo de modelos GPT administrados por Codex.
+OpenClaw Codex arnés de servidor de aplicaciones y complemento de proveedor de modelos con un catálogo GPT gestionado por Codex.
 
 ## Distribución
 

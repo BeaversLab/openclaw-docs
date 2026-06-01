@@ -915,7 +915,7 @@ export GEMINI_API_KEY=...
     introMessage: "Say exactly: I'm here.",
     providers: {
       google: {
-        voice: "Kore",
+        speakerVoice: "Kore",
       },
     },
   },
@@ -932,7 +932,7 @@ export GEMINI_API_KEY=...
       providers: {
         elevenlabs: {
           modelId: "eleven_v3",
-          voiceId: "pMsXgVXv3BLzUgSXRplE",
+          speakerVoiceId: "pMsXgVXv3BLzUgSXRplE",
         },
       },
     },
@@ -960,11 +960,11 @@ export GEMINI_API_KEY=...
 ```
 
 持續的 Meet 語音來自
-`messages.tts.providers.elevenlabs.voiceId`。當啟用 TTS 模型
+`messages.tts.providers.elevenlabs.speakerVoiceId`。當啟用 TTS 模型
 覆寫時，Agent 回覆也可以使用
-每次回覆的 `[[tts:voiceId=... model=eleven_v3]]` 指令，但對於會議而言，組態是確定性預設值。
+每次回覆的 `[[tts:speakerVoiceId=... model=eleven_v3]]` 指令，但配置是會議的確定性預設值。
 加入時，日誌應顯示 `transcriptionProvider=elevenlabs`，且每個
-口語回覆應記錄 `provider=elevenlabs model=eleven_v3 voice=<voiceId>`。
+口語回覆應記錄 `provider=elevenlabs model=eleven_v3 speakerVoiceId=<voiceId>`。
 
 僅限 Twilio 的組態：
 

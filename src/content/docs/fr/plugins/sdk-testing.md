@@ -14,7 +14,7 @@ Référence pour les utilitaires de test, les modèles et l'application des règ
 
 ## Utilitaires de test
 
-Ces sous-chemins d'aide aux tests sont des points d'entrée source locaux au dépôt pour les propres tests de plugins intégrés d'OpenClaw. Ils ne sont pas des exportations de package pour les plugins tiers.
+Ces sous-chemins d'aide aux tests sont des points d'entrée source locaux au dépôt pour les propres tests de plugin fournis par OpenClaw. Ils ne sont pas des exportations de package pour les plugins tiers, et ils peuvent importer Vitest ou d'autres dépendances de test exclusives au dépôt.
 
 **Import du simulacre d'API de plugin :** API`openclaw/plugin-sdk/plugin-test-api`
 
@@ -40,8 +40,7 @@ Ces sous-chemins d'aide aux tests sont des points d'entrée source locaux au dé
 
 **Import du simulacle intégré Node :** `openclaw/plugin-sdk/test-node-mocks`
 
-Privilégiez les sous-chemins ciblés ci-dessous pour les nouveaux tests de plugins. Le module général `openclaw/plugin-sdk/testing` n'est qu'une compatibilité héritée.
-Les garde-fous du dépôt rejettent les nouveaux imports réels de `plugin-sdk/testing` et `plugin-sdk/test-utils` ; ces noms ne demeurent que comme surfaces de compatibilité dépréciées pour les tests d'enregistrement de compatibilité.
+Dans le dépôt OpenClaw, privilégiez les sous-chemins ciblés ci-dessous pour les nouveaux tests de plugin fournis. Le "barrel" `openclaw/plugin-sdk/testing` large n'est conservé que pour la compatibilité héritée. Les gardes du dépôt rejettent les nouvelles importations réelles de `plugin-sdk/testing` et `plugin-sdk/test-utils` ; ces noms ne demeurent qu'en tant que surfaces de compatibilité dépréciées pour les tests de compatibilité-record.
 
 ```typescript
 import { shouldAckReaction, removeAckReactionAfterReply } from "openclaw/plugin-sdk/channel-feedback";

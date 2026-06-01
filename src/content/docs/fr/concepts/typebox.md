@@ -50,8 +50,8 @@ L'inventaire de **découverte** publié de manière faisant autorité réside da
 
 ## Où résident les schémas
 
-- Source : `src/gateway/protocol/schema.ts`
-- Validateurs d'exécution (AJV) : `src/gateway/protocol/index.ts`
+- Source : `packages/gateway-protocol/src/schema.ts`
+- Validateurs d'exécution (AJV) : `packages/gateway-protocol/src/index.ts`
 - Registre de fonctionnalités/découverte publié : `src/gateway/server-methods-list.ts`
 - Handshake serveur + répartition des méthodes : `src/gateway/server.impl.ts`
 - Client Node : `src/gateway/client.ts`
@@ -192,7 +192,7 @@ Exemple : ajouter une nouvelle requête `system.echo` qui renvoie `{ ok: true, t
 
 1. **Schéma (source de vérité)**
 
-Ajouter à `src/gateway/protocol/schema.ts` :
+Ajouter à `packages/gateway-protocol/src/schema.ts` :
 
 ```ts
 export const SystemEchoParamsSchema = Type.Object({ text: NonEmptyString }, { additionalProperties: false });
@@ -214,7 +214,7 @@ export type SystemEchoResult = Static<typeof SystemEchoResultSchema>;
 
 2. **Validation**
 
-Dans `src/gateway/protocol/index.ts`, exporter un validateur AJV :
+Dans `packages/gateway-protocol/src/index.ts`, exporter un validateur AJV :
 
 ```ts
 export const validateSystemEchoParams = ajv.compile<SystemEchoParams>(SystemEchoParamsSchema);
@@ -262,7 +262,7 @@ Les types de trames inconnus sont conservés sous forme de charges utiles brutes
 
 ## Versionnage + compatibilité
 
-- `PROTOCOL_VERSION` se trouve dans `src/gateway/protocol/version.ts`.
+- `PROTOCOL_VERSION` se trouve dans `packages/gateway-protocol/src/version.ts`.
 - Les clients envoient `minProtocol` + `maxProtocol` ; le serveur rejette les plages qui
   n'incluent pas leur protocole actuel.
 - Les modèles Swift conservent les types de trames inconnus pour éviter de casser les anciens clients.

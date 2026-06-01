@@ -132,7 +132,7 @@ OpenRouter 也可以通过其与 OpenAI 兼容的 OpenRouterOpenAI`/audio/speech
       providers: {
         openrouter: {
           model: "hexgrad/kokoro-82m",
-          voice: "af_alloy",
+          speakerVoice: "af_alloy",
           responseFormat: "mp3",
         },
       },

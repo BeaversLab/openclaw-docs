@@ -24,9 +24,8 @@ Codex 应用服务器拥有由应用支持的 MCP 执行。
   源安装的 `openai-curated` 插件。
 - 目标 Codex 应用服务器必须能够看到预期的市场、插件和应用清单。
 
-`codexPlugins` 对 PI 运行、普通 OpenAI 提供商运行、ACP
-会话绑定或其他 harness 无效，因为这些路径不会创建
-具有原生 `apps` 配置的 Codex 应用服务器线程。
+`codexPlugins`OpenClawOpenAI 对 OpenClaw 运行、普通 OpenAI 提供商运行、ACP
+对话绑定或其他线束没有影响，因为这些路径不会创建具有原生 `apps` 配置的 Codex 应用服务器线程。
 
 ## 快速入门
 

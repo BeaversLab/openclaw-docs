@@ -55,7 +55,7 @@ La misma superficie de compatibilidad también incluye:
 - `POST /v1/embeddings`
 - `POST /v1/chat/completions`
 
-Para la explicación canónica de cómo los modelos objetivo del agente, `openclaw/default`, el paso a través de incrustaciones y las anulaciones del modelo backend se ajustan, consulte [OpenAI Chat Completions](/es/gateway/openai-http-api#agent-first-model-contract) y [Model list and agent routing](/es/gateway/openai-http-api#model-list-and-agent-routing).
+Para la explicación canónica de cómo encajan los modelos objetivo de agente, `openclaw/default`, el paso a través de embeddings y las anulaciones del modelo de backend, consulte [OpenAI Chat Completions](/es/gateway/openai-http-api#agent-first-model-contract) y [Lista de modelos y enrutamiento de agentes](/es/gateway/openai-http-api#model-list-and-agent-routing).
 
 ## Comportamiento de la sesión
 
@@ -173,9 +173,9 @@ Comportamiento actual:
   convierten en imágenes rasterizadas y se pasan al modelo, y el bloque de archivo inyectado utiliza
   el marcador de posición `[PDF content rendered to images]`.
 
-El análisis de PDF lo proporciona el complemento incluido `document-extract`, que utiliza la
-versión heredada `pdfjs-dist` compatible con Node (sin worker). La versión moderna de PDF.js
-espera workers del navegador/globales DOM, por lo que no se utiliza en Gateway.
+El análisis de PDF es proporcionado por el complemento `document-extract` incluido, que utiliza
+`clawpdf` y su tiempo de ejecución WebAssembly de PDFium empaquetado para la extracción de texto y
+el renderizado de páginas.
 
 Valores predeterminados de obtención de URL:
 
@@ -245,13 +245,13 @@ Valores predeterminados cuando se omiten:
 - `images.maxBytes`: 10MB
 - `images.maxRedirects`: 3
 - `images.timeoutMs`: 10s
-- Las fuentes `input_image` HEIC/HEIF se aceptan y normalizan a JPEG antes de la entrega al proveedor.
+- Se aceptan fuentes `input_image` HEIC/HEIF cuando hay un convertidor del sistema disponible y se normalizan a JPEG antes de la entrega al proveedor. Los convertidores compatibles son macOS `sips`, ImageMagick, GraphicsMagick o ffmpeg.
 
 Nota de seguridad:
 
 - Las listas de permitidos de URL se aplican antes de la obtención y en los saltos de redirección.
 - Permitir un nombre de host no evita el bloqueo de IP privada/interna.
-- Para gateways expuestos a internet, aplique controles de salida de red además de las protecciones a nivel de aplicación.
+- Para gateways expuestos a Internet, aplique controles de salida de red además de las protecciones a nivel de aplicación.
   Consulte [Seguridad](/es/gateway/security).
 
 ## Transmisión (SSE)
@@ -260,7 +260,7 @@ Establezca `stream: true` para recibir eventos enviados por el servidor (SSE):
 
 - `Content-Type: text/event-stream`
 - Cada línea de evento es `event: <type>` y `data: <json>`
-- La transmisión termina con `data: [DONE]`
+- La secuencia termina con `data: [DONE]`
 
 Tipos de eventos emitidos actualmente:
 
@@ -277,9 +277,9 @@ Tipos de eventos emitidos actualmente:
 
 ## Uso
 
-`usage` se completa cuando el proveedor subyacente informa los recuentos de tokens.
-OpenClaw normaliza los alias comunes de estilo OpenAI antes de que esos contadores lleguen a
-las superficies de estado/sesión descendentes, incluyendo `input_tokens` / `output_tokens`
+`usage` se rellena cuando el proveedor subyacente informa los recuentos de tokens.
+OpenClaw normaliza los alias comunes de estilo OpenAI antes de que esos contadores alcancen
+las superficies de estado/sesión posteriores, incluyendo `input_tokens` / `output_tokens`
 y `prompt_tokens` / `completion_tokens`.
 
 ## Errores
@@ -327,5 +327,5 @@ curl -N http://127.0.0.1:18789/v1/responses \
 
 ## Relacionado
 
-- [Finalizaciones de chat de OpenAI](/es/gateway/openai-http-api)
+- [Completaciones de chat de OpenAI](/es/gateway/openai-http-api)
 - [OpenAI](/es/providers/openai)

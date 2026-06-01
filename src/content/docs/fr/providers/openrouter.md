@@ -131,7 +131,7 @@ OpenRouter peut également être utilisé comme fournisseur TTS via son point de
       providers: {
         openrouter: {
           model: "hexgrad/kokoro-82m",
-          voice: "af_alloy",
+          speakerVoice: "af_alloy",
           responseFormat: "mp3",
         },
       },

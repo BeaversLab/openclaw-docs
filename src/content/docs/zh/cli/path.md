@@ -150,22 +150,23 @@ oc://FILE/SECTION/ITEM/FIELD?session=SCOPE
 `set` 写入一个具体目标：
 
 - Markdown frontmatter 值和 `- key: value` 项目字段是字符串叶节点。Markdown 插入会追加部分、frontmatter 键或部分项目，并为更改后的文件呈现规范的 markdown 形状。
-- JSONC 叶节点写入会将字符串值强制转换为现有叶节点类型
-  (`string`、有限 `number`、`true`/`false` 或 `null`)。JSONC 对象和数组
-  插入会将 `<value>` 解析为 JSON，并使用 `jsonc-parser` 编辑路径进行
-  普通叶节点写入，同时保留注释和附近的格式。
+- JSONC 叶节点写入会将字符串值强制转换为现有的叶节点类型
+  (`string`、有限的 `number`、`true`/`false` 或 `null`)。当 JSONC/JSON/JSONL
+  叶节点替换应将 `<value>` 解析为 JSON 并可能更改结构时（例如用对象替换字符串
+  SecretRef 简写），请使用 `--value-json`。JSONC 对象和数组插入会将 `<value>`
+  解析为 JSON，并对普通叶节点写入使用 `jsonc-parser` 编辑路径，同时保留注释和
+  附近的格式。
 - JSONL 叶节点写入会在行内像 JSONC 一样进行强制转换。整行替换和
-  追加会将 `<value>` 解析为 JSON。呈现的 JSONL 会保留文件主要的
+  追加会将 `<value>` 解析为 JSON。呈现的 JSONL 会保留文件的主导
   LF/CRLF 行尾约定。
-- YAML 叶节点写入会强制转换为现有的标量类型 (`string`、有限
+- YAML 叶节点写入会强制转换为现有的标量类型 (`string`、有限的
   `number`、`true`/`false` 或 `null`)。YAML 插入使用捆绑的
-  `yaml`API 包的文档 API 进行映射/序列更新。在变异之前，格式错误的 YAML
-  文档（带有解析器错误）将被 `parse-error` 拒绝。
+  `yaml`API 包的文档 API 进行映射/序列更新。带有解析错误的格式错误的 YAML
+  文档会在使用 `parse-error` 进行变更之前被拒绝。
 
-当精确字节至关重要时，请在用户可见的写入之前使用 `--dry-run`。虽然
-substrate 在解析/发射往返中保持字节相同的输出，但根据类型，
-变异可能会规范化编辑区域或整个文件。
-当您希望预览为集中的前后差异补丁而不是
+当精确的字节至关重要时，请在用户可见的写入之前使用 `--dry-run`。底层
+保留了解析/发出往返的字节相同输出，但根据类型的不同，变更可能会规范化
+编辑的区域或文件。当您希望预览作为聚焦的前后补丁而不是
 完整的呈现文件时，请添加 `--diff`。
 
 ## 示例
@@ -198,6 +199,12 @@ openclaw path emit ./AGENTS.md
 ```bash
 # Quote keys containing / or .
 openclaw path resolve 'oc://config.jsonc/agents.defaults.models/"anthropic/claude-opus-4-7"/alias'
+
+# Deep JSON/JSONC paths can use slash segments; they normalize to dotted subsegments
+openclaw path set 'oc://openclaw.json/agents/list/0/tools/exec/security' 'allowlist' --dry-run
+
+# Replace a JSONC leaf with a parsed object
+openclaw path set 'oc://openclaw.json/gateway/auth/token' '{"source":"file","provider":"secrets","id":"/test"}' --value-json --dry-run
 
 # Predicate search over JSONC children
 openclaw path find 'oc://config.jsonc/plugins/[enabled=true]/id'
@@ -268,8 +275,8 @@ $ openclaw path find 'oc://x.md/tools/*' --file frontmatter.md --human
 ```
 
 `[frontmatter]` 谓词用于寻址 YAML frontmatter 块；`tools`
-通过 slug 匹配 `## Tools` 标题，并且项目叶节点会保持其 slug 形式，
-即使源文件使用下划线 (`send_email` → `send-email`)。
+通过 slug 匹配 `## Tools` 标题，并且项目叶节点即使源使用下划线也会保持其 slug 格式
+(`send_email` → `send-email`)。
 
 ### JSONC
 
@@ -297,7 +304,7 @@ $ openclaw path set 'oc://config.jsonc/plugins/slack/enabled' 'true' --file conf
 }
 ```
 
-JSONC 编辑通过 `jsonc-parser` 进行，因此注释和空白字符可以在 `set` 中保留下来。在提交之前，请先运行 `--dry-run` 以检查字节内容。
+JSONC 编辑通过 `jsonc-parser` 进行，因此注释和空白字符在 `set` 中得以保留。请先运行 `--dry-run` 以在提交之前检查字节内容。
 
 ### JSONL
 
@@ -316,7 +323,7 @@ $ openclaw path resolve 'oc://session.jsonl/L2/ts' --file session.jsonl --human
 leaf @ L2: "2" (number)
 ```
 
-每一行是一条记录。当您不知道行号时，使用谓词 (`[event=action]`) 寻址；如果知道，则使用规范的 `LN` 段进行寻址。
+每一行都是一个记录。如果您不知道行号，请使用谓词（`[event=action]`）进行寻址；如果知道，则使用规范的 `LN` 段进行寻址。
 
 ### YAML
 
@@ -344,13 +351,13 @@ steps:
     command: openclaw.invoke
 ```
 
-YAML 使用 `yaml` 包的 `Document` API 而不是手工编写的解析器，因此普通的解析/输出往返会保留注释和编写形状，而解析后的路径使用与 JSONC 相同的 map-key / sequence-index 模型。同一个适配器处理 `.yaml`、`.yml` 和 `.lobster` 文件。
+YAML 使用 `yaml` 包的 `Document`API API 而不是手工编写的解析器，因此普通的解析/生成往返会保留注释和编写时的形状，而解析后的路径使用与 JSONC 相同的映射键/序列索引模型。同一个适配器处理 `.yaml`、`.yml` 和 `.lobster` 文件。
 
 ## 子命令参考
 
 ### `resolve <oc-path>`
 
-读取单个叶子节点或节点。不接受通配符 — 请为此使用 `find`。匹配时退出 `0`，干净未匹配时退出 `1`，解析错误或拒绝模式时退出 `2`。
+读取单个叶或节点。通配符将被拒绝 — 对此请使用 `find`。匹配时退出 `0`，干净地未匹配时退出 `1`，解析错误或拒绝的模式时退出 `2`。
 
 ```bash
 openclaw path resolve 'oc://AGENTS.md/tools/gh/risk' --human
@@ -359,7 +366,7 @@ openclaw path resolve 'oc://gateway.jsonc/server/port' --json
 
 ### `find <pattern>`
 
-枚举通配符 / 谓词 / 联合模式的每个匹配项。如果至少有一个匹配项则退出 `0`，如果没有匹配项则退出 `1`。文件槽位通配符会被拒绝并显示 `OC_PATH_FILE_WILDCARD_UNSUPPORTED` — 请传递一个具体的文件（多文件全局匹配是后续功能）。
+枚举通配符/谓词/联合模式的每个匹配项。如果至少有一个匹配项则退出 `0`，零个匹配项则退出 `1`。文件槽通配符会被拒绝并返回 `OC_PATH_FILE_WILDCARD_UNSUPPORTED` — 请传递一个具体的文件（多文件全局匹配是后续功能）。
 
 ```bash
 openclaw path find 'oc://AGENTS.md/tools/**/risk'
@@ -369,7 +376,7 @@ openclaw path find 'oc://config.jsonc/plugins/{github,slack}/enabled'
 
 ### `set <oc-path> <value>`
 
-写入一个叶子节点。配合 `--dry-run` 使用，以在不接触文件的情况下预览将要写入的字节。添加 `--diff` 以获取统一差异预览。写入成功时退出 `0`，如果底层拒绝（例如，触及哨兵保护）则退出 `1`，解析错误时退出 `2`。
+写入一个叶。与 `--dry-run` 配合使用，可以在不接触文件的情况下预览将要写入的字节。添加 `--diff` 以获得统一差异预览。成功写入时退出 `0`，如果底层拒绝（例如，命中哨兵守卫）则退出 `1`，解析错误时退出 `2`。
 
 ```bash
 openclaw path set 'oc://gateway.jsonc/version' '2.0' --dry-run
@@ -378,7 +385,7 @@ openclaw path set 'oc://gateway.jsonc/version' '2.0'
 openclaw path set 'oc://AGENTS.md/Tools/+gh/risk' 'low'
 ```
 
-`+key` 插入标记会在指定的子项不存在时创建它；`+nnn` 和单独的 `+` 分别适用于索引插入和追加插入。
+`+key` 插入标记会在命名子项不存在时创建它；`+nnn` 和单独的 `+` 分别用于索引插入和追加插入。
 
 ### `validate <oc-path>`
 
@@ -392,7 +399,8 @@ valid: oc://AGENTS.md/tools/gh
   item:    gh
 ```
 
-有效时退出 `0`，无效时退出 `1`（附带结构化的 `code` 和 `message`），参数错误时退出 `2`。
+有效时返回 `0`，无效时返回 `1`（包含结构化的 `code` 和
+`message`），参数错误时返回 `2`。
 
 ### `emit <file>`
 
@@ -405,21 +413,22 @@ openclaw path emit ./gateway.jsonc --json
 
 ## 退出代码
 
-| 代码 | 含义                                                              |
-| ---- | ----------------------------------------------------------------- |
-| `0`  | 成功。（`resolve` / `find`：至少有一个匹配项。`set`：写入成功。） |
-| `1`  | 无匹配项，或 `set` 被基底拒绝（无系统级错误）。                   |
-| `2`  | 参数或解析错误。                                                  |
+| 代码 | 含义                                                            |
+| ---- | --------------------------------------------------------------- |
+| `0`  | 成功。（`resolve` / `find`：至少有一个匹配。`set`：写入成功。） |
+| `1`  | 无匹配，或 `set` 被底层拒绝（无系统级错误）。                   |
+| `2`  | 参数或解析错误。                                                |
 
 ## 输出模式
 
-`openclaw path` 支持 TTY 感知：在终端上输出人类可读的内容，当 stdout 被管道传输或重定向时输出 JSON。`--json` 和 `--human` 会覆盖自动检测。
+`openclaw path` 可感知 TTY：在终端上输出人类可读格式，当标准输出被管道或重定向时输出 JSON。`--json` 和 `--human` 可覆盖自动检测。
 
 ## 注意
 
-- `set` 通过基底的发射路径写入字节，该路径会自动应用编辑哨兵保护。包含 `__OPENCLAW_REDACTED__`（逐字或作为子字符串）的叶子节点会在写入时被拒绝。
-- JSONC 解析和叶子编辑使用插件本地的 `jsonc-parser` 依赖项，因此在常规叶子写入时会保留注释和格式，而不是通过手动解析的解析器/重新渲染路径。
-- `path` 不知道 LKG 的存在。如果文件受 LKG 跟踪，下一次 observe 调用将决定是提升还是恢复。计划通过 LKG 提升/恢复生命周期进行原子性多重设置的 `set --batch` 将与 LKG 恢复基底一起推出。
+- `set` 通过底层的发出路径写入字节，这会自动应用编辑哨兵保护。包含 `__OPENCLAW_REDACTED__`（逐字或作为子字符串）的叶子在写入时将被拒绝。
+- JSONC 解析和叶子编辑使用插件本地的 `jsonc-parser`
+  依赖，因此注释和格式会在普通的叶子写入中被保留，而不是通过手写的解析器/重新渲染路径。
+- `path` 不知道 LKG。如果文件被 LKG 跟踪，下一次 observe 调用决定是提升还是恢复。`set --batch` 用于通过 LKG 提升/恢复生命周期进行原子多集设置的计划与 LKG 恢复底层一同进行。
 
 ## 相关
 

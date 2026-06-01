@@ -187,16 +187,18 @@ Matrix：
 
 預覽串流也可以包含 **工具進度 (tool-progress)** 更新——例如「搜尋網路」、「讀取檔案」或「呼叫工具」等短狀態行——這些會在工具執行時、最終回覆之前，顯示在同一則預覽訊息中。在 Codex app-server 模式下，Codex 的前言/註解訊息也使用這條相同的預覽路徑，因此短暫的「我正在檢查...」進度說明可以串流進入可編輯的草稿，而不會成為最終答案的一部分。這讓多步驟的工具輪次在視覺上保持生動，而不會在第一個思考預覽與最終答案之間顯得沈寂。
 
-支援的平台：
+長時間執行的工具可能會在返回之前發出類型化進度。例如，`web_fetch` 在啟動時會設定一個五秒計時器：如果提取仍在進行中，預覽可以顯示 `Fetching page content...`；如果提取在該時間之前完成或被取消，則不會發出進度行。稍後的最終工具結果仍會正常傳遞給模型。
 
-- 當預覽串流啟用時，**Discord**、**Slack**、**Telegram** 和 **Matrix** 預設會將工具進度和 Codex 前言更新串流進即時預覽編輯中。Microsoft Teams 則在個人對話中使用其原生的進度串流。
-- Telegram 自 `v2026.4.22` 起已預設啟用工具進度預覽更新；保持啟用可維持該發布版本的行為。
-- **Mattermost** 已將工具活動折疊至其單一草稿預覽貼文中（見上文）。
-- 工具進度編輯遵循作用中的預覽串流模式；當預覽串流為 `off` 或當區塊串流已接管訊息時，這些編輯會被跳過。在 Telegram 上，`streaming.mode: "off"` 為僅最終版本：一般的進度閒談也會被抑制，而不會作為獨立的狀態訊息傳送，而批准提示、媒體酬載和錯誤仍會正常路由。
-- 若要保留預覽串流但隱藏工具進度行，請將該頻道的 `streaming.preview.toolProgress` 設定為 `false`。若要保留工具進度行可見但隱藏 command/exec 文字，請將 `streaming.preview.commandText` 設定為 `"status"` 或將 `streaming.progress.commandText` 設定為 `"status"`；預設值為 `"raw"` 以維持發布版本的行為。此政策由使用 OpenClaw 緊湊進度渲染器的草稿/進度頻道共用，包括 Discord、Matrix、Microsoft Teams、Mattermost、Slack 草稿預覽和 Telegram。若要完全停用預覽編輯，請將 `streaming.mode` 設定為 `off`。
-- Telegram 選取的引用回覆是一個例外：當 `replyToMode` 不是 `"off"` 且存在選取的引用文字時，OpenClaw 會跳過該輪次的答案預覽串流，因此無法渲染工具進度預覽行。沒有選取引用文字的當前訊息回覆仍會保留預覽串流。詳情請參閱 [Telegram 頻道文件](/zh-Hant/channels/telegram)。
+支援的介面：
 
-保持進度行可見但隱藏原始 command/exec 文字：
+- **Discord**、**Slack**、**Telegram** 和 **Matrix** 在啟用預覽串流時，預設會將工具進度和 Codex 前言更新串流到即時預覽編輯中。Microsoft Teams 在個人聊天中使用其原生的進度串流。
+- Telegram 自 `v2026.4.22` 起發佈時已啟用工具進度預覽更新；保持啟用可保留該已發布的行為。
+- **Mattermost** 已經將工具活動合併到其單一草稿預覽貼文中（見上文）。
+- 工具進度編輯遵循活動的預覽串流模式；當預覽串流為 `off` 或區塊串流已接管訊息時，它們會被跳過。在 Telegram 上，`streaming.mode: "off"` 為僅限最終結果：一般進度閒談也會被抑制，而不是作為獨立狀態訊息傳遞，而核准提示、媒體負載和錯誤仍會正常路由。
+- 要保留預覽串流但隱藏工具進度行，請將該頻道的 `streaming.preview.toolProgress` 設定為 `false`。要保留工具進度行可見同時隱藏 command/exec 文字，請將 `streaming.preview.commandText` 設定為 `"status"` 或將 `streaming.progress.commandText` 設定為 `"status"`；預設值為 `"raw"` 以保留已發布的行為。此策略由使用 OpenClaw 緊湊進度渲染器的草稿/進度頻道共用，包括 Discord、Matrix、Microsoft Teams、Mattermost、Slack 草稿預覽和 Telegram。要完全停用預覽編輯，請將 `streaming.mode` 設定為 `off`。
+- Telegram 選取的引用回覆是個例外：當 `replyToMode` 不是 `"off"` 且存在選取的引用文字時，OpenClaw 會跳過該輪次的答案預覽串流，因此工具進度預覽行無法呈現。沒有選取引用文字的當前訊息回覆仍然會保留預覽串流。詳見 [Telegram 頻道文件](/zh-Hant/channels/telegram)。
+
+保持進度行可見，但隱藏原始指令/執行文字：
 
 ```json
 {
@@ -214,7 +216,7 @@ Matrix：
 }
 ```
 
-在另一個緊湊進度頻道金鑰下使用相同的結構，例如 `channels.discord`、`channels.matrix`、`channels.msteams`、`channels.mattermost` 或 Slack 草稿預覽。對於 progress-draft 模式，請將相同的政策放在 `streaming.progress` 下：
+在另一個精簡進度頻道金鑰下使用相同的結構，例如 `channels.discord`、`channels.matrix`、`channels.msteams`、`channels.mattermost` 或 Slack 草稿預覽。對於 progress-draft 模式，請將相同的政策置於 `streaming.progress` 下：
 
 ```json
 {
@@ -234,8 +236,8 @@ Matrix：
 
 ## 相關
 
-- [訊息生命週期重構](/zh-Hant/concepts/message-lifecycle-refactor) - 目標共用預覽、編輯、串流和最終化設計
-- [進度草稿](/zh-Hant/concepts/progress-drafts) - 在長回合期間更新的可見進行中訊息
+- [訊息生命週期重構](/zh-Hant/concepts/message-lifecycle-refactor) - 目標的共享預覽、編輯、串流和最終確認設計
+- [進度草稿](/zh-Hant/concepts/progress-drafts) - 在長時間輪次中更新的可見進行中訊息
 - [訊息](/zh-Hant/concepts/messages) - 訊息生命週期與傳遞
 - [重試](/zh-Hant/concepts/retry) - 傳遞失敗時的重試行為
-- [頻道](/zh-Hant/channels) - 針對每個頻道的串流支援
+- [頻道](/zh-Hant/channels) - 各頻道的串流支援

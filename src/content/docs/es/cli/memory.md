@@ -58,7 +58,7 @@ openclaw memory index --agent main --verbose
 - `--fix`: reparar bloqueos de recuperación obsoletos y normalizar los metadatos de promoción.
 - `--json`: imprimir salida JSON.
 
-Si `memory status` muestra `Dreaming status: blocked`, el cron de soñando administrado está habilitado pero el latido que lo impulsa no se está ejecutando para el agente predeterminado. Consulte [Dreaming never runs](/es/concepts/dreaming#dreaming-never-runs-status-shows-blocked) para conocer las dos causas comunes.
+Si `memory status` muestra `Dreaming status: blocked`, el cron de soñado gestionado está habilitado pero el latido que lo impulsa no se está ejecutando para el agente predeterminado. Consulte [Dreaming never runs](/es/concepts/dreaming#dreaming-never-runs-status-shows-blocked) para conocer las dos causas comunes.
 
 `memory index`:
 
@@ -168,14 +168,14 @@ Notas:
 - `memory status` incluye cualquier ruta adicional configurada a través de `memorySearch.extraPaths`.
 - Si los campos de clave de API remota de memoria activa efectiva están configurados como SecretRefs, el comando resuelve esos valores desde la instantánea de la puerta de enlace activa. Si la puerta de enlace no está disponible, el comando falla rápidamente.
 - Nota de desviación de versión de gateway: esta ruta de comando requiere un gateway que soporte `secrets.resolve`; los gateways antiguos devuelven un error de método desconocido.
-- Ajustar la cadencia de barrido programada con `dreaming.frequency`. La política de promoción profunda es, por lo demás, interna; usa las banderas de CLI en `memory promote` cuando necesites anulaciones manuales puntuales.
-- `memory rem-harness --path <file-or-dir> --grounded` previsualiza `What Happened`, `Reflections` y `Possible Lasting Updates` basados a partir de notas diarias históricas sin escribir nada.
-- `memory rem-backfill --path <file-or-dir>` escribe entradas de diario basadas reversibles en `DREAMS.md` para su revisión en la interfaz de usuario.
-- `memory rem-backfill --path <file-or-dir> --stage-short-term` también siembra candidatos duraderos basados en el almacén de promoción a corto plazo en vivo para que la fase profunda normal pueda clasificarlos.
-- `memory rem-backfill --rollback` elimina las entradas de diario basadas escritas previamente, y `memory rem-backfill --rollback-short-term` elimina los candidatos a corto plazo basados preparados previamente.
+- Ajuste la cadencia de barrida programada con `dreaming.frequency`. La política de promoción profunda es, por lo demás, interna, excepto por `dreaming.phases.deep.maxPromotedSnippetTokens`, que limita la longitud del fragmento promocionado manteniendo visible la procedencia. Use las banderas de CLI en `memory promote` cuando necesite anulaciones manuales únicas de umbral.
+- `memory rem-harness --path <file-or-dir> --grounded` previsualiza `What Happened`, `Reflections` y `Possible Lasting Updates` fundamentados de notas diarias históricas sin escribir nada.
+- `memory rem-backfill --path <file-or-dir>` escribe entradas de diario fundamentadas reversibles en `DREAMS.md` para su revisión en la interfaz de usuario.
+- `memory rem-backfill --path <file-or-dir> --stage-short-term` también siembra candidatos duraderos fundamentados en el almacén de promoción a corto plazo en vivo para que la fase profunda normal pueda clasificarlos.
+- `memory rem-backfill --rollback` elimina las entradas de diario fundamentadas escritas previamente, y `memory rem-backfill --rollback-short-term` elimina los candidatos a corto plazo fundamentados preparados previamente.
 - Consulte [Dreaming](/es/concepts/dreaming) para obtener descripciones completas de las fases y la referencia de configuración.
 
 ## Relacionado
 
 - [Referencia de CLI](/es/cli)
-- [Resumen de memoria](/es/concepts/memory)
+- [Descripción general de Memory](/es/concepts/memory)

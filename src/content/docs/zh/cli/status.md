@@ -21,7 +21,7 @@ openclaw status --usage
 - 纯 `openclaw status` 保持在快速只读路径上，并在跳过内存检查时将内存标记为 `not checked` 而不是不可用。繁重的安全审计、插件兼容性和内存向量探测留给 `openclaw status --all`、`openclaw status --deep`、`openclaw security audit` 和 `openclaw memory status --deep`。
 - `status --json --all` 报告由 `plugins.slots.memory` 选择的活动的内存插件运行时的内存详细信息。自定义内存插件可以禁用内置的 `agents.defaults.memorySearch.enabled` 并仍然报告它们自己的文件、块、向量和 FTS 状态。
 - `--usage` 将标准化的提供商使用窗口打印为 `X% left`。
-- 会话状态输出将 `Execution:` 与 `Runtime:` 分开显示。`Execution` 是沙箱路径（`direct`、`docker/*`），而 `Runtime` 会告知会话是否正在使用 `OpenClaw Pi Default`、`OpenAI Codex`CLI、CLI 后端，或 ACP 后端（例如 `codex (acp/acpx)`）。有关提供商/模型/运行时的区别，请参阅 [Agent runtimes](/zh/concepts/agent-runtimes)。
+- 会话状态输出将 `Execution:` 与 `Runtime:` 分开。`Execution` 是沙箱路径（`direct`、`docker/*`），而 `Runtime` 则告诉你该会话是使用 `OpenClaw Default`、`OpenAI Codex`CLI、CLI 后端，还是诸如 `codex (acp/acpx)` 之类的 ACP 后端。有关提供商/模型/运行时之间的区别，请参阅 [Agent runtimes](/zh/concepts/agent-runtimes)。
 - MiniMax 的原始 MiniMax`usage_percent` / `usagePercent`OpenClaw 字段是剩余配额，因此 OpenClaw 在显示之前将它们反转；当存在基于计数的字段时，它们优先。`model_remains` 响应优先选择聊天模型条目，在需要时从时间戳推导窗口标签，并在计划标签中包含模型名称。
 - 当当前会话快照稀疏时，`/status` 可以从最近的记录使用日志回填令牌和缓存计数器。现有的非零实时值仍然优先于记录回退值。
 - `/status`Gateway(网关) 包括简化的 Gateway(网关) 进程运行时间和主机系统运行时间。

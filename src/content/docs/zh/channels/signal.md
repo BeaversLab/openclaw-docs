@@ -100,7 +100,7 @@ title: "SignalSignal"
 }
 ```
 
-多账号支持：使用 `channels.signal.accounts` 配置针对每个账号的设置和可选的 `name`。有关共享模式，请参阅 [`gateway/configuration`](/zh/gateway/config-channels#multi-account-all-channels)。
+多账号支持：使用带有每账号配置的 `channels.signal.accounts` 和可选的 `name`。有关共享模式，请参阅 [`gateway/configuration`](/zh/gateway/config-channels#multi-account-all-channels)。
 
 ## 设置路径 B：注册专用机器人号码（短信，Linux）
 
@@ -182,7 +182,7 @@ openclaw channels status --probe
 
 ## 容器模式 (bbernhard/signal-cli-rest-api)
 
-除了本地运行 `signal-cli`，您还可以使用 [bbernhard/signal-cli-rest-api](https://github.com/bbernhard/signal-cli-rest-api) Docker 容器。它将 `signal-cli` 封装在 REST API 和 WebSocket 接口之后。
+除了原生运行 `signal-cli`，您还可以使用 [bbernhard/signal-cli-rest-api](https://github.com/bbernhard/signal-cli-rest-api) Docker 容器。它将 `signal-cli` 封装在 REST API 和 WebSocket 接口之后。
 
 要求：
 
@@ -304,16 +304,31 @@ message action=react channel=signal target=signal:group:<groupId> targetAuthor=u
   - `minimal`/`extensive` 启用代理回应并设置指导级别。
 - 按账户覆盖：`channels.signal.accounts.<id>.actions.reactions`，`channels.signal.accounts.<id>.reactionLevel`。
 
-## 传递目标 (CLI/cron)
+## 审批反应
 
-- 私信：`signal:+15551234567`（或纯 E.164）。
+Signal 执行和插件审批提示使用顶级的 `approvals.exec` 和
+`approvals.plugin` 路由块。Signal 没有
+`channels.signal.execApprovals` 块。
+
+- `👍` 批准一次。
+- `👎` 拒绝。
+- 当请求提供持久审批时，请使用 `/approve <id> allow-always`。
+
+审批反应解析需要来自
+`channels.signal.allowFrom`、`channels.signal.defaultTo` 或匹配的账号级别字段的明确 Signal 审批人。
+直接的同频执行审批提示仍可在没有明确审批人的情况下抑制重复的本地 `/approve` 回退；
+无审批人的群组审批则保持本地回退可见。
+
+## 投递目标 (CLI/cron)
+
+- 私信：`signal:+15551234567`（或纯 E.164 号码）。
 - UUID 私信：`uuid:<id>`（或裸 UUID）。
 - 群组：`signal:group:<groupId>`。
-- 用户名：`username:<name>`（如果您的 Signal 账户支持）。
+- 用户名：`username:<name>`（如果您的 Signal 账号支持）。
 
-## 故障排除
+## 故障排查
 
-首先运行此步骤：
+首先运行此阶梯检查：
 
 ```bash
 openclaw status
@@ -323,7 +338,7 @@ openclaw doctor
 openclaw channels status --probe
 ```
 
-如有需要，然后确认私信配对状态：
+然后如有需要，确认私信配对状态：
 
 ```bash
 openclaw pairing list signal
@@ -331,11 +346,11 @@ openclaw pairing list signal
 
 常见故障：
 
-- 守护进程可达但无回复：验证账户/守护进程设置（`httpUrl`、`account`）和接收模式。
-- 私信被忽略：发送者正在等待配对批准。
-- 群组消息被忽略：群组发送者/提及门控阻止了投递。
-- 编辑后出现配置验证错误：运行 `openclaw doctor --fix`。
-- 诊断中缺少 Signal：确认 `channels.signal.enabled: true`。
+- 守护进程可达但无回复：请验证账号/守护进程设置（`httpUrl`、`account`）和接收模式。
+- 私信被忽略：发送人待配对审批。
+- 群组消息被忽略：群组发送人/提及拦截阻止了投递。
+- 编辑后出现配置验证错误：请运行 `openclaw doctor --fix`。
+- 诊断中缺少 Signal：请确认 `channels.signal.enabled: true`。
 
 额外检查：
 
@@ -345,47 +360,47 @@ pgrep -af signal-cli
 grep -i "signal" "/tmp/openclaw/openclaw-$(date +%Y-%m-%d).log" | tail -20
 ```
 
-用于排查流程：[/channels/故障排除](/zh/channels/troubleshooting)。
+排查流程：[/channels/故障排除](/zh/channels/troubleshooting)。
 
 ## 安全说明
 
-- `signal-cli` 在本地存储账户密钥（通常为 `~/.local/share/signal-cli/data/`）。
-- 在服务器迁移或重建之前，备份 Signal 账户状态。
-- 请保留 `channels.signal.dmPolicy: "pairing"`，除非您明确希望更广泛的私信访问权限。
-- SMS 验证仅在注册或恢复流程时需要，但失去对号码/账户的控制可能会使重新注册变得复杂。
+- `signal-cli` 在本地存储账户密钥（通常是 `~/.local/share/signal-cli/data/`）。
+- 在服务器迁移或重建之前，请备份 Signal 账户状态。
+- 除非您明确希望获得更广泛的 访问权限，否则请保留 `channels.signal.dmPolicy: "pairing"`。
+- 短信验证仅在注册或恢复流程时需要，但失去对号码/账户的控制可能会使重新注册变得复杂。
 
-## 配置参考 (Signal)
+## 配置参考（Signal）
 
 完整配置：[Configuration](/zh/gateway/configuration)
 
 Provider 选项：
 
-- `channels.signal.enabled`：启用/禁用渠道启动。
+- `channels.signal.enabled`：启用/禁用 启动。
 - `channels.signal.apiMode`：`auto | native | container`（默认：auto）。参见 [Container mode](#container-mode-bbernhardsignal-cli-rest-api)。
 - `channels.signal.account`：机器人账户的 E.164 号码。
 - `channels.signal.cliPath`：`signal-cli` 的路径。
 - `channels.signal.configPath`：可选的 `signal-cli --config` 目录。
-- `channels.signal.httpUrl`：完整的守护进程 URL（覆盖主机/端口）。
-- `channels.signal.httpHost`，`channels.signal.httpPort`：守护进程绑定地址（默认 127.0.0.1:8080）。
-- `channels.signal.autoStart`：自动生成守护进程（如果未设置 `httpUrl`，则默认为 true）。
-- `channels.signal.startupTimeoutMs`：启动等待超时时间，以毫秒为单位（上限 120000）。
+- `channels.signal.httpUrl`：完整的守护程序 URL（覆盖 host/port）。
+- `channels.signal.httpHost`，`channels.signal.httpPort`：守护程序绑定地址（默认 127.0.0.1:8080）。
+- `channels.signal.autoStart`：自动生成守护程序（如果未设置 `httpUrl`，默认为 true）。
+- `channels.signal.startupTimeoutMs`：启动等待超时（毫秒，上限 120000）。
 - `channels.signal.receiveMode`：`on-start | manual`。
 - `channels.signal.ignoreAttachments`：跳过附件下载。
-- `channels.signal.ignoreStories`：忽略来自守护进程的动态（Stories）。
+- `channels.signal.ignoreStories`：忽略来自守护程序的动态（Stories）。
 - `channels.signal.sendReadReceipts`：转发已读回执。
 - `channels.signal.dmPolicy`：`pairing | allowlist | open | disabled`（默认：pairing）。
-- `channels.signal.allowFrom`：私信白名单（E.164 或 `uuid:<id>`）。`open` 需要 `"*"`。Signal 没有用户名；请使用电话号码/UUID ID。
+- `channels.signal.allowFrom`：私信允许列表（E.164 或 `uuid:<id>`）。`open` 需要 `"*"`Signal。Signal 没有用户名；请使用手机号/UUID ID。
 - `channels.signal.groupPolicy`：`open | allowlist | disabled`（默认：allowlist）。
-- `channels.signal.groupAllowFrom`：群组白名单；接受 Signal 群组 ID（原始格式、`group:<id>` 或 `signal:group:<id>`）、发送者 E.164 号码或 `uuid:<id>` 值。
-- `channels.signal.groups`：按 Signal 群组 ID（或 `"*"`）键入的群组覆盖项。支持字段：`requireMention`、`tools`、`toolsBySender`。
-- `channels.signal.accounts.<id>.groups`：用于多账户设置的 `channels.signal.groups` 的按账户版本。
+- `channels.signal.groupAllowFrom`Signal：群组允许列表；接受 Signal 群组 ID（原始值、`group:<id>` 或 `signal:group:<id>`）、发送者 E.164 号码或 `uuid:<id>` 值。
+- `channels.signal.groups`Signal：按 Signal 群组 ID（或 `"*"`）键入的群组覆盖设置。支持的字段：`requireMention`、`tools`、`toolsBySender`。
+- `channels.signal.accounts.<id>.groups`：多帐户设置中 `channels.signal.groups` 的按帐户版本。
 - `channels.signal.historyLimit`：作为上下文包含的最大群组消息数（0 表示禁用）。
-- `channels.signal.dmHistoryLimit`：私信历史记录限制，以用户轮次为单位。按用户覆盖：`channels.signal.dms["<phone_or_uuid>"].historyLimit`。
-- `channels.signal.textChunkLimit`：出站分块大小（字符）。
-- `channels.signal.chunkMode`：`length`（默认）或 `newline`，以便在按长度分块之前按空行（段落边界）拆分。
-- `channels.signal.mediaMaxMb`：入站/出站媒体上限（MB）。
+- `channels.signal.dmHistoryLimit`：私信历史记录限制（以用户轮次为单位）。按用户覆盖：`channels.signal.dms["<phone_or_uuid>"].historyLimit`。
+- `channels.signal.textChunkLimit`：出站块大小（字符）。
+- `channels.signal.chunkMode`：`length`（默认）或 `newline`，以便在按长度分块之前按空行（段落边界）分割。
+- `channels.signal.mediaMaxMb`：入站/出站媒体限制（MB）。
 
-相关全局选项：
+相关的全局选项：
 
 - `agents.list[].groupChat.mentionPatterns`Signal（Signal 不支持原生提及）。
 - `messages.groupChat.mentionPatterns`（全局回退）。
@@ -393,8 +408,8 @@ Provider 选项：
 
 ## 相关
 
-- [频道概览](/zh/channels) — 所有支持的频道
-- [配对](/zh/channels/pairing) — 私信认证和配对流程
-- [群组](/zh/channels/groups) — 群聊行为和提及限制
-- [频道路由](/zh/channels/channel-routing) — 消息的会话路由
-- [安全性](/zh/gateway/security) — 访问模型和加固
+- [Channels Overview](/zh/channels) — 所有支持的渠道
+- [Pairing](/zh/channels/pairing) — 私信认证和配对流程
+- [Groups](/zh/channels/groups) — 群聊行为和提及控制
+- [Channel Routing](/zh/channels/channel-routing) — 消息的会话路由
+- [Security](/zh/gateway/security) — 访问模型和加固

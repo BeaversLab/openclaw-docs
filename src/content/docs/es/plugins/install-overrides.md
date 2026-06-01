@@ -68,8 +68,8 @@ pnpm openclaw onboard --mode local
 Verifique el paquete instalado en el directorio de estado:
 
 ```bash
-find "$OPENCLAW_STATE_DIR/npm/node_modules" -maxdepth 3 -name package.json -print
-grep -R '"@openclaw/codex"' "$OPENCLAW_STATE_DIR/npm/package-lock.json"
+find "$OPENCLAW_STATE_DIR/npm/projects" -path '*/node_modules/@openclaw/codex/package.json' -print
+grep -R '"@openclaw/codex"' "$OPENCLAW_STATE_DIR/npm/projects"/*/package-lock.json
 ```
 
 Para E2E de proveedores en vivo, obtenga la clave API real de un shell de confianza o secreto de CI antes de lanzar el comando de prueba. No imprima claves; reporte solo la fuente y si la clave estaba presente.

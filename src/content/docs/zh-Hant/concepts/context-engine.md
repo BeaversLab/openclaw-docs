@@ -225,34 +225,40 @@ info: {
     "agent-run": {
       requiredCapabilities: ["assemble-before-prompt"],
       unsupportedMessage:
-        "Use the native Codex or Pi embedded runtime, or select the legacy context engine.",
+        "Use the native Codex or OpenClaw embedded runtime, or select the legacy context engine.",
     },
   },
 }
 ```
 
-原生 Codex 和 Pi 內嵌代理執行滿足 `assemble-before-prompt`。
-通用 CLI 後端則不滿足，因此需要它的引擎會在 CLI 程序啟動前被拒絕。
+原生 Codex 和 OpenClaw 內嵌代理運行滿足 `assemble-before-prompt`。
+通用 CLI 後端則不滿足，因此需要在 CLI 程序啟動前拒絕需要該能力的引擎。
+
+### 故障隔離
+
+OpenClaw 將選定的插件引擎與核心回覆路徑隔離開來。如果非舊版引擎缺失、未通過合約驗證、在工廠創建期間拋出異常，或在生命週期方法中拋出異常，OpenClaw 將在當前 Gateway 進程中隔離該引擎，並將上下文引擎的工作降級到內建的 `legacy` 引擎。錯誤會隨著失敗的操作一起記錄下來，以便操作員修復、更新或禁用插件，而不會導致代理靜默無響應。
+
+主機需求失敗的情況則有所不同：當引擎聲明運行時缺乏所需能力時，OpenClaw 會在開始運行之前以關閉失敗的方式處理。這可以保護那些在不支援的主機上運行會破壞狀態的引擎。
 
 ### ownsCompaction
 
-`ownsCompaction` 控制是否在執行期間保持啟用 Pi 內建的自動壓縮：
+`ownsCompaction` 控制是否在運行期間保持啟用 OpenClaw 運行時內建的嘗試中自動壓縮：
 
 <AccordionGroup>
-  <Accordion title="ownsCompaction: true">引擎擁有壓縮行為。OpenClaw 會針對該次執行停用 Pi 的內建自動壓縮，而引擎的 `compact()` 實作需負責 `/compact`、溢出恢復壓縮，以及其想要在 `afterTurn()` 中執行的任何主動壓縮。OpenClaw 可能仍會執行提示前溢出保護措施；當它預測完整紀錄將會溢出時，恢復路徑會在提交另一個提示之前呼叫目前啟用引擎的 `compact()`。</Accordion>
-  <Accordion title="ownsCompaction: false or unset">Pi 的內建自動壓縮仍可能在提示執行期間運作，但目前啟用引擎的 `compact()` 方法仍會被呼叫以進行 `/compact` 和溢出恢復。</Accordion>
+  <Accordion title="ownsCompaction: true">該引擎擁有壓縮行為。OpenClaw 會針對該運行禁用 OpenClaw 運行時內建的自動壓縮，並且該引擎的 `compact()` 實現負責 `/compact`、溢出恢復壓縮以及它想要在 `afterTurn()` 中執行的任何主動壓縮。OpenClaw 可能仍會運行提示前溢出保護措施；當它預測完整的對話記錄將溢出時，恢復路徑會在提交另一個提示之前調用活動引擎的 `compact()`。</Accordion>
+  <Accordion title="ownsCompaction: false or unset">OpenClaw 運行時內建的自動壓縮仍可能在提示執行期間運行，但仍會調用活動引擎的 `compact()` 方法進行 `/compact` 和溢出恢復。</Accordion>
 </AccordionGroup>
 
-<Warning>`ownsCompaction: false` **並不**代表 OpenClaw 會自動回退到傳統引擎的壓縮路徑。</Warning>
+<Warning>`ownsCompaction: false` **並不**意味著 OpenClaw 會自動回退到舊版引擎的壓縮路徑。</Warning>
 
-這意味著有兩種有效的外掛模式：
+這意味著有兩種有效的外掛程式模式：
 
 <Tabs>
-  <Tab title="Owning mode">實作您自己的壓縮演算法並設定 `ownsCompaction: true`。</Tab>
-  <Tab title="Delegating mode">設定 `ownsCompaction: false` 並讓 `compact()` 從 `openclaw/plugin-sdk/core` 呼叫 `delegateCompactionToRuntime(...)`，以使用 OpenClaw 的內建壓縮行為。</Tab>
+  <Tab title="擁有模式">實作您自己的壓縮演算法並設定 `ownsCompaction: true`。</Tab>
+  <Tab title="委派模式">設定 `ownsCompaction: false` 並讓 `compact()` 從 `openclaw/plugin-sdk/core` 呼叫 `delegateCompactionToRuntime(...)` 以使用 OpenClaw 的內建壓縮行為。</Tab>
 </Tabs>
 
-對於啟用的非擁有模式引擎來說，空操作的 `compact()` 是不安全的，因為它會停用該引擎位置正常的 `/compact` 和溢出恢復壓縮路徑。
+對於主動的非擁有引擎，無操作（no-op）`compact()` 是不安全的，因為它會停用該引擎插槽的正常 `/compact` 和溢位復原壓縮路徑。
 
 ## 設定參考
 
@@ -268,32 +274,32 @@ info: {
 }
 ```
 
-<Note>該插槽在執行時期是獨佔的 - 對於給定的執行或壓縮操作，只會解析一個已註冊的內容引擎。其他已啟用的 `kind: "context-engine"` 外掛程式仍然可以載入並執行其註冊程式碼；`plugins.slots.contextEngine` 僅選擇當 OpenClaw 需要內容引擎時要解析哪個已註冊的引擎 ID。</Note>
+<Note>此插槽在執行時期是獨佔的 - 對於給定的執行或壓縮操作，只會解析一個已註冊的上下文引擎。其他已啟用的 `kind: "context-engine"` 外掛程式仍然可以載入並執行其註冊程式碼；`plugins.slots.contextEngine` 僅選擇當 OpenClaw 需要上下文引擎時解析哪個已註冊的引擎 ID。</Note>
 
-<Note>**外掛程式解除安裝：** 當您解除安裝目前選為 `plugins.slots.contextEngine` 的外掛程式時，OpenClaw 會將該插槽重設回預設值（`legacy`）。相同的重設行為也適用於 `plugins.slots.memory`。無需手動編輯設定。</Note>
+<Note>**外掛程式解除安裝：** 當您解除安裝目前選取為 `plugins.slots.contextEngine` 的外掛程式時，OpenClaw 會將該插槽重設回預設值（`legacy`）。相同的重設行為也適用於 `plugins.slots.memory`。無需手動編輯設定。</Note>
 
 ## 與壓縮和記憶體的關係
 
 <AccordionGroup>
-  <Accordion title="壓縮">壓縮是內容引擎的職責之一。舊版引擎委派給 OpenClaw 內建的摘要功能。外掛程式引擎可以實作任何壓縮策略（DAG 摘要、向量檢索等）。</Accordion>
-  <Accordion title="記憶體外掛程式">
-    記憶體外掛程式（`plugins.slots.memory`）與內容引擎是分開的。記憶體外掛程式提供搜尋/檢索功能；內容引擎則控制模型看到的內容。它們可以協同工作 - 內容引擎可能在組裝過程中使用記憶體外掛程式的資料。如果外掛程式引擎想要使用現用的記憶體提示路徑，應優先使用 `openclaw/plugin-sdk/core` 中的 `buildMemorySystemPromptAddition(...)`，它會將現用的記憶體提示區段轉換為準備好前置的
-    `systemPromptAddition`。如果引擎需要更低階的控制，仍然可以透過 `buildActiveMemoryPromptSection(...)` 從 `openclaw/plugin-sdk/memory-host-core` 提取原始行。
+  <Accordion title="壓縮">壓縮是上下文引擎的職責之一。舊版引擎會委派給 OpenClaw 的內建摘要。外掛引擎可以實作任何壓縮策略（DAG 摘要、向量檢索等）。</Accordion>
+  <Accordion title="Memory plugins">
+    記憶外掛程式 (`plugins.slots.memory`) 與情境引擎是分開的。記憶外掛程式提供搜尋/檢索功能；情境引擎則控制模型看見的內容。它們可以協同運作——情境引擎可能在組建過程中使用記憶外掛程式的資料。想要使用作用中記憶提示路徑的外掛程式引擎，應該優先使用 `buildMemorySystemPromptAddition(...)` 來自 `openclaw/plugin-sdk/core`，它會將作用中的記憶提示區段轉換為準備好可附加的
+    `systemPromptAddition`。如果引擎需要更低階的控制，它仍然可以透過 `buildActiveMemoryPromptSection(...)` 從 `openclaw/plugin-sdk/memory-host-core` 拉取原始行。
   </Accordion>
-  <Accordion title="Session pruning">無論哪個內容引擎處於啟用狀態，記憶體中修剪舊工具結果的作業仍會繼續執行。</Accordion>
+  <Accordion title="Session pruning">在記憶體中修剪舊的工具結果仍會繼續執行，無論目前啟用的是哪個情境引擎。</Accordion>
 </AccordionGroup>
 
 ## 提示
 
 - 使用 `openclaw doctor` 來驗證您的引擎是否正確載入。
-- 如果切換引擎，現有的工作階段會以其目前的歷史記錄繼續運作。新的引擎將接管未來的執行。
-- 引擎錯誤會被記錄下來並顯示在診斷資訊中。如果外掛引擎註冊失敗，或無法解析所選的引擎 ID，OpenClaw 不會自動回退；執行會失敗，直到您修復外掛或將 `plugins.slots.contextEngine` 切換回 `"legacy"`。
-- 為了開發，請使用 `openclaw plugins install -l ./my-engine` 來連結本機外掛目錄，而無須複製。
+- 如果切換引擎，現有的工作階段會以其目前的歷史記錄繼續執行。新的引擎將接管未來的執行。
+- 引擎錯誤會被記錄下來，且選定的外掛程式引擎會在目前的 Gateway 程序中被隔離。OpenClaw 會在使用者輪次時回退到 `legacy`，以便回覆可以繼續，但您仍然應該修復、更新、停用或解除安裝損壞的外掛程式。
+- 對於開發，請使用 `openclaw plugins install -l ./my-engine` 來連結本地外掛程式目錄而不需要複製。
 
 ## 相關
 
-- [壓縮](/zh-Hant/concepts/compaction) - 總結長對話
-- [語境](/zh-Hant/concepts/context) - 如何為代理回合建構語境
-- [外掛架構](/zh-Hant/plugins/architecture) - 註冊語境引擎外掛
-- [外掛清單](/zh-Hant/plugins/manifest) - 外掛清單欄位
-- [外掛](/zh-Hant/tools/plugin) - 外掛概覽
+- [壓縮] (/en/concepts/compaction) - 總結長對話
+- [情境] (/en/concepts/context) - 如何為代理輪次建立情境
+- [外掛程式架構] (/en/plugins/architecture) - 註冊情境引擎外掛程式
+- [外掛程式清單] (/en/plugins/manifest) - 外掛程式清單欄位
+- [外掛程式] (/en/tools/plugin) - 外掛程式概覽

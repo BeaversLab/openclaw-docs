@@ -1,5 +1,5 @@
 ---
-summary: "新增 Discord 頻道介面，用於傳送和接收 OpenClaw 訊息。"
+summary: "用於頻道、DM、指令和應用程式事件的 OpenClaw Discord 頻道外掛。"
 read_when:
   - You are installing, configuring, or auditing the discord plugin
 title: "Discord 外掛程式"
@@ -7,7 +7,7 @@ title: "Discord 外掛程式"
 
 # Discord 外掛程式
 
-新增 Discord 頻道介面，用於傳送和接收 OpenClaw 訊息。
+用於頻道、DM、指令和應用程式事件的 OpenClaw Discord 頻道外掛。
 
 ## 發布
 
@@ -16,7 +16,7 @@ title: "Discord 外掛程式"
 
 ## 介面
 
-channels: discord; contracts: meetingNotesSourceProviders
+channels: discord; contracts: transcriptSourceProviders
 
 ## 相關文件
 

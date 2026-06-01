@@ -1,5 +1,5 @@
 ---
-summary: "DiscordOpenClaw添加 Discord 渠道 Surface，用于发送和接收 OpenClaw 消息。"
+summary: "用于频道、私信、命令和应用事件的 OpenClaw Discord 渠道 插件。"
 read_when:
   - You are installing, configuring, or auditing the discord plugin
 title: "DiscordDiscord 插件"
@@ -7,7 +7,7 @@ title: "DiscordDiscord 插件"
 
 # Discord 插件
 
-添加 Discord 渠道 Surface，用于发送和接收 OpenClaw 消息。
+用于频道、私信、命令和应用事件的 OpenClaw Discord 渠道 插件。
 
 ## 分发
 
@@ -16,7 +16,7 @@ title: "DiscordDiscord 插件"
 
 ## Surface
 
-channels: discord; contracts: meetingNotesSourceProviders
+channels: discord; contracts: transcriptSourceProviders
 
 ## 相关文档
 

@@ -1,5 +1,5 @@
 ---
-summary: "Google ChatOpenClaw添加用于发送和接收 OpenClaw 消息的 Google Chat 渠道界面。"
+summary: "OpenClawGoogle ChatOpenClaw Google Chat 渠道插件，用于聊天室和私信。"
 read_when:
   - You are installing, configuring, or auditing the googlechat plugin
 title: "Google ChatGoogle Chat 插件"
@@ -7,7 +7,7 @@ title: "Google ChatGoogle Chat 插件"
 
 # Google Chat 插件
 
-添加用于发送和接收 OpenClaw 消息的 Google Chat 渠道界面。
+OpenClaw Google Chat 渠道插件，用于聊天室和私信。
 
 ## 分发
 

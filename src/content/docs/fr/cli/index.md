@@ -27,12 +27,12 @@ Utilisez les commandes de configuration selon l'intention :
 | Modèles et inférence                | [`models`](/fr/cli/models) · [`infer`](/fr/cli/infer) · `capability` (alias pour [`infer`](/fr/cli/infer)) · [`memory`](/fr/cli/memory) · [`commitments`](/fr/cli/commitments) · [`wiki`](/fr/cli/wiki)                                                           |
 | Réseau et nœuds                     | [`directory`](/fr/cli/directory) · [`nodes`](/fr/cli/nodes) · [`devices`](/fr/cli/devices) · [`node`](/fr/cli/node)                                                                                                                                               |
 | Runtime et bac à sable              | [`approvals`](/fr/cli/approvals) · `exec-policy` (voir [`approvals`](/fr/cli/approvals)) · [`sandbox`](/fr/cli/sandbox) · [`tui`](/fr/cli/tui) · `chat`/`terminal` (alias pour [`tui --local`](/fr/cli/tui)) · [`browser`](/fr/cli/browser)                       |
-| Automatisation                      | [`cron`](/fr/cli/cron) · [`tasks`](/fr/cli/tasks) · [`hooks`](/fr/cli/hooks) · [`webhooks`](/fr/cli/webhooks)                                                                                                                                                     |
+| Automatisation                      | [`cron`](/fr/cli/cron) · [`tasks`](/fr/cli/tasks) · [`hooks`](/fr/cli/hooks) · [`webhooks`](/fr/cli/webhooks) · [`transcripts`](/fr/cli/transcripts)                                                                                                              |
 | Discovery et documentation          | [`dns`](/fr/cli/dns) · [`docs`](/fr/cli/docs)                                                                                                                                                                                                                     |
 | Appairage et canaux                 | [`pairing`](/fr/cli/pairing) · [`qr`](/fr/cli/qr) · [`channels`](/fr/cli/channels)                                                                                                                                                                                |
 | Sécurité et plugins                 | [`security`](/fr/cli/security) · [`secrets`](/fr/cli/secrets) · [`skills`](/fr/cli/skills) · [`plugins`](/fr/cli/plugins) · [`proxy`](/fr/cli/proxy)                                                                                                              |
 | Alias hérités                       | [`daemon`](/fr/cli/daemon) (service de passerelle) · [`clawbot`](/fr/cli/clawbot) (espace de noms)                                                                                                                                                                |
-| Plugins (en option)                 | [`meeting-notes`](/fr/cli/meeting-notes) · [`path`](/fr/cli/path) · [`policy`](/fr/cli/policy) · [`voicecall`](/fr/cli/voicecall) (si installé)                                                                                                                   |
+| Plugins (en option)                 | [`path`](/fr/cli/path) · [`policy`](/fr/cli/policy) · [`voicecall`](/fr/cli/voicecall) (si installé)                                                                                                                                                              |
 
 ## Indicateurs globaux
 
@@ -125,7 +125,7 @@ openclaw [--dev] [--profile <name>] <command>
     status
     index
     search
-  meeting-notes
+  transcripts
     list
     show
     path
@@ -365,7 +365,7 @@ openclaw [--dev] [--profile <name>] <command>
   terminal (alias: tui --local)
 ```
 
-Les plugins peuvent ajouter des commandes de niveau supérieur supplémentaires (par exemple `openclaw voicecall`).
+Les plugins peuvent ajouter des commandes de premier niveau supplémentaires (par exemple `openclaw voicecall`).
 
 </Accordion>
 

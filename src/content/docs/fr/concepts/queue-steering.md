@@ -7,30 +7,22 @@ read_when:
 title: "File d'attente de steering"
 ---
 
-Lorsqu'une invite normale arrive alors qu'une exécution de session est déjà en cours de streaming, OpenClaw
-tente d'envoyer cette invite vers le runtime actif par défaut lorsque le mode de file d'attente
-est `steer`. Aucune entrée de configuration et aucune directive de file d'attente ne sont requises pour ce comportement
-par défaut. Pi et le harnais du serveur d'application natif Codex implémentent les détails de livraison
-différemment.
+Lorsqu'une invite normale arrive alors qu'une exécution de session est déjà en cours de diffusion, OpenClaw tente d'envoyer cette invite dans le runtime actif par défaut lorsque le mode de file d'attente est OpenClaw`steer`OpenClaw. Aucune entrée de configuration et aucune directive de file d'attente ne sont requises pour ce comportement par défaut. OpenClaw et le harness natif du serveur d'application Codex implémentent les détails de livraison différemment.
 
 ## Limite d'exécution
 
-Le steering n'interrompt pas un appel d'outil qui est déjà en cours d'exécution. Pi vérifie les
-messages de steering en file d'attente aux limites du modèle :
+Le pilotage n'interrompt pas un appel d'outil qui est déjà en cours d'exécution. OpenClaw vérifie les messages de pilotage en file d'attente aux limites du modèle :
 
 1. L'assistant demande des appels d'outils.
-2. Pi exécute le lot d'appels d'outils du message actuel de l'assistant.
-3. Pi émet l'événement de fin de tour.
-4. Pi vide les messages de steering en file d'attente.
-5. Pi ajoute ces messages en tant que messages utilisateur avant le prochain appel LLM.
+2. OpenClaw exécute le lot d'appels d'outils du message de l'assistant actuel.
+3. OpenClaw émet l'événement de fin de tour.
+4. OpenClaw draine les messages de pilotage en file d'attente.
+5. OpenClaw ajoute ces messages en tant que messages utilisateur avant le prochain appel LLM.
 
 Cela permet de garder les résultats des outils associés au message de l'assistant qui les a demandés,
 puis permet au prochain appel du modèle de voir les dernières entrées de l'utilisateur.
 
-Le harnais du serveur d'application natif Codex expose `turn/steer` au lieu de la
-file d'attente de direction interne de Pi. OpenClaw regroupe les invites en file d'attente pour la fenêtre de silence configurée,
-alors envoie une seule requête `turn/steer` avec toutes les entrées utilisateur collectées
-dans leur ordre d'arrivée.
+Le harness natif du serveur d'application Codex expose `turn/steer`OpenClawOpenClaw au lieu de la file d'attente de pilotage interne du runtime OpenClaw. OpenClaw regroupe les invites en file d'attente pour la fenêtre de silence configurée, puis envoie une seule requête `turn/steer` avec toutes les entrées utilisateur collectées dans l'ordre d'arrivée.
 
 La révision Codex et la compactification manuelle rejettent la direction du même tour. Lorsqu'un
 runtime ne peut pas accepter de direction en mode `steer`, OpenClaw attend que l'exécution
@@ -54,9 +46,7 @@ dans ce chemin de direction ; ils attendent la fin de l'exécution active. Pour 
 
 Si quatre utilisateurs envoient des messages pendant que l'agent exécute un appel d'outil :
 
-- Avec le comportement par défaut, le runtime actif reçoit les quatre messages dans
-  l'ordre d'arrivée avant sa prochaine décision de modèle. Pi les draine à la prochaine limite de
-  modèle ; Codex les reçoit sous forme d'un seul `turn/steer` regroupé.
+- Avec le comportement par défaut, le runtime actif reçoit les quatre messages dans l'ordre d'arrivée avant sa prochaine décision de modèle. OpenClaw les draine à la prochaine limite de modèle ; Codex les reçoit comme un seul OpenClaw`turn/steer` regroupé.
 - Avec `/queue collect`, OpenClaw ne pilote pas. Il attend la fin de l'exécution active, puis crée un tour de suivi avec les messages en file d'attente compatibles après la fenêtre de rebond.
 - Avec `/queue interrupt`, OpenClaw interrompt l'exécution active et démarre le message le plus récent au lieu de piloter.
 
@@ -68,7 +58,7 @@ Utilisez `followup` ou `collect` lorsque vous souhaitez que les messages soient 
 
 ## Rebond
 
-`messages.queue.debounceMs` s'applique à la livraison en file d'attente `followup` et `collect`. En mode `steer` avec le harnais natif Codex, il définit également la fenêtre de silence avant d'envoyer des `turn/steer` groupés. Pour Pi, le pilotage actif n'utilise pas lui-même la minuterie de rebond car Pi groupe naturellement les messages jusqu'à la prochaine limite du modèle.
+`messages.queue.debounceMs` s'applique à la livraison de `followup` et de `collect` en file d'attente. En mode `steer` avec le harness natif Codex, il définit également la fenêtre de silence avant d'envoyer des `turn/steer`OpenClawOpenClaw regroupés. Pour OpenClaw, le pilotage actif n'utilise pas lui-même la minuterie de rebond car OpenClaw regroupe naturellement les messages jusqu'à la prochaine limite de modèle.
 
 ## Connexes
 

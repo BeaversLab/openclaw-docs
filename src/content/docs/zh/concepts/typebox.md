@@ -53,8 +53,8 @@ Client                    Gateway
 
 ## Schema 的存放位置
 
-- 源码：`src/gateway/protocol/schema.ts`
-- 运行时验证器 (AJV)：`src/gateway/protocol/index.ts`
+- 来源：`packages/gateway-protocol/src/schema.ts`
+- 运行时验证器 (AJV)：`packages/gateway-protocol/src/index.ts`
 - 通告式功能/发现注册表：`src/gateway/server-methods-list.ts`
 - 服务器握手 + 方法分发：`src/gateway/server.impl.ts`
 - Node 客户端：`src/gateway/client.ts`
@@ -193,7 +193,7 @@ ws.on("message", (data) => {
 
 1. **Schema（单一事实来源）**
 
-添加到 `src/gateway/protocol/schema.ts`：
+添加到 `packages/gateway-protocol/src/schema.ts`：
 
 ```ts
 export const SystemEchoParamsSchema = Type.Object({ text: NonEmptyString }, { additionalProperties: false });
@@ -215,7 +215,7 @@ export type SystemEchoResult = Static<typeof SystemEchoResultSchema>;
 
 2. **验证**
 
-在 `src/gateway/protocol/index.ts` 中，导出一个 AJV 验证器：
+在 `packages/gateway-protocol/src/index.ts` 中，导出一个 AJV 验证器：
 
 ```ts
 export const validateSystemEchoParams = ajv.compile<SystemEchoParams>(SystemEchoParamsSchema);
@@ -262,7 +262,7 @@ Swift 生成器发出：
 
 ## 版本控制 + 兼容性
 
-- `PROTOCOL_VERSION` 位于 `src/gateway/protocol/version.ts` 中。
+- `PROTOCOL_VERSION` 位于 `packages/gateway-protocol/src/version.ts`。
 - 客户端发送 `minProtocol` + `maxProtocol`；服务器会拒绝不包含其当前协议的范围。
 - Swift 模型保留未知的帧类型，以避免破坏较旧的客户端。
 

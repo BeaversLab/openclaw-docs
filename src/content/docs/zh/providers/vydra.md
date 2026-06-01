@@ -142,7 +142,7 @@ OpenClaw 对所有这三项功能使用相同的 `VYDRA_API_KEY`。
           providers: {
             vydra: {
               apiKey: "${VYDRA_API_KEY}",
-              voiceId: "21m00Tcm4TlvDq8ikWAM",
+              speakerVoiceId: "21m00Tcm4TlvDq8ikWAM",
             },
           },
         },
@@ -155,7 +155,7 @@ OpenClaw 对所有这三项功能使用相同的 `VYDRA_API_KEY`。
     - 模型：`elevenlabs/tts`
     - 语音 ID：`21m00Tcm4TlvDq8ikWAM`
 
-    捆绑的插件目前公开一个已知可用的默认语音，并返回 MP3 音频文件。
+    捆绑的插件目前提供了一个已知正常的默认语音，并返回 MP3 音频文件。
 
   </Accordion>
 </AccordionGroup>

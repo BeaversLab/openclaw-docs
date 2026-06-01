@@ -151,14 +151,14 @@ Preguntas y respuestas de inicio rápido y primera ejecución. Para operaciones 
     Se requiere Node **>= 22**. Se recomienda `pnpm`. No se recomienda Bun para el Gateway.
   </Accordion>
 
-  <Accordion title="¿Funciona en Raspberry Pi?">
-    Sí. La Gateway es ligera; la documentación lista **512MB-1GB de RAM**, **1 núcleo** y unos **500MB**
-    de disco como suficiente para uso personal, y ten en cuenta que **una Raspberry Pi 4 puede ejecutarla**.
+  <Accordion title="¿Se ejecuta en Raspberry Pi?">
+    Sí. El Gateway es ligero: la documentación indica **512MB-1GB de RAM**, **1 núcleo** y unos **500MB**
+    de disco como suficientes para uso personal, y ten en cuenta que una **Raspberry Pi 4 puede ejecutarlo**.
 
     Si quieres espacio adicional (registros, medios, otros servicios), **se recomiendan 2GB**, pero no es un
     mínimo estricto.
 
-    Consejo: una Pi/VPS pequeña puede alojar la Gateway, y puedes emparejar **nodos** en tu portátil/teléfono para
+    Consejo: una pequeña Raspberry Pi/VPS puede alojar el Gateway, y puedes emparejar **nodos** en tu portátil/teléfono para
     pantalla/cámara/lienzo locales o ejecución de comandos. Consulta [Nodos](/es/nodes).
 
   </Accordion>
@@ -811,13 +811,13 @@ Preguntas y respuestas de inicio rápido y primera ejecución. Para operaciones 
   </Accordion>
 
   <Accordion title="¿Qué tan importante es ejecutar OpenClaw en una máquina dedicada?">
-    No es obligatorio, pero **recomendado para mayor confiabilidad y aislamiento**.
+    No es obligatorio, pero **se recomienda para mayor confiabilidad y aislamiento**.
 
-    - **Host dedicado (VPS/Mac mini/Pi):** siempre encendido, menos interrupciones por suspensión/reinicio, permisos más limpios, más fácil de mantener en ejecución.
-    - **Portátil/escritorio compartido:** totalmente bien para pruebas y uso activo, pero espera pausas cuando la máquina se suspenda o se actualice.
+    - **Anfitrión dedicado (VPS/Mac mini/Raspberry Pi):** siempre encendido, menos interrupciones por suspensión/reinicio, permisos más limpios, más fácil de mantener en ejecución.
+    - **Portátil/escritorio compartido:** totalmente aceptable para pruebas y uso activo, pero espera pausas cuando la máquina se suspenda o se actualice.
 
-    Si quieres lo mejor de ambos mundos, mantén el Gateway en un host dedicado y empareja tu portátil como un **nodo** para herramientas locales de pantalla/cámara/exec. Consulta [Nodos](/es/nodes).
-    Para orientación de seguridad, lee [Seguridad](/es/gateway/security).
+    Si quieres aprovechar lo mejor de ambos mundos, mantén el Gateway en un anfitrión dedicado y empareja tu portátil como un **nodo** para herramientas locales de pantalla/cámara/ejecución. Consulta [Nodos](/es/nodes).
+    Para orientación sobre seguridad, lee [Seguridad](/es/gateway/security).
 
   </Accordion>
 

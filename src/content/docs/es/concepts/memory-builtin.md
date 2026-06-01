@@ -19,7 +19,9 @@ una base de datos SQLite por agente y no necesita dependencias adicionales para 
 
 ## Para empezar
 
-Si tienes una clave de API para OpenAI, Gemini, Voyage, Mistral o DeepInfra, el motor integrado la detecta automáticamente y habilita la búsqueda vectorial. No se necesita configuración.
+De forma predeterminada, el motor integrado utiliza incrustaciones de OpenAI. Si ya tiene
+`OPENAI_API_KEY` o `models.providers.openai.apiKey` configurado, la búsqueda vectorial
+funciona sin configuración de memoria adicional.
 
 Para establecer un proveedor explícitamente:
 
@@ -37,8 +39,8 @@ Para establecer un proveedor explícitamente:
 
 Sin un proveedor de incrustaciones, solo está disponible la búsqueda de palabras clave.
 
-Para forzar el proveedor de incrustaciones local incorporado, instale el paquete
-de tiempo de ejecución opcional `node-llama-cpp` junto a OpenClaw, luego señale `local.modelPath`
+Para forzar el proveedor de incrustaciones local integrado, instale el paquete
+de tiempo de ejecución opcional `node-llama-cpp` junto a OpenClaw y luego señale `local.modelPath`
 a un archivo GGUF:
 
 ```json5
@@ -59,35 +61,39 @@ a un archivo GGUF:
 
 ## Proveedores de incrustaciones compatibles
 
-| Proveedor | ID          | Detectado automáticamente | Notas                                         |
-| --------- | ----------- | ------------------------- | --------------------------------------------- |
-| OpenAI    | `openai`    | Sí                        | Predeterminado: `text-embedding-3-small`      |
-| Gemini    | `gemini`    | Sí                        | Admite multimodal (imagen + audio)            |
-| Voyage    | `voyage`    | Sí                        |                                               |
-| Mistral   | `mistral`   | Sí                        |                                               |
-| DeepInfra | `deepinfra` | Sí                        | Predeterminado: `BAAI/bge-m3`                 |
-| Ollama    | `ollama`    | No                        | Local, establecer explícitamente              |
-| Local     | `local`     | Sí (primero)              | Tiempo de ejecución `node-llama-cpp` opcional |
+| Proveedor             | ID                  | Notas                                         |
+| --------------------- | ------------------- | --------------------------------------------- |
+| Bedrock               | `bedrock`           | Usa la cadena de credenciales de AWS          |
+| DeepInfra             | `deepinfra`         | Predeterminado: `BAAI/bge-m3`                 |
+| Gemini                | `gemini`            | Admite multimodal (imagen + audio)            |
+| GitHub Copilot        | `github-copilot`    | Usa la suscripción a Copilot                  |
+| Local                 | `local`             | Tiempo de ejecución `node-llama-cpp` opcional |
+| Mistral               | `mistral`           |                                               |
+| Ollama                | `ollama`            | Local/autoalojado                             |
+| OpenAI                | `openai`            | Predeterminado: `text-embedding-3-small`      |
+| Compatible con OpenAI | `openai-compatible` | Punto final `/v1/embeddings` genérico         |
+| Voyage                | `voyage`            |                                               |
 
-La detección automática elige el primer proveedor cuya clave de API se pueda resolver, en el orden que se muestra. Establezca `memorySearch.provider` para anularlo.
+Establezca `memorySearch.provider` para cambiar de OpenAI.
 
 ## Cómo funciona la indexación
 
-OpenClaw indexa `MEMORY.md` y `memory/*.md` en fragmentos (~400 tokens con una superposición de 80 tokens) y los almacena en una base de datos SQLite por agente.
+OpenClaw indexa `MEMORY.md` y `memory/*.md` en fragmentos (~400 tokens con
+superposición de 80 tokens) y los almacena en una base de datos SQLite por agente.
 
 - **Ubicación del índice:** `~/.openclaw/memory/<agentId>.sqlite`
-- **Mantenimiento del almacenamiento:** los archivos auxiliares WAL de SQLite están limitados con puntos de control periódicos y de cierre.
-- **Vigilancia de archivos:** los cambios en los archivos de memoria activan un reindexado con rebote (1,5s).
+- **Mantenimiento del almacenamiento:** los sidecars de WAL de SQLite están limitados con puntos de control periódicos y de apagado.
+- **Observación de archivos:** los cambios en los archivos de memoria activan un reindexado con rebote (1.5s).
 - **Reindexado automático:** cuando cambia el proveedor de incrustaciones, el modelo o la configuración de fragmentación, todo el índice se reconstruye automáticamente.
 - **Reindexado bajo demanda:** `openclaw memory index --force`
 
-<Info>También puedes indexar archivos Markdown fuera del espacio de trabajo con `memorySearch.extraPaths`. Consulta la [referencia de configuración](/es/reference/memory-config#additional-memory-paths).</Info>
+<Info>También puede indexar archivos Markdown fuera del espacio de trabajo con `memorySearch.extraPaths`. Consulte la [referencia de configuración](/es/reference/memory-config#additional-memory-paths).</Info>
 
 ## Cuándo usar
 
-El motor integrado es la elección correcta para la mayoría de los usuarios:
+El motor integrado es la opción correcta para la mayoría de los usuarios:
 
-- Funciona de inmediato sin dependencias adicionales.
+- Funciona directamente sin dependencias adicionales.
 - Maneja bien la búsqueda de palabras clave y vectorial.
 - Admite todos los proveedores de incrustaciones.
 - La búsqueda híbrida combina lo mejor de ambos enfoques de recuperación.
@@ -98,28 +104,29 @@ Considere [Honcho](/es/concepts/memory-honcho) si desea memoria entre sesiones c
 
 ## Solución de problemas
 
-**¿Búsqueda de memoria deshabilitada?** Verifique `openclaw memory status`. Si no se detecta ningún proveedor, configure uno explícitamente o agregue una clave de API.
+**¿Búsqueda de memoria deshabilitada?** Verifique `openclaw memory status`. Si no se detecta ningún proveedor, configure uno explícitamente o añada una clave de API.
 
-**¿No se detectó el proveedor local?** Confirme que la ruta local exista y ejecute:
+**¿No se detectó el proveedor local?** Confirme que la ruta local existe y ejecute:
 
 ```bash
 openclaw memory status --deep --agent main
 openclaw memory index --force --agent main
 ```
 
-Tanto los comandos CLI independientes como el Gateway usan el mismo id de proveedor `local`.
-Si el proveedor está configurado en `auto`, las incrustaciones locales se consideran primero solo cuando `memorySearch.local.modelPath` apunta a un archivo local existente.
+Tanto los comandos independientes de CLI como la Gateway usan el mismo id de proveedor `local`.
+Establezca `memorySearch.provider: "local"` cuando desee incrustaciones locales.
 
-**¿Resultados obsoletos?** Ejecute `openclaw memory index --force` para reconstruir. El observador puede perder cambios en casos extremos poco frecuentes.
+**¿Resultados obsoletos?** Ejecute `openclaw memory index --force` para reconstruir. El observador puede perder cambios en casos extremos raros.
 
-**¿sqlite-vec no se carga?** OpenClaw vuelve automáticamente a la similitud de coseno en proceso. `openclaw memory status --deep` informa el almacén de vectores local por separado del proveedor de incrustaciones, por lo que `Vector store: unavailable` apunta a la carga de sqlite-vec mientras que `Embeddings: unavailable` apunta al proveedor/autenticación o la preparación del modelo. Consulte los registros para ver el error de carga específico.
+**¿sqlite-vec no se carga?** OpenClaw vuelve automáticamente a la similitud de coseno en proceso. `openclaw memory status --deep` informa el almacén de vectores local por separado del proveedor de incrustaciones, por lo que `Vector store: unavailable` apunta a la carga de sqlite-vec mientras que `Embeddings: unavailable` apunta al proveedor/autenticación o la disponibilidad del modelo. Revise los registros para ver el error de carga específico.
 
 ## Configuración
 
-Para la configuración del proveedor de incrustaciones, el ajuste de búsqueda híbrida (ponderaciones, MMR, decaimiento temporal), indexación por lotes, memoria multimodal, sqlite-vec, rutas adicionales y todos los demás controles de configuración, consulte la [referencia de configuración de memoria](/es/reference/memory-config).
+Para la configuración del proveedor de incrustaciones, el ajuste de la búsqueda híbrida (ponderaciones, MMR, degradación temporal), indexación por lotes, memoria multimodal, sqlite-vec, rutas adicionales y todos los demás ajustes de configuración, consulte la
+[Referencia de configuración de memoria](/es/reference/memory-config).
 
 ## Relacionado
 
-- [Resumen de memoria](/es/concepts/memory)
+- [Descripción general de memoria](/es/concepts/memory)
 - [Búsqueda de memoria](/es/concepts/memory-search)
 - [Memoria activa](/es/concepts/active-memory)

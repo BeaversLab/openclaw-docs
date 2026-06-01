@@ -14,7 +14,7 @@ Referencia de utilidades de prueba, patrones y aplicación de reglas de lint par
 
 ## Utilidades de prueba
 
-Estas subrutas de asistentes de prueba son puntos de entrada de código fuente locales del repositorio para las pruebas de los complementos integrados de OpenClaw. No son exportaciones del paquete para complementos de terceros.
+Estas subrutas de asistentes de pruebas son puntos de entrada de código fuente locales del repositorio para las propias pruebas de complementos incluidos en OpenClaw. No son exportaciones del paquete para complementos de terceros, y pueden importar Vitest u otras dependencias de prueba exclusivas del repositorio.
 
 **Importación simulada de la API del complemento:** `openclaw/plugin-sdk/plugin-test-api`
 
@@ -40,9 +40,7 @@ Estas subrutas de asistentes de prueba son puntos de entrada de código fuente l
 
 **Importación simulada de módulos integrados de Node:** `openclaw/plugin-sdk/test-node-mocks`
 
-Prefiera las subrutas específicas a continuación para las nuevas pruebas de complementos. El barril amplio `openclaw/plugin-sdk/testing` es solo por compatibilidad heredada.
-Las protecciones del repositorio rechazan las nuevas importaciones reales de `plugin-sdk/testing` y
-`plugin-sdk/test-utils`; esos nombres permanecen solo como superficies de compatibilidad obsoletas para pruebas de registros de compatibilidad.
+Dentro del repositorio de OpenClaw, prefiera las subrutas específicas a continuación para las nuevas pruebas de complementos incluidos. El barril amplio `openclaw/plugin-sdk/testing` es solo por compatibilidad heredada. Las protecciones del repositorio rechazan nuevas importaciones reales de `plugin-sdk/testing` y `plugin-sdk/test-utils`; esos nombres permanecen solo como superficies de compatibilidad obsoletas para pruebas de registro de compatibilidad.
 
 ```typescript
 import { shouldAckReaction, removeAckReactionAfterReply } from "openclaw/plugin-sdk/channel-feedback";

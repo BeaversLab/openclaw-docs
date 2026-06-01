@@ -7,8 +7,8 @@ read_when:
 title: "Approbations exec — avancé"
 ---
 
-Sujets avancés sur les approbations exec : le chemin rapide `safeBins`, la liaison d'interpréteur/d'exécution
-et le transfert d'approbation vers les canaux de chat (y compris la livraison native).
+Rubriques avancées sur les approbations d'exécution : le chemin rapide `safeBins`, la liaison d'interpréteur/d'exécution
+et le transfert des approbations vers les canaux de discussion (y compris la livraison native).
 Pour la politique principale et le flux d'approbation, voir [Exec approvals](/fr/tools/exec-approvals).
 
 ## Bins sécurisés (stdin uniquement)
@@ -192,8 +192,10 @@ La commande `/approve` gère à la fois les approbations exec et les approbation
 
 ### Transfert des approbations de plugin
 
-Le transfert des approbations de plugin utilise le même pipeline de livraison que les approbations exec mais possède sa propre
-configuration indépendante sous `approvals.plugin`. Activer ou désactiver l'un n'affecte pas l'autre.
+Le transfert des approbations de plugin utilise le même pipeline de livraison que les approbations d'exécution, mais possède sa propre
+configuration indépendante sous `approvals.plugin`. L'activation ou la désactivation de l'un n'affecte pas l'autre.
+Pour le comportement de création de plugin, les champs de requête et la sémantique de décision, voir
+[Plugin permission requests](/fr/plugins/plugin-permission-requests).
 
 ```json5
 {
@@ -240,71 +242,67 @@ Modèle générique :
 
 - la stratégie d'exécution de l'hôte décide toujours si l'approbation d'exécution est requise
 - `approvals.exec` contrôle le transfert des invites d'approbation vers d'autres destinations de discussion
-- `channels.<channel>.execApprovals` contrôle si ce canal agit en tant que client d'approbation natif
+- `channels.<channel>.execApprovals` contrôle si les clients natifs spécifiques à un canal comme Discord, Slack, Telegram
+  et similaires sont activés
 - Les approbations par plugin Slack peuvent utiliser le client d'approbation natif de Slack lorsque la demande provient de Slack
   et que les approbateurs du plugin Slack sont résolus ; SlackSlackSlackSlack`approvals.plugin`SlackSlack peut également router les approbations par plugin vers des
   sessions ou des cibles Slack, même lorsque les approbations d'exécution Slack sont désactivées
-- La livraison des approbations par emoji WhatsApp est conditionnée par WhatsApp`approvals.exec` et `approvals.plugin`WhatsApp, tandis que
-  les réactions d'approbation nécessitent des approbateurs WhatsApp explicites provenant de `channels.whatsapp.allowFrom` ou `"*"`
+- La livraison des approbations par réaction sur WhatsApp et Signal est conditionnée par `approvals.exec` et
+  `approvals.plugin` ; ils n'ont pas de blocs `channels.<channel>.execApprovals`
 
 Les clients d'approbation natifs activent automatiquement la livraison en priorité par DM lorsque toutes les conditions suivantes sont remplies :
 
 - le channel prend en charge la livraison des approbations natives
-- les approbateurs peuvent être résolus à partir de `execApprovals.approvers` explicites ou d'une identité
+- les approbateurs peuvent être résolus à partir de `execApprovals.approvers` explicite ou d'une identité
   de propriétaire telle que `commands.ownerAllowFrom`
-- `channels.<channel>.execApprovals.enabled` est non défini ou `"auto"`
+- `channels.<channel>.execApprovals.enabled` est non défini (unset) ou `"auto"`
 
 Définissez `enabled: false` pour désactiver explicitement un client d'approbation natif. Définissez `enabled: true` pour le
-forcer lorsque les approbateurs sont résolus. La livraison publique dans le chat d'origine reste explicite via
+forcer activement lorsque les approbateurs sont résolus. La livraison publique dans le canal d'origine reste explicite via
 `channels.<channel>.execApprovals.target`.
 
-FAQ : [Pourquoi existe-t-il deux configurations d'approbation d'exécution pour les approbations par chat ?](/fr/help/faq-first-run#why-are-there-two-exec-approval-configs-for-chat-approvals)
+FAQ : [Pourquoi existe-t-il deux configurations d'approbation d'exécution pour les approbations de discussion ?](/fr/help/faq-first-run#why-are-there-two-exec-approval-configs-for-chat-approvals)
 
-- Discord : Discord`channels.discord.execApprovals.*`
-- Slack : Slack`channels.slack.execApprovals.*`
-- Telegram : Telegram`channels.telegram.execApprovals.*`
-- WhatsApp : utilisez WhatsApp`approvals.exec` et `approvals.plugin`WhatsApp pour router les invites d'approbation vers WhatsApp
+- Discord : `channels.discord.execApprovals.*`
+- Slack : `channels.slack.execApprovals.*`
+- Telegram : `channels.telegram.execApprovals.*`
+- WhatsApp : utilisez `approvals.exec` et `approvals.plugin` pour acheminer les invites d'approbation vers WhatsApp
+- Signal : utilisez `approvals.exec` et `approvals.plugin` pour acheminer les invites d'approbation vers Signal
 
-Ces clients d'approbation natifs ajoutent le routage par DM et la diffusion de canal (fanout) en plus du flux partagé
-`/approve` de même-chat et des boutons d'approbation partagés.
+Ces clients d'approbation natifs ajoutent le routage par DM et la diffusion de canal facultative par-dessus le flux partagé `/approve` de même chat et les boutons d'approbation partagés.
 
 Comportement partagé :
 
-- Slack, Matrix, Microsoft Teams et les chats similaires livrables utilisent le modèle d'authentification de canal normal
-  pour les SlackMatrixMicrosoft Teams`/approve` de même-chat
+- Slack, Matrix, Microsoft Teams et les chats similaires livrables utilisent le modèle d'authentification de canal normal pour le `/approve` de même chat
 - lorsqu'un client d'approbation natif s'active automatiquement, la cible de livraison native par défaut est les DM des approbateurs
 - pour Discord et Telegram, seuls les approbateurs résolus peuvent approuver ou refuser
 - les approbateurs Discord peuvent être explicites (`execApprovals.approvers`) ou déduits de `commands.ownerAllowFrom`
 - les approbateurs Telegram peuvent être explicites (`execApprovals.approvers`) ou déduits de `commands.ownerAllowFrom`
 - les approbateurs Slack peuvent être explicites (`execApprovals.approvers`) ou déduits de `commands.ownerAllowFrom`
-- les DM d'approbation de plugin Slack utilisent les approbateurs de plugin Slack à partir de `allowFrom` et du routage par défaut du compte, et non les approbateurs d'exécution Slack
-- les boutons natifs Slack préservent le type d'identifiant d'approbation, donc les identifiants `plugin:` peuvent résoudre les approbations de plugin
-  sans une seconde couche de repli locale Slack
-- les approbations par emoji WhatsApp gèrent à la fois les invites d'exécution et de plugin uniquement lorsque la famille de transfert de niveau supérieur correspondante est activée et acheminée vers WhatsApp; le transfert WhatsApp ciblé uniquement reste sur
-  le chemin de transfert partagé sauf s'il correspond à la même cible d'origine native
-- le routage natif DM/channel Matrix et les raccourcis de réaction gèrent à la fois les approbations d'exécution et de plugin;
-  l'autorisation du plugin provient toujours de `channels.matrix.dm.allowFrom`
-- les invites natives Matrix incluent le contenu d'événement personnalisé `com.openclaw.approval` sur le premier événement d'invite
-  afin que les clients OpenClaw conscients de Matrix puissent lire l'état d'approbation structuré tandis que les clients standard
-  conservent le repli en texte brut `/approve`
+- les DM d'approbation de plugin Slack utilisent les approbateurs de plugin Slack provenant de `allowFrom` et du routage par défaut du compte, et non les approbateurs d'exécution Slack
+- les boutons natifs Slack préservent le type d'ID d'approbation, donc les ID `plugin:` peuvent résoudre les approbations de plugin sans une deuxième couche de repli locale Slack
+- les approbations par emoji WhatsApp gèrent à la fois les invites d'exécution et de plugin uniquement lorsque la famille de transfert de niveau supérieur correspondante est activée et acheminée vers WhatsApp ; le transfert WhatsApp ciblé uniquement reste sur le chemin de transfert partagé sauf s'il correspond à la même cible d'origine native
+- Les approbations par réaction Signal gèrent à la fois les invites d'exécution et de plugin uniquement lorsque la famille de transfert de premier niveau correspondante est activée et acheminée vers Signal. Les approbations d'exécution Signal en même-chat directes peuvent supprimer le repli local SignalSignalSignal`/approve`SignalSignal sans approbateurs explicites ; la résolution par réaction Signal nécessite toujours des approbateurs Signal explicites provenant de `channels.signal.allowFrom` ou `defaultTo`.
+- Le routage natif DM/channel Matrix et les raccourcis de réaction gèrent les approbations d'exécution et de plugin ; l'autorisation du plugin provient toujours de Matrix`channels.matrix.dm.allowFrom`
+- Les invites natives Matrix incluent le contenu d'événement personnalisé Matrix`com.openclaw.approval`OpenClawMatrix sur le premier événement d'invite afin que les clients Matrix conscients d'OpenClaw puissent lire l'état d'approbation structuré, tandis que les clients standards conservent le repli en texte brut `/approve`
 - le demandeur n'a pas besoin d'être un approbateur
 - le chat d'origine peut approuver directement avec `/approve` lorsque ce chat prend déjà en charge les commandes et les réponses
-- les boutons d'approbation natifs Discord acheminent en fonction du type d'ID d'approbation : les ID Discord`plugin:` vont directement aux approbations de plugins, tout le reste va aux approbations exec
-- les boutons d'approbation natifs Telegram suivent le même repli limité exec-vers-plugin que Telegram`/approve`
+- les boutons d'approbation natifs Discord sont acheminés par type d'identifiant d'approbation : les identifiants Discord`plugin:` vont directement aux approbations de plugin, tout le reste va aux approbations d'exécution
+- les boutons d'approbation natifs Telegram suivent le même repli limité d'exécution vers plugin que Telegram`/approve`
 - lorsque `target` natif active la livraison vers le chat d'origine, les invites d'approbation incluent le texte de la commande
-- les approbations exec en attente expirent après 30 minutes par défaut
-- si aucune interface utilisateur d'opérateur ou aucun client d'approbation configuré ne peut accepter la demande, l'invite revient à `askFallback`
+- les approbations d'exécution en attente expirent après 30 minutes par défaut
+- si aucune interface utilisateur d'opérateur ou client d'approbation configuré ne peut accepter la demande, l'invite revient à `askFallback`
 
-les commandes de groupe sensibles réservées au propriétaire, telles que `/diagnostics` et `/export-trajectory`OpenClaw, utilisent un acheminement privé vers le propriétaire pour les invites d'approbation et les résultats finaux. OpenClaw essaie d'abord une route privée sur la même surface où le propriétaire a exécuté la commande. Si cette surface n'a pas de route privée vers le propriétaire, elle revient à la première route privée disponible vers le propriétaire à partir de `commands.ownerAllowFrom`DiscordTelegramTelegram, de sorte qu'une commande de groupe Discord peut toujours envoyer l'approbation et le résultat au DM Telegram du propriétaire lorsque Telegram est l'interface privée principale configurée. Le chat de groupe ne reçoit qu'un court accusé de réception.
+Les commandes de groupe sensibles réservées au propriétaire, telles que `/diagnostics` et `/export-trajectory`, utilisent un acheminement privé vers le propriétaire pour les invites d'approbation et les résultats finaux. OpenClaw essaie d'abord une route privée sur la même surface où le propriétaire a exécuté la commande. Si cette surface n'a pas de route privée vers le propriétaire, elle revient à la première route propriétaire disponible à partir de `commands.ownerAllowFrom`, ainsi une commande de groupe Discord peut toujours envoyer l'approbation et le résultat au DM Telegram du propriétaire lorsque Telegram est l'interface privée principale configurée. Le chat de groupe ne reçoit qu'un court accusé de réception.
 
-Telegram utilise par défaut les DMs de l'approbateur (Telegram`target: "dm"`). Vous pouvez passer à `channel` ou `both`TelegramTelegramOpenClaw lorsque vous voulez que les invites d'approbation apparaissent également dans le chat/sujet Telegram d'origine. Pour les sujets de forum Telegram, OpenClaw préserve le sujet pour l'invite d'approbation et le suivi post-approbation.
+Telegram utilise par défaut les DM des approbateurs (`target: "dm"`). Vous pouvez passer à `channel` ou `both` lorsque vous souhaitez que les invites d'approbation apparaissent également dans le chat/sujet Telegram d'origine. Pour les sujets de forum Telegram, OpenClaw préserve le sujet pour l'invite d'approbation et le suivi post-approbation.
 
 Voir :
 
-- [Discord](Discord/en/channels/discord)
-- [Telegram](Telegram/en/channels/telegram)
+- [Discord](/fr/channels/discord)
+- [Telegram](/fr/channels/telegram)
 
-### flux IPC macOS
+### Flux macOS IPC
 
 ```
 Gateway -> Node Service (WS)
@@ -316,16 +314,16 @@ Gateway -> Node Service (WS)
 Notes de sécurité :
 
 - Mode socket Unix `0600`, jeton stocké dans `exec-approvals.json`.
-- Vérification des pairs même UID.
-- Défi/réponse (nonce + jeton HMAC + hachage de la requête) + TTL court.
+- Vérification des pairs avec même UID.
+- Défi/réponse (nonce + jeton HMAC + hash de la demande) + TTL court.
 
 ## FAQ
 
 ### Quand `accountId` et `threadId` seraient-ils utilisés sur une cible d'approbation ?
 
-Utilisez `accountId` lorsque le channel a plusieurs identités configurées et que la demande d'approbation doit partir via un compte spécifique. Utilisez `threadId` lorsque la destination prend en charge les sujets ou les fils de discussion et que la demande doit rester dans ce fil plutôt que dans la conversation de niveau supérieur.
+Utilisez `accountId` lorsque le channel a plusieurs identités configurées et que l'invite d'approbation doit partir via un compte spécifique. Utilisez `threadId` lorsque la destination prend en charge les sujets ou les fils de discussion et que l'invite doit rester à l'intérieur de ce fil plutôt que dans le chat de niveau supérieur.
 
-Un cas concret Telegram est un supergroupe d'opérations avec des sujets de forum et deux comptes de bots Telegram. La valeur `to` nomme le supergroupe, `accountId` sélectionne le compte du bot, et `threadId` sélectionne le sujet du forum :
+Un cas concret Telegram concerne un supergroupe d'opérations avec des sujets de forum et deux comptes de bots Telegram. La valeur `to` nomme le supergroupe, `accountId` sélectionne le compte du bot, et `threadId` sélectionne le sujet du forum :
 
 ```json5
 {
@@ -360,19 +358,19 @@ Un cas concret Telegram est un supergroupe d'opérations avec des sujets de foru
 }
 ```
 
-Avec cette configuration, les approbations d'exécution transférées sont publiées par le compte Telegram `ops-bot` dans le sujet `77` de la discussion `-1001234567890`. Une cible sans `accountId` utilise le compte par défaut du channel, et une cible sans `threadId` publie vers la destination de niveau supérieur.
+Avec cette configuration, les approbations d'exécution transférées sont publiées par le compte Telegram `ops-bot` dans le sujet `77` du chat `-1001234567890`. Une cible sans `accountId` utilise le compte par défaut du channel, et une cible sans `threadId` publie vers la destination de premier niveau.
 
 ### Lorsque les approbations sont envoyées à une session, n'importe qui dans cette session peut-il les approuver ?
 
-Non. La livraison par session contrôle uniquement l'endroit où la demande apparaît. Elle n'autorise pas par elle-même chaque participant de cette discussion à approuver.
+Non. La livraison par session contrôle uniquement l'endroit où l'invite apparaît. Elle n'autorise pas par elle-même chaque participant de ce chat à approuver.
 
-Pour les `/approve` de même canal génériques, l'expéditeur doit déjà être autorisé pour les commandes dans cette session de channel. Si le channel expose des approbateurs explicites, ces approbateurs peuvent autoriser l'action `/approve` même s'ils ne sont pas autrement autorisés pour les commandes dans cette session.
+Pour les `/approve` génériques de même chat, l'expéditeur doit déjà être autorisé pour les commandes dans cette session de channel. Si le channel expose des approbateurs explicites, ces approbateurs peuvent autoriser l'action `/approve` même lorsqu'ils ne sont pas autrement autorisés pour les commandes dans cette session.
 
-Certains channels sont plus stricts. Discord, Telegram, Matrix, les DMs d'approbation natifs Slack et les clients d'approbation natifs similaires utilisent leurs listes d'approbateurs résolus pour l'autorisation d'approbation. Par exemple, une demande d'approbation de sujet de forum Telegram peut être visible pour tous dans le sujet, mais seuls les IDs utilisateur numériques Telegram résolus depuis `channels.telegram.execApprovals.approvers` ou `commands.ownerAllowFrom` peuvent l'approuver ou la refuser.
+Certains channels sont plus stricts. Discord, Telegram, Matrix, les DMs d'approbation natifs Slack et les clients d'approbation natifs similaires utilisent leurs listes d'approbateurs résolus pour l'autorisation d'approbation. Par exemple, une invite d'approbation de sujet de forum Telegram peut être visible pour tous dans le sujet, mais seuls les IDs d'utilisateur numériques Telegram résolus depuis `channels.telegram.execApprovals.approvers` ou `commands.ownerAllowFrom` peuvent l'approuver ou la rejeter.
 
 ## Connexes
 
-- [Approbations Exec](/fr/tools/exec-approvals) — politique de base et flux d'approbation
+- [Approbations d'exécution](/fr/tools/exec-approvals) — politique de base et flux d'approbation
 - [Outil Exec](/fr/tools/exec)
 - [Mode élevé](/fr/tools/elevated)
-- [Skills](/fr/tools/skills) — comportement d'autorisation automatique basé sur les compétences
+- [Skills](/fr/tools/skills) — comportement d'auto-autorisation basé sur des skills

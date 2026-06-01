@@ -264,14 +264,13 @@ Fast 和 Grok Code 别名。官方的 Grok Code Fast 别名
   </Accordion>
 
   <Accordion title="文本转语音">
-    捆绑的 `xai` 插件通过共享的 `tts`
-    提供商表面注册文本转语音功能。
+    捆绑的 `xai` 插件通过共享的 `tts` 提供商表面注册文本转语音。
 
     - Voices: `eve`, `ara`, `rex`, `sal`, `leo`, `una`
-    - 默认语音: `eve`
-    - 格式: `mp3`, `wav`, `pcm`, `mulaw`, `alaw`
+    - Default voice: `eve`
+    - Formats: `mp3`, `wav`, `pcm`, `mulaw`, `alaw`
     - Language: BCP-47 code or `auto`
-    - 语速: 提供商原生速度覆盖
+    - Speed: 提供商原生速度覆盖
     - 不支持原生 Opus 语音笔记格式
 
     要将 xAI 用作默认的 TTS 提供商：
@@ -283,17 +282,16 @@ Fast 和 Grok Code 别名。官方的 Grok Code Fast 别名
           provider: "xai",
           providers: {
             xai: {
-              voiceId: "eve",
+              speakerVoiceId: "eve",
             },
           },
         },
       },
     }
-    ```OpenClaw
+    ```
 
     <Note>
-    OpenClaw 使用 xAI 的批量 `/v1/tts`OpenClaw 端点。xAI 还提供通过 WebSocket
-    进行流式 TTS，但 OpenClaw 语音提供商合约目前期望在回复交付之前获得完整的音频缓冲区。
+    OpenClaw 使用 xAI 的批量 `/v1/tts` 端点。xAI 还通过 WebSocket 提供流式 TTS，但 OpenClaw 语音提供商合约目前期望在回复交付前拥有完整的音频缓冲区。
     </Note>
 
   </Accordion>

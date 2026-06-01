@@ -25,7 +25,7 @@ title: "WebChat"
 - UI 連線到 Gateway WebSocket 並使用 `chat.history`、`chat.send` 和 `chat.inject`。
 - `chat.history` 為了穩定性設有界限：Gateway 可能會截斷長文字欄位，省略繁重的元數據，並用 `[chat.history omitted: message too large]` 替換過大的項目。
 - `chat.history` 遵循現代僅追加會話檔案的作用中抄錄分支，因此被放棄的重寫分支和被取代的提示副本不會在 WebChat 中呈現。
-- 壓縮條目會呈現為明確的壓縮歷史分隔線。分隔線說明較早的輪次已保留在檢查點中，並連結到 Sessions 檢查點控制項，操作員可在權限允許時從中分支或還原壓縮前的檢視。
+- 壓縮條目會呈現為明確的壓縮歷史記錄分隔線。該分隔線說明壓縮的對話記錄會保留為檢查點，並連結到「Sessions」檢查點控制項，操作員可在權限允許的情況下，從該壓縮視圖分支還原。
 - Control UI 會記住 `chat.history` 傳回的後端 Gateway `sessionId`，並將其包含在後續的 `chat.send` 呼叫中，因此除非使用者啟動或重置會話，否則重新連線和重新整理頁面都會繼續相同的儲存對話。
 - Control UI 會在產生新的 `chat.send` 執行 ID 之前，針對相同的會話、訊息和附件合併重複的進中提交；Gateway 仍會對重複使用相同等冪性金鑰的重複請求進行去重。
 - 工作區啟動檔案和待處理的 `BOOTSTRAP.md` 指令是透過代理程式系統提示詞的專案內容提供，而非複製到 WebChat 使用者訊息中。啟動截斷僅會新增簡潔的系統提示詞復原通知；詳細計數和設定旋鈕則保留在診斷介面上。
@@ -49,20 +49,20 @@ title: "WebChat"
 
 WebChat 有兩條獨立的資料路徑：
 
-- Session JSONL 檔案是持久的模型/運行時對話紀錄。對於正常的代理程式運行，Pi 透過其會話管理器將模型可見的 `user`、`assistant` 和 `toolResult` 訊息持久化。WebChat 不會將任意的傳遞、狀態或協助文字寫入該對話紀錄中。
+- Session JSONL 檔案是持久的模型/運行時對話記錄。對於正常的 Agent 執行，內嵌的 OpenClaw 運行時會透過其會話管理員保存模型可見的 `user`、`assistant` 和 `toolResult` 訊息。WebChat 不會將任意傳送、狀態或輔助文字寫入該對話記錄中。
 - Gateway `ReplyPayload` 事件是即時傳遞投影。它們可以針對 WebChat/頻道顯示、區塊串流、指令標籤、媒體嵌入、TTS/音訊標誌和 UI 後援行為進行正規化。它們本身不是規範的會話日誌。
 - 需要透過 `tools.message` 顯示回覆的測試線路仍將 WebChat 作為當前執行內部的來源回覆接收器。來自該活動 WebChat 執行的無目標 `message.send` 會被投影到相同的聊天中，並映照到會話記錄稿；WebChat 不會變成可重複使用的輸出通道，也從不繼承 `lastChannel`。
-- 只有當網關擁有顯示的訊息且該訊息位於正常的 Pi 助手回合之外時，WebChat 才會插入助手記錄稿條目：`chat.inject`、非代理程式指令回覆、已中止的部分輸出，以及 WebChat 管理的媒體記錄稿補充。
+- WebChat 僅在 Gateway 擁有正常內嵌 Agent 週期之外顯示的訊息時，才會插入 Assistant 對話記錄條目：`chat.inject`、非 Agent 指令回覆、已中止的部分輸出，以及 WebChat 管理的媒體對話記錄補充內容。
 - `chat.history` 會讀取儲存的會話記錄稿並套用 WebChat 顯示投影。如果在執行期間出現即時助手文字，但在重新載入歷程記錄後消失，請先檢查原始 JSONL 是否包含該助手文字，然後檢查是否 `chat.history` 投影將其剝除，再檢查 Control UI 樂觀尾部合併是否用持續性快照取代了本機傳遞狀態。
 
-正常的代理程式執行最終答案應該是持久的，因為 Pi 會寫入助手 `message_end`。任何將已傳遞的最終酬載映照到記錄稿的後備機制，都必須首先避免複製 Pi 已寫入的助手回合。
+正常的 Agent 執行最終答案應該是持久的，因為內嵌運行時會寫入 Assistant `message_end`。任何將已傳送的最終 Payload 鏡像到對話記錄中的後備機制，首先必須避免重複內嵌運行時已經寫入的 Assistant 週期。
 
 ## Control UI 代理程式工具面板
 
 - Control UI `/agents` 工具面板有兩個獨立檢視：
-  - **目前可用** 使用 `tools.effective(sessionKey=...)` 並顯示當前會話在執行時實際上可用的內容，包括核心、外掛程式和通道擁有的工具。
+  - **可用工具** 使用 `tools.effective(sessionKey=...)`，並顯示目前 Session 清單的伺服器衍生唯讀投影，包括核心、外掛、通道擁有，以及已探索的 MCP 伺服器工具。
   - **工具設定** 使用 `tools.catalog` 並持續專注於設定檔、覆寫和目錄語意。
-- 執行時期的可用性範圍限於會話。在同一個代理程式上切換會話可能會改變 **目前可用** 清單。
+- 運行時可用性是以 Session 為範圍。在相同 Agent 上切換 Session 可能會變更 **可用工具** 清單。如果設定的 MCP 伺服器尚未連線，或是自上次探索後已變更，面板會顯示通知，而不是在讀取路徑中靜默啟動 MCP 傳輸。
 - 設定編輯器並不代表執行時期的可用性；有效存取仍然遵循原則優先順序 (`allow`/`deny`，每個代理程式和提供者/通道覆寫)。
 
 ## 遠端使用

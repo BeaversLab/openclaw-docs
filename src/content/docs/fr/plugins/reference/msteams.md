@@ -1,5 +1,5 @@
 ---
-summary: "Microsoft TeamsOpenClawAjoute la surface du canal Microsoft Teams pour l'envoi et la réception de messages OpenClaw."
+summary: "OpenClawMicrosoft TeamsPlugin de canal Microsoft Teams OpenClaw pour les conversations de bot."
 read_when:
   - You are installing, configuring, or auditing the msteams plugin
 title: "Microsoft TeamsPlug-in Microsoft Teams"
@@ -7,7 +7,7 @@ title: "Microsoft TeamsPlug-in Microsoft Teams"
 
 # Plug-in Microsoft Teams
 
-Ajoute la surface du canal Microsoft Teams pour l'envoi et la réception de messages OpenClaw.
+Plugin de canal Microsoft Teams OpenClaw pour les conversations de bot.
 
 ## Distribution
 

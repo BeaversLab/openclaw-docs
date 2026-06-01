@@ -266,16 +266,16 @@ Los alias heredados todavía se normalizan a los ids integrados canónicos:
   </Accordion>
 
   <Accordion title="Texto a voz">
-    El complemento `xai` incluido registra texto a voz a través de la superficie del proveedor compartido `tts`.
+    El complemento `xai` incluido registra texto a voz a través de la superficie del proveedor `tts` compartida.
 
     - Voces: `eve`, `ara`, `rex`, `sal`, `leo`, `una`
     - Voz predeterminada: `eve`
     - Formatos: `mp3`, `wav`, `pcm`, `mulaw`, `alaw`
     - Idioma: código BCP-47 o `auto`
-    - Velocidad: anulación de velocidad nativa del proveedor
+    - Velocidad: invalidación de velocidad nativa del proveedor
     - No se admite el formato de nota de voz Opus nativo
 
-    Para usar xAI como el proveedor TTS predeterminado:
+    Para usar xAI como proveedor TTS predeterminado:
 
     ```json5
     {
@@ -284,7 +284,7 @@ Los alias heredados todavía se normalizan a los ids integrados canónicos:
           provider: "xai",
           providers: {
             xai: {
-              voiceId: "eve",
+              speakerVoiceId: "eve",
             },
           },
         },
@@ -293,7 +293,9 @@ Los alias heredados todavía se normalizan a los ids integrados canónicos:
     ```
 
     <Note>
-    OpenClaw utiliza el endpoint por lotes `/v1/tts` de xAI. xAI también ofrece TTS en streaming a través de WebSocket, pero el contrato del proveedor de voz de OpenClaw actualmente espera un búfer de audio completo antes de la entrega de la respuesta.
+    OpenClaw utiliza el endpoint por lotes `/v1/tts` de xAI. xAI también ofrece TTS en streaming
+    a través de WebSocket, pero el contrato del proveedor de voz de OpenClaw actualmente espera
+    un búfer de audio completo antes de la entrega de la respuesta.
     </Note>
 
   </Accordion>

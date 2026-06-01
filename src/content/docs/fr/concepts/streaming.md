@@ -194,14 +194,20 @@ Matrix :
 
 La diffusion en aperçu peut également inclure des mises à jour de **progression de l'outil** (tool-progress) - de courtes lignes de statut telles que « recherche sur le web », « lecture de fichier » ou « appel de l'outil » - qui apparaissent dans le même message d'aperçu pendant que les outils sont en cours d'exécution, avant la réponse finale. En mode serveur d'application Codex, les messages de préambule/commentaire Codex utilisent ce même chemin d'aperçu, de sorte que de courtes notes de progression telles que « Je vérifie... » peuvent être diffusées dans le brouillon modifiable sans faire partie de la réponse finale. Cela permet de maintenir visuellement les tours d'outils à plusieurs étapes actifs plutôt que silencieux entre le premier aperçu de réflexion et la réponse finale.
 
+Les outils de longue durée peuvent émettre une progression typée avant de renvoyer leur résultat. Par exemple,
+`web_fetch` arme une minuterie de cinq secondes au démarrage : si la récupération est toujours
+en attente, l'aperçu peut afficher `Fetching page content...` ; si la récupération se termine
+ou est annulée avant ce délai, aucune ligne de progression n'est émise. Le résultat final ultérieur de l'outil
+est toujours transmis normalement au model.
+
 Surfaces prises en charge :
 
-- **Discord**, **Slack**, **Telegram** et **Matrix** diffusent par défaut les mises à jour de la progression de l'outil et du préambule Codex dans la modification de l'aperçu en direct lorsque la diffusion en aperçu est active. Microsoft Teams utilise son flux de progression natif dans les discussions personnelles.
-- Telegram est livré avec les mises à jour de l'aperçu de tool-progress activées depuis `v2026.4.22` ; les maintenir activées préserve ce comportement publié.
+- **Discord**, **Slack**, **Telegram** et **Matrix** diffusent les mises à jour de progression des outils et du préambule Codex dans la modification de l'aperçu en direct par défaut lorsque le streaming d'aperçu est actif. Microsoft Teams utilise son flux de progression natif dans les chats personnels.
+- Telegram est livré avec les mises à jour de l'aperçu de progression des outils activées depuis `v2026.4.22` ; les garder activées préserve ce comportement publié.
 - **Mattermost** intègre déjà l'activité des outils dans son unique message de brouillon d'aperçu (voir ci-dessus).
-- Les modifications de tool-progress suivent le mode de diffusion en aperçu actif ; elles sont ignorées lorsque la diffusion en aperçu est `off` ou lorsque la diffusion de blocs a pris le relais du message. Sur Telegram, `streaming.mode: "off"` est final-only : les bavardages de progression génériques sont également supprimés au lieu d'être livrés sous forme de messages de statut autonomes, tandis que les invites d'approbation, les charges utiles multimédias et les erreurs sont toujours acheminés normalement.
-- Pour conserver le streaming d'aperçu tout en masquant les lignes de progression des outils, définissez `streaming.preview.toolProgress` sur `false` pour ce channel. Pour garder les lignes de progression des outils visibles tout en masquant le texte de commande/exec, définissez `streaming.preview.commandText` sur `"status"` ou `streaming.progress.commandText` sur `"status"` ; la valeur par défaut est `"raw"` pour préserver le comportement publié. Cette stratégie est partagée par les channels de brouillon/progression qui utilisent le rendu de progression compact d'OpenClaw, notamment Discord, Matrix, Microsoft Teams, Mattermost, les aperçus de brouillon Slack et Telegram. Pour désactiver entièrement les modifications d'aperçu, définissez `streaming.mode` sur `off`.
-- Les réponses avec citation sélectionnée sur Telegram font exception : lorsque `replyToMode` n'est pas `"off"` et qu'un texte de citation est présent, OpenClaw ignore le flux d'aperçu de réponse pour ce tour, afin que les lignes d'aperçu de progression des outils ne puissent pas s'afficher. Les réponses au message actuel sans texte de citation sélectionné conservent toujours le streaming d'aperçu. Voir la [documentation du channel Telegram](/fr/channels/telegram) pour plus de détails.
+- Les modifications de progression des outils suivent le mode de streaming d'aperçu actif ; elles sont ignorées lorsque le streaming d'aperçu est `off` ou lorsque le block streaming a pris en charge le message. Sur Telegram, `streaming.mode: "off"` est final uniquement : les bavardages de progression génériques sont également supprimés au lieu d'être transmis comme messages de statut autonomes, tandis que les invites d'approbation, les charges utiles multimédias et les erreurs sont toujours acheminés normalement.
+- Pour conserver le flux de prévisualisation mais masquer les lignes de progression des outils, définissez `streaming.preview.toolProgress` sur `false` pour ce channel. Pour garder les lignes de progression des outils visibles tout en masquant le texte de commande/exec, définissez `streaming.preview.commandText` sur `"status"` ou `streaming.progress.commandText` sur `"status"` ; la valeur par défaut est `"raw"`OpenClawDiscordMatrixMicrosoft TeamsMattermostSlackTelegram pour préserver le comportement publié. Cette stratégie est partagée par les channels de brouillon/progression qui utilisent le moteur de rendu de progression compact d'OpenClaw, notamment Discord, Matrix, Microsoft Teams, Mattermost, les prévisualisations de brouillon Slack, et Telegram. Pour désactiver entièrement les modifications de prévisualisation, définissez `streaming.mode` sur `off`.
+- Les réponses par citation sélectionnées sur Telegram sont une exception : lorsque Telegram`replyToMode` n'est pas `"off"`OpenClawTelegram et qu'un texte de citation sélectionné est présent, OpenClaw ignore le flux de prévisualisation de la réponse pour ce tour, afin que les lignes de prévisualisation de la progression des outils ne puissent pas être rendues. Les réponses au message en cours sans texte de citation sélectionné conservent toujours le flux de prévisualisation. Consultez la [documentation du channel Telegram](/fr/channels/telegram) pour plus de détails.
 
 Garder les lignes de progression visibles mais masquer le texte brut de commande/exec :
 
@@ -221,7 +227,7 @@ Garder les lignes de progression visibles mais masquer le texte brut de commande
 }
 ```
 
-Utilisez la même structure sous une autre clé de channel à progression compacte, par exemple `channels.discord`, `channels.matrix`, `channels.msteams`, `channels.mattermost` ou les aperçus de brouillon Slack. Pour le mode progression-brouillon, placez la même stratégie sous `streaming.progress` :
+Utilisez la même structure sous une autre clé de channel de progression compact, par exemple `channels.discord`, `channels.matrix`, `channels.msteams`, `channels.mattermost`Slack, ou les prévisualisations de brouillon Slack. Pour le mode progress-draft, placez la même stratégie sous `streaming.progress` :
 
 ```json
 {
@@ -241,8 +247,8 @@ Utilisez la même structure sous une autre clé de channel à progression compac
 
 ## Connexes
 
-- [Refactorisation du cycle de vie des messages](/fr/concepts/message-lifecycle-refactor) - conception cible partagée pour l'aperçu, la modification, le streaming et la finalisation
-- [Brouillons de progression](/fr/concepts/progress-drafts) - messages de travail en cours visibles qui sont mis à jour lors des longs tours
+- [Refactorisation du cycle de vie des messages](/fr/concepts/message-lifecycle-refactor) - conception cible partagée pour la prévisualisation, la modification, le flux et la finalisation
+- [Brouillons de progression](/fr/concepts/progress-drafts) - messages de travail en cours visibles qui sont mis à jour pendant les longs tours
 - [Messages](/fr/concepts/messages) - cycle de vie et livraison des messages
 - [Nouvelle tentative](/fr/concepts/retry) - comportement de nouvelle tentative en cas d'échec de livraison
-- [Canaux](/fr/channels) - prise en charge du flux par canal
+- [Channels](/fr/channels) - support du streaming par channel

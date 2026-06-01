@@ -1,5 +1,5 @@
 ---
-summary: "新增 Synology Chat 頻道表面，用於發送和接收 OpenClaw 訊息。"
+summary: "適用於 OpenClaw 頻道和直接訊息的 Synology Chat 頻道外掛程式。"
 read_when:
   - You are installing, configuring, or auditing the synology-chat plugin
 title: "Synology Chat 外掛程式"
@@ -7,7 +7,7 @@ title: "Synology Chat 外掛程式"
 
 # Synology Chat 外掛程式
 
-新增 Synology Chat 頻道表面，用於發送和接收 OpenClaw 訊息。
+適用於 OpenClaw 頻道和直接訊息的 Synology Chat 頻道外掛程式。
 
 ## 發布
 

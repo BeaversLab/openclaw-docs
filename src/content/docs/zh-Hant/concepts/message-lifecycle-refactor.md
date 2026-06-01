@@ -2,12 +2,12 @@
 summary: "統一的持續性訊息接收、發送、預覽、編輯與串流生命週期設計方案"
 read_when:
   - Refactoring channel send or receive behavior
-  - Changing channel turn, reply dispatch, outbound queue, preview streaming, or plugin SDK message APIs
+  - Changing channel inbound, reply dispatch, outbound queue, preview streaming, or plugin SDK message APIs
   - Designing a new channel plugin that needs durable sends, receipts, previews, edits, or retries
 title: "訊息生命週期重構"
 ---
 
-本頁面是目標設計，旨在用一個持續性的訊息生命週期來取代分散的通道輪次、回覆派發、預覽串流以及輸出傳遞輔助函式。
+此頁面是用單一持久化訊息生命週期取代分散的通道入站、回覆分發、預覽串流和出站傳遞輔助工具的目標設計。
 
 簡而言之：
 
@@ -16,14 +16,14 @@ title: "訊息生命週期重構"
 - 輪次 只是輸入處理的便利措施，並非傳遞的擁有者。
 - 發送必須基於情境：`begin`、轉譯、預覽或串流、最終發送、提交、失敗。
 - 接收也必須基於情境：正規化、去重、路由、記錄、派發、平台確認、失敗。
-- 公開的插件 SDK 應精簡為一個小型的通道訊息介面。
+- 公開的外掛程式 SDK 應收斂為一個小型的通道出站介面。
 
 ## 問題
 
 目前的通道堆疊源於幾個合理的本地需求：
 
-- 簡單的輸入適配器使用 `runtime.channel.turn.run`。
-- 豐富的適配器使用 `runtime.channel.turn.runPrepared`。
+- 簡單的入站適配器使用 `runtime.channel.inbound.run`。
+- 豐富的適配器使用 `runtime.channel.inbound.runPreparedReply`。
 - 舊版輔助函式使用 `dispatchInboundReplyWithBase`、
   `recordInboundSessionAndDispatchReply`、回覆載荷輔助函式、回覆分塊、
   回覆參照以及輸出執行時輔助函式。
@@ -51,7 +51,7 @@ Telegram polling update acked
 - 在適配器宣告可重播安全行為後，新的訊息生命週期中預設採用持久的最終發送。
 - 共享的預覽、編輯、串流、最終確定、重試、恢復和接收語意。
 - 一個小型的外掛 SDK 介面，方便第三方外掛學習和維護。
-- 在遷移期間與現有的 `channel.turn` 呼叫端相容。
+- 在遷移期間，為現有的入站回覆相容性呼叫者提供相容性。
 - 針對新頻道功能的清晰擴充點。
 - 核心中沒有特定於平台的分支。
 - 沒有 token-delta 頻道訊息。頻道串流保持為訊息預覽、編輯、追加或完成的區塊傳遞。
@@ -59,7 +59,7 @@ Telegram polling update acked
 
 ## 非目標
 
-- 不要在第一階段移除 `runtime.channel.turn.*`。
+- 不要在第一階段強制每個現有通道都採用持久化訊息傳遞。
 - 不要強迫每個頻道採用相同的原生傳輸行為。
 - 不要在核心中教導 Telegram 主題、Slack 原生串流、Matrix 紅訊、飛書卡片、QQ 語音或 Teams 活動。
 - 不要將所有內部遷移輔助程式發佈為穩定的 SDK API。
@@ -74,7 +74,7 @@ Vercel Chat 有一個很好的公開心智模型：
 - `Channel`
 - `Message`
 - 適配器方法，例如 `postMessage`、`editMessage`、`deleteMessage`、
-  `stream`、`startTyping` 和歷史記錄提取
+  `stream``startTyping`、%%PH:INLINE_CODE:47:af9384f%% 以及歷史記錄擷取
 - 用於去重、鎖定、佇列和持久化的狀態適配器
 
 OpenClaw 應該借用詞彙，而不是複製表面。
@@ -88,11 +88,11 @@ OpenClaw 在該模型之外的額外需求：
 - 更小的公開 SDK。捆綁的插件可以使用內部執行時輔助程式，但第三方插件應該看到一個一致的訊息 API。
 - Agent 專屬的行為：sessions、transcripts、區塊串流、工具進度、核准、媒體指令、無聲回覆，以及群組提及歷史。
 
-`thread.post()` 風格的 promises 對 OpenClaw 來說是不夠的。它們隱藏了決定發送是否可恢復的事務邊界。
+`thread.post()` 風格的 Promise 對 OpenClaw 來說是不夠的。它們隱藏了決定發送是否可恢復的交易邊界。
 
 ## 核心模型
 
-新的領域應該位於一個內部核心命名空間下，例如 `src/channels/message/*`。
+新領域應位於內部核心命名空間下，例如 `src/channels/message/*`。
 
 它有四個概念：
 
@@ -109,7 +109,7 @@ core.messages.state(...)
 
 `live` 擁有預覽、編輯、進度和串流狀態。
 
-`state` 擁有持久意圖儲存、收據、等冪性、恢復、鎖定和去重。
+`state` 擁有持久化意圖儲存、回執、等冪性、恢復、鎖和去重。
 
 ## 訊息術語
 
@@ -200,7 +200,7 @@ type MessageOrigin =
 
 Core 擁有 OpenClaw 產生之輸出的含義。Channels 擁有將該來源編碼到其傳輸中的方式。
 
-第一個必須的用途是閘道失敗輸出。人類應該仍然能看到諸如「Agent 在回覆前失敗」或「缺少 API 金鑰」之類的訊息，但在啟用 `allowBots` 時，在共用聊天室中不得將標記為 OpenClaw 運營輸出的內容視為 bot 撰寫的輸入。
+第一個必須的用途是閘道失敗輸出。人類仍應看到「Agent 在回覆前失敗」或「遺失 API 金鑰」等訊息，但當啟用 `allowBots` 時，標記為 OpenClaw 操作輸出的內容絕不能在共用聊天室中被接受為機器人發送的輸入。
 
 ### 收據
 
@@ -288,8 +288,7 @@ Ack（確認）並非單一事物。接收契約必須將這些訊號分開：
 - **User-visible receipt（使用者可見回執）：** 選用的已讀/狀態/輸入中行為；絕非
   持久性邊界。
 
-`ReceiveAckPolicy` 僅控制傳輸或輪詢確認。它必須
-不被重複用於已讀回執或狀態反應。
+`ReceiveAckPolicy` 僅控制傳輸或輪詢確認。不得將其重複用於已讀回執或狀態反應。
 
 在機器人授權之前，當管道能夠解碼訊息來源元資料時，接收必須應用共用的 OpenClaw 回應策略：
 
@@ -299,7 +298,7 @@ function shouldDropOpenClawEcho(params: { origin?: MessageOrigin; isBotAuthor: b
 }
 ```
 
-此丟棄是基於標籤而非文字。一條具有相同可見的閘道失敗文字但沒有 OpenClaw 來源元資料的機器人發送之房間訊息，仍然會經過正常的 `allowBots` 授權。
+此丟棄機制是基於標籤，而非基於文字。一條具有相同可見閘道失敗文字但沒有 OpenClaw 來源元數據的機器人發送聊天室訊息，仍需經過正常的 `allowBots` 授權。
 
 Ack 策略是明確的：
 
@@ -307,7 +306,7 @@ Ack 策略是明確的：
 type ReceiveAckPolicy = { kind: "immediate"; reason: "webhook-timeout" | "platform-contract" } | { kind: "after-record" } | { kind: "after-durable-send" } | { kind: "manual" };
 ```
 
-Telegram 輪詢現在使用接收上下文 ack 策略來處理其持久化的重新啟動水位線。追蹤器仍然在 grammY 更新進入中介軟體鏈時進行觀察，但 OpenClaw 僅在成功分發後保留安全完成的更新 ID，使失敗或較低的待處理更新能在重新啟動後重播。Telegram 的上游 `getUpdates` 取得偏移量仍由輪詢程式庫控制，因此如果除了 OpenClaw 的重新啟動水位線之外，我們還需要平台層級的重新傳遞，那麼其餘更深的切入就是一個完全持久的輪詢來源。Webhook 平台可能需要立即的 HTTP 確認，但它們仍需要入站去重和持久的出站傳送意圖，因為 webhook 可能會重新傳遞。
+Telegram 輪詢現在針對其持久化的重新啟動水位線使用接收語境的確認策略。追蹤器仍然會在 grammY 更新進入中介軟體鏈時進行觀察，但 OpenClaw 只會在成功分發後持久化安全完成的更新 ID，讓失敗或較低的待處理更新在重新啟動後可以重新播放。Telegram 的上游 `getUpdates` 取得偏移量仍然由輪詢庫控制，因此如果除了 OpenClaw 的重新啟動水位線之外，我們還需要平台層級的重新投遞，剩餘的更深入改動就是一個完全持久的輪詢來源。Webhook 平台可能需要立即的 HTTP 確認，但它們仍然需要入站去重和持久的出站發送意圖，因為 webhook 可能會重新投遞。
 
 ## 傳送上下文
 
@@ -366,7 +365,7 @@ begin durable intent
 
 意圖必須在傳輸 I/O 之前存在。在 begin 之後但在 commit 之前的重啟是可恢復的。
 
-危險的邊界是在平台成功之後和回執提交之前。如果進程在那裡終止，除非適配器提供原生冪等性或回執對帳路徑，否則 OpenClaw 無法知道平台訊息是否存在。這些嘗試必須在 `unknown_after_send` 中恢復，而不是盲目重播。沒有對帳功能的頻道可以選擇至少一次重播，僅當重複的可見訊息對該頻道和關係來說是可接受的、有文檔記錄的權衡時。當前的 SDK 對帳橋接器要求適配器聲明 `reconcileUnknownSend`，然後要求 `durableFinal.reconcileUnknownSend` 將未知條目分類為 `sent`、`not_sent` 或 `unresolved`；只有 `not_sent` 允許重播，並且未解決的條目保持終止狀態或僅重試對帳檢查。
+危險的邊界是在平台成功之後和收據提交之前。如果程序在那裡終止，除非配接器提供原生等冪性或收據對核路徑，否則 OpenClaw 無法知道平台訊息是否存在。那些嘗試必須在 `unknown_after_send` 中恢復，而不是盲目地重新播放。沒有對核的通道可能只有在重複的可見訊息對該通道和關係來說是可接受且已記錄的權衡時，才會選擇至少一次的重新播放。目前的 SDK 對核橋接器要求配接器宣告 `reconcileUnknownSend`，然後要求 `durableFinal.reconcileUnknownSend` 將未知條目分類為 `sent`、`not_sent` 或 `unresolved`；只有 `not_sent` 允許重新播放，而未解決的條目保持終止或僅重試對核檢查。
 
 持久性策略必須是顯式的：
 
@@ -374,11 +373,14 @@ begin durable intent
 type MessageDurabilityPolicy = "required" | "best_effort" | "disabled";
 ```
 
-`required` 意味著當核心無法寫入持久化意圖時必須關閉失效。`best_effort` 可以在持久化不可用時通過。`disabled` 保持舊的直接發送行為。在遷移期間，舊的包裝器和公共兼容性助手默認為 `disabled`；它們絕不能根據頻道具有通用出站適配器這一事實推斷出 `required`。
+`required` 意味著核心在無法寫入持久化意圖時必須失效關閉。`best_effort` 可以在持久化不可用時通過。`disabled` 保留舊的直接發送行為。在遷移期間，傳統包裝器和公開相容性輔助函數預設為 `disabled`；它們不得僅根據通道具有通用出站配接器這一事實就推斷 `required`。
 
 發送上下文也擁有頻道本地的發送後效果。如果持久化傳遞繞過了以前附加到頻道直接發送路徑的本地行為，則遷移是不安全的。例子包括自我回顯抑制快取、線程參與標記、原生編輯錨點、模型簽名渲染以及平台特定的重複守護。這些效果必須在該頻道啟用持久化通用最終傳遞之前移動到發送適配器、渲染適配器或命名發送上下文掛鉤中。
 
-傳送輔助程式必須將回執一直傳回給呼叫者。持久包裝器不能吞掉訊息 ID 或將通道傳遞結果替換為 `undefined`；緩衝分發器使用這些 ID 作為執行緒錨點、後續編輯、預覽最終化和重複抑制。
+Send helpers 必須將回條一直返回給呼叫者。Durable
+wrappers 不能吞噬訊息 ID 或用 `undefined` 取代 channel delivery result；
+buffered dispatchers 會使用這些 ID 作為 thread anchors、後續編輯、
+preview finalization 和重複抑制。
 
 後備傳送是在批次上運作，而非單一負載。靜默回覆重寫、媒體後備、卡片後備和區塊投影都可能產生多個可傳送的訊息，因此傳送內容必須傳遞整個投影批次，或明確記錄為何僅有一個負載有效。
 
@@ -397,7 +399,10 @@ type RenderedMessageUnit = {
 };
 ```
 
-當此類後備具備持久性時，整個投影批次必須由一個持久傳送意圖或另一個原子批次計畫表示。逐一記錄每個負載是不夠的：負載之間的當機可能會導致部分可見的後備，而剩餘負載沒有持久記錄。恢復機制必須知道哪些單元已有回執，並僅重播缺失的單元，或將批次標記為 `unknown_after_send`，直到配接器協調完畢。
+當這種後備機制是 durable 時，整個預測的批次必須由
+一個 durable send intent 或另一個原子批次計畫來表示。逐個記錄每個 payload 是不夠的：
+payload 之間的崩潰可能會導致部分可見的後備機制，而剩餘的 payload 沒有 durable 記錄。
+Recovery 必須知道哪些單元已經有回條，並且僅重播缺失的單元，或在協調器協調之前將批次標記為 `unknown_after_send`。
 
 ## 即時內容
 
@@ -440,7 +445,7 @@ type LiveMessageState = {
 公開 SDK 目標應為單一子路徑：
 
 ```typescript
-import { defineChannelMessageAdapter } from "openclaw/plugin-sdk/channel-message";
+import { defineChannelMessageAdapter } from "openclaw/plugin-sdk/channel-outbound";
 ```
 
 目標形狀：
@@ -481,7 +486,9 @@ type MessageReceiveAdapter<TRaw = unknown> = {
 };
 ```
 
-在預先授權之前，只要 `origin.decode` 返回 OpenClaw 來源元數據，核心必須執行共用的 OpenClaw 回謂詞。接收配接器提供平台事實，例如機器人作者和房間形狀；核心擁有丟棄決策和排序，以便通道不會重新實作文字過濾器。
+在預檢授權之前，每當 `origin.decode` 返回 OpenClaw-origin 元資料時，
+core 必須執行共享的 OpenClaw echo predicate。接收配接器提供平台事實，
+例如 bot 作者和 room shape；core 擁有 drop 決策和排序權限，以便 channels 不必重新實作文字過濾器。
 
 來源配接器：
 
@@ -492,11 +499,10 @@ type MessageOriginAdapter<TRaw = unknown, TNative = unknown> = {
 };
 ```
 
-Core sets `MessageOrigin`。Channels only translate it to and from native
-transport metadata. Slack maps this to `chat.postMessage({ metadata })` and
-inbound `message.metadata`; Matrix can map it to extra event content; channels
-without native metadata can use a receipt/outbound registry when that is the
-best available approximation.
+Core 設定 `MessageOrigin`。Channels 僅將其轉換為來自原生
+傳輸元資料的格式。Slack 將其對應到 `chat.postMessage({ metadata })` 和
+inbound `message.metadata`；Matrix 可以將其對應到額外的事件內容；
+沒有原生元資料的 channels 可以使用 receipt/outbound registry 當這是最好的可用近似值時。
 
 Capabilities:
 
@@ -538,30 +544,30 @@ The new public surface should absorb or deprecate these conceptual areas:
 - `reply-payload`
 - `inbound-reply-dispatch`
 - `channel-reply-pipeline`
-- most public uses of `outbound-runtime`
+- 大多數 `outbound-runtime` 的公開用途
 - ad hoc draft stream lifecycle helpers
 
 Compatibility subpaths can remain as wrappers, but new third-party plugins
 should not need them.
 
-Bundled plugins may keep internal helper imports through reserved runtime
-subpaths while migrating. Public docs should steer plugin authors to
-`plugin-sdk/channel-message` once it exists.
+Bundled plugins 在遷移期間可以透過保留的 runtime
+subpaths 繼續使用內部 helper imports。公開文件應引導 plugin 作者
+在 `plugin-sdk/channel-outbound` 存在時使用它。
 
-## Relationship to channel turn
+## 與 channel inbound 的關係
 
-`runtime.channel.turn.*` should stay during migration.
+`runtime.channel.inbound.*` 是遷移期間的 runtime bridge。
 
 It should become a compatibility adapter:
 
 ```text
-channel.turn.run
+channel.inbound.run
   -> messages.receive context
   -> session dispatch
   -> messages.send context for visible output
 ```
 
-`channel.turn.runPrepared` should also remain initially:
+`channel.inbound.runPreparedReply` 最初也應該保留：
 
 ```text
 channel-owned dispatcher
@@ -570,10 +576,7 @@ channel-owned dispatcher
   -> messages.send for final delivery
 ```
 
-After all bundled plugins and known third-party compatibility paths are bridged,
-`channel.turn` can be deprecated. It should not be removed until there is a
-published SDK migration path and contract tests proving old plugins still work
-or fail with a clear version error.
+舊的 `channel.turn` 執行時層已被移除。執行時呼叫者使用 `channel.inbound.*`；頻道文件和 SDK 子路徑使用 inbound/message 名詞。
 
 ## Compatibility guardrails
 
@@ -582,33 +585,20 @@ existing delivery callback has side effects beyond "send this payload".
 
 Legacy entry points are non-durable by default:
 
-- `channel.turn.run` and `dispatchAssembledChannelTurn` use the channel's
-  delivery callback unless that channel explicitly supplies an audited durable
-  policy/options object.
-- `channel.turn.runPrepared` stays channel-owned until the prepared dispatcher
-  explicitly calls the send context.
-- Public compatibility helpers such as `recordInboundSessionAndDispatchReply`,
-  `dispatchInboundReplyWithBase`, and direct-DM helpers never inject generic
-  durable delivery before the caller-provided `deliver` or `reply` callback.
+- `channel.inbound.run` 和 `dispatchChannelInboundReply` 使用頻道的傳遞回呼，除非該頻道明確提供經過審計的持久策略/選項物件。
+- `channel.inbound.runPreparedReply` 在準備好的分發器明確呼叫傳送上下文之前，一直保持由頻道擁有。
+- 公開的相容性輔助函式，如 `recordInboundSessionAndDispatchReply`、`dispatchInboundReplyWithBase` 和直接 DM 輔助函式，絕不會在呼叫者提供的 `deliver` 或 `reply` 回呼之前注入通用的持久傳遞。
 
-For migration bridge types, `durable: undefined` means "not durable". The
-durable path is enabled only by an explicit policy/options value. `durable:
-false` can remain as a compatibility spelling, but implementation should not
-require every unmigrated channel to add it.
+對於遷移橋接類型，`durable: undefined` 意味著「非持久」。持久路徑僅通過明確的策略/選項值啟用。`durable: false` 可以保留為相容性寫法，但實現不應要求每個未遷移的頻道都添加它。
 
 Current bridge code must keep the durability decision explicit:
 
-- Durable final delivery returns a discriminated status. `handled_visible` and
-  `handled_no_send` are terminal; `unsupported` and `not_applicable` may fall
-  back to channel-owned delivery; `failed` propagates the send failure.
+- 持久的最終傳遞返回一個可區分的狀態。`handled_visible` 和 `handled_no_send` 是終結性的；`unsupported` 和 `not_applicable` 可能會回退到頻道擁有的傳遞；`failed` 傳播傳送失敗。
 - Generic durable final delivery is gated by adapter capabilities such as
   silent delivery, reply target preservation, native quote preservation, and
   message-sending hooks. Missing parity should choose channel-owned delivery,
   not a generic send that changes user-visible behavior.
-- Queue-backed durable sends expose a delivery intent reference. Existing
-  `pendingFinalDelivery*` session fields can carry the intent id during the
-  transition; the end state is a `MessageSendIntent` store instead of frozen
-  reply text plus ad hoc context fields.
+- 由佇列支援的持久傳送會公開一個傳遞意圖引用。現有的 `pendingFinalDelivery*` 會話欄位可以在過渡期間攜帶意圖 ID；最終狀態是一個 `MessageSendIntent` 存儲，而不是凍結的回覆文本加上臨時上下文欄位。
 
 Do not enable the generic durable path for a channel until all of these are
 true:
@@ -631,8 +621,8 @@ Concrete migration hazards to preserve:
 - Discord 和其他已準備的發送器已經擁有直接的遞送和預覽行為。在它們的已準備發送器透過發送上下文明確路由最終訊息之前，它們不受組合回合持久性保證的涵蓋。
 - Telegram 靜默後備遞送必須傳遞完整的投影 payload 陣列。單一 payload 的捷徑可能會在投影後丟失額外的後備 payload。
 - LINE、Zalo、Nostr 和其他現有的組合/輔助路徑可能具有回覆 token 處理、媒體代理、已發送訊息快取、載入/狀態清理或僅回調目標。在這些語意由發送介面卡表示並透過測試驗證之前，它們必須保留在通道擁有的遞送上。
-- Direct-DM 輔助程式可能具有回調，這是唯一正確的傳輸目標。通用的出站傳輸不得從 `OriginatingTo` 或 `To` 猜測並跳過該回調。
-- OpenClaw 閘道失敗輸出必須保持對人類可見，但標記為機器人撰寫的房間回音必須在 `allowBots` 授權之前被丟棄。通道不得使用可見文字前綴過濾器來實現此功能，除非作為短期的緊急權宜之計；持久性合約是結構化的來源元資料。
+- 直接 DM 輔助函式可以具有一個回呼，該回呼是唯一正確的傳輸目標。通用出站不得從 `OriginatingTo` 或 `To` 推測並跳過該回呼。
+- OpenClaw 閘道失敗輸出必須保持對人類可見，但標記為機器人撰寫的房間回聲必須在 `allowBots` 授權之前被丟棄。頻道不得使用可見文本前綴過濾器來實現這一點，除非作為短期的緊急應變措施；持久契約是結構化的來源元數據。
 
 ## 內部儲存
 
@@ -684,11 +674,11 @@ type DeliveryFailureKind = "transient" | "rate_limit" | "auth" | "permission" | 
 核心策略：
 
 - 重試 `transient` 和 `rate_limit`。
-- 除非存在呈現後備，否則不要重試 `invalid_payload`。
-- 在配置變更之前，不要重試 `auth` 或 `permission`。
-- 對於 `not_found`，當管道聲明安全時，讓即時最終化從編輯回退到全新傳送。
-- 對於 `conflict`，使用回據/冪等規則來判斷訊息是否已存在。
-- 在適配器可能已完成平台 I/O 但在回據提交之後發生的任何錯誤都會變成 `unknown_after_send`，除非適配器能證明平台操作未發生。
+- 除非存在回退機制，否則不要重試 `invalid_payload`。
+- 在設定變更之前，不要重試 `auth` 或 `permission`。
+- 對於 `not_found`，當頻道宣告安全時，允許即時最終處理從編輯回退到重新發送。
+- 對於 `conflict`，使用回據/冪等規則來決定訊息是否已存在。
+- 除非介面卡能證明平台操作未發生，否則在介面卡可能已完成平台 I/O 之後、但在提交回據之前的任何錯誤都會變成 `unknown_after_send`。
 
 ## 管道對應
 
@@ -696,16 +686,16 @@ type DeliveryFailureKind = "transient" | "rate_limit" | "auth" | "permission" | 
 | --------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Telegram        | 接收確認原則加上持久的最終傳送。即時適配器負責傳送加上編輯預覽、過時預覽最終傳送、主題、引用回覆預覽跳過、媒體回退以及重試後處理。                                                                                                           |
 | Discord         | 傳送適配器包裝現有的持續性負載傳送。即時適配器負責草稿編輯、進度草稿、媒體/錯誤預覽取消、回覆目標保留以及訊息 ID 回據。稽核機器人在共享房間中的閘道失敗回聲；如果 Discord 無法在正常訊息上攜帶來源元數據，則使用出站註冊表或其他原生等效項。 |
-| Slack           | 傳送適配器處理正常聊天貼文。即時適配器在執行緒形狀支援時選擇原生串流，否則選擇草稿預覽。回據保留執行緒時間戳記。來源適配器將 OpenClaw 閘道失敗映射到 Slack `chat.postMessage.metadata`，並在 `allowBots` 授權之前丟棄標記的機器人房間回聲。  |
+| Slack           | 發送介面卡處理一般聊天貼文。即時介面卡在執行緒形狀支援時選擇原生串流，否則選擇草稿預覽。回據會保留執行緒時間戳。來源介面卡將 OpenClaw 閘道失敗對應到 Slack `chat.postMessage.metadata`，並在 `allowBots` 授權之前捨棄標記的機器人房間回顯。  |
 | WhatsApp        | 傳送適配器負責具有持久最終意圖的文字/媒體傳送。接收適配器處理群組提及和發送者身分。在 WhatsApp 具有可編輯傳輸之前，即時可以保持缺席。                                                                                                        |
-| Matrix          | 即時適配器負責草稿事件編輯、最終化、刪除、加密媒體約束以及回覆目標不匹配回退。接收適配器負責加密事件補水和去重。來源適配器應將 OpenClaw 閘道失敗來源編碼到 Matrix 事件內容中，並在 `allowBots` 處理之前丟棄已配置機器人房間的回聲。          |
+| Matrix          | 即時介面卡負責草稿事件編輯、最終處理、刪除、加密媒體限制以及回覆目標不匹配回退。接收介面卡負責加密事件補水和去重。來源介面卡應將 OpenClaw 閘道失敗來源編碼到 Matrix 事件內容中，並在 `allowBots` 處理之前捨棄設定的機器人房間回顯。          |
 | Mattermost      | 即時適配器負責一個草稿貼文、進度/工具折疊、就地最終化以及全新傳送回退。                                                                                                                                                                      |
 | Microsoft Teams | Live adapter 負責原生進度和區塊串流行為。Send adapter 負責活動以及附件/卡片回執。                                                                                                                                                            |
 | 飛書            | Render adapter 負責文字/卡片/原始渲染。Live adapter 負責串流卡片和重複最終抑制。Send adapter 負責評論、主題會話、媒體和語音抑制。                                                                                                            |
 | QQ 機器人       | Live adapter 負責 C2C 串流、累加器逾時和備用最終發送。Render adapter 負責媒體標籤和文字轉語音。                                                                                                                                              |
 | Signal          | 簡單的接收加發送 adapter。除非 signal-cli 增加可靠的編輯支援，否則沒有 Live adapter。                                                                                                                                                        |
 | iMessage        | 簡單的接收加發送 adapter。iMessage 發送必須在持久化最終訊息能繞過監視器傳遞之前，保持監視器回聲快取的填充。                                                                                                                                  |
-| Google Chat     | 簡單的接收加發送 adapter，將回覆關聯對應至空間和執行緒 ID。稽核 `allowBots=true` 房間行為，以處理標記的 OpenClaw 閘道失敗回聲。                                                                                                              |
+| Google Chat     | 簡單的接收加上發送介面卡，並將執行緒關係對應到空間和執行緒 ID。稽核 `allowBots=true` 房間對標記的 OpenClaw 閘道失敗回顯的行為。                                                                                                              |
 | LINE            | 簡單的接收加發送 adapter，將 reply-token 限制建模為目標/關聯能力。                                                                                                                                                                           |
 | Nextcloud Talk  | SDK 接收橋接器加發送 adapter。                                                                                                                                                                                                               |
 | IRC             | 簡單的接收加發送 adapter，沒有持久化編輯回執。                                                                                                                                                                                               |
@@ -721,8 +711,8 @@ type DeliveryFailureKind = "transient" | "rate_limit" | "auth" | "permission" | 
 
 ### 階段 1：內部訊息域
 
-- 新增 `src/channels/message/*` 類型，用於訊息、目標、關聯、來源、回執、能力、持久化意圖、接收上下文、發送上下文、即時上下文和失敗類別。
-- 將 `origin?: MessageOrigin` 新增至目前回覆傳遞所使用的遷移橋接器負載類型，然後在重構取代回覆負載時，將該欄位移至 `ChannelMessage` 和已渲染訊息類型。
+- 為訊息、目標、關係、來源、回據、功能、持久意圖、接收上下文、發送上下文、即時上下文和失敗類別新增 `src/channels/message/*` 類型。
+- 將 `origin?: MessageOrigin` 新增至目前回覆傳遞使用的遷移橋接器承載類型，然後將該欄位移至 `ChannelMessage` 和已呈現訊息類型，因為重構會取代回覆承載。
 - 在 adapter 和測試證明形狀之前，保持此內部狀態。
 - 新增用於狀態轉換和序列化的純單元測試。
 
@@ -732,17 +722,17 @@ type DeliveryFailureKind = "transient" | "rate_limit" | "auth" | "permission" | 
 - 讓持久化發送意圖攜帶預測的有效負載陣列或批次計畫，而不僅僅是一個回覆有效負載。
 - 透過相容性轉換保留目前的佇列恢復行為。
 - 讓 `deliverOutboundPayloads` 呼叫 `messages.send`。
-- 在最終發送持久性方面，將其設為預設值，並在配接器聲明重播安全性後，若在新的訊息生命週期中無法寫入持久化意圖，則以失敗關閉處理。在此階段，既有的通道回合和 SDK 相容性路徑預設仍保持直接發送。
+- 在適配器宣告重播安全之後，將最終發送的持久性設為預設，並且當持久意圖無法在新訊息生命週期中寫入時，以封閉式失敗處理。在此階段，現有的輸入執行器和 SDK 相容路徑預設仍保持直接發送。
 - 一致地記錄收據。
 - 將收據和遞送結果返回給原始的分派器呼叫者，而不是將持久化發送視為終端副作用。
 - 透過持久化發送意圖保存訊息來源，以便恢復、重播和分塊發送能夠保留 OpenClaw 的操作來源。
 
-### 階段 3：通道回合橋接
+### 第 3 階段：通道輸入橋接
 
-- 在 `messages.receive` 和 `messages.send` 之上重新實作 `channel.turn.run` 和 `dispatchAssembledChannelTurn`。
+- 基於 `messages.receive` 和 `messages.send` 重新實作 `channel.inbound.run` 和 `dispatchChannelInboundReply`。
 - 保持目前的事實類型穩定。
 - 預設保留舊版行為。組合回合通道僅在其配接器明確選擇具備重播安全性的持久化策略時，才會變為持久化。
-- 將 `durable: false` 作為相容性緊急出口，用於那些完成原生編輯且尚無法安全重播的路徑，但不要依賴 `false` 標記來保護未遷移的通道。
+- 將 `durable: false` 作為相容性緊急逃生門，用於那些完成原生編輯且尚無法安全重播的路徑，但不要依賴 `false` 標記來保護未遷移的通道。
 - 僅在新的訊息生命週期中預設組合回合持久性，在通道對映證明通用發送路徑保留了舊的通道遞送語意之後。
 
 ### 階段 4：準備好的分派器橋接
@@ -751,11 +741,11 @@ type DeliveryFailureKind = "transient" | "rate_limit" | "auth" | "permission" | 
 - 將舊的輔助函式保留為包裝器。
 - 優先移植 Telegram、WhatsApp、Slack、Signal、iMessage 和 Discord，因為它們已經具備持久化最終工作或較簡單的發送路徑。
 - 在每個準備好的分派器明確選擇加入發送上下文之前，將其視為未覆蓋。文件和變更日誌條目必須說明「組合通道回合」或命名已遷移的通道路徑，而不是聲稱所有自動最終回覆。
-- 保持 `recordInboundSessionAndDispatchReply`、direct-DM 輔助函式以及類似的公開相容性輔助函式不變更行為。它們之後可能會提供明確的 send-context 選用加入功能，但在呼叫者擁有的傳遞回呼之前，不得自動嘗試通用的永久性傳遞。
+- 保持 `recordInboundSessionAndDispatchReply`、直接 DM 輔助函式和類似的公開相容性輔助函式的行為不變。它們之後可能提供明確的發送上下文選用功能，但在呼叫者擁有的傳遞回呼之前，不得自動嘗試通用的持久傳遞。
 
 ### 階段 5：統一的即時生命週期
 
-- 建構 `messages.live` 並搭配兩個驗證配接器：
+- 使用兩個驗證適配器建構 `messages.live`：
   - Telegram 用於發送、編輯以及過期的最終發送。
   - Matrix 用於草稿定案以及撤銷後備。
 - 然後遷移 Discord、Slack、Mattermost、Teams、QQ Bot 和飛書。
@@ -763,16 +753,16 @@ type DeliveryFailureKind = "transient" | "rate_limit" | "auth" | "permission" | 
 
 ### 階段 6：公開 SDK
 
-- 新增 `openclaw/plugin-sdk/channel-message`。
+- 新增 `openclaw/plugin-sdk/channel-outbound`。
 - 將其記錄為首選的頻道外掛 API。
 - 更新 package exports、入口點清單、生成的 API 基準以及外掛 SDK 文件。
-- 將 `MessageOrigin`、origin encode/decode hooks 以及共享的 `shouldDropOpenClawEcho` 述詞包含在 channel-message SDK 表面中。
+- 在通道輸出 SDK 表面中包含 `MessageOrigin`、來源編碼/解碼鉤子以及共享的 `shouldDropOpenClawEcho` 述詞。
 - 保留舊子路徑的相容性包裝函式。
 - 在捆綁外掛遷移後，將命名為 reply 的 SDK 輔助函式在文件中標記為已棄用。
 
 ### 階段 7：所有發送者
 
-將所有非回覆的輸出生產者移至 `messages.send`：
+將所有非回覆輸出生產者移至 `messages.send`：
 
 - cron 和心跳通知
 - 任務完成
@@ -785,9 +775,9 @@ type DeliveryFailureKind = "transient" | "rate_limit" | "auth" | "permission" | 
 
 在此，模型將不再是「代理回覆」，而變成「OpenClaw 發送訊息」。
 
-### 階段 8：棄用 Turn
+### 第 8 階段：移除回合命名相容性
 
-- 至少在一個相容性視窗內，將 `channel.turn` 作為包裝函式保留。
+- 將輸入/訊息命名包裝器作為相容視窗保留。
 - 發布遷移說明。
 - 針對舊的匯入執行外掛 SDK 相容性測試。
 - 僅在沒有捆綁外掛需要舊內部輔助函式，且第三方合約有穩定的替代方案時，才移除或隱藏它們。
@@ -799,7 +789,7 @@ type DeliveryFailureKind = "transient" | "rate_limit" | "auth" | "permission" | 
 - 永久性發送意圖序列化和還原。
 - 等冪性金鑰重複使用和重複抑制。
 - 回據提交和重放略過。
-- 當配接器支援協調時，在重放之前進行協調的 `unknown_after_send` 還原。
+- 當適配器支援調解時，`unknown_after_send` 復原會在重播之前進行調解。
 - 失敗分類政策。
 - 接收確認政策排序。
 - 針對回覆、後續、系統和廣播發送的關聯映射。
@@ -808,9 +798,9 @@ type DeliveryFailureKind = "transient" | "rate_limit" | "auth" | "permission" | 
 
 整合測試：
 
-- `channel.turn.run` 簡單介面卡仍會記錄並發送。
+- `channel.inbound.run` 簡單適配器仍然會記錄並發送。
 - 傳統的組合事件交付除非通道明確選擇加入，否則不會變為持久。
-- `channel.turn.runPrepared` 橋接器仍會記錄並完成。
+- `channel.inbound.runPreparedReply` 橋接仍然會記錄並定稿。
 - 公開相容性輔助函式預設會呼叫呼叫者擁有的遞送回呼，並且在這些回呼之前不進行通用發送。
 - 持久化後備遞送會在重啟後重播整個投影的載荷陣列，並且不能在早期崩潰後留下未記錄的後續載荷。
 - 持久的組合事件交付會將平台訊息 ID 返回給緩衝調度器。
@@ -833,11 +823,11 @@ type DeliveryFailureKind = "transient" | "rate_limit" | "auth" | "permission" | 
 - iMessage 持久化最終發送會填充監視器的已發送訊息回聲快取。
 - LINE、Zalo 和 Nostr 的舊版遞送路徑不會被通用持久化發送繞過，直到它們的介面同等測試存在。
 - 除非明確遷移至完整的訊息目標和可重播安全的發送介面卡，否則 Direct-DM/Nostr 回調傳遞仍保持權威性。
-- Slack 標記的 OpenClaw 閘道失敗訊息保持可見的出站狀態，標記的機器人房間回聲在 `allowBots` 之前丟棄，而具有相同可見文字的未標記機器人訊息仍遵循正常的機器人授權。
+- Slack 標記的 OpenClaw 閘道失敗訊息在輸出端保持可見，標記的機器人室回顯會在 `allowBots` 之前丟棄，而具有相同可見文字的未標記機器人訊息仍然遵循正常的機器人授權。
 - Slack 原生串流在頂層 DM 中回退至草稿預覽。
 - Matrix 預覽最終確定與撤銷回退。
-- 來自已設定機器人帳戶的 Matrix 標記 OpenClaw 閘道失敗房間回聲，在 `allowBots` 處理之前丟棄。
-- Discord 和 Google Chat 共用房間的閘道失敗串連審計涵蓋 `allowBots` 模式，然後才聲稱通用保護。
+- 來自已設定機器人帳戶的 Matrix 標記 OpenClaw 閘道失敗室回顯會在 `allowBots` 處理之前丟棄。
+- Discord 和 Google Chat 共用聊天室閘道失敗連鎖稽核涵蓋 `allowBots` 模式，然後才聲稱該處具有通用保護。
 - Mattermost 草稿最終確定與新發送回退。
 - Teams 原生進度最終確定。
 - Feishu 重複最終抑制。
@@ -848,30 +838,30 @@ type DeliveryFailureKind = "transient" | "rate_limit" | "auth" | "permission" | 
 驗證：
 
 - 開發期間針對特定的 Vitest 檔案。
-- Testbox 中的 `pnpm check:changed` 用於測試完整的變更範圍。
-- 在完成重構落地之前，或在公開 SDK/匯出變更之後，在 Testbox 中進行更廣泛的 `pnpm check`。
+- Testbox 中的 `pnpm check:changed` 以涵蓋完整的變更表面。
+- 在落地完整重構或公開 SDK/匯出變更之前或之後，在 Testbox 中進行更廣泛的 `pnpm check`。
 - 在移除相容性包裝器之前，對至少一個支援編輯的頻道和一個僅簡單發送的頻道進行即時或 qa-channel 冒煙測試。
 
 ## 未解決的問題
 
 - Telegram 最終是否應該用一個完全持久的輪詢來源（polling source）取代 grammY runner 來源，該來源能夠控制平台層級的重新投遞，而不僅僅是 OpenClaw 的持久化重新啟動水位標記（restart watermark）。
 - 持久的即時預覽（live preview）狀態應該儲存在與最終發送意圖（send intent）相同的佇列記錄中，還是儲存在一個兄弟即時狀態儲存（live-state store）中。
-- 在 `plugin-sdk/channel-message` 發布後，相容性包裝器（compatibility wrappers）應該在文件中保留多久。
-- 第三方插件應該直接實作接收配接器（receive adapters），還是僅透過 `defineChannelMessageAdapter` 提供正規化（normalize）/發送（send）/即時（live）掛鉤（hooks）。
+- 在 `plugin-sdk/channel-outbound` 發布後，相容性包裝函式需在文件中保留多久。
+- 第三方外掛應直接實作接收配接器，還是僅透過 `defineChannelMessageAdapter` 提供 normalize/send/live 掛鉤。
 - 哪些收據欄位可以安全地在公開 SDK 中暴露，相對於內部運行時狀態。
 - 諸如 self-echo 快取和參與執行緒標記等副作用，應該建模為 send-context hooks、adapter 擁有的 finalize 步驟，還是 receipt subscribers。
 - 哪些通道具有原生 origin 元資料，哪些需要持久的出站註冊表，以及哪些無法提供可靠的跨 bot echo 抑制。
 
 ## 驗收標準
 
-- 每個捆綁的訊息通道都透過 `messages.send` 發送最終的可見輸出。
-- 每個入站訊息通道都透過 `messages.receive` 或文件化的相容性包裝器進入。
+- 每個捆綁的訊息通道都透過 `messages.send` 傳送最終的可見輸出。
+- 每個輸入訊息通道都透過 `messages.receive` 或記載的相容性包裝函式進入。
 - 每個預覽/編輯/串流通道都使用 `messages.live` 來處理草稿狀態和最終確定。
-- `channel.turn` 僅是一個包裝器。
+- `channel.inbound` 僅是一個包裝函式。
 - 以 Reply 命名的 SDK 輔助函式是相容性匯出，而非建議的路徑。
 - 持久恢復可以在重啟後重播待處理的最終發送，而不會丟失最終回應或重複已提交的發送；平台結果未知的發送會在重播前進行協調，或針對該配接器記錄為至少一次。
 - 當無法寫入持久意圖時，持久最終發送會失敗關閉，除非呼叫者明確選擇了文件化的非持久模式。
-- 舊版的通道輪替和 SDK 相容性輔助函式預設為直接的通道擁有的傳遞；通用持久發送僅限明確選擇加入。
+- 舊版 SDK 相容性協助程式預設為直接的通道擁有傳送；通用持久傳送僅限明確選擇加入。
 - 收據會保留所有平台訊息 ID 以用於多部分傳遞，並保留一個主要 ID 以方便執行緒/編輯。
 - 持久包裝器在替換直接傳遞回呼之前，會保留通道本地的副作用。
 - 準備好的分派器在其最終傳遞路徑明確使用發送上下文之前，不被計算為持久。
@@ -886,4 +876,4 @@ type DeliveryFailureKind = "transient" | "rate_limit" | "auth" | "permission" | 
 - [串流與分塊](/zh-Hant/concepts/streaming)
 - [進度草稿](/zh-Hant/concepts/progress-drafts)
 - [重試原則](/zh-Hant/concepts/retry)
-- [通道輪次核心](/zh-Hant/plugins/sdk-channel-turn)
+- [通道輸入 API](/zh-Hant/plugins/sdk-channel-inbound)

@@ -1,5 +1,5 @@
 ---
-summary: "Añade la superficie del canal de Twitch para enviar y recibir mensajes de OpenClaw."
+summary: "Complemento del canal de Twitch de OpenClaw para flujos de trabajo de chat y moderación."
 read_when:
   - You are installing, configuring, or auditing the twitch plugin
 title: "Complemento de Twitch"
@@ -7,7 +7,7 @@ title: "Complemento de Twitch"
 
 # Complemento de Twitch
 
-Añade la superficie del canal de Twitch para enviar y recibir mensajes de OpenClaw.
+Complemento del canal de Twitch de OpenClaw para flujos de trabajo de chat y moderación.
 
 ## Distribución
 

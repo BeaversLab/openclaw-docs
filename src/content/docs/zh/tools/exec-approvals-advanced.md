@@ -7,9 +7,7 @@ read_when:
 title: "Exec 批准 — 高级"
 ---
 
-高级 Exec 批准主题：`safeBins` 快速路径、解释器/运行时
-绑定，以及向聊天渠道的批准转发（包括原生投递）。
-有关核心策略和批准流程，请参阅 [Exec 批准](/zh/tools/exec-approvals)。
+高级执行审批主题：`safeBins` 快速路径、解释器/运行时绑定，以及向聊天渠道（包括原生投递）转发审批。有关核心策略和审批流程，请参阅 [Exec approvals](/zh/tools/exec-approvals)。
 
 ## 安全二进制文件（仅 stdin）
 
@@ -174,7 +172,7 @@ title: "Exec 批准 — 高级"
 
 ### 插件审批转发
 
-插件审批转发使用与 exec 审批相同的交付管道，但在 `approvals.plugin` 下有自己的独立配置。启用或禁用一个不会影响另一个。
+插件审批转发使用与执行审批相同的投递管道，但在 `approvals.plugin` 下拥有自己的独立配置。启用或禁用其中一个不会影响另一个。有关插件编写行为、请求字段和决策语义，请参阅 [Plugin permission requests](/zh/plugins/plugin-permission-requests)。
 
 ```json5
 {
@@ -219,56 +217,58 @@ Discord 和 Telegram 也支持同聊天 `/approve`，但即使禁用了原生批
 
 - 主机 exec 策略仍然决定是否需要 exec 审批
 - `approvals.exec` 控制将批准提示转发到其他聊天目标
-- `channels.<channel>.execApprovals` 控制该渠道是否充当原生批准客户端
+- `channels.<channel>.execApprovals` 控制是否启用 Discord、Slack、Telegram 和类似的特定于渠道的原生客户端
 - 当请求来自 Slack 且 Slack 插件批准者进行解析时，Slack 插件批准可以使用 Slack 的原生批准客户端；即使 Slack 批准已禁用，`approvals.plugin` 也可以将插件批准路由到 Slack 会话或目标
-- WhatsApp 表情符号批准交付受 `approvals.exec` 和 `approvals.plugin` 限制，而批准反应需要来自 `channels.whatsapp.allowFrom` 或 `"*"` 的明确 WhatsApp 批准者
+- WhatsApp 和 Signal 反应审批投递受 `approvals.exec` 和 `approvals.plugin` 限制；它们没有 `channels.<channel>.execApprovals` 块
 
 当满足以下所有条件时，原生批准客户端会自动启用优先私信交付：
 
 - 渠道支持原生批准交付
-- 可以从明确的 `execApprovals.approvers` 或所有者身份（例如 `commands.ownerAllowFrom`）中解析批准者
+- 审批人可以从显式 `execApprovals.approvers` 或所有者身份（例如 `commands.ownerAllowFrom`）中解析
 - `channels.<channel>.execApprovals.enabled` 未设置或为 `"auto"`
 
-设置 `enabled: false` 以明确禁用原生批准客户端。当批准者解析时，设置 `enabled: true` 以强制启用它。公共原始聊天交付通过 `channels.<channel>.execApprovals.target` 保持明确。
+设置 `enabled: false` 以显式禁用原生审批客户端。设置 `enabled: true` 以在解析出审批人时强制启用它。公共原始聊天投递通过 `channels.<channel>.execApprovals.target` 保持显式。
 
-常见问题：[聊天批准为什么有两个执行批准配置？](/zh/help/faq-first-run#why-are-there-two-exec-approval-configs-for-chat-approvals)
+常见问题：[Why are there two exec approval configs for chat approvals?](/zh/help/faq-first-run#why-are-there-two-exec-approval-configs-for-chat-approvals)
 
 - Discord：`channels.discord.execApprovals.*`
 - Slack：`channels.slack.execApprovals.*`
 - Telegram：`channels.telegram.execApprovals.*`
-- WhatsApp：使用 `approvals.exec` 和 `approvals.plugin` 将批准提示路由到 WhatsApp
+- WhatsApp：使用 `approvals.exec` 和 `approvals.plugin` 将审批提示路由到 WhatsApp
+- Signal：使用 `approvals.exec` 和 `approvals.plugin` 将审批提示路由到 Signal
 
-这些原生批准客户端在共享的同聊天 `/approve` 流程和共享批准按钮之上，增加了私信路由和可选的渠道扩散功能。
+这些原生审批客户端在共享的 same-chat `/approve` 流程和共享审批按钮的基础上，增加了私信路由和可选的渠道扩散。
 
 共享行为：
 
-- Slack、Matrix、Microsoft Teams 和类似的可交付聊天使用正常的渠道身份验证模型进行同聊天 `/approve`
-- 当原生审批客户端自动启用时，默认的原生交付目标是审批者私信
+- Slack、Matrix、Microsoft Teams 和类似的可投递聊天使用标准的渠道授权模型来处理 same-chat `/approve`
+- 当原生审批客户端自动启用时，默认的原生投递目标是审批者的私信
 - 对于 Discord 和 Telegram，只有已解析的审批者可以批准或拒绝
-- Discord 审批者可以是显式的 (Discord`execApprovals.approvers`) 或从 `commands.ownerAllowFrom` 推断
-- Telegram 审批者可以是显式的 (Telegram`execApprovals.approvers`) 或从 `commands.ownerAllowFrom` 推断
-- Slack 审批者可以是显式的 (Slack`execApprovals.approvers`) 或从 `commands.ownerAllowFrom` 推断
-- Slack 插件审批私信使用来自 SlackSlack`allowFrom`Slack 和账户默认路由的 Slack 插件审批者，而不是 Slack exec 审批者
-- Slack 原生按钮保留审批 ID 类型，因此 Slack`plugin:`Slack ID 可以解析插件审批而无需第二层 Slack 本地回退层
-- WhatsApp 表情符号审批仅在匹配的顶级转发系列已启用并路由到 WhatsApp 时处理 exec 和插件提示；仅目标的 WhatsApp 转发除非匹配相同的原生源目标，否则保持在共享转发路径上
-- Matrix 原生私信/渠道路由和反应快捷方式处理 exec 和插件审批；插件授权仍来自 Matrix`channels.matrix.dm.allowFrom`
-- Matrix 原生提示在第一个提示事件中包含 Matrix`com.openclaw.approval`OpenClawMatrix 自定义事件内容，以便支持 OpenClaw 的 Matrix 客户端可以读取结构化审批状态，而普通客户端保留纯文本 `/approve` 回退
-- 请求者无需成为审批者
-- 当原始聊天已支持命令和回复时，该聊天可以使用 `/approve` 直接批准
-- 原生 Discord 审批按钮按审批 ID 类型路由：Discord`plugin:` ID 直接进入插件审批，其他所有内容进入 exec 审批
-- 原生 Telegram 审批按钮遵循与 Telegram`/approve` 相同的有界 exec 到插件回退机制
-- 当原生 `target` 启用源聊天交付时，审批提示包含命令文本
-- 挂起的 exec 审批默认在 30 分钟后过期
-- 如果没有操作员 UI 或配置的审批客户端可以接受该请求，提示将回退到 `askFallback`
+- Discord 审批者可以是显式的 (`execApprovals.approvers`) 或从 `commands.ownerAllowFrom` 推断得出
+- Telegram 审批者可以是显式的 (`execApprovals.approvers`) 或从 `commands.ownerAllowFrom` 推断得出
+- Slack 审批者可以是显式的 (`execApprovals.approvers`) 或从 `commands.ownerAllowFrom` 推断得出
+- Slack 插件审批私信使用来自 `allowFrom` 和账户默认路由的 Slack 插件审批者，而不是 Slack exec 审批者
+- Slack 原生按钮保留审批 id 类型，因此 `plugin:` id 可以解析插件审批，而无需第二个 Slack 本地回退层
+- WhatsApp 表情符号审批仅在匹配的顶级转发系列已启用并路由到 WhatsApp 时处理 exec 和插件提示；仅目标的 WhatsApp 转发保留在共享转发路径上，除非它匹配相同的原生来源目标
+- Signal 反应批准仅在匹配的顶级转发系列已启用并路由到 Signal 时，才处理 exec 和插件提示。直接同聊天 Signal exec 批准可以在没有明确批准人的情况下抑制本地 `/approve` 后备选项；Signal 反应解决仍然需要来自 `channels.signal.allowFrom` 或 `defaultTo` 的明确 Signal 批准人。
+- Matrix 原生 私信/渠道 路由和反应快捷方式处理 exec 和插件批准；插件授权仍然来自 `channels.matrix.dm.allowFrom`
+- Matrix 原生提示在第一个提示事件上包含 `com.openclaw.approval` 自定义事件内容，因此支持 OpenClaw 的 Matrix 客户端可以读取结构化的批准状态，而标准客户端则保留纯文本 `/approve` 后备选项
+- 请求者不需要是批准人
+- 当原始聊天已经支持命令和回复时，它可以使用 `/approve` 直接批准
+- 原生 Discord 批准按钮按批准 ID 类型路由：`plugin:` ID 直接进入插件批准，其他所有内容进入 exec 批准
+- 原生 Telegram 批准按钮遵循与 `/approve` 相同的有界 exec 到插件后备逻辑
+- 当原生 `target` 启用原始聊天传送时，批准提示包含命令文本
+- 待处理的 exec 批准默认在 30 分钟后过期
+- 如果没有操作员 UI 或配置的批准客户端可以接受该请求，提示将回退到 `askFallback`
 
-敏感的仅限所有者的组命令（如 `/diagnostics` 和 `/export-trajectory`OpenClaw）使用私有所有者路由来发送审批提示和最终结果。OpenClaw 首先尝试在所有者运行命令的同一表面上的私有路由。如果该表面没有私有所有者路由，它将回退到 `commands.ownerAllowFrom`DiscordTelegramTelegram 中的第一个可用所有者路由，因此当 Telegram 配置为主要私有接口时，Discord 组命令仍可将审批和结果发送到所有者的 Telegram 私信。组聊天只会收到简短的确认。
+敏感的仅限所有者的群组命令（如 `/diagnostics` 和 `/export-trajectory`）使用私有所有者路由来发送审批提示和最终结果。OpenClaw 首先尝试在所有者运行命令的同一界面上使用私有路由。如果该界面没有私有所有者路由，它将回退到 `commands.ownerAllowFrom` 中的第一个可用所有者路由，因此当 Discord 是配置的主要私有界面时，Telegram 群组命令仍可将审批和结果发送到所有者的 Telegram 私信。群组聊天只会收到简短的确认。
 
-Telegram 默认为审批者私信 (Telegram`target: "dm"`)。当您希望审批提示也出现在发起的 Telegram 聊天/主题中时，可以切换到 `channel` 或 `both`TelegramTelegramOpenClaw。对于 Telegram 论坛主题，OpenClaw 会保留审批提示和审批后后续内容的主题。
+Telegram 默认使用审批者私信（`target: "dm"`）。当您希望审批提示也出现在发起的 Telegram 聊天/主题中时，您可以切换到 `channel` 或 `both`。对于 Telegram 论坛主题，OpenClaw 会为审批提示和审批后的后续跟进保留该主题。
 
 参见：
 
-- [Discord](Discord/en/channels/discord)
-- [Telegram](Telegram/en/channels/telegram)
+- [Discord](/zh/channels/discord)
+- [Telegram](/zh/channels/telegram)
 
 ### macOS IPC 流程
 
@@ -279,19 +279,19 @@ Gateway -> Node Service (WS)
              Mac App (UI + approvals + system.run)
 ```
 
-安全注意事项：
+安全说明：
 
-- Unix socket 模式 `0600`，令牌存储在 `exec-approvals.json` 中。
-- 相同 UID 对等检查。
-- 质询/响应（nonce + HMAC 令牌 + 请求哈希）+ 短 TTL。
+- Unix 套接字模式 `0600`，令牌存储在 `exec-approvals.json` 中。
+- 相同 UID 对等方检查。
+- 挑战/响应（nonce + HMAC 令牌 + 请求哈希）+ 短 TTL。
 
 ## 常见问题
 
 ### 何时会在审批目标上使用 `accountId` 和 `threadId`？
 
-当渠道配置了多个身份且审批提示必须通过某个特定账号发出时，请使用 `accountId`。当目标支持主题或话题，且提示应停留在该话题内而不是顶级聊天中时，请使用 `threadId`。
+当渠道配置了多个身份且审批提示必须通过一个特定帐户发出时，请使用 `accountId`。当目标支持主题或线程且提示应保留在该线程内而不是顶级聊天中时，请使用 `threadId`。
 
-一个具体的 Telegram 案例是：一个具有论坛话题的运营超级群组和两个 Telegram 机器人账号。`to` 值指定了超级群组，`accountId` 选择了机器人账号，而 `threadId` 选择了论坛话题：
+一个具体的 Telegram 案例是包含论坛主题和两个 Telegram 机器人账户的运营超级群组。`to` 值指定了超级群组，`accountId` 选择了机器人账户，而 `threadId` 选择了论坛主题：
 
 ```json5
 {
@@ -326,19 +326,19 @@ Gateway -> Node Service (WS)
 }
 ```
 
-使用该设置后，转发的执行审批将由 `ops-bot` Telegram 账号发布到聊天 `-1001234567890` 的话题 `77` 中。没有 `accountId` 的目标使用渠道的默认账号，而没有 `threadId` 的目标则发布到顶级目标。
+通过该设置，转发的执行审批会由 `ops-bot` Telegram 账户发布到聊天 `-1001234567890` 的主题 `77` 中。没有 `accountId` 的目标使用渠道的默认账户，而没有 `threadId` 的目标则发布到顶级目标位置。
 
-### 当审批发送到会话后，该会话中的任何人都可以批准吗？
+### 当审批被发送到会话时，该会话中的任何人都可以批准它们吗？
 
-不。会话投递仅控制提示出现的位置。它本身并不授权该聊天中的每个参与者进行批准。
+不。会话传递仅控制提示出现的位置。它本身并不授权该聊天中的每个参与者进行批准。
 
-对于通用的同聊天 `/approve`，发送者必须已在该渠道会话中获得命令授权。如果渠道暴露了明确的审批批准人，这些批准人可以授权 `/approve` 操作，即使他们在该会话中未获得其他命令授权。
+对于通用同聊天 `/approve`，发送者必须已在该渠道会话中获得命令授权。如果渠道公开了明确的审批批准者，这些批准者即使在该会话中未获得其他命令授权，也可以授权 `/approve` 操作。
 
-某些渠道更为严格。Discord、Telegram、Matrix、Slack 原生审批私信以及类似的原生审批客户端使用其解析的批准人列表进行审批授权。例如，Telegram 论坛话题审批提示对该话题中的所有人可见，但只有从 `channels.telegram.execApprovals.approvers` 或 `commands.ownerAllowFrom` 解析出的数字 Telegram 用户 ID 才能批准或拒绝它。
+某些渠道更严格。Discord、Telegram、Matrix、Slack 原生审批私信以及类似的原生审批客户端使用其解析的批准者列表进行审批授权。例如，Telegram 论坛主题审批提示可能对该主题中的每个人都可见，但只有从 `channels.telegram.execApprovals.approvers` 或 `commands.ownerAllowFrom` 解析出的 Telegram 用户 ID 才能批准或拒绝它。
 
 ## 相关
 
-- [Exec 批准](/zh/tools/exec-approvals) — 核心策略和批准流程
+- [执行审批](/zh/tools/exec-approvals) — 核心策略和审批流程
 - [Exec 工具](/zh/tools/exec)
-- [提升模式](/zh/tools/elevated)
-- [Skills](/zh/tools/skills) — 基于 Skills 的自动允许行为
+- [提权模式](/zh/tools/elevated)
+- [Skills](/zh/tools/skills) — 由 Skills 支持的自动允许行为

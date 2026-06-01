@@ -100,11 +100,13 @@ méthodes :
 | `api.registerWebFetchProvider(...)`              | Web fetch / scrape provider                  |
 | `api.registerWebSearchProvider(...)`             | Web search                                   |
 
-Embedding providers registered with `api.registerEmbeddingProvider(...)` must
-also be listed in `contracts.embeddingProviders` in the plugin manifest. This
-is the generic embedding surface for reusable vector generation. Memory-only
-adapters still use `api.registerMemoryEmbeddingProvider(...)` and
-`contracts.memoryEmbeddingProviders`.
+Les providers d'embeddings enregistrés avec `api.registerEmbeddingProvider(...)` doivent
+également être répertoriés dans `contracts.embeddingProviders` dans le manifeste du plugin. Il
+s'agit de la surface d'embedding générique pour la génération de vecteurs réutilisables. La recherche dans la mémoire
+peut consommer cette surface de provider générique. L'ancienne jonction
+`api.registerMemoryEmbeddingProvider(...)` et
+`contracts.memoryEmbeddingProviders` est une compatibilité obsolète pendant que les
+fournisseurs existants spécifiques à la mémoire migrent.
 
 ### Tools and commands
 
@@ -125,18 +127,19 @@ Les entrées de guidage peuvent être des chaînes héritées, qui s'appliquent 
 des entrées structurées :
 
 ```ts
-agentPromptGuidance: ["Global command hint.", { text: "Only show this in the main PI prompt.", surfaces: ["pi_main"] }];
+agentPromptGuidance: ["Global command hint.", { text: "Only show this in the main OpenClaw prompt.", surfaces: ["openclaw_main"] }];
 ```
 
-`surfaces` structuré peut inclure `pi_main`, `codex_app_server`, `cli_backend`,
-`acp_backend`, ou `subagent`. Omettez `surfaces` pour un guidage intentionnel pour toutes les surfaces.
-Ne passez pas un tableau `surfaces` vide ; il est rejeté pour qu'une perte accidentelle
-de portée ne devienne pas du texte de prompt global.
+Les `surfaces` structurés peuvent inclure `openclaw_main`, `codex_app_server`,
+`cli_backend`, `acp_backend`, ou `subagent`. `pi_main` reste un alias obsolète
+pour `openclaw_main`. Omettez `surfaces` pour une guidance intentionnelle sur toutes les surfaces. Ne
+passez pas un tableau `surfaces` vide ; il est rejeté afin qu'une perte accidentelle de portée ne
+devienne pas un texte d'invite global.
 
-Les instructions de développeur du serveur d'application native Codex sont plus strictes que pour les autres surfaces
-de prompt : seul le guidage explicitement délimité à `codex_app_server` est promu dans
-cette voie à priorité plus élevée. Le guidage de chaîne hérité et le guidage structuré non délimité
-restent disponibles pour les surfaces de prompt non-Codex pour la compatibilité.
+Les instructions du développeur pour le serveur d'application native Codex sont plus strictes que pour les autres surfaces
+d'invite : seule la guidance explicitement délimitée à `codex_app_server` est promue dans
+cette voie à priorité plus élevée. La guidance sous forme de chaîne héritée et la guidance structurée non délimitée
+restent disponibles pour les surfaces d'invite non-Codex pour compatibilité.
 
 ### Infrastructure
 
@@ -189,24 +192,18 @@ Utilisez les espaces de noms groupés pour le nouveau code de plugin :
 - `api.runContext.setRunContext(...)` / `getRunContext(...)` / `clearRunContext(...)`
 - `api.lifecycle.registerRuntimeLifecycle(...)`
 
-Les méthodes plates équivalentes restent disponibles en tant qu'alias de compatibilité obsolètes pour les plugins existants. N'ajoutez pas de nouveau code de plugin qui appelle directement `api.registerSessionExtension`, `api.enqueueNextTurnInjection`,
-`api.registerControlUiDescriptor`, `api.registerRuntimeLifecycle`,
-`api.registerAgentEventSubscription`, `api.emitAgentEvent`,
-`api.setRunContext`, `api.getRunContext`, `api.clearRunContext`,
-`api.registerSessionSchedulerJob`, `api.registerSessionAction`,
-`api.sendSessionAttachment`, `api.scheduleSessionTurn`, ou
-`api.unscheduleSessionTurnsByTag`.
+Les méthodes plates équivalentes restent disponibles en tant qu'alias de compatibilité obsolètes pour les plugins existants. N'ajoutez pas de nouveau code de plugin qui appelle directement `api.registerSessionExtension`, `api.enqueueNextTurnInjection`, `api.registerControlUiDescriptor`, `api.registerRuntimeLifecycle`, `api.registerAgentEventSubscription`, `api.emitAgentEvent`, `api.setRunContext`, `api.getRunContext`, `api.clearRunContext`, `api.registerSessionSchedulerJob`, `api.registerSessionAction`, `api.sendSessionAttachment`, `api.scheduleSessionTurn` ou `api.unscheduleSessionTurnsByTag`.
 
-`scheduleSessionTurn(...)` est une commodité à portée de session sur le planificateur Cron du Gateway. Cron gère le timing et crée l'enregistrement de tâche en arrière-plan lorsque le tour s'exécute ; le Plugin SDK ne contraint que la session cible, la nommage appartenant au plugin et le nettoyage. Utilisez `api.runtime.tasks.managedFlows` dans le tour planifié lorsque le travail lui-même nécessite un état de flux de tâches multi-étapes durable.
+`scheduleSessionTurn(...)` est une commodité à portée de session par rapport au planificateur Cron du Gateway. Cron gère le minutage et crée l'enregistrement de tâche en arrière-plan lorsque le tour s'exécute ; le Plugin SDK ne contraint que la session cible, la dénomination appartenant au plugin et le nettoyage. Utilisez `api.runtime.tasks.managedFlows` à l'intérieur du tour planifié lorsque le travail lui-même nécessite un état durable de flux de tâches en plusieurs étapes.
 
 Les contrats divisent intentionnellement l'autorité :
 
 - Les plugins externes peuvent posséder des extensions de session, descripteurs d'interface utilisateur, commandes, métadonnées de tool, injections de tour suivant et hooks normaux.
-- Les stratégies de tool de confiance s'exécutent avant les hooks `before_tool_call` ordinaires et sont réservées aux bundles car elles participent à la politique de sécurité de l'hôte.
+- Les stratégies de de confiance s'exécutent avant les hooks `before_tool_call` ordinaires et sont uniquement groupées car elles participent à la stratégie de sécurité de l'hôte.
 - La propriété de commande réservée est réservée aux bundles. Les plugins externes doivent utiliser leurs propres noms ou alias de commande.
-- `allowPromptInjection=false` désactive les hooks de modification de prompt, y compris
+- `allowPromptInjection=false` désactive les hooks de modification de prompt, notamment
   `agent_turn_prepare`, `before_prompt_build`, `heartbeat_prompt_contribution`,
-  les champs de prompt des `before_agent_start` hérités, et
+  les champs de prompt de l'ancien `before_agent_start`, et
   `enqueueNextTurnInjection`.
 
 Exemples de consommateurs non-Plan :
@@ -218,29 +215,29 @@ Exemples de consommateurs non-Plan :
 | Moniteur du cycle de vie en arrière-plan          | Nettoyage du cycle de vie d'exécution, abonnement aux événements de l'agent, possession/nettoyage de l'ordonnanceur de session, contribution au prompt de pulsation, descripteur d'interface utilisateur |
 | Assistant de configuration ou d'intégration       | Extension de session, commandes délimitées, descripteur de l'interface utilisateur de contrôle                                                                                                           |
 
-<Note>Les espaces de noms d'administration du noyau réservés (`config.*`, `exec.approvals.*`, `wizard.*`, `update.*`) restent toujours `operator.admin`, même si un plugin tente d'assigner une portée de méthode de passerelle plus étroite. Préférez les préfixes spécifiques aux plugins pour les méthodes appartenant aux plugins.</Note>
+<Note>Les espaces de noms d'administration principale réservés (`config.*`, `exec.approvals.*`, `wizard.*`, `update.*`) restent toujours `operator.admin`, même si un plugin tente d'assigner une portée de méthode de Gateway plus étroite. Privilégiez les préfixes spécifiques aux plugins pour les méthodes appartenant aux plugins.</Note>
 
 <Accordion title="Quand utiliser le middleware de résultat d'outil">
   Les plugins groupés peuvent utiliser `api.registerAgentToolResultMiddleware(...)` lorsqu'ils
   ont besoin de réécrire un résultat d'outil après l'exécution et avant que le runtime
-  ne renvoie ce résultat dans le modèle. Il s'agit de la jointure neutre par rapport au runtime
-  de confiance pour les réducteurs de sortie asynchrones tels que tokenjuice.
+  ne renvoie ce résultat dans le modèle. Il s'agit de la jonction neutre par rapport au runtime de confiance pour
+  les réducteurs de sortie asynchrones tels que tokenjuice.
 
 Les plugins groupés doivent déclarer `contracts.agentToolResultMiddleware` pour chaque
-cible runtime, par exemple `["pi", "codex"]`. Les plugins externes
-ne peuvent pas enregistrer ce middleware ; gardez les hooks de plugin normaux OpenClaw pour le travail
-qui n'a pas besoin de synchronisation pré-modèle des résultats d'outil. L'ancien chemin d'enregistrement
-de fabrique d'extension embarqué Pi uniquement a été supprimé.
+cible de runtime, par exemple `["openclaw", "codex"]`OpenClaw. Les plugins externes
+ne peuvent pas enregistrer ce middleware ; conservez les hooks de plugin OpenClaw normaux pour le travail
+qui ne nécessite pas de timing pré-modèle pour les résultats d'outils. L'ancien chemin d'enregistrement de fabrique d'extension
+uniquement pour l'exécuteur intégré a été supprimé.
 
 </Accordion>
 
 ### Enregistrement de découverte Gateway
 
-`api.registerGatewayDiscoveryService(...)` permet à un plugin d'annoncer le Gateway actif
-sur un transport de découverte local tel que mDNS/Bonjour. OpenClaw appelle le
+`api.registerGatewayDiscoveryService(...)`Gateway permet à un plugin d'annoncer le Gateway actif
+sur un transport de découverte local tel que mDNS/Bonjour. OpenClawGatewayGateway appelle le
 service lors du démarrage du Gateway lorsque la découverte locale est activée, transmet les
-ports actuels du Gateway et les données de conseil TXT non secrètes, et appelle le gestionnaire
-`stop` renvoyé lors de l'arrêt du Gateway.
+ports actuels du Gateway et les données de suggestion TXT non secrètes, et appelle le gestionnaire
+`stop`Gateway retourné lors de l'arrêt du Gateway.
 
 ```typescript
 api.registerGatewayDiscoveryService({
@@ -264,20 +261,14 @@ comme une authentification. La découverte est une indication de routage ; l'aut
 
 `api.registerCli(registrar, opts?)` accepte deux types de métadonnées de commande :
 
-- `commands` : noms de commandes explicites détenus par le registrant
-- `descriptors` : descripteurs de commande au moment de l'analyse utilisés pour l'aide CLI,
+- `commands` : noms de commande explicites détenus par le registrant
+- `descriptors` : descripteurs de commande au moment de l'analyse utilisés pour l'aide du CLI,
   le routage et l'enregistrement différé du plugin CLI
-- `parentPath` : chemin de commande parent optionnel pour les groupes de commandes imbriqués, tel que
-  `["nodes"]`
+- `parentPath` : chemin de commande parent facultatif pour les groupes de commandes imbriqués, tel que `["nodes"]`
 
-Pour les fonctionnalités de nœuds jumelés, préférez
-`api.registerNodeCliFeature(registrar, opts?)`. C'est un petit wrapper autour de
-`api.registerCli(..., { parentPath: ["nodes"] })` et rend des commandes telles que
-`openclaw nodes canvas` des fonctionnalités de nœud explicitement détenues par le plugin.
+Pour les fonctionnalités de nœuds couplés, privilégiez `api.registerNodeCliFeature(registrar, opts?)`. C'est un petit wrapper autour de `api.registerCli(..., { parentPath: ["nodes"] })` qui rend des commandes comme `openclaw nodes canvas` des fonctionnalités de nœud explicitement détenues par le plugin.
 
-Si vous souhaitez qu'une commande de plugin reste chargée à la demande (lazy-loaded) dans le chemin normal de la racine CLI,
-fournissez des `descriptors` qui couvrent chaque racine de commande de premier niveau exposée par ce
-registrant.
+Si vous souhaitez qu'une commande de plugin reste chargée à la demande dans le chemin racine du CLI normal, fournissez `descriptors` qui couvrent chaque racine de commande de premier niveau exposée par ce registre.
 
 ```typescript
 api.registerCli(
@@ -297,7 +288,7 @@ api.registerCli(
 );
 ```
 
-Les commandes imbriquées reçoivent la commande parente résolue en tant que `program` :
+Les commandes imbriquées reçoivent la commande parente résolue sous forme de `program` :
 
 ```typescript
 api.registerCli(
@@ -318,19 +309,17 @@ api.registerCli(
 );
 ```
 
-Utilisez `commands` seul uniquement lorsque vous n'avez pas besoin de l'enregistrement différé de la racine CLI.
-Ce chemin de compatibilité eagre reste pris en charge, mais il n'installe pas
-les espaces réservés basés sur des descripteurs pour le chargement différé au moment de l'analyse.
+Utilisez `commands` seul uniquement lorsque vous n'avez pas besoin de l'enregistrement racine du CLI à la demande. Ce chemin de compatibilité rapide reste pris en charge, mais il n'installe pas d'espaces réservés basés sur des descripteurs pour le chargement à la demande au moment de l'analyse.
 
 ### Enregistrement du backend CLI
 
-`api.registerCliBackend(...)` permet à un plugin de posséder la configuration par défaut pour un backend CLI d'IA local tel que `claude-cli` ou `my-cli`.
+`api.registerCliBackend(...)` permet à un plugin de posséder la configuration par défaut d'un backend local d'CLI IA tel que `claude-cli` ou `my-cli`.
 
 - Le `id` du backend devient le préfixe du fournisseur dans les références de modèle comme `my-cli/gpt-5`.
-- Le `config` du backend utilise la même structure que `agents.defaults.cliBackends.<id>`.
+- Le `config` du backend utilise la même forme que `agents.defaults.cliBackends.<id>`.
 - La configuration de l'utilisateur l'emporte toujours. OpenClaw fusionne `agents.defaults.cliBackends.<id>` par-dessus la valeur par défaut du plugin avant d'exécuter le CLI.
-- Utilisez `normalizeConfig` lorsqu'un backend a besoin de réécritures de compatibilité après la fusion (par exemple pour normaliser les anciennes formes de drapeaux).
-- Utilisez `resolveExecutionArgs` pour les réécritures d'argv limitées à la requête qui appartiennent au dialecte CLI, telles que le mappage des niveaux de réflexion OpenClaw vers un drapeau d'effort natif.
+- Utilisez `normalizeConfig` lorsqu'un backend a besoin de réécritures de compatibilité après la fusion (par exemple, pour normaliser les anciennes formes de drapeaux).
+- Utilisez `resolveExecutionArgs` pour les réécritures argv limitées à la demande qui appartiennent au dialecte du CLI, comme le mappage des niveaux de réflexion de OpenClaw vers un drapeau d'effort natif.
 
 Pour un guide de création de bout en bout, consultez [plugins de backend CLI](/fr/plugins/cli-backend-plugins).
 
@@ -344,22 +333,28 @@ Pour un guide de création de bout en bout, consultez [plugins de backend CLI](/
 | `api.registerMemoryFlushPlan(resolver)`    | Résolveur de plan de vidage de mémoire                                                                                                                             |
 | `api.registerMemoryRuntime(runtime)`       | Adaptateur d'exécution de mémoire                                                                                                                                  |
 
-### Adaptateurs d'intégration de mémoire
+### Adaptateurs d'intégration de mémoire obsolètes
 
 | Méthode                                        | Ce qu'il enregistre                                      |
 | ---------------------------------------------- | -------------------------------------------------------- |
 | `api.registerMemoryEmbeddingProvider(adapter)` | Adaptateur d'intégration de mémoire pour le plugin actif |
 
-- `registerMemoryCapability` est l'API exclusive de plugin de mémoire préférée.
-- `registerMemoryCapability` peut également exposer `publicArtifacts.listArtifacts(...)` afin que les plugins compagnons puissent consommer les artefacts de mémoire exportés via `openclaw/plugin-sdk/memory-host-core` au lieu d'accéder à la disposition privée d'un plugin de mémoire spécifique.
+- `registerMemoryCapability` est l'API API de plugin de mémoire exclusive préférée.
+- `registerMemoryCapability` peut également exposer `publicArtifacts.listArtifacts(...)`
+  afin que les plugins compagnons puissent consommer les artefacts de mémoire exportés via
+  `openclaw/plugin-sdk/memory-host-core` au lieu d'accéder à la structure privée d'un
+  plugin de mémoire spécifique.
 - `registerMemoryPromptSection`, `registerMemoryFlushPlan` et
-  `registerMemoryRuntime` sont des API de plugin de mémoire exclusives compatibles avec les versions héritées.
+  `registerMemoryRuntime` sont des API de plugin de mémoire exclusives compatibles avec l'héritage.
 - `MemoryFlushPlan.model` peut épingler le tour de vidage (flush turn) à une référence `provider/model`
-  exacte, telle que `ollama/qwen3:8b`, sans hériter de la chaîne de repli (fallback chain) active.
-- `registerMemoryEmbeddingProvider` permet au plugin de mémoire actif d'enregistrer un
-  ou plusieurs identifiants d'adaptateur d'intégration (embeddings) (par exemple `openai`, `gemini`, ou un identifiant personnalisé défini par le plugin).
-- La configuration utilisateur telle que `agents.defaults.memorySearch.provider` et
-  `agents.defaults.memorySearch.fallback` est résolue par rapport à ces identifiants d'adaptateur enregistrés.
+  exacte, telle que `ollama/qwen3:8b`, sans hériter de la chaîne de repli (fallback)
+  active.
+- `registerMemoryEmbeddingProvider` est obsolète. Les nouveaux fournisseurs d'intégrations
+  doivent utiliser `api.registerEmbeddingProvider(...)` et
+  `contracts.embeddingProviders`.
+- Les fournisseurs existants spécifiques à la mémoire continuent de fonctionner pendant la fenêtre
+  de migration, mais l'inspection des plugins signale ceci comme une dette de compatibilité pour
+  les plugins non groupés.
 
 ### Événements et cycle de vie
 

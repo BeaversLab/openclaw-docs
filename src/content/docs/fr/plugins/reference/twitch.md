@@ -1,5 +1,5 @@
 ---
-summary: "TwitchOpenClawAjoute la surface de channel Twitch pour l'envoi et la réception de messages OpenClaw."
+summary: "OpenClawTwitchOpenClaw Twitch channel plugin for chat and moderation workflows."
 read_when:
   - You are installing, configuring, or auditing the twitch plugin
 title: "TwitchPlugin Twitch"
@@ -7,7 +7,7 @@ title: "TwitchPlugin Twitch"
 
 # Plugin Twitch
 
-Ajoute la surface de channel Twitch pour l'envoi et la réception de messages OpenClaw.
+OpenClaw Twitch channel plugin for chat and moderation workflows.
 
 ## Distribution
 

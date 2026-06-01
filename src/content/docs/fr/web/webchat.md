@@ -24,7 +24,7 @@ title: "WebChat"
 - L'interface utilisateur se connecte au WebSocket du Gateway et utilise `chat.history`, `chat.send` et `chat.inject`.
 - `chat.history` est limité pour la stabilité : le Gateway peut tronquer les champs de texte longs, omettre les métadonnées volumineuses et remplacer les entrées trop grandes par `[chat.history omitted: message too large]`.
 - `chat.history` suit la branche de transcription active pour les fichiers de session modernes en ajout uniquement, donc les branches de réécriture abandonnées et les copies de invites remplacées ne sont pas rendues dans WebChat.
-- Les entrées de compactage sont rendues sous forme d'un séparateur explicite d'historique compacté. Le séparateur explique que les tours précédents sont conservés dans un point de contrôle et renvoie aux commandes de point de contrôle des sessions, où les opérateurs peuvent créer une branche ou restaurer la vue pré-compactage lorsque leurs autorisations le permettent.
+- Les entrées de compactage s'affichent sous la forme d'un séparateur explicite d'historique compacté. Le séparateur indique que la transcription compactée est conservée en tant que point de contrôle et renvoie aux commandes de point de contrôle des sessions, où les opérateurs peuvent créer une branche ou restaurer à partir de cette vue compactée lorsque leurs autorisations le leur permettent.
 - L'interface de contrôle (Control UI) mémorise le `sessionId` Gateway sous-jacent renvoyé par `chat.history` et l'inclut dans les appels `chat.send` suivants, donc les reconnexions et les actualisations de page continuent la même conversation stockée, sauf si l'utilisateur démarre ou réinitialise une session.
 - L'interface de contrôle fusionne les soumissions en double en cours pour la même session, le même message et les mêmes pièces jointes avant de générer un nouvel identifiant d'exécution `chat.send` ; le Gateway déduplique toujours les demandes répétées qui réutilisent la même clé d'idempotence.
 - Les fichiers de démarrage de l'espace de travail et les instructions en attente `BOOTSTRAP.md` sont fournis via le contexte du projet de l'invite système de l'agent, et non copiés dans le message utilisateur WebChat. La troncature de l'amorçage (bootstrap) ajoute uniquement un avis de récupération concis de l'invite système ; les comptes détaillés et les commandes de configuration restent sur les surfaces de diagnostic.
@@ -48,22 +48,21 @@ title: "WebChat"
 
 WebChat possède deux chemins de données distincts :
 
-- Le fichier JSONL de session est la transcription durable du modèle/d'exécution. Pour les exécutions normales d'agent, Pi conserve les messages `user`, `assistant` et `toolResult`WebChat visibles par le modèle via son gestionnaire de session. WebChat n'écrit pas de texte de livraison, d'état ou d'assistance arbitraire dans cette transcription.
+- Le fichier JSONL de session est la transcription durable du modèle/d'exécution. Pour les exécutions normales d'agent, le runtime OpenClaw intégré persiste les messages OpenClaw`user`, `assistant` et `toolResult`WebChat visibles par le modèle via son gestionnaire de session. WebChat n'écrit pas de texte arbitraire de livraison, de statut ou d'assistance dans cette transcription.
 - Les événements Gateway`ReplyPayload`WebChat de la passerelle sont la projection de livraison en direct. Ils peuvent être normalisés pour l'affichage WebChat/canal, le block streaming, les balises de directive, l'intégration de médias, les indicateurs audio/TTS et le comportement de repli de l'interface utilisateur. Ils ne constituent pas eux-mêmes le journal de session canonique.
 - Les harnais qui nécessitent des réponses visibles via `tools.message` utilisent toujours WebChat comme récepteur de réponses source interne pour l'exécution en cours. Un `message.send` sans cible de cette exécution WebChat active est projeté dans le même chat et mis en miroir dans la transcription de la session ; WebChat ne devient pas un canal sortant réutilisable et n'hérite jamais de `lastChannel`.
-- WebChat injecte des entrées de transcription d'assistant uniquement lorsque le Gateway possède un message affiché en dehors d'un tour d'assistant Pi normal : `chat.inject`, les réponses aux commandes non-agent, la sortie partielle interrompue, et les suppléments de transcription multimédia gérés par WebChat.
+- WebChat injecte des entrées de transcription d'assistant uniquement lorsque le Gateway possède un message affiché en dehors d'un tour d'agent intégré normal : WebChatGateway`chat.inject`WebChat, les réponses de commande non-agent, la sortie partielle interrompue et les suppléments de transcription multimédia gérés par WebChat.
 - `chat.history` lit la transcription de session stockée et applique la projection d'affichage WebChat. Si du texte d'assistant en direct apparaît pendant une exécution mais disparaît après le rechargement de l'historique, vérifiez d'abord si le JSONL brut contient le texte de l'assistant, puis si la projection `chat.history` l'a supprimé, puis si la fusion de queue optimiste de l'interface de contrôle a remplacé l'état de livraison local par l'instantané persistant.
 
-Les réponses finales des exécutions d'agents normales doivent être durables car Pi écrit le `message_end` de l'assistant. Tout mécanisme de secours qui met en miroir une charge utile finale livrée dans la transcription doit d'abord éviter de dupliquer un tour d'assistant que Pi a déjà écrit.
+Les réponses finales de l'exécution normale de l'agent doivent être durables car le runtime intégré écrit le `message_end` de l'assistant. Tout repli qui reflète une charge utile finale livrée dans la transcription doit d'abord éviter de dupliquer un tour d'assistant que le runtime intégré a déjà écrit.
 
 ## Panneau des outils des agents de l'interface de contrôle
 
 - Le panneau des outils `/agents` de l'interface de contrôle possède deux vues distinctes :
-  - **Disponible immédiatement** utilise `tools.effective(sessionKey=...)` et affiche ce que la session
-    courante peut réellement utiliser au moment de l'exécution, y compris les outils principaux, les plugins et ceux appartenant au canal.
+  - **Disponible immédiatement** utilise `tools.effective(sessionKey=...)` et affiche une projection en lecture seule dérivée du serveur de l'inventaire de session actuel, y compris les outils du serveur MCP de base, de plugin, appartenant au canal et déjà découverts.
   - **Configuration des outils** utilise `tools.catalog` et reste axé sur les profils, les overrides et
     la sémantique du catalogue.
-- La disponibilité au moment de l'exécution est limitée à la session. Le changement de session sur le même agent peut modifier la liste **Disponible immédiatement**.
+- La disponibilité du runtime est limitée à la session. Le changement de sessions sur le même agent peut modifier la liste **Disponible immédiatement**. Si les serveurs MCP configurés n'ont pas été connectés ou ont été modifiés depuis la dernière découverte, le panneau affiche un avis au lieu de démarrer silencieusement les transports MCP à partir du chemin de lecture.
 - L'éditeur de configuration n'implique pas la disponibilité au moment de l'exécution ; l'accès effectif suit toujours la priorité de la stratégie (`allow`/`deny`, overrides par agent et par fournisseur/canal).
 
 ## Utilisation à distance

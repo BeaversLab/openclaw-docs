@@ -1,5 +1,5 @@
 ---
-summary: "Codex 應用程式伺服器套件及 Codex 管理的 GPT 模型目錄。"
+summary: "OpenClaw Codex 應用程式伺服器線束和模型提供者外掛程式，附帶由 Codex 管理的 GPT 目錄。"
 read_when:
   - You are installing, configuring, or auditing the codex plugin
 title: "Codex 外掛程式"
@@ -7,7 +7,7 @@ title: "Codex 外掛程式"
 
 # Codex 外掛程式
 
-Codex 應用程式伺服器套件及 Codex 管理的 GPT 模型目錄。
+OpenClaw Codex 應用程式伺服器線束和模型提供者外掛程式，附帶由 Codex 管理的 GPT 目錄。
 
 ## 發行版本
 

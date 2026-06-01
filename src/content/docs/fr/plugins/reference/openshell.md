@@ -1,5 +1,5 @@
 ---
-summary: "Backend Sandbox propulsé par le NVIDIA OpenShell CLI avec des espaces de travail locaux en miroir et une exécution de commandes basée sur SSH."
+summary: "OpenClaw sandbox backend pour le OpenClawCLI NVIDIA OpenShell avec des espaces de travail locaux miroir et l'exécution de commandes SSH."
 read_when:
   - You are installing, configuring, or auditing the openshell plugin
 title: "Plugin Openshell"
@@ -7,7 +7,7 @@ title: "Plugin Openshell"
 
 # Plugin Openshell
 
-Backend Sandbox propulsé par le NVIDIA OpenShell CLI avec des espaces de travail locaux en miroir et une exécution de commandes basée sur SSH.
+OpenClaw sandbox backend pour le CLI NVIDIA OpenShell avec des espaces de travail locaux miroir et l'exécution de commandes SSH.
 
 ## Distribution
 

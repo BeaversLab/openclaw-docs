@@ -1,5 +1,5 @@
 ---
-summary: "Runtime principal ACP intégré avec gestion des sessions et des transports appartenant au plugin."
+summary: "OpenClawOpenClaw ACP runtime backend avec session et gestion de transport appartenant au plugin."
 read_when:
   - You are installing, configuring, or auditing the acpx plugin
 title: "Plugin ACPx"
@@ -7,7 +7,7 @@ title: "Plugin ACPx"
 
 # Plugin ACPx
 
-Runtime principal ACP intégré avec gestion des sessions et des transports appartenant au plugin.
+OpenClaw ACP runtime backend avec session et gestion de transport appartenant au plugin.
 
 ## Distribution
 

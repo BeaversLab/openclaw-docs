@@ -11,10 +11,10 @@ Las marcas de tiempo del proveedor se conservan para que las herramientas manten
 
 ## Sobres de mensajes (local por defecto)
 
-Los mensajes entrantes se envuelven con una marca de tiempo (precisión de minutos):
+Los mensajes entrantes se envuelven con una marca de tiempo (precisión de segundos):
 
 ```
-[Provider ... 2026-01-05 16:26 PST] message text
+[Provider ... Mon 2026-01-05 16:26:34 PST] message text
 ```
 
 Esta marca de tiempo del sobre es **local del host por defecto**, independientemente de la zona horaria del proveedor.
@@ -45,19 +45,19 @@ Puedes anular este comportamiento:
 **Local (predeterminado):**
 
 ```
-[WhatsApp +1555 2026-01-18 00:19 PST] hello
+[WhatsApp +1555 Sun 2026-01-18 00:19:42 PST] hello
 ```
 
 **Zona horaria del usuario:**
 
 ```
-[WhatsApp +1555 2026-01-18 00:19 CST] hello
+[WhatsApp +1555 Sun 2026-01-18 00:19:42 CST] hello
 ```
 
 **Tiempo transcurrido habilitado:**
 
 ```
-[WhatsApp +1555 +30s 2026-01-18T05:19Z] follow-up
+[WhatsApp +1555 +30s Sun 2026-01-18T05:19:00Z] follow-up
 ```
 
 ## Prompt del sistema: fecha y hora actual

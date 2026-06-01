@@ -289,12 +289,16 @@ curl "https://api.telegram.org/bot<bot_token>/getUpdates"
 - 路由是确定性的：Telegram 入站回复会发回 Telegram（模型不选择渠道）。
 - 传入消息会规范化为共享的渠道信封，其中包含回复元数据、媒体占位符以及网关观察到的 Telegram 回复的持久化回复链上下文。
 - 群组会话按群组 ID 隔离。论坛主题附加 `:topic:<threadId>` 以保持主题隔离。
-- 私信消息可以携带 `message_thread_id`；OpenClaw 在回复时会保留主题 ID，但默认情况下将私信保留在扁平会话中。当您有意实现私信主题会话隔离时，请配置 `channels.telegram.dm.threadReplies: "inbound"`、`channels.telegram.direct.<chatId>.threadReplies: "inbound"`、`requireTopic: true` 或匹配的主题配置。
-- 长轮询使用 grammY 运行器，并按聊天/按主题进行排序。整体运行器接收并发使用 `agents.defaults.maxConcurrent`。
-- 多账号启动限制了并发的 Telegram `getMe` 探测，这样大型机器人群组不会立即扩散每个账号的探测。
-- 长轮询在每个网关进程内部受到保护，因此一次只有一个活跃的轮询器可以使用 bot 令牌。如果您仍然看到 `getUpdates` 409 冲突，则另一个 OpenClaw 网关、脚本或外部轮询器可能正在使用相同的令牌。
-- 默认情况下，如果在 120 秒内未完成 `getUpdates` 存活检查，将触发长轮询看门狗重启。仅当您的部署在长时间运行的工作期间仍然出现误判的轮询停滞重启时，才增加 `channels.telegram.pollingStallThresholdMs`。该值以毫秒为单位，允许范围从 `30000` 到 `600000`；支持每个账户的覆盖设置。
+- 私信消息可以携带 `message_thread_id`OpenClawTelegram；OpenClaw 会在回复中保留它。私信主题会话仅在 Telegram `getMe` 为机器人报告 `has_topics_enabled: true` 时才会拆分；否则私信保持在扁平会话中。
+- 长轮询使用 grammY 运行器进行逐聊天/逐话题排序。整体运行器接收器并发性使用 grammY`agents.defaults.maxConcurrent`。
+- 多账户启动限制了并发的 Telegram Telegram`getMe` 探测，因此大型机器人队列不会一次性展开每个账户的探测。
+- 长轮询在每个网关进程内受到保护，因此一次只有一个活动的轮询器可以使用机器人令牌。如果您仍然看到 `getUpdates`OpenClaw 409 冲突，则可能是另一个 OpenClaw 网关、脚本或外部轮询器正在使用相同的令牌。
+- 默认情况下，长轮询看门狗会在 120 秒内未完成 `getUpdates` 存活检查时触发重启。仅当您的部署在长时间运行的工作期间仍然出现错误的轮询停滞重启时，才增加 `channels.telegram.pollingStallThresholdMs`。该值以毫秒为单位，允许范围从 `30000` 到 `600000`；支持逐账户覆盖。
 - Telegram Bot API 不支持已读回执（`sendReadReceipts` 不适用）。
+
+<Note>
+  `channels.telegram.dm.threadReplies` 和 `channels.telegram.direct.<chatId>.threadReplies` 已被移除。如果您的配置中仍有这些键，请在升级后运行 `openclaw doctor --fix`Telegram。私信主题路由现在遵循 Telegram `getMe.has_topics_enabled`Telegram 中的机器人能力，该能力由 BotFather 的 threaded mode 控制：启用了主题的机器人在 Telegram 发送 `message_thread_id` 时使用线程范围的私信会话；其他私信保持在扁平会话中。
+</Note>
 
 ## 功能参考
 
@@ -303,20 +307,20 @@ curl "https://api.telegram.org/bot<bot_token>/getUpdates"
     OpenClaw 可以实时流式传输部分回复：
 
     - 直接聊天：预览消息 + `editMessageText`
-    - 群组/主题：预览消息 + `editMessageText`
-    - 直接聊天工具进度：在启用并支持时，可选的原生 `sendMessageDraft` 状态预览
+    - 群组/话题：预览消息 + `editMessageText`
+    - 直接聊天工具进度：启用并受支持时，可选的原生 `sendMessageDraft` 状态预览
 
     要求：
 
     - `channels.telegram.streaming` 为 `off | partial | block | progress`（默认：`partial`）
-    - `progress` 为工具进度保留一个可编辑的状态草稿，在完成时将其清除，并将最终答案作为普通消息发送
-    - `streaming.preview.toolProgress` 控制工具/进度更新是否重用同一条已编辑的预览消息（当预览流式传输激活时默认为 `true`）
-    - `streaming.preview.commandText` 控制这些工具进度行内的命令/执行细节：`raw`（默认，保留已发布的行为）或 `status`（仅工具标签）
-    - 会检测旧版 `channels.telegram.streamMode` 和布尔 `streaming` 值；运行 `openclaw doctor --fix` 将其迁移为 `channels.telegram.streaming.mode`TelegramOpenClaw
+    - `progress` 为工具进度保留一个可编辑的状态草稿，完成后将其清除，并将最终答案作为普通消息发送
+    - `streaming.preview.toolProgress` 控制工具/进度更新是否复用同一条编辑后的预览消息（当预览流式传输处于活动状态时，默认为 `true`）
+    - `streaming.preview.commandText` 控制这些工具进度行内的命令/执行详细信息：`raw`（默认，保留已发布的行为）或 `status`（仅工具标签）
+    - 系统会检测旧版 `channels.telegram.streamMode` 和布尔 `streaming` 值；运行 `openclaw doctor --fix` 将其迁移到 `channels.telegram.streaming.mode`TelegramOpenClaw
 
-    工具进度预览更新是工具运行时显示的短状态行，例如命令执行、文件读取、规划更新、补丁摘要，或 Codex 应用服务器模式下的 Codex 前言/评论文本。Telegram 默认启用这些功能以匹配 `v2026.4.22`Telegram 及更高版本中发布的 OpenClaw 行为。
+    工具进度预览更新是在工具运行时显示的简短状态行，例如命令执行、文件读取、规划更新、补丁摘要，或 Codex 应用服务器模式下的 Codex 前言/评注文本。Telegram 默认保持这些功能启用，以匹配 `v2026.4.22`Telegram 及更高版本发布的 OpenClaw 行为。
 
-    直接聊天可以使用原生 Telegram 草稿来处理这些工具进度行，而不会将工具闲聊保留到聊天记录中。原生草稿在答案文本开始前停止；最终答案保持在正常的持久交付路径上。此通道默认处于关闭状态，应首先限制为受信任的私信 ID：
+    直接聊天可以使用原生 Telegram 草稿来显示这些工具进度行，而无需将工具闲聊持久化到聊天历史记录中。原生草稿在答案文本开始前停止；最终答案保留在正常的持久化传送路径上。此通道默认关闭，应首先限制为受信任的私信 ID：
 
     ```json
     {
@@ -335,7 +339,7 @@ curl "https://api.telegram.org/bot<bot_token>/getUpdates"
     }
     ```
 
-    要保留答案文本的已编辑预览但隐藏工具进度行，请设置：
+    要保留答案文本的编辑预览但隐藏工具进度行，请设置：
 
     ```json
     {
@@ -369,7 +373,7 @@ curl "https://api.telegram.org/bot<bot_token>/getUpdates"
     }
     ```
 
-    当您希望可见的工具进度而不将最终答案编辑到同一条消息中时，请使用 `progress` 模式。将命令文本策略置于 `streaming.progress` 下：
+    当您希望在不将最终答案编辑到同一条消息中的情况下显示工具进度时，请使用 `progress` 模式。将命令文本策略置于 `streaming.progress` 下：
 
     ```json
     {
@@ -387,43 +391,43 @@ curl "https://api.telegram.org/bot<bot_token>/getUpdates"
     }
     ```
 
-    仅当您想要仅最终交付时才使用 `streaming.mode: "off"`Telegram：Telegram 预览编辑被禁用，通用工具/进度闲聊被抑制，而不是作为独立状态消息发送。批准提示、媒体负载和错误仍通过正常的最终交付路由。当您只想保留答案预览编辑并隐藏工具进度状态行时，请使用 `streaming.preview.toolProgress: false`Telegram。
+    仅当您希望仅传送最终结果时才使用 `streaming.mode: "off"`Telegram：Telegram 预览编辑被禁用，通用的工具/进度闲聊将被抑制，而不是作为独立状态消息发送。批准提示、媒体载荷和错误仍通过正常的最终传送路径进行路由。当您只想保留答案预览编辑并隐藏工具进度状态行时，请使用 `streaming.preview.toolProgress: false`Telegram。
 
     <Note>
-      Telegram 选定的引用回复是例外情况。当 `replyToMode` 为 `"first"`、`"all"` 或 `"batched"`OpenClawTelegram 且入站消息包含选定的引用文本时，OpenClaw 通过 Telegram 的原生引用回复路径发送最终答案，而不是编辑答案预览，因此 `streaming.preview.toolProgress` 无法显示该轮次的短状态行。没有选定引用文本的当前消息回复仍保持预览流式传输。当工具进度的可见性比原生引用回复更重要时，设置 `replyToMode: "off"`，或设置 `streaming.preview.toolProgress: false`OpenClawTelegramOpenClawOpenClawTelegramOpenClawTelegram 以确认权衡。
+      Telegram 选定的引用回复是例外情况。当 `replyToMode` 为 `"first"`、`"all"` 或 `"batched"`OpenClawTelegram 且传入消息包含选定的引用文本时，OpenClaw 将通过 Telegram 的原生引用回复路径发送最终答案，而不是编辑答案预览，因此 `streaming.preview.toolProgress` 无法显示该轮次的简短状态行。不包含选定引用文本的当前消息回复仍保留预览流式传输。如果工具进度的可见性比原生引用回复更重要，请设置 `replyToMode: "off"`；或设置 `streaming.preview.toolProgress: false`OpenClawTelegramOpenClawOpenClawTelegramOpenClaw 以确认这种权衡。
     </Note>
 
-    对于仅文本回复：
+    对于纯文本回复：
 
-    - 短私信/群组/主题预览：OpenClaw 保留同一条预览消息并就地执行最终编辑
-    - 分割为多条 Telegram 消息的长文本最终结果在可能的情况下将现有预览重用为第一个最终分块，然后仅发送剩余的分块
-    - 进度模式的最终结果会清除状态草稿并使用正常的最终交付，而不是将草稿编辑为答案
-    - 如果在确认完成文本之前最终编辑失败，OpenClaw 使用正常的最终交付并清除过时的预览
+    - 简短的私信/群组/话题预览：OpenClaw 保持同一条预览消息并就地执行最终编辑
+    - 分割为多条 Telegram 消息的长文本最终结果会在可能的情况下将现有预览重用为第一个最终片段，然后仅发送剩余片段
+    - 进度模式的最终结果会清除状态草稿，并使用正常的最终传送，而不是将草稿编辑为答案
+    - 如果在完成文本确认前最终编辑失败，OpenClaw 将使用正常的最终传送并清理过时的预览
 
-    对于复杂回复（例如媒体负载），OpenClaw 回退到正常的最终交付，然后清除预览消息。
+    对于复杂回复（例如媒体载荷），OpenClaw 将回退到正常的最终传送，然后清理预览消息。
 
-    预览流式传输与分块流式传输是分开的。当为 Telegram 显式启用分块流式传输时，OpenClaw 跳过预览流以避免双重流式传输。
+    预览流式传输与分块流式传输是分开的。当为 Telegram 显式启用分块流式传输时，OpenClaw 会跳过预览流以避免双重流式传输。
 
-    Telegram 仅推理流：
+    推理流式传输行为：
 
-    - `/reasoning stream` 在生成时将推理发送到实时预览
-    - 推理预览在最终交付后被删除；当推理应保持可见时，请使用 `/reasoning on`
-    - 最终答案不包含推理文本
-
-  </Accordion>
-
-  <Accordion title="Formatting and HTML fallback"Telegram>
-    Outbound text uses Telegram `parse_mode: "HTML"`TelegramTelegramTelegramOpenClaw.
-
-    - Markdown-ish text is rendered to Telegram-safe HTML.
-    - Supported Telegram HTML tags are preserved; unsupported HTML is escaped.
-    - If Telegram rejects parsed HTML, OpenClaw retries as plain text.
-
-    Link previews are enabled by default and can be disabled with `channels.telegram.linkPreview: false`.
+    - `/reasoning stream`Telegram 使用支持的渠道的推理预览路径；在 Telegram 上，它在生成时将推理流式传输到实时预览中
+    - 推理预览在最终传送后删除；当推理应保持可见时，请使用 `/reasoning on`
+    - 最终答案在发送时不包含推理文本
 
   </Accordion>
 
-  <Accordion title="原生命令和自定义命令">
+  <Accordion title="格式化与 HTML 回退"Telegram>
+    出站文本使用 Telegram `parse_mode: "HTML"`TelegramTelegramTelegramOpenClaw。
+
+    - 类 Markdown 文本会被渲染为 Telegram 安全的 HTML。
+    - 支持的 Telegram HTML 标签会被保留；不支持的 HTML 会被转义。
+    - 如果 Telegram 拒绝解析后的 HTML，OpenClaw 将重试为纯文本。
+
+    链接预览默认启用，并可以通过 `channels.telegram.linkPreview: false` 禁用。
+
+  </Accordion>
+
+  <Accordion title="Native commands and custom commands">
     Telegram 命令菜单注册在启动时通过 `setMyCommands` 处理。
 
     原生命令默认值：
@@ -450,23 +454,23 @@ curl "https://api.telegram.org/bot<bot_token>/getUpdates"
     - 名称会被规范化（去除前导 `/`，转为小写）
     - 有效模式：`a-z`、`0-9`、`_`，长度 `1..32`
     - 自定义命令不能覆盖原生命令
-    - 冲突/重复项将被跳过并记录
+    - 冲突/重复的条目将被跳过并记录日志
 
     注意事项：
 
     - 自定义命令仅作为菜单条目；它们不会自动实现行为
-    - 即使未在 Telegram 菜单中显示，插件/技能命令在输入时仍可工作
+    - 即使未在 Telegram 菜单中显示，插件/技能命令在输入时仍然可以工作
 
-    如果禁用了原生命令，内置命令将被移除。如果配置了，自定义/插件命令仍可能注册。
+    如果禁用了原生命令，内置命令将被移除。如果已配置，自定义/插件命令可能仍会注册。
 
     常见设置失败：
 
-    - 带有 `BOT_COMMANDS_TOO_MUCH` 的 `setMyCommands failed` 表示 Telegram 菜单在修剪后仍然溢出；请减少插件/技能/自定义命令或禁用 `channels.telegram.commands.native`。
-    - 当直接的 Bot API curl 命令可以工作，但 `deleteWebhook`、`deleteMyCommands` 或 `setMyCommands` 失败并提示 `404: Not Found` 时，可能意味着 `channels.telegram.apiRoot` 被设置为了完整的 `/bot<TOKEN>` 端点。`apiRoot` 必须仅是 Bot API 根目录，而 `openclaw doctor --fix` 会移除意外附加的 `/bot<TOKEN>`。
-    - `getMe returned 401` 表示 Telegram 拒绝了配置的 bot 令牌。请使用当前的 BotFather 令牌更新 `botToken`、`tokenFile` 或 `TELEGRAM_BOT_TOKEN`；OpenClaw 会在轮询之前停止，因此这不会作为 webhook 清理失败被报告。
-    - 带有网络/获取错误的 `setMyCommands failed` 通常意味着到 `api.telegram.org` 的出站 DNS/HTTPS 被阻止。
+    - `setMyCommands failed` 且带有 `BOT_COMMANDS_TOO_MUCH` 表示 Telegram 菜单在修剪后仍然溢出；请减少插件/技能/自定义命令或禁用 `channels.telegram.commands.native`。
+    - `deleteWebhook`、`deleteMyCommands` 或 `setMyCommands` 失败并提示 `404: Not Found`，而直接的 Bot API curl 命令可以工作，这可能意味着 `channels.telegram.apiRoot` 被设置为了完整的 `/bot<TOKEN>` 端点。`apiRoot` 必须仅是 Bot API 根目录，而 `openclaw doctor --fix` 会移除意外的尾部 `/bot<TOKEN>`。
+    - `getMe returned 401` 表示 Telegram 拒绝了配置的 bot 令牌。请使用当前的 BotFather 令牌更新 `botToken`、`tokenFile` 或 `TELEGRAM_BOT_TOKEN`；OpenClaw 会在轮询之前停止，因此这不会被报告为 webhook 清理失败。
+    - `setMyCommands failed` 且带有网络/获取错误通常意味着到 `api.telegram.org` 的出站 DNS/HTTPS 被阻止。
 
-    ### 设备配对命令（`device-pair` 插件）
+    ### 设备配对命令 (`device-pair` 插件)
 
     当安装了 `device-pair` 插件时：
 
@@ -474,20 +478,20 @@ curl "https://api.telegram.org/bot<bot_token>/getUpdates"
     2. 将代码粘贴到 iOS 应用中
     3. `/pair pending` 列出待处理的请求（包括角色/作用域）
     4. 批准请求：
-       - `/pair approve <requestId>` 用于显式批准
-       - `/pair approve` 当只有一个待处理的请求时
+       - `/pair approve <requestId>` 用于明确批准
+       - `/pair approve` 当只有一个待处理请求时
        - `/pair approve latest` 用于最近的请求
 
-    设置代码携带一个短期引导令牌。内置的设置代码引导仅适用于节点：首次连接会创建一个待处理的节点请求，批准后，Gateway(网关) 会返回一个带有 `scopes: []` 的持久节点令牌。它不返回移交的操作员令牌；操作员访问需要单独的已批准操作员配对或令牌流。
+    设置代码包含一个短期的引导令牌。内置的设置代码引导仅适用于节点：首次连接会创建一个待处理的节点请求，批准后，Gateway(网关) 会通过 `scopes: []` 返回一个持久的节点令牌。它不会返回移交的操作员令牌；操作员访问需要单独的批准操作员配对或令牌流。
 
-    如果设备使用更改的身份验证详细信息（例如角色/作用域/公钥）重试，先前的待处理请求将被取代，新请求将使用不同的 `requestId`。在批准之前请重新运行 `/pair pending`。
+    如果设备使用更改的身份验证详细信息（例如角色/作用域/公钥）重试，之前的待处理请求将被取代，新请求将使用不同的 `requestId`。在批准之前请重新运行 `/pair pending`。
 
     更多详情：[配对](/zh/channels/pairing#pair-via-telegram-recommended-for-ios)。
 
   </Accordion>
 
   <Accordion title="Inline buttons">
-    配置内联键盘范围：
+    配置内联键盘作用域：
 
 ```json5
 {
@@ -501,7 +505,7 @@ curl "https://api.telegram.org/bot<bot_token>/getUpdates"
 }
 ```
 
-    每账户覆盖：
+    每个账户覆盖：
 
 ```json5
 {
@@ -519,13 +523,13 @@ curl "https://api.telegram.org/bot<bot_token>/getUpdates"
 }
 ```
 
-    范围：
+    作用域：
 
     - `off`
     - `dm`
     - `group`
     - `all`
-    - `allowlist` (默认)
+    - `allowlist`（默认）
 
     旧版 `capabilities: ["inlineButtons"]` 映射到 `inlineButtons: "all"`。
 
@@ -547,7 +551,7 @@ curl "https://api.telegram.org/bot<bot_token>/getUpdates"
 }
 ```
 
-    Mini App 按钮示例：
+    小程序按钮示例：
 
 ```json5
 {
@@ -566,14 +570,14 @@ curl "https://api.telegram.org/bot<bot_token>/getUpdates"
 }
 ```
 
-    Telegram `web_app` 按钮仅在用户与机器人之间的私聊中有效。
+    Telegram `web_app` 按钮仅在用户与机器人之间的私密聊天中有效。
 
-    回调点击作为文本传递给代理：
+    回调点击会作为文本传递给代理：
     `callback_data: <value>`
 
   </Accordion>
 
-  <Accordion title="TelegramTelegram 消息操作（用于代理和自动化）"Telegram>
+  <Accordion title="Telegram代理和自动化的 Telegram 消息操作"Telegram>
     Telegram 工具操作包括：
 
     - `sendMessage` (`to`, `content`, 可选 `mediaUrl`, `replyToMessageId`, `messageThreadId`)
@@ -589,51 +593,51 @@ curl "https://api.telegram.org/bot<bot_token>/getUpdates"
     - `channels.telegram.actions.sendMessage`
     - `channels.telegram.actions.deleteMessage`
     - `channels.telegram.actions.reactions`
-    - `channels.telegram.actions.sticker` (默认: disabled)
+    - `channels.telegram.actions.sticker` (默认：禁用)
 
-    注意：`edit` 和 `topic-create` 目前默认已启用，并且没有单独的 `channels.telegram.actions.*` 开关。
-    运行时发送使用活动配置/机密快照（启动/重新加载），因此操作路径不会在每次发送时执行临时的 SecretRef 重新解析。
+    注意：`edit` 和 `topic-create` 目前默认已启用，且没有单独的 `channels.telegram.actions.*` 开关。
+    运行时发送使用当前的配置/机密快照 (启动/重新加载)，因此操作路径不会在每次发送时执行临时的 SecretRef 重新解析。
 
-    反应移除语义: [/tools/reactions](/zh/tools/reactions)
+    表情符号移除语义：[/tools/reactions](/zh/tools/reactions)
 
   </Accordion>
 
-  <Accordion title="Reply threading tags"Telegram>
-    Telegram 支持在生成的输出中使用显式回复串行标签：
+  <Accordion title="Reply threading tags">
+    Telegram 支持在生成输出中使用显式回复线程标签：
 
     - `[[reply_to_current]]` 回复触发消息
-    - `[[reply_to:<id>]]`Telegram 回复特定的 Telegram 消息 ID
+    - `[[reply_to:<id>]]` 回复特定的 Telegram 消息 ID
 
     `channels.telegram.replyToMode` 控制处理方式：
 
     - `off`（默认）
     - `first`
-    - `all`TelegramOpenClawTelegramTelegramTelegram
+    - `all`
 
-    当启用回复串行功能且原始 Telegram 文本或字幕可用时，OpenClaw 会自动包含原生的 Telegram 引用摘录。Telegram 将原生引用文本限制为 1024 个 UTF-16 代码单位，因此较长的消息会从开头开始引用，如果 Telegram 拒绝该引用，则会回退到普通回复。
+    当启用回复线程且原始 Telegram 文本或说明文字可用时，OpenClaw 会自动包含原生的 Telegram 引用摘录。Telegram 将原生引用文本限制为 1024 个 UTF-16 代码单位，因此较长的消息会从开头开始引用，如果 Telegram 拒绝该引用，则回退到普通回复。
 
-    注意：`off` 会禁用隐式回复串行。显式的 `[[reply_to_*]]` 标签仍然有效。
+    注意：`off` 会禁用隐式回复线程。显式的 `[[reply_to_*]]` 标签仍然有效。
 
   </Accordion>
 
-  <Accordion title="Forum topics and thread behavior">
+  <Accordion title="论坛主题和线程行为">
     论坛超级群组：
 
     - 主题会话键附加 `:topic:<threadId>`
-    - 回复和打字以主题串为目标
+    - 回复和正在输入以主题线程为目标
     - 主题配置路径：
       `channels.telegram.groups.<chatId>.topics.<threadId>`
 
-    常规主题（`threadId=1`）特殊情况：
+    常规主题 (`threadId=1`) 特殊情况：
 
-    - 消息发送省略 `message_thread_id`Telegram（Telegram 拒绝 `sendMessage(...thread_id=1)`）
-    - 打字操作仍包含 `message_thread_id`
+    - 消息发送省略 `message_thread_id` (Telegram 拒绝 `sendMessage(...thread_id=1)`)
+    - 正在输入动作仍然包含 `message_thread_id`
 
-    主题继承：除非被覆盖，否则主题条目继承群组设置（`requireMention`、`allowFrom`、`skills`、`systemPrompt`、`enabled`、`groupPolicy`）。
-    `agentId` 是主题专属的，不继承群组默认值。
-    `topics."*"` 为该群组中的每个主题设置默认值；精确的主题 ID 仍优先于 `"*"`。
+    主题继承：主题条目继承群组设置，除非被覆盖 (`requireMention`, `allowFrom`, `skills`, `systemPrompt`, `enabled`, `groupPolicy`)。
+    `agentId` 仅限主题，不继承群组默认值。
+    `topics."*"` 为该群组中的每个主题设置默认值；精确的主题 ID 仍然优先于 `"*"`。
 
-    **按主题的代理路由**：每个主题可以通过在主题配置中设置 `agentId` 来路由到不同的代理。这为每个主题提供了独立的隔离工作空间、内存和会话。示例：
+    **按主题代理路由**：每个主题可以通过在主题配置中设置 `agentId` 来路由到不同的代理。这为每个主题提供了自己独立的工作区、内存和会话。示例：
 
     ```json5
     {
@@ -655,22 +659,23 @@ curl "https://api.telegram.org/bot<bot_token>/getUpdates"
 
     然后，每个主题都有自己的会话键：`agent:zu:telegram:group:-1001234567890:topic:3`
 
-    **持久化 ACP 主题绑定**：论坛主题可以通过顶级类型化 ACP 绑定固定 ACP harness 会话（`bindings[]` 具有 `type: "acp"` 和 `match.channel: "telegram"`、`peer.kind: "group"`，以及类似 `-1001234567890:topic:42` 的主题限定 ID）。目前仅限于群组/超级群组中的论坛主题。请参阅 [ACP 代理](/zh/tools/acp-agents)。
+    **持久化 ACP 主题绑定**：论坛主题可以通过顶级类型化 ACP 绑定来固定 ACP 挂载会话 (`bindings[]` 带有 `type: "acp"` 和 `match.channel: "telegram"`, `peer.kind: "group"`，以及一个主题限定 ID 如 `-1001234567890:topic:42`)。目前范围限定为群组/超级群组中的论坛主题。参见 [ACP Agents](/zh/tools/acp-agents)。
 
-    **从聊天中生成线程绑定的 ACP**：`/acp spawn <agent> --thread here|auto`OpenClaw 将当前主题绑定到新的 ACP 会话；后续回复直接路由到那里。OpenClaw 会将生成确认固定在主题内。要求 `channels.telegram.threadBindings.spawnSessions` 保持启用状态（默认值：`true`）。
+    **从聊天生成的线程绑定 ACP 衍生**：`/acp spawn <agent> --thread here|auto` 将当前主题绑定到新的 ACP 会话；后续直接路由到那里。OpenClaw 将生成确认固定在主题内。要求 `channels.telegram.threadBindings.spawnSessions` 保持启用状态 (默认值：`true`)。
 
-    模板上下文公开 `MessageThreadId` 和 `IsForum`。具有 `message_thread_id` 的私聊聊天默认情况下在扁平会话上保持私聊路由和回复元数据；只有在使用 `threadReplies: "inbound"`、`threadReplies: "always"`、`requireTopic: true` 或匹配的主题主题配置时，它们才使用线程感知的会话键。使用顶级 `channels.telegram.dm.threadReplies` 作为帐户默认值，或使用 `direct.<chatId>.threadReplies` 针对单个私聊。
+    模板上下文公开 `MessageThreadId` 和 `IsForum`。带有 `message_thread_id` 的私信聊天保留回复元数据；仅当 Telegram `getMe` 向机器人报告 `has_topics_enabled: true` 时，它们才使用线程感知会话键。
+    以前的 `dm.threadReplies` 和 `direct.*.threadReplies` 覆盖已有意弃用；请使用 BotFather 线程模式作为唯一真实来源，并运行 `openclaw doctor --fix` 以删除过时的配置键。
 
   </Accordion>
 
   <Accordion title="Audio, video, and stickers">
-    ### 音频消息
+    ### Audio messages
 
-    Telegram 区分语音笔记和音频文件。
+    Telegram 区分语音笔记与音频文件。
 
     - 默认：音频文件行为
-    - 在 Agent 回复中使用标签 `[[audio_as_voice]]` 以强制发送语音笔记
-    - 接收到的语音笔记转录内容在 Agent 上下文中被标记为机器生成且不受信任的文本；提及检测仍使用原始转录文本，因此受提及限制的语音消息将继续正常工作。
+    - 在代理回复中使用标记 `[[audio_as_voice]]` 强制发送语音笔记
+    - 传入的语音笔记转录在代理上下文中被框定为机器生成的、不可信文本；提及检测仍使用原始转录，因此提及拦截的语音消息可以继续工作。
 
     消息操作示例：
 
@@ -684,9 +689,9 @@ curl "https://api.telegram.org/bot<bot_token>/getUpdates"
 }
 ```
 
-    ### 视频消息
+    ### Video messages
 
-    Telegram 区分视频文件和视频笔记。
+    Telegram 区分视频文件与视频笔记。
 
     消息操作示例：
 
@@ -700,11 +705,11 @@ curl "https://api.telegram.org/bot<bot_token>/getUpdates"
 }
 ```
 
-    视频笔记不支持说明文字；提供的消息文本将单独发送。
+    视频笔记不支持字幕；提供的消息文本将单独发送。
 
-    ### 贴纸
+    ### Stickers
 
-    接收贴纸的处理：
+    传入贴纸处理：
 
     - 静态 WEBP：已下载并处理（占位符 `<media:sticker>`）
     - 动画 TGS：已跳过
@@ -722,7 +727,7 @@ curl "https://api.telegram.org/bot<bot_token>/getUpdates"
 
     - `~/.openclaw/telegram/sticker-cache.json`
 
-    贴纸仅被描述一次（在可能的情况下）并进行缓存，以减少重复的视觉调用。
+    贴纸仅描述一次（尽可能）并缓存，以减少重复的视觉调用。
 
     启用贴纸操作：
 
@@ -763,63 +768,63 @@ curl "https://api.telegram.org/bot<bot_token>/getUpdates"
   </Accordion>
 
   <Accordion title="Reaction notifications"Telegram>
-    Telegram 反应以 `message_reaction`OpenClaw 更新形式到达（与消息负载分开）。
+    Telegram 反应会作为 `message_reaction`OpenClaw 更新到达（与消息正文分开）。
 
-    启用后，OpenClaw 会将系统事件排队，例如：
+    启用后，OpenClaw 会将系统事件（如下所示）加入队列：
 
     - `Telegram reaction added: 👍 by Alice (@alice) on msg 42`
 
     配置：
 
-    - `channels.telegram.reactionNotifications`: `off | own | all` (默认: `own`)
-    - `channels.telegram.reactionLevel`: `off | ack | minimal | extensive` (默认: `minimal`)
+    - `channels.telegram.reactionNotifications`: `off | own | all`（默认值：`own`）
+    - `channels.telegram.reactionLevel`: `off | ack | minimal | extensive`（默认值：`minimal`）
 
-    注意：
+    注意事项：
 
-    - `own`Telegram 表示仅限用户对机器人发送的消息的反应（通过已发送消息缓存尽力而为）。
-    - 反应事件仍然遵守 Telegram 访问控制 (`dmPolicy`, `allowFrom`, `groupPolicy`, `groupAllowFrom`Telegram)；未经授权的发送者将被丢弃。
-    - Telegram 不在反应更新中提供话题 ID。
-      - 非论坛群组路由到群组聊天会话
-      - 论坛群组路由到群组一般话题会话 (`:topic:1`)，而非确切来源话题
+    - `own`Telegram 意味着仅包含用户对机器人发送消息的反应（通过已发送消息缓存尽力而为）。
+    - 反应事件仍然遵循 Telegram 访问控制（`dmPolicy`、`allowFrom`、`groupPolicy`、`groupAllowFrom`Telegram）；未授权的发送者会被丢弃。
+    - Telegram 不会在反应更新中提供话题 ID。
+      - 非论坛群组会路由到群聊会话
+      - 论坛群组会路由到群组的一般话题会话（`:topic:1`），而不是确切的原始话题
 
-    轮询/Webhook 的 `allowed_updates` 自动包含 `message_reaction`。
+    用于轮询/Webhook 的 `allowed_updates` 会自动包含 `message_reaction`。
 
   </Accordion>
 
   <Accordion title="Ack reactions">
-    `ackReaction` 在 OpenClaw 处理传入消息时发送一个确认表情符号。`ackReactionScope` 决定了*何时*实际发送该表情符号。
+    `ackReaction`OpenClaw 在 OpenClaw 处理入站消息时发送确认表情符号。`ackReactionScope` 决定*何时*实际发送该表情符号。
 
-    **表情符号 (`ackReaction`) 解析顺序：**
+    **Emoji (`ackReaction`) 解析顺序：**
 
     - `channels.telegram.accounts.<accountId>.ackReaction`
     - `channels.telegram.ackReaction`
     - `messages.ackReaction`
-    - 代理身份表情符号回退 (`agents.list[].identity.emoji`，否则为 "👀")
+    - 代理身份表情符号回退 (`agents.list[].identity.emoji`Telegram，否则为 "👀")
 
     注意：
 
-    - Telegram 需要 unicode 表情符号（例如 "👀"）。
+    - Telegram 需要 unicode emoji（例如 "👀"）。
     - 使用 `""` 为渠道或帐户禁用该反应。
 
-    **作用域 (`messages.ackReactionScope`)：**
+    **作用域 (`messages.ackReactionScope`Telegram)：**
 
-    Telegram 提供商从 `messages.ackReactionScope` 读取作用域（默认 `"group-mentions"`）。目前没有 Telegram 帐户或 Telegram 渠道级别的覆盖设置。
+    Telegram 提供商从 `messages.ackReactionScope` 读取作用域（默认为 `"group-mentions"`TelegramTelegram）。目前没有 Telegram 帐户或 Telegram 渠道级别的覆盖。
 
-    取值：`"all"` (私信 + 群组)、`"direct"` (仅私信)、`"group-all"` (每条群组消息，无私信)、`"group-mentions"` (当机器人被提及时的群组；**无私信** — 这是默认值)、`"off"` / `"none"` (已禁用)。
+    值：`"all"` (私信 + 群组), `"direct"` (仅私信), `"group-all"` (每条群组消息，无私信), `"group-mentions"` (当机器人被提及时的群组；**无私信** — 这是默认值), `"off"` / `"none"` (已禁用)。
 
     <Note>
-    默认作用域 (`"group-mentions"`) 不会在私信中触发确认反应。若要在传入的 Telegram 私信中获得确认反应，请将 `messages.ackReactionScope` 设置为 `"direct"` 或 `"all"`。该值在 Telegram 提供商启动时读取，因此需要重启网关才能使更改生效。
+    默认作用域 (`"group-mentions"`Telegram) 不会在直接消息中触发确认反应。要在传入 Telegram 私信中获得确认反应，请将 `messages.ackReactionScope` 设置为 `"direct"` 或 `"all"`Telegram。该值在 Telegram 提供商启动时读取，因此需要重启网关才能使更改生效。
     </Note>
 
   </Accordion>
 
-  <Accordion title="Config writes from Telegram events and commands">
-    默认启用频道配置写入 (`configWrites !== false`Telegram)。
+  <Accordion title="Telegram来自 Telegram 事件和命令的配置写入">
+    通道配置写入默认已启用 (`configWrites !== false`Telegram)。
 
     Telegram 触发的写入包括：
 
     - 群组迁移事件 (`migrate_to_chat_id`) 以更新 `channels.telegram.groups`
-    - `/config set` 和 `/config unset`（需要启用命令）
+    - `/config set` 和 `/config unset` (需要启用命令)
 
     禁用方法：
 
@@ -835,32 +840,32 @@ curl "https://api.telegram.org/bot<bot_token>/getUpdates"
 
   </Accordion>
 
-  <Accordion title="Long polling vs webhook">
-    默认为长轮询。如需使用 Webhook 模式，请设置 `channels.telegram.webhookUrl` 和 `channels.telegram.webhookSecret`；可选 `webhookPath`、`webhookHost`、`webhookPort`（默认值分别为 `/telegram-webhook`、`127.0.0.1`、`8787`）。
+  <Accordion title="长轮询与 Webhook">
+    默认为长轮询模式。要使用 webhook 模式，请设置 `channels.telegram.webhookUrl` 和 `channels.telegram.webhookSecret`；可选 `webhookPath`、`webhookHost`、`webhookPort` (默认值分别为 `/telegram-webhook`、`127.0.0.1`、`8787`OpenClaw)。
 
-    在长轮询模式下，OpenClaw 仅在更新成功分发后持久化其重启水位线。如果处理程序失败，该更新在同一进程中保持可重试状态，并且不会标记为已完成以进行重启去重。
+    在长轮询模式下，OpenClaw 仅在更新成功调度后才持久化其重启水位线。如果处理程序失败，该更新在同一进程中保持可重试状态，且不会作为已完成写入以进行重启去重。
 
-    本地侦听器绑定到 `127.0.0.1:8787`。对于外部入口，可以在本地端口前放置反向代理，或有意设置 `webhookHost: "0.0.0.0"`Telegram。
+    本地监听器绑定到 `127.0.0.1:8787`。对于公共入口，可以在本地端口前放置反向代理，或者有意设置 `webhookHost: "0.0.0.0"`Telegram。
 
-    Webhook 模式会在向 Telegram 返回 `200` 之前验证请求保护、Telegram 密钥令牌和 JSON 正文。
-    OpenClawTelegram 随后通过长轮询使用的相同每聊天/每主题机器人通道异步处理更新，因此缓慢的代理轮次不会占用 Telegram 的交付 ACK。
+    Webhook 模式在向 Telegram 返回 `200`TelegramOpenClawTelegram 之前会验证请求守卫、Telegram 密钥令牌 和 JSON 主体。
+    OpenClaw 随后通过长轮询使用的相同的每个聊天/每个主题机器人通道异步处理更新，因此缓慢的代理回合不会阻塞 Telegram 的交付确认 (ACK)。
 
   </Accordion>
 
   <Accordion title="限制、重试和 CLI 目标">
     - `channels.telegram.textChunkLimit` 默认为 4000。
-    - `channels.telegram.chunkMode="newline"` 在按长度拆分前优先选择段落边界（空行）。
-    - `channels.telegram.mediaMaxMb`（默认 100）限制了入站和出站 Telegram 媒体的大小。
-    - `channels.telegram.mediaGroupFlushMs`（默认 500）控制在 Telegram 将 OpenClaw 相册/媒体组作为一条入站消息分发之前的缓冲时长。如果相册部分延迟到达，请增加此值；若要减少相册回复延迟，请减小此值。
-    - `channels.telegram.timeoutSeconds` 会覆盖 Telegram API 客户端的超时时间（如果未设置，则应用 grammY 的默认值）。Bot 客户端会将配置值限制在 60 秒的出站文本/输入请求保护之下，以确保 grammY 不会在 OpenClaw 的传输保护和回退机制运行之前中止可见回复的传递。长轮询仍然使用 45 秒的 `getUpdates` 请求保护，以免空闲轮询被无限期放弃。
-    - `channels.telegram.pollingStallThresholdMs` 默认为 `120000`；仅针对误报的轮询停滞重启时，才在 `30000` 和 `600000` 之间进行调整。
+    - `channels.telegram.chunkMode="newline"` 优先在长度分割之前使用段落边界（空行）。
+    - `channels.telegram.mediaMaxMb`（默认 100）限制传入和传出的 Telegram 媒体大小。
+    - `channels.telegram.mediaGroupFlushMs`（默认 500）控制在 Telegram 将其作为一条传入消息分派之前，OpenClaw 专辑/媒体组的缓冲时间。如果专辑部分到达较晚，请增加此值；若要减少专辑回复延迟，请减小此值。
+    - `channels.telegram.timeoutSeconds` 覆盖 Telegram API 客户端超时（如果未设置，则应用 grammY 默认值）。Bot 客户端会将配置的值限制在 60 秒出站文本/输入请求保护之下，这样 grammY 就不会在 OpenClaw 的传输保护和回退机制运行之前中止可见回复的发送。长轮询仍然使用 45 秒的 `getUpdates` 请求保护，因此空闲轮询不会被无限期放弃。
+    - `channels.telegram.pollingStallThresholdMs` 默认为 `120000`；仅针对误报的轮询停滞重启，才在 `30000` 和 `600000` 之间进行调节。
     - 群组上下文历史记录使用 `channels.telegram.historyLimit` 或 `messages.groupChat.historyLimit`（默认 50）；`0` 表示禁用。
-    - 当网关已观察到父消息时，回复/引用/转发的补充上下文会被归一化为一个选定的对话上下文窗口；观察到的消息缓存与会话存储一起持久化。Telegram 在更新中仅包含一个浅层 `reply_to_message`，因此早于缓存的链式消息受限于 Telegram 当前的更新负载。
-    - Telegram 许可列表主要控制谁可以触发代理，而非完整的补充上下文编辑边界。
+    - 当网关观察到父消息时，回复/引用/转发的补充上下文会被规范化为一个选定的对话上下文窗口；观察到的消息缓存与会话存储一起持久化。Telegram 在更新中仅包含一个浅层的 `reply_to_message`，因此早于缓存的链受限于 Telegram 当前的更新负载。
+    - Telegram 白名单主要控制谁可以触发代理，而不是完整的补充上下文编辑边界。
     - 私信历史记录控制：
       - `channels.telegram.dmHistoryLimit`
       - `channels.telegram.dms["<user_id>"].historyLimit`
-    - `channels.telegram.retry` 配置适用于 Telegram 发送助手（CLI/工具/操作）以处理可恢复的出站 API 错误。入站的最终回复传递也对 Telegram 预连接失败使用有界的安全发送重试，但它不会重试那些可能导致重复可见消息的模棱两可的发送后网络信封。
+    - `channels.telegram.retry` 配置适用于 Telegram 发送助手（CLI/tools/actions），用于可恢复的出站 API 错误。传入的最终回复传递也使用有界的安全发送重试来处理 Telegram 连接前失败，但它不会重试发送后模棱两可的网络信封，以免重复可见消息。
 
     CLI 和消息工具发送目标可以是数字聊天 ID、用户名或论坛主题目标：
 
@@ -880,7 +885,7 @@ openclaw message poll --channel telegram --target -1001234567890:topic:42 \
   --poll-duration-seconds 300 --poll-public
 ```
 
-    Telegram 专用的轮询标志：
+    Telegram 专用轮询标志：
 
     - `--poll-duration-seconds` (5-600)
     - `--poll-anonymous`
@@ -889,48 +894,48 @@ openclaw message poll --channel telegram --target -1001234567890:topic:42 \
 
     Telegram 发送还支持：
 
-    - `--presentation` 结合 `buttons` 块，用于在 `channels.telegram.capabilities.inlineButtons` 允许时显示内联键盘
-    - `--pin` 或 `--delivery '{"pin":true}'` 用于请求置顶传递，当机器人可以在该聊天中置顶消息时
-    - `--force-document` 用于将出站图片、GIF 和视频作为文档发送，而不是压缩的照片、动画媒体或视频上传
+    - `--presentation` 与 `buttons` 块用于内联键盘，当 `channels.telegram.capabilities.inlineButtons` 允许时
+    - `--pin` 或 `--delivery '{"pin":true}'` 用于在机器人可以在该聊天中置顶时请求置顶传递
+    - `--force-document` 用于将出站图像、GIF 和视频作为文档发送，而不是压缩照片、动画媒体或视频上传
 
-    动作控制：
+    操作控制：
 
     - `channels.telegram.actions.sendMessage=false` 禁用出站 Telegram 消息，包括轮询
-    - `channels.telegram.actions.poll=false` 禁用 Telegram 轮询创建，同时保留常规发送功能
+    - `channels.telegram.actions.poll=false` 禁用 Telegram 轮询创建，同时保留常规发送启用
 
   </Accordion>
 
-  <Accordion title="在 Telegram 中进行执行审批">
-    Telegram 支持在审批人的私信中进行执行审批，并可以选择在原始聊天或话题中发布提示。审批人必须是 Telegram 数字用户 ID。
+  <Accordion title="TelegramTelegram 中的执行审批"TelegramTelegram>
+    Telegram 支持在审批人的私信中进行执行审批，并可选择在原始聊天或话题中发布提示。审批人必须是数字形式的 Telegram 用户 ID。
 
     配置路径：
 
     - `channels.telegram.execApprovals.enabled` （当至少有一个审批人可解析时自动启用）
     - `channels.telegram.execApprovals.approvers` （回退到来自 `commands.ownerAllowFrom` 的数字所有者 ID）
-    - `channels.telegram.execApprovals.target`: `dm` （默认）| `channel` | `both`
+    - `channels.telegram.execApprovals.target`: `dm` （默认） | `channel` | `both`
     - `agentFilter`, `sessionFilter`
 
-    `channels.telegram.allowFrom`、`groupAllowFrom` 和 `defaultTo` 控制谁可以与机器人对话以及它在哪里发送普通回复。它们不会使人成为执行审批人。当尚不存在命令所有者时，第一个批准的私信配对会引导 `commands.ownerAllowFrom`，因此单所有者设置仍然有效，而无需在 `execApprovals.approvers` 下复制 ID。
+    `channels.telegram.allowFrom`、`groupAllowFrom` 和 `defaultTo` 控制谁可以与机器人对话以及它在哪里发送普通回复。它们不会使某人成为执行审批人。当尚不存在命令所有者时，第一个批准的私信配对会引导 `commands.ownerAllowFrom`，因此单一所有者设置仍然有效，无需在 `execApprovals.approvers` 下重复 ID。
 
-    频道投递会在聊天中显示命令文本；仅在受信任的群组/话题中启用 `channel` 或 `both`。当提示进入论坛话题时，OpenClaw 会保留该话题用于审批提示和后续跟进。执行审批默认在 30 分钟后过期。
+    频道传送会在聊天中显示命令文本；仅在受信任的群组/话题中启用 `channel` 或 `both`OpenClaw。当提示落在论坛话题中时，OpenClaw 会为审批提示和后续消息保留该话题。执行审批默认在 30 分钟后过期。
 
-    内联审批按钮还需要 `channels.telegram.capabilities.inlineButtons` 来允许目标界面（`dm`、`group` 或 `all`）。带有 `plugin:` 前缀的审批 ID 通过插件审批解析；其他则首先通过执行审批解析。
+    内联审批按钮还需要 `channels.telegram.capabilities.inlineButtons` 来允许目标界面（`dm`、`group` 或 `all`）。前缀为 `plugin:` 的审批 ID 通过插件审批解析；其他则首先通过执行审批解析。
 
-    参见 [Exec approvals](/zh/tools/exec-approvals)。
+    请参阅 [Exec approvals](/zh/tools/exec-approvals)。
 
   </Accordion>
 </AccordionGroup>
 
 ## 错误回复控制
 
-当代理遇到投递或提供商错误时，Telegram 可以回复错误文本或抑制该错误。两个配置键控制此行为：
+当代理遇到传送或提供商错误时，Telegram 可以回复错误文本也可以抑制它。两个配置键控制此行为：
 
 | 键                                  | 值                | 默认值  | 描述                                                                       |
 | ----------------------------------- | ----------------- | ------- | -------------------------------------------------------------------------- |
-| `channels.telegram.errorPolicy`     | `reply`, `silent` | `reply` | `reply` 向聊天发送友好的错误消息。`silent` 完全禁止错误回复。              |
-| `channels.telegram.errorCooldownMs` | number (ms)       | `60000` | 向同一聊天发送错误回复之间的最小时间间隔。防止在故障期间出现错误消息刷屏。 |
+| `channels.telegram.errorPolicy`     | `reply`，`silent` | `reply` | `reply` 会向聊天发送友好的错误消息。`silent` 则完全禁止错误回复。          |
+| `channels.telegram.errorCooldownMs` | 数字（毫秒）      | `60000` | 向同一聊天发送错误回复之间的最小时间间隔。防止在故障期间出现错误消息轰炸。 |
 
-支持按账户、按群组和按主题的覆盖（与其他 Telegram 配置键的继承规则相同）。
+支持按账户、按群组和按主题进行覆盖（继承方式与其他 Telegram 配置键相同）。
 
 ```json5
 {
@@ -948,59 +953,59 @@ openclaw message poll --channel telegram --target -1001234567890:topic:42 \
 }
 ```
 
-## 故障排查
+## 故障排除
 
 <AccordionGroup>
-  <Accordion title="Bot does not respond to non mention group messages">
+  <Accordion title="机器人不响应群组中未提及的消息">
 
-    - 如果是 `requireMention=false`Telegram，Telegram 隐私模式必须允许完全可见。
-      - BotFather: `/setprivacy` -> Disable
+    - 如果 `requireMention=false`，则 Telegram 隐私模式必须允许完全可见。
+      - BotFather：`/setprivacy` -> 禁用
       - 然后将机器人从群组中移除并重新添加
     - 当配置期望未提及的群组消息时，`openclaw channels status` 会发出警告。
     - `openclaw channels status --probe` 可以检查明确的数字群组 ID；通配符 `"*"` 无法探测成员身份。
-    - 快速会话测试: `/activation always`。
+    - 快速会话测试：`/activation always`。
 
   </Accordion>
 
-  <Accordion title="Bot not seeing group messages at all">
+  <Accordion title="机器人完全看不到群组消息">
 
     - 当存在 `channels.telegram.groups` 时，群组必须被列出（或包含 `"*"`）
-    - 验证机器人在群组中的成员身份
-    - 检查日志: `openclaw logs --follow` 了解跳过原因
+    - 验证机器人是否为群组成员
+    - 检查日志：`openclaw logs --follow` 以了解跳过原因
 
   </Accordion>
 
-  <Accordion title="Commands work partially or not at all">
+  <Accordion title="命令部分工作或完全不工作">
 
     - 授权您的发送者身份（配对和/或数字 `allowFrom`）
-    - 即使群组策略是 `open`，命令授权仍然适用
-    - 带有 `BOT_COMMANDS_TOO_MUCH` 的 `setMyCommands failed` 表示原生菜单条目过多；请减少插件/技能/自定义命令或禁用原生菜单
-    - `deleteMyCommands` / `setMyCommands` 启动调用和 `sendChatAction`Telegram 输入调用是有界的，并且在请求超时时通过 Telegram 的传输回退重试一次。持续的网络/fetch 错误通常表明对 `api.telegram.org` 的 DNS/HTTPS 可达性问题
+    - 即使组策略为 `open`，命令授权仍然适用
+    - `setMyCommands failed` 与 `BOT_COMMANDS_TOO_MUCH` 表示原生菜单条目过多；请减少插件/技能/自定义命令或禁用原生菜单
+    - `deleteMyCommands` / `setMyCommands` 启动调用和 `sendChatAction` 类型调用有界限制，并在请求超时时通过 Telegram 的传输回退机制重试一次。持续的网络/fetch 错误通常表明对 `api.telegram.org` 的 DNS/HTTPS 可达性问题。
 
   </Accordion>
 
-  <Accordion title="Startup reports unauthorized token">
+  <Accordion title="启动报告未授权令牌">
 
-    - `getMe returned 401`Telegram 是已配置机器人令牌的 Telegram 身份验证失败。
-    - 在 BotFather 中重新复制或重新生成机器人令牌，然后为默认帐户更新 `channels.telegram.botToken`、`channels.telegram.tokenFile`、`channels.telegram.accounts.<id>.botToken` 或 `TELEGRAM_BOT_TOKEN`。
-    - 启动期间的 `deleteWebhook 401 Unauthorized`API 也是身份验证失败；将其视为“不存在 webhook”只会将同样的令牌错误失败推迟到后续的 API 调用中。
+    - `getMe returned 401` 是已配置机器人令牌的 Telegram 身份验证失败。
+    - 在 BotFather 中重新复制或重新生成机器人令牌，然后为默认账户更新 `channels.telegram.botToken`、`channels.telegram.tokenFile`、`channels.telegram.accounts.<id>.botToken` 或 `TELEGRAM_BOT_TOKEN`。
+    - 启动期间的 `deleteWebhook 401 Unauthorized` 也是身份验证失败；将其视为“不存在 Webhook”只会将相同的错误令牌失败推迟到后续的 API 调用。
 
   </Accordion>
 
   <Accordion title="轮询或网络不稳定">
 
     - Node 22+ + 自定义 fetch/proxy 如果 AbortSignal 类型不匹配，可能会触发立即中止行为。
-    - 某些主机优先将 `api.telegram.org` 解析为 IPv6；损坏的 IPv6 出站可能导致间歇性的 Telegram API 故障。
+    - 某些主机首先将 `api.telegram.org` 解析为 IPv6；损坏的 IPv6 出站可能会导致间歇性的 Telegram API 故障。
     - 如果日志中包含 `TypeError: fetch failed` 或 `Network request for 'getUpdates' failed!`，OpenClaw 现在会将其作为可恢复的网络错误进行重试。
-    - 在轮询启动期间，OpenClaw 会重用成功的启动 `getMe` 探针供 grammY 使用，因此运行器在第一次 `getUpdates` 之前不需要第二次 `getMe`。
-    - 如果 `deleteWebhook` 在轮询启动期间因短暂网络错误而失败，OpenClaw 将继续进行长轮询，而不是发起另一次轮询前控制平面调用。仍然活跃的 webhook 会表现为 `getUpdates` 冲突；OpenClaw 随后重建 Telegram 传输并重试 webhook 清理。
-    - 如果 Telegram 套接字按短间隔定期回收，请检查 `channels.telegram.timeoutSeconds` 是否过低；Bot 客户端会将配置值限制在出站和 `getUpdates` 请求保护值之下，但在旧版本中，如果此值设置低于保护值，可能会导致每次轮询或回复都中止。
-    - 如果日志中包含 `Polling stall detected`，默认情况下，OpenClaw 会在 120 秒内未完成长轮询存活检测后重启轮询并重建 Telegram 传输。
-    - `openclaw channels status --probe` 和 `openclaw doctor` 会在以下情况发出警告：正在运行的轮询账户在启动宽限期内未完成 `getUpdates`；正在运行的 webhook 账户在启动宽限期内未完成 `setWebhook`；或者上次成功的轮询传输活动已过时。
-    - 仅当长期运行的 `getUpdates` 调用健康但主机仍报告错误的轮询停滞重启时，才增加 `channels.telegram.pollingStallThresholdMs`。持续停滞通常指向主机与 `api.telegram.org` 之间的代理、DNS、IPv6 或 TLS 出站问题。
-    - Telegram 也会为 Bot API 传输遵循进程代理环境变量，包括 `HTTP_PROXY`、`HTTPS_PROXY`、`ALL_PROXY` 及其小写变体。`NO_PROXY` / `no_proxy` 仍可绕过 `api.telegram.org`。
+    - 在轮询启动期间，OpenClaw 会为 grammY 重用成功的启动 `getMe` 探测，因此运行器在第一个 `getUpdates` 之前不需要进行第二次 `getMe`。
+    - 如果在轮询启动期间 `deleteWebhook` 因瞬时网络错误而失败，OpenClaw 将继续进行长轮询，而不是进行另一次轮询前控制平面调用。仍然活动的 webhook 会表现为 `getUpdates` 冲突；然后 OpenClaw 将重建 Telegram 传输并重试 webhook 清理。
+    - 如果 Telegram 套接字以较短的固定频率循环，请检查 `channels.telegram.timeoutSeconds` 是否过低；Bot 客户端会将配置的值限制在出站和 `getUpdates` 请求守卫之下，但在旧版本中，如果该值设置在这些守卫之下，可能会导致每次轮询或回复中止。
+    - 如果日志中包含 `Polling stall detected`，OpenClaw 默认会在 120 秒内未完成长轮询活跃检查后重启轮询并重建 Telegram 传输。
+    - `openclaw channels status --probe` 和 `openclaw doctor` 会在以下情况发出警告：正在运行的轮询账户在启动宽限期内未完成 `getUpdates`，正在运行的 webhook 账户在启动宽限期内未完成 `setWebhook`，或者上次成功的轮询传输活动已过期。
+    - 仅当长时间运行的 `getUpdates` 调用健康，但您的主机仍然报告错误的轮询停滞重启时，才增加 `channels.telegram.pollingStallThresholdMs`。持续的停滞通常指向主机与 `api.telegram.org` 之间的代理、DNS、IPv6 或 TLS 出站问题。
+    - Telegram 也尊重 Bot API 传输的进程代理环境变量，包括 `HTTP_PROXY`、`HTTPS_PROXY`、`ALL_PROXY` 及其小写变体。`NO_PROXY` / `no_proxy` 仍可绕过 `api.telegram.org`。
     - 如果 OpenClaw 托管代理通过 `OPENCLAW_PROXY_URL` 为服务环境配置，且不存在标准代理环境变量，则 Telegram 也会使用该 URL 进行 Bot API 传输。
-    - 在直接出站/TLS 不稳定的 VPS 主机上，请通过 `channels.telegram.proxy` 路由 Telegram API 调用：
+    - 在具有不稳定直接出站/TLS 的 VPS 主机上，请通过 `channels.telegram.proxy` 路由 Telegram API 调用：
 
 ```yaml
 channels:
@@ -1008,8 +1013,8 @@ channels:
     proxy: socks5://<user>:<password>@proxy-host:1080
 ```
 
-    - Node 22+ 默认为 `autoSelectFamily=true`（WSL2 除外）。Telegram DNS 结果顺序遵循 `OPENCLAW_TELEGRAM_DNS_RESULT_ORDER`，然后 `channels.telegram.network.dnsResultOrder`，接着是进程默认值（如 `NODE_OPTIONS=--dns-result-order=ipv4first`）；如果均不适用，Node 22+ 将回退到 `ipv4first`。
-    - 如果您的主机是 WSL2 或明确在仅 IPv4 行为下效果更好，请强制选择地址族：
+    - Node 22+ 默认为 `autoSelectFamily=true`（WSL2 除外）。Telegram DNS 结果顺序遵循 `OPENCLAW_TELEGRAM_DNS_RESULT_ORDER`，然后是 `channels.telegram.network.dnsResultOrder`，接着是进程默认值（如 `NODE_OPTIONS=--dns-result-order=ipv4first`）；如果都不适用，Node 22+ 将回退到 `ipv4first`。
+    - 如果您的主机是 WSL2 或明确在仅使用 IPv4 的行为下效果更好，请强制选择协议族：
 
 ```yaml
 channels:
@@ -1018,7 +1023,7 @@ channels:
       autoSelectFamily: false
 ```
 
-    - RFC 2544 基准范围地址（`198.18.0.0/15`）默认已允许用于 Telegram 媒体下载。如果在媒体下载期间，受信任的 fake-IP 或透明代理将 `api.telegram.org` 重写为其他私有/内部/专用地址，您可以选择加入 Telegram 专用绕过：
+    - 默认情况下，RFC 2544 基准范围地址（`198.18.0.0/15`）已被允许用于 Telegram 媒体下载。如果在媒体下载期间，受信任的 fake-IP 或透明代理将 `api.telegram.org` 重写为其他私有/内部/专用地址，您可以选择加入 Telegram 专用绕过：
 
 ```yaml
 channels:
@@ -1027,18 +1032,20 @@ channels:
       dangerouslyAllowPrivateNetwork: true
 ```
 
-    - 每个账户在 `channels.telegram.accounts.<accountId>.network.dangerouslyAllowPrivateNetwork` 处也可使用相同的选择加入选项。
-    - 如果您的代理将 Telegram 媒体主机解析为 `198.18.x.x`，请先关闭危险标志。Telegram 媒体默认已允许 RFC 2544 基准范围。
+    - 每个账户也可以在 `channels.telegram.accounts.<accountId>.network.dangerouslyAllowPrivateNetwork` 处选择加入相同的配置。
+    - 如果您的代理将 Telegram 媒体主机解析为 `198.18.x.x`，请首先关闭此危险标志。Telegram 媒体默认已允许 RFC 2544 基准范围。
 
     <Warning>
-      `channels.telegram.network.dangerouslyAllowPrivateNetwork` 会削弱 Telegram 媒体 SSRF 保护。仅当受信任的运营方控制代理环境（如 Clash、Mihomo 或 Surge fake-IP 路由）合成 RFC 2544 基准范围之外的私有或专用地址时才使用它。对于正常的公共互联网 Telegram 访问，请保持关闭。
+      `channels.telegram.network.dangerouslyAllowPrivateNetwork` 会削弱 Telegram
+      媒体 SSRF 保护。请仅在受信任的操作员控制的代理环境（如 Clash、Mihomo 或 Surge fake-IP 路由）中使用，
+      当它们在 RFC 2544 基准范围之外合成私有或专用地址时。对于正常的公共互联网 Telegram 访问，请保持关闭。
     </Warning>
 
     - 环境变量覆盖（临时）：
       - `OPENCLAW_TELEGRAM_DISABLE_AUTO_SELECT_FAMILY=1`
       - `OPENCLAW_TELEGRAM_ENABLE_AUTO_SELECT_FAMILY=1`
       - `OPENCLAW_TELEGRAM_DNS_RESULT_ORDER=ipv4first`
-    - 验证 DNS 应答：
+    - 验证 DNS 答案：
 
 ```bash
 dig +short api.telegram.org A
@@ -1054,45 +1061,45 @@ dig +short api.telegram.org AAAA
 
 主要参考：[Configuration reference - Telegram](Telegram/en/gateway/config-channels#telegram)。
 
-<Accordion title="关键 Telegram 字段">
+<Accordion title="重要的 Telegram 字段">
 
-- startup/auth: `enabled`, `botToken`, `tokenFile`, `accounts.*` (`tokenFile` 必须指向常规文件；不支持符号链接)
-- access control: `dmPolicy`, `allowFrom`, `groupPolicy`, `groupAllowFrom`, `groups`, `groups.*.topics.*`, 顶级 `bindings[]` (`type: "acp"`)
-- topic defaults: `groups.<chatId>.topics."*"` 适用于未匹配的论坛主题；精确的主题 ID 会覆盖它
-- exec approvals: `execApprovals`, `accounts.*.execApprovals`
-- command/menu: `commands.native`, `commands.nativeSkills`, `customCommands`
-- threading/replies: `replyToMode`, `dm.threadReplies`, `direct.*.threadReplies`
-- streaming: `streaming` (预览), `streaming.preview.toolProgress`, `blockStreaming`
-- formatting/delivery: `textChunkLimit`, `chunkMode`, `linkPreview`, `responsePrefix`
-- media/network: `mediaMaxMb`, `mediaGroupFlushMs`, `timeoutSeconds`, `pollingStallThresholdMs`, `retry`, `network.autoSelectFamily`, `network.dangerouslyAllowPrivateNetwork`, `proxy`
-- custom API root: `apiRoot` (仅 Bot API root；不要包含 `/bot<TOKEN>`)
-- webhook: `webhookUrl`, `webhookSecret`, `webhookPath`, `webhookHost`
-- actions/capabilities: `capabilities.inlineButtons`, `actions.sendMessage|editMessage|deleteMessage|reactions|sticker`
-- reactions: `reactionNotifications`, `reactionLevel`
-- errors: `errorPolicy`, `errorCooldownMs`
-- writes/history: `configWrites`, `historyLimit`, `dmHistoryLimit`, `dms.*.historyLimit`
+- 启动/认证：`enabled`、`botToken`、`tokenFile`、`accounts.*`（`tokenFile` 必须指向常规文件；拒绝使用符号链接）
+- 访问控制：`dmPolicy`、`allowFrom`、`groupPolicy`、`groupAllowFrom`、`groups`、`groups.*.topics.*`、顶层 `bindings[]`（`type: "acp"`）
+- 话题默认值：`groups.<chatId>.topics."*"` 适用于未匹配的论坛话题；确切的话题 ID 会覆盖它
+- 执行批准：`execApprovals`、`accounts.*.execApprovals`
+- 命令/菜单：`commands.native`、`commands.nativeSkills`、`customCommands`
+- 线程/回复：`replyToMode`
+- 流式传输：`streaming`（预览版）、`streaming.preview.toolProgress`、`blockStreaming`
+- 格式化/投递：`textChunkLimit`、`chunkMode`、`linkPreview`、`responsePrefix`
+- 媒体/网络：`mediaMaxMb`、`mediaGroupFlushMs`、`timeoutSeconds`、`pollingStallThresholdMs`、`retry`、`network.autoSelectFamily`、`network.dangerouslyAllowPrivateNetwork`、`proxy`
+- 自定义 API 根路径：`apiRoot`（仅 Bot API 根路径；不要包含 `/bot<TOKEN>`）
+- Webhook：`webhookUrl`、`webhookSecret`、`webhookPath`、`webhookHost`
+- 操作/功能：`capabilities.inlineButtons`、`actions.sendMessage|editMessage|deleteMessage|reactions|sticker`
+- 反应：`reactionNotifications`、`reactionLevel`
+- 错误：`errorPolicy`、`errorCooldownMs`
+- 写入/历史记录：`configWrites`、`historyLimit`、`dmHistoryLimit`、`dms.*.historyLimit`
 
 </Accordion>
 
-<Note>多账号优先级：当配置了两个或更多账号 ID 时，请设置 `channels.telegram.defaultAccount`（或包含 `channels.telegram.accounts.default`）以明确默认路由。否则 OpenClaw 将回退到第一个标准化账号 ID 并且 `openclaw doctor` 会发出警告。命名账号继承 `channels.telegram.allowFrom` / `groupAllowFrom`，但不继承 `accounts.default.*` 值。</Note>
+<Note>多账户优先级：当配置了两个或更多账户 ID 时，请设置 `channels.telegram.defaultAccount`（或包含 `channels.telegram.accounts.default`OpenClaw）以明确默认路由。否则 OpenClaw 将回退到第一个标准化的账户 ID，并且 `openclaw doctor` 会发出警告。命名账户继承 `channels.telegram.allowFrom` / `groupAllowFrom`，但不继承 `accounts.default.*` 值。</Note>
 
 ## 相关
 
 <CardGroup cols={2}>
-  <Card title="Pairing" icon="link" href="/zh/channels/pairing">
+  <Card title="Pairing" icon="link" href="/zh/channels/pairing" Telegram>
     将 Telegram 用户与网关配对。
   </Card>
   <Card title="Groups" icon="users" href="/zh/channels/groups">
-    群组和话题允许列表行为。
+    群组和主题白名单行为。
   </Card>
   <Card title="Channel routing" icon="route" href="/zh/channels/channel-routing">
-    将入站消息路由至代理。
+    将传入消息路由到代理。
   </Card>
   <Card title="Security" icon="shield" href="/zh/gateway/security">
     威胁模型与加固。
   </Card>
   <Card title="Multi-agent routing" icon="sitemap" href="/zh/concepts/multi-agent">
-    将群组和话题映射到代理。
+    将群组和主题映射到代理。
   </Card>
   <Card title="Troubleshooting" icon="wrench" href="/zh/channels/troubleshooting">
     跨渠道诊断。

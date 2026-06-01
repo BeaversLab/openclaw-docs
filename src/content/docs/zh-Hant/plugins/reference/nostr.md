@@ -1,5 +1,5 @@
 ---
-summary: "新增 Nostr 頻道介面，用於傳送和接收 OpenClaw 訊息。"
+summary: "OpenClaw Nostr 頻道外掛，用於 NIP-04 加密直接訊息。"
 read_when:
   - You are installing, configuring, or auditing the nostr plugin
 title: "Nostr 外掛程式"
@@ -7,7 +7,7 @@ title: "Nostr 外掛程式"
 
 # Nostr 外掛程式
 
-新增 Nostr 頻道介面，用於傳送和接收 OpenClaw 訊息。
+OpenClaw Nostr 頻道外掛，用於 NIP-04 加密直接訊息。
 
 ## 發行版本
 

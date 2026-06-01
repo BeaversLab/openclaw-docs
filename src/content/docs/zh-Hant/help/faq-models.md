@@ -8,7 +8,7 @@ title: "常見問題：模型與認證"
 sidebarTitle: "模型常見問題"
 ---
 
-模型與設定檔的問答。如需設定、工作階段、閘道、通道和疑難排解的資訊，請參閱主要的 [FAQ](/zh-Hant/help/faq)。
+模型與授權設定檔的常見問題解答。若要了解設定、工作階段、閘道、通道和疑難排解，請參閱主要的 [常見問題](/zh-Hant/help/faq)。
 
 ## 模型：預設值、選擇、別名、切換
 
@@ -24,66 +24,63 @@ sidebarTitle: "模型常見問題"
 
   </Accordion>
 
-  <Accordion title="您推薦哪種模型？">
-    **推薦預設值：** 使用您的提供者堆疊中可用的最強大最新世代模型。
-    **對於啟用工具或不受信任輸入的代理程式：** 優先考慮模型強度而非成本。
-    **對於常規/低風險聊天：** 使用較便宜的備用模型並依代理程式角色進行路由。
+  <Accordion title="您推薦使用哪種模型？">
+    **建議的預設值：** 使用您的供應商堆疊中可用的最強大最新一代模型。
+    **對於啟用工具或輸入不受信任的代理程式：** 優先考慮模型強度而非成本。
+    **對於一般/低風險的聊天：** 使用較便宜的備用模型，並根據代理程式角色進行路由。
 
     MiniMax 有其自己的文件：[MiniMax](/zh-Hant/providers/minimax) 和
     [本機模型](/zh-Hant/gateway/local-models)。
 
-    經驗法則：對於高風險工作，使用您**負擔得起的最佳模型**；對於常規聊天或摘要，則使用較便宜的模型。您可以依代理程式路由模型，並使用子代理程式來
-    平行化長任務（每個子代理程式都會消耗 token）。請參閱 [模型](/zh-Hant/concepts/models) 和
+    經驗法則：對於高風險工作，使用您**負擔得起的最佳模型**；對於一般聊天或摘要，則使用較便宜的模型。您可以為每個代理程式路由模型，並使用子代理程式將長任務平行化（每個子代理程式都會消耗 token）。請參閱 [模型](/zh-Hant/concepts/models) 和
     [子代理程式](/zh-Hant/tools/subagents)。
 
-    強烈警告：較弱/過度量化的模型更容易受到提示
-    注入和不安全行為的影響。請參閱 [安全性](/zh-Hant/gateway/security)。
+    嚴重警告：較弱/過度量化的模型更容易受到提示詞注入和不安全行為的影響。請參閱 [安全性](/zh-Hant/gateway/security)。
 
     更多背景資訊：[模型](/zh-Hant/concepts/models)。
 
   </Accordion>
 
-  <Accordion title="如何在不清除設定的情況下切換模型？">
-    使用 **模型指令** 或僅編輯 **模型** 欄位。避免完整替換設定。
+  <Accordion title="如何在不清除配置的情況下切換模型？">
+    使用 **模型命令** 或僅編輯 **模型** 欄位。避免完整的配置替換。
 
     安全選項：
 
-    - `/model` 在聊天中（快速，僅限該次會話）
-    - `openclaw models set ...`（僅更新模型設定）
+    - 在聊天中使用 `/model`（快速，僅對當前會話有效）
+    - `openclaw models set ...`（僅更新模型配置）
     - `openclaw configure --section model`（互動式）
-    - 編輯 `agents.defaults.model` 中的 `~/.openclaw/openclaw.json`
+    - 在 `~/.openclaw/openclaw.json` 中編輯 `agents.defaults.model`
 
-    除非您打算替換整個設定，否則請避免使用帶有部分物件的 `config.apply`。
-    對於 RPC 編輯，請先使用 `config.schema.lookup` 檢查，並優先使用 `config.patch`。查詢回傳值會提供正規化的路徑、淺層架構文件/限制以及直接子項的摘要。
-    以進行部分更新。
-    如果您不小心覆寫了設定，請從備份還原或重新執行 `openclaw doctor` 來修復。
+    除非您打算替換整個配置，否則避免使用帶有部分物件的 `config.apply`。
+    針對 RPC 編輯，請先使用 `config.schema.lookup` 檢查，並優先使用 `config.patch`。查詢負載會提供標準化路徑、淺層架構文件/約束以及直接子項摘要，以進行部分更新。
+    如果您確實覆蓋了配置，請從備份還原或重新執行 `openclaw doctor` 進行修復。
 
-    文件：[Models](/zh-Hant/concepts/models)、[Configure](/zh-Hant/cli/configure)、[Config](/zh-Hant/cli/config)、[Doctor](/zh-Hant/gateway/doctor)。
+    文件：[模型](/zh-Hant/concepts/models)、[配置](/zh-Hant/cli/configure)、[Config](/zh-Hant/cli/config)、[Doctor](/zh-Hant/gateway/doctor)。
 
   </Accordion>
 
-  <Accordion title="我可以使用自託管模型（llama.cpp, vLLM, Ollama）嗎？">
-    可以。對於本地模型，Ollama 是最簡單的途徑。
+  <Accordion title="我可以使用自託管模型（llama.cpp、vLLM、Ollama）嗎？">
+    可以。Ollama 是本地模型最簡單的途徑。
 
-    最快設定方式：
+    最快的設定方式：
 
     1. 從 `https://ollama.com/download` 安裝 Ollama
-    2. 下載一個本地模型，例如 `ollama pull gemma4`
-    3. 如果您也想使用雲端模型，請執行 `ollama signin`
+    2. 拉取一個本地模型，例如 `ollama pull gemma4`
+    3. 如果您同時想要雲端模型，請執行 `ollama signin`
     4. 執行 `openclaw onboard` 並選擇 `Ollama`
     5. 選擇 `Local` 或 `Cloud + Local`
 
-    備註：
+    注意事項：
 
-    - `Cloud + Local` 讓您可以同時使用雲端模型和您的本地 Ollama 模型
-    - 諸如 `kimi-k2.5:cloud` 的雲端模型不需要本地下載
+    - `Cloud + Local` 提供雲端模型加上您的本地 Ollama 模型
+    - 諸如 `kimi-k2.5:cloud` 等雲端模型不需要在本地拉取
     - 若要手動切換，請使用 `openclaw models list` 和 `openclaw models set ollama/<model>`
 
-    安全注意：較小或高度量化的模型更容易受到提示詞注入的攻擊。對於任何可以使用工具的機器人，我們強烈建議使用**大型模型**。如果您仍想使用小型模型，請啟用沙盒機制和嚴格的工具允許清單。
+    安全性提醒：較小或高度量化（quantized）的模型更容易受到提示注入（prompt injection）攻擊。對於任何可以使用工具的機器人，我們強烈建議使用**大型模型**。如果您仍想使用小型模型，請啟用沙盒（sandboxing）和嚴格的工具允許清單。
 
-    文件：[Ollama](/zh-Hant/providers/ollama)、[Local models](/zh-Hant/gateway/local-models)、
-    [Model providers](/zh-Hant/concepts/model-providers)、[Security](/zh-Hant/gateway/security)、
-    [Sandboxing](/zh-Hant/gateway/sandboxing)。
+    文件：[Ollama](/zh-Hant/providers/ollama)、[本地模型](/zh-Hant/gateway/local-models)、
+    [模型提供商](/zh-Hant/concepts/model-providers)、[安全性](/zh-Hant/gateway/security)、
+    [沙盒](/zh-Hant/gateway/sandboxing)。
 
   </Accordion>
 
@@ -140,38 +137,38 @@ sidebarTitle: "模型常見問題"
 
   </Accordion>
 
-  <Accordion title="如果兩個供應商公開相同的模型 ID，/model 會使用哪一個？">
-    `/model provider/model` 會為該會話選取該特定的供應商路由。
+  <Accordion title="如果兩個供應商暴露相同的模型 ID，/model 會使用哪一個？">
+    `/model provider/model` 會為該會話選擇該特定的供應商路由。
 
-    例如，`qianfan/deepseek-v4-flash` 和 `deepseek/deepseek-v4-flash` 是不同的模型參照，即使兩者都包含 `deepseek-v4-flash`。OpenClaw 不應僅因為裸模型 ID 相符，就靜默地從一個供應商切換到另一個。
+    例如，`qianfan/deepseek-v4-flash` 和 `deepseek/deepseek-v4-flash` 是不同的模型引用，即使兩者都包含 `deepseek-v4-flash`。OpenClaw 不應僅因裸模型 ID 匹配就無聲地從一個供應商切換到另一個。
 
-    使用者選取的 `/model` 參照對於備援策略也是嚴格的。如果該選取的供應商/模型無法使用，回覆會明顯失敗，而不是從 `agents.defaults.model.fallbacks` 回答。已配置的備援鏈仍然適用於已配置的預設值、主要 cron 任務以及自動選取的備援狀態。
+    使用者選擇的 `/model` 引用對於故障轉移策略也是嚴格的。如果該選定的供應商/模型不可用，回應會明顯失敗，而不是從 `agents.defaults.model.fallbacks` 回答。配置的故障轉移鏈仍然適用於配置的預設值、定時任務主要項和自動選擇的故障轉移狀態。
 
-    如果從非會話覆寫開始的執行被允許使用備援，OpenClaw 會先嘗試請求的供應商/模型，然後是已配置的備援，最後才是已配置的主要項目。這可以防止重複的裸模型 ID 直接跳回預設供應商。
+    如果允許從非會話覆寫開始的執行使用故障轉移，OpenClaw 會先嘗試請求的供應商/模型，然後是配置的故障轉移項，最後才是配置的主要項。這可以防止重複的裸模型 ID 直接跳回到預設供應商。
 
-    請參閱 [模型](/zh-Hant/concepts/models) 和 [模型備援](/zh-Hant/concepts/model-failover)。
-
-  </Accordion>
-
-  <Accordion title="我可以將 GPT 5.5 用於日常任務，將 Codex 5.5 用於編程嗎？">
-    可以。將模型選擇和運行時選擇分開處理：
-
-    - **原生 Codex 編程代理：** 將 `agents.defaults.model.primary` 設定為 `openai/gpt-5.5`。當您想要使用 ChatGPT/Codex 訂閱驗證時，請使用 `openclaw models auth login --provider openai-codex` 登入。
-    - **代理循環之外的直接 OpenAI API 任務：** 為圖像、嵌入、語音、即時通訊和其他非代理 OpenAI API 介面配置 `OPENAI_API_KEY`。
-    - **OpenAI 代理 API 金鑰驗證：** 使用 `/model openai/gpt-5.5` 搭配已排序的 `openai-codex` API 金鑰設定檔。
-    - **子代理：** 將編程任務路由到具有自己 `openai/gpt-5.5` 模型的專注於 Codex 的代理。
-
-    請參閱 [模型](/zh-Hant/concepts/models) 和 [斜線指令](/zh-Hant/tools/slash-commands)。
+    參見 [Models](/zh-Hant/concepts/models) 和 [Model failover](/zh-Hant/concepts/model-failover)。
 
   </Accordion>
 
-  <Accordion title="How do I configure fast mode for GPT 5.5?">
-    Use either a session toggle or a config default:
+  <Accordion title="我可以在日常任務中使用 GPT 5.5，在編程中使用 Codex 5.5 嗎？">
+    可以。請將模型選擇和運行時選擇分開處理：
 
-    - **Per session:** send `/fast on` while the session is using `openai/gpt-5.5`.
-    - **Per model default:** set `agents.defaults.models["openai/gpt-5.5"].params.fastMode` to `true`.
+    - **原生 Codex 編程代理：** 將 `agents.defaults.model.primary` 設定為 `openai/gpt-5.5`。當您需要 ChatGPT/Codex 訂閱身份驗證時，請使用 `openclaw models auth login --provider openai-codex` 登入。
+    - **代理迴圈之外的直接 OpenAI API 任務：** 為映像、嵌入、語音、即時通訊和其他非代理 OpenAI API 介面配置 `OPENAI_API_KEY`。
+    - **OpenAI 代理 API 金鑰身份驗證：** 使用具有排序後的 `openai-codex` API 金鑰設定檔的 `/model openai/gpt-5.5`。
+    - **子代理：** 將編程任務路由到專注於 Codex 的代理，該代理擁有自己的 `openai/gpt-5.5` 模型。
 
-    Example:
+    參見 [Models](/zh-Hant/concepts/models) 和 [Slash commands](/zh-Hant/tools/slash-commands)。
+
+  </Accordion>
+
+  <Accordion title="我該如何為 GPT 5.5 配置快速模式？">
+    使用會話切換或配置預設值皆可：
+
+    - **每個會話：** 當會話使用 `openai/gpt-5.5` 時，傳送 `/fast on`。
+    - **每個模型預設值：** 將 `agents.defaults.models["openai/gpt-5.5"].params.fastMode` 設定為 `true`。
+
+    範例：
 
     ```json5
     {
@@ -189,9 +186,9 @@ sidebarTitle: "模型常見問題"
     }
     ```
 
-    For OpenAI, fast mode maps to `service_tier = "priority"` on supported native Responses requests. Session `/fast` overrides beat config defaults.
+    對於 OpenAI，在支援的原生 Responses 請求中，快速模式對應至 `service_tier = "priority"`。會話 `/fast` 會覆寫 beat 配置預設值。
 
-    See [Thinking and fast mode](/zh-Hant/tools/thinking) and [OpenAI fast mode](/zh-Hant/providers/openai#fast-mode).
+    請參閱 [思考與快速模式](/zh-Hant/tools/thinking) 和 [OpenAI 快速模式](/zh-Hant/providers/openai#fast-mode)。
 
   </Accordion>
 
@@ -211,18 +208,20 @@ sidebarTitle: "模型常見問題"
 
   </Accordion>
 
-  <Accordion title='為什麼我看到「Unknown model: minimax/MiniMax-M2.7」？'>
-    這意味著**未設定供應商**（找不到 MiniMax 供應商設定或驗證設定檔），因此無法解析該模型。
+  <Accordion title='為什麼我會看到「Unknown model: minimax/MiniMax-M2.7」？'>
+    這表示 **未設定提供者** (找不到 MiniMax 提供者配置或身分驗證
+    設定檔)，因此無法解析該模型。
 
     修復檢查清單：
 
-    1. 升級至最新的 OpenClaw 版本（或從原始碼執行 `main`），然後重新啟動閘道。
-    2. 確認已設定 MiniMax（透過精靈或 JSON），或環境/驗證設定檔中存在 MiniMax 驗證資訊，以便注入相符的供應商
-       （`MINIMAX_API_KEY` 用於 `minimax`、`MINIMAX_OAUTH_TOKEN` 或儲存的 MiniMax
-       OAuth 用於 `minimax-portal`）。
-    3. 在您的驗證路徑中使用確切的模型 ID（區分大小寫）：
-       若是 API-key 設定則使用 `minimax/MiniMax-M2.7` 或 `minimax/MiniMax-M2.7-highspeed`，
-       若是 OAuth 設定則使用 `minimax-portal/MiniMax-M2.7` /
+    1. 升級至最新的 OpenClaw 版本 (或從原始碼執行 `main`)，然後重新啟動閘道。
+    2. 請確保已設定 MiniMax (精靈或 JSON)，或者 env/auth 設定檔中存在 MiniMax 身分驗證
+       資訊，以便注入相符的提供者
+       (針對 `minimax`、`MINIMAX_OAUTH_TOKEN` 使用 `MINIMAX_API_KEY`，或針對 `minimax-portal` 使用儲存的 MiniMax
+       OAuth)。
+    3. 針對您的身分驗證路徑，使用確切的模型 ID (區分大小寫)：
+       針對 API 金鑰設定使用 `minimax/MiniMax-M2.7` 或 `minimax/MiniMax-M2.7-highspeed`，
+       或針對 OAuth 設定使用 `minimax-portal/MiniMax-M2.7` /
        `minimax-portal/MiniMax-M2.7-highspeed`。
     4. 執行：
 
@@ -230,17 +229,17 @@ sidebarTitle: "模型常見問題"
        openclaw models list
        ```
 
-       並從清單中選取（或在聊天中使用 `/model list`）。
+       並從清單中選取 (或在聊天中 `/model list`)。
 
-    請參閱 [MiniMax](/zh-Hant/providers/minimax) 和 [Models](/zh-Hant/concepts/models)。
+    請參閱 [MiniMax](/zh-Hant/providers/minimax) 和 [模型](/zh-Hant/concepts/models)。
 
   </Accordion>
 
-  <Accordion title="我可以將 MiniMax 作為預設值，並在複雜任務中使用 OpenAI 嗎？">
-    可以。將 **MiniMax 作為預設值**，並在需要時**依會話切換**模型。
-    容錯機制是用於**錯誤**，而非「困難任務」，因此請使用 `/model` 或獨立的代理程式。
+  <Accordion title="我可以將 MiniMax 作為預設，並在複雜任務中使用 OpenAI 嗎？">
+    可以。將 **MiniMax 設為預設**，並在需要時**按會話**切換模型。
+    後備機制是為了**錯誤**準備的，而非「困難任務」，因此請使用 `/model` 或獨立的代理程式。
 
-    **選項 A：依會話切換**
+    **選項 A：按會話切換**
 
     ```json5
     {
@@ -263,29 +262,29 @@ sidebarTitle: "模型常見問題"
     /model gpt
     ```
 
-    **選項 B：分開的代理程式**
+    **選項 B：獨立代理程式**
 
     - 代理程式 A 預設：MiniMax
     - 代理程式 B 預設：OpenAI
-    - 透過代理程式路由或使用 `/agent` 進行切換
+    - 依代理程式路由，或使用 `/agent` 進行切換
 
-    文件：[Models](/zh-Hant/concepts/models)、[Multi-Agent Routing](/zh-Hant/concepts/multi-agent)、[MiniMax](/zh-Hant/providers/minimax)、[OpenAI](/zh-Hant/providers/openai)。
+    文件：[模型](/zh-Hant/concepts/models)、[多代理程式路由](/zh-Hant/concepts/multi-agent)、[MiniMax](/zh-Hant/providers/minimax)、[OpenAI](/zh-Hant/providers/openai)。
 
   </Accordion>
 
   <Accordion title="opus / sonnet / gpt 是內建的捷徑嗎？">
-    是的。OpenClaw 附帶了一些預設的簡寫（僅在模型存在於 `agents.defaults.models` 時套用）：
+    是的。OpenClaw 內建了一些預設簡寫（僅在 `agents.defaults.models` 中存在該模型時套用）：
 
-    - `opus` → `anthropic/claude-opus-4-7`
+    - `opus` → `anthropic/claude-opus-4-8`
     - `sonnet` → `anthropic/claude-sonnet-4-6`
     - `gpt` → `openai/gpt-5.4`
     - `gpt-mini` → `openai/gpt-5.4-mini`
     - `gpt-nano` → `openai/gpt-5.4-nano`
     - `gemini` → `google/gemini-3.1-pro-preview`
     - `gemini-flash` → `google/gemini-3-flash-preview`
-    - `gemini-flash-lite` → `google/gemini-3.1-flash-lite-preview`
+    - `gemini-flash-lite` → `google/gemini-3.1-flash-lite`
 
-    如果您設定了同名的別名，您的設定值優先。
+    如果您設定了同名的自訂別名，您的設定將優先套用。
 
   </Accordion>
 
@@ -460,17 +459,17 @@ sidebarTitle: "模型常見問題"
 
 ## Auth profiles: what they are and how to manage them
 
-相關：[/concepts/oauth](/zh-Hant/concepts/oauth) （OAuth 流程、Token 儲存、多帳號模式）
+相關：[/concepts/oauth](/zh-Hant/concepts/oauth) (OAuth 流程、Token 儲存、多帳號模式)
 
 <AccordionGroup>
-  <Accordion title="什麼是 auth profile？">
-    Auth profile 是與提供者綁定的具名憑證記錄（OAuth 或 API 金鑰）。Profile 儲存在：
+  <Accordion title="什麼是設定檔 (auth profile)？">
+    設定檔 (auth profile) 是與提供者綁定的具名憑證記錄 (OAuth 或 API 金鑰)。設定檔位於：
 
     ```
     ~/.openclaw/agents/<agentId>/agent/auth-profiles.json
     ```
 
-    若要檢視已儲存的 profile 而不傾印敏感資訊，請執行 `openclaw models auth list`（可選擇性地加入 `--provider <id>` 或 `--json`）。詳情請參閱 [Models CLI](/zh-Hant/cli/models#auth-profiles)。
+    若要檢視已儲存的設定檔而不傾印機密，請執行 `openclaw models auth list` (可選 `--provider <id>` 或 `--json`)。詳細資訊請參閱 [Models CLI](/zh-Hant/cli/models#auth-profiles)。
 
   </Accordion>
 
@@ -522,20 +521,20 @@ sidebarTitle: "模型常見問題"
 
   </Accordion>
 
-  <Accordion title="OAuth 與 API 金鑰 - 有什麼差別？">
-    OpenClaw 支援這兩者：
+  <Accordion title="OAuth 與 API 金鑰的區別為何？">
+    OpenClaw 支援兩者：
 
-    - **OAuth** 通常利用訂閱存取權（如適用）。
-    - **API 金鑰** 使用依 token 付費的計費方式。
+    - **OAuth / CLI 登入** 通常會在提供者支援的情況下利用訂閱存取權。對於 Anthropic，OpenClaw 的 Claude CLI 後端會使用 Claude Code `claude -p`；Anthropic 目前將其視為 Agent SDK/程式化使用，並自 2026 年 6 月 15 日起提供單獨的每月 Agent SDK 額度。
+    - **API 金鑰** 使用按 token 付費的計費方式。
 
-    精靈明確支援 Anthropic Claude CLI、OpenAI Codex OAuth 和 API 金鑰。
+    精靈 (wizard) 明確支援 Anthropic Claude CLI、OpenAI Codex OAuth 以及 API 金鑰。
 
   </Accordion>
 </AccordionGroup>
 
 ## 相關
 
-- [FAQ](/zh-Hant/help/faq) — 主要常見問題
-- [FAQ — 快速入門與首次執行設定](/zh-Hant/help/faq-first-run)
+- [FAQ](/zh-Hant/help/faq) — 主要 FAQ
+- [FAQ — 快速開始與首次執行設定](/zh-Hant/help/faq-first-run)
 - [模型選擇](/zh-Hant/concepts/model-providers)
-- [模型失效備援](/zh-Hant/concepts/model-failover)
+- [模型故障轉移](/zh-Hant/concepts/model-failover)

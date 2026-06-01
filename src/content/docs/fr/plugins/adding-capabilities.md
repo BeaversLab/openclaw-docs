@@ -8,9 +8,7 @@ title: "Ajout de capacités (guide du contributeur)"
 sidebarTitle: "Ajout de capacités"
 ---
 
-<Info>
-  Ceci est un **guide pour les contributeurs** destiné aux développeurs du cœur d'OpenClaw. Si vous créez un plugin externe, consultez plutôt [Création de plugins](/fr/plugins/building-plugins). Pour la référence approfondie de l'architecture (modèle de capacité, propriété, pipeline de chargement, assistants d'exécution), consultez [Fonctionnement interne des plugins](/fr/plugins/architecture).
-</Info>
+<Info>This is a **contributor guide** for OpenClaw core developers. If you are building an external plugin, see [Building plugins](/fr/plugins/building-plugins) instead. For the deep architecture reference (capability model, ownership, load pipeline, runtime helpers), see [Plugin internals](/fr/plugins/architecture).</Info>
 
 Utilisez ceci lorsqu'OpenClaw a besoin d'un nouveau domaine partagé tel que les embeddings, la
 génération d'images, la génération vidéo, ou une future zone de fonctionnalités supportée par un fournisseur.
@@ -118,11 +116,10 @@ est volontairement plus large que la mémoire : les outils, la recherche, la ré
 les plugins de fonctionnalités futurs peuvent consommer des embeddings sans dépendre du moteur
 de mémoire.
 
-Pour les adaptateurs spécifiques au moteur de mémoire, continuez d'utiliser `memoryEmbeddingProviders`.
-Ces adaptateurs possèdent les détails d'indexation de la mémoire tels que la division requête/document,
-les métadonnées d'exécution et la configuration du moteur de mémoire local. Ne faites pas dépendre un fournisseur
-d'embeddings générique de modules appartenant à la mémoire, sauf si le fournisseur n'est
-utilisable que par la mémoire.
+Memory search can consume generic `embeddingProviders`. The older
+`memoryEmbeddingProviders` contract is deprecated compatibility while existing
+memory-specific providers migrate; new reusable embedding providers should use
+`embeddingProviders`.
 
 ## Liste de vérification pour la révision
 
@@ -138,7 +135,7 @@ Si une PR ignore la couche de capacité et encode en dur le comportement du four
 
 ## Connexes
 
-- [Fonctionnement interne des plugins](/fr/plugins/architecture) — modèle de capacité, propriété, pipeline de chargement, assistants d'exécution.
-- [Création de plugins](/fr/plugins/building-plugins) — tutoriel pour le premier plugin.
-- [Présentation du SDK](/fr/plugins/sdk-overview) — référence de la carte d'importation et de l'API d'enregistrement.
-- [Création de compétences](/fr/tools/creating-skills) — surface contributive accompagnante.
+- [Plugin internals](/fr/plugins/architecture) — capability model, ownership, load pipeline, runtime helpers.
+- [Building plugins](/fr/plugins/building-plugins) — first-plugin tutorial.
+- [SDK overview](/fr/plugins/sdk-overview) — import map and registration API reference.
+- [Creating skills](/fr/tools/creating-skills) — companion contributor surface.

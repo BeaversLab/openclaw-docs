@@ -1,5 +1,5 @@
 ---
-summary: "WhatsAppOpenClawAjoute la surface de channel WhatsApp pour l'envoi et la réception de messages OpenClaw."
+summary: "OpenClawWhatsAppWhatsAppPlug-in de canal OpenClaw WhatsApp pour les conversations WhatsApp Web."
 read_when:
   - You are installing, configuring, or auditing the whatsapp plugin
 title: "WhatsAppPlugin WhatsApp"
@@ -7,7 +7,7 @@ title: "WhatsAppPlugin WhatsApp"
 
 # Plugin WhatsApp
 
-Ajoute la surface de channel WhatsApp pour l'envoi et la réception de messages OpenClaw.
+Plug-in de canal OpenClaw WhatsApp pour les conversations WhatsApp Web.
 
 ## Distribution
 

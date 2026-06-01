@@ -41,7 +41,7 @@ la canalización estándar de audio de respuesta.
     ```
 
   </Step>
-  <Step title="Seleccione Inworld en messages.tts">
+  <Step title="Selecciona Inworld en messages.tts">
     ```json5
     {
       messages: {
@@ -50,7 +50,7 @@ la canalización estándar de audio de respuesta.
           provider: "inworld",
           providers: {
             inworld: {
-              voiceId: "Sarah",
+              speakerVoiceId: "Sarah",
               modelId: "inworld-tts-1.5-max",
             },
           },
@@ -68,13 +68,13 @@ la canalización estándar de audio de respuesta.
 
 ## Opciones de configuración
 
-| Opción        | Ruta                                         | Descripción                                                                       |
-| ------------- | -------------------------------------------- | --------------------------------------------------------------------------------- |
-| `apiKey`      | `messages.tts.providers.inworld.apiKey`      | Credencial del panel en Base64. Recurre a `INWORLD_API_KEY`.                      |
-| `baseUrl`     | `messages.tts.providers.inworld.baseUrl`     | Anula la URL base de la API de Inworld (predeterminado `https://api.inworld.ai`). |
-| `voiceId`     | `messages.tts.providers.inworld.voiceId`     | Identificador de voz (predeterminado `Sarah`).                                    |
-| `modelId`     | `messages.tts.providers.inworld.modelId`     | ID del modelo TTS (predeterminado `inworld-tts-1.5-max`).                         |
-| `temperature` | `messages.tts.providers.inworld.temperature` | Temperatura de muestreo `0..2` (opcional).                                        |
+| Opción           | Ruta                                            | Descripción                                                                       |
+| ---------------- | ----------------------------------------------- | --------------------------------------------------------------------------------- |
+| `apiKey`         | `messages.tts.providers.inworld.apiKey`         | Credencial del panel en Base64. Recurre a `INWORLD_API_KEY`.                      |
+| `baseUrl`        | `messages.tts.providers.inworld.baseUrl`        | Anula la URL base de la API de Inworld (predeterminado `https://api.inworld.ai`). |
+| `speakerVoiceId` | `messages.tts.providers.inworld.speakerVoiceId` | Identificador de voz (predeterminado `Sarah`).                                    |
+| `modelId`        | `messages.tts.providers.inworld.modelId`        | ID del modelo TTS (predeterminado `inworld-tts-1.5-max`).                         |
+| `temperature`    | `messages.tts.providers.inworld.temperature`    | Temperatura de muestreo `0..2` (opcional).                                        |
 
 ## Notas
 

@@ -23,16 +23,16 @@ conectado de extremo a extremo.
 2. `agentCommand` ejecuta el agente:
    - resuelve el modelo + los valores predeterminados de pensamiento/verbose/trace
    - carga la instantánea de habilidades (skills)
-   - llama a `runEmbeddedPiAgent` (tiempo de ejecución pi-agent-core)
+   - llama a `runEmbeddedAgent` (entorno de ejecución del agente OpenClaw)
    - emite **fin/error del ciclo de vida** si el bucle incrustado no emite uno
-3. `runEmbeddedPiAgent`:
+3. `runEmbeddedAgent`:
    - serializa las ejecuciones mediante colas por sesión + globales
-   - resuelve el modelo + perfil de autenticación y construye la sesión pi
-   - se suscribe a eventos pi y transmite los deltas del asistente/herramientas
+   - resuelve el modelo y el perfil de autenticación y construye la sesión OpenClaw
+   - se suscribe a los eventos del tiempo de ejecución y transmite los deltas del asistente/herramienta
    - hace cumplir el tiempo de espera -> aborta la ejecución si se excede
    - para los turnos del servidor de aplicaciones de Codex, aborta un turno aceptado que deja de producir progreso del servidor de aplicaciones antes de un evento terminal
    - devuelve cargas útiles + metadatos de uso
-4. `subscribeEmbeddedPiSession` puentea los eventos de pi-agent-core al flujo `agent` de OpenClaw:
+4. `subscribeEmbeddedAgentSession` puentea los eventos del tiempo de ejecución del agente al flujo (stream) OpenClaw `agent`:
    - eventos de herramientas => `stream: "tool"`
    - deltas del asistente => `stream: "assistant"`
    - eventos del ciclo de vida => `stream: "lifecycle"` (`phase: "start" | "end" | "error"`)
@@ -116,7 +116,7 @@ Los arneses pueden adaptar estos enlaces de manera diferente. El arnés del serv
 
 ## Transmisión + respuestas parciales
 
-- Los deltas del asistente se transmiten desde pi-agent-core y se emiten como eventos `assistant`.
+- Los deltas del asistente se transmiten desde el tiempo de ejecución del agente y se emiten como eventos `assistant`.
 - La transmisión de bloques puede emitir respuestas parciales ya sea en `text_end` o `message_end`.
 - La transmisión del razonamiento puede emitirse como una transmisión separada o como respuestas de bloque.
 - Consulte [Streaming](/es/concepts/streaming) para conocer el comportamiento de fragmentación y respuesta en bloque.
@@ -147,9 +147,9 @@ Los arneses pueden adaptar estos enlaces de manera diferente. El arnés del serv
 
 ## Transmisiones de eventos (hoy)
 
-- `lifecycle`: emitido por `subscribeEmbeddedPiSession` (y como alternativa por `agentCommand`)
-- `assistant`: deltas transmitidos desde pi-agent-core
-- `tool`: eventos de herramientas transmitidos desde pi-agent-core
+- `lifecycle`: emitido por `subscribeEmbeddedAgentSession` (y como alternativa por `agentCommand`)
+- `assistant`: deltas transmitidos desde el tiempo de ejecución del agente
+- `tool`: eventos de herramienta transmitidos desde el tiempo de ejecución del agente
 
 ## Manejo del canal de chat
 
@@ -159,9 +159,9 @@ Los arneses pueden adaptar estos enlaces de manera diferente. El arnés del serv
 ## Tiempos de espera
 
 - `agent.wait` predeterminado: 30 s (solo la espera). El parámetro `timeoutMs` lo anula.
-- Tiempo de ejecución del agente: `agents.defaults.timeoutSeconds` predeterminado 172800 s (48 horas); se aplica en el temporizador de aborto `runEmbeddedPiAgent`.
+- Tiempo de ejecución del agente: `agents.defaults.timeoutSeconds` predeterminado 172800s (48 horas); aplicado en el temporizador de anulación de `runEmbeddedAgent`.
 - Tiempo de ejecución de Cron: el `timeoutSeconds` de turno del agente aislado pertenece a cron. El programador inicia ese temporizador cuando comienza la ejecución, aborta la ejecución subyacente en el plazo configurado y luego realiza una limpieza delimitada antes de registrar el tiempo de espera, para que una sesión secundaria obsoleta no pueda mantener el carril atascado.
-- Diagnósticos de actividad de la sesión: con los diagnósticos habilitados, `diagnostics.stuckSessionWarnMs` clasifica las sesiones `processing` largas que no tienen respuesta, herramienta, estado, bloqueo o progreso de ACP observado. Las ejecuciones integradas activas, las llamadas al modelo y las llamadas a las herramientas se informan como `session.long_running`; el trabajo activo sin informes de progreso recientes como `session.stalled`; `session.stuck` está reservado para la contabilidad de sesiones obsoletas sin trabajo activo. La contabilidad de sesiones obsoletas libera el carril de la sesión afectada inmediatamente; las ejecuciones integradas estancadas se abortan y drenan solo después de `diagnostics.stuckSessionAbortMs` (predeterminado: al menos 5 minutos y 3 veces el umbral de advertencia) para que el trabajo en cola pueda reanudarse sin cortar simplemente las ejecuciones lentas. La recuperación emite resultados de solicitud/completado estructurados, y el estado de diagnóstico se marca como inactivo solo si la misma generación de procesamiento sigue siendo actual. Los diagnósticos repetidos de `session.stuck` se reducen mientras la sesión permanece sin cambios.
+- Diagnósticos de actividad de sesión: con los diagnósticos habilitados, `diagnostics.stuckSessionWarnMs` clasifica sesiones `processing` largas que no tienen progreso observado de respuesta, herramienta, estado, bloqueo o ACP. Las ejecuciones integradas activas, las llamadas al modelo y las llamadas a herramientas se reportan como `session.long_running`; el trabajo activo sin informes de progreso recientes como `session.stalled`; `session.stuck` está reservado para la contabilidad de sesiones obsoletas recuperables, incluyendo sesiones en cola inactivas con actividad de modelo/herramienta obsoleta sin propietario. La contabilidad de sesiones obsoletas libera el carril de sesión afectado inmediatamente después de pasar los filtros de recuperación; las ejecuciones integradas estancadas se drenan por anulación solo después de `diagnostics.stuckSessionAbortMs` (predeterminado: al menos 5 minutos y 3 veces el umbral de advertencia) para que el trabajo en cola pueda reanudarse sin cortar ejecuciones que simplemente son lentas. La recuperación emite resultados estructurados solicitados/completados, y el estado de diagnóstico se marca como inactivo solo si la misma generación de procesamiento sigue siendo actual. Los diagnósticos repetidos de `session.stuck` se reducen (back off) mientras la sesión permanece sin cambios.
 - Tiempo de espera de inactividad del modelo: OpenClaw aborta una solicitud del modelo cuando no llegan fragmentos de respuesta antes de la ventana de inactividad. `models.providers.<id>.timeoutSeconds` extiende este vigilante de inactividad para proveedores locales/autoalojados lentos, pero todavía está limitado por cualquier `agents.defaults.timeoutSeconds` inferior o tiempo de espera específico de la ejecución porque esos controlan toda la ejecución del agente. De lo contrario, OpenClaw usa `agents.defaults.timeoutSeconds` cuando está configurado, limitado a 120s por defecto. Las ejecuciones activadas por cron sin tiempo de espera explícito de modelo o agente deshabilitan el vigilante de inactividad y se basan en el tiempo de espera externo de cron.
 - Tiempo de espera de la solicitud HTTP del proveedor: `models.providers.<id>.timeoutSeconds` se aplica a las recuperaciones HTTP del modelo de ese proveedor, incluyendo la conexión, los encabezados, el cuerpo, el tiempo de espera de la solicitud del SDK, el manejo total de interrupción de recuperación protegida y el perro guardián de inactividad del flujo del modelo. Use esto para proveedores locales/autoalojados lentos como Ollama antes de aumentar el tiempo de espera de ejecución del agente completo, y mantenga el tiempo de espera del agente/ejecución al menos tan alto cuando la solicitud del modelo necesita ejecutarse por más tiempo.
 

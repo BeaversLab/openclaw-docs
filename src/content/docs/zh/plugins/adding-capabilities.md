@@ -8,7 +8,7 @@ title: "添加功能（贡献者指南）"
 sidebarTitle: "添加功能"
 ---
 
-<Info>这是一份面向 OpenClaw 核心开发者的**贡献者指南**。如果您正在 构建外部插件，请参阅[构建插件](/zh/plugins/building-plugins) 。有关深度架构参考（能力模型、所有权、 加载管道、运行时助手），请参阅[插件内部机制](/zh/plugins/architecture)。</Info>
+<Info>这是针对 OpenClaw 核心开发者的**贡献者指南**。如果您正在 构建外部插件，请参阅[构建插件](/zh/plugins/building-plugins)。 如需深入了解架构参考（能力模型、所有权、加载管道、运行时辅助工具），请参阅[插件内部机制](/zh/plugins/architecture)。</Info>
 
 当 OpenClaw 需要一个新的共享领域（例如嵌入、图像
 生成、视频生成或某些未来的供应商支持的功能区域）时，请使用本文档。
@@ -116,11 +116,10 @@ sidebarTitle: "添加功能"
 未来的功能插件可以在不依赖内存
 引擎的情况下使用嵌入。
 
-对于特定于内存引擎的适配器，请继续使用 `memoryEmbeddingProviders`。
-这些适配器拥有内存索引细节，例如查询/文档拆分、
-运行时元数据和本地内存引擎设置。除非提供商仅
-能被内存使用，否则不要让通用
-嵌入提供商依赖于内存拥有的模块。
+内存搜索可以使用通用的 `embeddingProviders`。旧的
+`memoryEmbeddingProviders` 合约已弃用，仅作为现有的
+特定于内存的提供商迁移时的兼容性支持；新的可重用嵌入提供商应使用
+`embeddingProviders`。
 
 ## 审查清单
 
@@ -136,7 +135,7 @@ sidebarTitle: "添加功能"
 
 ## 相关
 
-- [插件内部机制](/zh/plugins/architecture) — 能力模型、所有权、加载管道、运行时助手。
+- [插件内部机制](/zh/plugins/architecture) — 能力模型、所有权、加载管道、运行时辅助工具。
 - [构建插件](/zh/plugins/building-plugins) — 第一个插件教程。
 - [SDK 概述](/zh/plugins/sdk-overview) — 导入映射和注册 API 参考。
-- [创建技能](/zh/tools/creating-skills) — 伴随的贡献者接口。
+- [创建技能](/zh/tools/creating-skills) — 伴随的贡献者界面。

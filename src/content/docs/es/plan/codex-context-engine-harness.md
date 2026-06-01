@@ -4,7 +4,7 @@ summary: "Especificación para hacer que el arnés del servidor de aplicaciones 
 read_when:
   - You are wiring context-engine lifecycle behavior into the Codex harness
   - You need lossless-claw or another context-engine plugin to work with codex/* embedded harness sessions
-  - You are comparing embedded PI and Codex app-server context behavior
+  - You are comparing embedded OpenClaw and Codex app-server context behavior
 ---
 
 ## Estado
@@ -13,12 +13,9 @@ Especificación de implementación preliminar.
 
 ## Objetivo
 
-Hacer que el arnés del servidor de aplicaciones Codex incluido respete el mismo contrato de ciclo de vida del motor de contexto de OpenClaw que ya respetan los turnos de PI integrados.
+Hacer que el arnés del servidor de aplicaciones Codex incluido respete el mismo contrato de ciclo de vida del motor de contexto de OpenClaw que los turnos de OpenClaw integrados ya respetan.
 
-Una sesión que utiliza un modelo `agents.defaults.embeddedHarness.runtime: "codex"` o un
-modelo `codex/*` aún debe permitir que el complemento del motor de contexto seleccionado, como
-`lossless-claw`, controle el ensamblaje del contexto, la ingestión posterior al turno, el mantenimiento y la
-política de compactación a nivel de OpenClaw hasta donde lo permita el límite del servidor de aplicaciones de Codex.
+Una sesión que utiliza el proveedor/modelo `agentRuntime.id: "codex"` o un modelo `codex/*` aún debería permitir que el complemento del motor de contexto seleccionado, como `lossless-claw`, controle el ensamblaje del contexto, la ingestión posterior al turno, el mantenimiento y la política de compactación a nivel de OpenClaw en la medida en que lo permita el límite del servidor de aplicaciones Codex.
 
 ## No objetivos
 
@@ -35,7 +32,7 @@ política de compactación a nivel de OpenClaw hasta donde lo permita el límite
 El bucle de ejecución integrado resuelve el motor de contexto configurado una vez por ejecución antes
 de seleccionar un arnés de bajo nivel concreto:
 
-- `src/agents/pi-embedded-runner/run.ts`
+- `src/agents/embedded-agent-runner/run.ts`
   - inicializa los complementos del motor de contexto
   - llama a `resolveContextEngine(params.config)`
   - pasa `contextEngine` y `contextTokenBudget` a
@@ -43,7 +40,7 @@ de seleccionar un arnés de bajo nivel concreto:
 
 `runEmbeddedAttemptWithBackend(...)` delega en el arnés del agente seleccionado:
 
-- `src/agents/pi-embedded-runner/run/backend.ts`
+- `src/agents/embedded-agent-runner/run/backend.ts`
 - `src/agents/harness/selection.ts`
 
 El arnés del servidor de aplicaciones de Codex está registrado por el complemento Codex incluido:
@@ -51,8 +48,7 @@ El arnés del servidor de aplicaciones de Codex está registrado por el compleme
 - `extensions/codex/index.ts`
 - `extensions/codex/harness.ts`
 
-La implementación del arnés de Codex recibe el mismo `EmbeddedRunAttemptParams`
-que los intentos respaldados por PI:
+La implementación del arnés de Codex recibe el mismo `EmbeddedRunAttemptParams` que los intentos de OpenClaw integrados:
 
 - `extensions/codex/src/app-server/run-attempt.ts`
 
@@ -64,7 +60,7 @@ compactador nativo.
 
 ## Brecha actual
 
-Los intentos de PI integrados llaman al ciclo de vida del motor de contexto directamente:
+Los intentos de OpenClaw integrados llaman al ciclo de vida del motor de contexto directamente:
 
 - bootstrap/mantenimiento antes del intento
 - ensamblar antes de la llamada al modelo
@@ -72,11 +68,11 @@ Los intentos de PI integrados llaman al ciclo de vida del motor de contexto dire
 - mantenimiento después de un turno exitoso
 - compactación del motor de contexto para motores que poseen la compactación
 
-Código PI relevante:
+Código relevante de OpenClaw:
 
-- `src/agents/pi-embedded-runner/run/attempt.ts`
-- `src/agents/pi-embedded-runner/run/attempt.context-engine-helpers.ts`
-- `src/agents/pi-embedded-runner/context-engine-maintenance.ts`
+- `src/agents/embedded-agent-runner/run/attempt.ts`
+- `src/agents/embedded-agent-runner/run/attempt.context-engine-helpers.ts`
+- `src/agents/embedded-agent-runner/context-engine-maintenance.ts`
 
 Los intentos del servidor de aplicaciones Codex actualmente ejecutan enlaces genéricos de arnés de agentes y reflejan
 la transcripción, pero no llaman a `params.contextEngine.bootstrap`,
@@ -137,10 +133,10 @@ Para motores como lossless-claw, el contexto ensamblado debe ser determinista pa
 
 La selección del arnés permanece como está:
 
-- `runtime: "pi"` fuerza PI
+- `runtime: "openclaw"` selecciona el arnés integrado de OpenClaw
 - `runtime: "codex"` selecciona el arnés de Codex registrado
 - `runtime: "auto"` permite a los arneses de complementos reclamar proveedores compatibles
-- las ejecuciones de `auto` no coincidentes usan PI
+- las ejecuciones `auto` no coincidentes utilizan el arnés integrado de OpenClaw
 
 Este trabajo cambia lo que sucede después de que se selecciona el arnés de Codex.
 
@@ -148,13 +144,13 @@ Este trabajo cambia lo que sucede después de que se selecciona el arnés de Cod
 
 ### 1. Exportar o reubicar los asistentes de intentos del motor de contexto reutilizables
 
-Hoy, los asistentes de ciclo de vida reutilizables viven bajo el ejecutor de PI:
+Hoy, los auxiliares de ciclo de vida reutilizables se encuentran bajo el ejecutor del agente integrado:
 
-- `src/agents/pi-embedded-runner/run/attempt.context-engine-helpers.ts`
-- `src/agents/pi-embedded-runner/run/attempt.prompt-helpers.ts`
-- `src/agents/pi-embedded-runner/context-engine-maintenance.ts`
+- `src/agents/embedded-agent-runner/run/attempt.context-engine-helpers.ts`
+- `src/agents/embedded-agent-runner/run/attempt.prompt-helpers.ts`
+- `src/agents/embedded-agent-runner/context-engine-maintenance.ts`
 
-Codex no debería importar desde una ruta de implementación cuyo nombre implique PI si podemos evitarlo.
+Codex debería importar auxiliares neutrales al arnés en lugar de acceder a detalles de implementación del ejecutor.
 
 Crear un módulo neutral respecto al arnés (harness-neutral), por ejemplo:
 
@@ -169,9 +165,9 @@ Mover o re-exportar:
 - `buildAfterTurnRuntimeContextFromUsage`
 - un pequeño envoltorio alrededor de `runContextEngineMaintenance`
 
-Mantenga las importaciones de PI funcionando ya sea reexportando desde los archivos antiguos o actualizando los sitios de llamada de PI en el mismo PR.
+Actualice los sitios de llamada del arnés integrado en el mismo PR.
 
-Los nombres de los ayudantes neutrales no deben mencionar PI.
+Los nombres de los auxiliares neutrales no deben mencionar el arnés integrado.
 
 Nombres sugeridos:
 
@@ -296,7 +292,7 @@ debería volverse consciente del contexto:
 2. aplicar el ensamblaje/proyección del motor de contexto
 3. ejecutar `before_prompt_build` con el prompt/instrucciones de desarrollador proyectados
 
-Este orden permite que los ganchos de prompt genéricos vean el mismo prompt que recibirá Codex. Si necesitamos paridad estricta con PI, ejecute el ensamblaje del motor de contexto antes de la composición de ganchos, porque PI aplica el `systemPromptAddition` del motor de contexto al prompt del sistema final después de su canalización de prompt. La invariante importante es que tanto el motor de contexto como los ganchos obtengan un orden determinista y documentado.
+Este orden permite que los enlaces de comandos genéricos vean el mismo mensaje que recibirá Codex. Si necesitamos una paridad estricta con OpenClaw, ejecute el ensamblaje del motor de contexto antes de la composición de enlaces, porque el arnés integrado aplica `systemPromptAddition` del motor de contexto al mensaje del sistema final después de su canalización de mensajes. La invariante importante es que tanto el motor de contexto como los enlaces obtengan un orden determinista y documentado.
 
 Orden recomendado para la primera implementación:
 
@@ -440,7 +436,7 @@ ciclo de vida del motor de contexto actualmente pierda eventos de restablecimien
 
 ### 10. Manejo de errores
 
-Siga la semántica de PI:
+Siga la semántica integrada de OpenClaw:
 
 - los fallos de arranque advierten y continúan
 - los fallos de ensamblaje advierten y recurren a mensajes/prompt de canalización sin ensamblar
@@ -493,7 +489,7 @@ Agregue pruebas bajo `extensions/codex/src/app-server`:
   detalles del evento de compactación.
 - `src/agents/harness/selection.test.ts` no debería necesitar cambios a menos que el comportamiento de la configuración
   cambie; debería permanecer estable.
-- Las pruebas del motor de contexto de PI deberían seguir pasando sin cambios.
+- Las pruebas del motor de contexto del arnés integrado deben seguir superándose sin cambios.
 
 ### Pruebas de integración / en vivo
 
@@ -501,7 +497,7 @@ Agregar o extender las pruebas de humeo del arnés Codex en vivo:
 
 - configurar `plugins.slots.contextEngine` a un motor de prueba
 - configurar `agents.defaults.model` a un modelo `codex/*`
-- configurar `agents.defaults.embeddedHarness.runtime = "codex"`
+- configurar proveedor/modelo `agentRuntime.id = "codex"`
 - afirmar que el motor de prueba observó:
   - bootstrap
   - ensamblar
@@ -564,10 +560,7 @@ Esto debe ser compatible con versiones anteriores:
 
 3. ¿Debe ejecutarse `before_prompt_build` antes o después del ensamblaje del motor de contexto?
 
-   Recomendación: después de la proyección del motor de contexto para Codex, para que los enlaces genéricos del arnés
-   vean las instrucciones reales de mensaje/desarrollador que Codex recibirá. Si la paridad de PI
-   requiere lo contrario, codifique el orden elegido en las pruebas y documéntelo
-   aquí.
+   Recomendación: después de la proyección del motor de contexto para Codex, para que los enlaces del arnés genéricos vean las instrucciones reales del mensaje/desarrollador que Codex recibirá. Si la paridad con el arnés integrado requiere lo contrario, codifique el orden elegido en las pruebas y documentelo aquí.
 
 4. ¿Puede el servidor de aplicaciones Codex aceptar una invalidación futura de contexto/historial estructurada?
 
@@ -584,5 +577,5 @@ Esto debe ser compatible con versiones anteriores:
 - Los turnos fallidos/abortados/abortados por cesión no ejecutan el mantenimiento del turno.
 - La compactación propiedad del motor de contexto sigue siendo primaria para el estado de OpenClaw/complemento.
 - La compactación nativa de Codex sigue siendo auditable como comportamiento nativo de Codex.
-- El comportamiento del motor de contexto de PI existente no cambia.
+- El comportamiento existente del motor de contexto del arnés integrado no ha cambiado.
 - El comportamiento del arnés de Codex existente no cambia cuando no se selecciona ningún motor de contexto que no sea heredado o cuando falla el ensamblaje.

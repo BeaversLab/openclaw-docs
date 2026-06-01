@@ -107,7 +107,7 @@ devuelven la configuración exacta del proveedor faltante cuando se utilizan.
               responseSystemPrompt: "You are a concise baseball card specialist.",
               tts: {
                 providers: {
-                  openai: { voice: "alloy" },
+                  openai: { speakerVoice: "alloy" },
                 },
               },
             },
@@ -219,7 +219,7 @@ Comportamiento actual en tiempo de ejecución:
 - La configuración bruta del proveedor reside bajo `realtime.providers.<providerId>`.
 - Voice Call expone la herramienta en tiempo real compartida `openclaw_agent_consult` de forma predeterminada. El modelo en tiempo real puede llamarla cuando el solicitante pide un razonamiento más profundo, información actual o herramientas normales de OpenClaw.
 - `realtime.consultPolicy` opcionalmente añade orientación sobre cuándo el modelo en tiempo real debe llamar a `openclaw_agent_consult`.
-- `realtime.agentContext.enabled` está desactivado de forma predeterminada. Cuando se habilita, Voice Call inyecta una identidad de agente limitada, una anulación de prompt del sistema y una cápsula de archivo de espacio de trabajo seleccionada en las instrucciones del proveedor en tiempo real durante la configuración de la sesión.
+- `realtime.agentContext.enabled` está desactivado de forma predeterminada. Cuando está activado, Voice Call inyecta una identidad de agente delimitada y una cápsula de archivo de área de trabajo seleccionada en las instrucciones del proveedor en tiempo real durante la configuración de la sesión.
 - `realtime.fastContext.enabled` está desactivado de forma predeterminada. Cuando se habilita, Voice Call primero busca en el contexto de memoria/sesión indexado la pregunta de consulta y devuelve esos fragmentos al modelo en tiempo real dentro de `realtime.fastContext.timeoutMs` antes de recurrir al agente de consulta completo solo si `realtime.fastContext.fallbackToConsult` es verdadero.
 - Si `realtime.provider` apunta a un proveedor no registrado, o no hay ningún proveedor de voz en tiempo real registrado, Voice Call registra una advertencia y omite los medios en tiempo real en lugar de hacer fallar todo el complemento.
 - Las claves de sesión de consulta reutilizan la sesión de llamada almacenada cuando está disponible, luego recurren a la `sessionScope` configurada (`per-phone` de forma predeterminada, o `per-call` para llamadas aisladas).
@@ -267,7 +267,6 @@ para trabajo de herramientas, información actual, búsquedas de memoria o estad
               enabled: true,
               maxChars: 6000,
               includeIdentity: true,
-              includeSystemPrompt: true,
               includeWorkspaceFiles: true,
               files: ["SOUL.md", "IDENTITY.md", "USER.md"],
             },
@@ -283,12 +282,12 @@ para trabajo de herramientas, información actual, búsquedas de memoria o estad
 
 <Tabs>
   <Tab title="Google Gemini Live">
-    Valores predeterminados: clave API de `realtime.providers.google.apiKey`,
-    `GEMINI_API_KEY` o `GOOGLE_GENERATIVE_AI_API_KEY`; modelo
+    Valores predeterminados: clave de API de `realtime.providers.google.apiKey`,
+    `GEMINI_API_KEY`, o `GOOGLE_GENERATIVE_AI_API_KEY`; modelo
     `gemini-2.5-flash-native-audio-preview-12-2025`; voz `Kore`.
     `sessionResumption` y `contextWindowCompression` están activados de forma predeterminada para llamadas más largas
-    y reconectables. Use `silenceDurationMs`, `startSensitivity` y
-    `endSensitivity` para ajustar una alternancia de turnos más rápida en el audio de telefonía.
+    y reconectables. Use `silenceDurationMs`, `startSensitivity`, y
+    `endSensitivity` para ajustar una alternancia más rápida en el audio de telefonía.
 
     ```json5
     {
@@ -312,7 +311,7 @@ para trabajo de herramientas, información actual, búsquedas de memoria o estad
                   google: {
                     apiKey: "${GEMINI_API_KEY}",
                     model: "gemini-2.5-flash-native-audio-preview-12-2025",
-                    voice: "Kore",
+                    speakerVoice: "Kore",
                     silenceDurationMs: 500,
                     startSensitivity: "high",
                   },
@@ -444,7 +443,7 @@ durante las llamadas. Puede anularla en la configuración del complemento con el
     provider: "elevenlabs",
     providers: {
       elevenlabs: {
-        voiceId: "pMsXgVXv3BLzUgSXRplE",
+        speakerVoiceId: "pMsXgVXv3BLzUgSXRplE",
         modelId: "eleven_multilingual_v2",
       },
     },
@@ -465,14 +464,14 @@ Notas de comportamiento:
 ### Ejemplos de TTS
 
 <Tabs>
-  <Tab title="Solo Core TTS">
+  <Tab title="Solo TTS central">
 ```json5
 {
   messages: {
     tts: {
       provider: "openai",
       providers: {
-        openai: { voice: "alloy" },
+        openai: { speakerVoice: "alloy" },
       },
     },
   },
@@ -491,7 +490,7 @@ Notas de comportamiento:
             providers: {
               elevenlabs: {
                 apiKey: "elevenlabs_key",
-                voiceId: "pMsXgVXv3BLzUgSXRplE",
+                speakerVoiceId: "pMsXgVXv3BLzUgSXRplE",
                 modelId: "eleven_multilingual_v2",
               },
             },
@@ -503,7 +502,7 @@ Notas de comportamiento:
 }
 ```
   </Tab>
-  <Tab title="Anulación de modelo OpenAI (fusión profunda)">
+  <Tab title="Anulación del modelo de OpenAI (fusión profunda)">
 ```json5
 {
   plugins: {
@@ -514,7 +513,7 @@ Notas de comportamiento:
             providers: {
               openai: {
                 model: "gpt-4o-mini-tts",
-                voice: "marin",
+                speakerVoice: "marin",
               },
             },
           },
@@ -571,7 +570,7 @@ El valor de ruta `tts` se fusiona profundamente sobre la configuración `tts` de
   tts: {
     provider: "openai",
     providers: {
-      openai: { voice: "coral" },
+      openai: { speakerVoice: "coral" },
     },
   },
   numbers: {
@@ -580,7 +579,7 @@ El valor de ruta `tts` se fusiona profundamente sobre la configuración `tts` de
       responseSystemPrompt: "You are a concise baseball card specialist.",
       tts: {
         providers: {
-          openai: { voice: "alloy" },
+          openai: { speakerVoice: "alloy" },
         },
       },
     },

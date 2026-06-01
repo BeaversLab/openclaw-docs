@@ -100,7 +100,7 @@ Exemple :
 }
 ```
 
-Support multi-compte : utilisez `channels.signal.accounts` avec une configuration par compte et `name` en option. Consultez [`gateway/configuration`](/fr/gateway/config-channels#multi-account-all-channels) pour le modèle partagé.
+Prise en charge multi-compte : utilisez `channels.signal.accounts` avec une configuration par compte et `name` en option. Voir [`gateway/configuration`](/fr/gateway/config-channels#multi-account-all-channels) pour le modèle partagé.
 
 ## Chemin d'installation B : enregistrer un numéro de bot dédié (SMS, Linux)
 
@@ -182,7 +182,7 @@ Cela évite le lancement automatique et l'attente de démarrage à l'intérieur 
 
 ## Mode conteneur (bbernhard/signal-cli-rest-api)
 
-Au lieu d'exécuter `signal-cli` nativement, vous pouvez utiliser le conteneur Docker [bbernhard/signal-cli-rest-api](https://github.com/bbernhard/signal-cli-rest-api). Cela encapsule `signal-cli` derrière une API REST et une interface WebSocket.
+Au lieu d'exécuter `signal-cli` en mode natif, vous pouvez utiliser le conteneur Docker [bbernhard/signal-cli-rest-api](https://github.com/bbernhard/signal-cli-rest-api). Cela encapsule `signal-cli` derrière une interface REST API et WebSocket.
 
 Conditions requises :
 
@@ -246,7 +246,7 @@ DMs :
 - Approuver via :
   - `openclaw pairing list signal`
   - `openclaw pairing approve signal <CODE>`
-- L'appariement est l'échange de jetons par défaut pour les DMs Signal. Détails : [Appariement](/fr/channels/pairing)
+- L'appairage est l'échange de jetons par défaut pour les DMs Signal. Détails : [Appairage](/fr/channels/pairing)
 - Les expéditeurs UUID uniquement (de `sourceUuid`) sont stockés sous forme de `uuid:<id>` dans `channels.signal.allowFrom`.
 
 Groupes :
@@ -304,10 +304,22 @@ Configuration :
   - `minimal`/`extensive` active les réactions de l'agent et définit le niveau de guidage.
 - Remplacements par compte : `channels.signal.accounts.<id>.actions.reactions`, `channels.signal.accounts.<id>.reactionLevel`.
 
+## Réactions d'approbation
+
+Les invites d'approbation pour l'exécution et les plugins Signal utilisent les blocs de routage de premier niveau `approvals.exec` et `approvals.plugin`. Signal n'a pas de bloc `channels.signal.execApprovals`.
+
+- `👍` approuve une seule fois.
+- `👎` refuse.
+- Utilisez `/approve <id> allow-always` lorsqu'une demande offre une approbation persistante.
+
+La résolution des réactions d'approbation nécessite des approbateurs Signal explicites provenant de `channels.signal.allowFrom`, `channels.signal.defaultTo` ou des champs correspondants au niveau du compte.
+Les invites d'approbation d'exécution directe dans le même chat peuvent toujours supprimer le repli local `/approve` en double
+sans approbateurs explicites ; les approbations de groupe sans approbateur gardent le repli local visible.
+
 ## Cibles de livraison (CLI/cron)
 
 - DMs : `signal:+15551234567` (ou E.164 brut).
-- DMs UUID : `uuid:<id>` (ou UUID seul).
+- DMs UUID : `uuid:<id>` (ou UUID nu).
 - Groupes : `signal:group:<groupId>`.
 - Noms d'utilisateur : `username:<name>` (si pris en charge par votre compte Signal).
 
@@ -323,7 +335,7 @@ openclaw doctor
 openclaw channels status --probe
 ```
 
-Ensuite, confirmez l'état du jumelage DM si nécessaire :
+Confirmez ensuite l'état de l'appairage DM si nécessaire :
 
 ```bash
 openclaw pairing list signal
@@ -332,8 +344,8 @@ openclaw pairing list signal
 Pannes courantes :
 
 - Démon accessible mais pas de réponses : vérifiez les paramètres du compte/démon (`httpUrl`, `account`) et le mode de réception.
-- DMs ignorés : l'expéditeur est en attente d'approbation de jumelage.
-- Messages de groupe ignorés : le filtrage par expéditeur de groupe/mention bloque la livraison.
+- DMs ignorés : l'expéditeur est en attente d'approbation d'appairage.
+- Messages de groupe ignorés : le blocage de l'expéditeur/mention du groupe empêche la livraison.
 - Erreurs de validation de configuration après modifications : exécutez `openclaw doctor --fix`.
 - Signal manquant dans les diagnostics : confirmez `channels.signal.enabled: true`.
 
@@ -351,8 +363,8 @@ Pour le flux de triage : [/channels/troubleshooting](/fr/channels/troubleshootin
 
 - `signal-cli` stocke les clés de compte localement (généralement `~/.local/share/signal-cli/data/`).
 - Sauvegardez l'état du compte Signal avant la migration ou la reconstruction du serveur.
-- Conservez `channels.signal.dmPolicy: "pairing"` sauf si vous voulez explicitement un accès DM plus large.
-- La vérification par SMS n'est nécessaire que pour l'inscription ou les processus de récupération, mais la perte de contrôle du numéro/compte peut compliquer la réinscription.
+- Conservez `channels.signal.dmPolicy: "pairing"` sauf si vous souhaitez explicitement un accès DM plus large.
+- La vérification par SMS n'est nécessaire que pour les flux d'enregistrement ou de récupération, mais la perte de contrôle du numéro/compte peut compliquer la réinscription.
 
 ## Référence de configuration (Signal)
 
@@ -362,24 +374,24 @@ Options du fournisseur :
 
 - `channels.signal.enabled` : activer/désactiver le démarrage du channel.
 - `channels.signal.apiMode` : `auto | native | container` (par défaut : auto). Voir [Container mode](#container-mode-bbernhardsignal-cli-rest-api).
-- `channels.signal.account` : E.164 pour le compte du bot.
+- `channels.signal.account` : E.164 pour le compte bot.
 - `channels.signal.cliPath` : chemin vers `signal-cli`.
 - `channels.signal.configPath` : répertoire `signal-cli --config` facultatif.
 - `channels.signal.httpUrl` : URL complète du démon (remplace l'hôte/port).
 - `channels.signal.httpHost`, `channels.signal.httpPort` : liaison du démon (par défaut 127.0.0.1:8080).
-- `channels.signal.autoStart` : lancement automatique du démon (par défaut true si `httpUrl` n'est pas défini).
+- `channels.signal.autoStart` : lancement automatique du démon (par défaut vrai si `httpUrl` non défini).
 - `channels.signal.startupTimeoutMs` : délai d'attente de démarrage en ms (max 120000).
 - `channels.signal.receiveMode` : `on-start | manual`.
 - `channels.signal.ignoreAttachments` : ignorer les téléchargements de pièces jointes.
 - `channels.signal.ignoreStories` : ignorer les stories du démon.
-- `channels.signal.sendReadReceipts` : transférer les accusés de réception.
-- `channels.signal.dmPolicy` : `pairing | allowlist | open | disabled` (par défaut : pairing).
-- `channels.signal.allowFrom` : liste d'autorisation DM (E.164 ou `uuid:<id>`). `open` nécessite `"*"`. Signal n'a pas de noms d'utilisateur ; utilisez les identifiants téléphone/UUID.
+- `channels.signal.sendReadReceipts` : transférer les accusés de lecture.
+- `channels.signal.dmPolicy` : `pairing | allowlist | open | disabled` (par défaut : appairage).
+- `channels.signal.allowFrom` : liste blanche de DM (E.164 ou `uuid:<id>`). `open` nécessite `"*"`Signal. Signal n'a pas de noms d'utilisateur ; utilisez les identifiants téléphone/UUID.
 - `channels.signal.groupPolicy` : `open | allowlist | disabled` (par défaut : allowlist).
-- `channels.signal.groupAllowFrom` : liste d'autorisation de groupe ; accepte les ID de groupe Signal (bruts, `group:<id>`, ou `signal:group:<id>`), les numéros E.164 de l'expéditeur, ou les valeurs `uuid:<id>`.
-- `channels.signal.groups` : substitutions par groupe indexées par l'ID de groupe Signal (ou `"*"`). Champs pris en charge : `requireMention`, `tools`, `toolsBySender`.
+- `channels.signal.groupAllowFrom`Signal : liste blanche de groupe ; accepte les ID de groupe Signal (bruts, `group:<id>`, ou `signal:group:<id>`), les numéros E.164 de l'expéditeur, ou les valeurs `uuid:<id>`.
+- `channels.signal.groups`Signal : remplacements par groupe indexés par l'ID de groupe Signal (ou `"*"`). Champs pris en charge : `requireMention`, `tools`, `toolsBySender`.
 - `channels.signal.accounts.<id>.groups` : version par compte de `channels.signal.groups` pour les configurations multi-comptes.
-- `channels.signal.historyLimit` : nombre maximum de messages de groupe à inclure en contexte (0 désactive).
+- `channels.signal.historyLimit` : nombre maximum de messages de groupe à inclure comme contexte (0 désactive).
 - `channels.signal.dmHistoryLimit` : limite d'historique DM en tours utilisateur. Remplacements par utilisateur : `channels.signal.dms["<phone_or_uuid>"].historyLimit`.
 - `channels.signal.textChunkLimit` : taille des blocs sortants (caractères).
 - `channels.signal.chunkMode` : `length` (par défaut) ou `newline` pour diviser sur les lignes vides (limites de paragraphe) avant le découpage par longueur.
@@ -388,13 +400,13 @@ Options du fournisseur :
 Options globales connexes :
 
 - `agents.list[].groupChat.mentionPatterns`Signal (Signal ne prend pas en charge les mentions natives).
-- `messages.groupChat.mentionPatterns` (solution de repli globale).
+- `messages.groupChat.mentionPatterns` (repli global).
 - `messages.responsePrefix`.
 
 ## Connexes
 
 - [Vue d'ensemble des canaux](/fr/channels) — tous les canaux pris en charge
-- [Appairage](/fr/channels/pairing) — flux d'authentification et d'appairage par DM
-- [Groupes](/fr/channels/groups) — comportement des discussions de groupe et filtrage des mentions
+- [Appairage](/fr/channels/pairing) — authentification DM et flux d'appairage
+- [Groupes](/fr/channels/groups) — comportement du chat de groupe et filtrage des mentions
 - [Routage de canal](/fr/channels/channel-routing) — routage de session pour les messages
 - [Sécurité](/fr/gateway/security) — modèle d'accès et durcissement

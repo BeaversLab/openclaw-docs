@@ -57,7 +57,7 @@ Le plugin vérifie d'abord le `apiKey` résolu et se rabat sur la variable d'env
       provider: "gradium",
       providers: {
         gradium: {
-          voiceId: "YTpq7expH9539ERJ",
+          speakerVoiceId: "YTpq7expH9539ERJ",
           // apiKey: "${GRADIUM_API_KEY}",
           // baseUrl: "https://api.gradium.ai",
         },
@@ -67,11 +67,11 @@ Le plugin vérifie d'abord le `apiKey` résolu et se rabat sur la variable d'env
 }
 ```
 
-| Clé                                      | Type   | Description                                                                                                |
-| ---------------------------------------- | ------ | ---------------------------------------------------------------------------------------------------------- |
-| `messages.tts.providers.gradium.apiKey`  | chaîne | Clé API résolue. Prend en charge `${ENV}` et les références secrètes.                                      |
-| `messages.tts.providers.gradium.baseUrl` | chaîne | Remplacer l'origine API. Les barres obliques de fin sont supprimées. Par défaut, `https://api.gradium.ai`. |
-| `messages.tts.providers.gradium.voiceId` | chaîne | ID de voix par défaut utilisé lorsqu'aucune directive de remplacement n'est présente.                      |
+| Clé                                             | Type   | Description                                                                                                |
+| ----------------------------------------------- | ------ | ---------------------------------------------------------------------------------------------------------- |
+| `messages.tts.providers.gradium.apiKey`         | chaîne | Clé API résolue. Prend en charge `${ENV}` et les références secrètes.                                      |
+| `messages.tts.providers.gradium.baseUrl`        | chaîne | Remplacer l'origine API. Les barres obliques de fin sont supprimées. Par défaut, `https://api.gradium.ai`. |
+| `messages.tts.providers.gradium.speakerVoiceId` | chaîne | ID de voix par défaut utilisé lorsqu'aucune directive de remplacement n'est présente.                      |
 
 Le format audio de sortie est sélectionné automatiquement par le runtime en fonction de la surface cible et n'est pas configurable depuis `openclaw.json`. Voir [Sortie](#output) ci-dessous.
 
@@ -91,7 +91,7 @@ Voix par défaut : Emma.
 
 ### Remplacement de voix par message
 
-Lorsque la politique vocale active autorise le remplacement des voix, vous pouvez changer de voix en ligne à l'aide d'un jeton de directive. Tous ceux-ci résolvent le même remplacement `voiceId` :
+Lorsque la stratégie vocale active autorise les substitutions de voix, vous pouvez changer de voix en ligne à l'aide d'un jeton de directive. Utilisez `speakerVoiceId` pour les identifiants de voix natifs du fournisseur.
 
 ```text
 /voice:LFZvm12tW_z0xfGo

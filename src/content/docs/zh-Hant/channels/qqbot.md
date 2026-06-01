@@ -23,7 +23,8 @@ openclaw plugins install @openclaw/qqbot
 
 ## 設定
 
-1. 前往 [QQ 開放平台](https://q.qq.com/) 並使用手機 QQ 掃描二維碼以註冊 / 登入。
+1. 前往 [QQ 開放平台](https://q.qq.com/) 並使用您的
+   手機 QQ 掃描 QR code 以註冊 / 登入。
 2. 點擊 **建立機器人** 以建立新的 QQ 機器人。
 3. 在機器人的設定頁面上尋找 **AppID** 和 **AppSecret** 並複製它們。
 
@@ -259,39 +260,37 @@ STT 和 TTS 支援具有優先順序回退機制的兩層設定：
 
 管理員指令（`/bot-me`、`/bot-upgrade`、`/bot-logs`、`/bot-clear-storage`、`/bot-streaming`、`/bot-approve`）僅限直接訊息使用，並且傳送者的 openid 必須位於明確的非萬用字元 `allowFrom` 清單中。萬用字元 `allowFrom: ["*"]` 允許聊天但不授予管理員指令存取權。群組訊息會先比對 `groupAllowFrom`，然後回退到 `allowFrom`。在群組中執行管理員指令會傳回提示，而不是靜默丟棄。
 
+當 QQ Bot 執行核准使用預設的同聊天室回退機制時，原生核准按鈕點擊遵循相同的明確非萬用字元指令允許清單。若要在未賦予更廣泛指令存取權限的情況下授予僅核准存取權，請設定
+`channels.qqbot.execApprovals.approvers`。
+
 ## 引擎架構
 
-QQ Bot 作為外掛程式內的獨立引擎提供：
+QQ Bot 作為外掛內的獨立引擎提供：
 
-- 每個帳戶擁有一個以 `appId` 為鍵的隔離資源堆疊（WebSocket 連線、API 用戶端、令牌快取、媒體儲存根目錄）。帳戶絕不共用輸入/輸出狀態。
-- 多帳戶記錄器會在日誌行上標記擁有者帳戶，因此當您在一個閘道下執行多個機器人時，診斷資訊仍可分開。
-- 輸入、輸出和閘道橋接路徑共用 `~/.openclaw/media` 下的一個單一媒體酬載根目錄，因此上傳、下載和轉碼快取會落地在同一個受保護的目錄下，而不是每個子系統的樹狀結構。
-- 富媒體傳遞透過一個 `sendMedia` 路徑用於 C2C 和群組目標。超過大檔案閾值的本機檔案和緩衝區使用 QQ 的分塊上傳端點，而較小的酬載使用一次性媒體 API。
-- 憑證可以作為標準 OpenClaw 憑證快照的一部分進行備份和還原；引擎在還原時會重新附加每個帳戶的資源堆疊，而無需新的 QR 碼配對。
+- 每個帳戶擁有一個以 `appId` 為鍵值的獨立資源堆疊（WebSocket 連線、API 用戶端、令牌快取、媒體儲存根目錄）。帳戶絕不共用輸入/輸出狀態。
+- 多重帳戶記錄器會以擁有帳戶標記記錄行，因此當您在單一閘道下執行多個機器人時，診斷資訊仍可保持區隔。
+- 輸入、輸出和閘道橋接路徑共用 `~/.openclaw/media` 下的一個媒體負載根目錄，因此上傳、下載和轉碼快取會位於一個受保護的目錄中，而非每個子系統的樹狀結構。
+- 富媒體傳遞透過 C2C 和群組目標的一個 `sendMedia` 路徑進行。超過大型檔案閾值的本機檔案和緩衝區使用 QQ 的區塊上傳端點，而較小的負載則使用一次性媒體 API。
+- 認證資料可以作為標準 OpenClaw 認證快照的一部分進行備份和還原；還原時引擎會重新附加每個帳戶的資源堆疊，而無需新的 QR code 配對。
 
-## QR 碼入門
+## QR code 入職
 
-作為手動貼上 `AppID:AppSecret` 的替代方案，引擎支援 QR code 入站流程，用於將 QQ 機器人連結至 OpenClaw：
+除了手動貼上 `AppID:AppSecret` 之外，引擎還支援 QR code 入職流程，用於將 QQ Bot 連結至 OpenClaw：
 
-1. 執行 QQ 機器人設定路徑（例如 `openclaw channels add --channel qqbot`）並在系統提示時選擇 QR code 流程。
-2. 使用與目標 QQ 機器人綁定的手機應用程式掃描生成的 QR code。
-3. 在手機上批准配對。OpenClaw 會將傳回的憑證儲存在正確帳戶範圍下的 `credentials/` 中。
+1. 執行 QQ Bot 設定路徑（例如 `openclaw channels add --channel qqbot`）並在提示時選擇 QR code 流程。
+2. 使用與目標 QQ Bot 綁定的手機應用程式掃描生成的 QR code。
+3. 在手機上核准配對。OpenClaw 會將傳回的認證資料儲存在正確帳戶範圍下的 `credentials/` 中。
 
-由機器人本身產生的批准提示（例如，QQ 機器人 API 公開的「允許此操作？」流程）會顯示為原生的 OpenClaw 提示，您可以使用 `/bot-approve` 加以接受，而不需透過原始 QQ 用戶端回覆。
+由機器人本身產生的核准提示（例如，QQ Bot API 公開的「允許此操作？」流程）會顯示為原生的 OpenClaw 提示，您可以使用 `/bot-approve` 接受，而不需透過原始 QQ 用戶端回覆。
 
 ## 疑難排解
 
-- **機器人回覆「gone to Mars」：** 尚未設定憑證或尚未啟動 Gateway。
-- **沒有收到訊息：** 請確認 `appId` 和 `clientSecret` 正確無誤，並且
-  機器人已在 QQ 開放平台上啟用。
-- **重複的自我回覆：** OpenClaw 會將 QQ 傳出參考索引記錄為
-  由機器人發送，並忽略目前 `msgIdx` 符合
-  該機器人帳戶的傳入事件。這可防止平台回應循環，同時仍允許使用者
-  引用或回覆先前的機器人訊息。
-- **使用 `--token-file` 設定仍顯示未設定：** `--token-file` 僅設定
-  AppSecret。您仍需在設定中提供 `appId` 或 `QQBOT_APP_ID`。
-- **主動訊息未送達：** 如果使用者近期沒有互動，QQ 可能會攔截由機器人發起的訊息。
-- **語音未轉錄：** 請確保 STT 已設定且供應商可連線。
+- **Bot replies "gone to Mars":** 尚未配置憑證或尚未啟動 Gateway。
+- **No inbound messages:** 請驗證 `appId` 和 `clientSecret` 是否正確，並在 QQ 開放平台上啟用機器人。
+- **Repeated self-replies:** OpenClaw 將 QQ 的出站參考索引記錄為由機器人發送，並會忽略當前 `msgIdx` 與該機器人帳號相符的入站事件。這可防止平台回音迴圈，同時仍允許使用者引用或回覆先前的機器人訊息。
+- **Setup with `--token-file` still shows unconfigured:** `--token-file` 僅會設定 AppSecret。您仍需在設定檔中提供 `appId` 或使用 `QQBOT_APP_ID`。
+- **Proactive messages not arriving:** 如果使用者近期沒有互動，QQ 可能會攔截由機器人主動發送的訊息。
+- **Voice not transcribed:** 請確保 STT 已設定且供應商連線正常。
 
 ## 相關
 

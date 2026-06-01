@@ -224,93 +224,81 @@ Les utilisateurs acceptent via `tools.allow` :
 }
 ```
 
-Utilisez des outils facultatifs pour les effets secondaires, les binaires inhabituels ou les capacités qui
-ne doivent pas être exposées par défaut. Les noms d'outils ne doivent pas entrer en conflit avec les outils principaux ;
-les conflits sont ignorés et signalés dans les diagnostics du plugin. Les
-enregistrements malformés, y compris les descripteurs d'outils sans `parameters`, sont ignorés et
-signalés de la même manière. Les outils enregistrés sont des fonctions typées que le modèle peut appeler
-une fois les vérifications de stratégie et de liste blanche passées.
+Les outils optionnels contrôlent si un outil est exposé au modèle. Utilisez les [demandes d'autorisation de plugin](/fr/plugins/plugin-permission-requests) lorsqu'un outil ou un hook doit demander une approbation après que le modèle l'a sélectionné et avant l'exécution de l'action.
 
-Les fabriques d'outils reçoivent un objet de contexte fourni par le runtime. Utilisez `ctx.activeModel`
-lorsqu'un outil doit journaliser, afficher ou s'adapter au modèle actif pour le tour
-courant. L'objet peut inclure `provider`, `modelId` et `modelRef`OpenClaw. Traitez-le comme
-métadonnées d'exécution informationnelles, et non comme une limite de sécurité contre l'opérateur
-local, le code de plugin installé ou un runtime OpenClaw modifié. Les outils locaux sensibles
-doivent toujours exiger une acceptation explicite du plugin ou de l'opérateur et échouer en mode fermé
-lorsque les métadonnées du modèle actif sont manquantes ou inadaptées.
+Utilisez des outils optionnels pour les effets secondaires, les binaires inhabituels ou les capacités qui ne doivent pas être exposées par défaut. Les noms d'outils ne doivent pas entrer en conflit avec les outils principaux ; les conflits sont ignorés et signalés dans les diagnostics du plugin. Les enregistrements malformés, y compris les descripteurs d'outils sans `parameters`, sont ignorés et signalés de la même manière. Les outils enregistrés sont des fonctions typées que le modèle peut appeler après que les vérifications de stratégie et de liste d'autorisation ont réussi.
 
-Le manifeste déclare la propriété et la découverte ; l'exécution appelle toujours l'implémentation
-de l'outil enregistré en direct. Gardez `toolMetadata.<tool>.optional: true`
-aligné avec `api.registerTool(..., { optional: true })`OpenClaw pour qu'OpenClaw puisse éviter
-de charger ce runtime de plugin jusqu'à ce que l'outil soit explicitement autorisé.
+Les fabriques d'outils reçoivent un objet de contexte fourni par le runtime. Utilisez `ctx.activeModel` lorsqu'un outil doit enregistrer, afficher ou s'adapter au modèle actuel pour le tour actuel. L'objet peut inclure `provider`, `modelId` et `modelRef`OpenClaw. Traitez-le comme des métadonnées d'exécution informatives, et non comme une frontière de sécurité contre l'opérateur local, le code de plugin installé ou un runtime OpenClaw modifié. Les outils locaux sensibles doivent toujours exiger un opt-in explicite du plugin ou de l'opérateur et échouer en mode fermé lorsque les métadonnées du modèle actif sont manquantes ou inappropriées.
+
+Le manifeste déclare la propriété et la découverte ; l'exécution appelle toujours la mise en œuvre de l'outil enregistré en direct. Gardez `toolMetadata.<tool>.optional: true` aligné avec `api.registerTool(..., { optional: true })`OpenClaw afin qu'OpenClaw puisse éviter de charger ce runtime de plugin jusqu'à ce que l'outil soit explicitement autorisé.
 
 ## Conventions d'importation
 
-Importez à partir des sous-chemins SDK ciblés :
+Importez depuis des sous-chemins SDK ciblés :
 
 ```typescript
 import { definePluginEntry } from "openclaw/plugin-sdk/plugin-entry";
 import { createPluginRuntimeStore } from "openclaw/plugin-sdk/runtime-store";
 ```
 
-N'importez pas à partir du baril racine obsolète :
+N'importez pas depuis le module racine obsolète :
 
 ```typescript
 import { definePluginEntry } from "openclaw/plugin-sdk";
 ```
 
-Dans le package de votre plugin, utilisez des fichiers barrel locaux tels que `api.ts` et `runtime-api.ts` pour les importations internes. N'importez pas votre propre plugin via un chemin SDK. Les helpers spécifiques au provider doivent rester dans le package provider, sauf si la jointure est véritablement générique.
+Dans votre package de plugin, utilisez des fichiers module locaux tels que `api.ts` et `runtime-api.ts` pour les importations internes. N'importez pas votre propre plugin via un chemin SDK. Les helpers spécifiques au fournisseur doivent rester dans le package du fournisseur, sauf si la jonction est véritablement générique.
 
-Les méthodes RPC de GatewayRPC personnalisées sont un point d'entrée avancé. Gardez-les sur un préfixe spécifique au plugin ; les espaces de noms d'administration principale tels que `config.*`, `exec.approvals.*`, `operator.admin.*`, `wizard.*` et `update.*` restent réservés et résolvent vers `operator.admin`. Le pont `openclaw/plugin-sdk/gateway-method-runtime` est réservé aux itinéraires HTTP des plugins qui déclarent `contracts.gatewayMethodDispatch: ["authenticated-request"]`.
+Les méthodes personnalisées Gateway RPC sont un point d'entrée avancé. Gardez-les sur un préfixe spécifique au plugin ; les espaces de noms d'administration principaux tels que `config.*`, `exec.approvals.*`, `operator.admin.*`, `wizard.*` et `update.*` restent réservés et résolvent vers `operator.admin`. Le pont `openclaw/plugin-sdk/gateway-method-runtime` est réservé aux routes HTTP des plugins qui déclarent `contracts.gatewayMethodDispatch: ["authenticated-request"]`.
 
-Pour la carte d'importation complète, consultez la [vue d'ensemble du SDK Plugin](/fr/plugins/sdk-overview).
+Pour la carte d'import complète, consultez [Plugin SDK overview](/fr/plugins/sdk-overview).
 
-## Liste de contrôle avant soumission
+## Liste de contrôle pré-soumission
 
 <Check>**package.** contient les métadonnées `openclaw` correctes</Check>
 <Check>Le manifeste **openclaw.plugin.** est présent et valide</Check>
 <Check>Le point d'entrée utilise `defineChannelPluginEntry` ou `definePluginEntry`</Check>
-<Check>Toutes les importations utilisent des chemins `plugin-sdk/<subpath>` ciblés</Check>
-<Check>Les importations internes utilisent des modules locaux, pas des auto-importations du SDK</Check>
-<Check>Les tests réussissent (`pnpm test -- <bundled-plugin-root>/my-plugin/`)</Check>
-<Check>`pnpm check` réussit (plugins dans le dépôt)</Check>
+<Check>Tous les imports utilisent des chemins `plugin-sdk/<subpath>` ciblés</Check>
+<Check>Les imports internes utilisent des modules locaux, pas des auto-imports du SDK</Check>
+<Check>Les tests passent (`pnpm test -- <bundled-plugin-root>/my-plugin/`)</Check>
+<Check>`pnpm check` réussit (plugins internes)</Check>
 
-## Tester contre les versions bêta
+## Tester avec les versions bêta
 
-1. Surveillez les tags de publication GitHub sur [openclaw/openclaw](https://github.com/openclaw/openclaw/releases) et abonnez-vous via `Watch` > `Releases`. Les tags bêta ressemblent à `v2026.3.N-beta.1`. Vous pouvez également activer les notifications pour le compte X officiel OpenClaw [@openclaw](https://x.com/openclaw) pour les annonces de publication.
-2. Testez votre plugin par rapport au tag bêta dès son apparition. La fenêtre avant la version stable est généralement de quelques heures seulement.
-3. Publiez dans le fil de discussion de votre plugin sur le canal Discord `plugin-forum`Discord après avoir testé avec `all good` ou ce qui a échoué. Si vous n'avez pas encore de fil de discussion, créez-en un.
-4. Si quelque chose échoue, ouvrez ou mettez à jour un problème intitulé `Beta blocker: <plugin-name> - <summary>` et appliquez l'étiquette `beta-blocker`. Mettez le lien du problème dans votre fil de discussion.
-5. Ouvrez une PR vers `main` intitulée `fix(<plugin-id>): beta blocker - <summary>`Discord et liez le problème à la fois dans la PR et votre fil de discussion Discord. Les contributeurs ne peuvent pas étiqueter les PR, donc le titre est le signal côté PR pour les mainteneurs et l'automatisation. Les bloquants avec une PR sont fusionnés ; les bloquants sans PR pourraient tout de même être livrés. Les mainteneurs surveillent ces fils de discussion pendant les tests bêta.
-6. Le silence signifie que tout va bien. Si vous manquez la fenêtre, votre correctif sera probablement inclus dans le prochain cycle.
+1. Surveillez les balises de version GitHub sur [openclaw/openclaw](https://github.com/openclaw/openclaw/releases) et abonnez-vous via `Watch` > `Releases`. Les balises bêta ressemblent à `v2026.3.N-beta.1`. Vous pouvez également activer les notifications pour le compte X officiel OpenClaw [@openclaw](https://x.com/openclaw) pour les annonces de version.
+2. Testez votre plugin par rapport à la balise bêta dès qu'elle apparaît. La fenêtre avant la version stable est généralement de seulement quelques heures.
+3. Publiez dans le fil de discussion de votre plugin dans le canal `plugin-forum` Discord après avoir testé avec `all good` ou avec ce qui a échoué. Si vous n'avez pas encore de fil, créez-en un.
+4. Si quelque chose échoue, ouvrez ou mettez à jour un problème intitulé `Beta blocker: <plugin-name> - <summary>` et appliquez l'étiquette `beta-blocker`. Mettez le lien du problème dans votre fil.
+5. Ouvrez une PR vers `main` intitulée `fix(<plugin-id>): beta blocker - <summary>`Discord et liez le ticket à la fois dans la PR et dans votre fil Discord. Les contributeurs ne peuvent pas étiqueter les PR, le titre est donc le signal côté PR pour les mainteneurs et l'automatisation. Les bloqueurs avec une PR sont fusionnés ; les bloqueurs sans PR pourraient tout de même être livrés. Les mainteneurs surveillent ces fils pendant les tests bêta.
+6. Le silence signifie que tout va bien. Si vous manquez la fenêtre, votre correction sera probablement intégrée dans le prochain cycle.
 
 ## Étapes suivantes
 
 <CardGroup cols={2}>
-  <Card title="Plugins de canal" icon="messages-square" href="/fr/plugins/sdk-channel-plugins">
-    Créer un plugin de canal de messagerie
+  <Card title="Channel Plugins" icon="messages-square" href="/fr/plugins/sdk-channel-plugins">
+    Créer un plugin de channel de messagerie
   </Card>
-  <Card title="Plugins de fournisseur" icon="cpu" href="/fr/plugins/sdk-provider-plugins">
+  <Card title="Provider Plugins" icon="cpu" href="/fr/plugins/sdk-provider-plugins">
     Créer un plugin de fournisseur de modèle
   </Card>
-  <Card title="CLIPlugins de backend CLI" icon="terminal" href="/fr/plugins/cli-backend-plugins" CLI>
-    Enregistrer un backend IA local CLI
+  <Card title="CLI Backend Plugins" icon="terminal" href="/fr/plugins/cli-backend-plugins">
+    Enregistrer un backend d'IA CLI local
   </Card>
-  <Card title="Aperçu du SDK" icon="book-open" href="/fr/plugins/sdk-overview" API>
-    Référence de l'API d'import map et d'enregistrement
+  <Card title="SDK Overview" icon="book-open" href="/fr/plugins/sdk-overview">
+    Référence de la carte d'importation et de l'API d'enregistrement
   </Card>
-  <Card title="Helpers d'exécution" icon="settings" href="/fr/plugins/sdk-runtime">
+  <Card title="Runtime Helpers" icon="settings" href="/fr/plugins/sdk-runtime">
     TTS, recherche, subagent via api.runtime
   </Card>
-  <Card title="Tests" icon="test-tubes" href="/fr/plugins/sdk-testing">
+  <Card title="Testing" icon="test-tubes" href="/fr/plugins/sdk-testing">
     Utilitaires et modèles de test
   </Card>
-  <Card title="Manifeste du plugin" icon="file-" href="/fr/plugins/manifest">
+  <Card title="Plugin Manifest" icon="file-" href="/fr/plugins/manifest">
     Référence complète du schéma de manifeste
   </Card>
 </CardGroup>
 
 ## Connexes
 
-- [Crochets de plugin](/fr/plugins/hooks)
+- [Plugin hooks](/fr/plugins/hooks)
 - [Architecture des plugins](/fr/plugins/architecture)

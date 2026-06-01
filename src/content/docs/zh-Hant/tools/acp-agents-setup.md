@@ -7,11 +7,11 @@ read_when:
 title: "ACP 代理程式 — 設定"
 ---
 
-如需概觀、操作員操作手冊和概念，請參閱 [ACP agents](/zh-Hant/tools/acp-agents)。
+如需概覽、操作員手冊和概念，請參閱 [ACP agents](/zh-Hant/tools/acp-agents)。
 
 下列章節涵蓋 acpx harness 設定、MCP 橋接器的外掛程式設定，以及權限設定。
 
-僅在設定 ACP/acpx 路由時使用此頁面。若為原生 Codex app-server 執行時期設定，請使用 [Codex harness](/zh-Hant/plugins/codex-harness)。若為 OpenAI API 金鑰或 Codex OAuth 模型提供者設定，請使用 [OpenAI](/zh-Hant/providers/openai)。
+僅在您設定 ACP/acpx 路由時使用此頁面。如需原生 Codex app-server 執行時配置，請使用 [Codex harness](/zh-Hant/plugins/codex-harness)。如需 OpenAI API 金鑰或 Codex OAuth 模型提供者配置，請使用 [OpenAI](/zh-Hant/providers/openai)。
 
 Codex 有兩個 OpenClaw 路由：
 
@@ -38,20 +38,15 @@ Codex 有兩個 OpenClaw 路由：
 - `kiro`
 - `openclaw`
 - `opencode`
-- `pi`
 - `qwen`
 
-當 OpenClaw 使用 acpx 後端時，除非您的 acpx 設定定義了自訂代理程式別名，否則建議為 `agentId` 使用這些值。
-如果您本機的 Cursor 安裝版本仍將 ACP 公開為 `agent acp`，請在您的 acpx 設定中覆寫 `cursor` 代理程式指令，而不是更改內建的預設值。
+當 OpenClaw 使用 acpx 後端時，除非您的 acpx 配置定義了自訂代理程式別名，否則建議為 `agentId` 使用這些值。如果您本機安裝的 Cursor 仍將 ACP 顯示為 `agent acp`，請在您的 acpx 配置中覆寫 `cursor` 代理程式指令，而不要更改內建預設值。
 
-直接使用 acpx CLI 也可以透過 `--agent <command>` 以任意介面卡為目標，但該原始逃逸方法 (escape hatch) 是 acpx CLI 的功能（並非正常的 OpenClaw `agentId` 路徑）。
+直接使用 acpx CLI 也可以透過 `--agent <command>` 以目標任意轉接器，但這種原始的緊急逃生方法是 acpx CLI 的功能（不是正常的 OpenClaw `agentId` 路徑）。
 
-模型控制取決於介面卡的功能。Codex ACP 模型參照會在
-啟動前由 OpenClaw 正規化。其他 harness 需要 ACP `models` 加上
-`session/set_model` 支援；如果 harness 未公開該 ACP 功能
-也沒有自己的啟動模型旗標，OpenClaw/acpx 將無法強制選擇模型。
+模型控制取決於轉接器功能。Codex ACP 模型參照會在啟動前由 OpenClaw 正規化。其他線束需要 ACP `models` 加上 `session/set_model` 支援；如果線束未公開該 ACP 功能或其自身的啟動模型標誌，OpenClaw/acpx 將無法強制選擇模型。
 
-## 必要設定
+## 必要配置
 
 核心 ACP 基線：
 
@@ -63,7 +58,7 @@ Codex 有兩個 OpenClaw 路由：
     dispatch: { enabled: true },
     backend: "acpx",
     defaultAgent: "codex",
-    allowedAgents: ["claude", "codex", "copilot", "cursor", "droid", "gemini", "iflow", "kilocode", "kimi", "kiro", "openclaw", "opencode", "pi", "qwen"],
+    allowedAgents: ["claude", "codex", "copilot", "cursor", "droid", "gemini", "iflow", "kilocode", "kimi", "kiro", "openclaw", "opencode", "openclaw", "qwen"],
     maxConcurrentSessions: 8,
     stream: {
       coalesceIdleMs: 300,
@@ -76,7 +71,7 @@ Codex 有兩個 OpenClaw 路由：
 }
 ```
 
-執行緒綁定配置因通道適配器而異。以 Discord 為例：
+執行緒綁定配置特定於通道轉接器。Discord 範例：
 
 ```json5
 {
@@ -98,34 +93,34 @@ Codex 有兩個 OpenClaw 路由：
 }
 ```
 
-如果執行緒綁定 ACP 生成無效，請先驗證適配器功能標誌：
+如果執行緒綁定的 ACP 產生無法運作，請先驗證轉接器功能標誌：
 
-- Discord: `channels.discord.threadBindings.spawnSessions=true`
+- Discord： `channels.discord.threadBindings.spawnSessions=true`
 
-目前對話的綁定不需要建立子執行緒。它們需要一個有效的對語上下文，以及一個暴露 ACP 對話綁定的通道適配器。
+目前對話綁定不需要建立子執行緒。它們需要一個作用中的對話內容和一個公開 ACP 對話綁定的通道轉接器。
 
 請參閱 [Configuration Reference](/zh-Hant/gateway/configuration-reference)。
 
 ## acpx 後端的外掛程式設定
 
-套件安裝版本使用 ACP 的官方 `@openclaw/acpx` 執行期外掛。
-在使用 ACP harness 會話之前，請安裝並啟用它：
+封裝安裝使用 ACP 的官方 `@openclaw/acpx` 執行時外掛程式。
+在使用 ACP 線束工作階段之前，請先安裝並啟用它：
 
 ```bash
 openclaw plugins install @openclaw/acpx
 openclaw config set plugins.entries.acpx.enabled true
 ```
 
-來源檢出版本也可以在 `pnpm install` 之後使用本機工作區外掛。
+來源檢出也可以在 `pnpm install` 之後使用本機工作區外掛程式。
 
-從以下開始：
+開始使用：
 
 ```text
 /acp doctor
 ```
 
 如果您停用了 `acpx`，透過 `plugins.allow` / `plugins.deny` 拒絕了它，或者想要
-切換回套件外掛，請使用明確的套件路徑：
+切換回打包的外掛程式，請使用明確的套件路徑：
 
 ```bash
 openclaw plugins install @openclaw/acpx
@@ -138,7 +133,7 @@ openclaw config set plugins.entries.acpx.enabled true
 openclaw plugins install ./path/to/local/acpx-plugin
 ```
 
-然後驗證後端健康狀況：
+然後驗證後端健康狀態：
 
 ```text
 /acp doctor
@@ -146,9 +141,14 @@ openclaw plugins install ./path/to/local/acpx-plugin
 
 ### acpx 指令與版本設定
 
-預設情況下，`acpx` 外掛程式會在 Gateway 啟動期間註冊內建的 ACP 後端，並在 Gateway `ready` 信號之前等待內建執行時期啟動探針。僅針對故意停用啟動探針的指令碼或環境設定 `OPENCLAW_ACPX_RUNTIME_STARTUP_PROBE=0` 或 `OPENCLAW_SKIP_ACPX_RUNTIME_PROBE=1`。執行 `/acp doctor` 以進行明確的按需探針檢查。
+預設情況下，`acpx` 外掛程式會在 Gateway
+啟動期間註冊內嵌的 ACP 後端，並在 Gateway
+`ready` 訊號之前等待內嵌執行時啟動探測。僅針對故意
+停用啟動探測的腳本或環境設定 `OPENCLAW_ACPX_RUNTIME_STARTUP_PROBE=0` 或
+`OPENCLAW_SKIP_ACPX_RUNTIME_PROBE=1`。執行 `/acp doctor` 以進行明確的
+隨選探測。
 
-在外掛設定中覆寫指令或版本：
+在外掛程式設定中覆寫指令或版本：
 
 ```json
 {
@@ -167,10 +167,10 @@ openclaw plugins install ./path/to/local/acpx-plugin
 ```
 
 - `command` 接受絕對路徑、相對路徑（從 OpenClaw 工作區解析）或指令名稱。
-- `expectedVersion: "any"` 會停用嚴格版本比對。
-- 自訂 `command` 路徑會停用外掛程式本機自動安裝。
+- `expectedVersion: "any"` 停用嚴格版本比對。
+- 自訂 `command` 路徑會停用外掛程式本地的自動安裝。
 
-當路徑或標誌值應保持為單一 argv 權杖時，使用結構化引數覆寫個別 ACP 代理程式指令：
+當路徑或標記值應保持為一個 argv token 時，覆寫個別 ACP 代理程式指令並搭配結構化引數：
 
 ```json
 {
@@ -193,20 +193,24 @@ openclaw plugins install ./path/to/local/acpx-plugin
 ```
 
 - `agents.<id>.command` 是該 ACP 代理程式的可執行檔或現有指令字串。
-- `agents.<id>.args` 為選用項目。每個陣列項目在 OpenClaw 將其傳遞至目前的 acpx 指令字串登錄之前，都會經過 shell 引用處理。
+- `agents.<id>.args` 是選用的。在 OpenClaw 將陣列項目透過目前的 acpx 指令字串登錄表傳遞之前，每個陣列項目都會經過 shell 引號處理。
 
 請參閱 [Plugins](/zh-Hant/tools/plugin)。
 
 ### 自動相依性安裝
 
-當您使用 `npm install -g openclaw` 全域安裝 OpenClaw 時，acpx 執行時期相依性（平台特定的二進位檔）會透過 postinstall 掛鉤自動安裝。如果自動安裝失敗，Gateway 仍會正常啟動，並透過 `openclaw acp doctor` 回報缺少的相依性。
+當您使用 `npm install -g openclaw` 全域安裝 OpenClaw 時，acpx
+執行時相依性（平台特定的二進位檔）會透過 postinstall hook
+自動安裝。如果自動安裝失敗，Gateway 仍會正常啟動
+並透過 `openclaw acp doctor` 回報遺失的相依性。
 
-### 外掛工具 MCP 橋接器
+### Plugin tools MCP 橋接器
 
-預設情況下，ACPX 會話**不會**將 OpenClaw 外掛註冊的工具公開給
-ACP harness。
+預設情況下，ACPX 工作階段**不會**將 OpenClaw 外掛程式註冊的工具
+公開給 ACP 線具。
 
-如果您希望 ACP 代理（如 Codex 或 Claude Code）呼叫已安裝的 OpenClaw 外掛工具（例如記憶體回取/儲存），請啟用專用橋接器：
+如果您希望 ACP 代理程式（例如 Codex 或 Claude Code）呼叫已安裝的
+OpenClaw 外掛程式工具（例如記憶體回憶/儲存），請啟用專用橋接器：
 
 ```bash
 openclaw config set plugins.entries.acpx.config.pluginToolsMcpBridge true
@@ -214,93 +218,94 @@ openclaw config set plugins.entries.acpx.config.pluginToolsMcpBridge true
 
 其作用如下：
 
-- 將名為 `openclaw-plugin-tools` 的內建 MCP 伺服器注入 ACPX 工作階段啟動程序中。
-- 公開已由已安裝並啟用的 OpenClaw 外掛註冊的外掛工具。
-- 保持該功能為明確選項且預設關閉。
+- 將名為 `openclaw-plugin-tools` 的內建 MCP 伺服器注入 ACPX 工作階段
+  引導程序。
+- 公開已安裝並啟用的 OpenClaw 外掛程式已註冊的外掛程式工具。
+- 保持此功能為明確選項，且預設為關閉。
 
-安全與信任注意事項：
+安全性與信任注意事項：
 
-- 這會擴展 ACP 駝駿工具的表面範圍。
-- ACP 代理僅能存取在閘道中已啟用的外掛工具。
-- 將此視為與允許這些外掛在 OpenClaw 本身執行相同的信任邊界。
-- 啟用此功能前，請先檢視已安裝的外掛。
+- 這會擴充 ACP harness 的工具表面。
+- ACP 代理程式只能存取閘道中已啟用的外掛程式工具。
+- 請將此視為與讓那些外掛程式在 OpenClaw 本身執行相同的信任邊界。
+- 在啟用它之前，請檢閱已安裝的外掛程式。
 
-自訂 `mcpServers` 仍像以前一樣運作。內建的 plugin-tools 橋接器是一個額外的選用便利功能，而非通用 MCP 伺服器設定的替代方案。
+自訂 `mcpServers` 仍像以前一樣運作。內建的 plugin-tools 橋接器是一個額外的選用便利功能，並非通用 MCP 伺服器設定的替代品。
 
 ### OpenClaw 工具 MCP 橋接器
 
-根據預設，ACPX 會話也**不**會透過 MCP 公開內建的 OpenClaw 工具。當 ACP 代理程式需要選取的內建工具（例如 `cron`）時，請啟用獨立的 core-tools 橋接器：
+根據預設，ACPX 工作階段也**不會**透過 MCP 公開內建的 OpenClaw 工具。當 ACP 代理程式需要選定的內建工具（例如 `cron`）時，請啟用獨立的 core-tools 橋接器：
 
 ```bash
 openclaw config set plugins.entries.acpx.config.openClawToolsMcpBridge true
 ```
 
-其作用如下：
+此功能的作用：
 
-- 將一個名為 `openclaw-tools` 的內建 MCP 伺服器注入到 ACPX 會話啟動程序中。
-- 公開選取的內建 OpenClaw 工具。初始伺服器會公開 `cron`。
-- 保持核心工具的公開為明確選項且預設關閉。
+- 將名為 `openclaw-tools` 的內建 MCP 伺服器注入 ACPX 工作階段啟動程序中。
+- 公開選定的內建 OpenClaw 工具。初始伺服器會公開 `cron`。
+- 保持核心工具的公開為明確選項，且預設為關閉。
 
-### 執行階段操作逾時組態
+### 執行階段作業逾時設定
 
-`acpx` 外掛程式預設給予嵌入式執行階段啟動和控制操作 120 秒的時間。這能讓較慢的套接程式（例如 Gemini CLI）有足夠的時間完成 ACP 啟動和初始化。如果您的主機需要不同的操作限制，請覆寫此設定：
+`acpx` 外掛程式預設給予嵌入式執行階段啟動和控制作業 120 秒的時間。這給予較慢的 harness（如 Gemini CLI）足夠的時間來完成 ACP 啟動和初始化。如果您的主機需要不同的作業限制，請覆寫此值：
 
 ```bash
 openclaw config set plugins.entries.acpx.config.timeoutSeconds 180
 ```
 
-執行階段輪次使用 OpenClaw agent/run 逾時，包括 `/acp timeout` 和 `sessions_spawn.timeoutSeconds`。變更此值後請重新啟動閘道。
+執行階段輪次會使用 OpenClaw 代理程式/執行逾時設定，包括 `/acp timeout` 和 `sessions_spawn.timeoutSeconds`。變更此值後請重新啟動閘道。
 
-### 健康探測代理設定
+### 健康探測代理程式設定
 
-當 `/acp doctor` 或啟動探針檢查後端時，隨附的 `acpx` 外掛程式會探查其中一個套接程式代理程式。如果設定了 `acp.allowedAgents`，則預設為第一個允許的代理程式；否則預設為 `codex`。如果您的部署需要不同的 ACP 代理程式進行健康檢查，請明確設定探針代理程式：
+當 `/acp doctor` 或啟動探測檢查後端時，隨附的 `acpx` 外掛程式會探測一個 harness 代理程式。如果設定了 `acp.allowedAgents`，它預設為第一個允許的代理程式；否則預設為 `codex`。如果您的部署需要不同的 ACP 代理程式進行健康檢查，請明確設定探測代理程式：
 
 ```bash
 openclaw config set plugins.entries.acpx.config.probeAgent claude
 ```
 
-變更此值後，請重新啟動閘道。
+變更此值後請重新啟動閘道。
 
 ## 權限設定
 
-ACP 會話以非互動方式執行 — 沒有 TTY 來批准或拒絕檔案寫入和 shell 執行權限提示。acpx 外掛程式提供了兩個組態鍵來控制如何處理權限：
+ACP 會話以非互動方式運行 — 沒有 TTY 來批准或拒絕檔案寫入和 Shell 執行權限提示。acpx 外掛程式提供兩個配置鍵來控制權限的處理方式：
 
-這些 ACPX 套接程式權限與 OpenClaw exec 核准分開，也與 CLI 後端供應商略過旗標（例如 Claude CLI `--permission-mode bypassPermissions`）分開。ACPX `approve-all` 是 ACP 會話的套接程式層級緊急開關。
+這些 ACPX harness 權限與 OpenClaw 執行批准分開，也與 CLI 後端供應商旁路標誌（如 Claude CLI `--permission-mode bypassPermissions`）分開。ACPX `approve-all` 是 ACP 會話的 harness 層級緊急開關。
 
 ### `permissionMode`
 
 控制 harness 代理程式可以在無需提示的情況下執行哪些操作。
 
-| 數值            | 行為                                 |
+| 值              | 行為                                 |
 | --------------- | ------------------------------------ |
-| `approve-all`   | 自動批准所有檔案寫入和 shell 指令。  |
+| `approve-all`   | 自動批准所有檔案寫入和 Shell 指令。  |
 | `approve-reads` | 僅自動批准讀取；寫入和執行需要提示。 |
 | `deny-all`      | 拒絕所有權限提示。                   |
 
 ### `nonInteractivePermissions`
 
-控制當顯示權限提示但沒有可用的互動式 TTY 時會發生什麼情況（這對於 ACP 會話總是如此）。
+控制當顯示權限提示但沒有可用的互動式 TTY 時發生的情況（這對於 ACP 會程式來說總是如此）。
 
-| 數值   | 行為                                          |
-| ------ | --------------------------------------------- |
-| `fail` | 以 `AcpRuntimeError` 中止會話。**（預設值）** |
-| `deny` | 靜默拒絕權限並繼續（優雅降級）。              |
+| 值     | 行為                                              |
+| ------ | ------------------------------------------------- |
+| `fail` | 使用 `AcpRuntimeError` 中止會程式。**（預設值）** |
+| `deny` | 靜默拒絕權限並繼續（優雅降級）。                  |
 
-### 組態
+### 配置
 
-透過外掛程式組態設定：
+透過外掛程式配置設定：
 
 ```bash
 openclaw config set plugins.entries.acpx.config.permissionMode approve-all
 openclaw config set plugins.entries.acpx.config.nonInteractivePermissions fail
 ```
 
-變更這些數值後，請重新啟動閘道。
+變更這些值後重新啟動閘道。
 
 <Warning>
-OpenClaw 預設為 `permissionMode=approve-reads` 和 `nonInteractivePermissions=fail`。在非互動式 ACP 工作階段中，任何觸發權限提示的寫入或執行操作都可能會因 `AcpRuntimeError: Permission prompt unavailable in non-interactive mode` 而失敗。
+OpenClaw 預設為 `permissionMode=approve-reads` 和 `nonInteractivePermissions=fail`。在非互動式 ACP 會程式中，任何觸發權限提示的寫入或執行操作都可能失敗並顯示 `AcpRuntimeError: Permission prompt unavailable in non-interactive mode`。
 
-如果您需要限制權限，請將 `nonInteractivePermissions` 設定為 `deny`，以便工作階段能夠優雅地降級，而不是當機。
+如果您需要限制權限，請將 `nonInteractivePermissions` 設定為 `deny`，以便會程式優雅降級而不是當機。
 
 </Warning>
 

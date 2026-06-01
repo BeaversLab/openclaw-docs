@@ -1,5 +1,5 @@
 ---
-summary: "MatrixOpenClaw添加用于发送和接收 OpenClaw 消息的 Matrix 渠道 surface。"
+summary: "OpenClawMatrix用于房间和直接消息的OpenClaw Matrix渠道插件。"
 read_when:
   - You are installing, configuring, or auditing the matrix plugin
 title: "MatrixMatrix 插件"
@@ -7,7 +7,7 @@ title: "MatrixMatrix 插件"
 
 # Matrix 插件
 
-添加用于发送和接收 OpenClaw 消息的 Matrix 渠道 surface。
+用于房间和直接消息的OpenClaw Matrix渠道插件。
 
 ## 分发
 

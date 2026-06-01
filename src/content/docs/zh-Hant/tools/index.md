@@ -25,7 +25,7 @@ title: "概覽"
 | 新增新的整合或執行階段介面     | [外掛程式](#extend-capabilities)            | [外掛程式](/zh-Hant/tools/plugin) 和 [建置外掛程式](/zh-Hant/plugins/building-plugins) |
 | 稍後或在背景執行工作           | [自動化](/zh-Hant/automation)                    | [自動化總覽](/zh-Hant/automation)                                                 |
 | 協調多個代理程式或線束         | [子代理程式](/zh-Hant/tools/subagents)           | [ACP 代理程式](/zh-Hant/tools/acp-agents) 和 [代理程式傳送](/zh-Hant/tools/agent-send) |
-| 搜尋大型 PI 工具目錄           | [工具搜尋](/zh-Hant/tools/tool-search)           | [工具搜尋](/zh-Hant/tools/tool-search)                                            |
+| 搜尋大型 OpenClaw 工具目錄     | [工具搜尋](/zh-Hant/tools/tool-search)           | [工具搜尋](/zh-Hant/tools/tool-search)                                            |
 
 ## 選擇工具、技能或外掛程式
 
@@ -85,9 +85,9 @@ title: "概覽"
 | 自動化             | 排程工作或回應背景事件                                 | `cron`, `heartbeat_respond`                                          | [Automation](/zh-Hant/automation)                                                 |
 | 閘道與節點         | 檢查閘道狀態或已配對的目標裝置                         | `gateway`, `nodes`                                                   | [Gateway configuration](/zh-Hant/gateway/configuration), [Nodes](/zh-Hant/nodes)       |
 | 媒體               | 分析、產生或說出媒體內容                               | `image`, `image_generate`, `music_generate`, `video_generate`, `tts` | [Media overview](/zh-Hant/tools/media-overview)                                   |
-| 大型 PI 目錄       | 搜尋並呼叫許多符合資格的工具，無需將每個架構傳送至模型 | `tool_search_code`, `tool_search`, `tool_describe`                   | [工具搜尋](/zh-Hant/tools/tool-search)                                            |
+| 大型 OpenClaw 目錄 | 搜尋並呼叫許多符合資格的工具，無需將每個架構傳送至模型 | `tool_search_code`, `tool_search`, `tool_describe`                   | [工具搜尋](/zh-Hant/tools/tool-search)                                            |
 
-<Note>工具搜尋是一個實驗性的 PI-agent 介面。Codex harness 執行使用 Codex 原生程式碼模式、原生工具搜尋、延遲動態工具和巢狀 工具呼叫，而不是使用 `tools.toolSearch`。</Note>
+<Note>Tool Search 是一個實驗性的 OpenClaw 介面。Codex harness 執行會使用 Codex 原生程式碼模式、原生工具搜尋、延後動態工具以及巢狀 工具呼叫，而不是 `tools.toolSearch`。</Note>
 
 ## 外掛程式提供的工具
 
@@ -152,8 +152,8 @@ title: "概覽"
    [外掛程式](/zh-Hant/tools/plugin) 中檢查擁有者外掛程式是否已安裝並啟用。
 5. 對於委派執行，請在
    [每個代理程式的沙箱與工具限制](/zh-Hant/tools/multi-agent-sandbox-tools) 中檢查特定代理程式的限制。
-6. 對於大型 PI 目錄，請確認執行是使用直接工具公開還是
-   [工具搜尋](/zh-Hant/tools/tool-search)。
+6. 對於大型 OpenClaw 目錄，請確認執行是使用直接工具存取還是
+   [Tool Search](/zh-Hant/tools/tool-search)。
 
 ## 相關主題
 
@@ -163,4 +163,4 @@ title: "概覽"
 - [外掛程式](/zh-Hant/tools/plugin) 用於外掛程式安裝和管理
 - [外掛程式 SDK](/zh-Hant/plugins/sdk-overview) 用於外掛程式作者參考
 - [技能](/zh-Hant/tools/skills) 用於技能載入順序、閘道和配置
-- [工具搜尋](/zh-Hant/tools/tool-search) 用於精簡的 PI 工具目錄探索
+- 用於精簡型 OpenClaw 工具目錄探索的 [Tool Search](/zh-Hant/tools/tool-search)

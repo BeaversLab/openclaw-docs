@@ -14,7 +14,7 @@ Feishu/Lark es una plataforma de colaboración integral donde los equipos chatea
 
 ## Inicio rápido
 
-<Note>Requiere OpenClaw 2026.4.25 o superior. Ejecute `openclaw --version` para verificar. Actualice con `openclaw update`.</Note>
+<Note>Requiere OpenClaw 2026.5.29 o superior. Ejecute `openclaw --version` para verificar. Actualice con `openclaw update`.</Note>
 
 <Steps>
   <Step title="Ejecute el asistente de configuración del canal">

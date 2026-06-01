@@ -18,8 +18,8 @@ provider id 為 `opencode-go`，以便上游的每個模型路由保持正確。
 
 ## 內建目錄
 
-OpenClaw 大部分 Go 目錄項目來自捆綁的 pi 模型註冊表，並在註冊表趕上進度時補充當前的上游項目。執行
-`openclaw models list --provider opencode-go` 以取得目前的模型列表。
+OpenClaw 從打包的 OpenClaw 模型註冊表中獲取大部分 Go 目錄行，並在註冊表趕上時補充當前的上游行。執行
+`openclaw models list --provider opencode-go` 以獲取當前的模型列表。
 
 此提供者包含：
 

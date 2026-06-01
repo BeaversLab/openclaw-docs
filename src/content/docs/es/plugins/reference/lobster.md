@@ -1,5 +1,5 @@
 ---
-summary: "Herramienta de flujo de trabajo tipada con aprobaciones reanudables."
+summary: "Complemento de la herramienta de flujo de trabajo Lobster para canalizadas con tipos y aprobaciones reanudables."
 read_when:
   - You are installing, configuring, or auditing the lobster plugin
 title: "Complemento Lobster"
@@ -7,7 +7,7 @@ title: "Complemento Lobster"
 
 # Complemento Lobster
 
-Herramienta de flujo de trabajo tipada con aprobaciones reanudables.
+Complemento de la herramienta de flujo de trabajo Lobster para canalizaciones con tipos y aprobaciones reanudables.
 
 ## Distribución
 

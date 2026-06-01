@@ -100,7 +100,7 @@ Gateway 啟動時會記錄一個設定不完整的警告，包含遺失的鍵並
               responseSystemPrompt: "You are a concise baseball card specialist.",
               tts: {
                 providers: {
-                  openai: { voice: "alloy" },
+                  openai: { speakerVoice: "alloy" },
                 },
               },
             },
@@ -211,7 +211,7 @@ Gateway 啟動時會記錄一個設定不完整的警告，包含遺失的鍵並
 - 提供商擁有的原始設定位於 `realtime.providers.<providerId>` 之下。
 - Voice Call 預設會公開共用的 `openclaw_agent_consult` 即時工具。當來電者要求更深入的推理、目前資訊或一般 OpenClaw 工具時，即時模型可以呼叫它。
 - `realtime.consultPolicy` 可選地針對即時模型何時應該呼叫 `openclaw_agent_consult` 新增指引。
-- `realtime.agentContext.enabled` 預設為關閉。啟用後，Voice Call 會在設定階段將受限的代理程式身分、系統提示詞覆寫和選定的工作區檔案膠囊注入即時提供商的指示中。
+- `realtime.agentContext.enabled` 預設為關閉。啟用後，Voice Call 會在會話設定時將受限制的代理程式身分和選定的工作區檔案膠囊注入到即時提供者的指示中。
 - `realtime.fastContext.enabled` 預設為關閉。啟用後，Voice Call 會先搜尋索引記憶體/會話內容中的諮詢問題，並將這些摘要傳回給 `realtime.fastContext.timeoutMs` 內的即時模型，然後僅當 `realtime.fastContext.fallbackToConsult` 為 true 時才回退到完整的諮詢代理程式。
 - 如果 `realtime.provider` 指向未註冊的提供商，或者根本沒有註冊任何即時語音提供商，Voice Call 會記錄警告並跳過即時媒體，而不是讓整個外掛程式失敗。
 - 諮詢會話金鑰會在可用時重複使用儲存的通話會話，然後回退到設定的 `sessionScope` (預設為 `per-phone`，或對於隔離通話則為 `per-call`)。
@@ -254,7 +254,6 @@ Gateway 啟動時會記錄一個設定不完整的警告，包含遺失的鍵並
               enabled: true,
               maxChars: 6000,
               includeIdentity: true,
-              includeSystemPrompt: true,
               includeWorkspaceFiles: true,
               files: ["SOUL.md", "IDENTITY.md", "USER.md"],
             },
@@ -273,9 +272,10 @@ Gateway 啟動時會記錄一個設定不完整的警告，包含遺失的鍵並
     預設值：來自 `realtime.providers.google.apiKey`、
     `GEMINI_API_KEY` 或 `GOOGLE_GENERATIVE_AI_API_KEY` 的 API 金鑰；
     模型 `gemini-2.5-flash-native-audio-preview-12-2025`；語音 `Kore`。
-    `sessionResumption` 和 `contextWindowCompression` 預設為開啟，以支援更長、
-    可重新連線的通話。使用 `silenceDurationMs`、`startSensitivity` 和
-    `endSensitivity` 來調整電話音訊上的更快速輪替。
+    `sessionResumption` 和 `contextWindowCompression` 預設為開啟，以實現更長、
+    可重新連線的通話。使用 `silenceDurationMs`、
+    `startSensitivity` 和
+    `endSensitivity` 來調整電話音訊上更快的輪流發言。
 
     ```json5
     {
@@ -299,7 +299,7 @@ Gateway 啟動時會記錄一個設定不完整的警告，包含遺失的鍵並
                   google: {
                     apiKey: "${GEMINI_API_KEY}",
                     model: "gemini-2.5-flash-native-audio-preview-12-2025",
-                    voice: "Kore",
+                    speakerVoice: "Kore",
                     silenceDurationMs: 500,
                     startSensitivity: "high",
                   },
@@ -431,7 +431,7 @@ Gateway 啟動時會記錄一個設定不完整的警告，包含遺失的鍵並
     provider: "elevenlabs",
     providers: {
       elevenlabs: {
-        voiceId: "pMsXgVXv3BLzUgSXRplE",
+        speakerVoiceId: "pMsXgVXv3BLzUgSXRplE",
         modelId: "eleven_multilingual_v2",
       },
     },
@@ -452,14 +452,14 @@ Gateway 啟動時會記錄一個設定不完整的警告，包含遺失的鍵並
 ### TTS 範例
 
 <Tabs>
-  <Tab title="僅限 Core TTS">
+  <Tab title="僅核心 TTS">
 ```json5
 {
   messages: {
     tts: {
       provider: "openai",
       providers: {
-        openai: { voice: "alloy" },
+        openai: { speakerVoice: "alloy" },
       },
     },
   },
@@ -478,7 +478,7 @@ Gateway 啟動時會記錄一個設定不完整的警告，包含遺失的鍵並
             providers: {
               elevenlabs: {
                 apiKey: "elevenlabs_key",
-                voiceId: "pMsXgVXv3BLzUgSXRplE",
+                speakerVoiceId: "pMsXgVXv3BLzUgSXRplE",
                 modelId: "eleven_multilingual_v2",
               },
             },
@@ -501,7 +501,7 @@ Gateway 啟動時會記錄一個設定不完整的警告，包含遺失的鍵並
             providers: {
               openai: {
                 model: "gpt-4o-mini-tts",
-                voice: "marin",
+                speakerVoice: "marin",
               },
             },
           },
@@ -555,7 +555,7 @@ Gateway 啟動時會記錄一個設定不完整的警告，包含遺失的鍵並
   tts: {
     provider: "openai",
     providers: {
-      openai: { voice: "coral" },
+      openai: { speakerVoice: "coral" },
     },
   },
   numbers: {
@@ -564,7 +564,7 @@ Gateway 啟動時會記錄一個設定不完整的警告，包含遺失的鍵並
       responseSystemPrompt: "You are a concise baseball card specialist.",
       tts: {
         providers: {
-          openai: { voice: "alloy" },
+          openai: { speakerVoice: "alloy" },
         },
       },
     },

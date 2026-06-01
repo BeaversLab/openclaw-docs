@@ -1,5 +1,5 @@
 ---
-summary: "ZaloOpenClawAjoute la surface du channel Zalo pour l'envoi et la réception de messages OpenClaw."
+summary: "Extension de canal OpenClaw Zalo pour les discussions de bot et de webhook."
 read_when:
   - You are installing, configuring, or auditing the zalo plugin
 title: "ZaloPlugin Zalo"
@@ -7,7 +7,7 @@ title: "ZaloPlugin Zalo"
 
 # Plugin Zalo
 
-Ajoute la surface du channel Zalo pour l'envoi et la réception de messages OpenClaw.
+Extension de canal OpenClaw Zalo pour les discussions de bot et de webhook.
 
 ## Distribution
 

@@ -1,5 +1,5 @@
 ---
-summary: "新增用於發送和接收 OpenClaw 訊息的 Twitch 頻道介面。"
+summary: "用於聊天和協調工作流程的 OpenClaw Twitch 頻道外掛程式。"
 read_when:
   - You are installing, configuring, or auditing the twitch plugin
 title: "Twitch 外掛程式"
@@ -7,7 +7,7 @@ title: "Twitch 外掛程式"
 
 # Twitch 外掛程式
 
-新增用於發送和接收 OpenClaw 訊息的 Twitch 頻道介面。
+用於聊天和協調工作流程的 OpenClaw Twitch 頻道外掛程式。
 
 ## 發布
 

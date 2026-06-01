@@ -14,7 +14,7 @@ OpenClaw 外掛程式的測試工具、模式與 Lint 強制執行參考。
 
 ## 測試工具
 
-這些測試輔助子路徑是 OpenClaw 自己的捆綁插件測試的倉庫本機源入口點。它們不是第三方插件的套件匯出。
+這些測試輔助子路徑是 OpenClaw 自有內掛件測試的倉庫本機源入口點。它們不是第三方掛件的套件匯出，而且它們可能匯入 Vitest 或其他僅限倉庫內的測試相依項。
 
 **插件 API mock 匯入：** `openclaw/plugin-sdk/plugin-test-api`
 
@@ -40,8 +40,7 @@ OpenClaw 外掛程式的測試工具、模式與 Lint 強制執行參考。
 
 **Node 內建 mock 匯入：** `openclaw/plugin-sdk/test-node-mocks`
 
-對於新的插件測試，請優先使用下列專注的子路徑。寬泛的 `openclaw/plugin-sdk/testing` 桶僅用於舊版相容性。
-倉庫防護機制會拒絕來自 `plugin-sdk/testing` 和 `plugin-sdk/test-utils` 的新實際匯入；這些名稱僅作為過時的相容性介面保留給相容性記錄測試。
+在 OpenClaw 倉庫內，針對新的內掛件測試，請優先使用下列專注的子路徑。寬泛的 `openclaw/plugin-sdk/testing` 匯出僅用於舊版相容性。倉庫防護機制會拒絕來自 `plugin-sdk/testing` 和 `plugin-sdk/test-utils` 的新實際匯入；這些名稱僅保留為已棄用的相容性介面，用於相容性記錄測試。
 
 ```typescript
 import { shouldAckReaction, removeAckReactionAfterReply } from "openclaw/plugin-sdk/channel-feedback";

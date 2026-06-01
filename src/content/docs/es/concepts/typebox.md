@@ -49,8 +49,8 @@ El inventario de **descubrimiento** (discovery) autoritativo y anunciado se encu
 
 ## Dónde se encuentran los esquemas
 
-- Fuente: `src/gateway/protocol/schema.ts`
-- Validadores de tiempo de ejecución (AJV): `src/gateway/protocol/index.ts`
+- Fuente: `packages/gateway-protocol/src/schema.ts`
+- Validadores en tiempo de ejecución (AJV): `packages/gateway-protocol/src/index.ts`
 - Registro de características/descubrimiento anunciadas: `src/gateway/server-methods-list.ts`
 - Protocolo de enlace (handshake) del servidor + despacho de métodos: `src/gateway/server.impl.ts`
 - Cliente Node: `src/gateway/client.ts`
@@ -191,7 +191,7 @@ Ejemplo: agregar una nueva solicitud `system.echo` que devuelva `{ ok: true, tex
 
 1. **Esquema (fuente de verdad)**
 
-Agregar a `src/gateway/protocol/schema.ts`:
+Agregar a `packages/gateway-protocol/src/schema.ts`:
 
 ```ts
 export const SystemEchoParamsSchema = Type.Object({ text: NonEmptyString }, { additionalProperties: false });
@@ -213,7 +213,7 @@ export type SystemEchoResult = Static<typeof SystemEchoResultSchema>;
 
 2. **Validación**
 
-En `src/gateway/protocol/index.ts`, exportar un validador AJV:
+En `packages/gateway-protocol/src/index.ts`, exportar un validador AJV:
 
 ```ts
 export const validateSystemEchoParams = ajv.compile<SystemEchoParams>(SystemEchoParamsSchema);
@@ -262,7 +262,7 @@ Los tipos de trama desconocidos se conservan como cargas útiles sin procesar pa
 
 ## Versionado + compatibilidad
 
-- `PROTOCOL_VERSION` vive en `src/gateway/protocol/version.ts`.
+- `PROTOCOL_VERSION` vive en `packages/gateway-protocol/src/version.ts`.
 - Los clientes envían `minProtocol` + `maxProtocol`; el servidor rechaza los rangos que
   no incluyen su protocolo actual.
 - Los modelos Swift mantienen tipos de trama desconocidos para evitar romper clientes antiguos.

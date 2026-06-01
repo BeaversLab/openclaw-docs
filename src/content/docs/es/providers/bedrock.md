@@ -6,7 +6,7 @@ read_when:
 title: "Amazon Bedrock"
 ---
 
-OpenClaw puede utilizar modelos de **Amazon Bedrock** a través del proveedor de transmisión **Bedrock Converse** de pi-ai. La autenticación de Bedrock utiliza la **cadena de credenciales predeterminada del AWS SDK**, no una clave de API.
+OpenClaw puede utilizar modelos de **Amazon Bedrock** a través de su proveedor de transmisión **Bedrock Converse**. La autenticación de Bedrock utiliza la **cadena de credenciales predeterminada del AWS SDK**, no una clave de API.
 
 | Propiedad     | Valor                                                                                   |
 | ------------- | --------------------------------------------------------------------------------------- |
@@ -303,9 +303,9 @@ openclaw models list
 
   <Accordion title="Guardrails">
     Puede aplicar [Amazon Bedrock Guardrails](https://docs.aws.amazon.com/bedrock/latest/userguide/guardrails.html)
-    a todas las invocaciones de modelos de Bedrock añadiendo un objeto `guardrail` a la
-    configuración del complemento `amazon-bedrock`. Los guardrails le permiten aplicar filtros de contenido,
-    denegación de temas, filtros de palabras, filtros de información sensible y comprobaciones de
+    a todas las invocaciones de modelos de Bedrock agregando un objeto `guardrail` a la configuración
+    del complemento `amazon-bedrock`. Los Guardrails le permiten aplicar filtros de contenido,
+    denegación de temas, filtros de palabras, filtros de información sensible y verificaciones de
     fundamentación contextual.
 
     ```json5
@@ -327,23 +327,23 @@ openclaw models list
     }
     ```
 
-    | Option | Required | Description |
+    | Opción | Obligatorio | Descripción |
     | ------ | -------- | ----------- |
-    | `guardrailIdentifier` | Sí | ID del guardrail (p. ej. `abc123`) o ARN completo (p. ej. `arn:aws:bedrock:us-east-1:123456789012:guardrail/abc123`). |
-    | `guardrailVersion` | Sí | Número de versión publicada, o `"DRAFT"` para el borrador de trabajo. |
-    | `streamProcessingMode` | No | `"sync"` o `"async"` para la evaluación del guardrail durante la transmisión. Si se omite, Bedrock usa su valor predeterminado. |
-    | `trace` | No | `"enabled"` o `"enabled_full"` para la depuración; omita o establezca `"disabled"` para producción. |
+    | `guardrailIdentifier` | Sí | ID de guardrail (p. ej., `abc123`) o ARN completo (p. ej., `arn:aws:bedrock:us-east-1:123456789012:guardrail/abc123`). |
+    | `guardrailVersion` | Sí | Número de versión publicada o `"DRAFT"` para el borrador de trabajo. |
+    | `streamProcessingMode` | No | `"sync"` o `"async"` para la evaluación del guardrail durante la transmisión. Si se omite, Bedrock utiliza su valor predeterminado. |
+    | `trace` | No | `"enabled"` o `"enabled_full"` para depuración; omita o establezca `"disabled"` para producción. |
 
     <Warning>
-    El principal de IAM utilizado por la puerta de enlace debe tener el permiso `bedrock:ApplyGuardrail` además de los permisos de invocación estándar.
+    La entidad de IAM utilizada por la puerta de enlace debe tener el permiso `bedrock:ApplyGuardrail` además de los permisos de invocación estándar.
     </Warning>
 
   </Accordion>
 
   <Accordion title="Incrustaciones para la búsqueda de memoria">
-    Bedrock también puede actuar como proveedor de incrustaciones para la
-    [búsqueda de memoria](/es/concepts/memory-search). Esto se configura por separado del
-    proveedor de inferencia -- establezca `agents.defaults.memorySearch.provider` en `"bedrock"`:
+    Bedrock también puede actuar como proveedor de incrustaciones para
+    [memory search](/es/concepts/memory-search). Esto se configura por separado del
+    proveedor de inferencia: establezca `agents.defaults.memorySearch.provider` en `"bedrock"`:
 
     ```json5
     {
@@ -358,15 +358,14 @@ openclaw models list
     }
     ```
 
-    Las incrustaciones de Bedrock utilizan la misma cadena de credenciales del AWS SDK que la inferencia (roles de
-    instancia, SSO, claves de acceso, configuración compartida e identidad web). No se necesita ninguna clave de
-    API. Cuando `provider` es `"auto"`, Bedrock se detecta automáticamente si esa
-    cadena de credenciales se resuelve con éxito.
+    Las incrustaciones de Bedrock utilizan la misma cadena de credenciales de AWS SDK que la inferencia (roles de instancia,
+    SSO, claves de acceso, configuración compartida e identidad web). No se necesita
+    ninguna clave de API. Establezca `memorySearch.provider: "bedrock"` explícitamente para utilizar las incrustaciones de Bedrock.
 
-    Los modelos de incrustación admitidos incluyen Amazon Titan Embed (v1, v2), Amazon Nova
+    Los modelos de incrustación compatibles incluyen Amazon Titan Embed (v1, v2), Amazon Nova
     Embed, Cohere Embed (v3, v4) y TwelveLabs Marengo. Consulte
     [Referencia de configuración de memoria -- Bedrock](/es/reference/memory-config#bedrock-embedding-config)
-    para obtener la lista completa de modelos y opciones de dimensiones.
+    para ver la lista completa de modelos y las opciones de dimensión.
 
   </Accordion>
 
@@ -374,16 +373,16 @@ openclaw models list
     - Bedrock requiere que el **acceso al modelo** esté habilitado en su cuenta/región de AWS.
     - El descubrimiento automático necesita los permisos `bedrock:ListFoundationModels` y
       `bedrock:ListInferenceProfiles`.
-    - Si confía en el modo automático, configure uno de los marcadores de entorno de autenticación de AWS admitidos en el
+    - Si confía en el modo automático, establezca uno de los marcadores de entorno de autenticación de AWS compatibles en el
       host de la puerta de enlace. Si prefiere la autenticación IMDS/configuración compartida sin marcadores de entorno, establezca
       `plugins.entries.amazon-bedrock.config.discovery.enabled: true`.
     - OpenClaw expone el origen de las credenciales en este orden: `AWS_BEARER_TOKEN_BEDROCK`,
       luego `AWS_ACCESS_KEY_ID` + `AWS_SECRET_ACCESS_KEY`, luego `AWS_PROFILE`, y luego la
-      cadena predeterminada del AWS SDK.
-    - La compatibilidad con el razonamiento depende del modelo; consulte la ficha del modelo de Bedrock para conocer las
-      capacidades actuales.
+      cadena predeterminada de AWS SDK.
+    - La compatibilidad con el razonamiento depende del modelo; consulte la tarjeta del modelo de Bedrock para conocer
+      las capacidades actuales.
     - Si prefiere un flujo de claves administrado, también puede colocar un proxy compatible con OpenAI
-      delante de Bedrock y configurarlo como proveedor de OpenAI.
+n      delante de Bedrock y configurarlo como proveedor de OpenAI.
   </Accordion>
 </AccordionGroup>
 

@@ -27,7 +27,7 @@ read_when:
 
 所有入口路径必须保留在插件软件包目录内。运行时入口和推断的已构建 JavaScript 同级文件不会使逃逸 `extensions` 或 `setupEntry` 源路径生效。
 
-<Tip>**寻找分步指南？** 请参阅 [工具插件](/zh/plugins/tool-plugins)、[频道插件](/zh/plugins/sdk-channel-plugins) 或 [提供者插件](/zh/plugins/sdk-provider-plugins)。</Tip>
+<Tip>**正在寻找演练？** 请参阅 [工具插件](/zh/plugins/tool-plugins)、 [渠道插件](/zh/plugins/sdk-channel-plugins) 或 [提供商插件](/zh/plugins/sdk-provider-plugins) 获取分步指南。</Tip>
 
 ## `defineToolPlugin`
 
@@ -158,7 +158,8 @@ import { defineSetupPluginEntry } from "openclaw/plugin-sdk/channel-core";
 export default defineSetupPluginEntry(myChannelPlugin);
 ```
 
-当渠道被禁用、未配置或启用延迟加载时，OpenClaw 会加载此项而不是完整入口。有关何时重要，请参阅[设置和配置](/zh/plugins/sdk-setup#setup-entry)。
+当渠道被禁用、未配置或启用延迟加载时，OpenClaw 会加载此内容而不是完整入口。请参阅
+[设置和配置](/zh/plugins/sdk-setup#setup-entry) 了解这何时适用。
 
 实际上，将 `defineSetupPluginEntry(...)` 与窄设置辅助函数系列配对：
 
@@ -185,14 +186,24 @@ export default defineBundledChannelSetupEntry({
     specifier: "./runtime-api.js",
     exportName: "setMyChannelRuntime",
   },
+  registerSetupRuntime(api) {
+    api.registerHttpRoute({
+      path: "/my-channel/events",
+      auth: "plugin",
+      handler: async (req, res) => {
+        /* setup-safe route */
+      },
+    });
+  },
 });
 ```
 
-仅当设置流程确实需要在加载完整渠道入口之前使用轻量级运行时设置器时，才使用该打包契约。
+仅当设置流程确实需要在完整渠道入口加载之前使用轻量级运行时设置程序或设置安全的网关接口时，才使用该捆绑合约。`registerSetupRuntime` 仅针对 `"setup-runtime"` 加载运行；将其限制为
+仅配置的路由或必须在延迟完全激活之前存在的方法。
 
 ## 注册模式
 
-`api.registrationMode` 告诉您的插件它是如何加载的：
+`api.registrationMode` 告诉您的插件它是如何被加载的：
 
 | 模式              | 何时                     | 注册内容                                                                              |
 | ----------------- | ------------------------ | ------------------------------------------------------------------------------------- |
@@ -202,8 +213,8 @@ export default defineBundledChannelSetupEntry({
 | `"setup-runtime"` | 具有可用运行时的设置流程 | 渠道注册加上加载完整入口之前仅需要的轻量级运行时                                      |
 | `"cli-metadata"`  | 根帮助 / CLI 元数据捕获  | 仅 CLI 描述符                                                                         |
 
-`defineChannelPluginEntry` 会自动处理此分离。如果您直接为渠道使用
-`definePluginEntry`，请自行检查模式：
+`defineChannelPluginEntry` 自动处理这种拆分。如果您直接为
+渠道使用 `definePluginEntry`，请自行检查模式：
 
 ```typescript
 register(api) {
@@ -226,14 +237,18 @@ register(api) {
 
 设备发现模式会构建一个非激活的注册表快照。它可能仍会评估插件入口和渠道插件对象，以便 OpenClaw 能够注册渠道功能和静态 CLI 描述符。应将设备发现中的模块评估视为受信任且轻量级的：不要在顶层包含网络客户端、子进程、监听器、数据库连接、后台工作线程、凭据读取或其他实时运行时副作用。
 
-应将 `"setup-runtime"` 视为一个窗口，仅限设置的启动面必须在此存在，而无需重新进入完整的打包渠道运行时。适用的场景包括渠道注册、设置安全的 HTTP 路由、设置安全的网关方法以及委托的设置助手。繁重的后台服务、CLI 注册器和提供商/客户端 SDK 引导仍然属于 `"full"`。
+将 `"setup-runtime"` 视为仅设置启动表面必须存在而不重新进入完整捆绑渠道运行时的窗口。适合的选项包括
+渠道注册、设置安全的 HTTP 路由、设置安全的网关方法和
+委托设置助手。繁重的后台服务、CLI 注册器以及
+提供商/客户端 SDK 引导仍然属于 `"full"`。
 
 具体针对 CLI 注册器：
 
-- 当注册器拥有一个或多个根命令，并且您希望 OpenClaw 在首次调用时延迟加载真正的 CLI 模块时，请使用 `descriptors`
+- 当注册器拥有一个或多个根命令并且您
+  希望 OpenClaw 在首次调用时延迟加载真正的 CLI 模块时，请使用 `descriptors`
 - 确保这些描述符覆盖注册器公开的每个顶级命令根
 - 描述符命令名称应仅保留字母、数字、连字符和下划线，并以字母或数字开头；OpenClaw 会拒绝此形状之外的描述符名称，并在呈现帮助之前从描述中剥离终端控制序列
-- 仅对急切型兼容性路径单独使用 `commands`
+- 仅对急切兼容性路径单独使用 `commands`
 
 ## 插件形状
 
@@ -252,6 +267,6 @@ OpenClaw 根据其注册行为对已加载的插件进行分类：
 
 - [SDK 概述](/zh/plugins/sdk-overview) - 注册 API 和子路径参考
 - [运行时助手](/zh/plugins/sdk-runtime) - `api.runtime` 和 `createPluginRuntimeStore`
-- [设置和配置](/zh/plugins/sdk-setup) - 清单、设置入口、延迟加载
-- [通道插件](/zh/plugins/sdk-channel-plugins) - 构建 `ChannelPlugin` 对象
-- [提供商插件](/zh/plugins/sdk-provider-plugins) - 提供商注册和钩子
+- [Setup and Config](/zh/plugins/sdk-setup) - manifest, setup entry, deferred loading
+- [Channel Plugins](/zh/plugins/sdk-channel-plugins) - building the `ChannelPlugin` object
+- [Provider Plugins](/zh/plugins/sdk-provider-plugins) - 提供商 registration and hooks

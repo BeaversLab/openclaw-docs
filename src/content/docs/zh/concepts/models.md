@@ -15,50 +15,50 @@ sidebarTitle: "CLI模型 CLI"
   <Card title="模型提供商" href="/zh/concepts/model-providers">
     提供商快速概览和示例。
   </Card>
-  <Card title="Agent 运行时" href="/zh/concepts/agent-runtimes">
-    PI、Codex 和其他代理循环运行时。
+  <Card title="Agent runtimes" href="/zh/concepts/agent-runtimes" OpenClaw>
+    OpenClaw、Codex 和其他代理循环运行时。
   </Card>
   <Card title="配置参考" href="/zh/gateway/config-agents#agent-defaults">
     模型配置键。
   </Card>
 </CardGroup>
 
-模型引用选择提供商和模型。它们通常不选择底层代理运行时。OpenAI 代理引用是主要的例外：在官方 OpenAI 提供商上，`openai/gpt-5.5` 默认通过 Codex 应用服务器运行时运行。显式运行时覆盖属于提供商/模型策略，而不是整个代理或会话。在 Codex 运行时模式下，`openai/gpt-*` 引用并不意味着 API 密钥计费；身份验证可以来自 Codex 帐户或 `openai-codex` 身份验证配置文件。请参阅 [代理运行时](/zh/concepts/agent-runtimes)。
+模型引用会选择提供商和模型。它们通常不选择底层代理运行时。OpenAI 代理引用是主要的例外：默认情况下，OpenAI`openai/gpt-5.5`OpenAI 在官方 OpenAI 提供商上通过 Codex 应用服务器运行时运行。订阅版 Copilot 引用（`github-copilot/*`GitHub）还可以选择加入捆绑的 GitHub Copilot 代理运行时——该路径保持显式（无 `auto` 回退）。显式运行时覆盖属于提供商/模型策略，而不属于整个代理或会话。在 Codex 运行时模式下，`openai/gpt-*`API 引用并不暗示 API 密钥计费；身份验证可以来自 Codex 账户或 `openai-codex` 身份验证配置文件。请参阅[代理运行时](/zh/concepts/agent-runtimesGitHub)和[GitHub Copilot 代理运行时](/zh/plugins/copilot)。
 
 ## 模型选择如何工作
 
 OpenClaw 按以下顺序选择模型：
 
 <Steps>
-  <Step title="主模型">`agents.defaults.model.primary`（或 `agents.defaults.model`）。</Step>
-  <Step title="故障转移">`agents.defaults.model.fallbacks`（按顺序）。</Step>
+  <Step title="Primary 模型">`agents.defaults.model.primary`（或 `agents.defaults.model`）。</Step>
+  <Step title="Fallbacks">`agents.defaults.model.fallbacks`（按顺序）。</Step>
   <Step title="提供商身份验证故障转移">身份验证故障转移在移至下一个模型之前在提供商内部发生。</Step>
 </Steps>
 
 <AccordionGroup>
-  <Accordion title="相关模型表面">
-    - `agents.defaults.models` 是 OpenClaw 可以使用的模型允许列表/目录（包括别名）。使用 `provider/*` 条目来限制可见的提供商，同时保持提供商发现的动态性。
-    - `agents.defaults.imageModel` **仅当** 主模型无法接受图像时才使用。
+  <Accordion title="Related 模型 surfaces">
+    - `agents.defaults.models`OpenClaw 是 OpenClaw 可以使用的模型允许列表/目录（以及别名）。使用 `provider/*` 条目来限制可见的提供商，同时保持提供商发现为动态。
+    - `agents.defaults.imageModel` **仅当**主模型无法接受图像时才使用。
     - `agents.defaults.pdfModel` 由 `pdf` 工具使用。如果省略，该工具将回退到 `agents.defaults.imageModel`，然后是已解析的会话/默认模型。
-    - `agents.defaults.imageGenerationModel` 由共享图像生成功能使用。如果省略，`image_generate` 仍然可以推断支持身份验证的提供商默认值。它首先尝试当前的默认提供商，然后按提供商 ID 的顺序尝试剩余的已注册图像生成提供商。如果您设置了特定的提供商/模型，还需要配置该提供商的 auth/API 密钥。
-    - `agents.defaults.musicGenerationModel` 由共享音乐生成功能使用。如果省略，`music_generate` 仍然可以推断支持身份验证的提供商默认值。它首先尝试当前的默认提供商，然后按提供商 ID 的顺序尝试剩余的已注册音乐生成提供商。如果您设置了特定的提供商/模型，还需要配置该提供商的 auth/API 密钥。
-    - `agents.defaults.videoGenerationModel` 由共享视频生成功能使用。如果省略，`video_generate` 仍然可以推断支持身份验证的提供商默认值。它首先尝试当前的默认提供商，然后按提供商 ID 的顺序尝试剩余的已注册视频生成提供商。如果您设置了特定的提供商/模型，还需要配置该提供商的 auth/API 密钥。
-    - 每个代理的默认值可以通过 `agents.list[].model` 加上绑定来覆盖 `agents.defaults.model`（请参阅[多代理路由](/zh/concepts/multi-agent)）。
+    - `agents.defaults.imageGenerationModel` 由共享图像生成功能使用。如果省略，`image_generate`API 仍然可以推断一个支持身份验证的提供商默认值。它首先尝试当前的默认提供商，然后按提供商 ID 顺序尝试剩余的已注册图像生成提供商。如果您设置了特定的提供商/模型，还请配置该提供商的 auth/API 密钥。
+    - `agents.defaults.musicGenerationModel` 由共享音乐生成功能使用。如果省略，`music_generate`API 仍然可以推断一个支持身份验证的提供商默认值。它首先尝试当前的默认提供商，然后按提供商 ID 顺序尝试剩余的已注册音乐生成提供商。如果您设置了特定的提供商/模型，还请配置该提供商的 auth/API 密钥。
+    - `agents.defaults.videoGenerationModel` 由共享视频生成功能使用。如果省略，`video_generate`API 仍然可以推断一个支持身份验证的提供商默认值。它首先尝试当前的默认提供商，然后按提供商 ID 顺序尝试剩余的已注册视频生成提供商。如果您设置了特定的提供商/模型，还请配置该提供商的 auth/API 密钥。
+    - 每个代理的默认值可以通过 `agents.list[].model` 加上绑定来覆盖 `agents.defaults.model`（请参阅 [多代理路由](/zh/concepts/multi-agent)）。
 
   </Accordion>
 </AccordionGroup>
 
 ## 选择来源和回退行为
 
-同一个 `provider/model` 根据其来源可能具有不同的含义：
+相同的 `provider/model` 可能因其来源不同而含义不同：
 
-- 配置的默认值（`agents.defaults.model.primary` 和特定于代理的主要模型）是正常的起点，并使用 `agents.defaults.model.fallbacks`。
-- 自动回退选择是临时的恢复状态。它们随 `modelOverrideSource: "auto"` 一起存储，以便后续轮次可以继续使用回退链，而无需每次都探测已知故障的主模型；OpenClaw 会定期再次探测原始主模型，在其恢复时清除自动选择，并在每次状态变化时通告回退/恢复转换。
-- 用户会话选择是精确的。`/model`、模型选择器 `session_status(model=...)` 和 `sessions.patch` 存储 `modelOverrideSource: "user"`OpenClaw；如果所选的提供商/模型不可达，OpenClaw 将明显失败，而不是回退到另一个配置的模型。
+- 配置的默认值（`agents.defaults.model.primary` 和特定于代理的主要模型）是常规的起点，并使用 `agents.defaults.model.fallbacks`。
+- 自动故障转移选择是临时的恢复状态。它们通过 `modelOverrideSource: "auto"` 存储，以便后续轮次可以继续使用故障转移链，而无需每次都探测已知损坏的主要模型；OpenClaw 会定期再次探测原始的主要模型，并在其恢复时清除自动选择，且每次状态变更仅宣布一次故障转移/恢复转换。
+- 用户会话选择是精确的。`/model`、模型选择器 `session_status(model=...)` 和 `sessions.patch` 存储 `modelOverrideSource: "user"`；如果所选的提供商/模型不可达，OpenClaw 将明显失败，而不是回退到另一个配置的模型。
 - 更改 `agents.defaults.model.primary` 不会重写现有的会话选择。如果状态显示 `This session is pinned to X; config primary Y will apply to new/unpinned sessions.`，请使用 `/model Y` 切换当前会话，或使用 `/reset` 清除过时的会话状态。
-- Cron `--model` / payload `model` 是每个作业的主选。它仍使用配置的回退，除非作业提供了显式的 payload `fallbacks`（使用 `fallbacks: []` 进行严格的 Cron 运行）。
-- CLI default-模型 和 allowlist 选择器通过列出显式的 `models.providers.*.models` 来遵循 CLI`models.mode: "replace"`，而不是加载完整的内置目录。
-- Control UI 模型选择器会向 Gateway 请求其配置的模型视图：如果存在，则显示 Gateway(网关)`agents.defaults.models`（包括提供商范围的 `provider/*` 条目），否则显示显式的 `models.providers.*.models` 以及具有可用身份验证的提供商。完整的内置目录保留用于显式的浏览视图，例如带有 `view: "all"` 或 `openclaw models list --all` 的 `models.list`。
+- Cron `--model` / 负载 `model` 是每个作业的主要模型。除非作业提供了明确的负载 `fallbacks`（使用 `fallbacks: []` 进行严格的 Cron 运行），否则它仍使用配置的故障转移。
+- CLI default-模型 和 allowlist 选择器通过列出明确的 `models.providers.*.models` 而不是加载完整的内置目录来遵循 `models.mode: "replace"`。
+- 控制 UI 模型选择器向 Gateway(网关) 请求其配置的模型视图：如果存在，则为 `agents.defaults.models`，包括提供商范围的 `provider/*` 条目；否则为明确的 `models.providers.*.models` 加上具有可用身份验证的提供商。完整的内置目录保留用于明确的浏览视图，例如带有 `view: "all"` 或 `openclaw models list --all` 的 `models.list`。
 
 ## 快速模型策略
 
@@ -83,11 +83,11 @@ openclaw onboard
 - `agents.defaults.pdfModel.primary` 和 `agents.defaults.pdfModel.fallbacks`
 - `agents.defaults.imageGenerationModel.primary` 和 `agents.defaults.imageGenerationModel.fallbacks`
 - `agents.defaults.videoGenerationModel.primary` 和 `agents.defaults.videoGenerationModel.fallbacks`
-- `agents.defaults.models` （allowlist + aliases + 提供商 params + `provider/*` dynamic 提供商 entries）
-- `models.providers` （写入 `models.json` 的自定义提供商）
+- `agents.defaults.models`（allowlist + aliases + 提供商 params + `provider/*` 动态提供商条目）
+- `models.providers`（写入 `models.json` 的自定义提供商）
 
 <Note>
-模型引用会被规范化为小写。提供商别名如 `z.ai/*` 会规范化为 `zai/*`。
+模型引用被规范化为小写。提供商 ID 须完全匹配；请使用插件通告的提供商 ID。
 
 提供商配置示例（包括 OpenCode）位于 [OpenCode](/zh/providers/opencode)。
 
@@ -212,7 +212,7 @@ Add it with: openclaw config set agents.defaults.models '{"provider/model":{}}' 
   </Accordion>
 </AccordionGroup>
 
-完整的命令行为/配置：[Slash commands](/zh/tools/slash-commands)。
+完整命令行为/配置：[斜杠命令](/zh/tools/slash-commands)。
 
 ## CLI 命令
 
@@ -321,7 +321,7 @@ openclaw models status
 输入：
 
 - OpenRouter OpenRouter`/models` 列表（过滤器 `:free`）
-- 实时探测需要来自身份验证配置文件或 OpenRouterAPI`OPENROUTER_API_KEY` 的 OpenRouter API 密钥（参见 [环境变量](/zh/help/environment)）
+- 实时探测需要来自身份验证配置文件的 OpenRouter API 密钥或 `OPENROUTER_API_KEY`（参见[环境变量](/zh/help/environment)）
 - 可选过滤器：`--max-age-days`、`--min-params`、`--provider`、`--max-candidates`
 - 请求/探测控制：`--timeout`、`--concurrency`
 
@@ -329,7 +329,7 @@ openclaw models status
 
 ## 模型注册表 (`models.json`)
 
-`models.providers` 中的自定义提供商被写入 agent 目录下的 `models.json` 中（默认为 `~/.openclaw/agents/<agentId>/agent/models.json`）。除非将 `models.mode` 设置为 `replace`，否则默认合并此文件。
+`models.providers` 中的自定义提供商被写入 agent 目录下的 `models.json`（默认为 `~/.openclaw/agents/<agentId>/agent/models.json`）。提供商插件目录作为生成的插件拥有的目录片段存储在 agent 的插件状态下并自动加载。除非将 `models.mode` 设置为 `replace`，否则默认合并此文件。
 
 <AccordionGroup>
   <Accordion title="合并模式优先级">
@@ -349,10 +349,10 @@ openclaw models status
 
 ## 相关
 
-- [Agent runtimes](/zh/concepts/agent-runtimes) — PI、Codex 以及其他 agent loop 运行时
-- [Configuration reference](/zh/gateway/config-agents#agent-defaults) — 模型配置键
-- [Image generation](/zh/tools/image-generation) — 图像模型配置
-- [Model failover](/zh/concepts/model-failover) — 故障转移链
-- [Model providers](/zh/concepts/model-providers) — 提供商路由和认证
-- [Music generation](/zh/tools/music-generation) — 音乐模型配置
-- [Video generation](/zh/tools/video-generation) — 视频模型配置
+- [Agent 运行时](/zh/concepts/agent-runtimes) — OpenClaw、Codex 和其他 agent 循环运行时
+- [配置参考](/zh/gateway/config-agents#agent-defaults) — 模型配置键
+- [图像生成](/zh/tools/image-generation) — 图像模型配置
+- [模型故障转移](/zh/concepts/model-failover) — 故障转移链
+- [模型提供商](/zh/concepts/model-providers) — 提供商路由和身份验证
+- [音乐生成](/zh/tools/music-generation) — 音乐模型配置
+- [视频生成](/zh/tools/video-generation) — 视频模型配置

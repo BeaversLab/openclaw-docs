@@ -1,5 +1,5 @@
 ---
-summary: "新增用於傳送和接收 OpenClaw 訊息的 WhatsApp 通道表面。"
+summary: "OpenClaw WhatsApp 頻道外掛程式，用於 WhatsApp Web 聊天。"
 read_when:
   - You are installing, configuring, or auditing the whatsapp plugin
 title: "WhatsApp 外掛程式"
@@ -7,7 +7,7 @@ title: "WhatsApp 外掛程式"
 
 # WhatsApp 外掛程式
 
-新增用於傳送和接收 OpenClaw 訊息的 WhatsApp 頻道介面。
+OpenClaw WhatsApp 頻道外掛程式，用於 WhatsApp Web 聊天。
 
 ## 發行版本
 

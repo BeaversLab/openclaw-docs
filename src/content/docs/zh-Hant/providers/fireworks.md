@@ -80,7 +80,7 @@ openclaw onboard --non-interactive \
 
 ## 自訂 Fireworks 模型 ID
 
-OpenClaw 在執行時接受任何 Fireworks 模型或路由器 ID。請使用 Fireworks 顯示的確切 ID，並加上 `fireworks/` 前綴。動態解析會複製 Fire Pass 模板（文字 + 圖片輸入、OpenAI 相容 API、預設成本為零），並在 ID 符合 Kimi 模式時自動停用思維功能。
+OpenClaw 在執行時接受任何 Fireworks 模型或路由器 ID。使用 Fireworks 顯示的確切 ID 並在其前面加上 `fireworks/`。動態解析會複製 Fire Pass 模板（文字 + 圖片輸入、OpenAI 相容 API、預設成本為零），並在 ID 符合 Kimi 模式時自動停用思考。GLM 動態 ID 會被標記為僅限文字，除非您設定包含圖片輸入的自訂模型項目。
 
 ```json5
 {

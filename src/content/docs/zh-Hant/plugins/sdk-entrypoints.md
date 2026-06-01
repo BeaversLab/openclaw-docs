@@ -27,7 +27,7 @@ read_when:
 
 所有進入點路徑都必須保留在外掛套件目錄內。執行時期進入點和推斷的建置 JavaScript 同層檔案不會讓跳脫的 `extensions` 或 `setupEntry` 來源路徑變為有效。
 
-<Tip>**正在尋找逐步解說？** 請參閱 [Tool Plugins](/zh-Hant/plugins/tool-plugins)、 [Channel Plugins](/zh-Hant/plugins/sdk-channel-plugins) 或 [Provider Plugins](/zh-Hant/plugins/sdk-provider-plugins) 以取得逐步指南。</Tip>
+<Tip>**正在尋找逐步指南？** 請參閱[工具外掛](/zh-Hant/plugins/tool-plugins)、 [通道外掛](/zh-Hant/plugins/sdk-channel-plugins)或 [提供者外掛](/zh-Hant/plugins/sdk-provider-plugins)以了解詳細步驟。</Tip>
 
 ## `defineToolPlugin`
 
@@ -179,7 +179,8 @@ import { defineSetupPluginEntry } from "openclaw/plugin-sdk/channel-core";
 export default defineSetupPluginEntry(myChannelPlugin);
 ```
 
-當通道被停用、未配置，或啟用延遲載入時，OpenClaw 會載入此項目而不是完整項目。請參閱 [設定與配置](/zh-Hant/plugins/sdk-setup#setup-entry) 以了解這在何時重要。
+當通道被停用、未設定，或啟用延遲載入時，OpenClaw 會載入此項目而非完整項目。請參閱
+[設定與組態](/zh-Hant/plugins/sdk-setup#setup-entry)以了解其適用時機。
 
 實務上，請將 `defineSetupPluginEntry(...)` 與狹義的設定輔助程式系列搭配使用：
 
@@ -204,14 +205,25 @@ export default defineBundledChannelSetupEntry({
     specifier: "./runtime-api.js",
     exportName: "setMyChannelRuntime",
   },
+  registerSetupRuntime(api) {
+    api.registerHttpRoute({
+      path: "/my-channel/events",
+      auth: "plugin",
+      handler: async (req, res) => {
+        /* setup-safe route */
+      },
+    });
+  },
 });
 ```
 
-僅當設定流程確實需要在完整頻道入口載入之前使用輕量級執行時設定器時，才使用該打包合約。
+僅在設定流程確實需要在載入完整通道項目之前使用輕量級運行時設定器或設定安全的網關介面時，才使用該打包合約。
+`registerSetupRuntime` 僅在 `"setup-runtime"` 載入時執行；請將其限制於
+僅限設定的路由或必須在延遲完整啟用前存在的方法。
 
 ## 註冊模式
 
-`api.registrationMode` 告訴您的外掛它是如何被載入的：
+`api.registrationMode` 會告訴您的外掛它是如何被載入的：
 
 | 模式              | 時機                       | 註冊內容                                                                                        |
 | ----------------- | -------------------------- | ----------------------------------------------------------------------------------------------- |
@@ -221,7 +233,8 @@ export default defineBundledChannelSetupEntry({
 | `"setup-runtime"` | 具備執行時可用性的設定流程 | 頻道註冊加上僅在完整入口載入前所需的輕量級執行時                                                |
 | `"cli-metadata"`  | 根說明 / CLI 中繼資料擷取  | 僅 CLI 描述符                                                                                   |
 
-`defineChannelPluginEntry` 會自動處理此分割。如果您直接對頻道使用 `definePluginEntry`，請自行檢查模式：
+`defineChannelPluginEntry` 會自動處理此分割。如果您直接對通道使用
+`definePluginEntry`，請自行檢查模式：
 
 ```typescript
 register(api) {
@@ -244,14 +257,18 @@ register(api) {
 
 探索模式會建構非啟動式的登錄快照。它可能仍會評估外掛入口和頻道外掛物件，以便 OpenClaw 可以註冊頻道功能和靜態 CLI 描述符。請將探索中的模組評估視為受信任但輕量級的：頂層不得有網路用戶端、子處理程序、監聽器、資料庫連線、背景 worker、憑證讀取或其他即時執行時副作用。
 
-請將 `"setup-runtime"` 視為僅限設定的啟動層面必須存在的視窗，且無需重新進入完整的打包頻道執行時。適合的項目包括頻道註冊、設定安全的 HTTP 路由、設定安全的閘道方法，以及委派的設定輔助程式。繁重的背景服務、CLI 註冊器和提供者/用戶端 SDK 引導程序仍應屬於 `"full"`。
+將 `"setup-runtime"` 視為一個時間窗口，在此期間僅限設定的啟動介面必須存在，而無需重新進入完整的打包通道運行時。適合的用途包括
+通道註冊、設定安全的 HTTP 路由、設定安全的網關方法以及
+委派的設定輔助函式。繁重的背景服務、CLI 註冊器以及
+提供者/客戶端 SDK 引導程序仍應置於 `"full"` 中。
 
 特別針對 CLI 註冊器：
 
-- 當註冊器擁有一或多個根命令，且您希望 OpenClaw 在首次叫用時延遲載入實際的 CLI 模組時，請使用 `descriptors`
+- 當註冊器擁有一或多個根指令且您希望
+  OpenClaw 在首次叫用時延遲載入實際的 CLI 模組時，請使用 `descriptors`
 - 確保這些描述子涵蓋註冊器暴露的每個頂層命令根
 - 將描述子命令名稱限制為字母、數字、連字號和底線，並以字母或數字開頭；OpenClaw 會拒絕此格式之外的描述子名稱，並在呈現說明之前從描述中移除終端機控制序列
-- 僅為了急切相容性路徑單獨使用 `commands`
+- 僅單獨使用 `commands` 於急切相容性路徑
 
 ## Plugin shapes
 
@@ -268,8 +285,8 @@ OpenClaw 根據載入外掛的註冊行為進行分類：
 
 ## Related
 
-- [SDK 概觀](/zh-Hant/plugins/sdk-overview) - 註冊 API 和子路徑參考
-- [Runtime Helpers](/zh-Hant/plugins/sdk-runtime) - `api.runtime` 和 `createPluginRuntimeStore`
-- [Setup and Config](/zh-Hant/plugins/sdk-setup) - manifest、setup entry、延遲載入
-- [Channel Plugins](/zh-Hant/plugins/sdk-channel-plugins) - 建構 `ChannelPlugin` 物件
-- [Provider Plugins](/zh-Hant/plugins/sdk-provider-plugins) - 提供者註冊與 hooks
+- [SDK 概觀](/zh-Hant/plugins/sdk-overview) - 註冊 API 與子路徑參考
+- [運行時輔助函式](/zh-Hant/plugins/sdk-runtime) - `api.runtime` 和 `createPluginRuntimeStore`
+- [設定與組態](/zh-Hant/plugins/sdk-setup) - 宣示清單、設定項目、延遲載入
+- [頻道外掛](/zh-Hant/plugins/sdk-channel-plugins) - 建立 `ChannelPlugin` 物件
+- [提供者外掛](/zh-Hant/plugins/sdk-provider-plugins) - 提供者註冊與鉤子

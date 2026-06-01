@@ -421,7 +421,7 @@ client:app:select_file
 
 ## 工具搜索交互
 
-对于代码模式处于活动状态的运行，代码模式取代了 PI 工具搜索模型界面。
+代码模式取代了 OpenClaw 工具搜索模型表面，适用于激活该模式的运行。
 
 当 `tools.codeMode.enabled` 为 true 且代码模式激活时：
 
@@ -430,7 +430,7 @@ client:app:select_file
 - 客机运行时接收紧凑的 `ALL_TOOLS` 元数据以及搜索、描述和调用辅助程序。
 - 嵌套调用通过工具搜索所使用的同一 OpenClaw 执行器路径进行调度。
 
-现有的 [工具搜索](/zh/tools/tool-searchOpenClaw) 页面描述了 PI 紧凑目录桥。代码模式是适用于可以使用 `exec` 和 `wait` 的运行的通用 OpenClaw 替代方案。
+现有的 [Tool Search](/zh/tools/tool-searchOpenClawOpenClaw) 页面描述了 OpenClaw 紧凑目录桥接器。代码模式是 OpenClaw 的通用替代方案，适用于可以使用 `exec` 和 `wait` 的运行。
 
 ## 工具名称与冲突
 

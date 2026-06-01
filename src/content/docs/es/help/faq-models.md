@@ -8,7 +8,7 @@ title: "Preguntas frecuentes: modelos y autenticación"
 sidebarTitle: "Preguntas frecuentes sobre modelos"
 ---
 
-Preguntas y respuestas sobre modelos y perfiles de autenticación. Para la configuración, sesiones, puerta de enlace, canales y solución de problemas, consulte las [Preguntas frecuentes](/es/help/faq) principales.
+Preguntas y respuestas sobre modelos y perfiles de autenticación. Para la configuración, sesiones, puerta de enlace, canales y resolución de problemas, consulte las [preguntas frecuentes](/es/help/faq) principales.
 
 ## Modelos: predeterminados, selección, alias, cambio
 
@@ -25,63 +25,68 @@ Preguntas y respuestas sobre modelos y perfiles de autenticación. Para la confi
   </Accordion>
 
   <Accordion title="¿Qué modelo recomienda?">
-    **Predeterminado recomendado:** utilice el modelo más fuerte de la última generación disponible en su pila de proveedores.
-    **Para agentes con herramientas activadas o entradas que no son de confianza:** priorice la fuerza del modelo sobre el costo.
-    **Para chat de rutina/bajo riesgo:** utilice modelos de reserva más económicos y enrute por función de agente.
+    **Predeterminado recomendado:** utilice el modelo más reciente y potente disponible en su pila de proveedores.
+    **Para agentes con herramientas habilitadas o entradas que no son de confianza:** dé prioridad a la potencia del modelo sobre el costo.
+    **Para chats rutinarios o de bajo riesgo:** utilice modelos alternativos más económicos y enrute por rol de agente.
 
     MiniMax tiene su propia documentación: [MiniMax](/es/providers/minimax) y
     [Modelos locales](/es/gateway/local-models).
 
-    Regla general: utilice el **mejor modelo que pueda permitirse** para trabajos de alto riesgo, y un modelo más económico para el chat de rutina o resúmenes. Puede enrutar modelos por agente y usar subagentes para paralelizar tareas largas (cada subagente consume tokens). Consulte [Modelos](/es/concepts/models) y
-    [Subagentes](/es/tools/subagents).
+    Regla general: utilice el **mejor modelo que pueda permitirse** para trabajos de alto riesgo, y un modelo
+    más económico para chats rutinarios o resúmenes. Puede enrutar modelos por agente y usar sub-agentes para
+    paralelizar tareas largas (cada sub-agente consume tokens). Consulte [Modelos](/es/concepts/models) y
+    [Sub-agentes](/es/tools/subagents).
 
-    Advertencia importante: los modelos más débiles/sobre-cuantizados son más vulnerables a la inyección de avisos y comportamientos inseguros. Consulte [Seguridad](/es/gateway/security).
+    Advertencia importante: los modelos más débiles o sobrecuantizados son más vulnerables a la inyección
+    de instrucciones y a comportamientos inseguros. Consulte [Seguridad](/es/gateway/security).
 
     Más contexto: [Modelos](/es/concepts/models).
 
   </Accordion>
 
   <Accordion title="¿Cómo cambio de modelos sin borrar mi configuración?">
-    Use **comandos de modelos** o edite solo los campos **model**. Evite reemplazos completos de la configuración.
+    Use **comandos de modelo** o edite solo los campos **model**. Evite reemplazos completos de la configuración.
 
     Opciones seguras:
 
     - `/model` en el chat (rápido, por sesión)
     - `openclaw models set ...` (actualiza solo la configuración del modelo)
     - `openclaw configure --section model` (interactivo)
-    - editar `agents.defaults.model` en `~/.openclaw/openclaw.json`
+    - edite `agents.defaults.model` en `~/.openclaw/openclaw.json`
 
     Evite `config.apply` con un objeto parcial a menos que pretenda reemplazar toda la configuración.
     Para ediciones RPC, inspeccione con `config.schema.lookup` primero y prefiera `config.patch`. La carga útil de búsqueda le proporciona la ruta normalizada, documentos/restricciones de esquema superficial y resúmenes de hijos inmediatos.
     para actualizaciones parciales.
-    Si sobrescribió la configuración, restáurela desde una copia de seguridad o vuelva a ejecutar `openclaw doctor` para reparar.
+    Si sobrescribió la configuración, restaure desde una copia de seguridad o vuelva a ejecutar `openclaw doctor` para reparar.
 
     Documentos: [Models](/es/concepts/models), [Configure](/es/cli/configure), [Config](/es/cli/config), [Doctor](/es/gateway/doctor).
 
   </Accordion>
 
   <Accordion title="¿Puedo usar modelos autohospedados (llama.cpp, vLLM, Ollama)?">
-    Sí. Ollama es la vía más fácil para modelos locales.
+    Sí. Ollama es la opción más sencilla para modelos locales.
 
     Configuración más rápida:
 
-    1. Instale Ollama desde `https://ollama.com/download`
-    2. Descargue un modelo local como `ollama pull gemma4`
-    3. Si también quiere modelos en la nube, ejecute `ollama signin`
-    4. Ejecute `openclaw onboard` y elija `Ollama`
-    5. Elija `Local` o `Cloud + Local`
+    1. Instala Ollama desde `https://ollama.com/download`
+    2. Descarga un modelo local como `ollama pull gemma4`
+    3. Si también quieres modelos en la nube, ejecuta `ollama signin`
+    4. Ejecuta `openclaw onboard` y elige `Ollama`
+    5. Elige `Local` o `Cloud + Local`
 
     Notas:
 
-    - `Cloud + Local` le proporciona modelos en la nube además de sus modelos locales de Ollama
+    - `Cloud + Local` te proporciona modelos en la nube además de tus modelos locales de Ollama
     - los modelos en la nube como `kimi-k2.5:cloud` no necesitan una descarga local
-    - para el cambio manual, use `openclaw models list` y `openclaw models set ollama/<model>`
+    - para cambiar manualmente, usa `openclaw models list` y `openclaw models set ollama/<model>`
 
-    Nota de seguridad: los modelos más pequeños o muy cuantizados son más vulnerables a la inyección de prompts. Recomendamos encarecidamente **modelos grandes** para cualquier bot que pueda usar herramientas. Si aún quiere modelos pequeños, active el sandboxing y listas de permitidos estrictas de herramientas.
+    Nota de seguridad: los modelos pequeños o muy cuantificados son más vulnerables a la inyección de prompts.
+    Recomendamos encarecidamente **modelos grandes** para cualquier bot que pueda usar herramientas.
+    Si aún quieres modelos pequeños, activa el sandbox y listas de permisos estrictas para herramientas.
 
-    Documentación: [Ollama](/es/providers/ollama), [Local models](/es/gateway/local-models),
-    [Model providers](/es/concepts/model-providers), [Security](/es/gateway/security),
-    [Sandboxing](/es/gateway/sandboxing).
+    Documentación: [Ollama](/es/providers/ollama), [Modelos locales](/es/gateway/local-models),
+    [Proveedores de modelos](/es/concepts/model-providers), [Seguridad](/es/gateway/security),
+    [Sandbox](/es/gateway/sandboxing).
 
   </Accordion>
 
@@ -138,36 +143,36 @@ Preguntas y respuestas sobre modelos y perfiles de autenticación. Para la confi
 
   </Accordion>
 
-  <Accordion title="Si dos proveedores exponen el mismo id de modelo, ¿cuál utiliza /model?">
+  <Accordion title="Si dos proveedores exponen el mismo ID de modelo, ¿cuál usa /model?">
     `/model provider/model` selecciona esa ruta de proveedor exacta para la sesión.
 
-    Por ejemplo, `qianfan/deepseek-v4-flash` y `deepseek/deepseek-v4-flash` son referencias de modelo diferentes aunque ambas contengan `deepseek-v4-flash`. OpenClaw no debe cambiar silenciosamente de un proveedor a otro solo porque el id del modelo simple coincida.
+    Por ejemplo, `qianfan/deepseek-v4-flash` y `deepseek/deepseek-v4-flash` son diferentes referencias de modelo aunque ambas contengan `deepseek-v4-flash`. OpenClaw no debe cambiar silenciosamente de un proveedor a otro solo porque el ID de modelo simple coincida.
 
-    Una referencia `/model` seleccionada por el usuario también es estricta para la política de reserva. Si ese proveedor/modelo seleccionado no está disponible, la respuesta falla visiblemente en lugar de responder desde `agents.defaults.model.fallbacks`. Las cadenas de reserva configuradas todavía se aplican a los valores predeterminados configurados, primarios de trabajos cron y estado de reserva auto-seleccionado.
+    Una referencia `/model` seleccionada por el usuario también es estricta para la política de respaldo. Si ese proveedor/modelo seleccionado no está disponible, la respuesta falla visiblemente en lugar de responder desde `agents.defaults.model.fallbacks`. Las cadenas de respaldo configuradas todavía se aplican a los valores predeterminados configurados, primarios de trabajos programados y estado de respaldo seleccionado automáticamente.
 
-    Si se permite que una ejecución que comenzó con una anulación fuera de sesión use reserva, OpenClaw intenta primero el proveedor/modelo solicitado, luego las reservas configuradas, y solo entonces el principal configurado. Eso evita que los ids de modelo simple duplicados salten directamente de vuelta al proveedor predeterminado.
+    Si se permite que una ejecución que comenzó desde una invalidación que no es de sesión use el respaldo, OpenClaw primero intenta el proveedor/modelo solicitado, luego los respaldos configurados y solo entonces el principal configurado. Eso evita que los IDs de modelo simples duplicados salten directamente de vuelta al proveedor predeterminado.
 
-    Consulte [Modelos](/es/concepts/models) y [Conmutación por error de modelo](/es/concepts/model-failover).
+    Consulte [Models](/es/concepts/models) y [Model failover](/es/concepts/model-failover).
 
   </Accordion>
 
   <Accordion title="¿Puedo usar GPT 5.5 para tareas diarias y Codex 5.5 para programación?">
     Sí. Trate la elección del modelo y la elección del tiempo de ejecución por separado:
 
-    - **Agente de programación nativo de Codex:** configure `agents.defaults.model.primary` en `openai/gpt-5.5`. Inicie sesión con `openclaw models auth login --provider openai-codex` cuando desee autenticación de suscripción ChatGPT/Codex.
-    - **Tareas directas de la API de OpenAI fuera del bucle del agente:** configure `OPENAI_API_KEY` para imágenes, incrustaciones, voz, tiempo real y otras superficies de la API de OpenAI que no son de agente.
-    - **Autenticación con clave de API del agente de OpenAI:** use `/model openai/gpt-5.5` con un perfil de clave de API `openai-codex` ordenado.
+    - **Agente de programación Codex nativo:** establezca `agents.defaults.model.primary` en `openai/gpt-5.5`. Inicie sesión con `openclaw models auth login --provider openai-codex` cuando desee autenticación de suscripción ChatGPT/Codex.
+    - **Tareas directas de la API de OpenAI fuera del bucle del agente:** configure `OPENAI_API_KEY` para imágenes, incrustaciones, voz, tiempo real y otras superficies de la API de OpenAI que no son de agentes.
+    - **Autenticación por clave de API del agente OpenAI:** use `/model openai/gpt-5.5` con un perfil de clave de API `openai-codex` ordenado.
     - **Sub-agentes:** enrute las tareas de programación a un agente centrado en Codex con su propio modelo `openai/gpt-5.5`.
 
-    Consulte [Modelos](/es/concepts/models) y [Comandos de barra diagonal](/es/tools/slash-commands).
+    Consulte [Models](/es/concepts/models) y [Slash commands](/es/tools/slash-commands).
 
   </Accordion>
 
   <Accordion title="¿Cómo configuro el modo rápido para GPT 5.5?">
     Use un interruptor de sesión o una configuración predeterminada:
 
-    - **Por sesión:** envíe `/fast on` mientras la sesión esté usando `openai/gpt-5.5`.
-    - **Predeterminado por modelo:** establezca `agents.defaults.models["openai/gpt-5.5"].params.fastMode` en `true`.
+    - **Por sesión:** envíe `/fast on` mientras la sesión esté utilizando `openai/gpt-5.5`.
+    - **Predeterminado por modelo:** configure `agents.defaults.models["openai/gpt-5.5"].params.fastMode` en `true`.
 
     Ejemplo:
 
@@ -187,9 +192,9 @@ Preguntas y respuestas sobre modelos y perfiles de autenticación. Para la confi
     }
     ```
 
-    Para OpenAI, el modo rápido se asigna a `service_tier = "priority"` en las solicitudes nativas de Responses compatibles. El `/fast` de la sesión anula las configuraciones predeterminadas de beat.
+    Para OpenAI, el modo rápido se asigna a `service_tier = "priority"` en las solicitudes nativas de Responses admitidas. El `/fast` de la sesión anula los valores predeterminados de configuración de beat.
 
-    Consulte [Thinking and fast mode](/es/tools/thinking) y [OpenAI fast mode](/es/providers/openai#fast-mode).
+    Consulte [Thinking y modo rápido](/es/tools/thinking) y [Modo rápido de OpenAI](/es/providers/openai#fast-mode).
 
   </Accordion>
 
@@ -209,17 +214,17 @@ Preguntas y respuestas sobre modelos y perfiles de autenticación. Para la confi
 
   </Accordion>
 
-  <Accordion title='¿Por qué veo "Modelo desconocido: minimax/MiniMax-M2.7"?'>
-    Esto significa que **el proveedor no está configurado** (no se encontró ninguna configuración del proveedor MiniMax o perfil de autenticación), por lo que no se puede resolver el modelo.
+  <Accordion title='¿Por qué veo "Unknown model: minimax/MiniMax-M2.7"?'>
+    Esto significa que el **proveedor no está configurado** (no se encontró ninguna configuración de proveedor de MiniMax ni perfil de autenticación), por lo que no se puede resolver el modelo.
 
     Lista de verificación de solución:
 
-    1. Actualice a una versión actual de OpenClaw (o ejecútelo desde el código fuente `main`) y luego reinicie el gateway.
-    2. Asegúrese de que MiniMax esté configurado (asistente o JSON), o de que exista autenticación de MiniMax en perfiles env/auth para que se pueda inyectar el proveedor coincidente
+    1. Actualice a una versión actual de OpenClaw (o ejecute desde el código fuente `main`) y luego reinicie el gateway.
+    2. Asegúrese de que MiniMax esté configurado (asistente o JSON), o de que exista autenticación de MiniMax en perfiles de entorno/autenticación para que se pueda inyectar el proveedor coincidente
        (`MINIMAX_API_KEY` para `minimax`, `MINIMAX_OAUTH_TOKEN` o MiniMax OAuth almacenado para `minimax-portal`).
-    3. Use el ID exacto del modelo (distingue mayúsculas y minúsculas) para su ruta de autenticación:
+    3. Use el ID de modelo exacto (sensible a mayúsculas y minúsculas) para su ruta de autenticación:
        `minimax/MiniMax-M2.7` o `minimax/MiniMax-M2.7-highspeed` para la configuración
-       de API-key, o `minimax-portal/MiniMax-M2.7` /
+       con API key, o `minimax-portal/MiniMax-M2.7` /
        `minimax-portal/MiniMax-M2.7-highspeed` para la configuración de OAuth.
     4. Ejecute:
 
@@ -234,8 +239,8 @@ Preguntas y respuestas sobre modelos y perfiles de autenticación. Para la confi
   </Accordion>
 
   <Accordion title="¿Puedo usar MiniMax como predeterminado y OpenAI para tareas complejas?">
-    Sí. Use **MiniMax como predeterminado** y cambie de modelos **por sesión** cuando sea necesario.
-    Los respaldos (fallbacks) son para **errores**, no para "tareas difíciles", así que use `/model` o un agente separado.
+    Sí. Use **MiniMax como el predeterminado** y cambie de modelos **por sesión** cuando sea necesario.
+    Los respaldos son para **errores**, no para "tareas difíciles", así que use `/model` o un agente separado.
 
     **Opción A: cambiar por sesión**
 
@@ -266,23 +271,23 @@ Preguntas y respuestas sobre modelos y perfiles de autenticación. Para la confi
     - Agente B predeterminado: OpenAI
     - Enrutamiento por agente o use `/agent` para cambiar
 
-    Documentación: [Modelos](/es/concepts/models), [Enrutamiento multiagente](/es/concepts/multi-agent), [MiniMax](/es/providers/minimax), [OpenAI](/es/providers/openai).
+    Docs: [Modelos](/es/concepts/models), [Enrutamiento Multi-Agente](/es/concepts/multi-agent), [MiniMax](/es/providers/minimax), [OpenAI](/es/providers/openai).
 
   </Accordion>
 
-  <Accordion title="¿Son opus / sonnet / gpt accesos directos integrados?">
+  <Accordion title="¿Son opus / sonnet / gpt atajos integrados?">
     Sí. OpenClaw incluye algunos atajos predeterminados (solo se aplican cuando el modelo existe en `agents.defaults.models`):
 
-    - `opus` → `anthropic/claude-opus-4-7`
+    - `opus` → `anthropic/claude-opus-4-8`
     - `sonnet` → `anthropic/claude-sonnet-4-6`
     - `gpt` → `openai/gpt-5.4`
     - `gpt-mini` → `openai/gpt-5.4-mini`
     - `gpt-nano` → `openai/gpt-5.4-nano`
     - `gemini` → `google/gemini-3.1-pro-preview`
     - `gemini-flash` → `google/gemini-3-flash-preview`
-    - `gemini-flash-lite` → `google/gemini-3.1-flash-lite-preview`
+    - `gemini-flash-lite` → `google/gemini-3.1-flash-lite`
 
-    Si define su propio alias con el mismo nombre, prevalecerá su valor.
+    Si configura su propio alias con el mismo nombre, su valor prevalecerá.
 
   </Accordion>
 
@@ -457,7 +462,7 @@ Preguntas y respuestas sobre modelos y perfiles de autenticación. Para la confi
 
 ## Perfiles de autenticación: qué son y cómo gestionarlos
 
-Relacionado: [/concepts/oauth](/es/concepts/oauth) (flujo de OAuth, almacenamiento de tokens, patrones multicuenta)
+Relacionado: [/concepts/oauth](/es/concepts/oauth) (Flujos OAuth, almacenamiento de tokens, patrones multicuenta)
 
 <AccordionGroup>
   <Accordion title="¿Qué es un perfil de autenticación?">
@@ -467,7 +472,7 @@ Relacionado: [/concepts/oauth](/es/concepts/oauth) (flujo de OAuth, almacenamien
     ~/.openclaw/agents/<agentId>/agent/auth-profiles.json
     ```
 
-    Para inspeccionar los perfiles guardados sin volter secretos, ejecute `openclaw models auth list` (opcionalmente `--provider <id>` o `--json`). Consulte [CLI de modelos](/es/cli/models#auth-profiles) para obtener más detalles.
+    Para inspeccionar los perfiles guardados sin volterar secretos, ejecute `openclaw models auth list` (opcionalmente `--provider <id>` o `--json`). Consulte [Models CLI](/es/cli/models#auth-profiles) para obtener más detalles.
 
   </Accordion>
 
@@ -522,11 +527,15 @@ Relacionado: [/concepts/oauth](/es/concepts/oauth) (flujo de OAuth, almacenamien
 
   </Accordion>
 
-  <Accordion title="OAuth vs. clave de API: ¿cuál es la diferencia?">
+  <Accordion title="OAuth vs. clave de API - ¿cuál es la diferencia?">
     OpenClaw admite ambos:
 
-    - **OAuth** a menudo aprovecha el acceso por suscripción (cuando corresponda).
-    - **Las claves de API** usan la facturación de pago por token.
+    - **OAuth / inicio de sesión CLI** a menudo aprovecha el acceso por suscripción donde el
+      proveedor lo admite. Para Anthropic, el backend de Claude CLI de OpenClaw utiliza
+      Claude Code `claude -p`; Anthropic actualmente trata esto como uso de
+      Agent SDK/programático, con un crédito mensual separado de Agent SDK a partir
+      del 15 de junio de 2026.
+    - **Las claves de API** usan facturación por token.
 
     El asistente admite explícitamente Anthropic Claude CLI, OpenAI Codex OAuth y claves de API.
 
@@ -537,5 +546,5 @@ Relacionado: [/concepts/oauth](/es/concepts/oauth) (flujo de OAuth, almacenamien
 
 - [FAQ](/es/help/faq) — las preguntas frecuentes principales
 - [FAQ — inicio rápido y configuración de primera ejecución](/es/help/faq-first-run)
-- [Selección de modelo](/es/concepts/model-providers)
-- [Conmutación por error de modelo](/es/concepts/model-failover)
+- [Selección de modelos](/es/concepts/model-providers)
+- [Conmutación por error de modelos](/es/concepts/model-failover)

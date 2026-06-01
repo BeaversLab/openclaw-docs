@@ -13,8 +13,8 @@ suite à l'exécution de la commande.
 Il modifie la `tool_result` renvoyée, et non la commande elle-même. Tokenjuice ne
 réécrit pas l'entrée du shell, ne relance pas les commandes et ne modifie pas les codes de sortie.
 
-Actuellement, cela s'applique aux exécutions intégrées PI et aux outils dynamiques OpenClaw dans le harnais
-Codex app-server. Tokenjuice s'accroche au middleware de résultats d'outils de OpenClaw et
+Aujourd'hui, cela s'applique aux exécutions intégrées OpenClaw et aux outils dynamiques OpenClaw dans le harnais
+app-server Codex. Tokenjuice intercepte le middleware de résultat d'outil de OpenClaw et
 réduit la sortie avant qu'elle ne retourne dans la session de harnais active.
 
 ## Activer le plugin

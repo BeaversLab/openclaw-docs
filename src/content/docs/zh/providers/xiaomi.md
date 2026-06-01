@@ -78,7 +78,7 @@ Xiaomi MiMo 是 **MiMo** 模型的 XiaomiAPIOpenClaw 平台。OpenClaw 包含一
         xiaomi: {
           apiKey: "xiaomi_api_key",
           model: "mimo-v2.5-tts",
-          voice: "mimo_default",
+          speakerVoice: "mimo_default",
           format: "mp3",
           style: "Bright, natural, conversational tone.",
         },

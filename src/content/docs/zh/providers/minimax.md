@@ -268,14 +268,14 @@ MiniMax 插件为 `image_generate` 工具注册了 `image-01` 模型。它支持
   接受 `file_type: "opus"` 作为原生音频消息。
 - MiniMax T2A 接受分数形式的 `speed` 和 `vol`，但 `pitch` 会作为整数发送；OpenClaw 会在发出 API 请求前截断 `pitch` 的小数值。
 
-| 设置                                     | 环境变量               | 默认值                        | 描述                      |
-| ---------------------------------------- | ---------------------- | ----------------------------- | ------------------------- |
-| `messages.tts.providers.minimax.baseUrl` | `MINIMAX_API_HOST`     | `https://api.minimax.io`      | MiniMax T2A API 主机。    |
-| `messages.tts.providers.minimax.model`   | `MINIMAX_TTS_MODEL`    | `speech-2.8-hd`               | TTS 模型 ID。             |
-| `messages.tts.providers.minimax.voiceId` | `MINIMAX_TTS_VOICE_ID` | `English_expressive_narrator` | 用于语音输出的音色 ID。   |
-| `messages.tts.providers.minimax.speed`   |                        | `1.0`                         | 播放速度，`0.5..2.0`。    |
-| `messages.tts.providers.minimax.vol`     |                        | `1.0`                         | 音量，`(0, 10]`。         |
-| `messages.tts.providers.minimax.pitch`   |                        | `0`                           | 整数音高偏移，`-12..12`。 |
+| 设置                                            | 环境变量               | 默认值                        | 描述                      |
+| ----------------------------------------------- | ---------------------- | ----------------------------- | ------------------------- |
+| `messages.tts.providers.minimax.baseUrl`        | `MINIMAX_API_HOST`     | `https://api.minimax.io`      | MiniMax T2A API 主机。    |
+| `messages.tts.providers.minimax.model`          | `MINIMAX_TTS_MODEL`    | `speech-2.8-hd`               | TTS 模型 ID。             |
+| `messages.tts.providers.minimax.speakerVoiceId` | `MINIMAX_TTS_VOICE_ID` | `English_expressive_narrator` | 用于语音输出的音色 ID。   |
+| `messages.tts.providers.minimax.speed`          |                        | `1.0`                         | 播放速度，`0.5..2.0`。    |
+| `messages.tts.providers.minimax.vol`            |                        | `1.0`                         | 音量，`(0, 10]`。         |
+| `messages.tts.providers.minimax.pitch`          |                        | `0`                           | 整数音高偏移，`-12..12`。 |
 
 ### 音乐生成
 

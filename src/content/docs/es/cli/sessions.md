@@ -97,7 +97,7 @@ openclaw sessions cleanup --json
 - `--dry-run`: previsualiza cuántas entradas se podarían/limitarían sin escribir.
   - En modo texto, dry-run imprime una tabla de acciones por sesión (`Action`, `Key`, `Age`, `Model`, `Flags`) para que puedas ver qué se mantendría frente a lo que se eliminaría.
 - `--enforce`: aplica el mantenimiento incluso cuando `session.maintenance.mode` es `warn`.
-- `--fix-missing`: elimina las entradas cuyos archivos de transcripción faltan, incluso si normalmente aún no cumplirían con la antigüedad/recuento límite.
+- `--fix-missing`: elimina las entradas cuyos archivos de transcripción faltan o son solo encabezado/vacíos, incluso si normalmente todavía no habrían caducado o alcanzado el límite de conteo.
 - `--fix-dm-scope`: cuando `session.dmScope` es `main`, retira las filas obsoletas de MD directo con clave de par dejadas por el enrutamiento anterior `per-peer`, `per-channel-peer` o `per-account-channel-peer`. Use `--dry-run` primero; al aplicar la limpieza se eliminan esas filas de `sessions.json` y se conservan sus transcripciones como archivos eliminados.
 - `--active-key <key>`: protege una clave activa específica de la expulsión del presupuesto de disco. Los punteros externos de conversación duraderos, como las sesiones grupales y las sesiones de chat con ámbito de hilo, también se mantienen por el mantenimiento de edad/recuento/presupuesto de disco.
 - `--agent <id>`: ejecuta la limpieza para una tienda de agente configurada.

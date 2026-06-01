@@ -25,16 +25,16 @@ est connectée de bout en bout.
 2. `agentCommand` exécute l'agent :
    - résout le modèle et les valeurs par défaut de réflexion/verbose/trace
    - charge l'instantané des compétences
-   - appelle `runEmbeddedPiAgent` (runtime pi-agent-core)
+   - appelle `runEmbeddedAgent`OpenClaw (runtime de l'agent OpenClaw)
    - émet un **cycle de vie fin/erreur** si la boucle intégrée n'en émet pas un
-3. `runEmbeddedPiAgent` :
+3. `runEmbeddedAgent` :
    - sérialise les exécutions via des files par session + globales
-   - résout le modèle + le profil d'authentification et construit la session pi
-   - s'abonne aux événements pi et diffuse les deltas assistant/tool
+   - résout le model + le profil d'authentification et construit la session OpenClaw
+   - s'abonne aux événements du runtime et diffuse les deltas assistant/tool
    - applique le délai d'attente -> annule l'exécution s'il est dépassé
    - pour les tours de app-server Codex, abandonne un tour accepté qui cesse de produire des progrès app-server avant un événement terminal
    - renvoie les charges utiles + les métadonnées d'utilisation
-4. `subscribeEmbeddedPiSession` fait le pont entre les événements pi-agent-core et le flux OpenClaw `agent` :
+4. `subscribeEmbeddedAgentSession`OpenClaw fait le pont entre les événements du runtime de l'agent et le flux OpenClaw `agent` :
    - événements d'outils => `stream: "tool"`
    - deltas de l'assistant => `stream: "assistant"`
    - événements de cycle de vie => `stream: "lifecycle"` (`phase: "start" | "end" | "error"`)
@@ -118,7 +118,7 @@ Les harnais peuvent adapter ces hooks différemment. Le harnais du serveur d'app
 
 ## Diffusion en continu + réponses partielles
 
-- Les deltas de l'assistant sont diffusés en continu depuis pi-agent-core et émis sous forme d'événements `assistant`.
+- Les deltas de l'assistant sont diffusés depuis le runtime de l'agent et émis en tant qu'événements `assistant`.
 - La diffusion en bloc peut émettre des réponses partielles soit sur `text_end` soit sur `message_end`.
 - La diffusion du raisonnement peut être émise comme un flux séparé ou comme des réponses bloc.
 - Voir [Streaming](/fr/concepts/streaming) pour le comportement de découpage et de réponse de bloc.
@@ -149,9 +149,9 @@ Les harnais peuvent adapter ces hooks différemment. Le harnais du serveur d'app
 
 ## Flux d'événements (actuellement)
 
-- `lifecycle` : émis par `subscribeEmbeddedPiSession` (et en secours par `agentCommand`)
-- `assistant` : deltas diffusés en continu depuis pi-agent-core
-- `tool` : événements d'outil diffusés en continu depuis pi-agent-core
+- `lifecycle` : émis par `subscribeEmbeddedAgentSession` (et en secours par `agentCommand`)
+- `assistant` : deltas diffusés depuis le runtime de l'agent
+- `tool` : événements de tool diffusés depuis le runtime de l'agent
 
 ## Gestion du channel de discussion
 
@@ -161,9 +161,9 @@ Les harnais peuvent adapter ces hooks différemment. Le harnais du serveur d'app
 ## Délais d'expiration
 
 - `agent.wait` par défaut : 30 s (juste l'attente). Le paramètre `timeoutMs` prévaut.
-- Durée d'exécution de l'agent : `agents.defaults.timeoutSeconds` par défaut 172800 s (48 heures) ; appliquée dans la minuterie d'abandon `runEmbeddedPiAgent`.
+- Runtime de l'agent : `agents.defaults.timeoutSeconds` par défaut 172800 s (48 heures) ; appliqué dans la minuterie d'abandon `runEmbeddedAgent`.
 - Durée d'exécution Cron : le tour d'agent isolé `timeoutSeconds` appartient à cron. Le planificateur démarre cette minuterie lorsque l'exécution commence, abandonne l'exécution sous-jacente à l'échéance configurée, puis exécute un nettoyage limité avant d'enregistrer l'expiration afin qu'une session enfant obsolète ne puisse pas bloquer la voie.
-- Diagnostics de vivacité de session : avec les diagnostics activés, `diagnostics.stuckSessionWarnMs` classifie les sessions `processing` longues qui n'ont aucune réponse, outil, statut, bloc ou progression ACP observée. Les exécutions intégrées actives, les appels de modèle et les appels d'outils sont signalés comme `session.long_running` ; le travail actif sans progression récente comme `session.stalled` ; `session.stuck` est réservé à la gestion administrative des sessions obsolètes sans travail actif. La gestion administrative des sessions obsolètes libère immédiatement la voie de session concernée ; les exécutions intégrées bloquées sont drainées par abandon uniquement après `diagnostics.stuckSessionAbortMs` (par défaut : au moins 5 minutes et 3x le seuil d'avertissement) afin que le travail en file d'attente puisse reprendre sans interrompre les exécutions simplement lentes. La récupération émet des résultats structurés demandés/terminés, et l'état de diagnostic est marqué inactif uniquement si la même génération de traitement est toujours actuelle. Les diagnostics `session.stuck` répétés s'espacent tant que la session reste inchangée.
+- Diagnostics de vivacité de la session : avec les diagnostics activés, `diagnostics.stuckSessionWarnMs` classifie les sessions `processing` longues qui n'ont aucune réponse, tool, statut, bloc ou progression ACP observée. Les exécutions intégrées actives, les appels de model et les appels de tool signalent `session.long_running` ; le travail actif sans progression récente signale `session.stalled` ; `session.stuck` est réservé à la gestion de session obsolète récupérable, y compris les sessions mises en file d'attente inactives avec une activité de model/tool obsolète sans propriétaire. La gestion de session obsolète libère la voie de session affectée immédiatement après que les barrières de récupération sont passées ; les exécutions intégrées bloquées sont vidées par abandon uniquement après `diagnostics.stuckSessionAbortMs` (par défaut : au moins 5 minutes et 3x le seuil d'avertissement) afin que le travail en file d'attente puisse reprendre sans couper les exécutions simplement lentes. La récupération émet des résultats structurés demandés/terminés, et l'état de diagnostic est marqué inactif uniquement si la même génération de traitement est toujours actuelle. Les diagnostics répétés `session.stuck` espacent leurs tentatives tant que la session demeure inchangée.
 - Délai d'inactivité du modèle : OpenClaw abandonne une requête de modèle lorsque aucun bloc de réponse n'arrive avant la fenêtre d'inactivité. `models.providers.<id>.timeoutSeconds` étend ce chien de garde d'inactivité pour les fournisseurs locaux/auto-hébergés lents, mais il est toujours limité par tout `agents.defaults.timeoutSeconds` inférieur ou délai d'exécution spécifique, car ceux-ci contrôlent l'exécution entière de l'agent. Sinon, OpenClaw utilise `agents.defaults.timeoutSeconds` lorsque configuré, plafonné à 120s par défaut. Les exécutions déclenchées par Cron sans délai d'expiration explicite de modèle ou d'agent désactivent le chien de garde d'inactivité et s'appuient sur le délai d'expiration externe de Cron.
 - Délai d'expiration de la requête HTTP du fournisseur : `models.providers.<id>.timeoutSeconds` s'applique aux récupérations HTTP du model de ce fournisseur, y compris la connexion, les en-têtes, le corps, le délai d'expiration de la requête du SDK, la gestion globale de l'abandon de la récupération sécurisée et le chien de garde d'inactivité du flux du model. Utilisez ceci pour les fournisseurs locaux/auto-hébergés lents tels que Ollama avant d'augmenter le délai d'exécution global de l'agent, et gardez le délai d'expiration de l'agent/du runtime au moins aussi élevé lorsque la requête du model doit s'exécuter plus longtemps.
 

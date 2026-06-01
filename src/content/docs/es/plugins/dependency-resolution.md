@@ -32,34 +32,36 @@ OpenClaw solo posee el ciclo de vida del complemento:
 
 OpenClaw utiliza raíces estables por fuente:
 
-- los paquetes npm se instalan en `~/.openclaw/npm`
+- los paquetes npm se instalan en proyectos por complemento bajo
+  `~/.openclaw/npm/projects/<encoded-package>`
 - los paquetes git se clonan en `~/.openclaw/git`
 - las instalaciones locales/ruta/archivo se copian o referencian sin reparación de dependencias
 
-las instalaciones npm se ejecutan en la raíz npm con:
+las instalaciones de npm se ejecutan en esa raíz del proyecto por complemento con:
 
 ```bash
-cd ~/.openclaw/npm
+cd ~/.openclaw/npm/projects/<encoded-package>
 npm install --omit=dev --omit=peer --legacy-peer-deps --ignore-scripts --no-audit --no-fund
 ```
 
-`openclaw plugins install npm-pack:<path.tgz>` usa esa misma raíz npm administrada
-para un archivo tar local de npm-pack. OpenClaw lee los metadatos npm del archivo tar, lo agrega
-a la raíz administrada como una dependencia `file:` copiada, ejecuta la instalación normal de npm,
-y luego verifica los metadatos del archivo de bloqueo instalado antes de confiar en el complemento.
-Esto está destinado a la prueba de aceptación de paquetes y candidatos de lanzamiento donde un
-artefacto de paquete local debe comportarse como el artefacto de registro que simula.
+`openclaw plugins install npm-pack:<path.tgz>` usa esa misma raíz del proyecto npm por complemento
+para un archivo tar local de npm-pack. OpenClaw lee los metadatos npm del
+archivo tar, los agrega al proyecto administrado como una dependencia `file:` copiada, ejecuta
+la instalación normal de npm y luego verifica los metadatos del lockfile instalado antes
+de confiar en el complemento.
+Esto está destinado a la aceptación de paquetes y la prueba de candidatos a lanzamiento donde un
+artefacto de empaquetado local debe comportarse como el artefacto de registro que simula.
 
-npm puede elevar las dependencias transitivas a `~/.openclaw/npm/node_modules` junto
-al paquete del complemento. OpenClaw escanea la raíz npm administrada antes de confiar en la
-instalación y usa npm para eliminar los paquetes administrados por npm durante la desinstalación, por lo que las
-dependencias de tiempo de ejecución elevadas permanecen dentro del límite de limpieza administrado.
+npm puede elevar las dependencias transitivas al `node_modules` del proyecto por complemento
+junto con el paquete del complemento. OpenClaw escanea la raíz del proyecto administrado
+antes de confiar en la instalación y elimina ese proyecto durante la desinstalación, por lo que
+las dependencias de tiempo de ejecución elevadas permanecen dentro del límite de limpieza de ese complemento.
 
-Los paquetes de complementos npm publicados pueden incluir `npm-shrinkwrap.json`. npm usa ese
-archivo de bloqueo publicable durante la instalación, y la raíz npm administrada de OpenClaw lo admite
-a través de la ruta normal de instalación de npm. Los paquetes de complementos publicables propiedad de OpenClaw
-deben incluir un shrinkwrap local de paquete generado a partir del gráfico de dependencias
-publicado de ese paquete de complementos:
+Los paquetes de complementos npm publicados pueden enviar `npm-shrinkwrap.json`. npm usa ese
+lockfile publicable durante la instalación, y la raíz del proyecto npm administrada por OpenClaw
+lo admite a través de la ruta normal de instalación de npm. Los paquetes de complementos publicables
+propiedad de OpenClaw deben incluir un shrinkwrap local del paquete generado a partir del
+gráfico de dependencias publicado de ese paquete de complemento:
 
 ```bash
 pnpm deps:shrinkwrap:generate
@@ -74,7 +76,13 @@ cuando esté presente.
 
 Los paquetes de complementos npm propiedad de OpenClaw también pueden publicarse con `bundledDependencies` explícitos. La ruta de publicación de npm superpone la lista de nombres de dependencias en tiempo de ejecución, elimina los metadatos del espacio de trabajo solo de desarrollo del manifiesto del paquete publicado, ejecuta una instalación de npm sin scripts para las dependencias en tiempo de ejecución locales del paquete, y luego empaqueta o publica el tarball del complemento con esos archivos de dependencia incluidos. Los paquetes con muchos elementos nativos, incluidos los tiempos de ejecución de Codex y ACP, optan por excluirse con `openclaw.release.bundleRuntimeDependencies: false`; esos paquetes aún envían su shrinkwrap, pero npm resuelve las dependencias en tiempo de ejecución durante la instalación en lugar de incrustar cada binario de plataforma en el tarball del complemento. El paquete raíz `openclaw` no agrupa su árbol de dependencias completo.
 
-Los complementos que importan `openclaw/plugin-sdk/*` declaran `openclaw` como una dependencia entre pares (peer dependency). OpenClaw no permite que npm instale una copia de registro separada del paquete anfitrión en la raíz administrada, ya que los paquetes anfitriones obsoletos pueden afectar la resolución entre pares de npm durante instalaciones posteriores de complementos. Las instalaciones administradas de npm omiten la resolución/materialización entre pares de npm para la raíz compartida y OpenClaw reafirma los enlaces `node_modules/openclaw` locales del complemento para los paquetes instalados que declaran el anfitrión como par después de la instalación, actualización o desinstalación.
+Los complementos que importan `openclaw/plugin-sdk/*` declaran `openclaw` como una dependencia
+par (peer). OpenClaw no permite que npm instale una copia de registro separada del
+paquete anfitrión en un proyecto administrado, porque los paquetes anfitrión obsoletos pueden afectar la
+resolución de pares (peer) de npm dentro de ese complemento. Las instalaciones administradas de npm omiten la
+resolución/materialización de pares de npm y OpenClaw reafirma los enlaces `node_modules/openclaw` locales del complemento
+para los paquetes instalados que declaran el par anfitrión
+después de la instalación o actualización.
 
 Las instalaciones de git clonan o actualizan el repositorio, y luego ejecutan:
 
@@ -108,7 +116,8 @@ openclaw doctor --fix
 
 Los complementos incluidos ligeros y críticos para el núcleo se envían como parte de OpenClaw. Deben no tener un árbol de dependencias de tiempo de ejecución pesado o ser movidos a un paquete descargable en ClawHub/npm.
 
-Para ver la lista generada actual de complementos que se envían en el paquete principal, se instalan externamente o permanecen solo en el código fuente, consulte [Inventario de complementos](/es/plugins/plugin-inventory).
+Para ver la lista generada actual de complementos que se envían en el paquete principal, se instalan
+externamente o permanecen solo en el código fuente, consulte [Inventario de complementos](/es/plugins/plugin-inventory).
 
 Los manifiestos de complementos incluidos no deben solicitar la preparación de dependencias. La funcionalidad de complementos grande u opcional debe empaquetarse como un complemento normal e instalarse a través de la misma ruta npm/git/ClawHub que los complementos de terceros.
 
@@ -118,10 +127,13 @@ En las checkouts del código fuente, OpenClaw trata el repositorio como un monor
 | ------------------------------- | ---------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
 | `npm install -g openclaw`       | Árbol de tiempo de ejecución construido dentro del paquete | Paquete OpenClaw y flujos explícitos de instalación/actualización/doctor de complementos        |
 | Git checkout más `pnpm install` | Paquetes del espacio de trabajo `extensions/<id>`          | El espacio de trabajo pnpm, incluyendo las propias dependencias de cada paquete de complementos |
-| `openclaw plugins install ...`  | Raíz del complemento administrado npm/git/ClawHub          | El flujo de instalación/actualización del complemento                                           |
+| `openclaw plugins install ...`  | Raíz administrada del proyecto npm/git/ClawHub             | El flujo de instalación/actualización del complemento                                           |
 
 ## Limpieza heredada
 
 Las versiones anteriores de OpenClaw generaban raíces de dependencias de complementos empaquetados al inicio o durante la reparación del doctor. La limpieza actual del doctor elimina esos directorios y enlaces simbólicos obsoletos cuando se usa `--fix`, incluidas las raíces antiguas de `plugin-runtime-deps`, los enlaces simbólicos globales de paquetes con prefijo de Node que apuntan a objetivos `plugin-runtime-deps` eliminados, manifiestos `.openclaw-runtime-deps*`, `node_modules` de complementos generados, directorios de etapa de instalación y tiendas pnpm locales de paquetes. El postinstall empaquetado también elimina esos enlaces simbólicos globales antes de eliminar las raíces de objetivos heredadas, de modo que las actualizaciones no dejen importaciones de paquetes EPM colgantes.
 
-Estas rutas son solo restos heredados. Las nuevas instalaciones no deberían crearlas.
+Las instalaciones de npm más antiguas también usaban una raíz `~/.openclaw/npm/node_modules` compartida.
+Los flujos actuales de instalación, actualización, desinstalación y doctor todavía reconocen esa raíz
+plana heredada solo para la recuperación y la limpieza. Las nuevas instalaciones de npm deberían crear
+raíces de proyectos por complemento en su lugar.

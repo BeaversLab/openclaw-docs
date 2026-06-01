@@ -74,7 +74,7 @@ The API migration is being designed in another session. Future turns should not 
 A report from an untrusted source needs review before promotion. Future turns should treat it as evidence only; do not store it as durable memory until a trusted reviewer confirms the contents.
 ```
 
-使用 [commitments](/zh/concepts/commitments) 进行推断的、短期的后续跟进。使用 [scheduled tasks](/zh/automation/cron-jobs) 进行精确提醒、定时检查和周期性工作。记忆仍然可以总结任何一条路径周围的持久上下文。
+使用 [commitments](/zh/concepts/commitments) 来处理推断出的、短期的后续跟进。使用 [scheduled tasks](/zh/automation/cron-jobs) 来处理精确的提醒、定时检查和周期性工作。Memory 仍然可以总结这两条路径周围的持久上下文。
 
 这并不是每个记忆的必需架构。简单的事实可以保持简洁。当丢失时间、权限、过期或可安全执行上下文可能导致代理以后做错事情时，请使用动作敏感型边界。
 
@@ -82,7 +82,7 @@ A report from an untrusted source needs review before promotion. Future turns sh
 
 一些未来的后续跟进并不是持久的事实。如果您提到明天有一个面试，有用的记忆可能是“面试后跟进”，而不是“永远将其存储在 `MEMORY.md` 中”。
 
-[Commitments](/zh/concepts/commitments) 是针对这种情况的可选短期后续记忆。OpenClaw 会在隐藏的后台过程中推断它们，将其限定于同一代理和渠道，并通过心跳传递到期检查。显式提醒仍使用 [scheduled tasks](/zh/automation/cron-jobs)。
+[Commitments](/zh/concepts/commitments) 是针对这种情况的可选、短期后续跟进记忆。OpenClaw 在隐藏的后台过程中推断它们，将它们限定在同一个 agent 和 渠道，并通过心跳传递到期检查。明确的提醒仍然使用 [scheduled tasks](/zh/automation/cron-jobs)。
 
 ## Memory tools
 
@@ -114,9 +114,9 @@ A report from an untrusted source needs review before promotion. Future turns sh
 
 当配置了嵌入提供商时，`memory_search` 使用 **混合搜索** —— 结合向量相似性（语义含义）与关键词匹配（精确术语，如 ID 和代码符号）。一旦您拥有任何受支持提供商的 API 密钥，此功能即可开箱即用。
 
-<Info>OpenClaw 会从可用的 API 密钥中自动检测您的嵌入提供商。如果您配置了 OpenAI、Gemini、Voyage 或 Mistral 密钥，记忆搜索将自动启用。</Info>
+<Info>OpenClaw 默认使用 OpenAI 嵌入。显式设置 `agents.defaults.memorySearch.provider` 以使用 Gemini、Voyage、 Mistral、本地、Ollama、Bedrock、GitHub Copilot 或兼容 OpenAI 的 嵌入。</Info>
 
-有关搜索工作原理、调整选项和提供商设置的详细信息，请参阅
+有关搜索工作原理、调优选项和提供商设置的详细信息，请参阅
 [Memory Search](/zh/concepts/memory-search)。
 
 ## Memory backends
@@ -147,8 +147,8 @@ A report from an untrusted source needs review before promotion. Future turns sh
 ## Automatic memory flush
 
 在 [compaction](/zh/concepts/compaction) 总结您的对话之前，OpenClaw
-会运行一个静默轮次，提醒智能体将重要上下文保存到记忆
-文件中。此功能默认开启 —— 您无需配置任何内容。
+会运行一个静默回合，提醒 agent 将重要上下文保存到 memory
+文件。默认情况下此功能是开启的 — 您无需进行任何配置。
 
 要在本地模型上保留该整理轮次，请设置精确的 memory-flush 模型
 覆盖：
@@ -174,25 +174,32 @@ A report from an untrusted source needs review before promotion. Future turns sh
 
 ## 梦境
 
-梦境是内存的一个可选后台整合过程。它收集短期信号，对候选项进行评分，并仅将合格的项目提升到长期内存 (`MEMORY.md`) 中。
+Dreaming 是一个可选的后台记忆合并过程。它收集
+短期信号，对候选项进行评分，并仅将符合条件的项目提升到
+长期记忆 (`MEMORY.md`) 中。
 
 其设计旨在保持长期内存的高信噪比：
 
 - **可选加入**：默认禁用。
-- **计划执行**：启用后，`memory-core` 会自动管理一个循环的 cron 作业以进行完整的梦境扫描。
+- **Scheduled**：启用后，`memory-core` 会自动管理一个周期性的 cron 作业
+  以进行完整的 dreaming 扫描。
 - **阈值控制**：提升项目必须通过分数、召回频率和查询多样性门控。
-- **可审查**：阶段摘要和日记条目会被写入 `DREAMS.md` 供人工审查。
+- **Reviewable**：阶段摘要和日记条目被写入 `DREAMS.md`
+  供人工审查。
 
-有关阶段行为、评分信号和梦境日记的详细信息，请参阅 [梦境](/zh/concepts/dreaming)。
+有关阶段行为、评分信号和 Dream Diary 的详细信息，请参阅
+[Dreaming](/zh/concepts/dreaming)。
 
 ## 基于事实的回填和实时提升
 
 梦境系统现在有两条密切相关的审查通道：
 
-- **实时梦境** 处理 `memory/.dreams/` 下的短期梦境存储，这是正常的深度阶段在决定哪些内容可以升级到 `MEMORY.md` 时所使用的依据。
-- **基于事实的回填** 读取历史 `memory/YYYY-MM-DD.md` 笔记作为独立的日文件，并将结构化的审查输出写入 `DREAMS.md`。
+- **Live dreaming** 使用 `memory/.dreams/` 下的短期 dreaming 存储
+  工作，这也是正常深度阶段在决定什么可以
+  升级到 `MEMORY.md` 时所使用的方式。
+- **Grounded backfill** 读取历史的 `memory/YYYY-MM-DD.md` 笔记作为独立的每日文件，并将结构化的审查输出写入 `DREAMS.md`。
 
-当您想要重放旧笔记并检查系统认为哪些内容持久有效，而又无需手动编辑 `MEMORY.md` 时，基于事实的回填非常有用。
+当您想要重放较旧的笔记并检查系统认为持久的内容而无需手动编辑 `MEMORY.md` 时，Grounded backfill 非常有用。
 
 当您使用它时：
 
@@ -202,9 +209,9 @@ openclaw memory rem-backfill --path ./memory --stage-short-term
 
 基于事实的持久候选项不会被直接提升。它们被暂存到正常的深度阶段已经使用的同一个短期梦境存储中。这意味着：
 
-- `DREAMS.md` 仍然是人工审查界面。
+- `DREAMS.md` 保持为人工审查界面。
 - 短期存储仍然是机器层面的排序界面。
-- `MEMORY.md` 仍然仅由深度提升写入。
+- `MEMORY.md` 仍然只能通过深度提升写入。
 
 如果您决定重放没有用处，您可以删除暂存的工件，而无需触及普通日记条目或正常的召回状态：
 
@@ -224,14 +231,14 @@ openclaw memory index --force   # Rebuild the index
 ## 延伸阅读
 
 - [内置内存引擎](/zh/concepts/memory-builtin)：默认的 SQLite 后端。
-- [QMD memory engine](/zh/concepts/memory-qmd): advanced local-first sidecar.
-- [Honcho memory](/zh/concepts/memory-honcho): AI-native cross-会话 memory.
-- [Memory LanceDB](/zh/plugins/memory-lancedbOpenAI): LanceDB-backed plugin with OpenAI-compatible embeddings.
-- [Memory Wiki](/zh/plugins/memory-wiki): compiled knowledge vault and wiki-native tools.
-- [Memory search](/zh/concepts/memory-search): search pipeline, providers, and tuning.
-- [Dreaming](/zh/concepts/dreaming): background promotion from short-term recall to long-term memory.
-- [Memory configuration reference](/zh/reference/memory-config): all config knobs.
-- [Compaction](/zh/concepts/compaction): how compaction interacts with memory.
+- [QMD 内存引擎](/zh/concepts/memory-qmd)：高级的本地优先附加组件。
+- [Honcho 内存](/zh/concepts/memory-honcho)：AI 原生的跨会话内存。
+- [Memory LanceDB](/zh/plugins/memory-lancedb)：由 LanceDB 支持的插件，具有 OpenAI 兼容的嵌入。
+- [Memory Wiki](/zh/plugins/memory-wiki)：编译的知识库和 Wiki 原生工具。
+- [Memory search](/zh/concepts/memory-search)：搜索管道、提供程序和调优。
+- [Dreaming](/zh/concepts/dreaming)：从短期回想到长期记忆的后台提升。
+- [Memory configuration reference](/zh/reference/memory-config)：所有配置选项。
+- [Compaction](/zh/concepts/compaction)：压缩如何与内存交互。
 
 ## Related
 

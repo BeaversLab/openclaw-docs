@@ -1,5 +1,5 @@
 ---
-summary: "透過 Chrome 或 Twilio 傳輸加入 Google Meet 通話。"
+summary: "OpenClaw Google Meet 參與者外掛程式，用於透過 Chrome 或 Twilio 傳輸加入通話。"
 read_when:
   - You are installing, configuring, or auditing the google-meet plugin
 title: "Google Meet 外掛程式"
@@ -7,7 +7,7 @@ title: "Google Meet 外掛程式"
 
 # Google Meet 外掛程式
 
-透過 Chrome 或 Twilio 傳輸加入 Google Meet 通話。
+OpenClaw Google Meet 參與者外掛程式，用於透過 Chrome 或 Twilio 傳輸加入通話。
 
 ## 發行版本
 

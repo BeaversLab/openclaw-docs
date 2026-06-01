@@ -12,15 +12,15 @@ L'outil `music_generate`MiniMaxOpenRouter permet à l'agent de créer de la musi
 capacité de génération de musique partagée avec les providers configurés — ComfyUI,
 fal, Google, MiniMax et OpenRouter aujourd'hui.
 
-Pour les exécutions d'agent basées sur une session, OpenClaw lance la génération de musique en tant que
+Pour les exécutions d'agent basées sur la session, OpenClaw lance la génération de musique en tant que
 tâche d'arrière-plan, la suit dans le registre des tâches, puis réveille l'agent à nouveau
 lorsque la piste est prête afin que l'agent puisse informer l'utilisateur et joindre
-l'audio terminé. Les complétions de médias générés sont transmis par l'agent via
-l'outil de message. Si la session du demandeur est inactive et que certains audio
-générés manquent toujours à la transmission par l'outil de message, OpenClaw envoie un
-secours direct idempotent avec uniquement l'audio manquant. Le réveil de complétion
-avertit explicitement l'agent que les réponses finales normales sont privées pour cette
-route.
+l'audio terminé. Les achèvements de média générés sont transmis par l'agent via
+le tool de message. Si la session demanderesse est inactive ou si son réveil actif
+échoue, et que certains audios générés manquent encore à la livraison via le tool de message,
+OpenClaw envoie un secours direct idempotent avec uniquement l'audio manquant. Le
+réveil d'achèvement avertit explicitement l'agent que les réponses finales normales sont
+privées pour cette route.
 
 <Note>L'outil partagé intégré n'apparaît que lorsqu'au moins un provider de génération de musique est disponible. Si vous ne voyez pas `music_generate` dans les outils de votre agent, configurez `agents.defaults.musicGenerationModel`API ou configurez une clé d'API de provider.</Note>
 

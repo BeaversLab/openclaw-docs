@@ -1,5 +1,5 @@
 ---
-summary: "Añade la superficie del canal de WhatsApp para enviar y recibir mensajes de OpenClaw."
+summary: "Complemento de canal de OpenClaw para WhatsApp para chats de WhatsApp Web."
 read_when:
   - You are installing, configuring, or auditing the whatsapp plugin
 title: "Complemento de WhatsApp"
@@ -7,7 +7,7 @@ title: "Complemento de WhatsApp"
 
 # Complemento de WhatsApp
 
-Añade la superficie del canal de WhatsApp para enviar y recibir mensajes de OpenClaw.
+Complemento de canal de OpenClaw para WhatsApp para chats de WhatsApp Web.
 
 ## Distribución
 

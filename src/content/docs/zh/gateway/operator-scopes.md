@@ -13,8 +13,8 @@ title: "操作员作用域"
 人员、团队或机器之间实现严格的分离，请在不同的操作系统用户或
 主机下运行单独的 Gateway(网关)。
 
-相关内容：[安全性](</en/gateway/securityGateway(网关)>)、[Gateway(网关) 协议](</en/gateway/protocolGateway(网关)>)、
-[Gateway(网关) 配对](/zh/gateway/pairingCLI)、[设备 CLI](/zh/cli/devices)。
+相关：[Security](</en/gateway/securityGateway(网关)>)、[Gateway(网关) protocol](</en/gateway/protocolGateway(网关)>)、
+[Gateway(网关) pairing](/zh/gateway/pairingCLI)、[Devices CLI](/zh/cli/devices)。
 
 ## 角色
 
@@ -69,29 +69,44 @@ Gateway(网关) WebSocket 客户端使用以下一种角色进行连接：
 批准设备请求时：
 
 - 没有操作员角色的请求不需要操作员令牌范围批准。
-- 对于 `operator.read`、`operator.write`、`operator.approvals`、
-  `operator.pairing` 或 `operator.talk.secrets` 的请求要求调用方拥有
-  这些范围，或者拥有 `operator.admin`。
-- 对于 `operator.admin` 的请求需要 `operator.admin`。
-- 没有显式作用域的修复请求可以继承现有的操作员令牌作用域。如果该现有令牌具有管理员作用域，则批准仍需要 `operator.admin`。
+- 请求非操作员设备角色（例如 `node`）需要
+  `operator.admin`，即使 `device.pair.approve` 可以通过
+  `operator.pairing` 访问。
+- 请求 `operator.read`、`operator.write`、`operator.approvals`、
+  `operator.pairing` 或 `operator.talk.secrets` 需要调用方拥有
+  这些范围，或拥有 `operator.admin`。
+- 请求 `operator.admin` 需要 `operator.admin`。
+- 没有显式范围的修复请求可以继承现有的操作员
+  令牌范围。如果现有令牌具有管理员范围，则批准仍需要
+  `operator.admin`。
 
-对于已配对设备的令牌会话，除非调用者也拥有 `operator.admin`，否则管理是自作用域的：非管理员调用者只能看到自己的配对条目，只能批准或拒绝自己的待处理请求，并且只能轮换、撤销或删除自己的设备条目。
+非管理员共享密钥和受信任代理会话只能在其自己声明的操作员范围内批准操作员-设备
+请求。批准非操作员
+角色是管理员独有的，即使这些会话在其他情况下可以使用
+`operator.pairing`。
+
+对于已配对设备令牌会话，除非调用方具有 `operator.admin`，否则管理也是自限范围的：非管理员调用方只能看到自己的配对
+条目，只能批准或拒绝自己的待处理请求，并且只能轮换、
+撤销或删除自己的设备条目。
 
 ## 节点配对批准
 
-传统 `node.pair.*`Gateway(网关) 使用单独的 Gateway(网关) 拥有的节点配对存储。WS 节点使用带有 `role: node` 的设备配对，但适用相同的批准级别词汇。
+传统 `node.pair.*`Gateway(网关) 使用独立的 Gateway(网关) 拥有的节点配对存储。WS 节点
+使用带有 `role: node` 的设备配对，但适用相同的批准级别词汇
+表。
 
-`node.pair.approve` 使用待处理请求命令列表来派生其他所需作用域：
+`node.pair.approve` 使用待处理请求命令列表来推导附加
+所需范围：
 
 - 无命令请求：`operator.pairing`
-- 非 exec 节点命令：`operator.pairing` + `operator.write`
+- 非执行节点命令：`operator.pairing` + `operator.write`
 - `system.run`、`system.run.prepare` 或 `system.which`：
   `operator.pairing` + `operator.admin`
 
-节点配对建立身份和信任。它不取代节点自己的 `system.run` exec 批准策略。
+节点配对建立身份和信任。它不会取代节点自身的 `system.run` 执行批准策略。
 
-## 共享密钥身份验证
+## 共享密钥认证
 
-共享的 Gateway 令牌/密码身份验证被视为对该 Gateway 的可信操作员访问。OpenAI 兼容的 HTTP 表面、Gateway(网关)OpenAI`/tools/invoke` 和 HTTP 会话历史端点会恢复为共享密钥承载身份验证设置的正常完整操作员默认作用域，即使调用方发送了更窄的声明作用域。
+共享 Gateway 令牌/密码认证被视为对该 Gateway(网关) 的受信任操作员访问。OpenAI 兼容的 HTTP 表面、`/tools/invoke` 和 HTTP 会话历史记录端点会恢复为共享密钥不记名认证设置的正常的完整操作员默认范围集，即使调用方发送了更窄的声明范围。
 
-承载身份的模式（例如受信代理身份验证或私有入口 `none`）仍然可以遵守显式声明的作用域。请使用单独的 Gateway(网关) 来实现真正的信任边界分离。
+承载身份的模式（如受信任的代理认证或专用入口 `none`）仍然可以遵守明确的声明范围。请使用单独的 Gateway 来实现真正的信任边界分离。

@@ -535,9 +535,8 @@ emplacement mémoire suffit pour qu'Active Memory utilise cet outil de rappel :
 
 ### Lossless Claw
 
-Lossless Claw est un plugin de moteur de contexte avec ses propres outils de rappel. Installez-le et
-configurez-le d'abord comme moteur de contexte ; voir [Moteur de contexte](/fr/concepts/context-engine).
-Ensuite, permettez à Active Memory d'utiliser les outils de rappel Lossless Claw :
+Lossless Claw est un plugin de moteur de contexte avec ses propres outils de rappel. Installez-le et configurez-le d'abord en tant que moteur de contexte ; consultez [Moteur de contexte](/fr/concepts/context-engine).
+Ensuite, laissez la Mémoire active utiliser les outils de rappel Lossless Claw :
 
 ```json5
 {
@@ -669,7 +668,7 @@ Les champs les plus importants sont :
 | `config.promptOverride`      | `string`                                                                                             | Remplacement avancé du prompt complet ; non recommandé pour une utilisation normale                                                                                                                                                                                                                               |
 | `config.promptAppend`        | `string`                                                                                             | Instructions supplémentaires avancées ajoutées au prompt par défaut ou remplacé                                                                                                                                                                                                                                   |
 | `config.timeoutMs`           | `number`                                                                                             | Délai d'attente strict pour le sous-agent de mémoire bloquante, plafonné à 120000 ms                                                                                                                                                                                                                              |
-| `config.setupGraceTimeoutMs` | `number`                                                                                             | Budget supplémentaire de configuration avancée avant l'expiration du délai de rappel ; par défaut 0 et plafonné à 30000 ms. Consultez [Délai de grâce de démarrage à froid](#cold-start-grace) pour les conseils de mise à niveau v2026.4.x                                                                       |
+| `config.setupGraceTimeoutMs` | `number`                                                                                             | Budget de configuration supplémentaire avancé avant l'expiration du délai de rappel ; la valeur par défaut est 0 et la limite est de 30000 ms. Consultez [Délai de grâce de démarrage à froid (Cold-start grace)](#cold-start-grace) pour les conseils de mise à niveau v2026.4.x                                 |
 | `config.maxSummaryChars`     | `number`                                                                                             | Nombre maximum total de caractères autorisés dans le résumé de la mémoire active                                                                                                                                                                                                                                  |
 | `config.logging`             | `boolean`                                                                                            | Émet des journaux de mémoire active lors du réglage                                                                                                                                                                                                                                                               |
 | `config.persistTranscripts`  | `boolean`                                                                                            | Conserve les transcriptions du sous-agent de mémoire bloquante sur le disque au lieu de supprimer les fichiers temporaires                                                                                                                                                                                        |
@@ -790,39 +789,38 @@ Si la mémoire active est trop lente :
 La mémoire active s'appuie sur le pipeline de rappel du plugin de mémoire configuré, donc la plupart des surprises de rappel sont des problèmes de provider d'embeddings, et non des bogues de la mémoire active. Le chemin `memory-core` par défaut utilise `memory_search` et `memory_get` ; l'emplacement `memory-lancedb` utilise `memory_recall`. Si vous utilisez un autre plugin de mémoire, confirmez que `config.toolsAllow` nomme les outils que ce plugin enregistre réellement.
 
 <AccordionGroup>
-  <Accordion title="Provider d'embeddings changé ou a cessé de fonctionner">
-    Si `memorySearch.provider` n'est pas défini, OpenClaw détecte automatiquement le premier
-    provider d'embeddings disponible. Une nouvelle clé API, l'épuisement du quota, ou un
-    provider hébergé limité par le taux peuvent changer le provider qui est résolu entre
-    les exécutions. Si aucun provider ne résout, `memory_search` peut se dégrader en une récupération
-    purement lexicale ; les échecs d'exécution après la sélection d'un provider ne retombent
-    pas automatiquement sur une solution de repli.
+  <Accordion title="Fournisseur d'embeddings changé ou ne fonctionne plus">
+    Si `memorySearch.provider` n'est pas défini, OpenClaw utilise les embeddings OpenAI. Définissez
+    `memorySearch.provider` explicitement pour les embeddings locaux, Ollama, Gemini, Voyage,
+    Mistral, DeepInfra, Bedrock, GitHub Copilot, ou compatibles OpenAI.
+    Si le fournisseur configuré ne peut pas s'exécuter, `memory_search` peut
+    se dégrader en une récupération purement lexicale ; les échecs d'exécution après la sélection d'un fournisseur
+    ne reviennent pas automatiquement à la solution précédente.
 
-    Épinglez le provider (et un repli optionnel) explicitement pour rendre la sélection
-    déterministe. Consultez [Recherche de mémoire](/fr/concepts/memory-search) pour la liste
-    complète des providers et des exemples d'épinglage.
+    Définissez un `memorySearch.fallback` facultatif uniquement lorsque vous souhaitez une
+    solution de repli unique délibérée. Consultez [Recherche mémoire](/fr/concepts/memory-search) pour la liste
+    complète des fournisseurs et des exemples.
 
   </Accordion>
 
 <Accordion title="Le rappel semble lent, vide ou incohérent">
-  - Activez `/trace on` pour afficher le résumé de débogage de la mémoire active détenue par le plugin dans la session. - Activez `/verbose on` pour voir également la ligne d'état `🧩 Active Memory: ...` après chaque réponse. - Surveillez les journaux de la passerelle pour `active-memory: ... start|done`, `memory sync failed (search-bootstrap)`, ou les erreurs d'intégration du fournisseur. -
-  Exécutez `openclaw memory status --deep` pour inspecter le backend de recherche de mémoire et l'état de l'index. - Si vous utilisez `ollama`, vérifiez que le modèle d'intégration est installé (`ollama list`).
+  - Activez `/trace on` pour afficher le résumé de débogage de la Mémoire active détenue par le plugin dans la session. - Activez `/verbose on` pour voir également la ligne d'état `🧩 Active Memory: ...` après chaque réponse. - Surveillez les journaux de la passerelle pour `active-memory: ... start|done`, `memory sync failed (search-bootstrap)`, ou les erreurs d'embeddings du fournisseur. -
+  Exécutez `openclaw memory status --deep` pour inspecter le backend de recherche mémoire et l'état de l'index. - Si vous utilisez `ollama`, confirmez que le modèle d'embeddings est installé (`ollama list`).
 </Accordion>
 
-  <Accordion title="Le premier rappel après le redémarrage de la passerelle renvoie `status=timeout`">
-    Dans les versions v2026.5.2 et ultérieures, si la configuration à froid (chauffage du modèle + chargement de l'index d'intégration) n'est pas terminée au moment où le premier rappel se déclenche, l'exécution
-    peut atteindre le budget `timeoutMs` configuré et renvoyer `status=timeout`
-    avec une sortie vide. Les journaux de la Gateway affichent `active-memory timeout after Nms`
+  <Accordion title="Premier rappel après le redémarrage de la Gateway renvoie `status=timeout`">
+    Dans les versions v2026.5.2 et ultérieures, si la configuration à froid (préchauffage du modèle + chargement de l'index d'incorporation) n'est pas terminée au moment du premier rappel, l'exécution peut atteindre le budget `timeoutMs` configuré et renvoyer `status=timeout`
+    avec une sortie vide. Les journaux de la Gateway montrent `active-memory timeout after Nms`
     autour de la première réponse éligible après un redémarrage.
 
-    Voir [Cold-start grace](#cold-start-grace) sous Configuration recommandée pour la
-    valeur recommandée de `setupGraceTimeoutMs`.
+    Voir [Cold-start grace](#cold-start-grace) dans Configuration recommandée pour la valeur
+    `setupGraceTimeoutMs` recommandée.
 
   </Accordion>
 </AccordionGroup>
 
 ## Pages connexes
 
-- [Recherche de mémoire](/fr/concepts/memory-search)
-- [Référence de configuration de la mémoire](/fr/reference/memory-config)
-- [Configuration du SDK Plugin](/fr/plugins/sdk-setup)
+- [Memory Search](/fr/concepts/memory-search)
+- [Memory configuration reference](/fr/reference/memory-config)
+- [Plugin SDK setup](/fr/plugins/sdk-setup)

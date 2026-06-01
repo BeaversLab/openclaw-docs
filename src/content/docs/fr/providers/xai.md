@@ -260,17 +260,17 @@ Les alias hérités sont toujours normalisés vers les ids groupés canoniques :
   </Accordion>
 
   <Accordion title="Synthèse vocale">
-    Le plugin intégré `xai` enregistre la synthèse vocale via l'interface de fournisseur `tts`
-    partagée.
+    Le plugin `xai` intégré enregistre la synthèse vocale via l'interface `tts`
+    du provider partagée.
 
     - Voix : `eve`, `ara`, `rex`, `sal`, `leo`, `una`
     - Voix par défaut : `eve`
     - Formats : `mp3`, `wav`, `pcm`, `mulaw`, `alaw`
     - Langue : code BCP-47 ou `auto`
-    - Vitesse : substitution de vitesse native du fournisseur
-    - Le format de note vocale natif Opus n'est pas pris en charge
+    - Vitesse : substitution de vitesse native du provider
+    - Le format natif de note vocale Opus n'est pas pris en charge
 
-    Pour utiliser xAI comme fournisseur TTS par défaut :
+    Pour utiliser xAI comme provider TTS par défaut :
 
     ```json5
     {
@@ -279,7 +279,7 @@ Les alias hérités sont toujours normalisés vers les ids groupés canoniques :
           provider: "xai",
           providers: {
             xai: {
-              voiceId: "eve",
+              speakerVoiceId: "eve",
             },
           },
         },
@@ -288,8 +288,8 @@ Les alias hérités sont toujours normalisés vers les ids groupés canoniques :
     ```
 
     <Note>
-    OpenClaw utilise le point de terminaison par lots `/v1/tts` d'xAI. xAI propose également un TTS en flux continu
-    via WebSocket, mais le contrat du fournisseur de parole OpenClaw attend actuellement
+    OpenClaw utilise le point de terminaison de lot `/v1/tts` d'xAI. xAI propose également un flux TTS
+    via WebSocket, mais le contrat du provider de synthèse vocale OpenClaw attend actuellement
     un tampon audio complet avant la livraison de la réponse.
     </Note>
 

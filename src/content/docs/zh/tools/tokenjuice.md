@@ -13,7 +13,7 @@ read_when:
 它更改返回的 `tool_result`，而不是命令本身。Tokenjuice 不会
 重写 shell 输入、重新运行命令或更改退出代码。
 
-目前这适用于 Codex 应用服务器框架中的 PI 嵌入式运行和 OpenClaw 动态工具。Tokenjuice 挂接到 OpenClaw 的工具结果中间件，并在输出返回到活动的框架会话之前对其进行修剪。
+目前这适用于 Codex 应用服务器框架中的 OpenClaw 嵌入式运行和 OpenClaw 动态工具。Tokenjuice 挂钩 OpenClaw 的工具结果中间件，并在输出返回到活动框架会话之前对其进行修剪。
 
 ## 启用插件
 

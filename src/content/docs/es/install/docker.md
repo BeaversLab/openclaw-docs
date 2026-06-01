@@ -106,7 +106,7 @@ docker compose run --rm --no-deps --entrypoint node openclaw-gateway \
 docker compose up -d openclaw-gateway
 ```
 
-<Note>Ejecute `docker compose` desde la raíz del repositorio. Si habilitó `OPENCLAW_EXTRA_MOUNTS` o `OPENCLAW_HOME_VOLUME`, el script de configuración escribe `docker-compose.extra.yml`; inclúyalo con `-f docker-compose.yml -f docker-compose.extra.yml`.</Note>
+<Note>Ejecute `docker compose` desde la raíz del repositorio. Si habilitó `OPENCLAW_EXTRA_MOUNTS` o `OPENCLAW_HOME_VOLUME`, el script de configuración escribe `docker-compose.extra.yml`; inclúyalo después de cualquier archivo de anulación estándar, por ejemplo `-f docker-compose.yml -f docker-compose.override.yml -f docker-compose.extra.yml` cuando existen ambos archivos de anulación.</Note>
 
 <Note>Debido a que `openclaw-cli` comparte el espacio de nombres de red de `openclaw-gateway`, es una herramienta posterior al inicio. Antes de `docker compose up -d openclaw-gateway`, ejecute la incorporación y escrituras de configuración de tiempo de configuración a través de `openclaw-gateway` con `--no-deps --entrypoint node`.</Note>
 

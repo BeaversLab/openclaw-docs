@@ -59,7 +59,7 @@ Les profils non portables restent disponibles via l'héritage en lecture directe
 
 ## Routes d'authentification configuration uniquement
 
-Les entrées `auth.profiles` avec `mode: "aws-sdk"` sont des métadonnées de routage, et non des identifiants stockés. Elles sont valides lorsque le fournisseur cible utilise `models.providers.<id>.auth: "aws-sdk"`Amazon Bedrock ou la route par défaut du AWS SDK intégrée d'Amazon Bedrock. Ces identifiants de profil peuvent apparaître dans `auth.order` et les remplacements de session même si aucune entrée correspondante n'existe dans `auth-profiles.json`.
+Les entrées `auth.profiles` avec `mode: "aws-sdk"` sont des métadonnées de routage, et non des informations d'identification stockées. Elles sont valides lorsque le fournisseur cible utilise `models.providers.<id>.auth: "aws-sdk"` ou la route du kit AWS SDK configurée par le plugin pour Amazon Bedrock. Ces identifiants de profil peuvent apparaître dans `auth.order` et les substitutions de session même si aucune entrée correspondante n'existe dans `auth-profiles.json`.
 
 N'écrivez pas `type: "aws-sdk"` dans `auth-profiles.json`. Si une installation héritée possède un tel marqueur, `openclaw doctor --fix` le déplace vers `auth.profiles` et supprime le marqueur du magasin d'identifiants.
 

@@ -73,7 +73,7 @@ The API migration is being designed in another session. Future turns should not 
 A report from an untrusted source needs review before promotion. Future turns should treat it as evidence only; do not store it as durable memory until a trusted reviewer confirms the contents.
 ```
 
-對於推斷出的、短期的後續跟進，請使用 [承諾](/zh-Hant/concepts/commitments)。對於精確提醒、定時檢查和週期性工作，請使用 [排程任務](/zh-Hant/automation/cron-jobs)。記憶仍然可以概括任何一種路徑周圍的持續語境。
+使用 [承諾](/zh-Hant/concepts/commitments) 來處理推斷出的短期後續事項。使用 [排程任務](/zh-Hant/automation/cron-jobs) 進行精確提醒、定時檢查和週期性工作。記憶仍然可以總結這兩種路徑周圍的持久上下文。
 
 這並不是每個記憶的必需架構。簡單的事實可以保持簡潔。當失去時機、權限、過期或安全採取行動的語境可能導致代理稍後做錯事情時，請使用動作敏感邊界。
 
@@ -81,7 +81,7 @@ A report from an untrusted source needs review before promotion. Future turns sh
 
 有些未來的後續跟進並不是持續的事實。如果您提到明天有一個面試，有用的記憶可能是「面試後確認」，而不是「將此永久儲存在 `MEMORY.md` 中」。
 
-[Commitments](/zh-Hant/concepts/commitments) 是針對該情況選用的短期後續記憶。OpenClaw 會在隱藏的背景流程中推斷它們，將其範圍限制在相同的代理和通道，並透過心跳傳送到期檢查。明確的提醒仍使用 [scheduled tasks](/zh-Hant/automation/cron-jobs)。
+[承諾](/zh-Hant/concepts/commitments) 是針對該情況的可選、短期後續記憶。OpenClaw 會在隱藏的背景流程中推斷它們，將其範圍限制在同一個代理和頻道，並通過心跳傳送到期的檢查。明確的提醒仍然使用 [排程任務](/zh-Hant/automation/cron-jobs)。
 
 ## 記憶工具
 
@@ -107,16 +107,16 @@ A report from an untrusted source needs review before promotion. Future turns sh
 
 它不會取代活動記憶外掛。活動記憶外掛仍然擁有回想、提升和夢想的功能。`memory-wiki` 在旁邊增加了一個豐富來源的知識層。
 
-請參閱 [Memory Wiki](/zh-Hant/plugins/memory-wiki)。
+請參閱 [記憶 Wiki](/zh-Hant/plugins/memory-wiki)。
 
 ## 記憶搜尋
 
 當設定了嵌入提供者時，`memory_search` 會使用 **混合搜尋** —— 結合向量相似度（語意含義）與關鍵字比對（確切術語，如 ID 和代碼符號）。一旦您擁有任何支援提供者的 API 金鑰，此功能即可立即運作。
 
-<Info>OpenClaw 會從可用的 API 金鑰自動偵測您的嵌入提供者。如果您設定了 OpenAI、Gemini、Voyage 或 Mistral 金鑰，記憶搜尋將會自動啟用。</Info>
+<Info>OpenClaw 預設使用 OpenAI 嵌入。明確設定 `agents.defaults.memorySearch.provider` 以使用 Gemini、Voyage、 Mistral、本地、Ollama、Bedrock、GitHub Copilot 或 OpenAI 相容的嵌入。</Info>
 
 有關搜尋運作方式、調整選項和提供者設定的詳細資訊，請參閱
-[Memory Search](/zh-Hant/concepts/memory-search)。
+[記憶搜尋](/zh-Hant/concepts/memory-search)。
 
 ## 記憶後端
 
@@ -145,7 +145,9 @@ A report from an untrusted source needs review before promotion. Future turns sh
 
 ## 自動記憶排空
 
-在[壓縮](/zh-Hant/concepts/compaction)總結您的對話之前，OpenClaw 會執行一個靜默的回合，提醒代理將重要內容儲存到記憶檔案中。此功能預設為開啟 — 您不需要進行任何設定。
+在 [壓縮](/zh-Hant/concepts/compaction) 總結您的對話之前，OpenClaw
+會執行一個無聲輪次，提醒代理將重要的上下文儲存到記憶
+檔案中。這項功能預設為開啟 — 您不需要進行任何設定。
 
 若要在本機模型上保留該維護回合，請設定精確的記憶排空模型覆寫：
 
@@ -169,31 +171,34 @@ A report from an untrusted source needs review before promotion. Future turns sh
 
 ## 做夢
 
-夢想是一個可選的記憶背景合併過程。它收集短期信號，對候選項進行評分，並僅將合格的項目提升至長期記憶 (`MEMORY.md`)。
+做夢是一個可選的記憶背景整合過程。它收集
+短期訊號，對候選項進行評分，並僅將合格的項目提升至
+長期記憶 (`MEMORY.md`)。
 
 其設計目的是保持長期記憶的高信號：
 
 - **選用**：預設為停用。
-- **已排程**：啟用後，`memory-core` 會自動管理一個循環的 cron 工作
-  以執行完整的夢想掃描。
+- **已排程**：啟用後，`memory-core` 會自動管理一個週期性 cron 任務
+  以進行完整的做夢掃描。
 - **設有閾值**：提升項目必須通過分數、召回頻率和查詢
   多樣性的門檻。
-- **可供審閱**：階段摘要和日記條目會寫入 `DREAMS.md`
-  以供人工審閱。
+- **可審查**：階段摘要和日記條目會寫入 `DREAMS.md`
+  供人類審查。
 
-關於階段行為、評分信號和夢中日記的詳細資訊，請參閱
-[夢想](/zh-Hant/concepts/dreaming)。
+有關階段行為、評分訊號和夢境日記的詳細資訊，請參閱
+[做夢](/zh-Hant/concepts/dreaming)。
 
 ## 基礎回填與即時提升
 
 夢想系統現在有兩個密切相關的審閱通道：
 
-- **即時夢想** 從 `memory/.dreams/` 下的短期夢想儲存庫運作，
-  這是正常深度階段在決定哪些內容可以升級至 `MEMORY.md` 時所使用的機制。
-- **基礎回填** 將歷史 `memory/YYYY-MM-DD.md` 註記讀取為
-  獨立的日期檔案，並將結構化的審閱輸出寫入 `DREAMS.md`。
+- **即時做夢** 來自於
+  `memory/.dreams/` 下的短期做夢儲存，這是正常深層階段在決定什麼
+  可以晉升至 `MEMORY.md` 時所使用的內容。
+- **基礎回填** 會將歷史 `memory/YYYY-MM-DD.md` 筆記讀取為
+  獨立的日期檔案，並將結構化的審查輸出寫入 `DREAMS.md`。
 
-當您想要重新播放舊註記並檢視系統認為哪些內容具有持久性，而無需手動編輯 `MEMORY.md` 時，基礎回填非常有用。
+基礎回填很有用，當您想要重播舊筆記並檢查系統認為持久的內容時，而無需手動編輯 `MEMORY.md`。
 
 當您使用時：
 
@@ -205,9 +210,9 @@ openclaw memory rem-backfill --path ./memory --stage-short-term
 正常深度階段已使用的同一個短期夢想儲存庫。這
 意味著：
 
-- `DREAMS.md` 保持為人工審閱介面。
+- `DREAMS.md` 仍然是人工審查的介面。
 - 短期儲存庫保持為機器端排名介面。
-- `MEMORY.md` 仍僅由深度提升寫入。
+- `MEMORY.md` 仍然只能透過深度推廣來寫入。
 
 如果您決定重新播放沒有用處，您可以移除暫存的成品
 而不會影響一般的日記條目或正常的召回狀態：
@@ -228,20 +233,20 @@ openclaw memory index --force   # Rebuild the index
 ## 延伸閱讀
 
 - [內建記憶引擎](/zh-Hant/concepts/memory-builtin)：預設的 SQLite 後端。
-- [QMD 記憶引擎](/zh-Hant/concepts/memory-qmd)：進階的本機優先側車。
+- [QMD 記憶引擎](/zh-Hant/concepts/memory-qmd)：進階的本地優先側車。
 - [Honcho 記憶](/zh-Hant/concepts/memory-honcho)：AI 原生的跨會話記憶。
-- [Memory LanceDB](/zh-Hant/plugins/memory-lancedb)：使用 LanceDB 支援且相容 OpenAI 嵌入的外掛程式。
+- [Memory LanceDB](/zh-Hant/plugins/memory-lancedb)：支援 OpenAI 相容嵌入的 LanceDB 外掛。
 - [Memory Wiki](/zh-Hant/plugins/memory-wiki)：編譯的知識庫和 Wiki 原生工具。
-- [Memory search](/zh-Hant/concepts/memory-search)：搜尋管道、提供者和調整。
-- [Dreaming](/zh-Hant/concepts/dreaming)：從短期回憶到長期記憶的背景提升。
-- [Memory configuration reference](/zh-Hant/reference/memory-config)：所有設定選項。
-- [Compaction](/zh-Hant/concepts/compaction)：壓縮如何與記憶互動。
+- [記憶搜尋](/zh-Hant/concepts/memory-search)：搜尋管道、提供者和調整。
+- [做夢](/zh-Hant/concepts/dreaming)：從短期回憶到長期記憶的背景推廣。
+- [記憶設定參考](/zh-Hant/reference/memory-config)：所有設定選項。
+- [壓縮](/zh-Hant/concepts/compaction)：壓縮如何與記憶互動。
 
 ## 相關
 
-- [Active memory](/zh-Hant/concepts/active-memory)
-- [Memory search](/zh-Hant/concepts/memory-search)
-- [Builtin memory engine](/zh-Hant/concepts/memory-builtin)
-- [Honcho memory](/zh-Hant/concepts/memory-honcho)
+- [主動記憶](/zh-Hant/concepts/active-memory)
+- [記憶搜尋](/zh-Hant/concepts/memory-search)
+- [內建記憶引擎](/zh-Hant/concepts/memory-builtin)
+- [Honcho 記憶](/zh-Hant/concepts/memory-honcho)
 - [Memory LanceDB](/zh-Hant/plugins/memory-lancedb)
-- [Commitments](/zh-Hant/concepts/commitments)
+- [承諾](/zh-Hant/concepts/commitments)

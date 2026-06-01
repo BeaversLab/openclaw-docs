@@ -29,9 +29,7 @@ Les tests de mise à jour et de plugins protègent ces contrats :
   obsolète des plugins.
 - Les installations de plugins fonctionnent à partir des répertoires locaux, des dépôts git, des packages npm et du
   chemin de registre ClawHub.
-- Les dépendances npm des plugins sont installées à la racine npm gérée, analysées avant
-  la confiance, et supprimées via npm lors de la désinstallation afin que les dépendances hissées ne
-  restent pas en suspend.
+- Les dépendances npm des plugins sont installées dans un projet npm géré par plugin, analysées avant la confiance, et supprimées via npm lors de la désinstallation afin que les dépendances remontées ne persistent pas.
 - La mise à jour des plugins est stable lorsque rien n'a changé : les enregistrements d'installation, la source
   résolue, la disposition des dépendances installées et l'état activé restent intacts.
 
@@ -224,7 +222,7 @@ Lorsque vous modifiez le comportement de la mise à jour ou du plugin, ajoutez u
 - Comportement de migration de version publiée : scénario `published-upgrade-survivor`.
 - Comportement de redémarrage géré par la mise à jour : `update-restart-auth`.
 - Comportement de la source de registre/package : fixture `test:docker:plugins` ou serveur de fixture ClawHub.
-- Comportement de la disposition ou du nettoyage des dépendances : assertez à la fois l'exécution du runtime et la limite du système de fichiers. Les dépendances npm peuvent être hissées sous la racine npm gérée, donc les tests doivent prouver que la racine est analysée/nettoyée au lieu d'assumer un arbre `node_modules` local au package.
+- Disposition ou nettoyage des dépendances : vérifiez à la fois l'exécution au moment de l'exécution et la limite du système de fichiers. Les dépendances npm peuvent être remontées dans le projet npm géré du plugin, les tests doivent donc prouver que ce projet est analysé/nettoyé au lieu de supposer que seul l'arborescence `node_modules` locale au package du plugin l'est.
 
 Gardez les nouvelles fixtures Docker hermétiques par défaut. Utilisez des registres de fixtures locaux et de faux packages sauf si le point du test est le comportement du registre en direct.
 

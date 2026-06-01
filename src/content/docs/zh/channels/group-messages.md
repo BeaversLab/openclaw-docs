@@ -20,7 +20,7 @@ sidebarTitle: "WhatsAppWhatsApp 群组"
 - 组策略：`channels.whatsapp.groupPolicy` 控制是否接受组消息 (`open|disabled|allowlist`)。`allowlist` 使用 `channels.whatsapp.groupAllowFrom` (后备：显式 `channels.whatsapp.allowFrom`)。默认为 `allowlist` (在添加发送者之前被阻止)。
 - 按组会话：会话键看起来像 `agent:<agentId>:whatsapp:group:<jid>`，因此诸如 `/verbose on`、`/trace on` 或 `/think high` 之类的命令 (作为独立消息发送) 仅作用于该组；个人私信状态不受影响。组线程将跳过心跳检测。
 - 上下文注入：**仅待处理** 的组消息 (默认 50 条) 且 _未_ 触发运行的，将以 `[Chat messages since your last reply - for context]` 为前缀，触发行置于 `[Current message - respond to this]` 之下。已在会话中的消息不会被重新注入。
-- 发送者显示：现在每个组批次都以 `[from: Sender Name (+E164)]` 结尾，以便 Pi 知道谁在说话。
+- 发送者呈现：现在每个群组批次都以 `[from: Sender Name (+E164)]` 结束，以便 OpenClaw 知道是谁在发言。
 - 阅后即焚/一次性查看：我们在提取文本/提及之前会解包这些消息，因此其中的 ping 仍然会触发。
 - 组系统提示词：在组会话的第一轮 (以及每当 `/activation` 更改模式时)，我们会向系统提示词中注入一段简短的说明，如 `You are replying inside the WhatsApp group "<subject>". Group members: Alice (+44...), Bob (+43...), ... Activation: trigger-only ... Address the specific sender noted in the message context.`。如果元数据不可用，我们仍然会告知代理这是一个群聊。
 

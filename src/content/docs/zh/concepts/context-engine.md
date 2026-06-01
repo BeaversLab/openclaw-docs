@@ -220,34 +220,42 @@ info: {
     "agent-run": {
       requiredCapabilities: ["assemble-before-prompt"],
       unsupportedMessage:
-        "Use the native Codex or Pi embedded runtime, or select the legacy context engine.",
+        "Use the native Codex or OpenClaw embedded runtime, or select the legacy context engine.",
     },
   },
 }
 ```
 
-原生 Codex 和 Pi 嵌入式代理运行满足 `assemble-before-prompt`CLI。
-通用 CLI 后端不满足，因此在 CLI 进程启动之前，需要此功能的引擎将被拒绝。
+Native Codex 和 OpenClaw 嵌入式代理运行满足 OpenClaw`assemble-before-prompt`。
+通用 CLI 后端不满足，因此在 CLI 进程启动之前，需要它的引擎会被拒绝。
+
+### 故障隔离
+
+OpenClaw 将所选插件引擎与核心回复路径隔离开来。如果一个非遗留引擎丢失、未通过合同验证、在工厂创建期间抛出异常，或在生命周期方法中抛出异常，OpenClaw 将在当前的 Gateway 进程中隔离该引擎，并将上下文引擎的工作降级为内置的 OpenClawOpenClaw`legacy`Gateway(网关) 引擎。错误会与失败的操作一起记录，以便操作员可以在代理静默的情况下修复、更新或禁用插件。
+
+主机要求失败的情况有所不同：当引擎声明运行时缺少所需功能时，OpenClaw 会在启动运行之前直接失败。这可以保护那些在不支持的主机上运行时会破坏状态的引擎。
 
 ### ownsCompaction
 
-`ownsCompaction` 控制是否在该次运行中保持启用 Pi 内置的尝试中自动压缩：
+`ownsCompaction`OpenClaw 控制 OpenClaw 运行时内置的尝试内自动压缩是否在该次运行中保持启用状态：
 
 <AccordionGroup>
-  <Accordion title="ownsCompaction: true">引擎拥有压缩行为。OpenClaw 在该次运行中禁用 Pi 的内置自动压缩，引擎的 `compact()` 实现负责 `/compact`、溢出恢复压缩以及它想要在 `afterTurn()` 中执行的任何主动压缩。OpenClaw 仍可能运行提示前溢出保护措施；当它预测完整的记录将会溢出时，恢复路径将在提交另一个提示之前调用活动引擎的 `compact()`。</Accordion>
-  <Accordion title="ownsCompaction: false or unset">Pi 的内置自动压缩仍可能在提示执行期间运行，但活动引擎的 `compact()` 方法仍会被调用以进行 `/compact` 和溢出恢复。</Accordion>
+  <Accordion title="ownsCompaction: true">引擎拥有压缩行为。OpenClaw 将为该次运行禁用 OpenClaw 运行时内置的自动压缩，并且引擎的 OpenClaw 实现负责 OpenClaw`afterTurn()``/compact``compact()`、溢出恢复压缩以及它想要在 OpenClaw 中进行的任何主动压缩。OpenClaw 可能仍会运行提示前溢出保护措施；当它预测完整脚本将溢出时，恢复路径将在提交另一个提示之前调用活动引擎的 `compact()`。</Accordion>
+  <Accordion title="ownsCompaction: false or unset" OpenClaw>
+    OpenClaw 运行时的内置自动压缩仍可能在提示执行期间运行，但活动引擎的 `compact()` 方法仍会被 `/compact` 和溢出恢复调用。
+  </Accordion>
 </AccordionGroup>
 
-<Warning>`ownsCompaction: false` **并不**意味着 OpenClaw 会自动回退到旧版引擎的压缩路径。</Warning>
+<Warning>`ownsCompaction: false`OpenClaw 并**不**意味着 OpenClaw 会自动回退到旧版引擎的压缩路径。</Warning>
 
 这意味着有两种有效的插件模式：
 
 <Tabs>
   <Tab title="Owning mode">实现您自己的压缩算法并设置 `ownsCompaction: true`。</Tab>
-  <Tab title="Delegating mode">设置 `ownsCompaction: false` 并让 `compact()` 调用 `openclaw/plugin-sdk/core` 中的 `delegateCompactionToRuntime(...)`，以使用 OpenClaw 的内置压缩行为。</Tab>
+  <Tab title="Delegating mode">设置 `ownsCompaction: false` 并让 `compact()` 调用 `openclaw/plugin-sdk/core`OpenClaw 中的 `delegateCompactionToRuntime(...)` 以使用 OpenClaw 的内置压缩行为。</Tab>
 </Tabs>
 
-对于活跃的非自有引擎而言，无操作的 `compact()` 是不安全的，因为它会禁用该引擎槽位的常规 `/compact` 和溢出恢复压缩路径。
+对于活动的非拥有引擎，空的 `compact()` 是不安全的，因为它禁用了该引擎插槽的正常 `/compact` 和溢出恢复压缩路径。
 
 ## 配置参考
 
@@ -263,34 +271,34 @@ info: {
 }
 ```
 
-<Note>该槽位在运行时是互斥的 - 对于给定的运行或压缩操作，只会解析一个已注册的上下文引擎。其他已启用的 `kind: "context-engine"` 插件仍可以加载并运行其注册代码；`plugins.slots.contextEngine`OpenClaw 仅选择当 OpenClaw 需要上下文引擎时解析哪个已注册的引擎 ID。</Note>
+<Note>该插槽在运行时是排他的——对于给定的运行或压缩操作，只能解析一个已注册的上下文引擎。其他已启用的 `kind: "context-engine"` 插件仍可以加载并运行其注册代码；`plugins.slots.contextEngine`OpenClaw 仅选择 OpenClaw 在需要上下文引擎时解析哪个已注册的引擎 ID。</Note>
 
-<Note>**插件卸载：** 当您卸载当前选为 `plugins.slots.contextEngine`OpenClaw 的插件时，OpenClaw 会将该槽位重置为默认值（`legacy`）。相同的重置行为也适用于 `plugins.slots.memory`。无需手动编辑配置。</Note>
+<Note>**插件卸载：** 当您卸载当前被选为 `plugins.slots.contextEngine`OpenClaw 的插件时，OpenClaw 会将该插槽重置为默认值（`legacy`）。相同的重置行为也适用于 `plugins.slots.memory`。无需手动编辑配置。</Note>
 
-## 与压缩和内存的关系
+## 与压缩和记忆的关系
 
 <AccordionGroup>
-  <Accordion title="压缩" OpenClaw>
-    压缩是上下文引擎的职责之一。传统引擎委托给 OpenClaw 的内置摘要功能。插件引擎可以实现任何压缩策略（DAG 摘要、向量检索等）。
+  <Accordion title="Compaction" OpenClaw>
+    压缩是上下文引擎的职责之一。传统引擎委托给 OpenClaw 内置的摘要。插件引擎可以实现任何压缩策略（DAG 摘要、向量检索等）。
   </Accordion>
-  <Accordion title="内存插件">
-    内存插件（`plugins.slots.memory`）与上下文引擎是分开的。内存插件提供搜索/检索功能；上下文引擎控制模型看到的内容。它们可以协同工作 - 上下文引擎可能会在组装过程中使用内存插件数据。希望使用活跃内存提示路径的插件引擎应该优先使用 `openclaw/plugin-sdk/core` 中的 `buildMemorySystemPromptAddition(...)`，它会将活跃的内存提示部分转换为准备前置的
-    `systemPromptAddition`。如果引擎需要更低级别的控制，它仍然可以通过 `buildActiveMemoryPromptSection(...)` 从 `openclaw/plugin-sdk/memory-host-core` 中提取原始行。
+  <Accordion title="Memory plugins">
+    记忆插件 (`plugins.slots.memory`) 与上下文引擎是分开的。记忆插件提供搜索/检索；上下文引擎控制模型看到的内容。它们可以协同工作——上下文引擎可能会在组装过程中使用记忆插件数据。如果插件引擎需要活动的记忆提示路径，应首选 `openclaw/plugin-sdk/core` 的 `buildMemorySystemPromptAddition(...)`，它将活动的记忆提示部分转换为准备好前置的 `systemPromptAddition`。如果引擎需要更低级别的控制，它仍然可以通过
+    `buildActiveMemoryPromptSection(...)` 从 `openclaw/plugin-sdk/memory-host-core` 中提取原始行。
   </Accordion>
-  <Accordion title="会话修剪">无论哪个上下文引擎处于活跃状态，在内存中修剪旧工具结果的操作仍然会运行。</Accordion>
+  <Accordion title="Session pruning">无论哪个上下文引擎处于活动状态，内存中修剪旧工具结果的操作仍会继续运行。</Accordion>
 </AccordionGroup>
 
 ## 提示
 
 - 使用 `openclaw doctor` 来验证您的引擎是否正确加载。
-- 如果切换引擎，现有会话将继续保留其当前历史记录。新引擎将接管未来的运行。
-- 引擎错误会被记录并在诊断中显示。如果插件引擎注册失败或无法解析所选的引擎 ID，OpenClaw 不会自动回退；在您修复插件或将 `plugins.slots.contextEngine` 切换回 `"legacy"` 之前，运行将会失败。
-- 对于开发，请使用 `openclaw plugins install -l ./my-engine` 来链接本地插件目录而无需复制。
+- 如果切换引擎，现有会话将继续使用其当前历史记录。新引擎将接管未来的运行。
+- 引擎错误会被记录，所选的插件引擎将在当前的 Gateway 进程中被隔离。OpenClaw 会回退到 Gateway(网关)OpenClaw`legacy` 以便用户轮次可以继续，但您仍然应该修复、更新、禁用或卸载损坏的插件。
+- 对于开发，使用 `openclaw plugins install -l ./my-engine` 来链接本地插件目录而无需复制。
 
-## 相关内容
+## 相关
 
-- [压缩](/zh/concepts/compaction) - 总结长对话
-- [上下文](/zh/concepts/context) - 如何为代理轮次构建上下文
-- [插件架构](/zh/plugins/architecture) - 注册上下文引擎插件
-- [插件清单](/zh/plugins/manifest) - 插件清单字段
+- [Compaction](/zh/concepts/compaction) - 总结长对话
+- [Context](/zh/concepts/context) - 如何为代理轮次构建上下文
+- [Plugin Architecture](/zh/plugins/architecture) - 注册上下文引擎插件
+- [Plugin manifest](/zh/plugins/manifest) - 插件清单字段
 - [插件](/zh/tools/plugin) - 插件概述

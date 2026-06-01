@@ -28,7 +28,7 @@ Verás:
 - `🧹 Auto-compaction complete` en modo detallado.
 - `/status` mostrando `🧹 Compactions: <count>`.
 
-<Info>Antes de compactar, OpenClaw recuerda automáticamente al agente que guarde notas importantes en los archivos de [memoria](/es/concepts/memory). Esto evita la pérdida de contexto.</Info>
+<Info>Antes de compactar, OpenClaw recuerda automáticamente al agente que guarde notas importantes en archivos de [memoria](/es/concepts/memory). Esto evita la pérdida de contexto.</Info>
 
 <AccordionGroup>
   <Accordion title="Firmas de desbordamiento reconocidas">
@@ -52,7 +52,7 @@ Escriba `/compact` en cualquier chat para forzar una compactación. Agregue inst
 /compact Focus on the API design decisions
 ```
 
-Cuando `agents.defaults.compaction.keepRecentTokens` está configurado, la compactación manual respeta ese punto de corte Pi y mantiene la cola reciente en el contexto reconstruido. Sin un presupuesto de retención explícito, la compactación manual se comporta como un punto de control fijo y continúa solo desde el nuevo resumen.
+Cuando `agents.defaults.compaction.keepRecentTokens` está establecido, la compactación manual respeta ese punto de corte de OpenClaw y mantiene la cola reciente en el contexto reconstruido. Sin un presupuesto de mantenimiento explícito, la compactación manual se comporta como un punto de control fijo y continúa solo desde el nuevo resumen.
 
 ## Configuración
 
@@ -102,18 +102,18 @@ Cuando se establece `agents.defaults.compaction.maxActiveTranscriptBytes`, OpenC
 
 ### Transcripciones sucesoras
 
-Cuando `agents.defaults.compaction.truncateAfterCompaction` está activado, OpenClaw no reescribe la transcripción existente en su lugar. Crea una nueva transcripción sucesora activa a partir del resumen de compactación, el estado preservado y la cola no resumida, y luego mantiene el JSONL anterior como la fuente del punto de control archivado.
+Cuando `agents.defaults.compaction.truncateAfterCompaction` está habilitado, OpenClaw no reescribe la transcripción existente en su lugar. Crea una nueva transcripción sucesora activa a partir del resumen de compactación, el estado preservado y la cola no resumida, y luego registra metadatos de punto de control que dirigen los flujos de bifurcación/restauración a ese sucesor compactado.
 Las transcripciones sucesoras también descartan turnos largos de usuario duplicados exactos que lleguen
-dentro de una ventana corta de reintento, por lo que las tormentas de reintentos del canal no se transfieren a la
+dentro de una ventana corta de reintento, de modo que las tormentas de reintento del canal no se transfieran a la
 siguiente transcripción activa después de la compactación.
 
-Los puntos de control previos a la compactación se retienen solo mientras se mantengan por debajo del límite de tamaño de punto de control de OpenClaw;
-las transcripciones activas de gran tamaño aún se compactan, pero OpenClaw
-omite la instantánea de depuración grande en lugar de duplicar el uso del disco.
+OpenClaw ya no escribe copias separadas de `.checkpoint.*.jsonl` para nuevas
+compactaciones. Los archivos de punto de control heredados existentes aún se pueden usar mientras se hace referencia a ellos
+y son eliminados por la limpieza normal de la sesión.
 
 ### Avisos de compactación
 
-De forma predeterminada, la compactación se ejecuta en silencio. Establezca `notifyUser` para mostrar mensajes de estado breves cuando comienza y finaliza la compactación:
+De forma predeterminada, la compactación se ejecuta silenciosamente. Establezca `notifyUser` para mostrar mensajes de estado breves cuando se inicia y completa la compactación:
 
 ```json5
 {
@@ -129,7 +129,7 @@ De forma predeterminada, la compactación se ejecuta en silencio. Establezca `no
 
 ### Volcado de memoria
 
-Antes de la compactación, OpenClaw puede ejecutar un turno de **volcado de memoria silencioso** para almacenar notas duraderas en el disco. Establezca `agents.defaults.compaction.memoryFlush.model` cuando este turno de mantenimiento deba usar un modelo local en lugar del modelo de conversación activo:
+Antes de la compactación, OpenClaw puede ejecutar un turno de **lavado de memoria silencioso** para almacenar notas duraderas en el disco. Establezca `agents.defaults.compaction.memoryFlush.model` cuando este turno de mantenimiento deba usar un modelo local en lugar del modelo de conversación activo:
 
 ```json
 {
@@ -145,11 +145,11 @@ Antes de la compactación, OpenClaw puede ejecutar un turno de **volcado de memo
 }
 ```
 
-La anulación del modelo de volcado de memoria es exacta y no hereda la cadena de reserva de la sesión activa. Consulte [Memoria](/es/concepts/memory) para obtener detalles y configuración.
+La anulación del modelo de lavado de memoria es exacta y no hereda la cadena de reserva de la sesión activa. Consulte [Memoria](/es/concepts/memory) para obtener detalles y configuración.
 
 ## Proveedores de compactación conectables
 
-Los complementos pueden registrar un proveedor de compactación personalizado a través de `registerCompactionProvider()` en la API de complementos. Cuando se registra y configura un proveedor, OpenClaw delega el resumen en él en lugar de en la canalización integrada de LLM.
+Los complementos pueden registrar un proveedor de compactación personalizado a través de `registerCompactionProvider()` en la API de complementos. Cuando se registra y configura un proveedor, OpenClaw delega la resumisión a él en lugar de a la canalización LLM integrada.
 
 Para usar un proveedor registrado, establezca su id en su configuración:
 
@@ -165,7 +165,7 @@ Para usar un proveedor registrado, establezca su id en su configuración:
 }
 ```
 
-Establecer un `provider` fuerza automáticamente `mode: "safeguard"`. Los proveedores reciben las mismas instrucciones de compactación y la política de preservación de identificadores que la ruta integrada, y OpenClaw aún conserva el contexto de sufijo de turnos recientes y divididos después de la salida del proveedor.
+Establecer un `provider` fuerza automáticamente `mode: "safeguard"`. Los proveedores reciben las mismas instrucciones de compactación y la política de preservación de identificadores que la ruta integrada, y OpenClaw todavía preserva el contexto de sufijo de turnos recientes y divididos después de la salida del proveedor.
 
 <Note>Si el proveedor falla o devuelve un resultado vacío, OpenClaw vuelve al resumen integrado de LLM.</Note>
 
@@ -177,21 +177,21 @@ Establecer un `provider` fuerza automáticamente `mode: "safeguard"`. Los provee
 | **¿Guardado?**  | Sí (en la transcripción de la sesión) | No (solo en memoria, por solicitud)         |
 | **Alcance**     | Conversación completa                 | Solo resultados de herramientas             |
 
-[Poda de sesión](/es/concepts/session-pruning) es un complemento más ligero que recorta la salida de las herramientas sin resumir.
+[Session pruning](/es/concepts/session-pruning) es un complemento más ligero que recorta la salida de las herramientas sin resumir.
 
 ## Solución de problemas
 
-**¿Compactando con demasiada frecuencia?** La ventana de contexto del modelo puede ser pequeña o las salidas de las herramientas pueden ser grandes. Intente habilitar [poda de sesión](/es/concepts/session-pruning).
+**¿Compactando con demasiada frecuencia?** La ventana de contexto del modelo puede ser pequeña, o las salidas de las herramientas pueden ser grandes. Intente habilitar [session pruning](/es/concepts/session-pruning).
 
-**¿El contexto se siente obsoleto después de la compactación?** Use `/compact Focus on <topic>` para guiar el resumen o habilite el [flush de memoria](/es/concepts/memory) para que las notas sobrevivan.
+**¿El contexto se siente obsoleto después de la compactación?** Use `/compact Focus on <topic>` para guiar el resumen, o habilite el [memory flush](/es/concepts/memory) para que las notas sobrevivan.
 
-**¿Necesita un comienzo limpio?** `/new` inicia una sesión nueva sin compactación.
+**¿Necesita una limpieza total?** `/new` inicia una sesión nueva sin compactar.
 
-Para una configuración avanzada (reservar tokens, preservación de identificadores, motores de contexto personalizados, compactación del lado del servidor de OpenAI), consulte el [Análisis profundo de la gestión de sesiones](/es/reference/session-management-compaction).
+Para una configuración avanzada (reservar tokens, preservación de identificadores, motores de contexto personalizados, compactación del lado del servidor de OpenAI), consulte el [Session management deep dive](/es/reference/session-management-compaction).
 
 ## Relacionado
 
-- [Sesión](/es/concepts/session): gestión y ciclo de vida de la sesión.
-- [Poda de sesión](/es/concepts/session-pruning): recorte de resultados de herramientas.
-- [Contexto](/es/concepts/context): cómo se construye el contexto para los turnos del agente.
-- [Hooks](/es/automation/hooks): hooks del ciclo de vida de compactación (`before_compaction`, `after_compaction`).
+- [Session](/es/concepts/session): gestión y ciclo de vida de la sesión.
+- [Session pruning](/es/concepts/session-pruning): recorte de resultados de herramientas.
+- [Context](/es/concepts/context): cómo se construye el contexto para los turnos del agente.
+- [Hooks](/es/automation/hooks): ganchos del ciclo de vida de compactación (`before_compaction`, `after_compaction`).

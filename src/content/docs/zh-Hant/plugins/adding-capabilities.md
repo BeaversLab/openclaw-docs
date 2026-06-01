@@ -8,7 +8,7 @@ title: "新增功能（貢獻者指南）"
 sidebarTitle: "新增功能"
 ---
 
-<Info>這是給 OpenClaw 核心開發者的**貢獻者指南**。如果您正在 建構外部外掛，請改閱[建構外掛](/zh-Hant/plugins/building-plugins)。 如需深入架構參考（功能模型、擁有權、載入管線、執行時期輔助函式），請參閱[外掛內部機制](/zh-Hant/plugins/architecture)。</Info>
+<Info>這是給 OpenClaw 核心開發者的**貢獻者指南**。如果您正在 建構外部插件，請改為參閱[建構插件](/zh-Hant/plugins/building-plugins)。 若要深入了解架構參考（功能模型、所有權、 載入管線、執行時期輔助程式），請參閱[插件內部運作](/zh-Hant/plugins/architecture)。</Info>
 
 當 OpenClaw 需要一個新的共享領域時使用此指南，例如嵌入、影像
 生成、影片生成，或某些未來由供應商支援的功能區域。
@@ -116,10 +116,11 @@ sidebarTitle: "新增功能"
 未來的功能外掛都可以消耗嵌入，而不需依賴記憶體
 引擎。
 
-對於記憶體引擎專屬的配接器，請繼續使用 `memoryEmbeddingProviders`。
-這些配接器擁有記憶體索引細節，例如查詢/文件分割、
-執行時期元資料，以及本機記憶體引擎設定。除非該提供者僅
-供記憶體使用，否則不要讓通用的嵌入提供者依賴記憶體擁有的模組。
+記憶體搜尋可以使用通用的 `embeddingProviders`。較舊的
+`memoryEmbeddingProviders` 合約僅供現有
+記憶體特定的供應商遷移時使用，屬於棄用的相容性支援；
+新的可重複使用的嵌入供應商應該使用
+`embeddingProviders`。
 
 ## 審查檢查清單
 
@@ -135,7 +136,7 @@ sidebarTitle: "新增功能"
 
 ## 相關
 
-- [外掛內部機制](/zh-Hant/plugins/architecture) — 功能模型、擁有權、載入管線、執行時期輔助函式。
-- [建構外掛](/zh-Hant/plugins/building-plugins) — 第一個外掛教學。
-- [SDK 概觀](/zh-Hant/plugins/sdk-overview) — 匯入映射與註冊 API 參考。
+- [插件內部運作](/zh-Hant/plugins/architecture) — 功能模型、所有權、載入管線、執行時期輔助程式。
+- [建構插件](/zh-Hant/plugins/building-plugins) — 第一個插件教學。
+- [SDK 概覽](/zh-Hant/plugins/sdk-overview) — 匯入映射與註冊 API 參考。
 - [建立技能](/zh-Hant/tools/creating-skills) — 伴隨的貢獻者介面。

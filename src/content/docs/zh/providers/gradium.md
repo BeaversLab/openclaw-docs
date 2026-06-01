@@ -57,7 +57,7 @@ title: "Gradium"
       provider: "gradium",
       providers: {
         gradium: {
-          voiceId: "YTpq7expH9539ERJ",
+          speakerVoiceId: "YTpq7expH9539ERJ",
           // apiKey: "${GRADIUM_API_KEY}",
           // baseUrl: "https://api.gradium.ai",
         },
@@ -67,11 +67,11 @@ title: "Gradium"
 }
 ```
 
-| 密钥                                     | 类型   | 描述                                                         |
-| ---------------------------------------- | ------ | ------------------------------------------------------------ |
-| `messages.tts.providers.gradium.apiKey`  | 字符串 | 解析后的 API 密钥。支持 `${ENV}` 和 secret 引用。            |
-| `messages.tts.providers.gradium.baseUrl` | 字符串 | 覆盖 API 源。移除尾部斜杠。默认为 `https://api.gradium.ai`。 |
-| `messages.tts.providers.gradium.voiceId` | string | 当不存在指令覆盖时使用的默认语音 ID。                        |
+| 密钥                                            | 类型   | 描述                                                         |
+| ----------------------------------------------- | ------ | ------------------------------------------------------------ |
+| `messages.tts.providers.gradium.apiKey`         | 字符串 | 解析后的 API 密钥。支持 `${ENV}` 和 secret 引用。            |
+| `messages.tts.providers.gradium.baseUrl`        | 字符串 | 覆盖 API 源。移除尾部斜杠。默认为 `https://api.gradium.ai`。 |
+| `messages.tts.providers.gradium.speakerVoiceId` | string | 当不存在指令覆盖时使用的默认语音 ID。                        |
 
 输出音频格式由运行时根据目标表面自动选择，无法通过 `openclaw.json` 进行配置。请参阅下面的 [Output](#output)。
 
@@ -91,7 +91,7 @@ title: "Gradium"
 
 ### 每条消息的声音覆盖
 
-当启用的语音策略允许语音覆盖时，您可以使用指令令牌在行内切换语音。所有这些都会解析为相同的 `voiceId` 覆盖：
+当启用的语音策略允许覆盖语音时，您可以使用指令令牌在线切换语音。使用 `speakerVoiceId` 表示提供商原生的语音 ID。
 
 ```text
 /voice:LFZvm12tW_z0xfGo

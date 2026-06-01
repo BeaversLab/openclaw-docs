@@ -1,5 +1,5 @@
 ---
-summary: "通过 OpenAI、Google、fal、MiniMax、ComfyUI、DeepInfra、OpenRouter、LiteLLM、xAI、Vydra 的 image_generate 生成和编辑图像"
+summary: "通过 image_generate 在 OpenAI、Google、fal、MiniMax、ComfyUI、DeepInfra、OpenRouter、LiteLLM、xAI、Vydra 上生成和编辑图像"
 read_when:
   - Generating or editing images via the agent
   - Configuring image-generation providers and models
@@ -8,9 +8,9 @@ title: "图像生成"
 sidebarTitle: "图像生成"
 ---
 
-`image_generate` 工具允许代理使用您配置的提供商创建和编辑图像。在聊天会话中，图像生成异步运行：OpenClaw 记录后台任务，立即返回任务 ID，并在提供商完成时唤醒代理。完成代理必须通过 `message` 工具发送生成的图像。如果请求者会话处于非活动状态，且某些生成的图像仍未通过消息工具交付，OpenClaw 将发送一个仅包含缺失图像的幂等直接回退。
+`image_generate` 工具允许代理使用您配置的提供商创建和编辑图像。在聊天会话中，图像生成异步运行：OpenClaw 记录后台任务，立即返回任务 ID，并在提供商完成时唤醒代理。完成代理必须通过 `message` 工具发送生成的图像。如果请求者会话处于非活动状态或其活动唤醒失败，并且某些生成的图像仍然缺少消息工具交付，则 OpenClaw 会发送仅包含缺失图像的幂等直接回退。
 
-<Note>该工具仅在至少有一个图像生成提供商可用时出现。如果您在代理的工具中看不到 `image_generate`，请配置 `agents.defaults.imageGenerationModel`，设置提供商 API 密钥，或使用 OpenAI Codex OAuth 登录。</Note>
+<Note>该工具仅在至少有一个图像生成提供商可用时才会出现。如果您在代理的工具中看不到 `image_generate`，请配置 `agents.defaults.imageGenerationModel`，设置提供商 API 密钥，或使用 OpenAI Codex OAuth 登录。</Note>
 
 ## 快速开始
 
@@ -34,23 +34,25 @@ sidebarTitle: "图像生成"
     ```OAuth
 
     Codex OAuth 使用相同的 `openai/gpt-image-2` 模型引用。当配置了
-    `openai-codex`OAuthOpenClawOAuth OAuth 配置文件时，OpenClaw 将图像请求通过该 OAuth 配置文件
-    路由，而不是首先尝试 `OPENAI_API_KEY`。显式的 `models.providers.openai`APIOpenAIAPI 配置（API 密钥、
-    自定义/Azure 基础 URL）会选择回退到直接使用 OpenAI Images API
+    `openai-codex`OAuthOpenClawOAuth OAuth 个人资料时，OpenClaw 会通过该 OAuth 个人资料路由图像
+    请求，而不是首先尝试
+    `OPENAI_API_KEY`。显式的 `models.providers.openai`APIOpenAIAPI 配置（API 密钥、
+    custom/Azure 基础 URL）会选择回直接 OpenAI 图像 API
     路由。
 
   </Step>
-  <Step title="询问智能体">
+  <Step title="询问代理">
     _“生成一个友好的机器人吉祥物图像。”_
 
-    智能体会自动调用 `image_generate`。不需要工具允许列表——
-    当有提供商可用时，该工具默认启用。该工具返回一个后台任务 ID，然后完成智能体
-    会在准备好时通过 `message` 工具发送生成的附件。
+    代理会自动调用 `image_generate`。无需工具允许列表——
+    当提供商可用时，它默认启用。该工具
+    返回一个后台任务 ID，然后完成代理会在准备就绪时通过 `message` 工具发送生成的
+    附件。
 
   </Step>
 </Steps>
 
-<Warning>对于与 OpenAI 兼容的 LAN 端点（如 LocalAI），请保留自定义 OpenAI`models.providers.openai.baseUrl` 并使用 `browser.ssrfPolicy.dangerouslyAllowPrivateNetwork: true` 显式选择加入。私有和 内部图像端点默认仍被阻止。</Warning>
+<Warning>对于 OpenAI 兼容的 LAN 端点（如 LocalAI），请保留自定义 OpenAI`models.providers.openai.baseUrl` 并使用 `browser.ssrfPolicy.dangerouslyAllowPrivateNetwork: true` 显式选择加入。私有 和内部图像端点默认保持阻止状态。</Warning>
 
 ## 常用路由
 
@@ -60,26 +62,27 @@ sidebarTitle: "图像生成"
 | 通过 OpenAI 订阅身份验证进行 OpenAI 图像生成 | `openai/gpt-image-2`                               | OpenAI Codex OAuth                                |
 | OpenAI 透明背景 PNG/WebP                     | `openai/gpt-image-1.5`                             | `OPENAI_API_KEY`OpenAIOAuth 或 OpenAI Codex OAuth |
 | DeepInfra 图像生成                           | `deepinfra/black-forest-labs/FLUX-1-schnell`       | `DEEPINFRA_API_KEY`                               |
+| fal Krea 2 表现力/风格导向生成               | `fal/krea/v2/medium/text-to-image`                 | `FAL_KEY`                                         |
 | OpenRouter 图像生成                          | `openrouter/google/gemini-3.1-flash-image-preview` | `OPENROUTER_API_KEY`                              |
 | LiteLLM 图像生成                             | `litellm/gpt-image-2`                              | `LITELLM_API_KEY`                                 |
 | Google Gemini 图像生成                       | `google/gemini-3.1-flash-image-preview`            | `GEMINI_API_KEY` 或 `GOOGLE_API_KEY`              |
 
-同一个 `image_generate` 工具处理文生图和参考图像编辑。使用 `image` 处理单个参考或使用 `images` 处理多个参考。提供商支持的输出提示（如 `quality`、`outputFormat` 和 `background`）在可用时会被转发，并在提供商不支持时报告为已忽略。捆绑的透明背景支持是 OpenAI 特有的；如果其他提供商的后端生成，它们可能仍然保留 PNG alpha 通道。
+同一个 `image_generate` 工具处理文本生成图像和参考图像编辑。对于单个参考使用 `image`，对于多个参考使用 `images`。对于 fal 上的 Krea 2 模型，这些参考将作为样式参考发送，而不是作为编辑输入。提供商支持的输出提示（如 `quality`、`outputFormat` 和 `background`）在可用时会被转发，并在提供商不支持时被报告为已忽略。捆绑的透明背景支持是 OpenAI 特有的；如果其他提供商的后端发出 PNG alpha 通道，它们可能仍会保留该通道。
 
 ## 支持的提供商
 
-| 提供商     | 默认模型                                | 编辑支持                   | 认证                                                  |
-| ---------- | --------------------------------------- | -------------------------- | ----------------------------------------------------- |
-| ComfyUI    | `workflow`                              | 是（1 张图像，工作流配置） | `COMFY_API_KEY` 或 `COMFY_CLOUD_API_KEY` 用于云端     |
-| DeepInfra  | `black-forest-labs/FLUX-1-schnell`      | 是（1 张图像）             | `DEEPINFRA_API_KEY`                                   |
-| fal        | `fal-ai/flux/dev`                       | 是（特定模型的限制）       | `FAL_KEY`                                             |
-| Google     | `gemini-3.1-flash-image-preview`        | 是                         | `GEMINI_API_KEY` 或 `GOOGLE_API_KEY`                  |
-| LiteLLM    | `gpt-image-2`                           | 是（最多 5 张输入图像）    | `LITELLM_API_KEY`                                     |
-| MiniMax    | `image-01`                              | 是（主题参考）             | `MINIMAX_API_KEY` 或 MiniMax OAuth (`minimax-portal`) |
-| OpenAI     | `gpt-image-2`                           | 是（最多 4 张图片）        | `OPENAI_API_KEY` 或 OpenAI Codex OAuth                |
-| OpenRouter | `google/gemini-3.1-flash-image-preview` | 是（最多 5 张输入图片）    | `OPENROUTER_API_KEY`                                  |
-| Vydra      | `grok-imagine`                          | 否                         | `VYDRA_API_KEY`                                       |
-| xAI        | `grok-imagine-image`                    | 是（最多 5 张图片）        | `XAI_API_KEY`                                         |
+| 提供商     | 默认模型                                | 编辑支持                     | 身份验证                                               |
+| ---------- | --------------------------------------- | ---------------------------- | ------------------------------------------------------ |
+| ComfyUI    | `workflow`                              | 是（1 张图片，由工作流配置） | 云版本使用 `COMFY_API_KEY` 或 `COMFY_CLOUD_API_KEY`    |
+| DeepInfra  | `black-forest-labs/FLUX-1-schnell`      | 是（1 张图片）               | `DEEPINFRA_API_KEY`                                    |
+| fal        | `fal-ai/flux/dev`                       | 是（特定于模型的限制）       | `FAL_KEY`                                              |
+| Google     | `gemini-3.1-flash-image-preview`        | 是                           | `GEMINI_API_KEY` 或 `GOOGLE_API_KEY`                   |
+| LiteLLM    | `gpt-image-2`                           | 是（最多 5 张输入图片）      | `LITELLM_API_KEY`                                      |
+| MiniMax    | `image-01`                              | 是（主体参考）               | `MINIMAX_API_KEY` 或 MiniMax OAuth（`minimax-portal`） |
+| OpenAI     | `gpt-image-2`                           | 是（最多 4 张图片）          | `OPENAI_API_KEY` 或 OpenAI Codex OAuth                 |
+| OpenRouter | `google/gemini-3.1-flash-image-preview` | 是（最多 5 张输入图片）      | `OPENROUTER_API_KEY`                                   |
+| Vydra      | `grok-imagine`                          | 否                           | `VYDRA_API_KEY`                                        |
+| xAI        | `grok-imagine-image`                    | 是（最多 5 张图片）          | `XAI_API_KEY`                                          |
 
 使用 `action: "list"` 在运行时检查可用的提供商和模型：
 
@@ -93,15 +96,15 @@ sidebarTitle: "图像生成"
 /tool image_generate action=status
 ```
 
-## 提供商能力
+## 提供商功能
 
-| 能力              | ComfyUI            | DeepInfra | fal                       | Google        | MiniMax              | OpenAI        | Vydra | xAI           |
-| ----------------- | ------------------ | --------- | ------------------------- | ------------- | -------------------- | ------------- | ----- | ------------- |
-| 生成（最大数量）  | 工作流定义         | 4         | 4                         | 4             | 9                    | 4             | 1     | 4             |
-| 编辑 / 参考       | 1 张图像（工作流） | 1 张图片  | Flux: 1; GPT: 10; NB2: 14 | 最多 5 张图像 | 1 张图像（主题参考） | 最多 5 张图像 | -     | 最多 5 张图像 |
-| 尺寸控制          | -                  | ✓         | ✓                         | ✓             | -                    | 最高 4K       | -     | -             |
-| 宽高比            | -                  | -         | ✓                         | ✓             | ✓                    | -             | -     | ✓             |
-| 分辨率 (1K/2K/4K) | -                  | -         | ✓                         | ✓             | -                    | -             | -     | 1K, 2K        |
+| 功能               | ComfyUI            | DeepInfra | fal                                            | Google        | MiniMax              | OpenAI        | Vydra | xAI           |
+| ------------------ | ------------------ | --------- | ---------------------------------------------- | ------------- | -------------------- | ------------- | ----- | ------------- |
+| 生成（最大数量）   | 工作流定义         | 4         | 4                                              | 4             | 9                    | 4             | 1     | 4             |
+| 编辑 / 参考        | 1 张图片（工作流） | 1 张图片  | Flux: 1; GPT: 10; Krea style refs: 10; NB2: 14 | 最多 5 张图片 | 1 张图片（主体参考） | 最多 5 张图片 | -     | 最多 5 张图片 |
+| 尺寸控制           | -                  | ✓         | ✓                                              | ✓             | -                    | 最高 4K       | -     | -             |
+| 宽高比             | -                  | -         | ✓                                              | ✓             | ✓                    | -             | -     | ✓             |
+| 分辨率（1K/2K/4K） | -                  | -         | ✓                                              | ✓             | -                    | -             | -     | 1K, 2K        |
 
 ## 工具参数
 
@@ -109,49 +112,52 @@ sidebarTitle: "图像生成"
   图像生成提示词。`action: "generate"` 必需。
 </ParamField>
 <ParamField path="action" type='"generate" | "status" | "list"' default="generate">
-  使用 `"status"` 检查活动会话任务，或使用 `"list"` 在运行时检查 可用的提供商和模型。
+  使用 `"status"` 检查活跃会话任务，或使用 `"list"` 在运行时检查可用提供商和模型。
 </ParamField>
 <ParamField path="model" type="string">
-  提供商/模型覆盖（例如 `openai/gpt-image-2`）。请使用 `openai/gpt-image-1.5` 以实现透明的 OpenAI 背景。
+  提供商/模型覆盖（例如 `openai/gpt-image-2`）。使用 `openai/gpt-image-1.5`OpenAI 实现透明 OpenAI 背景。
 </ParamField>
 <ParamField path="image" type="string">
-  编辑模式的单张参考图像路径或 URL。
+  编辑模式下的单个参考图像路径或 URL。
 </ParamField>
 <ParamField path="images" type="string[]">
-  编辑模式的多张参考图像（支持的提供商最多 5 张）。
+  编辑模式或风格参考模型的多个参考图像（通过共享工具最多 10 张；提供商特定限制仍然适用）。
 </ParamField>
 <ParamField path="size" type="string">
   尺寸提示：`1024x1024`、`1536x1024`、`1024x1536`、`2048x2048`、`3840x2160`。
 </ParamField>
 <ParamField path="aspectRatio" type="string">
-  宽高比：`1:1`、`2:3`、`3:2`、`3:4`、`4:3`、`4:5`、`5:4`、`9:16`、`16:9`、`21:9`。
+  纵横比：`1:1`、`2:3`、`3:2`、`2.35:1`、`3:4`、`4:3`、`4:5`、 `5:4`、`9:16`、`16:9`、`21:9`、`4:1`、`1:4`、`8:1`、`1:8`。提供商 会验证其特定模型的子集。
 </ParamField>
 <ParamField path="resolution" type='"1K" | "2K" | "4K"'>
   分辨率提示。
 </ParamField>
 <ParamField path="quality" type='"low" | "medium" | "high" | "auto"'>
-  当提供商支持时的质量提示。
+  提供商支持时的质量提示。
 </ParamField>
 <ParamField path="outputFormat" type='"png" | "jpeg" | "webp"'>
-  当提供商支持时的输出格式提示。
+  提供商支持时的输出格式提示。
 </ParamField>
 <ParamField path="background" type='"transparent" | "opaque" | "auto"'>
-  当提供商支持时的背景提示。对于支持透明度的提供商，请使用 `transparent` 配合 `outputFormat: "png"` 或 `"webp"`。
+  提供商支持时的背景提示。对于支持透明度的提供商，请将 `transparent` 与 `outputFormat: "png"` 或 `"webp"` 结合使用。
 </ParamField>
 <ParamField path="count" type="number">
   要生成的图像数量 (1-4)。
 </ParamField>
 <ParamField path="timeoutMs" type="number">
-  可选的提供商请求超时时间（以毫秒为单位）。当 Codex 通过动态工具调用 `image_generate` 时，此每次调用的值仍会覆盖 配置的默认值，且上限为 600000 毫秒。
+  可选的提供商请求超时时间（毫秒）。当 Codex 通过动态工具调用 `image_generate` 时，此每次调用的值仍会覆盖 配置的默认值，并上限为 600000 毫秒。
 </ParamField>
 <ParamField path="filename" type="string">
   输出文件名提示。
 </ParamField>
-<ParamField path="openai" type="object">
+<ParamField path="openai" type="object" OpenAI>
   OpenAI 专用提示：`background`、`moderation`、`outputCompression` 和 `user`。
 </ParamField>
+<ParamField path="fal.creativity" type='"raw" | "low" | "medium" | "high"'>
+  fal Krea 2 创造力控制。默认为 `medium`。
+</ParamField>
 
-<Note>并非所有提供商都支持所有参数。当备用提供商支持的是接近的几何选项而不是确切请求的选项时，OpenClaw 会在提交前重新映射到最接近的支持尺寸、纵横比或分辨率。 对于未声明支持的提供商，不支持的输出提示将被丢弃，并在工具结果中报告。工具结果报告应用的设置；OpenClaw`details.normalization` 捕获任何请求到应用的转换。</Note>
+<Note>并非所有提供商都支持所有参数。当备用提供商支持的是相近的几何选项而非确切请求的选项时，OpenClaw 会在提交前重新映射到最接近的支持尺寸、宽高比或分辨率。对于未声明支持的提供商，不支持的输出提示将被丢弃，并在工具结果中报告。工具结果报告了应用的设置；OpenClaw`details.normalization` 捕获了从请求到应用的任何转换。</Note>
 
 ## 配置
 
@@ -175,46 +181,62 @@ sidebarTitle: "图像生成"
 
 OpenClaw 按以下顺序尝试提供商：
 
-1. **`model` 参数**（如果代理指定了一个）。
-2. **`imageGenerationModel.primary`**（来自配置）。
-3. **`imageGenerationModel.fallbacks`**（按顺序）。
-4. **自动检测** - 仅限基于身份验证的提供商默认值：
-   - 首先是当前默认提供商；
-   - 其余已注册的图像生成提供商按提供商 ID 顺序排列。
+1. **`model` 参数**，来自工具调用（如果代理指定了一个）。
+2. **`imageGenerationModel.primary`**，来自配置。
+3. **`imageGenerationModel.fallbacks`**，按顺序。
+4. **自动检测** - 仅限身份验证支持的提供商默认值：
+   - 首先是当前的默认提供商；
+   - 其余已注册的图像生成提供商，按提供商 ID 顺序。
 
-如果提供商失败（身份验证错误、速率限制等），系统将自动尝试下一个配置的候选项。如果全部失败，错误信息将包含每次尝试的详细信息。
+如果提供商失败（身份验证错误、速率限制等），系统会自动尝试下一个配置的候选者。如果全部失败，错误信息将包含每次尝试的详细信息。
 
 <AccordionGroup>
-  <Accordion title="每次调用的模型覆盖是精确的">每次调用 `model` 的覆盖仅尝试该提供商/模型，并且不会继续尝试配置的主要/备用或自动检测的提供商。</Accordion>
+  <Accordion title="每次调用模型覆盖是精确的">每次调用 `model` 覆盖仅尝试该提供商/模型，且不会 继续尝试配置的主/备用或自动检测的提供商。</Accordion>
   <Accordion title="自动检测具有身份验证感知能力" OpenClaw>
-    只有当 OpenClaw 实际上可以对该提供商进行身份验证时，该提供商的默认值才会进入候选列表。设置 `agents.defaults.mediaGenerationAutoProviderFallback: false` 以仅使用显式的 `model`、`primary` 和 `fallbacks` 条目。
+    只有当 OpenClaw 能够实际对该提供商进行身份验证时，提供商默认值才会进入候选列表。设置 `agents.defaults.mediaGenerationAutoProviderFallback: false` 以仅使用 显式的 `model`、`primary` 和 `fallbacks` 条目。
   </Accordion>
   <Accordion title="Timeouts">
-    为慢速图像后端设置 `agents.defaults.imageGenerationModel.timeoutMs`。每次调用的 `timeoutMs` 工具参数会覆盖配置的默认值，配置的默认值会覆盖插件编写的提供商默认值。Google 和 OpenRouter 托管的图像提供商使用 180 秒默认值；xAI 和 Azure OpenAI 图像生成使用 600 秒。Codex 动态工具调用使用 120 秒的 `image_generate` 网桥默认值，并在配置时遵守相同的超时预算，受限于 OpenClaw 的 600000
-    毫秒动态工具网桥最大值。
+    为慢速图像后端设置 `agents.defaults.imageGenerationModel.timeoutMs`。每次调用的 `timeoutMs` 工具参数会覆盖配置的默认值，而配置的默认值会覆盖插件编写的提供商默认值。Google 和 OpenRouter 托管的图像提供商使用 180 秒的默认值；xAI 和 Azure OpenAI 图像生成使用 600 秒。Codex dynamic-工具 调用使用 120 秒的 `image_generate` 桥接默认值，并在配置时遵守相同的超时预算，受 OpenClaw 的 600000 ms dynamic-工具
+    桥接最大值限制。
   </Accordion>
-  <Accordion title="Inspect at runtime">使用 `action: "list"` 检查当前注册的提供商、其默认模型和身份验证环境变量提示。</Accordion>
+  <Accordion title="Inspect at runtime">使用 `action: "list"` 检查当前注册的提供商、其默认模型以及身份验证环境变量提示。</Accordion>
 </AccordionGroup>
 
 ### 图像编辑
 
-OpenAI、OpenRouter、Google、DeepInfra、fal、MiniMax、ComfyUI 和 xAI 支持编辑参考图像。传递参考图像路径或 URL：
+OpenAI、OpenRouter、Google、DeepInfra、fal、MiniMax、ComfyUI 和 xAI 支持编辑参考图像。fal 上的 Krea 2 模型使用相同的 `image` / `images` 字段作为样式参考，而不是编辑输入。传递参考图像路径或 URL：
 
 ```text
 "Generate a watercolor version of this photo" + image: "/path/to/photo.jpg"
 ```
 
-OpenAI、OpenRouter、Google 和 xAI 通过 `images` 参数支持最多 5 张参考图像。fal 支持一张参考图像用于 Flux 图生图，GPT Image 2 编辑最多支持 10 张，Nano Banana 2 编辑最多支持 14 张。MiniMax 和 ComfyUI 支持 1 张。
+OpenAI、OpenRouter、Google 和 xAI 通过 `images` 参数支持最多 5 张参考图像。fal 支持 1 张 Flux 图生图的参考图像，GPT Image 2 编辑最多 10 张，Krea 2 最多 10 个样式参考，Nano Banana 2 编辑最多 14 张。MiniMax 和 ComfyUI 支持 1 张。
 
-## 提供程序深入探究
+## 提供商深入解析
 
 <AccordionGroup>
-  <Accordion title="OpenAIOpenAI gpt-image-2 (and gpt-image-1.5)"OpenAI>
-    OpenAI 图像生成默认为 `openai/gpt-image-2`。如果配置了 `openai-codex`OAuthOpenClawOAuth OAuth 个人资料，OpenClaw 将重用与 Codex 订阅聊天模型相同的 OAuth 个人资料，并通过 Codex Responses 后端发送图像请求。传统的 Codex 基础 URL（例如 `https://chatgpt.com/backend-api`）将被规范化为 `https://chatgpt.com/backend-api/codex`OpenClaw 以用于图像请求。对于该请求，OpenClaw **不会**静默回退到 `OPENAI_API_KEY`OpenAIAPI —— 若要强制通过直接 OpenAI Images API 路由，请使用 API 密钥、自定义基础 URL 或 Azure 端点显式配置 `models.providers.openai`API。
+  <Accordion title="OpenAIOpenAI gpt-image-2（和 gpt-image-1.5）"OpenAI>
+    OpenAI 图像生成默认使用 `openai/gpt-image-2`。如果配置了
+    `openai-codex`OAuthOpenClawOAuth OAuth 配置文件，OpenClaw 将复用与 Codex 订阅聊天模型相同的
+    OAuth 配置文件，并通过 Codex Responses 后端发送图像请求。旧的 Codex 基础
+    URL（例如 `https://chatgpt.com/backend-api`）会被规范化为
+    `https://chatgpt.com/backend-api/codex`OpenClaw 以用于图像请求。OpenClaw
+    不会**默默**退回到 `OPENAI_API_KEY`OpenAIAPI 来处理该请求 -
+    要强制使用直接的 OpenAI Images API 路由，请使用 API 密钥、自定义基础 URL
+    或 Azure 端点显式配置 `models.providers.openai`API。
 
-    仍然可以显式选择 `openai/gpt-image-1.5`、`openai/gpt-image-1` 和 `openai/gpt-image-1-mini` 模型。使用 `gpt-image-1.5` 获取透明背景的 PNG/WebP 输出；当前的 `gpt-image-2`API API 拒绝 `background: "transparent"`。
+    仍然可以显式选择 `openai/gpt-image-1.5`、`openai/gpt-image-1` 和
+    `openai/gpt-image-1-mini` 模型。使用
+    `gpt-image-1.5` 获取透明背景的 PNG/WebP 输出；当前的
+    `gpt-image-2`API API 会拒绝 `background: "transparent"`。
 
-    `gpt-image-2` 通过同一个 `image_generate`OpenClaw 工具支持文生图生成和参考图像编辑。OpenClaw 将 `prompt`、`count`、`size`、`quality`、`outputFormat`OpenAIOpenAI 和参考图像转发给 OpenAI。OpenAI **不会**直接接收 `aspectRatio` 或 `resolution`OpenClaw；在可能的情况下，OpenClaw 会将其映射为受支持的 `size`OpenAI，否则工具会将其报告为已忽略的覆盖项。
+    `gpt-image-2` 支持通过同一个 `image_generate`OpenClaw 工具进行文本生成图像和
+    参考图像编辑。
+    OpenClaw 会将 `prompt`、`count`、`size`、`quality`、`outputFormat`OpenAIOpenAI
+    和参考图像转发给 OpenAI。OpenAI **不**直接
+    接收 `aspectRatio` 或 `resolution`OpenClaw；如果可能，OpenClaw 会将其
+    映射为受支持的 `size`OpenAI，否则该工具会将它们报告为
+    被忽略的覆盖项。
 
     OpenAI 特定选项位于 `openai` 对象下：
 
@@ -231,15 +253,26 @@ OpenAI、OpenRouter、Google 和 xAI 通过 `images` 参数支持最多 5 张参
     }
     ```
 
-    `openai.background` 接受 `transparent`、`opaque` 或 `auto`；透明输出需要 `outputFormat` `png` 或 `webp`OpenAIOpenClaw 以及支持透明度的 OpenAI 图像模型。OpenClaw 将默认 `gpt-image-2` 透明背景请求路由到 `gpt-image-1.5`。`openai.outputCompression` 适用于 JPEG/WebP 输出，对于 PNG 输出则被忽略。
+    `openai.background` 接受 `transparent`、`opaque` 或 `auto`；
+    透明输出需要 `outputFormat` `png` 或 `webp`OpenAIOpenClaw 以及
+    支持透明度的 OpenAI 图像模型。OpenClaw 将默认的
+    `gpt-image-2` 透明背景请求路由到 `gpt-image-1.5`。
+    `openai.outputCompression` 适用于 JPEG/WebP 输出，对于
+    PNG 输出会被忽略。
 
-    顶层 `background`OpenAI 提示与提供商无关，当选择 OpenAI 提供商时，当前映射到同一个 OpenAI `background`OpenAI 请求字段。未声明背景支持的提供商会在 `ignoredOverrides`OpenAIOpenAI 中返回该提示，而不是接收不支持的参数。
+    顶层 `background`OpenAI 提示是提供商中立的，当选择
+    OpenAI 提供商时，它目前映射到相同的 OpenAI `background`OpenAI 请求字段。未声明背景支持的提供商
+    会将其在 `ignoredOverrides`OpenAIOpenAI 中返回，而不是接收不支持的参数。
 
-    若要通过 Azure OpenAI 部署而不是 `api.openai.com`OpenAI 路由 OpenAI 图像生成，请参阅 [Azure OpenAI endpoints](/zh/providers/openai#azure-openai-endpoints)。
+    若要通过 Azure OpenAI 部署
+    路由 OpenAI 图像生成，而不是通过 `api.openai.com`OpenAI，请参阅
+    [Azure OpenAI endpoints](/zh/providers/openai#azure-openai-endpoints)。
 
   </Accordion>
   <Accordion title="OpenRouterOpenRouter 图像模型"OpenRouter>
-    OpenRouter 图像生成使用相同的 `OPENROUTER_API_KEY`OpenRouter 并通过 OpenRouter 的聊天补全图像 APIOpenRouter 进行路由。使用 `openrouter/` 前缀选择 OpenRouter 图像模型：
+    OpenRouter 图像生成使用相同的 `OPENROUTER_API_KEY`OpenRouterAPIOpenRouter 并
+    通过 OpenRouter 的聊天补全图像 API 路由。使用 `openrouter/` 前缀选择
+    OpenRouter 图像模型：
 
     ```json5
     {
@@ -253,28 +286,75 @@ OpenAI、OpenRouter、Google 和 xAI 通过 `images` 参数支持最多 5 张参
     }
     ```OpenClaw
 
-    OpenClaw 会将 `prompt`、`count`、参考图像以及 Gemini 兼容的 `aspectRatio` / `resolution`OpenRouterOpenRouter 提示转发给 OpenRouter。当前内置的 OpenRouter 图像模型快捷方式包括 `google/gemini-3.1-flash-image-preview`、`google/gemini-3-pro-image-preview` 和 `openai/gpt-5.4-image-2`。使用 `action: "list"` 查看您配置的插件所暴露的内容。
+    OpenClaw 将 `prompt`、`count`、参考图像和
+    Gemini 兼容的 `aspectRatio` / `resolution`OpenRouterOpenRouter 提示转发给 OpenRouter。
+    当前的内置 OpenRouter 图像模型快捷方式包括
+    `google/gemini-3.1-flash-image-preview`、
+    `google/gemini-3-pro-image-preview` 和 `openai/gpt-5.4-image-2`。使用
+    `action: "list"` 查看您配置的插件暴露了哪些内容。
+
+  </Accordion>
+  <Accordion title="fal Krea 2">
+    fal 上的 Krea 2 模型使用 fal 原生的 Krea 架构，而不是 Flux 使用的通用
+    `image_size`OpenClaw 架构。OpenClaw 发送：
+
+    - `aspect_ratio` 用于宽高比提示
+    - `creativity`，默认为 `medium`
+    - 当提供 `image` 或 `images` 时发送 `image_style_references`
+
+    选择 Krea 2 Medium 以获得更快的富有表现力的插图，选择 Krea 2 Large
+    以获得较慢、更详细的写实和纹理外观：
+
+    ```json5
+    {
+      agents: {
+        defaults: {
+          imageGenerationModel: {
+            primary: "fal/krea/v2/medium/text-to-image",
+          },
+        },
+      },
+    }
+    ```
+
+    Krea 2 目前每次请求返回一张图像。对于
+    Krea，首选 `aspectRatio`OpenClaw；OpenClaw 将 `size` 映射到最接近支持的 Krea 宽高比，并且
+    对于 Krea 会拒绝 `resolution` 而不是丢弃它。当您想要原生的 Krea 创意级别时，使用 `fal.creativity`：
+
+    ```json
+    {
+      "model": "fal/krea/v2/medium/text-to-image",
+      "prompt": "A cyber zine portrait with risograph texture",
+      "aspectRatio": "9:16",
+      "fal": {
+        "creativity": "high"
+      }
+    }
+    ```
 
   </Accordion>
   <Accordion title="MiniMaxMiniMax 双重认证"MiniMaxMiniMax>
-    MiniMax 图像生成可通过两种捆绑的 MiniMax 认证路径使用：
+    MiniMax 图像生成可通过内置的 MiniMax
+    认证路径使用：
 
     - `minimax/image-01`API 用于 API 密钥设置
     - `minimax-portal/image-01`OAuth 用于 OAuth 设置
 
   </Accordion>
   <Accordion title="xAI grok-imagine-image">
-    内置的 xAI 提供商对仅提示词请求使用 `/v1/images/generations`，当存在 `image` 或 `images` 时使用 `/v1/images/edits`。
+    内置的 xAI 提供商对仅提示词请求使用 `/v1/images/generations`，当存在
+    `image` 或 `images` 时则使用 `/v1/images/edits`。
 
     - 模型：`xai/grok-imagine-image`、`xai/grok-imagine-image-quality`
     - 数量：最多 4 个
     - 参考：一个 `image` 或最多五个 `images`
-    - 纵横比：`1:1`、`16:9`、`9:16`、`4:3`、`3:4`、`2:3`、`3:2`
-    - 分辨率：`1K`、`2K`
-    - 输出：作为 OpenClaw 托管的图像附件返回
+    - 宽高比：`1:1`、`16:9`、`9:16`、`4:3`、`3:4`、`2:3`、`3:2`
+    - 分辨率：`1K`、`2K`OpenClawOpenClaw
+    - 输出：作为 OpenClaw 管理的图像附件返回
 
     OpenClaw 故意不公开 xAI 原生的 `quality`、`mask`、
-    `user` 或额外的仅原生纵横比，直到这些控件存在于共享的跨提供商 `image_generate` 协定中。
+    `user` 或额外的仅原生宽高比，直到这些控件存在于
+    共享的跨提供商 `image_generate` 契约中。
 
   </Accordion>
 </AccordionGroup>
@@ -282,7 +362,7 @@ OpenAI、OpenRouter、Google 和 xAI 通过 `images` 参数支持最多 5 张参
 ## 示例
 
 <Tabs>
-  <Tab title="生成（4K 横屏）">
+  <Tab title="生成（4K 横向）">
 ```text
 /tool image_generate action=generate model=openai/gpt-image-2 prompt="A clean editorial poster for OpenClaw image generation" size=3840x2160 count=1
 ```
@@ -290,7 +370,7 @@ OpenAI、OpenRouter、Google 和 xAI 通过 `images` 参数支持最多 5 张参
   <Tab title="生成（透明 PNG）">
 ```text
 /tool image_generate action=generate model=openai/gpt-image-1.5 prompt="A simple red circle sticker on a transparent background" outputFormat=png background=transparent
-```
+```CLI
 
 等效 CLI：
 
@@ -309,19 +389,24 @@ openclaw infer image generate \
 /tool image_generate action=generate model=openai/gpt-image-2 prompt="Two visual directions for a calm productivity app icon" size=1024x1024 count=2
 ```
   </Tab>
-  <Tab title="编辑（一个参考）">
+  <Tab title="编辑（一张参考图）">
 ```text
 /tool image_generate action=generate model=openai/gpt-image-2 prompt="Keep the subject, replace the background with a bright studio setup" image=/path/to/reference.png size=1024x1536
 ```
   </Tab>
-  <Tab title="编辑（多个参考）">
+  <Tab title="编辑（多张参考图）">
 ```text
 /tool image_generate action=generate model=openai/gpt-image-2 prompt="Combine the character identity from the first image with the color palette from the second" images='["/path/to/character.png","/path/to/palette.jpg"]' size=1536x1024
 ```
   </Tab>
+  <Tab title="Krea 风格参考">
+```text
+/tool image_generate action=generate model=fal/krea/v2/medium/text-to-image prompt="An expressive editorial portrait using this color palette and print texture" images='["/path/to/palette.png","/path/to/texture.jpg"]' aspectRatio=9:16 fal='{"creativity":"high"}'
+```
+  </Tab>
 </Tabs>
 
-`openclaw infer image edit` 上也提供相同的 `--output-format` 和 `--background` 标志；`--openai-background` 仍作为 OpenAI 特定的别名。除 OpenAI 以外的内置提供商目前不声明显式的背景控制，因此对于它们，`background: "transparent"` 被报告为已忽略。
+`openclaw infer image edit` 上同样可以使用 `--output-format` 和 `--background` 标志；`--openai-background` 仍然是 OpenAI 专用的别名。除 OpenAI 之外的打包提供商目前不声明显式的后台控制，因此对它们报告 `background: "transparent"` 为已忽略。
 
 ## 相关
 
@@ -330,7 +415,7 @@ openclaw infer image generate \
 - [fal](/zh/providers/fal) - fal 图像和视频提供商设置
 - [Google (Gemini)](/zh/providers/google) - Gemini 图像提供商设置
 - [MiniMax](/zh/providers/minimax) - MiniMax 图像提供商设置
-- [OpenAI](OpenAI/en/providers/openaiOpenAI) - OpenAI 图像提供商设置
+- [OpenAI](/zh/providers/openai) - OpenAI Images 提供商设置
 - [Vydra](/zh/providers/vydra) - Vydra 图像、视频和语音设置
 - [xAI](/zh/providers/xai) - Grok 图像、视频、搜索、代码执行和 TTS 设置
 - [配置参考](/zh/gateway/config-agents#agent-defaults) - `imageGenerationModel` 配置

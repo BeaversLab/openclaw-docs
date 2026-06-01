@@ -1,5 +1,5 @@
 ---
-summary: "DiscordOpenClawAjoute la surface channel Discord pour l'envoi et la réception de messages OpenClaw."
+summary: "OpenClawDiscordPlugin de canal Discord OpenClaw pour les canaux, les DMs, les commandes et les événements d'application."
 read_when:
   - You are installing, configuring, or auditing the discord plugin
 title: "DiscordPlugin Discord"
@@ -7,7 +7,7 @@ title: "DiscordPlugin Discord"
 
 # Plugin Discord
 
-Ajoute la surface channel Discord pour l'envoi et la réception de messages OpenClaw.
+Plugin de canal Discord OpenClaw pour les canaux, les DMs, les commandes et les événements d'application.
 
 ## Distribution
 
@@ -16,7 +16,7 @@ Ajoute la surface channel Discord pour l'envoi et la réception de messages Open
 
 ## Surface
 
-channels: discord; contracts: meetingNotesSourceProviders
+channels: discord; contracts: transcriptSourceProviders
 
 ## Documentation connexe
 

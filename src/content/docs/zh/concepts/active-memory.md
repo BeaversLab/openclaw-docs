@@ -521,9 +521,9 @@ memory-core 默认允许列表中包含 `memory_recall`。当 `plugins.slots.mem
 
 ### 无损爪
 
-无损爪是一个具有自己召回工具的上下文引擎插件。请先
-将其作为上下文引擎安装和配置；请参阅 [上下文引擎](/zh/concepts/context-engine)。
-然后让主动记忆使用无损爪的召回工具：
+Lossless Claw 是一个具有自己的检索工具的上下文引擎插件。请首先
+作为上下文引擎安装和配置它；参见[上下文引擎](/zh/concepts/context-engine)。
+然后让 Active Memory 使用 Lossless Claw 检索工具：
 
 ```json5
 {
@@ -652,7 +652,7 @@ plugins.entries.active-memory
 | `config.promptOverride`      | `string`                                                                                             | 高级完整提示词替换；不建议正常使用                                                                                                                                                                       |
 | `config.promptAppend`        | `string`                                                                                             | 附加到默认或覆盖提示词的高级额外指令                                                                                                                                                                     |
 | `config.timeoutMs`           | `number`                                                                                             | 阻塞型记忆子代理的硬超时时间，上限为 120000 毫秒                                                                                                                                                         |
-| `config.setupGraceTimeoutMs` | `number`                                                                                             | 在召回超时过期之前的额外高级设置预算；默认为 0，上限为 30000 毫秒。有关 v2026.4.x 升级指南，请参阅 [Cold-start grace](#cold-start-grace)                                                                 |
+| `config.setupGraceTimeoutMs` | `number`                                                                                             | 在检索超时过期之前的高级额外设置预算；默认为 0，且上限为 30000 毫秒。有关 v2026.4.x 升级指导，请参见[冷启动宽限期](#cold-start-grace)                                                                    |
 | `config.maxSummaryChars`     | `number`                                                                                             | Active Memory 摘要中允许的最大字符总数                                                                                                                                                                   |
 | `config.logging`             | `boolean`                                                                                            | 在调优时发出 Active Memory 日志                                                                                                                                                                          |
 | `config.persistTranscripts`  | `boolean`                                                                                            | 将阻塞型记忆子代理的记录保留在磁盘上，而不是删除临时文件                                                                                                                                                 |
@@ -756,22 +756,23 @@ plugins.entries.active-memory
 
 <AccordionGroup>
   <Accordion title="嵌入提供商已切换或停止工作">
-    如果 `memorySearch.provider` 未设置，OpenClaw 会自动检测第一个
-    可用的嵌入提供商。新的 API 密钥、配额耗尽或
-    受到速率限制的托管提供商可能会改变不同运行之间解析到的提供商。如果没有解析到任何提供商，`memory_search` 可能会降级为仅词汇检索；
-    在选定提供商后发生的运行时故障不会自动回退。
+    如果未设置 `memorySearch.provider`，OpenClaw 将使用 OpenAI 嵌入。如需使用本地、Ollama、Gemini、Voyage、
+    Mistral、DeepInfra、Bedrock、GitHub Copilot 或与 OpenAI 兼容的
+    嵌入，请显式设置 `memorySearch.provider`。如果配置的提供商无法运行，`memory_search` 可能
+    会降级为仅词法检索；在已经选择提供商之后发生的运行时故障不会
+    自动回退。
 
-    请显式锁定提供商（以及可选的回退提供商），以使选择具有确定性。
-    有关提供商的完整列表和锁定示例，请参阅[内存搜索](/zh/concepts/memory-search)。
+    仅当您需要有意设置单一回退时，才设置可选的 `memorySearch.fallback`。有关提供商
+    的完整列表和示例，请参见[内存搜索](/zh/concepts/memory-search)。
 
   </Accordion>
 
-<Accordion title="Recall feels slow, empty, or inconsistent">
-  - 打开 `/trace on` 以在会话中显示插件拥有的 Active Memory 调试摘要。 - 打开 `/verbose on` 以在每次回复后也查看 `🧩 Active Memory: ...` 状态行。 - 监视 Gateway 日志中的 `active-memory: ... start|done`、`memory sync failed (search-bootstrap)` 或提供商嵌入错误。 - 运行 `openclaw memory status --deep` 以检查内存搜索后端和索引健康状况。 - 如果您使用 `ollama`，请确认已安装嵌入模型（`ollama list`）。
+<Accordion title="检索感觉缓慢、为空或不一致">
+  - 打开 `/trace on` 以在会话中显示插件拥有的 Active Memory 调试 摘要。 - 打开 `/verbose on` 以在每次回复后也查看 `🧩 Active Memory: ...` 状态行 。 - 观察网关日志中的 `active-memory: ... start|done` 、`memory sync failed (search-bootstrap)` 或提供商嵌入错误。 - 运行 `openclaw memory status --deep` 以检查内存搜索后端 和索引运行状况。 - 如果您使用 `ollama`，请确认嵌入模型已安装 (`ollama list`)。
 </Accordion>
 
-  <Accordion title="First recall after gateway restart returns `status=timeout`">
-    在 v2026.5.2 及更高版本中，如果在首次召回触发时冷启动设置（模型预热 + 嵌入索引加载）尚未完成，运行可能会达到配置的 `timeoutMs` 预算并返回 `status=timeout`Gateway(网关) 且输出为空。Gateway 日志显示重启后第一个符合条件的回复周围的 `active-memory timeout after Nms`。
+  <Accordion title="Gateway(网关)重启后的首次召回返回 `status=timeout`">
+    在 v2026.5.2 及更高版本中，如果冷启动设置（模型热身 + 嵌入索引加载）在首次召回触发前尚未完成，则运行可能会达到配置的 `timeoutMs` 预算并返回 `status=timeout`Gateway(网关)，且输出为空。Gateway(网关) 日志显示 `active-memory timeout after Nms` 出现在重启后第一个符合条件的回复附近。
 
     请参阅推荐设置下的 [Cold-start grace](#cold-start-grace) 以获取推荐的 `setupGraceTimeoutMs` 值。
 
@@ -780,6 +781,6 @@ plugins.entries.active-memory
 
 ## 相关页面
 
-- [内存搜索](/zh/concepts/memory-search)
-- [内存配置参考](/zh/reference/memory-config)
-- [插件 SDK 设置](/zh/plugins/sdk-setup)
+- [Memory Search](/zh/concepts/memory-search)
+- [Memory configuration reference](/zh/reference/memory-config)
+- [Plugin SDK setup](/zh/plugins/sdk-setup)

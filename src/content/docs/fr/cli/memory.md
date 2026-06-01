@@ -17,7 +17,7 @@ exposent leurs propres espaces de noms CLI.
 Connexes :
 
 - Concept de mémoire : [Memory](/fr/concepts/memory)
-- Wiki Mémoire : [Memory Wiki](/fr/plugins/memory-wiki)
+- Wiki mémoire : [Memory Wiki](/fr/plugins/memory-wiki)
 - Wiki CLI : [wiki](/fr/cli/wiki)
 - Plugins : [Plugins](/fr/tools/plugin)
 
@@ -58,7 +58,7 @@ openclaw memory index --agent main --verbose
 - `--fix` : réparer les verrous de rappel obsolètes et normaliser les métadonnées de promotion.
 - `--json` : afficher la sortie JSON.
 
-Si `memory status` affiche `Dreaming status: blocked`, la cron de rêve gérée est activée mais le battement de cœur qui la pilote ne se déclenche pas pour l'agent par défaut. Voir [Dreaming never runs](/fr/concepts/dreaming#dreaming-never-runs-status-shows-blocked) pour les deux causes courantes.
+Si `memory status` affiche `Dreaming status: blocked`, la tâche cron de rêve gérée est activée mais le battement de cœur qui la pilote ne se déclenche pas pour l'agent par défaut. Consultez [Dreaming never runs](/fr/concepts/dreaming#dreaming-never-runs-status-shows-blocked) pour connaître les deux causes courantes.
 
 `memory index` :
 
@@ -168,12 +168,12 @@ Notes :
 - `memory status` inclut tous les chemins supplémentaires configurés via `memorySearch.extraPaths`.
 - Si les champs de clé d'API distante de la mémoire effectivement active sont configurés en tant que SecretRefs, la commande résout ces valeurs à partir de l'instantané de la passerelle active. Si la passerelle n'est pas disponible, la commande échoue rapidement.
 - Remarque sur le désynchronisation de la version de la Gateway : ce chemin de commande nécessite une passerelle qui prend en charge `secrets.resolve` ; les passerelles plus anciennes renvoient une erreur de méthode inconnue.
-- Ajustez la cadence de balayage planifiée avec `dreaming.frequency`. La politique de promotion deep est par ailleurs interne ; utilisez les drapeaux CLI sur `memory promote` lorsque vous avez besoin de substitutions manuelles ponctuelles.
+- Ajustez la cadence du balayage planifié avec `dreaming.frequency`. La stratégie de promotion approfondie est par ailleurs interne, à l'exception de `dreaming.phases.deep.maxPromotedSnippetTokens`, qui limite la longueur des extraits promus tout en gardant la provenance visible. Utilisez les drapeaux CLI sur `memory promote` lorsque vous avez besoin de substitutions manuelles de seuil ponctuelles.
 - `memory rem-harness --path <file-or-dir> --grounded` prévisualise les `What Happened`, `Reflections` et `Possible Lasting Updates` ancrés à partir des notes quotidiennes historiques sans rien écrire.
-- `memory rem-backfill --path <file-or-dir>` écrit des entrées de journal ancrées et réversibles dans `DREAMS.md` pour révision par l'interface utilisateur.
+- `memory rem-backfill --path <file-or-dir>` écrit des entrées de journal ancrées réversibles dans `DREAMS.md` pour examen via l'interface utilisateur.
 - `memory rem-backfill --path <file-or-dir> --stage-short-term` ensemence également des candidats durables ancrés dans le magasin de promotion à court terme en direct afin que la phase profonde normale puisse les classer.
-- `memory rem-backfill --rollback` supprime les entrées de journal ancrées précédemment écrites, et `memory rem-backfill --rollback-short-term` supprime les candidats à court terme ancrés précédemment mis en attente.
-- Voir [Dreaming](/fr/concepts/dreaming) pour les descriptions complètes des phases et la référence de configuration.
+- `memory rem-backfill --rollback` supprime les entrées de journal ancrées précédemment écrites, et `memory rem-backfill --rollback-short-term` supprime les candidats à court terme ancrés précédemment mis en scène.
+- Consultez [Dreaming](/fr/concepts/dreaming) pour obtenir les descriptions complètes des phases et la référence de configuration.
 
 ## Connexes
 

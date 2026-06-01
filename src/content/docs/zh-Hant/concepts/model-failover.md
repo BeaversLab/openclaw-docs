@@ -157,14 +157,14 @@ OpenClaw 會記錄 Codex 提供的確切重置時間，嘗試下一個
 當設定檔因認證/速率限制錯誤（或看似速率限制的超時）而失敗時，OpenClaw 會將其標記為冷卻並移至下一個設定檔。
 
 <AccordionGroup>
-  <Accordion title="哪些情況會被歸入速率限制 / 逾時桶">
-    該速率限制桶的範圍比單純的 `429` 更廣泛：它還包含供應商訊息，例如 `Too many concurrent requests`、`ThrottlingException`、`concurrency limit reached`、`workers_ai ... quota limit exceeded`、`throttled`、`resource exhausted`，以及週期性使用視窗限制，例如 `weekly/monthly limit reached`。
+  <Accordion title="哪些情況會被歸類為速率限制/逾時">
+    該速率限制分類比單純的 `429` 更廣泛：它還包括供應商訊息，例如 `Too many concurrent requests`、`ThrottlingException`、`concurrency limit reached`、`workers_ai ... quota limit exceeded`、`throttled`、`resource exhausted`，以及週期性使用視窗限制，例如 `weekly/monthly limit reached`。
 
-    格式/無效請求錯誤通常是終局性的，因為重試相同的載荷會以相同的方式失敗，因此 OpenClaw 會直接呈現這些錯誤，而不是輪換驗證設定檔。已知的重試修復路徑可以明確選擇加入：例如，Cloud Code Assist 工具呼叫 ID 驗證失敗會透過 `allowFormatRetry` 原則進行清理並重試一次。OpenAI 相容的停止原因錯誤，例如 `Unhandled stop reason: error`、`stop reason: error` 和 `reason: error`，會被歸類為逾時/故障轉移訊號。
+    格式/無效請求錯誤通常是終止性的，因為重試相同的負載會以相同的方式失敗，因此 OpenClaw 會顯示這些錯誤，而不是輪換認證設定檔。已知的重試修復路徑可以明確選擇加入：例如，Cloud Code Assist 工具呼叫 ID 驗證失敗會透過 `allowFormatRetry` 原則進行清理並重試一次。OpenAI 相容的停止原因錯誤，例如 `Unhandled stop reason: error`、`stop reason: error` 和 `reason: error`，會被歸類為逾時/故障轉移信號。
 
-    當來源符合已知的暫態模式時，通用伺服器文字也可能落入該逾時桶中。例如，單純的 pi-ai 串流包裝器訊息 `An unknown error occurred` 對於每個供應商都被視為值得故障轉移，因為當供應商串流以 `stopReason: "aborted"` 或 `stopReason: "error"` 結束而沒有具體細節時，pi-ai 會發出此訊息。包含暫態伺服器文字的 JSON `api_error` 載荷，例如 `internal server error`、`unknown error, 520`、`upstream error` 或 `backend error`，也會被視為值得故障轉移的逾時。
+    當來源符合已知的暫態模式時，通用伺服器文字也可能會落入該逾時分類。例如，裸機模型運行時串流包裝器訊息 `An unknown error occurred` 對於每個供應商都被視為值得故障轉移，因為共享模型運行時會在供應商串流以 `stopReason: "aborted"` 或 `stopReason: "error"` 結束而沒有具體細節時發出此訊息。包含暫態伺服器文字的 JSON `api_error` 負載，例如 `internal server error`、`unknown error, 520`、`upstream error` 或 `backend error`，也會被視為值得故障轉移的逾時。
 
-    OpenRouter 特定的通用上游文字，例如單純的 `Provider returned error`，僅當供應商語境實際上是 OpenRouter 時才會被視為逾時。通用的內部故障轉移文字，例如 `LLM request failed with an unknown error.`，則保持保守，不會自行觸發故障轉移。
+    OpenRouter 特定的通用上游文字，例如裸機 `Provider returned error`，僅在供應商上下文確實為 OpenRouter 時才被視為逾時。通用的內部備援文字，例如 `LLM request failed with an unknown error.`，則保持保守，本身不會觸發故障轉移。
 
   </Accordion>
   <Accordion title="SDK retry-after 上限">

@@ -29,14 +29,14 @@ OpenClaw 透過內建的遷移提供者匯入 Hermes 狀態。提供者在變更
 
   </Tab>
   <Tab title="CLI">
-    使用 `openclaw migrate` 進行腳本化或可重複的執行。請參閱 [`openclaw migrate`](/zh-Hant/cli/migrate) 以取得完整參考資料。
+    使用 `openclaw migrate` 進行腳本化或可重複的執行。完整參考請參閱 [`openclaw migrate`](/zh-Hant/cli/migrate)。
 
     ```bash
     openclaw migrate hermes --dry-run    # preview only
     openclaw migrate apply hermes --yes  # apply with confirmation skipped
     ```
 
-    當 Hermes 位於 `~/.hermes` 之外時，請加入 `--from <path>`。
+    當 Hermes 位於 `~/.hermes` 之外時，請新增 `--from <path>`。
 
   </Tab>
 </Tabs>
@@ -63,8 +63,8 @@ OpenClaw 透過內建的遷移提供者匯入 Hermes 狀態。提供者在變更
   <Accordion title="技能">
     在 `skills/<name>/` 下具有 `SKILL.md` 檔案的技能會被複製，同時包含來自 `skills.config` 的個別技能組態值。
   </Accordion>
-  <Accordion title="API 金鑰（選用）">
-    設定 `--include-secrets` 以匯入支援的 `.env` 金鑰：`OPENAI_API_KEY`、`ANTHROPIC_API_KEY`、`OPENROUTER_API_KEY`、`GOOGLE_API_KEY`、`GEMINI_API_KEY`、`GROQ_API_KEY`、`XAI_API_KEY`、`MISTRAL_API_KEY`、`DEEPSEEK_API_KEY`。若未設定此旗標，絕不會複製機密資料。
+  <Accordion title="Auth credentials">
+    互動式 `openclaw migrate` 會在匯入驗證憑證前詢問，預設選擇「是」。接受的匯入項目包括來自 Hermes `auth.json` 的支援 OAuth 憑證、來自 OpenCode `auth.json` 的 OpenCode OpenAI OAuth 憑證、來自 OpenCode `auth.json` 的 OpenCode 和 GitHub Copilot 項目，以及[支援的 `.env` 金鑰](/zh-Hant/cli/migrate#supported-env-keys)。請使用 `--include-secrets` 進行非互動式 `openclaw migrate` 憑證匯入，使用 `--no-auth-credentials` 跳過它，或在從入門嚮導匯入時使用 onboarding `--import-secrets`。
   </Accordion>
 </AccordionGroup>
 
@@ -77,66 +77,67 @@ OpenClaw 透過內建的遷移提供者匯入 Hermes 狀態。提供者在變更
 - `logs/`
 - `cron/`
 - `mcp-tokens/`
-- `auth.json`
 - `state.db`
 
-OpenClaw 拒絕自動執行或信任此狀態，因為格式和信任假設可能會在系統之間產生偏移。在檢閱歸檔後，請手動搬移您需要的內容。
+OpenClaw 拒絕自動執行或信任此狀態，因為格式和信任假設可能會在系統之間產生偏移。在審查存檔後，請手動移動您需要的內容。
 
 ## 建議流程
 
 <Steps>
-  <Step title="預覽計畫">
+  <Step title="Preview the plan">
     ```bash
     openclaw migrate hermes --dry-run
     ```
 
-    此計畫會列出所有將變更的內容，包括衝突、跳過的項目以及任何敏感項目。計畫輸出會隱藏巢狀的類似金鑰的敏感性金鑰。
+    此計畫列出了所有將會變更的內容，包括衝突、跳過的項目以及任何敏感項目。計畫輸出會編輯掉嵌套的看起來像機密的金鑰。
 
   </Step>
-  <Step title="套用並備份">
+  <Step title="Apply with backup">
     ```bash
     openclaw migrate apply hermes --yes
     ```
 
-    OpenClaw 會在套用前建立並驗證備份。如果您需要匯入 API 金鑰，請新增 `--include-secrets`。
+    OpenClaw 在套用之前會建立並驗證備份。這個非互動式範例會匯入非機密狀態。請在不加 `--yes` 的情況下執行，以回答憑證提示，或是新增 `--include-secrets` 以在無人值守執行中包含支援的憑證。
 
   </Step>
-  <Step title="執行檢查">
+  <Step title="Run doctor">
     ```bash
     openclaw doctor
     ```
 
-    [Doctor](/zh-Hant/gateway/doctor) 會重新套用任何擱置中的設定遷移，並檢查匯入期間引入的問題。
+    [Doctor](/zh-Hant/gateway/doctor) 會重新套用任何待處理的設定遷移，並檢查匯入期間引入的問題。
 
   </Step>
-  <Step title="重新啟動並驗證">
+  <Step title="Restart and verify">
     ```bash
     openclaw gateway restart
     openclaw status
     ```
 
-    確認閘道狀態正常，且您匯入的模型、記憶和技能已載入。
+    確認閘道健康狀態，以及您的匯入模型、記憶和技能已載入。
 
   </Step>
 </Steps>
 
 ## 衝突處理
 
-當計畫回報衝突時（目標處已存在檔案或設定值），Apply 會拒絕繼續執行。
+當計畫回報衝突（目標位置已存在檔案或設定值）時，Apply 會拒絕繼續執行。
 
-<Warning>僅當有意在替換現有目標時，才使用 `--overwrite` 重新執行。提供者仍可能在遷移報告目錄中為被覆寫的檔案寫入項目級備份。</Warning>
+<Warning>只有在故意取代現有目標時，才應使用 `--overwrite` 重新執行。提供者仍可能會在遷移報告目錄中，為被覆寫的檔案寫入項目層級的備份。</Warning>
 
-對於全新的 OpenClaw 安裝，衝突並不常見。它們通常出現在您在已有使用者編輯的設定上重新執行匯入時。
+對於全新的 OpenClaw 安裝，衝突並不常見。它們通常出現在您重新於已包含使用者編輯的設定上執行匯入時。
 
-如果在套用過程中出現衝突（例如，設定檔發生意外的競爭條件），Hermes 會將剩餘的相依設定項目標記為 `skipped`，原因為 `blocked by earlier apply conflict`，而不是部分寫入它們。遷移報告會記錄每個被阻擋的項目，以便您解決原始衝突並重新執行匯入。
+如果在套用過程中發生衝突（例如，設定檔發生非預期的競爭），Hermes 會將其餘相依的設定項目標記為 `skipped`，原因為 `blocked by earlier apply conflict`，而不是部分寫入它們。遷移報告會記錄每個被阻擋的項目，以便您解決原始衝突並重新執行匯入。
 
-## 機密資訊
+## 機密
 
-預設情況下，絕不會匯入機密資訊。
+互動式 `openclaw migrate` 會詢問是否匯入偵測到的驗證憑證，預設選擇「是」。
 
-- 先執行 `openclaw migrate apply hermes --yes` 以匯入非機密狀態。
-- 如果您也想複製支援的 `.env` 金鑰，請使用 `--include-secrets` 重新執行。
-- 對於由 SecretRef 管理的憑證，請在匯入完成後設定 SecretRef 來源。
+- 接受提示將從 Hermes `auth.json` 匯入支援的 OAuth 憑證、從 OpenCode `auth.json` 匯入 OpenCode OpenAI OAuth 憑證、從 OpenCode `auth.json` 匯入 OpenCode 和 GitHub Copilot 項目，以及[支援的 `.env` 金鑰](/zh-Hant/cli/migrate#supported-env-keys)。
+- 使用 `--no-auth-credentials` 或在提示時選擇 no 以僅匯入非機密狀態。
+- 使用 `--include-secrets` 以搭配 `--yes` 無人值守執行。
+- 從入門嚮導匯入憑證時，請使用入門 `--import-secrets`。
+- 對於 SecretRef 管理的憑證，請在匯入完成後設定 SecretRef 來源。
 
 ## 用於自動化的 JSON 輸出
 
@@ -145,21 +146,21 @@ openclaw migrate hermes --dry-run --json
 openclaw migrate apply hermes --json --yes
 ```
 
-使用 `--json` 且不使用 `--yes` 時，apply 會列印計畫且不會修改狀態。這對 CI 和共用腳本來說是最安全的模式。
+搭配 `--json` 且不使用 `--yes` 時，apply 會列印計畫且不修改狀態。這是 CI 和共用腳本最安全的模式。
 
 ## 疑難排解
 
 <AccordionGroup>
-  <Accordion title="套用因衝突而拒絕">檢查計畫輸出。每個衝突會標識來源路徑和現有目標。針對每個項目決定要跳過、編輯目標，還是使用 `--overwrite` 重新執行。</Accordion>
-  <Accordion title="Hermes 位於 ~/.hermes 之外">傳遞 `--from /actual/path` (CLI) 或 `--import-source /actual/path` (onboarding)。</Accordion>
-  <Accordion title="Onboarding 拒絕在現有設定上匯入">Onboarding 匯入需要全新的設定。請重設狀態並重新進行 onboarding，或直接使用 `openclaw migrate apply hermes`，它支援 `--overwrite` 和明確的備份控制。</Accordion>
-  <Accordion title="API 金鑰未匯入">需要使用 `--include-secrets`，且僅會識別上述列出的金鑰。`.env` 中的其他變數會被忽略。</Accordion>
+  <Accordion title="Apply 因衝突而拒絕執行">檢查計畫輸出。每個衝突都會指明來源路徑和現有目標。請逐項決定是跳過、編輯目標，還是使用 `--overwrite` 重新執行。</Accordion>
+  <Accordion title="Hermes 位於 ~/.hermes 之外">傳遞 `--from /actual/path` (CLI) 或 `--import-source /actual/path` (入門)。</Accordion>
+  <Accordion title="入門程式拒絕在現有設定上匯入">入門匯入需要全新的設定。請重設狀態並重新入門，或直接使用 `openclaw migrate apply hermes`，它支援 `--overwrite` 和明確的備份控制。</Accordion>
+  <Accordion title="API 金鑰未匯入">互動式 `openclaw migrate` 僅在您接受憑證提示時才匯入 API 金鑰。非互動式 `--yes` 執行需要 `--include-secrets`；入門匯入需要 `--import-secrets`。僅會識別[支援的 `.env` 金鑰](/zh-Hant/cli/migrate#supported-env-keys)；`.env` 中的其他變數將被忽略。</Accordion>
 </AccordionGroup>
 
 ## 相關
 
-- [`openclaw migrate`](/zh-Hant/cli/migrate)：完整的 CLI 參考資料、外掛合約以及 JSON 結構。
-- [Onboarding](/zh-Hant/cli/onboard)：精靈流程和非互動式旗標。
-- [Migrating](/zh-Hant/install/migrating)：在機器之間移動 OpenClaw 安裝。
+- [`openclaw migrate`](/zh-Hant/cli/migrate)：完整的 CLI 參考、外掛程式合約和 JSON 結構。
+- [入門](/zh-Hant/cli/onboard)：嚮導流程和非互動式旗標。
+- [Migrating](/zh-Hant/install/migrating)：在不同機器之間移動 OpenClaw 安裝。
 - [Doctor](/zh-Hant/gateway/doctor)：遷移後的健康檢查。
-- [Agent workspace](/zh-Hant/concepts/agent-workspace)：`SOUL.md`、`AGENTS.md` 和記憶體檔案所在的位置。
+- [Agent workspace](/zh-Hant/concepts/agent-workspace)：`SOUL.md`、`AGENTS.md` 和記憶檔案所在的位置。

@@ -194,16 +194,22 @@ Matrix:
 
 La transmisión de vista previa también puede incluir actualizaciones de **progreso de herramientas**: líneas de estado cortas como "buscando en la web", "leyendo archivo" o "llamando a herramienta" que aparecen en el mismo mensaje de vista previa mientras se ejecutan las herramientas, antes de la respuesta final. En el modo de servidor de aplicaciones de Codex, los mensajes de preámbulo/comentario de Codex utilizan esta misma ruta de vista previa, por lo que las breves notas de progreso tipo "Estoy comprobando..." pueden transmitirse al borrador editable sin formar parte de la respuesta final. Esto mantiene los turnos de herramientas de varios pasos visualmente activos en lugar de silenciosos entre la primera vista previa de pensamiento y la respuesta final.
 
+Las herramientas de larga duración pueden emitir un progreso tipado antes de volver. Por ejemplo,
+`web_fetch` arma un temporizador de cinco segundos cuando se inicia: si la recuperación todavía está
+pendiente, la vista previa puede mostrar `Fetching page content...`; si la recuperación termina
+o se cancela antes de eso, no se emite ninguna línea de progreso. El resultado final posterior de la herramienta
+aún se entrega normalmente al modelo.
+
 Superficies compatibles:
 
-- **Discord**, **Slack**, **Telegram** y **Matrix** transmiten las actualizaciones de progreso de herramientas y de preámbulo de Codex a la edición de vista previa en vivo de forma predeterminada cuando la transmisión de vista previa está activa. Microsoft Teams utiliza su flujo de progreso nativo en chats personales.
-- Telegram se ha enviado con las actualizaciones de vista previa del progreso de las herramientas habilitadas desde `v2026.4.22`; mantenerlas habilitadas preserva ese comportamiento lanzado.
-- **Mattermost** ya incorpora la actividad de las herramientas en su única publicación de borrador de vista previa (ver más arriba).
-- Las ediciones de progreso de las herramientas siguen el modo de transmisión de vista previa activo; se omiten cuando la transmisión de vista previa es `off` o cuando la transmisión de bloques ha asumido el control del mensaje. En Telegram, `streaming.mode: "off"` es final-only: el chatter de progreso genérico también se suprime en lugar de entregarse como mensajes de estado independientes, mientras que los avisos de aprobación, las cargas útiles multimedia y los errores todavía se enrutan normalmente.
-- Para mantener la transmisión de vista previa pero ocultar las líneas de progreso de las herramientas, establezca `streaming.preview.toolProgress` en `false` para ese canal. Para mantener visibles las líneas de progreso de las herramientas mientras se oculta el texto de comando/exec, establezca `streaming.preview.commandText` en `"status"` o `streaming.progress.commandText` en `"status"`; el valor predeterminado es `"raw"` para preservar el comportamiento lanzado. Esta política es compartida por los canales de borradero/progreso que usan el renderizador de progreso compacto de OpenClaw, incluyendo Discord, Matrix, Microsoft Teams, Mattermost, vistas previas de borrador de Slack y Telegram. Para deshabilitar las ediciones de vista previa por completo, establezca `streaming.mode` en `off`.
-- Las respuestas de cita seleccionadas de Telegram son una excepción: cuando `replyToMode` no es `"off"` y hay texto de cita seleccionado presente, OpenClaw omite la transmisión de vista previa de la respuesta para ese turno para que las líneas de vista previa del progreso de las herramientas no puedan renderizarse. Las respuestas de mensaje actual sin texto de cita seleccionado aún mantienen la transmisión de vista previa. Consulte los [documentos del canal de Telegram](/es/channels/telegram) para obtener más detalles.
+- **Discord**, **Slack**, **Telegram** y **Matrix** transmiten actualizaciones del progreso de herramientas y los prefacios de Codex a la edición de vista previa en vivo de manera predeterminada cuando la transmisión de vista previa está activa. Microsoft Teams utiliza su flujo de progreso nativo en chats personales.
+- Telegram se ha lanzado con las actualizaciones de vista previa de progreso de herramientas habilitadas desde `v2026.4.22`; mantenerlas habilitadas preserva ese comportamiento lanzado.
+- **Mattermost** ya pliega la actividad de la herramienta en su única publicación de vista previa de borrador (ver más arriba).
+- Las ediciones de progreso de herramientas siguen el modo de transmisión de vista previa activo; se omiten cuando la transmisión de vista previa está `off` o cuando la transmisión de bloques se ha hecho cargo del mensaje. En Telegram, `streaming.mode: "off"` es solo final: el chatter de progreso genérico también se suprime en lugar de entregarse como mensajes de estado independientes, mientras que las solicitudes de aprobación, las cargas útiles multimedia y los errores aún se enrutan normalmente.
+- Para mantener la transmisión de vista previa pero ocultar las líneas de progreso de herramientas, establezca `streaming.preview.toolProgress` en `false` para ese canal. Para mantener las líneas de progreso de herramientas visibles mientras se oculta el texto de comando/exec, establezca `streaming.preview.commandText` en `"status"` o `streaming.progress.commandText` en `"status"`; el valor predeterminado es `"raw"` para preservar el comportamiento lanzado. Esta política es compartida por los canales de borrador/progreso que utilizan el renderizador de progreso compacto de OpenClaw, incluyendo Discord, Matrix, Microsoft Teams, Mattermost, vistas previas de borrador de Slack y Telegram. Para deshabilitar las ediciones de vista previa por completo, establezca `streaming.mode` en `off`.
+- Las respuestas de cita seleccionadas de Telegram son una excepción: cuando `replyToMode` no es `"off"` y hay texto de cita seleccionado, OpenClaw omite el flujo de vista previa de la respuesta para ese turno, por lo que no se pueden mostrar las líneas de vista previa del progreso de las herramientas. Las respuestas al mensaje actual sin texto de cita seleccionado mantienen el flujo de vista previa. Consulte los [documentos del canal de Telegram](/es/channels/telegram) para más detalles.
 
-Mantenga las líneas de progreso visibles pero oculte el texto de comando/exec sin procesar:
+Mantenga las líneas de progreso visibles pero oculte el texto sin procesar del comando/exec:
 
 ```json
 {
@@ -221,7 +227,7 @@ Mantenga las líneas de progreso visibles pero oculte el texto de comando/exec s
 }
 ```
 
-Use la misma forma bajo otra clave de canal de progreso compacto, por ejemplo `channels.discord`, `channels.matrix`, `channels.msteams`, `channels.mattermost`, o vistas previas de borrador de Slack. Para el modo progress-draft, ponga la misma política bajo `streaming.progress`:
+Use la misma estructura bajo otra clave de canal de progreso compacto, por ejemplo `channels.discord`, `channels.matrix`, `channels.msteams`, `channels.mattermost`, o las vistas previas de borrador de Slack. Para el modo progress-draft, coloque la misma política bajo `streaming.progress`:
 
 ```json
 {
@@ -241,8 +247,8 @@ Use la misma forma bajo otra clave de canal de progreso compacto, por ejemplo `c
 
 ## Relacionado
 
-- [Re factorización del ciclo de vida de los mensajes](/es/concepts/message-lifecycle-refactor) - diseño objetivo compartido para vista previa, edición, transmisión y finalización
+- [Reestructuración del ciclo de vida de los mensajes](/es/concepts/message-lifecycle-refactor) - diseño objetivo compartido para vista previa, edición, flujo y finalización
 - [Borradores de progreso](/es/concepts/progress-drafts) - mensajes visibles de trabajo en curso que se actualizan durante turnos largos
 - [Mensajes](/es/concepts/messages) - ciclo de vida y entrega de mensajes
-- [Reintentar](/es/concepts/retry) - comportamiento de reintento en caso de fallo de entrega
-- [Canales](/es/channels) - soporte de transmisión por canal
+- [Reintento](/es/concepts/retry) - comportamiento de reintento ante fallos de entrega
+- [Canales](/es/channels) - soporte de streaming por canal

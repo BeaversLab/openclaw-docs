@@ -1,5 +1,5 @@
 ---
-summary: "給代理使用的唯讀差異檢視器和檔案渲染器。"
+summary: "適用於代理程式的 OpenClaw 唯讀差異檢視器外掛程式和檔案渲染器。"
 read_when:
   - You are installing, configuring, or auditing the diffs plugin
 title: "Diffs 插件"
@@ -7,7 +7,7 @@ title: "Diffs 插件"
 
 # Diffs 插件
 
-給代理使用的唯讀差異檢視器和檔案渲染器。
+適用於代理程式的 OpenClaw 唯讀差異檢視器外掛程式和檔案渲染器。
 
 ## 發行
 

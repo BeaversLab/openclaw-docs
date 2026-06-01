@@ -1,5 +1,5 @@
 ---
-summary: "WhatsAppOpenClaw添加用于发送和接收 OpenClaw 消息的 WhatsApp 渠道表面。"
+summary: "OpenClawWhatsAppWhatsAppOpenClaw WhatsApp 渠道插件，用于 WhatsApp Web 聊天。"
 read_when:
   - You are installing, configuring, or auditing the whatsapp plugin
 title: "WhatsAppWhatsApp 插件"
@@ -7,7 +7,7 @@ title: "WhatsAppWhatsApp 插件"
 
 # WhatsApp 插件
 
-添加用于发送和接收 WhatsApp 消息的 OpenClaw 渠道表面。
+OpenClaw WhatsApp 渠道插件，用于 WhatsApp Web 聊天。
 
 ## 分发
 

@@ -56,7 +56,7 @@ register(api) {
 
 ## 可重複使用的執行時工具
 
-對於機器人撰寫的入站訊息，請使用頻道輪次 `botLoopProtection` 事實。Core 在記錄會話和分派之前會套用共用的記憶體內滑動視窗守衛，而不將策略綁定到單一頻道。此守衛會追蹤 `(scopeId, conversationId, participant pair)` 金鑰，將成對的雙向計數合併計算，當視窗預算超出時套用冷卻時間，並 Opportunistically 修剪不作用的項目。
+針對機器人產生的入站訊息，使用入站 `botLoopProtection` 事實。核心會在會話記錄和分派之前套用共用的記憶體內滑動視窗守衛，而不會將此策略綁定至單一頻道。此守衛會追蹤 `(scopeId, conversationId, participant pair)` 鍵，將一對鍵的雙向計數合併計算，並在超出視窗預算時套用冷卻時間，同時會適機修剪不使用的項目。
 
 向操作者公開此行為的頻道外掛應優先使用共用的 `channels.defaults.botLoopProtection` 結構作為基礎預算，然後在其上層疊加特定於頻道/提供者的覆寫值。共用組態使用秒數，因為它是面向使用者的：
 
@@ -91,7 +91,7 @@ return {
 };
 ```
 
-僅對不通過共用頻道輪次核心的自訂兩方事件迴圈，直接使用 `openclaw/plugin-sdk/pair-loop-guard-runtime`。
+僅針對不經由共用的入站回覆執行器的自訂雙方事件迴圈，直接使用 `openclaw/plugin-sdk/pair-loop-guard-runtime`。
 
 ## 執行時命名空間
 
@@ -141,15 +141,15 @@ return {
     });
     ```
 
-    `runEmbeddedAgent(...)` 是從插件代碼啟動正常 OpenClaw Agent 回合的通用輔助函數。它使用與通道觸發回覆相同的提供者/模型解析和 Agent harness 選擇邏輯。
+    `runEmbeddedAgent(...)` 是從外掛程式碼啟動正常 OpenClaw agent 回合的中立輔助程式。它使用與通道觸發回覆相同的提供者/模型解析和 agent-harness 選擇。
 
-    `runEmbeddedPiAgent(...)` 作為相容性別名保留。
+    `runEmbeddedPiAgent(...)` 保留為現有外掛程式的已棄用相容性別名。新程式碼應使用 `runEmbeddedAgent(...)`。
 
-    `resolveThinkingPolicy(...)` 返回提供者/模型支援的思考層級和可選的預設值。提供者插件通過其 thinking hooks 擁有特定於模型的配置文件，因此工具插件應調用此運行時輔助函數，而不是導入或複製提供者列表。
+    `resolveThinkingPolicy(...)` 傳回提供者/模型支援的思考層級和可選預設值。提供者外掛程式透過其思考 hooks 擁有特定模型的設定檔，因此工具外掛程式應呼叫此執行時期輔助程式，而不是匯入或複製提供者清單。
 
-    `normalizeThinkingLevel(...)` 將用戶文本（如 `on`、`x-high` 或 `extra high`）轉換為規範的存儲層級，然後再根據解析的策略進行檢查。
+    `normalizeThinkingLevel(...)` 將使用者文字（例如 `on`、`x-high` 或 `extra high`）轉換為標準儲存層級，然後再根據解析的原則進行檢查。
 
-    **會話存儲輔助函數** 位於 `api.runtime.agent.session` 下：
+    **會話儲存輔助程式** 位於 `api.runtime.agent.session` 下：
 
     ```typescript
     const entry = api.runtime.agent.session.getSessionEntry({ agentId, sessionKey });
@@ -163,7 +163,7 @@ return {
     });
     ```
 
-    對於會話工作流，請優先使用 `getSessionEntry(...)`、`listSessionEntries(...)`、`patchSessionEntry(...)` 或 `upsertSessionEntry(...)`。這些輔助函數通過 Agent/會話身分來定址會話，因此插件不依賴於舊的 `sessions.json` 存儲形狀。使用 `preserveActivity: true` 進行僅限元數據的補丁，這些補丁不應刷新會話活動；僅當回調返回完整條目並且已刪除的字段必須保持刪除狀態時，才使用 `replaceEntry: true`。`loadSessionStore(...)` 作為已棄用的相容性應急出口保留，適用於故意需要可變整個存儲克隆的調用者。
+    針對會話工作流程，建議優先使用 `getSessionEntry(...)`、`listSessionEntries(...)`、`patchSessionEntry(...)` 或 `upsertSessionEntry(...)`。這些輔助程式透過 agent/會話身分尋址會話，因此外掛程式不會依賴舊版 `sessions.json` 儲存結構。請使用 `preserveActivity: true` 進行不應重新整理會話活動的僅中繼資料修補，並且僅當回呼傳回完整項目且已刪除的欄位必須保持刪除狀態時，才使用 `replaceEntry: true`。`loadSessionStore(...)` 保留為已棄用的相容性應急手段，適用於故意需要可變整個儲存區副本的呼叫者。
 
   </Accordion>
   <Accordion title="api.runtime.agent.defaults">
@@ -177,8 +177,8 @@ return {
   </Accordion>
 
   <Accordion title="api.runtime.llm">
-    執行主機擁有的文字補全，而無需匯入提供者內部程式碼或
-    重複 OpenClaw 模型/驗證/基礎 URL 的準備工作。
+    執行主機擁有的文字補全，無需匯入提供者內部元件或
+    重複 OpenClaw 模型/驗證/基礎 URL 準備工作。
 
     ```typescript
     const result = await api.runtime.llm.complete({
@@ -189,15 +189,15 @@ return {
     });
     ```
 
-    此輔助程式使用與 OpenClaw 內建執行時期相同的簡單補全準備路徑，以及主機擁有的執行時期配置快照。上下文引擎會收到綁定會話的 `llm.complete` 能力，因此模型呼叫會使用作用中會話的代理程式，而不會自動回退到預設代理程式。當可用時，結果會包含提供者/模型/代理程式的歸屬，以及標準化的 token、快取和預估成本使用量。
+    此輔助函式使用與 OpenClaw 內建執行階段和主機擁有的執行階段設定快照相同的簡易補全準備路徑。內容引擎會接收綁定至工作階段的 `llm.complete` 功能，因此模型呼叫會使用活躍工作階段的代理程式，並不會靜默回退至預設代理程式。結果包含提供者/模型/代理程式的歸屬資訊，以及在可用時標準化的 token、快取和預估成本使用量。
 
     <Warning>
-    模型覆寫需要操作員透過配置中的 `plugins.entries.<id>.llm.allowModelOverride: true` 來選擇加入。使用 `plugins.entries.<id>.llm.allowedModels` 將受信任的外掛程式限制為特定的標準 `provider/model` 目標。跨代理程式補全需要 `plugins.entries.<id>.llm.allowAgentIdOverride: true`。
+    模型覆寫需要操作員在設定中透過 `plugins.entries.<id>.llm.allowModelOverride: true` 加入啟用。使用 `plugins.entries.<id>.llm.allowedModels` 將受信任的外掛限制為特定的標準 `provider/model` 目標。跨代理程式補全需要 `plugins.entries.<id>.llm.allowAgentIdOverride: true`。
     </Warning>
 
   </Accordion>
   <Accordion title="api.runtime.subagent">
-    啟動和管理背景子代理程式執行。
+    啟動並管理背景子代理程式執行。
 
     ```typescript
     // Start a subagent run
@@ -225,14 +225,14 @@ return {
     ```
 
     <Warning>
-    模型覆寫 (`provider`/`model`) 需要操作員透過配置中的 `plugins.entries.<id>.subagent.allowModelOverride: true` 來選擇加入。不受信任的外掛程式仍然可以執行子代理程式，但覆寫請求會被拒絕。
+    模型覆寫 (`provider`/`model`) 需要操作員在設定中透過 `plugins.entries.<id>.subagent.allowModelOverride: true` 加入啟用。未受信任的外掛仍可執行子代理程式，但覆寫請求會被拒絕。
     </Warning>
 
-    `deleteSession(...)` 可以透過 `api.runtime.subagent.run(...)` 刪除由同一個外掛程式建立的會話。刪除任意使用者或操作員會話仍然需要具有管理員範圍的 Gateway 要求。
+    `deleteSession(...)` 可以透過 `api.runtime.subagent.run(...)` 刪除由同一外掛建立的工作階段。刪除任意使用者或操作員工作階段仍需要具有管理員範圍的 Gateway 要求。
 
   </Accordion>
   <Accordion title="api.runtime.nodes">
-    列出已連接的節點，並從 Gateway 載入的外掛程式程式碼或從外掛程式 CLI 指令叫用節點主機指令。當外掛程式在配對裝置（例如另一台 Mac 上的瀏覽器或音訊橋接器）上擁有本機工作時，請使用此功能。
+    列出已連接的節點，並從 Gateway 載入的外掛程式碼或從外掛程式 CLI 指令叫用節點主機指令。當外掛程式在配對裝置（例如另一台 Mac 上的瀏覽器或音訊橋接器）上擁有本機工作時，請使用此功能。
 
     ```typescript
     const { nodes } = await api.runtime.nodes.list({ connected: true });
@@ -245,15 +245,15 @@ return {
     });
     ```
 
-    在 Gateway 內部，此執行時期是進程內的。在外掛程式 CLI 指令中，它透過 RPC 呼叫已設定的 Gateway，因此諸如 `openclaw googlemeet recover-tab` 等指令可以從終端機檢查配對的節點。節點指令仍會經過正常的 Gateway 節點配對、指令允許清單、外掛程式節點叫用原則以及節點本機指令處理。
+    在 Gateway 內部，此執行時屬於同處理序。在外掛程式 CLI 指令中，它會透過 RPC 呼叫設定的 Gateway，因此諸如 `openclaw googlemeet recover-tab` 等指令可以從終端機檢查配對的節點。節點指令仍然會經過正常的 Gateway 節點配對、指令允許清單、外掛程式節點叫用原則，以及節點本機指令處理。
 
-    公開危險節點主機指令的外掛程式應該使用 `api.registerNodeInvokePolicy(...)` 註冊節點叫用原則。該原則在 Gateway 中於檢查指令允許清單之後、以及在將指令轉發至節點之前執行，因此直接的 `node.invoke` 呼叫和更高層級的外掛程式工具共用相同的強制執行路徑。
+    如果外掛程式暴露危險的節點主機指令，應該向 `api.registerNodeInvokePolicy(...)` 註冊節點叫用原則。該原則會在檢查指令允許清單後，以及在指令轉發至節點前，於 Gateway 中執行，因此直接的 `node.invoke` 呼叫和高階外掛程式工具共用相同的執行路徑。
 
   </Accordion>
   <Accordion title="api.runtime.tasks.managedFlows">
-    將任務流程執行時期繫結至現有的 OpenClaw 工階金鑰或受信任的工具上下文，然後建立並管理工作流程，而不需要在每次呼叫時傳遞擁有者。
+    將 Task Flow 執行時綁定到現有的 OpenClaw 工作階段金鑰或受信任的工具內容，然後建立並管理 Task Flows，而無需在每次呼叫時傳遞擁有者。
 
-    任務流程會追蹤持久的多步驟工作流程狀態。它不是排程器：請使用 Cron 或 `api.session.workflow.scheduleSessionTurn(...)` 進行未來的喚醒，然後當該工作需要流程狀態、子任務、等待或取消時，從已排程的回合使用 `managedFlows`。
+    Task Flow 會追蹤持久的多步驟工作流程狀態。它不是排程器：請使用 Cron 或 `api.session.workflow.scheduleSessionTurn(...)` 進行未來的喚醒，然後在該工作需要流程狀態、子任務、等待或取消時，從已排定的輪次使用 `managedFlows`。
 
     ```typescript
     const taskFlow = api.runtime.tasks.managedFlows.fromToolContext(ctx);
@@ -280,7 +280,7 @@ return {
     });
     ```
 
-    當您已經有自己的繫結層所提供的受信任 OpenClaw 工階金鑰時，請使用 `bindSession({ sessionKey, requesterOrigin })`。請勿從原始的使用者輸入進行繫結。
+    當您已經擁有來自您自己的綁定層的受信任 OpenClaw 工作階段金鑰時，請使用 `bindSession({ sessionKey, requesterOrigin })`。請勿從原始使用者輸入進行綁定。
 
   </Accordion>
   <Accordion title="api.runtime.tts">
@@ -306,7 +306,7 @@ return {
     });
     ```
 
-    使用核心 `messages.tts` 設定和提供者選取。傳回 PCM 音訊緩衝區 + 取樣率。
+    使用核心 `messages.tts` 設定和提供者選擇。傳回 PCM 音訊緩衝區 + 取樣率。
 
   </Accordion>
   <Accordion title="api.runtime.mediaUnderstanding">
@@ -368,7 +368,7 @@ return {
     });
     ```
 
-    當沒有產生輸出（例如略過輸入）時，會傳回 `{ text: undefined }`。
+    當未產生輸出（例如跳過輸入）時，回傳 `{ text: undefined }`。
 
     <Info>
     `api.runtime.stt.transcribeAudioFile(...)` 保留為 `api.runtime.mediaUnderstanding.transcribeAudioFile(...)` 的相容性別名。
@@ -427,7 +427,8 @@ return {
 
   </Accordion>
   <Accordion title="api.runtime.config">
-    目前的執行時設定快照和交易式設定寫入。請優先使用已傳入目前呼叫路徑的設定；僅在處理程式直接需要處理程序快照時，才使用 `current()`。
+    目前的執行時設定快照和交易式設定寫入。優先使用已傳入目前呼叫路徑的設定；僅當處理器直接需要處理程序快照時，才使用
+    `current()`。
 
     ```typescript
     const cfg = api.runtime.config.current();
@@ -439,7 +440,9 @@ return {
     });
     ```
 
-    `mutateConfigFile(...)` 和 `replaceConfigFile(...)` 會傳回 `followUp` 值，例如 `{ mode: "restart", requiresRestart: true, reason }`，它會記錄寫入者的意圖，而不會從閘道取走重新啟動的控制權。
+    `mutateConfigFile(...)` 和 `replaceConfigFile(...)` 會回傳 `followUp`
+    值，例如 `{ mode: "restart", requiresRestart: true, reason }`，
+    該值會記錄寫入者的意圖，而不會從閘道奪取重啟控制權。
 
   </Accordion>
   <Accordion title="api.runtime.system">
@@ -493,7 +496,7 @@ return {
 
   </Accordion>
   <Accordion title="api.runtime.state">
-    狀態目錄解析和以 SQLite 支援的鍵值儲存。
+    狀態目錄解析和 SQLite 支援的鍵值儲存。
 
     ```typescript
     const stateDir = api.runtime.state.resolveStateDir(process.env);
@@ -510,10 +513,10 @@ return {
     await store.clear();
     ```
 
-    鍵值儲存在重新啟動後仍然存在，並且依執行時綁定的外掛 ID 隔離。請使用 `registerIfAbsent(...)` 進行原子重複資料剔除宣告：當金鑰不存在或已過期並註冊時，它會傳回 `true`；當現有的即時值已存在時，則傳回 `false`，而不會覆寫其值、建立時間或 TTL。限制：每個命名空間 `maxEntries`，每個外掛 1,000 個即時資料列，低於 64KB 的 JSON 值，以及可選的 TTL 過期。
+    鍵值儲存在重啟後仍然存在，並由執行時綁定的外掛 ID 隔離。使用 `registerIfAbsent(...)` 進行原子去重聲明：當金鑰遺失或已過期並註冊時，它會回傳 `true`；當即時值已存在時，則回傳 `false` 且不會覆寫其值、建立時間或 TTL。限制：每個命名空間 `maxEntries`，每個外掛 6,000 個即時資料列，64 KB 以下的 JSON 值，以及選用的 TTL 到期時間。當寫入作業會超過外掛資料列上限時，執行時可能會從正在寫入的命名空間中驅逐最舊的即時資料列；同層級命名空間不會因該次寫入而被驅逐，如果命名空間無法釋放足夠的資料列，寫入仍然會失敗。
 
     <Warning>
-    本版本僅限隨附外掛。
+    本版本僅限隨附的外掛使用。
     </Warning>
 
   </Accordion>
@@ -528,9 +531,9 @@ return {
 
   </Accordion>
   <Accordion title="api.runtime.channel">
-    通道特定的執行時輔助程式（載入通道外掛程式時可用）。
+    特定於頻道的執行時輔助函式（在載入頻道外掛時可用）。
 
-    `api.runtime.channel.media` 是通道媒體下載和儲存的首選介面：
+    `api.runtime.channel.media` 是用於頻道媒體下載和儲存的首選介面：
 
     ```typescript
     const saved = await api.runtime.channel.media.saveRemoteMedia({
@@ -541,9 +544,9 @@ return {
     });
     ```
 
-    當遠端 URL 應變成 OpenClaw 媒體時，請使用 `saveRemoteMedia(...)`。當外掛程式已使用外掛程式擁有的驗證、重新導向或允許清單處理來取得 `Response` 時，請使用 `saveResponseMedia(...)`。僅當外掛程式需要原始位元組進行檢查、轉換、解密或重新上傳時，才使用 `readRemoteMediaBuffer(...)`。`fetchRemoteMedia(...)` 仍是 `readRemoteMediaBuffer(...)` 的已棄用相容性別名。
+    當遠端 URL 應變成 OpenClaw 媒體時，請使用 `saveRemoteMedia(...)`。當外掛已使用外掛擁有的驗證、重新導向或允許清單處理來獲取 `Response` 時，請使用 `saveResponseMedia(...)`。僅當外掛需要原始位元組進行檢查、轉換、解密或重新上傳時，才使用 `readRemoteMediaBuffer(...)`。`fetchRemoteMedia(...)` 仍是 `readRemoteMediaBuffer(...)` 已棄用的相容性別名。
 
-    `api.runtime.channel.mentions` 是使用執行時注入的綑綁通道外掛程式之共用傳入提及原則介面：
+    `api.runtime.channel.mentions` 是使用執行時插入的捆綁頻道外掛的共享輸入提及策略介面：
 
     ```typescript
     const mentionMatch = api.runtime.channel.mentions.matchesMentionWithExplicit(text, {
@@ -570,7 +573,7 @@ return {
     });
     ```
 
-    可用的提及輔助程式：
+    可用的提及輔助函式：
 
     - `buildMentionRegexes`
     - `matchesMentionPatterns`
@@ -578,7 +581,7 @@ return {
     - `implicitMentionKindWhen`
     - `resolveInboundMentionDecision`
 
-    `api.runtime.channel.mentions` 故意不公開較舊的 `resolveMentionGating*` 相容性輔助程式。請優先使用正規化的 `{ facts, policy }` 路徑。
+    `api.runtime.channel.mentions` 故意不公開較舊的 `resolveMentionGating*` 相容性輔助函式。請優先使用標準化的 `{ facts, policy }` 路徑。
 
   </Accordion>
 </AccordionGroup>
@@ -625,7 +628,7 @@ return {
   </Step>
 </Steps>
 
-<Note>請優先將 `pluginId` 用於執行時儲存區身分識別。較低層級的 `key` 格式適用於罕見情況，即某個外掛程式刻意需要多個執行時槽位。</Note>
+<Note>請優先使用 `pluginId` 作為執行時存放區身分識別。較低階的 `key` 形式僅適用於不常見的情況，即一個外掛故意需要多個執行時插槽。</Note>
 
 ## 其他頂層 `api` 欄位
 
@@ -638,16 +641,16 @@ return {
   外掛程式顯示名稱。
 </ParamField>
 <ParamField path="api.config" type="OpenClawConfig">
-  目前的配置快照（可用時為作用中的記憶體內執行時快照）。
+  目前組態快照（可用時為作用中的記憶體內執行時快照）。
 </ParamField>
 <ParamField path="api.pluginConfig" type="Record<string, unknown>">
-  來自 `plugins.entries.<id>.config` 的外掛程式特定配置。
+  來自 `plugins.entries.<id>.config` 的外掛程式特定組態。
 </ParamField>
 <ParamField path="api.logger" type="PluginLogger">
-  範圍記錄器（`debug`、`info`、`warn`、`error`）。
+  作用域記錄器（`debug`、`info`、`warn`、`error`）。
 </ParamField>
 <ParamField path="api.registrationMode" type="PluginRegistrationMode">
-  目前的載入模式；`"setup-runtime"` 是輕量級的完整進入前啟動/設定視窗。
+  目前載入模式；`"setup-runtime"` 是輕量級的完整進入前啟動/設定視窗。
 </ParamField>
 <ParamField path="api.resolvePath(input)" type="(string) => string">
   解析相對於外掛程式根目錄的路徑。
@@ -655,6 +658,6 @@ return {
 
 ## 相關
 
-- [外掛程式內部機制](/zh-Hant/plugins/architecture) — 功能模型與註冊表
+- [外掛程式內部機制](/zh-Hant/plugins/architecture) — 能力模型與註冊表
 - [SDK 進入點](/zh-Hant/plugins/sdk-entrypoints) — `definePluginEntry` 選項
 - [SDK 概覽](/zh-Hant/plugins/sdk-overview) — 子路徑參考

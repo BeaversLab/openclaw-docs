@@ -25,13 +25,13 @@ El alcance incluye:
 
 Si necesita detalles sobre el almacenamiento de transcripciones, consulte:
 
-- [Análisis profundo de la gestión de sesiones](/es/reference/session-management-compaction)
+- [Inmersión profunda en la gestión de sesiones](/es/reference/session-management-compaction)
 
 ---
 
 ## Regla global: el contexto de tiempo de ejecución no es la transcripción del usuario
 
-El contexto de tiempo de ejecución/sistema se puede agregar al aviso del modelo para un turno, pero no es contenido creado por el usuario final. OpenClaw mantiene un cuerpo de aviso orientado a la transcripción separado para las respuestas de Gateway, seguimientos en cola, ACP, CLI y ejecuciones de Pi integradas. Los turnos de usuario visibles almacenados usan ese cuerpo de transcripción en lugar del aviso enriquecido en tiempo de ejecución.
+El contexto de tiempo de ejecución/sistema se puede añadir al prompt del modelo para un turno, pero no es contenido creado por el usuario final. OpenClaw mantiene un cuerpo de prompt separado orientado a la transcripción para las respuestas de Gateway, seguimientos en cola, ACP, CLI y ejecuciones integradas de OpenClaw. Los turnos de usuario visibles almacenados utilizan ese cuerpo de transcripción en lugar del prompt enriquecido en tiempo de ejecución.
 
 Para las sesiones heredadas que ya persistieron envoltorios de tiempo de ejecución, las superficies de historial de Gateway aplican una proyección de visualización antes de devolver mensajes a los clientes de WebChat, TUI, REST o SSE.
 
@@ -42,7 +42,7 @@ Para las sesiones heredadas que ya persistieron envoltorios de tiempo de ejecuci
 Toda la higiene de la transcripción está centralizada en el ejecutor integrado:
 
 - Selección de política: `src/agents/transcript-policy.ts`
-- Aplicación de saneamiento/reparación: `sanitizeSessionHistory` en `src/agents/pi-embedded-runner/replay-history.ts`
+- Aplicación de saneamiento/reparación: `sanitizeSessionHistory` en `src/agents/embedded-agent-runner/replay-history.ts`
 
 La política usa `provider`, `modelApi` y `modelId` para decidir qué aplicar.
 
@@ -62,7 +62,7 @@ Dimensiones máximas más bajas generalmente reducen el uso de tokens; dimension
 
 Implementación:
 
-- `sanitizeSessionMessagesImages` en `src/agents/pi-embedded-helpers/images.ts`
+- `sanitizeSessionMessagesImages` en `src/agents/embedded-agent-helpers/images.ts`
 - `sanitizeContentBlocksImages` en `src/agents/tool-images.ts`
 - El lado máximo de la imagen es configurable vía `agents.defaults.imageMaxDimensionPx` (predeterminado: `1200`).
 - Los bloques de texto en blanco se eliminan mientras este paso recorre el contenido de la repetición. Los turnos
@@ -80,7 +80,7 @@ parcialmente persistidas (por ejemplo, después de un fallo por límite de tasa)
 Implementación:
 
 - `sanitizeToolCallInputs` en `src/agents/session-transcript-repair.ts`
-- Aplicado en `sanitizeSessionHistory` en `src/agents/pi-embedded-runner/replay-history.ts`
+- Aplicado en `sanitizeSessionHistory` en `src/agents/embedded-agent-runner/replay-history.ts`
 
 ---
 
@@ -106,15 +106,15 @@ antiguos persistidos que solo tienen metadatos de procedencia.
 - Descartar firmas de razonamiento huérfanas (elementos de razonamiento independientes sin un bloque de contenido siguiente) para las transcripciones de OpenAI Responses/Codex, y descartar el razonamiento reproducible de OpenAI después de un cambio de ruta del modelo.
 - Conservar las cargas útiles de elementos de razonamiento de OpenAI Responses reproducibles, incluidos los elementos de resumen vacío cifrados, para que la reproducción manual/WebSocket mantenga el estado `rs_*` requerido emparejado con los elementos de salida del asistente.
 - Las respuestas nativas de ChatGPT Codex siguen la paridad de cable de Codex al reproducir cargas útiles previas de razonamiento/mensaje/función de Responses sin ID de elementos previos, preservando al mismo tiempo `prompt_cache_key` de la sesión.
-- Sin saneamiento del ID de la llamada a herramienta.
-- La reparación del emparejamiento de resultados de herramientas puede mover las salidas coincidentes reales y sintetizar salidas `aborted` de estilo Codex para las llamadas a herramientas faltantes.
+- La reproducción de la familia Responses de OpenAI conserva los pares de razonamiento del mismo modelo canónicos `call_*|fc_*`, pero normaliza de manera determinista los ids de elementos de llamadas a funciones/sobrealargados o malformados `call_id` antes de la conversión de carga útil pi-ai.
+- La reparación del emparejamiento de resultados de herramientas puede mover las salidas coincidentes reales y sintetizar salidas estilo Codex `aborted` para llamadas a herramientas faltantes.
 - Sin validación o reordenamiento de turnos.
-- Las salidas de herramientas de la familia OpenAI Responses que faltan se sintetizan como `aborted` para coincidir con la normalización de reproducción de Codex.
+- Las salidas de herramientas faltantes de la familia Responses de OpenAI se sintetizan como `aborted` para coincidir con la normalización de reproducción de Codex.
 - Sin eliminación de firmas de pensamiento.
 
 **Completaciones de Chat compatibles con OpenAI**
 
-- Los bloques de pensamiento/razonamiento históricos del asistente se eliminan antes de la reproducción para que los servidores compatibles con OpenAI locales y de tipo proxy no reciban campos de razonamiento de turnos previos, como `reasoning` o `reasoning_content`.
+- Los bloques de pensamiento/razonamiento históricos del asistente se eliminan antes de la reproducción para que los servidores compatibles con OpenAI locales y de estilo proxy no reciban campos de razonamiento de turnos anteriores como `reasoning` o `reasoning_content`.
 - Las continuaciones de llamadas a herramientas del mismo turno mantienen el bloque de razonamiento del asistente adjunto a la llamada a herramienta hasta que se haya reproducido el resultado de la herramienta.
 - Las excepciones propiedad del proveedor pueden optar por no participar cuando su protocolo de cable requiera
   metadatos de razonamiento reproducidos.
@@ -142,7 +142,7 @@ antiguos persistidos que solo tienen metadatos de procedencia.
 
 **Amazon Bedrock (API de conversación)**
 
-- Los turnos de error de flujo del asistente vacíos se reparan con un bloque de texto de reserva no vacío antes de la reproducción. Bedrock Converse rechaza los mensajes del asistente con `content: []`, por lo que los turnos del asistente persistidos con `stopReason: "error"` y contenido vacío también se reparan en el disco antes de la carga.
+- Los turnos de error de flujo del asistente vacíos se reparan a un bloque de texto de reserva no vacío antes de la reproducción. Bedrock Converse rechaza los mensajes del asistente con `content: []`, por lo que los turnos del asistente persistidos con `stopReason: "error"` y contenido vacío también se reparan en el disco antes de la carga.
 - Los turnos de asistente con errores de transmisión que contienen solo bloques de texto en blanco se eliminan
   de la copia de repetición en memoria en lugar de repetir un bloque en blanco no válido.
 - Los bloques de pensamiento de Claude con firmas de repetición faltantes, vacías o en blanco se
@@ -159,7 +159,7 @@ antiguos persistidos que solo tienen metadatos de procedencia.
 
 **OpenRouter Gemini**
 
-- Limpieza de firmas de pensamiento: eliminar valores `thought_signature` que no sean base64 (mantener base64).
+- Limpieza de firma de pensamiento: eliminar valores `thought_signature` que no sean base64 (mantener base64).
 
 **OpenRouter Anthropic**
 
@@ -177,7 +177,7 @@ Antes del lanzamiento de 2026.1.22, OpenClaw aplicaba múltiples capas de higien
 
 - Una **extensión de sanitización de transcripciones** se ejecutaba en cada construcción de contexto y podía:
   - Reparar el emparejamiento de uso/resultado de herramientas.
-  - Saneamiento de identificadores de llamadas a herramientas (incluido un modo no estricto que preservaba `_`/`-`).
+  - Saneamiento de ids de llamadas a herramientas (incluido un modo no estricto que preservaba `_`/`-`).
 - El ejecutor también realizaba una sanitización específica del proveedor, lo que duplicaba el trabajo.
 - Ocurrieron mutaciones adicionales fuera de la política del proveedor, incluyendo:
   - Eliminación de etiquetas `<final>` del texto del asistente antes de la persistencia.
@@ -185,8 +185,8 @@ Antes del lanzamiento de 2026.1.22, OpenClaw aplicaba múltiples capas de higien
   - Recortar el contenido del asistente después de las llamadas a herramientas.
 
 Esta complejidad provocó regresiones entre proveedores (notablemente el emparejamiento `openai-responses`
-`call_id|fc_id`). La limpieza del 2026.1.22 eliminó la extensión, centralizó
-la lógica en el ejecutor y convirtió a OpenAI en **no-touch** más allá de la sanitización de imágenes.
+`call_id|fc_id`). La limpieza del 22 de enero de 2026 eliminó la extensión, centralizó
+la lógica en el ejecutor e hizo que OpenAI fuera de **no tocar** más allá de la sanitización de imágenes.
 
 ## Relacionado
 

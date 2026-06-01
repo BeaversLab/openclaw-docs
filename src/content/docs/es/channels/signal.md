@@ -182,7 +182,7 @@ Esto omite la generación automática y la espera de inicio dentro de OpenClaw. 
 
 ## Modo contenedor (bbernhard/signal-cli-rest-api)
 
-En lugar de ejecutar `signal-cli` de forma nativa, puedes usar el contenedor Docker [bbernhard/signal-cli-rest-api](https://github.com/bbernhard/signal-cli-rest-api). Esto envuelve `signal-cli` detrás de una API REST y una interfaz WebSocket.
+En lugar de ejecutar `signal-cli` de forma nativa, puede usar el contenedor Docker [bbernhard/signal-cli-rest-api](https://github.com/bbernhard/signal-cli-rest-api). Esto envuelve `signal-cli` detrás de una API REST y una interfaz WebSocket.
 
 Requisitos:
 
@@ -246,7 +246,7 @@ MDs:
 - Aprobar vía:
   - `openclaw pairing list signal`
   - `openclaw pairing approve signal <CODE>`
-- La vinculación es el intercambio de tokens predeterminado para los MDs de Signal. Detalles: [Vinculación](/es/channels/pairing)
+- El emparejamiento (pairing) es el intercambio de tokens predeterminado para los MD de Signal. Detalles: [Emparejamiento](/es/channels/pairing)
 - Los remitentes solo con UUID (de `sourceUuid`) se almacenan como `uuid:<id>` en `channels.signal.allowFrom`.
 
 Grupos:
@@ -304,16 +304,31 @@ Configuración:
   - `minimal`/`extensive` habilita las reacciones del agente y establece el nivel de orientación.
 - Invalidaciones por cuenta: `channels.signal.accounts.<id>.actions.reactions`, `channels.signal.accounts.<id>.reactionLevel`.
 
-## Objetivos de entrega (CLI/cron)
+## Reacciones de aprobación
 
-- MDs: `signal:+15551234567` (o E.164 simple).
-- MDs UUID: `uuid:<id>` (o UUID simple).
+Las solicitudes de aprobación de ejecución y complementos de Signal usan los bloques de enrutamiento de nivel superior `approvals.exec` y
+`approvals.plugin`. Signal no tiene un
+bloque `channels.signal.execApprovals`.
+
+- `👍` aprueba una vez.
+- `👎` deniega.
+- Use `/approve <id> allow-always` cuando una solicitud ofrezca aprobación persistente.
+
+La resolución de reacciones de aprobación requiere aprobadores de Signal explícitos de
+`channels.signal.allowFrom`, `channels.signal.defaultTo`, o los campos de nivel de cuenta correspondientes.
+Las solicitudes de aprobación de ejecución directa en el mismo chat aún pueden suprimir el respaldo local `/approve` duplicado
+sin aprobadores explícitos; las aprobaciones de grupo sin aprobadores mantienen visible el respaldo local.
+
+## Destinos de entrega (CLI/cron)
+
+- MD: `signal:+15551234567` (o E.164 simple).
+- MD UUID: `uuid:<id>` (o UUID simple).
 - Grupos: `signal:group:<groupId>`.
-- Nombres de usuario: `username:<name>` (si es compatible con su cuenta de Signal).
+- Nombres de usuario: `username:<name>` (si su cuenta de Signal lo admite).
 
 ## Solución de problemas
 
-Ejecute primero esta escalera:
+Ejecute primero esta escala:
 
 ```bash
 openclaw status
@@ -332,8 +347,8 @@ openclaw pairing list signal
 Fallos comunes:
 
 - Demonio accesible pero sin respuestas: verifique la configuración de la cuenta/demonio (`httpUrl`, `account`) y el modo de recepción.
-- MDs ignorados: el remitente está pendiente de aprobación de emparejamiento.
-- Mensajes de grupo ignorados: el filtrado del remitente/mención del grupo bloquea la entrega.
+- MD ignorados: el remitente está pendiente de aprobación de emparejamiento.
+- Mensajes de grupo ignorados: el bloqueo de remitente/mención del grupo impide la entrega.
 - Errores de validación de configuración después de ediciones: ejecute `openclaw doctor --fix`.
 - Signal no aparece en el diagnóstico: confirme `channels.signal.enabled: true`.
 
@@ -349,10 +364,10 @@ Para el flujo de triaje: [/channels/troubleshooting](/es/channels/troubleshootin
 
 ## Notas de seguridad
 
-- `signal-cli` almacena las claves de la cuenta localmente (típicamente `~/.local/share/signal-cli/data/`).
-- Haga una copia de seguridad del estado de la cuenta de Signal antes de la migración o reconstrucción del servidor.
-- Mantenga `channels.signal.dmPolicy: "pairing"` a menos que desee explícitamente un acceso a MD más amplio.
-- La verificación por SMS solo es necesaria para los flujos de registro o recuperación, pero perder el control del número/cuenta puede complicar el registro.
+- `signal-cli` almacena las claves de la cuenta localmente (típicamente en `~/.local/share/signal-cli/data/`).
+- Haz una copia de seguridad del estado de la cuenta de Signal antes de migrar o reconstruir el servidor.
+- Mantén `channels.signal.dmPolicy: "pairing"` a menos que explícitamente desees un acceso a DM más amplio.
+- La verificación por SMS solo es necesaria para los flujos de registro o recuperación, pero perder el control del número/cuenta puede complicar el nuevo registro.
 
 ## Referencia de configuración (Signal)
 
@@ -361,29 +376,29 @@ Configuración completa: [Configuration](/es/gateway/configuration)
 Opciones del proveedor:
 
 - `channels.signal.enabled`: habilitar/deshabilitar el inicio del canal.
-- `channels.signal.apiMode`: `auto | native | container` (predeterminado: auto). Consulte [Container mode](#container-mode-bbernhardsignal-cli-rest-api).
+- `channels.signal.apiMode`: `auto | native | container` (predeterminado: auto). Consulta [Container mode](#container-mode-bbernhardsignal-cli-rest-api).
 - `channels.signal.account`: E.164 para la cuenta del bot.
 - `channels.signal.cliPath`: ruta a `signal-cli`.
 - `channels.signal.configPath`: directorio `signal-cli --config` opcional.
 - `channels.signal.httpUrl`: URL completa del demonio (anula host/puerto).
 - `channels.signal.httpHost`, `channels.signal.httpPort`: enlace del demonio (predeterminado 127.0.0.1:8080).
-- `channels.signal.autoStart`: iniciar automáticamente el demonio (predeterminado true si `httpUrl` no está configurado).
+- `channels.signal.autoStart`: iniciar automáticamente el demonio (predeterminado verdadero si `httpUrl` no está establecido).
 - `channels.signal.startupTimeoutMs`: tiempo de espera de inicio en ms (máximo 120000).
 - `channels.signal.receiveMode`: `on-start | manual`.
 - `channels.signal.ignoreAttachments`: omitir la descarga de archivos adjuntos.
 - `channels.signal.ignoreStories`: ignorar historias del demonio.
 - `channels.signal.sendReadReceipts`: reenviar confirmaciones de lectura.
 - `channels.signal.dmPolicy`: `pairing | allowlist | open | disabled` (predeterminado: pairing).
-- `channels.signal.allowFrom`: lista de permitidos para MD (E.164 o `uuid:<id>`). `open` requiere `"*"`. Signal no tiene nombres de usuario; use ids de teléfono/UUID.
+- `channels.signal.allowFrom`: lista blanca de DM (E.164 o `uuid:<id>`). `open` requiere `"*"`. Signal no tiene nombres de usuario; usa ids de teléfono/UUID.
 - `channels.signal.groupPolicy`: `open | allowlist | disabled` (predeterminado: allowlist).
-- `channels.signal.groupAllowFrom`: lista blanca de grupos; acepta IDs de grupos de Signal (sin formato, `group:<id>` o `signal:group:<id>`), números E.164 del remitente o valores `uuid:<id>`.
-- `channels.signal.groups`: anulaciones por grupo indexadas por el ID de grupo de Signal (o `"*"`). Campos compatibles: `requireMention`, `tools`, `toolsBySender`.
-- `channels.signal.accounts.<id>.groups`: versión por cuenta de `channels.signal.groups` para configuraciones de varias cuentas.
-- `channels.signal.historyLimit`: número máximo de mensajes de grupo para incluir como contexto (0 lo desactiva).
+- `channels.signal.groupAllowFrom`: lista de permitidos de grupos; acepta IDs de grupos de Signal (crudos, `group:<id>` o `signal:group:<id>`), números E.164 del remitente o valores `uuid:<id>`.
+- `channels.signal.groups`: anulaciones por grupo claveadas por ID de grupo de Signal (o `"*"`). Campos admitidos: `requireMention`, `tools`, `toolsBySender`.
+- `channels.signal.accounts.<id>.groups`: versión por cuenta de `channels.signal.groups` para configuraciones de múltiples cuentas.
+- `channels.signal.historyLimit`: máximo de mensajes de grupo a incluir como contexto (0 lo desactiva).
 - `channels.signal.dmHistoryLimit`: límite de historial de MD en turnos de usuario. Anulaciones por usuario: `channels.signal.dms["<phone_or_uuid>"].historyLimit`.
 - `channels.signal.textChunkLimit`: tamaño del fragmento de salida (caracteres).
 - `channels.signal.chunkMode`: `length` (predeterminado) o `newline` para dividir en líneas en blanco (límites de párrafo) antes de la fragmentación por longitud.
-- `channels.signal.mediaMaxMb`: límite de medios de entrada/salida (MB).
+- `channels.signal.mediaMaxMb`: límite de medios entrantes/salientes (MB).
 
 Opciones globales relacionadas:
 
@@ -393,8 +408,8 @@ Opciones globales relacionadas:
 
 ## Relacionado
 
-- [Descripción general de canales](/es/channels) — todos los canales compatibles
-- [Emparejamiento](/es/channels/pairing) — autenticación y flujo de emparejamiento por MD
-- [Grupos](/es/channels/groups) — comportamiento del chat en grupo y filtrado de menciones
+- [Resumen de canales](/es/channels) — todos los canales compatibles
+- [Emparejamiento](/es/channels/pairing) — autenticación de MD y flujo de emparejamiento
+- [Grupos](/es/channels/groups) — comportamiento del chat grupal y filtrado de menciones
 - [Enrutamiento de canales](/es/channels/channel-routing) — enrutamiento de sesiones para mensajes
-- [Seguridad](/es/gateway/security) — modelo de acceso y endurecimiento
+- [Seguridad](/es/gateway/security) — modelo de acceso y fortalecimiento

@@ -29,9 +29,7 @@ Las pruebas de actualización y complementos protegen estos contratos:
   obsoleto de los complementos.
 - Las instalaciones de complementos funcionan desde directorios locales, repositorios git, paquetes npm y la
   ruta del registro ClawHub.
-- Las dependencias npm de los complementos se instalan en la raíz npm administrada, se escanean antes
-  de la confianza y se eliminan a través de npm durante la desinstalación para que las dependencias promovidas no
-  permanezcan.
+- Las dependencias npm de los complementos se instalan en un proyecto npm administrado por complemento, se escanean antes de la confianza y se eliminan mediante npm durante la desinstalación para que las dependencias elevadas no permanezcan.
 - La actualización del complemento es estable cuando no hubo cambios: los registros de instalación, la fuente
   resuelta, el diseño de dependencias instaladas y el estado habilitado permanecen intactos.
 
@@ -228,10 +226,7 @@ pueda fallar por la razón correcta:
 - Comportamiento de reinicio propiedad de la actualización: `update-restart-auth`.
 - Comportamiento de origen de registro/paquete: accesorio `test:docker:plugins` o servidor de accesorios
   ClawHub.
-- Diseño de dependencias o comportamiento de limpieza: afirma tanto la ejecución en tiempo de ejecución como el
-  límite del sistema de archivos. Las dependencias npm pueden ser elevadas bajo la raíz npm administrada,
-  por lo que las pruebas deben demostrar que la raíz se escanea/limpia en lugar de asumir un árbol
-  `node_modules` local al paquete.
+- Disposición o comportamiento de limpieza de dependencias: aseverar tanto la ejecución en tiempo de ejecución como el límite del sistema de archivos. Las dependencias npm pueden ser elevadas dentro del proyecto npm administrado del complemento, por lo que las pruebas deben demostrar que ese proyecto se escanea/limpia en lugar de asumir solo el árbol `node_modules` local del paquete del complemento.
 
 Mantén los nuevos accesorios de Docker herméticos por defecto. Usa registros de accesorios locales y
 paquetes falsos a menos que el punto de la prueba sea el comportamiento del registro en vivo.

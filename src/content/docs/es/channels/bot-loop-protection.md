@@ -13,11 +13,7 @@ OpenClaw puede aceptar mensajes escritos por otros bots en canales que soportan 
 Cuando esa ruta está habilitada, la protección de bucles por par evita que dos identidades de bot
 se respondan indefinidamente.
 
-El guardia se impone mediante el núcleo de turnos de canal (core channel-turn kernel). Cada canal compatible
-asigna su propio evento entrante a hechos genéricos: cuenta o ámbito, ID de conversación,
-ID del bot emisor y ID del bot receptor. Core luego rastrea el par de participantes en ambas
-direcciones, aplica un presupuesto de ventana deslizante y suprime el par durante un
-período de enfriamiento después de que se excede el presupuesto.
+El guardia es aplicado por el ejecutor de respuestas entrantes del núcleo. Cada canal compatible mapea su propio evento entrante en hechos genéricos: cuenta o ámbito, id de conversación, id del bot emisor e id del bot receptor. El núcleo luego rastrea el par de participantes en ambas direcciones, aplica un presupuesto de ventana deslizante y suprime el par durante un período de enfriamiento una vez que se excede el presupuesto.
 
 ## Valores predeterminados
 

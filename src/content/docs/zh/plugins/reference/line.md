@@ -1,5 +1,5 @@
 ---
-summary: "OpenClaw添加用于发送和接收 OpenClaw 消息的 LINE 渠道端。"
+summary: "OpenClawAPI用于 LINE Bot API 聊天的 OpenClaw LINE 渠道插件。"
 read_when:
   - You are installing, configuring, or auditing the line plugin
 title: "LINE 插件"
@@ -7,7 +7,7 @@ title: "LINE 插件"
 
 # LINE 插件
 
-添加用于发送和接收 OpenClaw 消息的 LINE 渠道端。
+用于 LINE Bot API 聊天的 OpenClaw LINE 渠道插件。
 
 ## 分发
 

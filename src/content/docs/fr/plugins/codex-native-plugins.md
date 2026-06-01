@@ -25,9 +25,7 @@ Utilisez cette page une fois que le [harnais Codex](/fr/plugins/codex-harness) d
 - Le serveur d'applications Codex cible doit pouvoir voir la place de marché attendue,
   ainsi que l'inventaire des plugins et des applications.
 
-`codexPlugins`OpenAI n'a aucun effet sur les exécutions PI, les exécutions normales du fournisseur OpenAI, les
-liaisons de conversation ACP ou d'autres harnais car ces chemins ne créent pas
-de fils de discussion du serveur d'applications Codex avec la configuration native `apps`.
+`codexPlugins` n'a aucun effet sur les exécutions OpenClaw, les exécutions normales du fournisseur OpenAI, les liaisons de conversation ACP ou d'autres harnais, car ces chemins ne créent pas de threads Codex app-server avec une configuration native `apps`.
 
 ## Démarrage rapide
 

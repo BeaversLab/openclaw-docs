@@ -17,7 +17,7 @@ title: "記憶"
 - 記憶概念：[Memory](/zh-Hant/concepts/memory)
 - 記憶 Wiki：[Memory Wiki](/zh-Hant/plugins/memory-wiki)
 - Wiki CLI：[wiki](/zh-Hant/cli/wiki)
-- 外掛：[Plugins](/zh-Hant/tools/plugin)
+- 外掛程式：[Plugins](/zh-Hant/tools/plugin)
 
 ## 範例
 
@@ -56,7 +56,7 @@ openclaw memory index --agent main --verbose
 - `--fix`：修復過期的召回鎖定並正規化提升元資料。
 - `--json`：列印 JSON 輸出。
 
-如果 `memory status` 顯示 `Dreaming status: blocked`，表示受控的夢境排程已啟用，但驅動其運作的心跳對於預設代理程式並未觸發。請參閱 [Dreaming never runs](/zh-Hant/concepts/dreaming#dreaming-never-runs-status-shows-blocked) 以了解兩個常見原因。
+如果 `memory status` 顯示 `Dreaming status: blocked`，表示受控的夢境定時任務 (cron) 已啟用，但驅動它的心跳針對預設代理程式 並未觸發。關於兩個常見原因，請參閱 [Dreaming never runs](/zh-Hant/concepts/dreaming#dreaming-never-runs-status-shows-blocked)。
 
 `memory index`：
 
@@ -166,14 +166,14 @@ Dreaming 是一個包含三個協作階段的背景記憶整合系統：**light*
 - `memory status` 包含透過 `memorySearch.extraPaths` 設定的任何額外路徑。
 - 如果有效的作用中記憶遠端 API 金鑰欄位設定為 SecretRefs，指令會從作用中的閘道快照解析這些值。如果閘道無法使用，指令會快速失敗。
 - Gateway 版本差異說明：此指令路徑需要支援 `secrets.resolve` 的 gateway；較舊的 gateway 會傳回未知方法的錯誤。
-- 使用 `dreaming.frequency` 調整排程掃描頻率。Deep 提升策略原則上是內部的；當您需要一次性手動覆寫時，請在 `memory promote` 上使用 CLI 標誌。
-- `memory rem-harness --path <file-or-dir> --grounded` 預覽來自歷史每日筆記的有根據 `What Happened`、`Reflections` 和 `Possible Lasting Updates`，而不寫入任何內容。
-- `memory rem-backfill --path <file-or-dir>` 將可逆的有根據日記條目寫入 `DREAMS.md` 以供 UI 審查。
-- `memory rem-backfill --path <file-or-dir> --stage-short-term` 還會將有根據的持久候選播種到即時短期提昇存儲中，以便正常的深度階段可以對其進行排名。
-- `memory rem-backfill --rollback` 移除先前寫入的有根據日記條目，而 `memory rem-backfill --rollback-short-term` 移除先前暫存的有根據短期候選。
-- 請參閱 [Dreaming](/zh-Hant/concepts/dreaming) 以了解完整的階段描述和設定參考。
+- 使用 `dreaming.frequency` 調整排程的掃描頻率。深度提升策略 原則上為內部機制，但 `dreaming.phases.deep.maxPromotedSnippetTokens` 除外，它會限制已提升片段的長度，同時保持來源可見。當您需要一次性手動閾值覆寫時，請使用 `memory promote` 上的 CLI 標誌。
+- `memory rem-harness --path <file-or-dir> --grounded` 會預覽來自歷史每日筆記的具基礎依據的 `What Happened`、`Reflections` 和 `Possible Lasting Updates`，而不會寫入任何內容。
+- `memory rem-backfill --path <file-or-dir>` 會將可還原的具基礎依據的日記條目寫入 `DREAMS.md` 以供 UI 檢閱。
+- `memory rem-backfill --path <file-or-dir> --stage-short-term` 也會將具基礎依據的持久候選者 加入到即時的短期提升存放區 中，以便正常的深度階段可以對其進行排名。
+- `memory rem-backfill --rollback` 會移除先前寫入的具基礎依據的日記條目，而 `memory rem-backfill --rollback-short-term` 會移除先前暫存的具基礎依據的短期候選者。
+- 關於完整的階段描述與設定參考，請參閱 [Dreaming](/zh-Hant/concepts/dreaming)。
 
 ## 相關
 
-- [CLI 參考](/zh-Hant/cli)
-- [Memory 概覽](/zh-Hant/concepts/memory)
+- [CLI 參考資料](/zh-Hant/cli)
+- [記憶概覽](/zh-Hant/concepts/memory)

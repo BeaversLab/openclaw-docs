@@ -82,8 +82,8 @@ Voir [Sécurité](/fr/gateway/security) et [Accès à distance](/fr/gateway/remo
 Utilisez `/v1/chat/completions` lorsque vous intégrez des outils ou un backend côté application de confiance avec une passerelle existante et que vous pouvez conserver en toute sécurité les identifiants d'opérateur de la passerelle.
 
 - Préférez cette solution à l'ajout d'un nouveau canal intégré lorsque votre intégration n'est qu'une autre surface opérateur/client pour la même passerelle.
-- Pour les clients mobiles natifs qui se connectent directement à une passerelle distante, préférez [WebChat](/fr/web/webchat) ou le [Protocole Gateway](/fr/gateway/protocol) et implémentez le flux d'amorçage d'appareil jumelé/jeton d'appareil pour que l'appareil n'ait pas besoin d'un jeton/mot de passe HTTP partagé.
-- Créez plutôt un plug-in de canal lorsque vous intégrez un réseau de messagerie externe avec ses propres utilisateurs, salles, diffusion de Webhooks ou transport sortant. Voir [Création de plug-ins](/fr/plugins/building-plugins).
+- Pour les clients mobiles natifs qui se connectent directement à une passerelle distante, privilégiez [WebChat](WebChat/en/web/webchatGateway) ou le [Protocole Gateway](/fr/gateway/protocol) et implémentez le flux d'amorçage d'appareil jumelé/jeton d'appareil afin que l'appareil n'ait pas besoin d'un jeton/mot de passe HTTP partagé.
+- Créez plutôt un plugin de canal lorsque vous intégrez un réseau de messagerie externe avec ses propres utilisateurs, salles, livraison de webhook ou transport sortant. Voir [Création de plugins](/fr/plugins/building-plugins).
 
 ## Contrat de modèle centré sur l'agent
 
@@ -218,58 +218,61 @@ Définissez `stream: true` pour recevoir les Server-Sent Events (SSE) :
 - `max_tokens` : nombre ; alias hérité accepté pour la rétrocompatibilité. Ignoré lorsque `max_completion_tokens` est également présent.
 - `temperature` : nombre ; température d'échantillonnage au mieux transmise au fournisseur en amont via le channel de paramètres de flux de l'agent.
 - `top_p` : nombre ; échantillonnage de noyau au mieux transmis au fournisseur en amont via le channel de paramètres de flux de l'agent.
+- `frequency_penalty` : nombre ; pénalité de fréquence au mieux transmise au fournisseur amont via le canal de paramètres de flux de l'agent. Plage validée : -2.0 à 2.0. Renvoie `400 invalid_request_error` pour les valeurs hors plage.
+- `presence_penalty` : nombre ; pénalité de présence au mieux transmise au fournisseur amont via le canal de paramètres de flux de l'agent. Plage validée : -2.0 à 2.0. Renvoie `400 invalid_request_error` pour les valeurs hors plage.
+- `seed` : nombre (entier) ; germe (seed) au mieux transmis au fournisseur amont via le canal de paramètres de flux de l'agent. Renvoie `400 invalid_request_error` pour les valeurs non entières.
 
-Lorsque l'un des champs de limite de jetons est défini, la valeur est transmise au fournisseur en amont via le channel de paramètres de flux de l'agent. Le nom réel du champ filaire envoyé au fournisseur en amont est choisi par le transport du fournisseur : `max_completion_tokens` pour les points de terminaison de la famille OpenAI, et `max_tokens` pour les fournisseurs qui n'acceptent que le nom hérité (tels que Mistral et Chutes). Les champs d'échantillonnage (`temperature`, `top_p`) suivent le même channel de paramètres de flux ; le backend Codex Responses basé sur ChatGPT les supprime côté serveur car il utilise un échantillonnage fixe.
+Lorsqu'un champ de limite de jetons est défini, la valeur est transmise au fournisseur amont via le canal de paramètres de flux de l'agent. Le nom réel du champ de protocole envoyé au fournisseur amont est choisi par le transport du fournisseur : `max_completion_tokens`OpenAI pour les points de terminaison de la famille OpenAI, et `max_tokens` pour les fournisseurs qui n'acceptent que le nom hérité (tel que Mistral et Chutes). Les champs d'échantillonnage (`temperature`, `top_p`, `frequency_penalty`, `presence_penalty`, `seed`) suivent le même canal de paramètres de flux ; le backend Codex Responses basé sur ChatGPT les supprime côté serveur car il utilise un échantillonnage fixe.
 
 ### Variantes non prises en charge
 
-Le point de terminaison renvoie `400 invalid_request_error` pour les variantes d'outils non prises en charge, y compris :
+Le point de terminaison renvoie `400 invalid_request_error` pour les variantes d'outils non prises en charge, notamment :
 
-- `tools` non-tableau
+- `tools` non tableau
 - entrées d'outil non-fonction
 - `tool.function.name` manquant
 - variantes `tool_choice` telles que `allowed_tools` et `custom`
 - `tool_choice: "required"` (pas encore appliqué lors de l'exécution ; sera pris en charge une fois l'application stricte implémentée)
 - `tool_choice: { "type": "function", "function": { "name": "..." } }` (même raisonnement que `required`)
-- Valeurs `tool_choice.function.name` qui ne correspondent pas aux `tools` fournies
+- valeurs `tool_choice.function.name` qui ne correspondent pas aux `tools` fournies
 
-### Forme de la réponse de l'outil en non-streaming
+### Forme de la réponse outil en non-streaming
 
 Lorsque l'agent décide d'appeler des outils, la réponse utilise :
 
 - `choices[0].finish_reason = "tool_calls"`
-- Entrées `choices[0].message.tool_calls[]` avec :
+- entrées `choices[0].message.tool_calls[]` avec :
   - `id`
   - `type: "function"`
   - `function.name`
   - `function.arguments` (chaîne JSON)
 
-Les commentaires de l'assistant avant l'appel de l'outil sont renvoyés dans `choices[0].message.content` (peut être vide).
+Les commentaires de l'assistant avant l'appel d'outil sont renvoyés dans `choices[0].message.content` (possiblement vide).
 
-### Forme de la réponse de l'outil en streaming
+### Forme de la réponse outil en streaming
 
-Lorsque `stream: true`, les appels d'outils sont émis sous forme de chunks SSE incrémentaux :
+Lors du `stream: true`, les appels d'outils sont émis sous forme de blocs SSE incrémentiels :
 
-- delta du rôle assistant initial
-- deltas de commentaires de l'assistant optionnels
-- un ou plusieurs chunks `delta.tool_calls` contenant l'identité de l'outil et des fragments d'arguments
-- chunk final avec `finish_reason: "tool_calls"`
+- delta de rôle assistant initial
+- deltas de commentaires assistant optionnels
+- un ou plusieurs blocs `delta.tool_calls` transportant l'identité de l'outil et des fragments d'arguments
+- bloc final avec `finish_reason: "tool_calls"`
 - `data: [DONE]`
 
-Si `stream_options.include_usage=true`, un chunk d'utilisation final est émis avant `[DONE]`.
+Si `stream_options.include_usage=true`, un bloc d'utilisation final est émis avant `[DONE]`.
 
-### Boucle de suivi de l'outil
+### Boucle de suivi d'outil
 
-Après avoir reçu `tool_calls`, le client doit exécuter la ou les fonctions demandées et envoyer une requête de suivi qui inclut :
+Après avoir reçu `tool_calls`, le client doit exécuter la ou les fonction(s) demandée(s) et envoyer une demande de suivi comprenant :
 
 - message d'appel d'outil de l'assistant précédent
 - un ou plusieurs messages `role: "tool"` avec `tool_call_id` correspondants
 
-Cela permet à l'exécution de l'agent de la passerelle de continuer la même boucle de raisonnement et de produire la réponse finale de l'assistant.
+Cela permet à l'exécution de l'agent du gateway de poursuivre la même boucle de raisonnement et de produire la réponse finale de l'assistant.
 
 ## Configuration rapide d'Open WebUI
 
-Pour une connexion de base Open WebUI :
+Pour une connexion de base à Open WebUI :
 
 - URL de base : `http://127.0.0.1:18789/v1`
 - URL de base Docker sur macOS : `http://host.docker.internal:18789/v1`
@@ -279,8 +282,8 @@ Pour une connexion de base Open WebUI :
 Comportement attendu :
 
 - `GET /v1/models` doit lister `openclaw/default`
-- Open WebUI doit utiliser `openclaw/default` comme id du modèle de chat
-- Si vous souhaitez un fournisseur/modèle de backend spécifique pour cet agent, définissez le modèle par défaut normal de l'agent ou envoyez `x-openclaw-model`
+- Open WebUI doit utiliser `openclaw/default` comme identifiant du model de chat
+- Si vous souhaitez un provider/model de backend spécifique pour cet agent, définissez le model par défaut normal de l'agent ou envoyez `x-openclaw-model`
 
 Test rapide :
 
@@ -306,7 +309,7 @@ curl -sS http://127.0.0.1:18789/v1/chat/completions \
   }'
 ```
 
-Réutilisez la même valeur `user` lors des appels ultérieurs pour cette conversation afin de poursuivre la même session d'agent.
+Réutilisez la même valeur `user` lors des appels ultérieurs pour cette conversation afin de continuer la même session d'agent.
 
 Non-streaming :
 
@@ -361,11 +364,11 @@ curl -sS http://127.0.0.1:18789/v1/embeddings \
   }'
 ```
 
-Notes :
+Remarques :
 
-- `/v1/models`OpenClaw renvoie les cibles d'agent OpenClaw, et non les catalogues bruts de fournisseurs.
-- `openclaw/default` est toujours présent, donc un identifiant stable fonctionne sur tous les environnements.
-- Les substitutions de fournisseur/modèle backend doivent être placées dans `x-openclaw-model`OpenAI, et non dans le champ `model` OpenAI.
+- `/v1/models`OpenClaw renvoie les cibles d'agent OpenClaw, et non les catalogues bruts de provider.
+- `openclaw/default` est toujours présent afin qu'un identifiant stable fonctionne dans tous les environnements.
+- Les substitutions de provider/model de backend doivent être placées dans `x-openclaw-model`OpenAI, et non dans le champ `model` d'OpenAI.
 - `/v1/embeddings` prend en charge `input` sous forme de chaîne ou de tableau de chaînes.
 
 ## Connexes

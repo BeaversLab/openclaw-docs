@@ -2,13 +2,13 @@
 summary: "CLIRéférence de la CLI pour `openclaw docs` (rechercher l'index de la documentation en direct)"
 read_when:
   - You want to search the live OpenClaw docs from the terminal
-  - You need to know which helper binaries the docs CLI shells out to
+  - You need to know which hosted search API the docs CLI calls
 title: "Docs"
 ---
 
 # `openclaw docs`
 
-Recherchez l'index de la documentation en direct d'OpenClaw depuis le terminal. La commande appelle le point de terminaison de recherche MCP de la documentation hébergée publiquement par Mintlify à l'adresse OpenClaw`https://docs.openclaw.ai/mcp.search_open_claw` et affiche les résultats dans votre terminal.
+Recherchez l'index des documents OpenClaw en direct depuis le terminal. La commande appelle l'API de recherche de documents hébergée par Cloudflare de OpenClawAPI et affiche les résultats dans votre terminal.
 
 ## Utilisation
 
@@ -31,27 +31,17 @@ openclaw docs sandbox allowHostControl
 openclaw docs gateway token secretref
 ```
 
-Sans requête, `openclaw docs` affiche l'URL du point d'entrée de la documentation ainsi qu'une commande de recherche exemple au lieu d'effectuer une recherche.
+Sans requête, `openclaw docs` affiche l'URL du point d'entrée des documents ainsi qu'un exemple de commande de recherche au lieu d'effectuer une recherche.
 
 ## Fonctionnement
 
-`openclaw docs` invoque la CLI `mcporter`CLI pour appeler l'outil MCP de recherche de documentation, puis analyse les blocs `Title: / Link: / Content:` de la sortie de l'outil pour obtenir une liste de résultats.
-
-Pour résoudre `mcporter`OpenClaw, OpenClaw vérifie dans l'ordre :
-
-1. `mcporter` sur `PATH` (utilisé directement si présent).
-2. `pnpm dlx mcporter ...` si `pnpm` est installé.
-3. `npx -y mcporter ...` si `npx` est installé.
-
-Si aucun n'est disponible, la commande échoue avec une suggestion d'installer `pnpm` (`npm install -g pnpm`).
-
-L'appel de recherche utilise un délai d'attente fixe de 30 secondes. Les extraits de résultats sont tronqués à environ 220 caractères par entrée.
+`openclaw docs` appelle `https://docs.openclaw.ai/api/search` et restitue les résultats JSON. L'appel de recherche utilise un délai d'expiration fixe de 30 secondes.
 
 ## Sortie
 
-Dans un terminal riche (TTY), les résultats sont affichés sous forme d'un titre suivi d'une liste à puces. Chaque puce affiche le titre de la page, l'URL de la documentation liée et un court extrait sur la ligne suivante. Les résultats vides affichent « Aucun résultat ».
+Dans un terminal riche (TTY), les résultats s'affichent sous forme d'un titre suivi d'une liste à puces. Chaque puce affiche le titre de la page, l'URL des documents liée et un court extrait sur la ligne suivante. Les résultats vides affichent "Aucun résultat.".
 
-En sortie non riche (redirigée via un tube, `--no-color`, scripts), les mêmes données sont rendues au format Markdown :
+Dans une sortie non riche (redirigée, `--no-color`, scripts), les mêmes données sont restituées sous forme de Markdown :
 
 ```markdown
 # Docs search: <query>
@@ -62,12 +52,12 @@ En sortie non riche (redirigée via un tube, `--no-color`, scripts), les mêmes 
 
 ## Codes de sortie
 
-| Code | Signification                                                 |
-| ---- | ------------------------------------------------------------- |
-| `0`  | Recherche réussie (y compris les réponses sans résultat).     |
-| `1`  | L'appel à l'outil MCP a échoué ; stderr est affiché en ligne. |
+| Code | Signification                                                                              |
+| ---- | ------------------------------------------------------------------------------------------ |
+| `0`  | Recherche réussie (y compris les réponses sans résultat).                                  |
+| `1`  | L'appel à l'API de recherche de documents hébergée a échoué ; stderr est affiché en ligne. |
 
 ## Connexes
 
-- [Référence de la CLI](CLI/en/cli)
-- [Documentation en direct](https://docs.openclaw.ai)
+- [Référence CLI](/fr/cli)
+- [Documents en direct](https://docs.openclaw.ai)

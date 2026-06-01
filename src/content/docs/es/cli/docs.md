@@ -2,13 +2,13 @@
 summary: "Referencia de la CLI para `openclaw docs` (buscar en el índice de documentos en vivo)"
 read_when:
   - You want to search the live OpenClaw docs from the terminal
-  - You need to know which helper binaries the docs CLI shells out to
+  - You need to know which hosted search API the docs CLI calls
 title: "Docs"
 ---
 
 # `openclaw docs`
 
-Busca en el índice en vivo de la documentación de OpenClaw desde la terminal. El comando ejecuta el punto final de búsqueda MCP de la documentación alojada en Mintlify en `https://docs.openclaw.ai/mcp.search_open_claw` y muestra los resultados en tu terminal.
+Busca el índice de documentos en vivo de OpenClaw desde la terminal. El comando llama a la API de búsqueda de documentos alojada en Cloudflare de OpenClaw y muestra los resultados en tu terminal.
 
 ## Uso
 
@@ -31,27 +31,17 @@ openclaw docs sandbox allowHostControl
 openclaw docs gateway token secretref
 ```
 
-Sin consulta, `openclaw docs` imprime la URL del punto de entrada de los documentos más un comando de búsqueda de ejemplo en lugar de realizar una búsqueda.
+Sin consulta, `openclaw docs` imprime la URL del punto de entrada de los documentos más un comando de búsqueda de ejemplo en lugar de ejecutar una búsqueda.
 
 ## Cómo funciona
 
-`openclaw docs` invoca la CLI de `mcporter` para llamar a la herramienta de búsqueda MCP de documentos, y luego analiza los bloques `Title: / Link: / Content:` de la salida de la herramienta en una lista de resultados.
-
-Para resolver `mcporter`, OpenClaw verifica en orden:
-
-1. `mcporter` en `PATH` (se usa directamente si está presente).
-2. `pnpm dlx mcporter ...` si `pnpm` está instalado.
-3. `npx -y mcporter ...` si `npx` está instalado.
-
-Si no hay ninguno disponible, el comando falla con una sugerencia para instalar `pnpm` (`npm install -g pnpm`).
-
-La llamada de búsqueda utiliza un tiempo de espera fijo de 30 segundos. Los fragmentos de resultados se truncarán a ~220 caracteres por entrada.
+`openclaw docs` llama a `https://docs.openclaw.ai/api/search` y muestra los resultados JSON. La llamada de búsqueda utiliza un tiempo de espera fijo de 30 segundos.
 
 ## Salida
 
-En una terminal enriquecida (TTY), los resultados se representan como un encabezado seguido de una lista con viñetas. Cada viñeta muestra el título de la página, la URL de los documentos vinculados y un breve fragmento en la línea siguiente. Los resultados vacíos imprimen "No results.".
+En una terminal enriquecida (TTY), los resultados se muestran como un encabezado seguido de una lista con viñetas. Cada viñeta muestra el título de la página, la URL de los documentos vinculados y un breve fragmento en la siguiente línea. Los resultados vacíos imprimen "No results.".
 
-En una salida no enriquecida (redirigida, `--no-color`, scripts), los mismos datos se representan como Markdown:
+En una salida no enriquecida (redirigida, `--no-color`, scripts), los mismos datos se muestran como Markdown:
 
 ```markdown
 # Docs search: <query>
@@ -62,12 +52,12 @@ En una salida no enriquecida (redirigida, `--no-color`, scripts), los mismos dat
 
 ## Códigos de salida
 
-| Código | Significado                                                        |
-| ------ | ------------------------------------------------------------------ |
-| `0`    | Búsqueda exitosa (incluyendo respuestas con cero resultados).      |
-| `1`    | La llamada a la herramienta MCP falló; stderr se imprime en línea. |
+| Código | Significado                                                                              |
+| ------ | ---------------------------------------------------------------------------------------- |
+| `0`    | Búsqueda exitosa (incluyendo respuestas con cero resultados).                            |
+| `1`    | Falló la llamada a la API de búsqueda de documentos alojada; stderr se imprime en línea. |
 
 ## Relacionado
 
-- [Referencia de la CLI](/es/cli)
+- [Referencia de CLI](/es/cli)
 - [Documentos en vivo](https://docs.openclaw.ai)

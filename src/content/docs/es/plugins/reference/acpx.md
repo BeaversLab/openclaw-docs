@@ -1,5 +1,5 @@
 ---
-summary: "Backend de tiempo de ejecución de ACP integrado con gestión de sesión y transporte propiedad del complemento."
+summary: "Backend de tiempo de ejecución ACP de OpenClaw con gestión de sesión y transporte propiedad del complemento."
 read_when:
   - You are installing, configuring, or auditing the acpx plugin
 title: "Complemento ACPx"
@@ -7,7 +7,7 @@ title: "Complemento ACPx"
 
 # Complemento ACPx
 
-Backend de tiempo de ejecución de ACP integrado con gestión de sesión y transporte propiedad del complemento.
+Backend de tiempo de ejecución ACP de OpenClaw con gestión de sesión y transporte propiedad del complemento.
 
 ## Distribución
 

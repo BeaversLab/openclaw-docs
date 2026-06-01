@@ -134,7 +134,7 @@ Configure el proxy para:
 
 Use esta lista de bloqueo como punto de partida para cualquier proxy de reenvío, firewall o política de salida.
 
-La lógica del clasificador a nivel de aplicación de OpenClaw reside en `src/infra/net/ssrf.ts` y `src/shared/net/ip.ts`. Los ganchos de paridad relevantes son `BLOCKED_HOSTNAMES`, `BLOCKED_IPV4_SPECIAL_USE_RANGES`, `BLOCKED_IPV6_SPECIAL_USE_RANGES`, `RFC2544_BENCHMARK_PREFIX` y el manejo integrado de centinelas IPv4 para NAT64, 6to4, Teredo, ISATAP y formas asignadas a IPv4. Esos archivos son referencias útiles al mantener una política de proxy externa, pero OpenClaw no exporta ni hace cumplir esas reglas automáticamente en su proxy.
+La lógica del clasificador a nivel de aplicación de OpenClaw reside en `src/infra/net/ssrf.ts` y `packages/net-policy/src/ip.ts`. Los ganchos de paridad relevantes son `BLOCKED_HOSTNAMES`, `BLOCKED_IPV4_SPECIAL_USE_RANGES`, `BLOCKED_IPV6_SPECIAL_USE_RANGES`, `RFC2544_BENCHMARK_PREFIX`, y el manejo integrado del centinela IPv4 para NAT64, 6to4, Teredo, ISATAP y formas mapeadas a IPv4. Esos archivos son referencias útiles al mantener una política de proxy externo, pero OpenClaw no exporta ni hace cumplir automáticamente esas reglas en su proxy.
 
 | Rango o host                                                                         | Por qué bloquear                                                    |
 | ------------------------------------------------------------------------------------ | ------------------------------------------------------------------- |

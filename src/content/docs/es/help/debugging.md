@@ -278,47 +278,44 @@ Archivo predeterminado:
 
 `~/.openclaw/logs/raw-stream.jsonl`
 
-## Registro de fragmentos sin procesar (pi-mono)
+## Registro de fragmentos compatible con OpenAI en bruto
 
-Para capturar **fragmentos compatibles con OpenAI sin procesar** antes de que se analicen en bloques,
-pi-mono expone un registrador separado:
+Para capturar **fragmentos compatibles con OpenAI en bruto** antes de que se analicen en bloques,
+habilite el registrador de transporte:
 
 ```bash
-PI_RAW_STREAM=1
+OPENCLAW_RAW_STREAM=1
 ```
 
 Ruta opcional:
 
 ```bash
-PI_RAW_STREAM_PATH=~/.pi-mono/logs/raw-openai-completions.jsonl
+OPENCLAW_RAW_STREAM_PATH=~/.openclaw/logs/raw-openai-completions.jsonl
 ```
 
 Archivo predeterminado:
 
-`~/.pi-mono/logs/raw-openai-completions.jsonl`
-
-> Nota: esto solo es emitido por procesos que usan el
-> proveedor `openai-completions` de pi-mono.
+`~/.openclaw/logs/raw-openai-completions.jsonl`
 
 ## Notas de seguridad
 
-- Los registros de flujo sin procesar pueden incluir mensajes completos, salida de herramientas y datos de usuario.
-- Mantenga los registros localmente y elimínelos después de depurar.
+- Los registros de flujo en bruto pueden incluir indicaciones completas, resultados de herramientas y datos del usuario.
+- Mantenga los registros localmente y elimínelos después de la depuración.
 - Si comparte registros, elimine primero los secretos y la información personal.
 
 ## Depuración en VSCode
 
-Se requieren mapas de origen para habilitar la depuración en IDE basados en VSCode, ya que muchos de los archivos generados terminan con nombres con hash como parte del proceso de compilación. Las configuraciones `launch.json` incluidas tienen como objetivo el servicio Gateway, pero se pueden adaptar rápidamente para otros propósitos:
+Se requieren mapas de origen para habilitar la depuración en IDE basados en VSCode porque muchos de los archivos generados terminan con nombres hash como parte del proceso de compilación. Las configuraciones `launch.json` incluidas tienen como objetivo el servicio Gateway, pero se pueden adaptar rápidamente para otros propósitos:
 
-1. **Rebuild and Debug Gateway** (Recompilar y depurar Gateway) - Depura el servicio Gateway después de crear una nueva compilación
-2. **Debug Gateway** (Depurar Gateway) - Depura el servicio Gateway de una compilación preexistente
+1. **Rebuild and Debug Gateway** (Recompilar y depurar Gateway): Depura el servicio Gateway después de crear una nueva compilación
+2. **Debug Gateway** (Depurar Gateway): Depura el servicio Gateway de una compilación preexistente
 
 ### Configuración
 
-La configuración predeterminada **Rebuild and Debug Gateway** incluye todo lo necesario; automáticamente eliminará la carpeta `/dist` y recompilará el proyecto con la depuración habilitada:
+La configuración predeterminada **Rebuild and Debug Gateway** incluye todo lo necesario; automáticamente eliminará la carpeta `/dist` y reconstruirá el proyecto con la depuración habilitada:
 
-1. Abra el panel **Run and Debug** (Ejecutar y depurar) desde la Barra de actividad o presione `Ctrl`+`Shift`+`D`
-2. En el IDE, asegúrese de que **Rebuild and Debug Gateway** esté seleccionado en el menú desplegable de configuración y luego presione el botón **Start Debugging** (Iniciar depuración)
+1. Abra el panel **Ejecutar y depurar** desde la Barra de actividad o presione `Ctrl`+`Shift`+`D`
+2. En el IDE, asegúrese de que **Rebuild and Debug Gateway** esté seleccionado en el menú desplegable de configuración y luego presione el botón **Iniciar depuración**
 
 Alternativamente, si prefiere administrar los procesos de compilación y depuración manualmente:
 
@@ -326,17 +323,17 @@ Alternativamente, si prefiere administrar los procesos de compilación y depurac
    - **Linux/macOS**: `export OUTPUT_SOURCE_MAPS=1`
    - **Windows (PowerShell)**: `$env:OUTPUT_SOURCE_MAPS="1"`
    - **Windows (CMD)**: `set OUTPUT_SOURCE_MAPS=1`
-2. En la misma terminal, recompile el proyecto: `pnpm clean:dist && pnpm build`
-3. En el IDE, seleccione la opción **Debug Gateway** en el menú desplegable de configuración **Run and Debug** y luego presione el botón **Start Debugging**
+2. En la misma terminal, reconstruya el proyecto: `pnpm clean:dist && pnpm build`
+3. En el IDE, seleccione la opción **Debug Gateway** en el menú desplegable de configuración **Ejecutar y depurar** y luego presione el botón **Iniciar depuración**
 
-Ahora puede establecer puntos de interrupción en sus archivos fuente de TypeScript (directorio `src/`) y el depurador asignará correctamente los puntos de interrupción al JavaScript compilado a través de los mapas de origen. Podrá inspeccionar variables, avanzar paso a paso por el código y examinar las pilas de llamadas como se espera.
+Ahora puede establecer puntos de interrupción en sus archivos fuente de TypeScript (directorio `src/`) y el depurador asignará correctamente los puntos de interrupción al JavaScript compilado a través de mapas de origen. Podrá inspeccionar variables, avanzar paso a paso por el código y examinar pilas de llamadas como se espera.
 
 ### Notas
 
-- Si usa la opción **"Rebuild and Debug Gateway"** - cada vez que se inicie el depurador, eliminará completamente la carpeta `/dist` y ejecutará una `pnpm build` completa con los mapas de origen habilitados antes de iniciar Gateway
-- Si usa la opción **"Debug Gateway"** - las sesiones de depuración se pueden iniciar y detener en cualquier momento sin afectar la carpeta `/dist`, pero debe usar un proceso de terminal separado para habilitar la depuración y administrar el ciclo de compilación
-- Modifica la configuración de `launch.json` para `args` para depurar otras secciones del proyecto
-- Si necesitas usar la CLI de OpenClaw compilada para otras tareas (es decir, `dashboard --no-open` si tu sesión de depuración genera un nuevo token de autenticación), puedes ejecutarla en otra terminal como `node ./openclaw.mjs` o crear un alias de shell como `alias openclaw-build="node $(pwd)/openclaw.mjs"`
+- Si se utiliza la opción **"Rebuild and Debug Gateway"** (Recompilar y depurar Gateway), cada vez que se inicie el depurador, se eliminará completamente la carpeta `/dist` y se ejecutará una `pnpm build` completa con los mapas de origen habilitados antes de iniciar el Gateway
+- Si se utiliza la opción **"Debug Gateway"** (Depurar Gateway), las sesiones de depuración se pueden iniciar y detener en cualquier momento sin afectar la carpeta `/dist`, pero debe usar un proceso de terminal separado tanto para habilitar la depuración como para administrar el ciclo de compilación
+- Modifique la configuración de `launch.json` para `args` para depurar otras secciones del proyecto
+- Si necesita usar la CLI de OpenClaw compilada para otras tareas (es decir, `dashboard --no-open` si su sesión de depuración genera un nuevo token de autenticación), puede ejecutarla en otra terminal como `node ./openclaw.mjs` o crear un alias de shell como `alias openclaw-build="node $(pwd)/openclaw.mjs"`
 
 ## Relacionado
 

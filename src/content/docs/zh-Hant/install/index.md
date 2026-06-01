@@ -1,5 +1,5 @@
 ---
-summary: "安裝 OpenClaw - 安裝程式腳本、npm/pnpm/bun、從原始碼、Docker 等等"
+summary: "安裝 OpenClaw - 安裝程式指令碼、npm/pnpm/bun、從原始碼、Docker 以及更多"
 read_when:
   - You need an install method other than the Getting Started quickstart
   - You want to deploy to a cloud platform
@@ -10,8 +10,8 @@ title: "安裝"
 ## 系統需求
 
 - **Node 24**（建議）或 Node 22.19+ - 安裝程式會自動處理此項
-- **macOS、Linux 或 Windows** - 支援原生 Windows 和 WSL2；WSL2 更穩定。請參閱 [Windows](/zh-Hant/platforms/windows)。
-- `pnpm` 僅在您從原始碼建置時才需要
+- **macOS、Linux 或 Windows** - 原生 Windows 和 WSL2 均受支援；WSL2 更為穩定。請參閱 [Windows](/zh-Hant/platforms/windows)。
+- `pnpm` 僅在您從原始碼建構時才需要
 
 ## 推薦：安裝程式腳本
 
@@ -29,24 +29,24 @@ title: "安裝"
   <Tab title="Windows (PowerShell)">```powershell & ([scriptblock]::Create((iwr -useb https://openclaw.ai/install.ps1))) -NoOnboard ```</Tab>
 </Tabs>
 
-如需所有旗標和 CI/自動化選項，請參閱 [安裝程式內部機制](/zh-Hant/install/installer)。
+若要查看所有旗標與 CI/自動化選項，請參閱 [Installer internals](/zh-Hant/install/installer)。
 
 ## 其他安裝方式
 
 ### 本地前綴安裝程式 (`install-cli.sh`)
 
-當您希望 OpenClaw 和 Node 保留在本地前綴路徑（例如
-`~/.openclaw`）下，而不依賴系統全域的 Node 安裝時，請使用此方法：
+當您希望將 OpenClaw 和 Node 保留在本地前綴（例如
+`~/.openclaw`）下，而不依賴系統範圍的 Node 安裝時，請使用此方法：
 
 ```bash
 curl -fsSL https://openclaw.ai/install-cli.sh | bash
 ```
 
-它預設支援 npm 安裝，加上在同一個前置流程下的 git-checkout 安裝。完整參考：[安裝程式內部機制](/zh-Hant/install/installer#install-clish)。
+它預設支援 npm 安裝，並在同一前綴流程下支援 git-checkout 安裝。完整參考：[Installer internals](/zh-Hant/install/installer#install-clish)。
 
-已經安裝了嗎？使用
+已經安裝了嗎？您可以使用
 `openclaw update --channel dev` 和 `openclaw update --channel stable` 在套件和 git 安裝之間切換。請參閱
-[更新](/zh-Hant/install/updating#switch-between-npm-and-git-installs)。
+[Updating](/zh-Hant/install/updating#switch-between-npm-and-git-installs)。
 
 ### npm、pnpm 或 bun
 
@@ -60,8 +60,8 @@ curl -fsSL https://openclaw.ai/install-cli.sh | bash
     ```
 
     <Note>
-    託管的安裝程式會清除 npm 新鮮度過濾器，例如 `min-release-age`
-    以用於 OpenClaw 套件安裝。如果您使用 npm 手動安裝，您自己的
+    託管安裝程式會清除 OpenClaw 套件安裝的 npm 新鮮度過濾器，例如 `min-release-age`。
+    如果您使用 npm 手動安裝，您自己的
     npm 原則仍然適用。
     </Note>
 
@@ -74,7 +74,7 @@ curl -fsSL https://openclaw.ai/install-cli.sh | bash
     ```
 
     <Note>
-    pnpm 對於包含建置腳本的套件需要明確批准。請在第一次安裝後執行 `pnpm approve-builds -g`。
+    pnpm 需要對具有建置腳本的套件給予明確批准。在首次安裝後執行 `pnpm approve-builds -g`。
     </Note>
 
   </Tab>
@@ -85,24 +85,15 @@ curl -fsSL https://openclaw.ai/install-cli.sh | bash
     ```
 
     <Note>
-    Bun 支援用於全域 CLI 安裝路徑。對於 Gateway 執行時，Node 仍然建議作為守護行程執行時。
+    Bun 支援全域 CLI 安裝路徑。對於 Gateway 執行時，Node 仍是推薦的守護行程執行時。
     </Note>
 
   </Tab>
 </Tabs>
 
-<Accordion title="疑難排解：sharp 建置錯誤 (npm)">
-  如果 `sharp` 因全域安裝的 libvips 而失敗：
-
-```bash
-SHARP_IGNORE_GLOBAL_LIBVIPS=1 npm install -g openclaw@latest
-```
-
-</Accordion>
-
 ### 從原始碼安裝
 
-適用於貢獻者或任何想要從本地端副本執行的人：
+適用於貢獻者或任何想要從本地副本執行的人：
 
 ```bash
 git clone https://github.com/openclaw/openclaw.git
@@ -112,19 +103,19 @@ pnpm link --global
 openclaw onboard --install-daemon
 ```
 
-或者跳過連結並直接從 repo 內部使用 `pnpm openclaw ...`。如需完整的開發工作流程，請參閱 [設定](/zh-Hant/start/setup)。
+或跳過連結並直接在程式庫內部使用 `pnpm openclaw ...`。請參閱 [Setup](/zh-Hant/start/setup) 以了解完整的開發工作流程。
 
-### 從 GitHub 主要分支安裝
+### 從 GitHub main 分支安裝
 
 ```bash
 curl -fsSL --proto '=https' --tlsv1.2 https://openclaw.ai/install.sh | bash -s -- --install-method git --version main
 ```
 
-### 容器與套件管理器
+### 容器與套件管理員
 
 <CardGroup cols={2}>
   <Card title="Docker" href="/zh-Hant/install/docker" icon="container">
-    容器化或無頭式部署。
+    容器化或無介面部署。
   </Card>
   <Card title="Podman" href="/zh-Hant/install/podman" icon="container">
     Docker 的無根容器替代方案。
@@ -133,7 +124,7 @@ curl -fsSL --proto '=https' --tlsv1.2 https://openclaw.ai/install.sh | bash -s -
     透過 Nix flake 進行宣告式安裝。
   </Card>
   <Card title="Ansible" href="/zh-Hant/install/ansible" icon="server">
-    自動化佈建伺服器群組。
+    自動化機群佈建。
   </Card>
   <Card title="Bun" href="/zh-Hant/install/bun" icon="zap">
     透過 Bun 執行時僅使用 CLI。
@@ -152,7 +143,7 @@ openclaw gateway status # verify the Gateway is running
 
 - macOS：透過 `openclaw onboard --install-daemon` 或 `openclaw gateway install` 使用 LaunchAgent
 - Linux/WSL2：透過相同的指令使用 systemd 使用者服務
-- 原生 Windows：優先使用排程任務，如果建立任務被拒絕，則改用每個使用者的啟動資料夾登入項目作為後備方案
+- 原生 Windows：優先使用排定的工作，如果拒絕建立工作，則退回到個別使用者的啟動資料夾登入項目
 
 ## 託管與部署
 
@@ -160,34 +151,34 @@ openclaw gateway status # verify the Gateway is running
 
 <CardGroup cols={3}>
   <Card title="VPS" href="/zh-Hant/vps">
-    任何 Linux VPS
+    任何 Linux VPS。
   </Card>
   <Card title="Docker VM" href="/zh-Hant/install/docker-vm-runtime">
-    共用 Docker 步驟
+    共用的 Docker 步驟。
   </Card>
   <Card title="Kubernetes" href="/zh-Hant/install/kubernetes">
-    K8s
+    K8s 部署。
   </Card>
   <Card title="Fly.io" href="/zh-Hant/install/fly">
-    Fly.io
+    在 Fly.io 上部署。
   </Card>
   <Card title="Hetzner" href="/zh-Hant/install/hetzner">
-    Hetzner
+    Hetzner 部署。
   </Card>
   <Card title="GCP" href="/zh-Hant/install/gcp">
-    Google Cloud
+    Google Cloud 部署。
   </Card>
   <Card title="Azure" href="/zh-Hant/install/azure">
-    Azure
+    Azure 部署。
   </Card>
   <Card title="Railway" href="/zh-Hant/install/railway">
-    Railway
+    Railway 部署。
   </Card>
   <Card title="Render" href="/zh-Hant/install/render">
-    Render
+    Render 部署。
   </Card>
   <Card title="Northflank" href="/zh-Hant/install/northflank">
-    Northflank
+    Northflank 部署。
   </Card>
 </CardGroup>
 
@@ -195,7 +186,7 @@ openclaw gateway status # verify the Gateway is running
 
 <CardGroup cols={3}>
   <Card title="Updating" href="/zh-Hant/install/updating" icon="refresh-cw">
-    保持 OpenClaw 為最新狀態。
+    讓 OpenClaw 保持最新狀態。
   </Card>
   <Card title="Migrating" href="/zh-Hant/install/migrating" icon="arrow-right">
     移動到新機器。
@@ -207,7 +198,7 @@ openclaw gateway status # verify the Gateway is running
 
 ## 疑難排解：找不到 `openclaw`
 
-如果安裝成功但在您的終端機中找不到 `openclaw`：
+如果安裝成功但在終端機中找不到 `openclaw`：
 
 ```bash
 node -v           # Node installed?
@@ -215,10 +206,10 @@ npm prefix -g     # Where are global packages?
 echo "$PATH"      # Is the global bin dir in PATH?
 ```
 
-如果 `$(npm prefix -g)/bin` 不在您的 `$PATH` 中，請將其新增到您的 shell 啟動檔案 (`~/.zshrc` 或 `~/.bashrc`)：
+如果 `$(npm prefix -g)/bin` 不在您的 `$PATH` 中，請將其新增至您的 Shell 啟動檔案（`~/.zshrc` 或 `~/.bashrc`）：
 
 ```bash
 export PATH="$(npm prefix -g)/bin:$PATH"
 ```
 
-然後開啟一個新的終端機。欲了解更多詳情，請參閱 [Node 設定](/zh-Hant/install/node)。
+然後打開一個新的終端機。詳情請參閱 [Node 設定](/zh-Hant/install/node)。

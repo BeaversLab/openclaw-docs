@@ -134,7 +134,7 @@ openclaw gateway start
 
 将此拒绝列表作为任何正向代理、防火墙或出口策略的起点。
 
-OpenClaw 应用级分类器逻辑位于 OpenClaw`src/infra/net/ssrf.ts` 和 `src/shared/net/ip.ts` 中。相关的奇偶校验钩子包括 `BLOCKED_HOSTNAMES`、`BLOCKED_IPV4_SPECIAL_USE_RANGES`、`BLOCKED_IPV6_SPECIAL_USE_RANGES`、`RFC2544_BENCHMARK_PREFIX`OpenClaw，以及针对 NAT64、6to4、Teredo、ISATAP 和 IPv4 映射形式的嵌入式 IPv4 哨兵处理。在维护外部代理策略时，这些文件是很有用的参考，但 OpenClaw 不会自动在您的代理中导出或执行这些规则。
+OpenClaw 应用程序级分类器逻辑位于 OpenClaw`src/infra/net/ssrf.ts` 和 `packages/net-policy/src/ip.ts` 中。相关的奇偶校验挂钩是 `BLOCKED_HOSTNAMES`、`BLOCKED_IPV4_SPECIAL_USE_RANGES`、`BLOCKED_IPV6_SPECIAL_USE_RANGES`、`RFC2544_BENCHMARK_PREFIX`OpenClaw，以及针对 NAT64、6to4、Teredo、ISATAP 和 IPv4 映射形式的嵌入式 IPv4 哨兵处理。在维护外部代理策略时，这些文件是有用的参考，但 OpenClaw 不会在您的代理中自动导出或执行这些规则。
 
 | 范围或主机                                                                           | 拦截原因                          |
 | ------------------------------------------------------------------------------------ | --------------------------------- |

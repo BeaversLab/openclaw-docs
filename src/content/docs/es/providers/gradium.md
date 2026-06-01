@@ -57,7 +57,7 @@ El complemento comprueba primero el `apiKey` resuelto y recurre a la variable de
       provider: "gradium",
       providers: {
         gradium: {
-          voiceId: "YTpq7expH9539ERJ",
+          speakerVoiceId: "YTpq7expH9539ERJ",
           // apiKey: "${GRADIUM_API_KEY}",
           // baseUrl: "https://api.gradium.ai",
         },
@@ -67,11 +67,11 @@ El complemento comprueba primero el `apiKey` resuelto y recurre a la variable de
 }
 ```
 
-| Clave                                    | Tipo            | Descripción                                                                                                                |
-| ---------------------------------------- | --------------- | -------------------------------------------------------------------------------------------------------------------------- |
-| `messages.tts.providers.gradium.apiKey`  | cadena (string) | Clave de API resuelta. Admite `${ENV}` y referencias secretas.                                                             |
-| `messages.tts.providers.gradium.baseUrl` | cadena (string) | Anula el origen de la API. Se eliminan las barras diagonales finales. De forma predeterminada es `https://api.gradium.ai`. |
-| `messages.tts.providers.gradium.voiceId` | cadena (string) | ID de voz predeterminado utilizado cuando no hay ninguna anulación de directiva.                                           |
+| Clave                                           | Tipo            | Descripción                                                                                                                |
+| ----------------------------------------------- | --------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| `messages.tts.providers.gradium.apiKey`         | cadena (string) | Clave de API resuelta. Admite `${ENV}` y referencias secretas.                                                             |
+| `messages.tts.providers.gradium.baseUrl`        | cadena (string) | Anula el origen de la API. Se eliminan las barras diagonales finales. De forma predeterminada es `https://api.gradium.ai`. |
+| `messages.tts.providers.gradium.speakerVoiceId` | cadena (string) | ID de voz predeterminado utilizado cuando no hay ninguna anulación de directiva.                                           |
 
 El formato de audio de salida se selecciona automáticamente según la superficie de destino y no se puede configurar desde `openclaw.json`. Consulte [Salida](#output) a continuación.
 
@@ -91,7 +91,7 @@ Voz predeterminada: Emma.
 
 ### Anulación de voz por mensaje
 
-Cuando la política de voz activa permite las anulaciones de voz, puedes cambiar las voces en línea utilizando un token de directiva. Todos estos se resuelven en la misma anulación `voiceId`:
+Cuando la política de voz activa permite anulaciones de voz, puedes cambiar las voces en línea utilizando un token de directiva. Usa `speakerVoiceId` para los identificadores de voz nativos del proveedor.
 
 ```text
 /voice:LFZvm12tW_z0xfGo

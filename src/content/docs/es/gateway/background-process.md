@@ -41,10 +41,10 @@ Al generar procesos secundarios de larga ejecución fuera de las herramientas ex
 
 Sobrescrituras de entorno:
 
-- `PI_BASH_YIELD_MS`: cedencia predeterminada (ms)
-- `PI_BASH_MAX_OUTPUT_CHARS`: límite de salida en memoria (caracteres)
+- `OPENCLAW_BASH_YIELD_MS`: rendimiento predeterminado (ms)
+- `OPENCLAW_BASH_MAX_OUTPUT_CHARS`: límite de salida en memoria (caracteres)
 - `OPENCLAW_BASH_PENDING_MAX_OUTPUT_CHARS`: límite de stdout/stderr pendiente por flujo (caracteres)
-- `PI_BASH_JOB_TTL_MS`: TTL para sesiones finalizadas (ms, limitado entre 1m y 3h)
+- `OPENCLAW_BASH_JOB_TTL_MS`: TTL para sesiones finalizadas (ms, limitado a 1m–3h)
 - `OPENCLAW_PROCESS_INPUT_WAIT_IDLE_MS`: umbral de salida inactiva antes de que las sesiones en segundo plano escribibles se marquen como probablemente esperando entrada (por defecto 15000 ms)
 
 Configuración (preferida):

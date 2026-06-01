@@ -36,7 +36,7 @@ openclaw qr --url wss://gateway.example/ws
 - `--token` y `--password` son mutuamente excluyentes.
 - El propio código de configuración ahora lleva un `bootstrapToken` opaco de corta duración, no el token/contraseña del gateway compartido.
 - El arranque del código de configuración integrado devuelve un token `node` primario con `scopes: []` más un token de traspaso `operator` limitado para la incorporación móvil de confianza.
-- El token de operador transferido se limita a `operator.approvals`, `operator.read` y `operator.write`; `operator.admin`, `operator.pairing` y `operator.talk.secrets` requieren un emparejamiento de operador aprobado separado o un flujo de token.
+- El token de operador entregado se limita a `operator.approvals`, `operator.read`, `operator.talk.secrets` y `operator.write`; `operator.admin` y `operator.pairing` requieren un emparejamiento de operador aprobado o flujo de token por separado.
 - El emparejamiento móvil falla de forma cerrada para las URL de puerta de enlace `ws://` de Tailscale/públicas. Las direcciones LAN privadas y los hosts Bonjour `.local` siguen siendo compatibles a través de `ws://`, pero las rutas móviles de Tailscale/públicas deben usar Tailscale Serve/Funnel o una URL de puerta de enlace `wss://`.
 - Con `--remote`, OpenClaw requiere `gateway.remote.url` o
   `gateway.tailscale.mode=serve|funnel`.
