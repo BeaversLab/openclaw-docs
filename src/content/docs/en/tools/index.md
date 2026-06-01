@@ -78,18 +78,18 @@ The table lists representative tools so you can recognize the surface. It is
 not the full policy reference. For exact groups, defaults, and allow/deny
 semantics, use [Tools and custom providers](/en/gateway/config-tools).
 
-| Category                | Use when the agent needs to...                                                | Representative tools                                                 | Read next                                                              |
-| ----------------------- | ----------------------------------------------------------------------------- | -------------------------------------------------------------------- | ---------------------------------------------------------------------- |
-| Runtime                 | Run commands, manage processes, or use provider-backed Python analysis        | `exec`, `process`, `code_execution`                                  | [Exec](/en/tools/exec), [Code execution](/en/tools/code-execution)           |
-| Files                   | Read and change workspace files                                               | `read`, `write`, `edit`, `apply_patch`                               | [Apply patch](/en/tools/apply-patch)                                      |
-| Web                     | Search the web, search X posts, or fetch readable page content                | `web_search`, `x_search`, `web_fetch`                                | [Web tools](/en/tools/web), [Web fetch](/en/tools/web-fetch)                 |
-| Browser                 | Operate a browser session                                                     | `browser`                                                            | [Browser](/en/tools/browser)                                              |
-| Messaging and channels  | Send replies or channel actions                                               | `message`                                                            | [Agent send](/en/tools/agent-send)                                        |
-| Sessions and agents     | Inspect sessions, delegate work, steer another run, or report status          | `sessions_*`, `subagents`, `agents_list`, `session_status`           | [Sub-agents](/en/tools/subagents), [Session tool](/en/concepts/session-tool) |
-| Automation              | Schedule work or respond to background events                                 | `cron`, `heartbeat_respond`                                          | [Automation](/en/automation)                                              |
-| Gateway and nodes       | Inspect Gateway state or paired target devices                                | `gateway`, `nodes`                                                   | [Gateway configuration](/en/gateway/configuration), [Nodes](/en/nodes)       |
-| Media                   | Analyze, generate, or speak media                                             | `image`, `image_generate`, `music_generate`, `video_generate`, `tts` | [Media overview](/en/tools/media-overview)                                |
-| Large OpenClaw catalogs | Search and call many eligible tools without sending every schema to the model | `tool_search_code`, `tool_search`, `tool_describe`                   | [Tool Search](/en/tools/tool-search)                                      |
+| Category                | Use when the agent needs to...                                                | Representative tools                                                 | Read next                                                                                   |
+| ----------------------- | ----------------------------------------------------------------------------- | -------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| Runtime                 | Run commands, manage processes, or use provider-backed Python analysis        | `exec`, `process`, `code_execution`                                  | [Exec](/en/tools/exec), [Code execution](/en/tools/code-execution)                                |
+| Files                   | Read and change workspace files                                               | `read`, `write`, `edit`, `apply_patch`                               | [Apply patch](/en/tools/apply-patch)                                                           |
+| Web                     | Search the web, search X posts, or fetch readable page content                | `web_search`, `x_search`, `web_fetch`                                | [Web tools](/en/tools/web), [Web fetch](/en/tools/web-fetch)                                      |
+| Browser                 | Operate a browser session                                                     | `browser`                                                            | [Browser](/en/tools/browser)                                                                   |
+| Messaging and channels  | Send replies or channel actions                                               | `message`                                                            | [Agent send](/en/tools/agent-send)                                                             |
+| Sessions and agents     | Inspect sessions, delegate work, steer another run, or report status          | `sessions_*`, `subagents`, `agents_list`, `session_status`, `goal`   | [Goal](/en/tools/goal), [Sub-agents](/en/tools/subagents), [Session tool](/en/concepts/session-tool) |
+| Automation              | Schedule work or respond to background events                                 | `cron`, `heartbeat_respond`                                          | [Automation](/en/automation)                                                                   |
+| Gateway and nodes       | Inspect Gateway state or paired target devices                                | `gateway`, `nodes`                                                   | [Gateway configuration](/en/gateway/configuration), [Nodes](/en/nodes)                            |
+| Media                   | Analyze, generate, or speak media                                             | `image`, `image_generate`, `music_generate`, `video_generate`, `tts` | [Media overview](/en/tools/media-overview)                                                     |
+| Large OpenClaw catalogs | Search and call many eligible tools without sending every schema to the model | `tool_search_code`, `tool_search`, `tool_describe`                   | [Tool Search](/en/tools/tool-search)                                                           |
 
 <Note>
 Tool Search is an experimental OpenClaw agent surface. Codex harness runs use
@@ -143,9 +143,6 @@ Choose the extension path by the job you need OpenClaw to do:
   [Build plugins](/en/plugins/building-plugins).
 - Add or tune reusable agent instructions with [Skills](/en/tools/skills) and
   [Creating skills](/en/tools/creating-skills).
-- Package reusable workflow material with
-  [Skill workshop](/en/plugins/skill-workshop) when the workflow belongs in a
-  plugin-distributed skill bundle.
 - Use [Plugin SDK](/en/plugins/sdk-overview) and [Plugin manifest](/en/plugins/manifest) when you need implementation contracts.
 
 ## Troubleshoot missing tools
