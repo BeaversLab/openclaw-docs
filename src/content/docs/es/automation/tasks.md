@@ -93,10 +93,10 @@ Las tareas **no** reemplazan a las sesiones, trabajos cron o heartbeats: son el 
 | Trabajos de medios del agente       | `cli`                       | Ejecuciones `image_generate`/`music_generate`/`video_generate` respaldadas por sesión | `silent`                                |
 
 <AccordionGroup>
-  <Accordion title="Notificaciones predeterminadas para cron y medios">
-    Las tareas cron de la sesión principal utilizan la política de notificación `silent` de forma predeterminada; crean registros para el seguimiento, pero no generan notificaciones. Las tareas cron aisladas también tienen `silent` como valor predeterminado, pero son más visibles porque se ejecutan en su propia sesión.
+  <Accordion title="Valores predeterminados de notificación para cron y medios">
+    Las tareas cron de sesión principal usan la política de notificación `silent` de manera predeterminada; crean registros para el seguimiento pero no generan notificaciones. Las tareas cron aisladas también usan `silent` de forma predeterminada, pero son más visibles porque se ejecutan en su propia sesión.
 
-    Las ejecuciones `image_generate`, `music_generate` y `video_generate` respaldadas por sesión también utilizan la política de notificación `silent`. Aún crean registros de tareas, pero la finalización se devuelve a la sesión del agente original como un reactivación interna para que el agente pueda escribir el mensaje de seguimiento y adjuntar los medios finalizados él mismo. Los eventos de finalización de medios generados requieren entrega mediante herramienta de mensaje: el agente debe enviar los medios finalizados con la herramienta `message` y luego responder `NO_REPLY`. Si la sesión solicitante ya no está activa o su reactivación activa falla, y el agente de finalización no recibe algunos o todos los medios generados, OpenClaw envía una reserva directa idempotente con solo los medios que faltan al objetivo del canal original.
+    Las ejecuciones `image_generate`, `music_generate` y `video_generate` respaldadas por sesión también usan la política de notificación `silent`. Aún crean registros de tareas, pero la finalización se devuelve a la sesión del agente original como un despertar interno para que el agente pueda escribir el mensaje de seguimiento y adjuntar el medio terminado él mismo. El agente solicitante sigue su contrato de respuesta visible normal: respuesta final automática cuando está configurado, o `message(action="send")` más `NO_REPLY` cuando la sesión requiere respuestas de herramienta de mensajes. Si la sesión solicitante ya no está activa o su despertar activo falla, y el agente de finalización pierde parte o todo el medio generado, OpenClaw envía una reserva directa idempotente con solo el medio que falta al objetivo del canal original.
 
   </Accordion>
   <Accordion title="Concurrent media-generation guardrail">
@@ -104,8 +104,8 @@ Las tareas **no** reemplazan a las sesiones, trabajos cron o heartbeats: son el 
   </Accordion>
   <Accordion title="Qué no crea tareas">
     - Turnos de Heartbeat - sesión principal; consulta [Heartbeat](/es/gateway/heartbeat)
-    - Turnos normales de chat interactivo
-    - Respuestas directas `/command`
+    - Turnos de chat interactivo normales
+    - Respuestas `/command` directas
 
   </Accordion>
 </AccordionGroup>
@@ -317,36 +317,36 @@ Un limpiador se ejecuta cada **60 segundos** y maneja cuatro cosas:
 ## Cómo se relacionan las tareas con otros sistemas
 
 <AccordionGroup>
-  <Accordion title="Tareas y flujo de tareas">
-    [Task Flow](/es/automation/taskflow) es la capa de orquestación de flujo sobre las tareas en segundo plano. Un único flujo puede coordinar múltiples tareas durante su vida útil utilizando modos de sincronización administrados o reflejados. Use `openclaw tasks` para inspeccionar registros de tareas individuales y `openclaw tasks flow` para inspeccionar el flujo de orquestación.
+  <Accordion title="Tareas y flujo de tareas (Task Flow)">
+    [Task Flow](/es/automation/taskflow) es la capa de orquestación de flujo sobre las tareas en segundo plano. Un solo flujo puede coordinar múltiples tareas a lo largo de su vida útil utilizando modos de sincronización administrados o reflejados. Usa `openclaw tasks` para inspeccionar registros de tareas individuales y `openclaw tasks flow` para inspeccionar el flujo de orquestación.
 
-    Consulte [Task Flow](/es/automation/taskflow) para obtener más detalles.
+    Consulta [Task Flow](/es/automation/taskflow) para obtener más detalles.
 
   </Accordion>
-  <Accordion title="Tareas y cron">
-    Una **definición** de trabajo cron reside en `~/.openclaw/cron/jobs.json`; el estado de ejecución en tiempo de ejecución reside junto a ella en `~/.openclaw/cron/jobs-state.json`. **Todas** las ejecuciones cron crean un registro de tarea, tanto de sesión principal como aisladas. Las tareas cron de sesión principal tienen por defecto la política de notificación `silent` para que realicen un seguimiento sin generar notificaciones.
+  <Accordion title="Tasks and cron">
+    Las definiciones de trabajos de cron, el estado de ejecución en tiempo de ejecución y el historial de ejecuciones residen en la base de datos de estado compartido SQLite de OpenClaw. **Cada** ejecución de cron crea un registro de tarea, tanto de sesión principal como aislada. Las tareas de cron de sesión principal tienen como valor predeterminado la política de notificación `silent` para que rastreen sin generar notificaciones.
 
     Consulte [Cron Jobs](/es/automation/cron-jobs).
 
   </Accordion>
-  <Accordion title="Tareas y heartbeat">
-    Las ejecuciones de Heartbeat son turnos de sesión principal; no crean registros de tareas. Cuando se completa una tarea, puede activar una reactivación del heartbeat para que vea el resultado rápidamente.
+  <Accordion title="Tasks and heartbeat">
+    Las ejecuciones de Heartbeat son turnos de sesión principal; no crean registros de tareas. Cuando se completa una tarea, puede activar un despertar de heartbeat para que vea el resultado rápidamente.
 
     Consulte [Heartbeat](/es/gateway/heartbeat).
 
   </Accordion>
-  <Accordion title="Tareas y sesiones">
+  <Accordion title="Tasks and sessions">
     Una tarea puede hacer referencia a una `childSessionKey` (donde se ejecuta el trabajo) y una `requesterSessionKey` (quién la inició). Las sesiones son el contexto de la conversación; las tareas son el seguimiento de la actividad sobre eso.
   </Accordion>
-  <Accordion title="Tareas y ejecuciones de agentes">
-    El `runId` de una tarea se vincula a la ejecución del agente que realiza el trabajo. Los eventos del ciclo de vida del agente (inicio, finalización, error) actualizan automáticamente el estado de la tarea; no necesita gestionar el ciclo de vida manualmente.
+  <Accordion title="Tasks and agent runs">
+    La `runId` de una tarea se vincula a la ejecución del agente que realiza el trabajo. Los eventos del ciclo de vida del agente (inicio, fin, error) actualizan automáticamente el estado de la tarea; no es necesario administrar el ciclo de vida manualmente.
   </Accordion>
 </AccordionGroup>
 
 ## Relacionado
 
-- [Automation](/es/automation) - todos los mecanismos de automatización de un vistazo
-- [CLI: Tasks](/es/cli/tasks) - referencia de comandos de CLI
+- [Automation](/es/automation) - todos los mecanismos de automatización en un vistazo
+- [CLI: Tasks](/es/cli/tasks) - referencia de comandos de la CLI
 - [Heartbeat](/es/gateway/heartbeat) - turnos periódicos de sesión principal
-- [Tareas programadas](/es/automation/cron-jobs) - programación de trabajos en segundo plano
-- [Flujo de tareas](/es/automation/taskflow) - orquestación de flujos sobre las tareas
+- [Scheduled Tasks](/es/automation/cron-jobs) - programación de trabajos en segundo plano
+- [Task Flow](/es/automation/taskflow) - orquestación de flujo por encima de las tareas

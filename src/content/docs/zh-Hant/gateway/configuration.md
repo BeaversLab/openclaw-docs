@@ -292,10 +292,10 @@ Gateway 在每次成功啟動後會保留一份受信任的「最後已知良好
 
   </Accordion>
 
-  <Accordion title="為官方 iOS 版本啟用基於轉發的推送">
-    基於轉發的推送在 `openclaw.json` 中設定。
+  <Accordion title="為官方 iOS 版本啟用基於中繼的推送">
+    基於中繼的推送預設使用託管的 OpenClaw 中繼：`https://ios-push-relay.openclaw.ai`。
 
-    在閘道設定中設定此項：
+    若要使用自訂中繼，請在 gateway config 中設定：
 
     ```json5
     {
@@ -313,39 +313,40 @@ Gateway 在每次成功啟動後會保留一份受信任的「最後已知良好
     }
     ```
 
-    CLI 對等寫法：
+    CLI 同等指令：
 
     ```bash
     openclaw config set gateway.push.apns.relay.baseUrl https://relay.example.com
     ```
 
-    此設定的作用：
+    其作用如下：
 
-    - 允許閘道透過外部轉發站發送 `push.test`、喚醒推撥和重連喚醒。
-    - 使用由配對的 iOS 應用程式轉發的註冊範圍發送授權。閘道不需要部署範圍的轉發權杖。
-    - 將每個基於轉發的註冊綁定到 iOS 應用程式所配對的閘道身份，因此另一個閘道無法重用儲存的註冊。
-    - 讓本機/手動 iOS 版本保持在直接 APNs 上。基於轉發的發送僅適用於透過轉發站註冊的官方發行版本。
-    - 必須與內建於官方/TestFlight iOS 版本中的轉發站基礎 URL 相符，以便註冊和發送流量抵達同一個轉發站部署。
+    - 允許 gateway 透過外部中繼傳送 `push.test`、喚醒輕推 (wake nudges) 以及重連喚醒 (reconnect wakes)。
+    - 使用由配對的 iOS app 轉發的註冊範圍傳送權限 (registration-scoped send grant)。gateway 不需要部署範圍的中繼權杖 (relay token)。
+    - 將每個基於中繼的註冊綁定至 iOS app 所配對的 gateway 身份，因此其他 gateway 無法重用儲存的註冊資料。
+    - 讓本機/手動的 iOS 版本保持使用直接 APNs。基於中繼的傳送僅適用於透過中繼註冊的官方發行版本。
+    - 必須與內建於官方/TestFlight iOS 版本中的中繼基底 URL 相符，以便註冊和傳送流量到達同一個中繼部署。
 
     端對端流程：
 
-    1. 安裝使用相同轉發站基礎 URL 編譯的官方/TestFlight iOS 版本。
-    2. 在閘道上設定 `gateway.push.apns.relay.baseUrl`。
-    3. 將 iOS 應用程式與閘道配對，並讓節點和操作員工作階段都連線。
-    4. iOS 應用程式會取得閘道身份，使用 App Attest 加上應用程式收據向轉發站註冊，然後將基於轉發的 `push.apns.register` 載荷發布到配對的閘道。
-    5. 閘道會儲存轉發句柄和發送授權，然後將它們用於 `push.test`、喚醒推撥和重連喚醒。
+    1. 安裝官方/TestFlight iOS 版本。
+    2. 選用：僅在使用自訂中繼部署時，在 gateway 上設定 `gateway.push.apns.relay.baseUrl`。
+    3. 將 iOS app 與 gateway 配對，並讓節點 (node) 和操作員 (operator) 會話都連線。
+    4. iOS app 會擷取 gateway 身份，使用 App Attest 與 app 收據向中繼註冊，然後將基於中繼的 `push.apns.register` 資料負載發佈至配對的 gateway。
+    5. gateway 儲存中繼控制代碼 (relay handle) 和傳送權限，然後將其用於 `push.test`、喚醒輕推以及重連喚醒。
 
-    操作備註：
+    操作注意事項：
 
-    - 如果您將 iOS 應用程式切換到不同的閘道，請重新連線應用程式，以便它發布綁定到該閘道的新轉發註冊。
-    - 如果您發布指向不同轉發站部署的新 iOS 版本，應用程式會重新整理其快取的轉發註冊，而不是重用舊的轉發站來源。
+    - 如果您將 iOS app 切換至不同的 gateway，請重新連線 app，以便其發佈綁定至該 gateway 的新中繼註冊。
+    - 如果您發布指向不同中繼部署的新 iOS 版本，app 會重新整理其快取的中繼註冊，而不是重用舊的中繼來源。
 
-    相容性備註：
+    相容性注意事項：
 
-    - `OPENCLAW_APNS_RELAY_BASE_URL` 和 `OPENCLAW_APNS_RELAY_TIMEOUT_MS` 仍可作為暫時的環境變數覆寫使用。
-    - `OPENCLAW_APNS_RELAY_ALLOW_HTTP=true` 僅保留為僅限回傳的開發逃生艙；請勿在設定中保存 HTTP 轉發站 URL。
+    - `OPENCLAW_APNS_RELAY_BASE_URL` 和 `OPENCLAW_APNS_RELAY_TIMEOUT_MS` 仍可作為暫時性的環境變數覆寫使用。
+    - 自訂 gateway 中繼 URL 必須與內建於官方/TestFlight iOS 版本中的中繼基底 URL 相符。
+    - `OPENCLAW_APNS_RELAY_ALLOW_HTTP=true` 仍然是僅限回環 (loopback-only) 的開發緊急手段；請勿在設定中保存 HTTP 中繼 URL。
 
-    如需瞭解端對端流程，請參閱 [iOS App](/zh-Hant/platforms/ios#relay-backed-push-for-official-builds)；如需瞭解轉發站安全模型，請參閱 [Authentication and trust flow](/zh-Hant/platforms/ios#authentication-and-trust-flow)。
+    參閱 [iOS App](/zh-Hant/platforms/ios#relay-backed-push-for-official-builds) 了解端對端流程，以及 [Authentication and trust flow](/zh-Hant/platforms/ios#authentication-and-trust-flow) 了解中繼安全模型。
 
   </Accordion>
 
@@ -370,7 +371,7 @@ Gateway 在每次成功啟動後會保留一份受信任的「最後已知良好
 
   </Accordion>
 
-  <Accordion title="設定 cron 工作">
+  <Accordion title="Configure cron jobs">
     ```json5
     {
       cron: {
@@ -385,9 +386,9 @@ Gateway 在每次成功啟動後會保留一份受信任的「最後已知良好
     }
     ```
 
-    - `sessionRetention`: 從 `sessions.json` 中修剪已完成的獨立執行階段 (預設 `24h`；設定 `false` 以停用)。
-    - `runLog`: 依大小和保留行數修剪 `cron/runs/<jobId>.jsonl`。
-    - 參閱 [Cron jobs](/zh-Hant/automation/cron-jobs) 了解功能概覽和 CLI 範例。
+    - `sessionRetention`: 從 `sessions.json` 中修剪已完成的獨立執行階段（預設為 `24h`；將 `false` 設為停用）。
+    - `runLog`: 修剪每項工作保留的 cron 執行歷史記錄列。`maxBytes` 仍然適用於較舊的檔案備援執行日誌。
+    - 請參閱 [Cron jobs](/zh-Hant/automation/cron-jobs) 以瞭解功能概覽與 CLI 範例。
 
   </Accordion>
 

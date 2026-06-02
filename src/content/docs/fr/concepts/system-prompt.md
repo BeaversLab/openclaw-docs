@@ -168,7 +168,7 @@ Les fichiers d'amorçage sont résolus à partir de l'espace de travail actif, p
 - `BOOTSTRAP.md` (uniquement sur les espaces de travail tout neufs)
 - `MEMORY.md` lorsqu'il est présent
 
-Sur le harnais natif Codex, OpenClaw évite de répéter les fichiers stables de l'espace de travail à chaque tour utilisateur. Codex charge `AGENTS.md` via sa propre découverte de documents de projet. `SOUL.md`, `IDENTITY.md`, `TOOLS.md` et `USER.md` sont transmis en tant qu'instructions de développeur Codex. Le contenu de `HEARTBEAT.md` n'est pas injecté ; les tours de battement de cœur reçoivent une note en mode de collaboration pointant vers le fichier lorsqu'il existe et n'est pas vide. Le contenu de `MEMORY.md` de l'espace de travail de l'agent configuré n'est pas collé dans chaque tour natif Codex ; lorsque les outils de mémoire sont disponibles pour cet espace de travail, les tours Codex reçoivent une petite note sur la mémoire de l'espace de travail et doivent utiliser `memory_search` ou `memory_get` lorsque la mémoire durable est pertinente. Si les outils sont désactivés, la recherche de mémoire est indisponible, ou si l'espace de travail actif diffère de l'espace de mémoire de l'agent, `MEMORY.md` revient au chemin normal de contexte de tour borné. Le contenu de `BOOTSTRAP.md` actif conserve pour l'instant le rôle normal de contexte de tour.
+Sur le harnais natif Codex, OpenClaw évite de répéter les fichiers stables de l'espace de travail à chaque tour de l'utilisateur. Codex charge OpenClaw`AGENTS.md` via sa propre découverte de documents de projet. `SOUL.md`, `IDENTITY.md`, `TOOLS.md` et `USER.md`OpenClaw sont transmis en tant qu'instructions de développeur Codex. La liste compacte des compétences d'OpenClaw est également transmise en tant qu'instructions de développeur de collaboration limitées au tour. Le contenu de `HEARTBEAT.md` n'est pas injecté ; les tours de heartbeat reçoivent une note en mode de collaboration pointant vers le fichier lorsqu'il existe et n'est pas vide. Le contenu de `MEMORY.md` de l'espace de travail de l'agent configuré n'est pas collé dans chaque tour natif Codex ; lorsque les outils de mémoire sont disponibles pour cet espace de travail, les tours Codex reçoivent une petite note sur la mémoire de l'espace de travail dans les instructions de développeur de collaboration limitées au tour et doivent utiliser `memory_search` ou `memory_get` lorsque la mémoire durable est pertinente. Si les outils sont désactivés, la recherche de mémoire est indisponible, ou si l'espace de travail actif diffère de l'espace de travail de mémoire de l'agent, `MEMORY.md` revient au chemin normal de contexte de tour borné. Le contenu actif de `BOOTSTRAP.md` conserve pour l'instant le rôle normal de contexte de tour.
 
 Sur les harnais non-Codex, les fichiers d'amorçage continuent d'être composés dans le prompt OpenClaw selon leurs portes existantes. `HEARTBEAT.md` est omis lors des exécutions normales lorsque les battements de cœur sont désactivés pour l'agent par défaut ou si `agents.defaults.heartbeat.includeSystemPromptSection` est faux. Gardez les fichiers injectés concis, en particulier le `MEMORY.md` non-Codex. `MEMORY.md` est destiné à rester un résumé à long terme organisé ; les notes quotidiennes détaillées appartiennent à `memory/*.md` où `memory_search` et `memory_get` peuvent les récupérer à la demande. Les fichiers `MEMORY.md` non-Codex trop volumineux augmentent l'utilisation du prompt et peuvent être partiellement injectés en raison des limites de fichiers d'amorçage ci-dessous.
 
@@ -229,17 +229,13 @@ prompt instruit le model d'utiliser `read` pour charger le SKILL.md à l'emplace
 répertorié (espace de travail, géré ou groupé). Si aucune compétence n'est éligible, la
 section Skills est omise.
 
-L'emplacement peut pointer vers une compétence imbriquée, telle que
-`skills/personal/foo/SKILL.md`. L'imbrication est uniquement organisationnelle ; le prompt utilise toujours
-le nom de compétence plat à partir du frontmatter `SKILL.md`.
+Les tours natifs Codex reçoivent cette liste en tant qu'instructions de développeur de collaboration limitées au tour au lieu d'une saisie utilisateur par tour, à l'exception des tours cron légers qui préservent le prompt planifié exact. Les autres harnais conservent la section de prompt normale.
 
-L'éligibilité inclut les portes de métadonnées de compétence, les vérifications de l'environnement/de configuration d'exécution,
-et la liste d'autorisation effective des compétences de l'agent lorsque `agents.defaults.skills` ou
-`agents.list[].skills` est configuré.
+L'emplacement peut pointer vers une compétence imbriquée, telle que `skills/personal/foo/SKILL.md`. L'imbrication est uniquement organisationnelle ; le prompt utilise toujours le nom plat de la compétence à partir du frontmatter `SKILL.md`.
 
-Les compétences groupées par plugin ne sont éligibles que lorsque leur plugin propriétaire est activé.
-Cela permet aux plugins d'outil d'exposer des guides opérationnels plus approfondis sans intégrer toutes
-ces directives directement dans chaque description d'outil.
+L'éligibilité comprend les portes de métadonnées de compétences, les vérifications de l'environnement d'exécution/de configuration, et la liste blanche effective des compétences de l'agent lorsque `agents.defaults.skills` ou `agents.list[].skills` est configuré.
+
+Les compétences groupées par plugin ne sont éligibles que lorsque leur plugin propriétaire est activé. Cela permet aux plugins d'outils d'exposer des guides d'utilisation approfondis sans intégrer toutes ces directives directement dans chaque description d'outil.
 
 ```
 <available_skills>
@@ -251,25 +247,25 @@ ces directives directement dans chaque description d'outil.
 </available_skills>
 ```
 
-Cela permet de garder le prompt de base petit tout en permettant une utilisation ciblée des compétences.
+Cela maintient le prompt de base petit tout en permettant une utilisation ciblée des compétences.
 
-Le budget de la liste des compétences est détenu par le sous-système de compétences :
+Le budget de la liste des compétences appartient au sous-système de compétences :
 
 - Par défaut global : `skills.limits.maxSkillsPromptChars`
-- Substitution par agent : `agents.list[].skillsLimits.maxSkillsPromptChars`
+- Remplacement par agent : `agents.list[].skillsLimits.maxSkillsPromptChars`
 
 Les extraits d'exécution bornés génériques utilisent une surface différente :
 
 - `agents.defaults.contextLimits.*`
 - `agents.list[].contextLimits.*`
 
-Cette séparation maintient la taille des compétences distincte de la taille de lecture/injection à l'exécution, telle que `memory_get`, les résultats d'outils en direct et les actualisations d'AGENTS.md après compactage.
+Cette séparation maintient le dimensionnement des compétences distinct du dimensionnement de la lecture/injection à l'exécution, tel que `memory_get`, les résultats d'outils en direct et les actualisations AGENTS.md post-compaction.
 
 ## Documentation
 
-Le système de prompt comprend une section **Documentation**. Lorsque la documentation locale est disponible, il pointe vers le répertoire de documentation locale OpenClaw (`docs/` dans un extrait Git ou les docs du package npm inclus). Si la documentation locale n'est pas disponible, il revient à [https://docs.openclaw.ai](https://docs.openclaw.ai).
+Le prompt système inclut une section **Documentation**. Lorsque la documentation locale est disponible, il pointe vers le répertoire de documentation local OpenClaw (`docs/` dans une extraction Git ou les docs du package npm). Si la documentation locale n'est pas disponible, il revient à [https://docs.openclaw.ai](https://docs.openclaw.ai).
 
-La même section inclut également l'emplacement de la source OpenClaw. Les extraits Git exposent la racine source locale afin que l'agent puisse inspecter le code directement. Les installations de package incluent l'URL source GitHub et indiquent à l'agent d'y consulter la source chaque fois que la documentation est incomplète ou obsolète. Le prompt note également le miroir de documentation public, le Discord communautaire, et ClawHub ([https://clawhub.ai](https://clawhub.ai)) pour la découverte de compétences. Il indique au modèle de consulter d'abord la documentation pour le comportement, les commandes, la configuration ou l'architecture OpenClaw, et d'exécuter `openclaw status` lui-même lorsque cela est possible (demandant à l'utilisateur uniquement en cas d'accès limité). Pour la configuration spécifiquement, il oriente les agents vers l'action d'outil `gateway` `config.schema.lookup` pour une documentation et des contraintes exactes au niveau des champs, puis vers `docs/gateway/configuration.md` et `docs/gateway/configuration-reference.md` pour des conseils plus généraux.
+La même section inclut également l'emplacement de la source OpenClaw. Les extraits Git exposent la racine source locale afin que l'agent puisse inspecter le code directement. Les installations de package incluent l'URL source GitHub et indiquent à l'agent d'y consulter la source lorsque la documentation est incomplète ou obsolète. Le prompt note également le miroir de la documentation publique, la communauté Discord et ClawHub ([https://clawhub.ai](https://clawhub.ai)) pour la découverte de compétences. Il indique au modèle de consulter d'abord la documentation pour le comportement, les commandes, la configuration ou l'architecture OpenClaw, et d'exécuter `openclaw status` lui-même lorsque cela est possible (en demandant à l'utilisateur uniquement en cas d'accès manquant). Pour la configuration spécifiquement, il oriente les agents vers l'action d'outil `gateway` `config.schema.lookup` pour une documentation et des contraintes exactes au niveau des champs, puis vers `docs/gateway/configuration.md` et `docs/gateway/configuration-reference.md` pour des conseils plus généraux.
 
 ## Connexes
 

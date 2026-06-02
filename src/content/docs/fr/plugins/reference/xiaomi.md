@@ -1,5 +1,5 @@
 ---
-summary: "XiaomiOpenClawAjoute la prise en charge du fournisseur de modèle Xiaomi à OpenClaw."
+summary: "XiaomiXiaomiOpenClawAjoute la prise en charge des fournisseurs de modèle Xiaomi et Xiaomi Token Plan à OpenClaw."
 read_when:
   - You are installing, configuring, or auditing the xiaomi plugin
 title: "XiaomiPlugin Xiaomi"
@@ -7,7 +7,7 @@ title: "XiaomiPlugin Xiaomi"
 
 # Plugin Xiaomi
 
-Ajoute la prise en charge du fournisseur de modèle Xiaomi à OpenClaw.
+Ajoute la prise en charge des fournisseurs de modèle Xiaomi et Xiaomi Token Plan à OpenClaw.
 
 ## Distribution
 
@@ -16,7 +16,7 @@ Ajoute la prise en charge du fournisseur de modèle Xiaomi à OpenClaw.
 
 ## Surface
 
-fournisseurs : xiaomi ; contrats : speechProviders
+providers: xiaomi, xiaomi-token-plan; contracts: speechProviders
 
 ## Documentation connexe
 

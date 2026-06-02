@@ -59,9 +59,9 @@ Todo el acceso a la cámara está controlado por **ajustes controlados por el us
 
 Al igual que `canvas.*`, el nodo iOS solo permite comandos `camera.*` en **primer plano**. Las invocaciones en segundo plano devuelven `NODE_BACKGROUND_UNAVAILABLE`.
 
-### Auxiliar de CLI (archivos temporales + MEDIA)
+### Auxiliar de CLI
 
-La forma más fácil de obtener archivos adjuntos es a través del asistente de CLI, que escribe los medios decodificados en un archivo temporal e imprime `MEDIA:<path>`.
+La forma más sencilla de obtener archivos multimedia es a través del auxiliar de CLI, que escribe los medios decodificados en un archivo temporal e imprime la ruta guardada.
 
 Ejemplos:
 
@@ -74,7 +74,7 @@ openclaw nodes camera clip --node <id> --no-audio
 
 Notas:
 
-- `nodes camera snap` se predetermina en **ambas** orientaciones para darle al agente ambas vistas.
+- `nodes camera snap` por defecto a **ambas** orientaciones para dar al agente ambas vistas.
 - Los archivos de salida son temporales (en el directorio temporal del SO) a menos que cree su propio contenedor.
 
 ## Nodo Android
@@ -88,15 +88,15 @@ Notas:
 ### Permisos
 
 - Android requiere permisos en tiempo de ejecución:
-  - `CAMERA` tanto para `camera.snap` como para `camera.clip`.
+  - `CAMERA` para ambos `camera.snap` y `camera.clip`.
   - `RECORD_AUDIO` para `camera.clip` cuando `includeAudio=true`.
 
-Si faltan permisos, la aplicación solicitará cuando sea posible; si se deniega, las solicitudes `camera.*` fallan con un
+Si faltan permisos, la aplicación solicitará cuando sea posible; si se deniegan, las solicitudes `camera.*` fallan con un
 error `*_PERMISSION_REQUIRED`.
 
 ### Requisito de primer plano de Android
 
-Al igual que `canvas.*`, el nodo Android solo permite comandos `camera.*` en **primer plano**. Las invocaciones en segundo plano devuelven `NODE_BACKGROUND_UNAVAILABLE`.
+Al igual que `canvas.*`, el nodo de Android solo permite comandos `camera.*` en **primer plano**. Las invocaciones en segundo plano devuelven `NODE_BACKGROUND_UNAVAILABLE`.
 
 ### Comandos de Android (vía Gateway `node.invoke`)
 
@@ -120,18 +120,18 @@ La aplicación complementaria de macOS expone una casilla de verificación:
 
 ### Auxiliar de CLI (invocación de nodo)
 
-Utilice la CLI principal `openclaw` para invocar comandos de cámara en el nodo de macOS.
+Use la CLI principal `openclaw` para invocar comandos de cámara en el nodo macOS.
 
 Ejemplos:
 
 ```bash
 openclaw nodes camera list --node <id>            # list camera ids
-openclaw nodes camera snap --node <id>            # prints MEDIA:<path>
+openclaw nodes camera snap --node <id>            # prints saved path
 openclaw nodes camera snap --node <id> --max-width 1280
 openclaw nodes camera snap --node <id> --delay-ms 2000
 openclaw nodes camera snap --node <id> --device-id <id>
-openclaw nodes camera clip --node <id> --duration 10s          # prints MEDIA:<path>
-openclaw nodes camera clip --node <id> --duration-ms 3000      # prints MEDIA:<path> (legacy flag)
+openclaw nodes camera clip --node <id> --duration 10s          # prints saved path
+openclaw nodes camera clip --node <id> --duration-ms 3000      # prints saved path (legacy flag)
 openclaw nodes camera clip --node <id> --device-id <id>
 openclaw nodes camera clip --node <id> --no-audio
 ```
@@ -139,20 +139,20 @@ openclaw nodes camera clip --node <id> --no-audio
 Notas:
 
 - `openclaw nodes camera snap` por defecto es `maxWidth=1600` a menos que se anule.
-- En macOS, `camera.snap` espera `delayMs` (predeterminado 2000ms) después del calentamiento/ajuste de exposición antes de capturar.
+- En macOS, `camera.snap` espera `delayMs` (por defecto 2000ms) después del calentamiento/ajuste de exposición antes de capturar.
 - Las cargas útiles de las fotos se recomprimen para mantener base64 por debajo de 5 MB.
 
 ## Límites de seguridad y prácticos
 
 - El acceso a la cámara y al micrófono activa las solicitudes de permisos habituales del sistema operativo (y requiere cadenas de uso en Info.plist).
-- Los videoclips están limitados (actualmente `<= 60s`) para evitar cargas útiles de nodos demasiado grandes (sobrecarga de base64 + límites de mensajes).
+- Los videoclips tienen un límite (actualmente `<= 60s`) para evitar cargas de nodos demasiado grandes (sobrecarga de base64 + límites de mensajes).
 
 ## Video de pantalla de macOS (nivel de sistema operativo)
 
 Para video de _pantalla_ (no de cámara), use el complemento de macOS:
 
 ```bash
-openclaw nodes screen record --node <id> --duration 10s --fps 15   # prints MEDIA:<path>
+openclaw nodes screen record --node <id> --duration 10s --fps 15   # prints saved path
 ```
 
 Notas:

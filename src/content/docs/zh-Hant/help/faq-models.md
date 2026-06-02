@@ -150,15 +150,15 @@ sidebarTitle: "模型常見問題"
 
   </Accordion>
 
-  <Accordion title="我可以在日常任務中使用 GPT 5.5，在編程中使用 Codex 5.5 嗎？">
-    可以。請將模型選擇和運行時選擇分開處理：
+  <Accordion title="我可以在日常工作中使用 GPT 5.5，而在編寫程式碼時使用 Codex 5.5 嗎？">
+    可以。請將模型選擇和執行時期選擇分開處理：
 
-    - **原生 Codex 編程代理：** 將 `agents.defaults.model.primary` 設定為 `openai/gpt-5.5`。當您需要 ChatGPT/Codex 訂閱身份驗證時，請使用 `openclaw models auth login --provider openai-codex` 登入。
-    - **代理迴圈之外的直接 OpenAI API 任務：** 為映像、嵌入、語音、即時通訊和其他非代理 OpenAI API 介面配置 `OPENAI_API_KEY`。
-    - **OpenAI 代理 API 金鑰身份驗證：** 使用具有排序後的 `openai-codex` API 金鑰設定檔的 `/model openai/gpt-5.5`。
-    - **子代理：** 將編程任務路由到專注於 Codex 的代理，該代理擁有自己的 `openai/gpt-5.5` 模型。
+    - **原生 Codex 編碼代理程式：**將 `agents.defaults.model.primary` 設為 `openai/gpt-5.5`。當您需要使用 ChatGPT/Codex 訂閱驗證時，請使用 `openclaw models auth login --provider openai` 登入。
+    - **代理程式迴圈之外的直接 OpenAI API 任務：**為影像、嵌入、語音、即時通訊和其他非代理程式的 OpenAI API 介面設定 `OPENAI_API_KEY`。
+    - **OpenAI 代理程式 API 金鑰驗證：**使用具有已排序 `openai` API 金鑰設定檔的 `/model openai/gpt-5.5`。
+    - **子代理程式：**將編碼任務路由到具有專屬 `openai/gpt-5.5` 模型的 Codex 專用代理程式。
 
-    參見 [Models](/zh-Hant/concepts/models) 和 [Slash commands](/zh-Hant/tools/slash-commands)。
+    請參閱 [模型](/zh-Hant/concepts/models) 和 [斜線指令](/zh-Hant/tools/slash-commands)。
 
   </Accordion>
 

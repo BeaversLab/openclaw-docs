@@ -23,7 +23,7 @@ sidebarTitle: "CLIModels CLI"
   </Card>
 </CardGroup>
 
-Les références de modèle choisissent un fournisseur et un modèle. Elles ne choisissent généralement pas le runtime d'agent de bas niveau. Les références d'agent OpenAI constituent l'exception principale : `openai/gpt-5.5` s'exécute via le runtime du serveur d'application Codex par défaut sur le fournisseur officiel OpenAI. Les références d'abonnement Copilot (`github-copilot/*`) peuvent en outre être activées pour le runtime d'agent Copilot GitHub intégré — ce chemin reste explicite (pas de repli `auto`). Les substitutions explicites de runtime appartiennent à la politique fournisseur/modèle, et non à l'agent ou à la session dans son ensemble. En mode runtime Codex, la référence `openai/gpt-*` n'implique pas la facturation par clé API ; l'authentification peut provenir d'un compte Codex ou d'un profil d'authentification `openai-codex`. Voir [Agent runtimes](/fr/concepts/agent-runtimes) et [GitHub Copilot agent runtime](/fr/plugins/copilot).
+Les références de modèle choisissent un fournisseur et un modèle. Elles ne choisissent généralement pas le runtime d'agent de bas niveau. Les références d'agent OpenAI sont la principale exception : `openai/gpt-5.5` passe par le runtime du serveur d'application Codex par défaut sur le fournisseur OpenAI officiel. Les références Copilot d'abonnement (`github-copilot/*`) peuvent en outre être activées pour le plugin de runtime d'agent Copilot GitHub externe — ce chemin reste explicite (pas de repli `auto`). Les remplacements explicites de runtime appartiennent à la stratégie de fournisseur/modèle, et non à l'agent entier ou à la session. En mode runtime Codex, la référence `openai/gpt-*` n'implique pas la facturation par clé API ; l'authentification peut provenir d'un compte Codex ou d'un profil OAuth `openai`. Voir [Runtimes d'agent](/fr/concepts/agent-runtimes) et [Runtime d'agent Copilot GitHub](/fr/plugins/copilot).
 
 ## Fonctionnement de la sélection de modèle
 
@@ -144,7 +144,7 @@ des entrées `provider/*` à `agents.defaults.models` :
   agents: {
     defaults: {
       models: {
-        "openai-codex/*": {},
+        "openai/*": {},
         "vllm/*": {},
       },
     },

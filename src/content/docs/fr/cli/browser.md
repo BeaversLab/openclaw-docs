@@ -48,7 +48,7 @@ openclaw browser --browser-profile openclaw tabs
 openclaw browser --browser-profile openclaw open https://example.com
 ```
 
-Guide détaillé : [Dépannage du navigateur](/fr/tools/browser#cdp-startup-failure-vs-navigation-ssrf-block)
+Instructions détaillées : [Dépannage du navigateur](/fr/tools/browser#cdp-startup-failure-vs-navigation-ssrf-block)
 
 ## Cycle de vie
 
@@ -200,13 +200,15 @@ Assistants pour les fichiers + boîtes de dialogue :
 
 ```bash
 openclaw browser upload /tmp/openclaw/uploads/file.pdf --ref <ref>
+openclaw browser upload media://inbound/file.pdf --ref <ref>
 openclaw browser waitfordownload
 openclaw browser download <ref> report.pdf
 openclaw browser dialog --accept
 openclaw browser dialog --dismiss --dialog-id d1
 ```
 
-Les profils Chrome gérés enregistrent les téléchargements ordinaires déclenchés par un clic dans le répertoire de téléchargements de OpenClaw (`/tmp/openclaw/downloads` par défaut, ou la racine temporaire configurée). Utilisez `waitfordownload` ou `download` lorsque l'agent doit attendre un fichier spécifique et renvoyer son chemin ; ces attentes explicites possèdent le prochain téléchargement. Lorsqu'une action ouvre une boîte de dialogue modale, la réponse de l'action renvoie `blockedByDialog` avec `browserState.dialogs.pending` ; passez `--dialog-id` pour y répondre directement. Les boîtes de dialogue gérées en dehors de OpenClaw apparaissent sous `browserState.dialogs.recent`.
+Les profils Chrome gérés enregistrent les téléchargements déclenchés par un clic ordinaire dans le répertoire de téléchargements OpenClaw (`/tmp/openclaw/downloads` par défaut, ou la racine temporaire configurée). Utilisez `waitfordownload` ou `download` lorsque l'agent doit attendre un fichier spécifique et retourner son chemin ; ces attentes explicites possèdent le prochain téléchargement. Les téléchargements acceptent les fichiers de la racine des téléchargements temporaires OpenClaw et des médias entrants gérés par OpenClaw, y compris les références `media://inbound/<id>` et `media/inbound/<id>` relatives au bac à sable. Les références de médias imbriquées, le parcours et les chemins locaux arbitraires restent rejetés.
+Lorsqu'une action ouvre une boîte de dialogue modale, la réponse de l'action renvoie `blockedByDialog` avec `browserState.dialogs.pending` ; passez `--dialog-id` pour y répondre directement. Les boîtes de dialogue gérées en dehors de OpenClaw apparaissent sous `browserState.dialogs.recent`.
 
 ## État et stockage
 
@@ -251,7 +253,7 @@ openclaw browser trace stop --out trace.zip
 
 ## Chrome existant via MCP
 
-Utilisez le profil intégré `user`, ou créez votre propre profil `existing-session` :
+Utilisez le profil intégré `user` ou créez votre propre profil `existing-session` :
 
 ```bash
 openclaw browser --browser-profile user tabs
@@ -269,16 +271,13 @@ Limites actuelles de la session existante :
 - `click` est uniquement un clic gauche
 - `type` ne prend pas en charge `slowly=true`
 - `press` ne prend pas en charge `delayMs`
-- `hover`, `scrollintoview`, `drag`, `select`, `fill`, et `evaluate` rejettent
-  les remplacements du délai d'attente par appel
-- `select` ne prend en charge qu'une seule valeur
+- `hover`, `scrollintoview`, `drag`, `select`, `fill` et `evaluate` rejettent les substitutions de délai d'attente par appel
+- `select` prend en charge une seule valeur
 - `wait --load networkidle` n'est pas pris en charge
-- les téléchargements de fichiers nécessitent `--ref` / `--input-ref`, ne prennent pas en charge le CSS
-  `--element` et prennent actuellement en charge un seul fichier à la fois
-- les crochets de boîte de dialogue ne prennent pas en charge `--timeout`
+- les téléchargements de fichiers nécessitent `--ref` / `--input-ref`, ne prennent pas en charge le CSS `--element`, et prennent actuellement en charge un seul fichier à la fois
+- les hooks de boîte de dialogue ne prennent pas en charge `--timeout`
 - les captures d'écran prennent en charge les captures de page et `--ref`, mais pas le CSS `--element`
-- `responsebody`, l'interception des téléchargements, l'exportation PDF et les actions par lots nécessitent toujours
-  un navigateur géré ou un profil CDP brut
+- `responsebody`, l'interception des téléchargements, l'exportation PDF et les actions par lots nécessitent toujours un navigateur géré ou un profil CDP brut
 
 ## Contrôle à distance du navigateur (proxy de l'hôte de nœud)
 
@@ -286,7 +285,7 @@ Si le Gateway s'exécute sur une machine différente de celle du navigateur, ex�
 
 Utilisez `gateway.nodes.browser.mode` pour contrôler le routage automatique et `gateway.nodes.browser.node` pour épingler un nœud spécifique si plusieurs sont connectés.
 
-Sécurité + configuration à distance : [Outil de navigateur](/fr/tools/browser), [Accès à distance](/fr/gateway/remote), [Tailscale](/fr/gateway/tailscale), [Sécurité](/fr/gateway/security)
+Sécurité + configuration à distance : [Outil de navigateur](/fr/tools/browser), [Accès distant](/fr/gateway/remote), [Tailscale](/fr/gateway/tailscale), [Sécurité](/fr/gateway/security)
 
 ## Connexes
 

@@ -10,7 +10,7 @@ title: "Cron"
 
 管理 Gateway(网关) 网关 调度器的 cron 作业。
 
-<Tip>运行 `openclaw cron --help` 以查看完整的命令界面。有关概念指南，请参阅 [Cron jobs](/zh/automation/cron-jobs)。</Tip>
+<Tip>运行 `openclaw cron --help` 以查看完整的命令界面。请参阅 [Cron jobs](/zh/automation/cron-jobs) 以获取概念指南。</Tip>
 
 ## 快速创建任务
 
@@ -103,7 +103,7 @@ openclaw cron create "0 18 * * 1-5" \
 
 对于针对本地配置的模型提供商的隔离作业，cron 在启动代理轮次之前会运行轻量级的提供商预检。Loopback、私有网络和 `.local` `api: "ollama"` 提供商在 `/api/tags`OpenAI 处被探测；本地 OpenAI 兼容的提供商（如 vLLM、SGLang 和 LM Studio）在 `/models` 处被探测。如果端点不可达，运行将被记录为 `skipped` 并在稍后的计划中重试；匹配的死端点将被缓存 5 分钟，以避免许多作业冲击同一个本地服务器。
 
-注意：cron 作业定义位于 `jobs.json` 中，而挂起的运行时状态位于 `jobs-state.json` 中。如果 `jobs.json`Gateway(网关) 在外部被编辑，Gateway(网关) 将重新加载已更改的计划并清除过期的挂起槽位；仅格式化的重写不会清除挂起槽位。格式错误的作业行在将其原始内容复制到 `jobs-quarantine.json` 后，会在加载时从活动的 `jobs.json` 中删除。
+注意：Cron 作业、挂起的运行时状态和运行历史存储在共享的 SQLite 状态数据库中。旧的 `jobs.json`、`jobs-state.json` 和 `runs/*.jsonl` 文件将被导入一次并重命名，添加 `.migrated` 后缀。导入后，请使用 `openclaw cron add|edit|remove` 编辑计划，而不是直接编辑 JSON 文件。
 
 ### 手动运行
 
@@ -180,11 +180,11 @@ Cron `--model` 是一个**作业主选项**，而不是聊天会话 `/model` 覆
 保留和修剪在配置中控制：
 
 - `cron.sessionRetention`（默认 `24h`）修剪已完成的隔离运行会话。
-- `cron.runLog.maxBytes` 和 `cron.runLog.keepLines` 修剪 `~/.openclaw/cron/runs/<jobId>.jsonl`。
+- `cron.runLog.keepLines` 会修剪每个作业保留的 SQLite 运行历史记录行。为了保持与基于文件的旧运行日志的兼容性，`cron.runLog.maxBytes` 仍然可被接受。
 
 ## 迁移旧作业
 
-<Note>如果您有来自当前交付和存储格式之前的 cron 作业，请运行 `openclaw doctor --fix`。Doctor 会规范化旧的 cron 字段（`jobId`、`schedule.cron`、包括旧的 `threadId` 在内的顶级交付字段、payload `provider` 交付别名），并在配置了 `cron.webhook` 时将简单的 `notify: true` webhook 回退作业迁移到显式 webhook 交付。</Note>
+<Note>如果您拥有来自当前交付和存储格式之前的 cron 作业，请运行 `openclaw doctor --fix`。Doctor 会规范化旧的 cron 字段（`jobId`、`schedule.cron`，包括旧的 `threadId` 在内的顶级交付字段，payload `provider` 交付别名），并在配置了 `cron.webhook` 时，将简单的 `notify: true` webhook 回退作业迁移为显式 webhook 交付。</Note>
 
 ## 常见编辑
 
@@ -229,7 +229,7 @@ openclaw cron create "0 7 * * *" \
   --no-deliver
 ```
 
-`--light-context` 仅适用于独立的 agent-turn 作业。对于 cron 运行，轻量级模式使启动上下文保持为空，而不是注入完整的工作区启动集。
+`--light-context` 仅适用于隔离的 agent-turn 作业。对于 cron 运行，轻量级模式会将 bootstrap 上下文保持为空，而不是注入完整的工作区 bootstrap 集合。
 
 ## 常见管理员命令
 
@@ -248,11 +248,11 @@ openclaw cron runs --id <job-id> --limit 50
 openclaw cron runs --id <job-id> --run-id <run-id>
 ```
 
-`openclaw cron list` 默认显示所有匹配的作业。传递 `--agent <id>` 以仅显示其有效规范化 agent id 匹配的作业；没有存储 agent id 的作业计入配置的默认 agent。
+`openclaw cron list` 默认显示所有匹配的作业。传递 `--agent <id>` 以仅显示其有效的规范化 agent id 匹配的作业；没有存储 agent id 的作业将计为配置的默认 agent。
 
-`openclaw cron get <job-id>` 直接返回存储的作业 JSON。当您需要包含交付路由预览的人类可读视图时，请使用 `cron show <job-id>`。
+`openclaw cron get <job-id>` 直接返回存储的作业 JSON。当您需要包含交付路由预览的可读视图时，请使用 `cron show <job-id>`。
 
-`cron list --json` 和 `cron show <job-id> --json` 在每个作业上包含一个顶级 `status` 字段，该字段根据 `enabled`、`state.runningAtMs` 和 `state.lastRunStatus` 计算得出。取值：`disabled`、`running`、`ok`、`error`、`skipped` 或 `idle`。这反映了人类可读的状态列，以便外部工具可以读取作业状态而无需重新推导。
+`cron list --json` 和 `cron show <job-id> --json` 在每个作业上包含一个顶层的 `status` 字段，该字段是根据 `enabled`、`state.runningAtMs` 和 `state.lastRunStatus` 计算得出的。值包括：`disabled`、`running`、`ok`、`error`、`skipped` 或 `idle`。这反映了人类可读的状态列，以便外部工具可以读取作业状态而无需重新推导。
 
 `cron runs` 条目包含传送诊断信息，其中包括预期的 cron 目标、解析后的目标、消息工具发送、回退使用情况以及已传送状态。
 
@@ -265,7 +265,7 @@ openclaw cron edit <job-id> --session current
 openclaw cron edit <job-id> --session "session:daily-brief"
 ```
 
-当在代理轮次作业中省略 `--agent` 时，`openclaw cron add` 会发出警告并回退到默认代理 (`main`)。请在创建时传递 `--agent <id>` 以固定特定代理。
+当在代理轮换作业上省略 `--agent` 时，`openclaw cron add` 会发出警告并回退到默认代理（`main`）。在创建时传递 `--agent <id>` 以固定特定代理。
 
 传送调整：
 

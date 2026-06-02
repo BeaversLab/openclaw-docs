@@ -201,7 +201,7 @@ El proveedor Hermes incluido detecta el estado en `~/.hermes` por defecto. Use `
 - Valores predeterminados de configuración de memoria para la memoria de archivos de OpenClaw, además de elementos de archivo o revisión manual para proveedores de memoria externos como Honcho.
 - Habilidades que incluyen un archivo `SKILL.md` bajo `skills/<name>/`.
 - Valores de configuración por habilidad de `skills.config`.
-- Credenciales OAuth compatibles de Hermes `auth.json` y credenciales OAuth de OpenAI de OpenCode desde OpenCode `auth.json` cuando se acepta la migración interactiva de credenciales, o cuando se establece `--include-secrets`.
+- Credenciales OAuth de OpenAI de OpenCode desde OpenCode `auth.json` cuando se acepta la migración interactiva de credenciales, o cuando `--include-secrets` está configurado. Las entradas OAuth de Hermes `auth.json` son un estado heredado informado para la reautenticación manual de OpenAI o la reparación con doctor.
 - Claves de API y tokens compatibles de Hermes `.env` y OpenCode `auth.json` cuando se acepta la migración interactiva de credenciales, o cuando se establece `--include-secrets`.
 
 ### Claves `.env` compatibles

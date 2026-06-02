@@ -12,7 +12,7 @@ title: "Copilot 外掛程式"
 ## 發佈
 
 - 套件：`@openclaw/copilot`
-- 安裝途徑：包含於 OpenClaw 中
+- 安裝途徑：npm；ClawHub：`clawhub:@openclaw/copilot`
 
 ## Surface
 

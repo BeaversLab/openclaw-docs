@@ -331,8 +331,7 @@ EOF
 
 ## 安全二进制文件和审批转发
 
-有关安全二进制文件（仅 stdin 快速路径）、解释器绑定详细信息，以及如何将审批提示转发到 Slack/Discord/Telegram（或将其作为原生审批客户端运行），请参阅
-[Exec approvals - advanced](SlackDiscordTelegram/en/tools/exec-approvals-advanced)。
+有关安全二进制文件（仅 stdin 快速路径）、解释器绑定详细信息，以及如何将审批提示转发到 Slack/Discord/Telegram（或将其作为原生审批客户端运行），请参阅[Exec approvals - advanced](SlackDiscordTelegram/en/tools/exec-approvals-advanced)。
 
 ## 控制 UI 编辑
 
@@ -345,8 +344,7 @@ EOF
 无头节点主机）。如果节点尚未通告 exec 审批，
 请直接编辑其本地 `~/.openclaw/exec-approvals.json`。
 
-CLI：CLI`openclaw approvals`CLI 支持网关或节点编辑 - 请参阅
-[Approvals CLI](/zh/cli/approvals)。
+CLI：CLI`openclaw approvals`CLI 支持 Gateway(网关) 或节点编辑 - 请参阅[Approvals CLI](/zh/cli/approvals)。
 
 ## 审批流程
 
@@ -374,19 +372,19 @@ Exec 生命周期作为系统消息呈现：
 - `Exec running`（仅当命令超过运行通知阈值时）。
 - `Exec finished`。
 
-这些消息在节点报告事件后发布到代理的会话中。被拒绝的 exec 批准是终止性的：OpenClaw 可以向操作员或直接聊天路由报告拒绝情况，但不会将 `Exec denied` 发布回代理会话或唤醒代理工作。Gateway(网关) 托管的 exec 批准在命令完成时（以及可选地在运行时间超过阈值时）会发出相同的生命周期事件。受批准控制的 exec 在这些消息中重用批准 id 作为 `runId`，以便于关联。
+这些内容会在节点报告事件后发布到代理的会话中。被拒绝的 exec 审批对于主机命令本身是终止性的：该命令不会运行。对于具有原始会话的主代理异步审批，OpenClaw 会将拒绝信息作为内部后续消息发布回该会话，以便代理停止等待异步命令并避免缺失结果修复。如果没有会话或会话无法恢复，OpenClaw 仍可以向操作员或直接聊天路由报告简明的拒绝信息。子代理会话的拒绝信息不会发布回子代理。Gateway(网关)主机 exec 审批在命令完成时（以及可选地，当运行时间超过阈值时）发出相同的生命周期事件。受审批限制的 exec 在这些消息中重用审批 ID 作为 OpenClawOpenClawGateway(网关)`runId`，以便于关联。
 
 ## 拒绝批准的行为
 
-当异步 exec 批准被拒绝时，OpenClaw 会将该请求视为终止性请求。它可以向操作员或直接聊天路由显示简明的拒绝信息，但不会通过代理会话发回拒绝指导。这可以防止被拒绝的命令变成另一个模型回合，并阻止代理重用同一命令早期运行的输出。
+当异步 exec 审批被拒绝时，OpenClaw 会将主机命令视为终止性的并进行故障关闭。对于主代理会话，拒绝信息将作为内部会话后续消息传递，告知代理异步命令未运行。这可以在不暴露过时命令输出的情况下保留记录连续性。如果会话传递不可用，只要存在安全路由，OpenClaw 就会退回向操作员或直接聊天发送简明的拒绝信息。
 
 ## 影响
 
-- **`full`** 很强大；请尽可能使用允许列表。
-- **`ask`** 让您随时了解情况，同时仍允许快速批准。
+- **`full`** 功能强大；请尽可能使用允许列表。
+- **`ask`** 让您随时掌握情况，同时仍允许快速审批。
 - 针对每个代理的允许列表可以防止一个代理的批准泄露到其他代理。
-- 批准仅适用于来自**授权发送者**的主机 exec 请求。未经授权的发送者无法发出 `/exec`。
-- `/exec security=full` 是一种为授权操作员设计的会话级便捷功能，旨在跳过批准流程。要彻底阻止主机执行，请将批准安全设置为 `deny` 或通过工具策略拒绝 `exec` 工具。
+- 审批仅适用于来自**授权发送者**的主机 exec 请求。未经授权的发送者无法发布 `/exec`。
+- `/exec security=full` 是为授权操作员提供的会话级便捷功能，按设计会跳过审批。若要彻底阻止主机执行，请将审批安全设置为 `deny` 或通过工具策略拒绝 `exec` 工具。
 
 ## 相关
 

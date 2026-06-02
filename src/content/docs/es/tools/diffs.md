@@ -206,7 +206,7 @@ Los alias comunes como `js`, `ts`, `bash`, `md`, `yml`, `c++`, `dockerfile`, `rb
 Instale el complemento Diff Viewer Language Pack para resaltar otros idiomas:
 
 ```bash
-openclaw plugins install diffs-language-pack
+openclaw plugins install clawhub:@openclaw/diffs-language-pack
 ```
 
 Con el paquete de idioma disponible, OpenClaw lo usa automáticamente para idiomas fuera de la lista predeterminada. Sin él, esos archivos permanecen legibles como texto sin formato.

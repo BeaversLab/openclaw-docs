@@ -16,7 +16,7 @@ Tablero de paneles para incidencias y sesiones propiedad del agente.
 
 ## Superficie
 
-plugin
+contratos: herramientas
 
 ## Documentos relacionados
 

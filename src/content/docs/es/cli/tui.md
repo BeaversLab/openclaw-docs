@@ -14,7 +14,7 @@ Abra la interfaz de usuario de terminal conectada a Gateway, o ejecútela en mod
 
 Relacionado:
 
-- Guía de la TUI: [TUI](/es/web/tui)
+- Guía de TUI: [TUI](/es/web/tui)
 
 ## Opciones
 
@@ -42,6 +42,7 @@ Notas:
 - El modo local usa el runtime del agente integrado directamente. La mayoría de las herramientas locales funcionan, pero las funciones exclusivas del Gateway no están disponibles.
 - El modo local añade `/auth [provider]` dentro de la superficie de comandos de la TUI.
 - Las puertas de aprobación de complementos aún se aplican en modo local. Las herramientas que requieren aprobación solicitan una decisión en la terminal; nada se aprueba automáticamente en silencio porque la Pasarela no está involucrada.
+- Los [objetivos](/es/tools/goal) de la sesión aparecen en el pie de página y se pueden gestionar con `/goal`.
 
 ## Ejemplos
 
@@ -59,11 +60,11 @@ openclaw tui --session bugfix
 ## Bucle de reparación de configuración
 
 Use el modo local cuando la configuración actual ya sea válida y desee que
-el agente integrado la inspeccione, la compare con la documentación y ayude a
+el agente incorporado la inspeccione, la compare con la documentación y ayude a
 repararla desde la misma terminal:
 
 Si `openclaw config validate` ya está fallando, use `openclaw configure` o
-`openclaw doctor --fix` primero. `openclaw chat` no omite el guardián de
+`openclaw doctor --fix` primero. `openclaw chat` no evita la protección de
 configuración no válida.
 
 ```bash
@@ -79,10 +80,11 @@ Luego, dentro de la TUI:
 !openclaw doctor
 ```
 
-Aplique correcciones específicas con `openclaw config set` o `openclaw configure`, y luego
+Aplique soluciones específicas con `openclaw config set` o `openclaw configure`, y luego
 vuelva a ejecutar `openclaw config validate`. Consulte [TUI](/es/web/tui) y [Config](/es/cli/config).
 
 ## Relacionado
 
 - [Referencia de CLI](/es/cli)
 - [TUI](/es/web/tui)
+- [Objetivo](/es/tools/goal)

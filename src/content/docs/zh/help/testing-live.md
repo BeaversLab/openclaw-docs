@@ -8,9 +8,9 @@ title: "测试：实时套件"
 sidebarTitle: "实时测试"
 ---
 
-有关快速入门、QA 运行程序、单元/集成套件和 Docker 流程，请参阅
-[Testing](Docker/en/help/testingCLI)。本页面涵盖 **live**（网络连接）测试
-套件：模型矩阵、CLI 后端、ACP 和媒体提供商实时测试，以及
+有关快速入门、QA 运行程序、单元/集成测试套件和 Docker 流程，请参阅
+[Testing](/zh/help/testing)。本页面介绍 **live**（涉及网络）测试
+套件：模型矩阵、CLI 后端、ACP 和媒体提供商 live 测试，以及
 凭据处理。
 
 ## 实时：本地冒烟命令
@@ -51,7 +51,7 @@ pnpm openclaw voicecall smoke --to "+15555550123"
 - 可选目标覆盖：
   - `OPENCLAW_ANDROID_NODE_ID` 或 `OPENCLAW_ANDROID_NODE_NAME`。
   - `OPENCLAW_ANDROID_GATEWAY_URL` / `OPENCLAW_ANDROID_GATEWAY_TOKEN` / `OPENCLAW_ANDROID_GATEWAY_PASSWORD`。
-- 完整的 Android 设置详细信息：[Android App](AndroidAndroid/en/platforms/android)
+- 完整的 Android 设置详情：[Android App](/zh/platforms/android)
 
 ## 实时：模型冒烟（配置文件密钥）
 
@@ -74,7 +74,7 @@ pnpm openclaw voicecall smoke --to "+15555550123"
   - `OPENCLAW_LIVE_MODELS=modern`GLMMiniMax 运行现代允许列表（Opus/Sonnet 4.6+、GPT-5.2 + Codex、Gemini 3、DeepSeek V4、GLM 4.7、MiniMax M2.7、Grok 4.3）
   - `OPENCLAW_LIVE_MODELS=small`QwenOpenRouterQwenGLMGLM 运行受限的小型模型允许列表（Qwen 8B/9B 本地兼容路由、OpenRouter Qwen/GLM 和 Z.AI GLM）
   - `OPENCLAW_LIVE_MODELS=all` 是现代允许列表的别名
-  - 或 `OPENCLAW_LIVE_MODELS="openai/gpt-5.5,openai-codex/gpt-5.5,anthropic/claude-opus-4-6,..."`（逗号分隔的允许列表）
+  - 或 `OPENCLAW_LIVE_MODELS="openai/gpt-5.5,anthropic/claude-opus-4-6,..."`（逗号允许列表）
   - Modern/all 和 small 扫描默认使用其策划的上限；设置 `OPENCLAW_LIVE_MAX_MODELS=0` 以进行详尽的选择性配置文件扫描，或设置正数以获得更小的上限。
   - 详尽扫描使用 `OPENCLAW_LIVE_TEST_TIMEOUT_MS` 作为整个直接模型测试的超时时间。默认值：60 分钟。
   - 直接模型探针默认以 20 路并行运行；设置 `OPENCLAW_LIVE_MODEL_CONCURRENCY` 以覆盖。
@@ -330,7 +330,7 @@ Docker 说明：
   - `OPENCLAW_LIVE_GATEWAY_MODELS="openai/gpt-5.5" pnpm test:live src/gateway/gateway-models.profiles.live.test.ts`
 
 - 跨多个提供者的工具调用：
-  - `OPENCLAW_LIVE_GATEWAY_MODELS="openai/gpt-5.5,openai-codex/gpt-5.5,anthropic/claude-opus-4-6,google/gemini-3-flash-preview,deepseek/deepseek-v4-flash,zai/glm-5.1,minimax/MiniMax-M2.7" pnpm test:live src/gateway/gateway-models.profiles.live.test.ts`
+  - `OPENCLAW_LIVE_GATEWAY_MODELS="openai/gpt-5.5,anthropic/claude-opus-4-6,google/gemini-3-flash-preview,deepseek/deepseek-v4-flash,zai/glm-5.1,minimax/MiniMax-M2.7" pnpm test:live src/gateway/gateway-models.profiles.live.test.ts`
 
 - Google 侧重（Gemini API 密钥 + Antigravity）：
   - Gemini (API 密钥): API`OPENCLAW_LIVE_GATEWAY_MODELS="google/gemini-3-flash-preview" pnpm test:live src/gateway/gateway-models.profiles.live.test.ts`
@@ -358,7 +358,7 @@ Docker 说明：
 这是我们期望保持正常工作的“通用模型”运行：
 
 - OpenAI（非 Codex）：OpenAI`openai/gpt-5.5`
-- OpenAI Codex OAuth：OpenAIOAuth`openai-codex/gpt-5.5`
+- OpenAI ChatGPT/Codex OAuth：`openai/gpt-5.5`
 - Anthropic：Anthropic`anthropic/claude-opus-4-6`（或 `anthropic/claude-sonnet-4-6`）
 - Google (Gemini API)：API`google/gemini-3.1-pro-preview` 和 `google/gemini-3-flash-preview`（避免较旧的 Gemini 2.x 模型）
 - Google (Antigravity)：`google-antigravity/claude-opus-4-6-thinking` 和 `google-antigravity/gemini-3-flash`
@@ -366,8 +366,8 @@ Docker 说明：
 - Z.AI (GLM)：GLM`zai/glm-5.1`
 - MiniMax：MiniMax`minimax/MiniMax-M2.7`
 
-运行包含工具 + 图像的网关冒烟测试：
-`OPENCLAW_LIVE_GATEWAY_MODELS="openai/gpt-5.5,openai-codex/gpt-5.5,anthropic/claude-opus-4-6,google/gemini-3.1-pro-preview,google/gemini-3-flash-preview,google-antigravity/claude-opus-4-6-thinking,google-antigravity/gemini-3-flash,deepseek/deepseek-v4-flash,zai/glm-5.1,minimax/MiniMax-M2.7" pnpm test:live src/gateway/gateway-models.profiles.live.test.ts`
+运行包含工具和图像的网关 smoketest：
+`OPENCLAW_LIVE_GATEWAY_MODELS="openai/gpt-5.5,anthropic/claude-opus-4-6,google/gemini-3.1-pro-preview,google/gemini-3-flash-preview,google-antigravity/claude-opus-4-6-thinking,google-antigravity/gemini-3-flash,deepseek/deepseek-v4-flash,zai/glm-5.1,minimax/MiniMax-M2.7" pnpm test:live src/gateway/gateway-models.profiles.live.test.ts`
 
 ### 基线：工具调用（Read + 可选 Exec）
 
@@ -400,24 +400,24 @@ If you have keys enabled, we also support testing via:
 
 More providers you can include in the live matrix (if you have creds/config):
 
-- Built-in: `openai`, `openai-codex`, `anthropic`, `google`, `google-vertex`, `google-antigravity`, `google-gemini-cli`, `zai`, `openrouter`, `opencode`, `opencode-go`, `xai`, `groq`, `cerebras`, `mistral`, `github-copilot`
-- Via `models.providers` (custom endpoints): `minimax` (cloud/API), plus any OpenAI/Anthropic-compatible proxy (LM Studio, vLLM, LiteLLM, etc.)
+- 内置：`openai`、`anthropic`、`google`、`google-vertex`、`google-antigravity`、`google-gemini-cli`、`zai`、`openrouter`、`opencode`、`opencode-go`、`xai`、`groq`、`cerebras`、`mistral`、`github-copilot`
+- 通过 `models.providers`（自定义端点）：`minimax`（云/API），以及任何兼容 OpenAI/Anthropic 的代理（LM Studio、vLLM、LiteLLM 等）
 
-<Tip>Do not hardcode "all models" in docs. The authoritative list is whatever `discoverModels(...)` returns on your machine plus whatever keys are available.</Tip>
+<Tip>不要在文档中硬编码“所有模型”。权威列表是指 `discoverModels(...)` 在您的机器上返回的内容以及可用的密钥。</Tip>
 
 ## Credentials (never commit)
 
 Live tests discover credentials the same way the CLI does. Practical implications:
 
 - 如果 CLI 正常工作，实时测试应该能找到相同的密钥。
-- 如果实时测试提示“no creds”（无凭据），请按照调试 `openclaw models list` / 模型选择的方式相同进行调试。
+- 如果 live 测试提示“no creds”（无凭据），请按照调试 `openclaw models list`/模型选择的方式进行调试。
 
-- 每个代理的身份验证配置文件：`~/.openclaw/agents/<agentId>/agent/auth-profiles.json`（这就是实时测试中“profile keys”所指的内容）
+- Per-agent 认证配置文件：`~/.openclaw/agents/<agentId>/agent/auth-profiles.json`（这是“profile keys”在 live 测试中的含义）
 - 配置：`~/.openclaw/openclaw.json`（或 `OPENCLAW_CONFIG_PATH`）
-- 旧版状态目录：`~/.openclaw/credentials/`（如果存在，会复制到暂存的实时主目录中，但不是主要的配置文件密钥存储）
-- 本地实时运行默认会将活动配置、每个代理的 `auth-profiles.json` 文件、旧版 `credentials/`CLI 以及受支持的外部 CLI 身份验证目录复制到一个临时测试主目录中；暂存的实时主目录会跳过 `workspace/` 和 `sandboxes/`，并且 `agents.*.workspace` / `agentDir` 路径覆盖项会被去除，以确保探测操作不会影响您的真实主机工作区。
+- 旧版状态目录：`~/.openclaw/credentials/`（如果存在，会复制到暂存的 live 主目录中，但不是主要的 profile-key 存储位置）
+- Live 本地运行默认会将活动配置、每个代理的 `auth-profiles.json` 文件、旧版 `credentials/`CLI 以及支持的外部 CLI 认证目录复制到临时测试主目录中；预演的 live 主目录会跳过 `workspace/` 和 `sandboxes/`，并且 `agents.*.workspace` / `agentDir` 路径覆盖项会被去除，以便探测器不干扰您真实的主机工作区。
 
-如果您希望依赖环境变量密钥，请在本地测试之前导出它们，或者使用下方的 Docker 运行器并指定明确的 Docker`OPENCLAW_PROFILE_FILE`。
+如果您希望依赖环境变量密钥，请在本地测试之前导出它们，或使用下方的 Docker 运行器并指定显式的 Docker`OPENCLAW_PROFILE_FILE`。
 
 ## Deepgram 实时（音频转录）
 
@@ -428,30 +428,30 @@ Live tests discover credentials the same way the CLI does. Practical implication
 
 - 测试：`extensions/byteplus/live.test.ts`
 - 启用：`BYTEPLUS_API_KEY=... BYTEPLUS_LIVE_TEST=1 pnpm test:live extensions/byteplus/live.test.ts`
-- 可选模型覆盖：`BYTEPLUS_CODING_MODEL=ark-code-latest`
+- 可选的模型覆盖：`BYTEPLUS_CODING_MODEL=ark-code-latest`
 
 ## ComfyUI 工作流媒体实时
 
 - 测试：`extensions/comfy/comfy.live.test.ts`
 - 启用：`OPENCLAW_LIVE_TEST=1 COMFY_LIVE_TEST=1 pnpm test:live -- extensions/comfy/comfy.live.test.ts`
 - 范围：
-  - 测试打包的 comfy 图像、视频和 `music_generate` 路径
-  - 除非配置了 `plugins.entries.comfy.config.<capability>`，否则跳过每个功能
+  - 执行捆绑的 comfy 图像、视频和 `music_generate` 路径
+  - 除非配置了 `plugins.entries.comfy.config.<capability>`，否则跳过每项功能
   - 在更改 comfy 工作流提交、轮询、下载或插件注册后很有用
 
 ## 图像生成实时
 
 - 测试：`test/image-generation.runtime.live.test.ts`
 - 命令：`pnpm test:live test/image-generation.runtime.live.test.ts`
-- 测试框架：`pnpm test:live:media image`
+- 测试线束：`pnpm test:live:media image`
 - 范围：
   - 枚举每个已注册的图像生成提供商插件
   - 在探测之前使用已导出的提供商环境变量
-  - 默认优先使用实时/环境 API 密钥而非存储的身份验证配置文件，因此 API`auth-profiles.json` 中的过时测试密钥不会掩盖真实的 shell 凭证
+  - 默认优先使用实时/环境 API 密钥，而不是存储的认证配置文件，因此 API`auth-profiles.json` 中的陈旧测试密钥不会掩盖真实的 shell 凭据
   - 跳过没有可用身份验证/配置文件/模型的提供商
   - 通过共享的图像生成运行时运行每个配置的提供商：
     - `<provider>:generate`
-    - 当提供商声明支持编辑时运行 `<provider>:edit`
+    - 当提供商声明支持编辑时，`<provider>:edit`
 - 当前涵盖的捆绑提供商：
   - `deepinfra`
   - `fal`
@@ -467,9 +467,9 @@ Live tests discover credentials the same way the CLI does. Practical implication
   - `OPENCLAW_LIVE_IMAGE_GENERATION_MODELS="openai/gpt-image-2,google/gemini-3.1-flash-image-preview,openrouter/google/gemini-3.1-flash-image-preview,xai/grok-imagine-image"`
   - `OPENCLAW_LIVE_IMAGE_GENERATION_CASES="google:flash-generate,google:pro-edit,openrouter:generate,xai:default-generate,xai:default-edit"`
 - 可选身份验证行为：
-  - `OPENCLAW_LIVE_REQUIRE_PROFILE_KEYS=1` 以强制使用配置文件存储的身份验证并忽略仅环境的覆盖
+  - `OPENCLAW_LIVE_REQUIRE_PROFILE_KEYS=1` 以强制使用配置文件存储认证并忽略仅限环境变量的覆盖项
 
-对于已发布的 CLI 路径，在提供商/运行时实时测试通过后添加 CLI`infer` 冒烟测试：
+对于随附的 CLI 路径，在提供商/运行时实时测试通过后，添加 CLI`infer` smoke：
 
 ```bash
 OPENCLAW_LIVE_TEST=1 OPENCLAW_LIVE_INFER_CLI_TEST=1 pnpm test:live -- test/image-generation.infer-cli.live.test.ts
@@ -487,60 +487,60 @@ openclaw infer image generate \
 
 - 测试：`extensions/music-generation-providers.live.test.ts`
 - 启用：`OPENCLAW_LIVE_TEST=1 pnpm test:live -- extensions/music-generation-providers.live.test.ts`
-- 测试框架：`pnpm test:live:media music`
+- 测试线束：`pnpm test:live:media music`
 - 范围：
   - 演练共享的捆绑音乐生成提供商路径
   - 目前涵盖 Google 和 MiniMax
   - 在探测之前使用已导出的提供商环境变量
-  - 默认优先使用实时/环境 API 密钥而非存储的身份验证配置文件，因此 API`auth-profiles.json` 中的过时测试密钥不会掩盖真实的 shell 凭证
+  - 默认优先使用实时/环境 API 密钥而非存储的身份验证配置文件，因此 `auth-profiles.json` 中的过时测试密钥不会掩盖真实的 Shell 凭证
   - 跳过没有可用身份验证/配置文件/模型的提供商
   - 在可用时运行两种声明的运行时模式：
-    - 仅提示词输入时运行 `generate`
-    - 当提供商声明 `capabilities.edit.enabled` 时运行 `edit`
+    - `generate` 使用仅提示词输入
+    - 当提供商声明 `capabilities.edit.enabled` 时，运行 `edit`
   - 当前共享通道覆盖率：
-    - `google`: `generate`, `edit`
-    - `minimax`: `generate`
-    - `comfy`: 独立的 Comfy live 文件，而非此共享扫描
+    - `google`：`generate`，`edit`
+    - `minimax`：`generate`
+    - `comfy`：单独的 Comfy 实时文件，而非此共享扫描
 - 可选缩小范围：
   - `OPENCLAW_LIVE_MUSIC_GENERATION_PROVIDERS="google,minimax"`
   - `OPENCLAW_LIVE_MUSIC_GENERATION_MODELS="google/lyria-3-clip-preview,minimax/music-2.6"`
 - 可选认证行为：
-  - `OPENCLAW_LIVE_REQUIRE_PROFILE_KEYS=1` 以强制 profile-store 认证并忽略仅环境变量的覆盖
+  - `OPENCLAW_LIVE_REQUIRE_PROFILE_KEYS=1` 以强制使用配置文件存储的身份验证并忽略仅环境的覆盖设置
 
 ## 视频生成实时测试
 
 - 测试：`extensions/video-generation-providers.live.test.ts`
 - 启用：`OPENCLAW_LIVE_TEST=1 pnpm test:live -- extensions/video-generation-providers.live.test.ts`
-- 测试工具：`pnpm test:live:media video`
+- 测试线束：`pnpm test:live:media video`
 - 范围：
   - 执行共享的捆绑视频生成提供商路径
-  - 默认为发布安全的冒烟路径：非 FAL 提供商，每个提供商一个文本生成视频请求，一秒的龙虾提示词，以及来自 `OPENCLAW_LIVE_VIDEO_GENERATION_TIMEOUT_MS` 的每个提供商的操作上限（默认为 `180000`）
+  - 默认采用发布安全的冒烟路径：非 FAL 提供商，每个提供商一个文本生成视频请求，一秒龙虾提示词，以及来自 `OPENCLAW_LIVE_VIDEO_GENERATION_TIMEOUT_MS` 的每个提供商操作上限（默认为 `180000`）
   - 默认跳过 FAL，因为提供商端的队列延迟可能会主导发布时间；传递 `--video-providers fal` 或 `OPENCLAW_LIVE_VIDEO_GENERATION_PROVIDERS="fal"` 以显式运行它
   - 在探测之前使用已导出的提供商环境变量
-  - 默认优先使用实时/环境 API 密钥而非存储的认证配置文件，因此 API`auth-profiles.json` 中的陈旧测试密钥不会掩盖真实的 shell 凭据
+  - 默认优先使用实时/环境 API 密钥而非存储的身份验证配置文件，因此 `auth-profiles.json` 中的过时测试密钥不会掩盖真实的 Shell 凭证
   - 跳过没有可用认证/配置文件/模型的提供商
   - 默认仅运行 `generate`
-  - 设置 `OPENCLAW_LIVE_VIDEO_GENERATION_FULL_MODES=1` 以在可用时同时运行声明的转换模式：
+  - 设置 `OPENCLAW_LIVE_VIDEO_GENERATION_FULL_MODES=1` 也可在可用时运行声明的转换模式：
     - 当提供商声明 `capabilities.imageToVideo.enabled` 且所选提供商/模型在共享扫描中接受缓冲区支持的本地图像输入时，运行 `imageToVideo`
     - 当提供商声明 `capabilities.videoToVideo.enabled` 且所选提供商/模型在共享扫描中接受缓冲区支持的本地视频输入时，运行 `videoToVideo`
-  - 当前已声明但跳过的共享扫描中的 `imageToVideo` 提供商：
-    - `vydra` 因为捆绑的 `veo3` 仅支持文本，且捆绑的 `kling` 需要远程图像 URL
+  - 共享扫描中当前已声明但跳过的 `imageToVideo` 提供商：
+    - `vydra` 因为捆绑的 `veo3` 仅支持文本，而捆绑的 `kling` 需要远程图片 URL
   - 特定于提供商的 Vydra 覆盖范围：
     - `OPENCLAW_LIVE_TEST=1 OPENCLAW_LIVE_VYDRA_VIDEO=1 pnpm test:live -- extensions/vydra/vydra.live.test.ts`
-    - 该文件运行 `veo3` 文本生成视频以及一个默认使用远程图像 URL 固定装置的 `kling` 车道
-  - 当前 `videoToVideo` 实时覆盖范围：
-    - 仅当所选模型为 `runway/gen4_aleph` 时 `runway`
+    - 该文件运行 `veo3` 文本生成视频，以及默认使用远程图片 URL 固定装置的 `kling` 通道
+  - 当前的 `videoToVideo` 实时覆盖率：
+    - `runway` 仅当所选模型为 `runway/gen4_aleph` 时
   - 共享扫描中当前已声明但跳过的 `videoToVideo` 提供商：
-    - `alibaba`、`qwen`、`xai`，因为这些路径当前需要远程 `http(s)` / MP4 参考 URL
-    - `google`，因为当前共享的 Gemini/Veo 车道使用本地缓冲区支持的输入，而该路径在共享扫描中不被接受
-    - `openai`，因为当前共享车道缺少特定于组织的视频编辑访问权限保证
+    - `alibaba`、`qwen`、`xai`，因为这些路径当前需要远程 `http(s)` / MP4 引用 URL
+    - `google`，因为当前的共享 Gemini/Veo 通道使用本地缓冲区支持的输入，而该路径在共享扫描中不被接受
+    - `openai`，因为当前的共享通道缺少特定于组织的视频编辑访问权限保证
 - 可选范围缩小：
   - `OPENCLAW_LIVE_VIDEO_GENERATION_PROVIDERS="deepinfra,google,openai,runway"`
   - `OPENCLAW_LIVE_VIDEO_GENERATION_MODELS="google/veo-3.1-fast-generate-preview,openai/sora-2,runway/gen4_aleph"`
-  - `OPENCLAW_LIVE_VIDEO_GENERATION_SKIP_PROVIDERS=""` 以包括默认扫描中的每个提供商，包括 FAL
-  - `OPENCLAW_LIVE_VIDEO_GENERATION_TIMEOUT_MS=60000` 以减少每个提供商的操作上限，从而进行激进的冒烟测试运行
+  - `OPENCLAW_LIVE_VIDEO_GENERATION_SKIP_PROVIDERS=""` 以将每个提供商（包括 FAL）都包含在默认扫描中
+  - `OPENCLAW_LIVE_VIDEO_GENERATION_TIMEOUT_MS=60000` 以降低每个提供商的操作上限，从而进行激进的冒烟测试运行
 - 可选身份验证行为：
-  - `OPENCLAW_LIVE_REQUIRE_PROFILE_KEYS=1` 以强制配置文件存储身份验证并忽略仅环境的覆盖设置
+  - `OPENCLAW_LIVE_REQUIRE_PROFILE_KEYS=1` 以强制执行配置文件存储身份验证并忽略仅限环境的覆盖
 
 ## 媒体实时测试工具
 
@@ -549,7 +549,7 @@ openclaw infer image generate \
   - 通过一个仓库原生入口点运行共享的图像、音乐和视频实时测试套件
   - 使用已导出的提供商环境变量
   - 默认情况下将每个套件自动缩小到当前具有可用身份验证的提供商
-  - 重用 `scripts/test-live.mjs`，因此心跳和静默模式行为保持一致
+  - 复用 `scripts/test-live.mjs`，因此心跳和静默模式行为保持一致
 - 示例：
   - `pnpm test:live:media`
   - `pnpm test:live:media image video --providers openai,google,minimax`
@@ -558,4 +558,4 @@ openclaw infer image generate \
 
 ## 相关
 
-- [Testing](/zh/help/testing) - 单元、集成、QA 和 Docker 套件
+- [测试](/zh/help/testing) - 单元测试、集成测试、QA 和 Docker 套件

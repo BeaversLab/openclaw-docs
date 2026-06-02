@@ -126,7 +126,7 @@ Focus on model runs, image generation, video generation, audio transcription, TT
 - 使用 `model run --thinking <level>` 傳遞一次性思考/推理層級 (`off`、`minimal`、`low`、`medium`、`high`、`adaptive`、`xhigh` 或 `max`)，同時保持執行原始狀態。
 - 對於 `image describe`、`audio transcribe` 和 `video describe`，`--model` 必須使用 `<provider/model>` 格式。
 - 對於 `image describe`，`--file` 接受本地路徑和 HTTP(S) 圖片 URL。遠端 URL 使用正常的媒體擷取 SSRF 原則。
-- 對於 `image describe`，明確的 `--model` 會直接執行該提供者/模型。該模型在模型目錄或提供者設定中必須具備圖片處理能力。`codex/<model>` 執行受限的 Codex 應用伺服器圖片理解輪次；`openai-codex/<model>` 則使用 OpenAI Codex OAuth 提供者路徑。
+- 對於 `image describe`，顯式的 `--model` 會直接執行該提供者/模型。該模型在模型目錄或提供者設定中必須具備映像處理能力。`codex/<model>` 執行有界的 Codex 應用程式伺服器映像理解輪次；`openai/<model>` 使用 OpenAI 提供者路徑，支援 API 金鑰或 ChatGPT/Codex OAuth 驗證。
 - 無狀態執行指令預設為本地。
 - 閘道管理的狀態指令預設為閘道。
 - 正常的本地路徑不需要閘道在執行中。
@@ -169,13 +169,13 @@ openclaw infer model run --local --model ollama/qwen2.5vl:7b --prompt "Describe 
 - 本機 `model run` 是針對提供商/模型/身份驗證健康狀況最狹窄的 CLI 煙霧測試，因為對於非 Codex 提供商，它僅將提供的提示傳送至選定的模型。
 - 本機 `model run --model <provider/model>` 可以在將該提供商寫入設定之前，使用來自 `models list --all` 的精確捆綁靜態目錄列。仍需要提供商身份驗證；缺少憑證會因為身份驗證錯誤而失敗，而非 `Unknown model`。
 - 針對 Mistral Medium 3.5 推理探測，請保持溫度為未設定/預設值。Mistral 會拒絕 `reasoning_effort="high"` 加上 `temperature: 0`；請搭配預設溫度或非零推理模式值（例如 `0.7`）來使用 `mistral/mistral-medium-3-5`。
-- `openai-codex/*` 本機探測是狹窄的例外：OpenClaw 會加入最少的系統指令，以便 Codex Responses 傳輸可以填入其所需的 `instructions` 欄位，而不會加入完整的代理情境、工具、記憶體或會話紀錄。
-- 本機 `model run --file` 會保持這條精簡路徑，並將圖片內容直接附加至單一使用者訊息。當 MIME 類型被偵測為 `image/*` 時，PNG、JPEG 和 WebP 等常見圖片檔案即可運作；不支援或無法辨識的檔案會在呼叫提供商之前失敗。
-- 當您想要直接測試選定的多模態文字模型時，`model run --file` 是最佳選擇。當您想要 OpenClaw 的圖片理解提供商選取和預設圖片模型路由時，請使用 `infer image describe`。
+- Codex Responses 本地探測是狹窄的例外情況：OpenClaw 會加入最小的系統指令，以便傳輸層能填入其所需的 `instructions` 欄位，而不加入完整的 Agent 上下文、工具、記憶體或會話紀錄。
+- 本地 `model run --file` 保持這條精簡路徑，並將映像內容直接附加到單一使用者訊息。常見的映像檔案（如 PNG、JPEG 和 WebP）在其 MIME 類型被偵測為 `image/*` 時即可運作；不支援或無法辨識的檔案會在呼叫提供者之前失敗。
+- 當您想要直接測試選取的多模態文字模型時，`model run --file` 是最佳選擇。當您需要 OpenClaw 的映像理解提供者選取和預設映像模型路由時，請使用 `infer image describe`。
 - 選定的模型必須支援圖片輸入；僅限文字的模型可能會在提供商層級拒絕該請求。
-- `model run --prompt` 必須包含非空白字元；空白提示會在呼叫本機提供商或 Gateway 之前被拒絕。
-- 當提供商未傳回文字輸出時，本機 `model run` 會以非零值退出，因此無法連線的本機提供商和空白完成不會看起來像成功的探測。
-- 當您需要測試 Gateway 路由、agent-runtime 設定或 Gateway 管理的提供者狀態，同時保持模型輸入為原始內容時，請使用 `model run --gateway`。當您需要完整的 agent 上下文、工具、記憶和會話紀錄時，請使用 `openclaw agent` 或聊天介面。
+- `model run --prompt` 必須包含非空白字元的文字；空白提示會在呼叫本地提供者或 Gateway 之前被拒絕。
+- 當提供者未傳回文字輸出時，本地 `model run` 會以非零狀態碼結束，因此無法連線的本地提供者和空白的完成結果不會看起來像是成功的探測。
+- 當您需要測試 Gateway 路由、Agent 執行時間設定，或 Gateway 管理的提供者狀態，同時保持模型輸入為原始狀態時，請使用 `model run --gateway`。當您需要完整的 Agent 上下文、工具、記憶體和會話紀錄時，請使用 `openclaw agent` 或聊天介面。
 - `model auth login`、`model auth logout` 和 `model auth status` 管理已儲存的提供者驗證狀態。
 
 ## 圖片
@@ -200,14 +200,15 @@ openclaw infer image describe --file ./photo.jpg --model ollama/qwen2.5vl:7b --p
 備註：
 
 - 從現有輸入檔案開始時，請使用 `image edit`。
-- 針對支援參考圖片編輯幾何提示的提供者/模型，請將 `--size`、`--aspect-ratio` 或 `--resolution` 與 `image edit` 搭配使用。
-- 搭配使用 `--output-format png --background transparent` 與
-  `--model openai/gpt-image-1.5` 以取得透明背景的 OpenAI PNG 輸出；
-  `--openai-background` 仍可作為 OpenAI 專用的別名。未宣告背景支援的提供者會將該提示回報為已忽略的覆寫。
-- 使用 `image providers --json` 來驗證哪些內建的圖片提供者
-  是可探索的、已設定的、已選取的，以及每個提供者公開了哪些生成/編輯功能。
-- 使用 `image generate --model <provider/model> --json` 作為圖片生成變更
-  最狹隘的即時 CLI 測試。範例：
+- 使用 `--size`、`--aspect-ratio` 或 `--resolution` 搭配 `image edit`，以用於
+  支援參考影像編輯幾何提示的提供者/模型。
+- 搭配 `--model openai/gpt-image-1.5` 使用 `--output-format png --background transparent` 以取得透明背景的 OpenAI PNG 輸出；
+  `--openai-background` 仍可作為 OpenAI 專用的別名使用。未宣告支援背景功能的提供者
+  會將該提示回報為已忽略的覆寫值。
+- 使用 `image providers --json` 來驗證哪些內建影像提供者是
+  可探索、已設定、已選取，以及各提供者公開了哪些生成/編輯功能。
+- 使用 `image generate --model <provider/model> --json` 作為針對影像生成變更
+  最精簡的即時 CLI 冒煙測試。範例：
 
   ```bash
   openclaw infer image providers --json
@@ -222,9 +223,9 @@ openclaw infer image describe --file ./photo.jpg --model ollama/qwen2.5vl:7b --p
   的輸出路徑。當設定 `--output` 時，最終副檔名可能會遵循
   提供者傳回的 MIME 類型。
 
-- 對於 `image describe` 和 `image describe-many`，請使用 `--prompt` 為視覺模型提供特定任務的指令，例如 OCR、比較、UI 檢查或簡潔的標題生成。
-- 搭配緩慢的本機視覺模型或冷啟動的 Ollama 使用 `--timeout-ms`。
-- 對於 `image describe`，`--model` 必須是具備圖片功能的 `<provider/model>`。
+- 對於 `image describe` 和 `image describe-many`，請使用 `--prompt` 為視覺模型提供特定任務的指令，例如 OCR、比較、UI 檢查或簡潔的圖說。
+- 將 `--timeout-ms` 用於緩慢的本機視覺模型或冷啟動的 Ollama。
+- 對於 `image describe`，`--model` 必須是具備影像功能的 `<provider/model>`。
 - 對於本機 Ollama 視覺模型，請先下載模型並將 `OLLAMA_API_KEY` 設定為任何預留位置值，例如 `ollama-local`。請參閱 [Ollama](/zh-Hant/providers/ollama#vision-and-image-description)。
 
 ## 音訊
@@ -239,12 +240,12 @@ openclaw infer audio transcribe --file ./memo.m4a --model openai/whisper-1 --jso
 
 備註：
 
-- `audio transcribe` 是用於檔案轉錄，而非即時會話管理。
-- `--model` 必須為 `<provider/model>`。
+- `audio transcribe` 用於檔案轉錄，而非即時工作階段管理。
+- `--model` 必須是 `<provider/model>`。
 
 ## TTS
 
-使用 `tts` 進行語音合成和 TTS 提供者狀態管理。
+使用 `tts` 進行語音合成和 TTS 提供者狀態查詢。
 
 ```bash
 openclaw infer tts convert --text "hello from openclaw" --output ./hello.mp3 --json
@@ -255,7 +256,7 @@ openclaw infer tts status --json
 
 備註：
 
-- `tts status` 預設為 gateway，因為它反映了由 gateway 管理的 TTS 狀態。
+- `tts status` 預設為 gateway，因為它反映的是 gateway 管理的 TTS 狀態。
 - 使用 `tts providers`、`tts voices` 和 `tts set-provider` 來檢查和設定 TTS 行為。
 
 ## 影片
@@ -271,8 +272,8 @@ openclaw infer video describe --file ./clip.mp4 --model openai/gpt-5.4-mini --js
 
 備註：
 
-- `video generate` 接受 `--size`、`--aspect-ratio`、`--resolution`、`--duration`、`--audio`、`--watermark` 和 `--timeout-ms`，並將其轉發至影片生成執行時。
-- 對於 `video describe`，`--model` 必須為 `<provider/model>`。
+- `video generate` 接受 `--size`、`--aspect-ratio`、`--resolution`、`--duration`、`--audio`、`--watermark` 和 `--timeout-ms`，並將它們轉發至視訊生成執行環境。
+- `--model` 對於 `video describe` 必須是 `<provider/model>`。
 
 ## 網頁
 
@@ -326,9 +327,9 @@ Infer 指令會將 JSON 輸出正規化為共享的封裝格式：
 - `outputs`
 - `error`
 
-對於生成的媒體命令，`outputs` 包含由 OpenClaw 寫入的檔案。請使用
-該陣列中的 `path`、`mimeType`、`size` 以及任何媒體特定維度來進行自動化，
-而不是解析人類可讀的標準輸出。
+對於產生的媒體指令，`outputs` 包含由 OpenClaw 寫入的檔案。請使用
+該陣列中的 `path`、`mimeType`、`size` 和任何媒體特定維度
+來進行自動化，而不是解析可讀的標準輸出。
 
 ## 常見陷阱
 

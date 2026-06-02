@@ -110,14 +110,15 @@ openclaw plugins list
 }
 ```
 
-OpenAI Codex / ChatGPT OAuth (OpenAIOAuth`openai-codex`OpenAIOpenAIOpenAIAPI) 不是 OpenAI Platform
-embeddings 凭证。对于 OpenAI embeddings，请使用 OpenAI API 密钥身份验证配置文件，
-`OPENAI_API_KEY` 或 `models.providers.openai.apiKey`OAuthGitHubOllama。仅使用 OAuth 的用户可以使用
-其他支持 embeddings 的提供商，例如 GitHub Copilot 或 Ollama。
+OpenAI Codex / ChatGPT OAuth 不是 OpenAI Platform 嵌入式凭据。
+对于 OpenAI 嵌入式，请使用 OpenAI API 密钥身份验证配置文件，
+OpenAIOAuthOpenAIOpenAIOpenAIAPI`OPENAI_API_KEY` 或 `models.providers.openai.apiKey`OAuthGitHubOllama。仅使用 OAuth 的用户可以使用
+其他支持嵌入的提供商，例如 GitHub Copilot 或 Ollama。
 
 ## Ollama embeddings
 
-对于 Ollama 嵌入，首选捆绑的 Ollama 嵌入提供商。它使用原生的 Ollama `/api/embed` 端点，并遵循与 [Ollama](/zh/providers/ollama) 文档中记录的 Ollama 提供商相同的认证/基础 URL 规则。
+对于 Ollama 嵌入式，建议使用捆绑的 Ollama 嵌入式提供商。它使用
+本机 Ollama OllamaOllamaOllama`/api/embed`OllamaOllama 端点，并遵循与 [Ollama](/zh/providers/ollama) 中记录的 Ollama 提供商相同的身份验证/基本 URL 规则。
 
 ```json5
 {
@@ -145,25 +146,25 @@ embeddings 凭证。对于 OpenAI embeddings，请使用 OpenAI API 密钥身份
 }
 ```
 
-对于非标准 embedding 模型，请设置 `dimensions`OpenClaw。OpenClaw 知道
-`text-embedding-3-small` 和 `text-embedding-3-large` 的维度；
-自定义模型需要在配置中提供该值，以便 LanceDB 可以创建向量列。
+为非标准嵌入模型设置 `dimensions`OpenClaw。OpenClaw 知道
+`text-embedding-3-small` 和 `text-embedding-3-large` 的维度；自定义
+模型需要在配置中提供该值，以便 LanceDB 可以创建向量列。
 
-对于小型本地 embedding 模型，如果您从本地服务器看到上下文
+对于小型本地嵌入模型，如果您从本地服务器看到上下文
 长度错误，请降低 `recallMaxChars`。
 
 ## OpenAI-compatible providers
 
-某些 OpenAI-compatible embedding 提供商会拒绝 OpenAI`encoding_format`
-参数，而其他提供商会忽略它并始终返回 `number[]` 向量。
-因此，`memory-lancedb` 会在 embedding 请求中省略 `encoding_format`，
-并接受浮点数组响应或 base64 编码的 float32 响应。
+一些 OpenAI 兼容的嵌入提供商拒绝 OpenAI`encoding_format`
+参数，而其他提供商则忽略它并始终返回 `number[]` 向量。
+因此，`memory-lancedb` 在嵌入请求中省略 `encoding_format` 并
+接受浮点数组响应或 base64 编码的 float32 响应。
 
-如果您有一个没有捆绑提供商适配器的原始 OpenAI-compatible embeddings 端点，请省略 OpenAI`embedding.provider`（或将其保留为 `openai`）并
-设置 `embedding.apiKey` 加上 `embedding.baseUrl`OpenAI。这保留了直接
-的 OpenAI-compatible 客户端路径。
+如果您有一个没有捆绑提供商适配器的原始 OpenAI 兼容嵌入端点，请省略 OpenAI`embedding.provider`（或将其保留为 `openai`） 并
+设置 `embedding.apiKey` 加上 `embedding.baseUrl`OpenAI。这保留了直接的
+OpenAI 兼容客户端路径。
 
-针对模型维度未内置的提供商，请设置 `embedding.dimensions`。例如，ZhiPu `embedding-3` 使用 `2048` 维度：
+对于内置维度信息的提供商，请设置 `embedding.dimensions`。例如，智谱 `embedding-3` 使用 `2048` 维度：
 
 ```json5
 {
@@ -195,15 +196,15 @@ embeddings 凭证。对于 OpenAI embeddings，请使用 OpenAI API 密钥身份
 | `captureMaxChars` | `500`  | 100-10000 | 符合自动捕获条件的消息长度   |
 | `customTriggers`  | `[]`   | 0-50      | 使自动捕获考虑消息的字面短语 |
 
-`recallMaxChars` 控制自动召回、`memory_recall` 工具、`memory_forget` 查询路径和 `openclaw ltm search`。自动召回优先使用来自本轮的最新用户消息，仅在没有可用用户消息时才回退到完整提示。这可以将渠道元数据和大型提示块排除在嵌入请求之外。
+`recallMaxChars` 控制自动回忆、`memory_recall` 工具、`memory_forget` 查询路径以及 `openclaw ltm search`。自动回忆优先使用对话轮次中的最新用户消息，仅在没有可用用户消息时才回退到完整提示词。这可以将渠道元数据和大段提示词排除在嵌入请求之外。
 
-`captureMaxChars` 控制响应是否足够短以被考虑进行自动捕获。它不限制召回查询嵌入。
+`captureMaxChars` 控制响应是否足够短以被考虑进行自动捕获。它不会限制回忆查询的嵌入。
 
-`customTriggers` 允许您添加字面自动捕获短语，而无需编写正则表达式。内置触发器包括常见的英语、捷克语、中文、日语和韩语记忆短语。
+`customTriggers` 允许您添加字面意义的自动捕获短语，而无需编写正则表达式。内置触发器包括常见的英语、捷克语、中文、日语和韩语记忆短语。
 
 ## 命令
 
-当 `memory-lancedb` 是活动内存插件时，它会注册 `ltm` CLI 命名空间：
+当 `memory-lancedb` 是活动的内存插件时，它会注册 `ltm` CLI 命名空间：
 
 ```bash
 openclaw ltm list
@@ -211,27 +212,27 @@ openclaw ltm search "project preferences"
 openclaw ltm stats
 ```
 
-`query` 子命令直接对 LanceDB 表运行非向量查询：
+`query` 子命令直接针对 LanceDB 表运行非向量查询：
 
 ```bash
 openclaw ltm query --cols id,text,createdAt --limit 20
 openclaw ltm query --filter "category = 'preference'" --order-by createdAt:desc
 ```
 
-- `--cols <columns>`：逗号分隔的列白名单（默认为 `id`、`text`、`importance`、`category`、`createdAt`）。
-- `--filter <condition>`：SQL 风格的 WHERE 子句；最多 200 个字符，并限制为字母数字、比较运算符、引号、括号和一小部分安全标点符号。
+- `--cols <columns>`：逗号分隔的列允许列表（默认为 `id`、`text`、`importance`、`category`、`createdAt`）。
+- `--filter <condition>`：SQL 风格的 WHERE 子句；上限为 200 个字符，并限制为字母数字、比较运算符、引号、括号和一小部分安全标点符号。
 - `--limit <n>`：正整数；默认为 `10`。
-- `--order-by <column>:<asc|desc>`：在过滤器之后应用的内存排序；排序列会自动包含在投影中。
+- `--order-by <column>:<asc|desc>`：在筛选器之后应用的内存排序；排序列会自动包含在投影中。
 
 代理还可以从活动的内存插件获取 LanceDB 记忆工具：
 
-- 用于 LanceDB 支持的召回的 `memory_recall`
-- 用于保存重要事实、偏好、决策和实体的 `memory_store`
-- 用于删除匹配记忆的 `memory_forget`
+- 用于基于 LanceDB 回忆的 `memory_recall`
+- `memory_store` 用于保存重要事实、偏好、决策和实体
+- `memory_forget` 用于删除匹配的记忆
 
 ## 存储
 
-默认情况下，LanceDB 数据位于 `~/.openclaw/memory/lancedb` 下。使用 `dbPath` 覆盖路径：
+默认情况下，LanceDB 数据位于 `~/.openclaw/memory/lancedb` 之下。使用 `dbPath` 覆盖该路径：
 
 ```json5
 {
@@ -252,7 +253,7 @@ openclaw ltm query --filter "category = 'preference'" --order-by createdAt:desc
 }
 ```
 
-`storageOptions` 接受 LanceDB 存储后端的字符串键/值对，并支持 `${ENV_VAR}` 扩展：
+`storageOptions` 接受用于 LanceDB 存储后端的字符串键/值对，并支持 `${ENV_VAR}` 扩展：
 
 ```json5
 {
@@ -280,15 +281,11 @@ openclaw ltm query --filter "category = 'preference'" --order-by createdAt:desc
 
 ## 运行时依赖
 
-`memory-lancedb` 依赖于原生的 `@lancedb/lancedb` 包。打包的 OpenClaw 将该包视为插件包的一部分。Gateway(网关) 启动不会修复插件依赖关系；如果缺少依赖项，请重新安装或更新插件包并重新启动 Gateway(网关)。
+`memory-lancedb` 依赖于原生的 `@lancedb/lancedb` 包。打包的 OpenClaw 将该包视为插件包的一部分。Gateway(网关) 启动不会修复插件依赖；如果依赖丢失，请重新安装或更新插件包并重启 Gateway(网关)。
 
-如果旧版本安装记录了缺少 `dist/package.json` 或缺少
-`@lancedb/lancedb` 的错误，请在插件加载期间升级 OpenClaw 并重启
-Gateway(网关)。
+如果旧版安装在插件加载期间记录了缺少 `dist/package.json` 或缺少 `@lancedb/lancedb` 错误，请升级 OpenClaw 并重启 Gateway(网关)。
 
-如果插件记录显示 LanceDB 在 `darwin-x64` 上不可用，请使用该机器上的默认
-内存后端，将 Gateway(网关) 移动到受支持的平台，或
-禁用 `memory-lancedb`。
+如果插件记录显示 LanceDB 在 `darwin-x64` 上不可用，请在该计算机上使用默认内存后端，将 Gateway(网关) 移动到受支持的平台，或禁用 `memory-lancedb`。
 
 ## 故障排除
 
@@ -326,9 +323,7 @@ curl http://127.0.0.1:11434/v1/embeddings \
 
 ### 不支持的嵌入模型
 
-如果没有 `dimensions`，仅已知内置 OpenAI 嵌入维度。
-对于本地或自定义嵌入模型，请将 `embedding.dimensions` 设置为
-该模型报告的向量大小。
+如果没有 `dimensions`，则仅知道内置的 OpenAI 嵌入维度。对于本地或自定义嵌入模型，请将 `embedding.dimensions` 设置为该模型报告的向量大小。
 
 ### 插件已加载但未显示任何记忆
 
@@ -339,14 +334,12 @@ openclaw ltm stats
 openclaw ltm search "recent preference"
 ```
 
-如果 `autoCapture` 被禁用，插件将检索现有记忆，但
-不会自动存储新记忆。请使用 `memory_store` 工具或启用
-`autoCapture` 如果您想要自动捕获。
+如果禁用了 `autoCapture`，插件将检索现有记忆，但不会自动存储新记忆。如果您想要自动捕获，请使用 `memory_store` 工具或启用 `autoCapture`。
 
 ## 相关
 
-- [Memory overview](/zh/concepts/memory)
-- [Active memory](/zh/concepts/active-memory)
-- [Memory search](/zh/concepts/memory-search)
+- [Memory 概述](/zh/concepts/memory)
+- [活动记忆](/zh/concepts/active-memory)
+- [Memory 搜索](/zh/concepts/memory-search)
 - [Memory Wiki](/zh/plugins/memory-wiki)
 - [Ollama](/zh/providers/ollama)

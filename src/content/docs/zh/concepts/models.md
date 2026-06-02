@@ -23,7 +23,7 @@ sidebarTitle: "CLI模型 CLI"
   </Card>
 </CardGroup>
 
-模型引用会选择提供商和模型。它们通常不选择底层代理运行时。OpenAI 代理引用是主要的例外：默认情况下，OpenAI`openai/gpt-5.5`OpenAI 在官方 OpenAI 提供商上通过 Codex 应用服务器运行时运行。订阅版 Copilot 引用（`github-copilot/*`GitHub）还可以选择加入捆绑的 GitHub Copilot 代理运行时——该路径保持显式（无 `auto` 回退）。显式运行时覆盖属于提供商/模型策略，而不属于整个代理或会话。在 Codex 运行时模式下，`openai/gpt-*`API 引用并不暗示 API 密钥计费；身份验证可以来自 Codex 账户或 `openai-codex` 身份验证配置文件。请参阅[代理运行时](/zh/concepts/agent-runtimesGitHub)和[GitHub Copilot 代理运行时](/zh/plugins/copilot)。
+模型引用选择提供商和模型。它们通常不选择底层的代理运行时。OpenAI 代理引用是主要的例外：`openai/gpt-5.5` 在官方 OpenAI 提供商上默认通过 Codex 应用服务器运行时运行。订阅版 Copilot 引用（`github-copilot/*`）还可以选择加入外部 GitHub Copilot 代理运行时插件 —— 该路径保持显式（没有 `auto` 回退）。显式的运行时覆盖属于提供商/模型策略，而不属于整个代理或会话。在 Codex 运行时模式下，`openai/gpt-*` 引用并不意味着 API 密钥计费；身份验证可以来自 Codex 账户或 `openai` OAuth 配置文件。请参阅[代理运行时](/zh/concepts/agent-runtimes)和[GitHub Copilot 代理运行时](/zh/plugins/copilot)。
 
 ## 模型选择如何工作
 
@@ -143,7 +143,7 @@ Add it with: openclaw config set agents.defaults.models '{"provider/model":{}}' 
   agents: {
     defaults: {
       models: {
-        "openai-codex/*": {},
+        "openai/*": {},
         "vllm/*": {},
       },
     },

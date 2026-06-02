@@ -44,7 +44,7 @@ Para reducir eso, OpenClaw trata `auth-profiles.json` como un **sumidero de toke
 
 - el tiempo de ejecución lee las credenciales de **un solo lugar**
 - podemos mantener múltiples perfiles y enrutarlos de manera determinista
-- la reutilización de la CLI externa es específica del proveedor: la CLI de Codex puede arrancar un perfil `openai-codex:default` vacío, pero una vez que OpenClaw tiene un perfil OAuth local, el token de actualización local es canónico. Si ese token de actualización local es rechazado, OpenClaw puede usar un token utilizable de la CLI de Codex de la misma cuenta como alternativa solo en tiempo de ejecución; otras integraciones pueden permanecer gestionadas externamente y releer su almacén de autenticación de la CLI
+- el reúso de CLI externo es específico del proveedor: Codex CLI puede iniciar un perfil `openai:default` vacío, pero una vez que OpenClaw tiene un perfil OAuth local, el token de actualización local es canónico. Si ese token de actualización local es rechazado, OpenClaw puede usar un token CLI de Codex de la misma cuenta que sea utilizable como respaldo solo para el tiempo de ejecución; otras integraciones pueden permanecer administradas externamente y releer su almacén de autenticación CLI
 - rutas de estado e inicio que ya conocen el conjunto de proveedores configurados limitan
   el descubrimiento de CLI externo a ese conjunto, de modo que no se sondea un almacén de inicio de sesión de CLI no relacionado
   para una configuración de un solo proveedor
@@ -122,7 +122,7 @@ Forma del flujo (PKCE):
 5. intercambiar en `https://auth.openai.com/oauth/token`
 6. extraer `accountId` del token de acceso y almacenar `{ access, refresh, expires, accountId }`
 
-La ruta del asistente es `openclaw onboard` → elección de autenticación `openai-codex`.
+La ruta del asistente es `openclaw onboard` → elección de autenticación `openai`.
 
 ## Actualización + caducidad
 
@@ -135,7 +135,7 @@ En tiempo de ejecución:
 - si un agente secundario lee un perfil OAuth heredado del agente principal, la actualización
   escribe de nuevo en el almacén del agente principal en lugar de copiar el token de actualización en
   el almacén del agente secundario
-- excepción: algunas credenciales externas de la CLI permanecen gestionadas externamente; OpenClaw vuelve a leer esos almacenes de autenticación de la CLI en lugar de gastar tokens de actualización copiados. El arranque de la CLI de Codex es intencionalmente más limitado: inicializa un perfil `openai-codex:default` vacío y luego las actualizaciones propiedad de OpenClaw mantienen el perfil local como canónico. Si la actualización local de Codex falla y la CLI de Codex tiene un token utilizable para la misma cuenta, OpenClaw puede usar ese token para la solicitud de tiempo de ejecución actual sin escribirlo de nuevo en `auth-profiles.json`.
+- excepción: algunas credenciales de CLI externas permanecen administradas externamente; OpenClaw relee esos almacenes de autenticación CLI en lugar de gastar tokens de actualización copiados. El inicio de Codex CLI es intencionalmente más estrecho: siembra un perfil `openai:default` vacío, luego las actualizaciones propiedad de OpenClaw mantienen el perfil local como canónico. Si la actualización local de Codex falla y Codex CLI tiene un token utilizable para la misma cuenta, OpenClaw puede usar ese token para la solicitud de tiempo de ejecución actual sin escribirlo de nuevo en `auth-profiles.json`.
 
 El flujo de actualización es automático; por lo general, no necesitas gestionar los tokens manualmente.
 

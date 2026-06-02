@@ -11,41 +11,57 @@ Cette page capture les preuves derrière le nettoyage des performances, de la ta
 
 Deux audits sont combinés ici :
 
-- **Analyse des performances de publication :** publications GitHub GitHub de `v2026.5.27` jusqu'à la version stable `v2026.4.23`, en utilisant le workflow `OpenClaw Performance`, `profile=smoke`, `repeat=1`, mock-provider lane.
-- **Contexte d'avril antérieur :** lignes de base du fournisseur simulé (mock-provider) `clawgrit-reports` publiées de `v2026.4.1` à `v2026.5.2`, utilisées uniquement pour éviter de traiter les publications corrompues de fin avril comme référence de performance publique.
-- **Analyse de l'empreinte d'installation :** installations fraîches `npm install --ignore-scripts` dans des packages temporaires, avec `du -sk node_modules` pour la taille et une analyse `node_modules` pour les comptes d'instances de packages.
-- **Analyse de la taille du package npm :** `npm pack openclaw@<version> --dry-run --json` pour les publications publiées, enregistrant la taille de l'archive compressée, la taille décompressée et le nombre de fichiers.
+- **Release performance sweep :** GitHub Releases de `v2026.5.28` jusqu'à
+  la version stable `v2026.4.23`, en utilisant le workflow `OpenClaw Performance`,
+  `profile=smoke`, voie mock-provider. La plupart des lignes de balises correspondent à un échantillon ; les
+  lignes `v2026.5.27` et `v2026.5.28` utilisent les derniers artefacts de branche de publication
+  repeat-3.
+- **Contexte d'avril précédent :** lignes de base `clawgrit-reports` mock-provider
+  publiées de `v2026.4.1` à `v2026.5.2`, utilisées uniquement pour éviter de considérer
+  les publications défectueuses de fin avril comme la base de référence des performances publiques.
+- **Analyse de l'empreinte d'installation :** installations `npm install --ignore-scripts` fraîches
+  dans des packages temporaires, avec `du -sk node_modules` pour la taille et un
+  parcours `node_modules` pour les comptes d'instances de packages.
+- **Analyse de la taille du package npm :** `npm pack openclaw@<version> --dry-run --json`
+  pour les publications publiées, enregistrant la taille de l'archive tar compressée, la taille décompressée et
+  le nombre de fichiers.
 
-<Warning>L'analyse principale des performances utilise un échantillon de test par étiquette. Le contexte d'avril antérieur utilise des médianes répétées-3 publiées à partir de `clawgrit-reports`. Traitez les chiffres comme une preuve de tendance et un signal de recherche de régression, et non comme des statistiques de barrière de publication.</Warning>
+<Warning>
+  L'analyse principale des performances utilise un échantillon de fumée par balise, à l'exception des lignes `v2026.5.27` et `v2026.5.28`, qui utilisent les derniers artefacts de branche de publication repeat-3. Le contexte d'avril précédent utilise des médianes repeat-3 publiées à partir de `clawgrit-reports`. Considérez ces chiffres comme des preuves de tendance et un signal de chasse aux
+  régressions, et non comme des statistiques de validation de publication.
+</Warning>
 
 ## Instantané
 
-Couverture des performances : **76 publications demandées**, **73 points basés sur des artefacts** et **3 exécutions CI indisponibles**. Dernier point stable mesuré : `v2026.5.27`.
+Couverture des performances : **77 publications demandées**, **74 points soutenus par des artefacts**,
+et **3 exécutions CI indisponibles**. Dernier point stable mesuré : `v2026.5.28`.
 
 <CardGroup cols={2}>
-  <Card title="Rotation de l'agent stable" icon="gauge">
-    **Démarrage à froid 2,9 fois plus rapide**
+  <Card title="Rotation d'agent stable" icon="gauge">
+    **5.1x plus rapide à froid**
 
-    - `v2026.4.14` : 9,8 s
-    - `v2026.5.27` : 3,4 s
+    - `v2026.4.14` : 9.8s
+    - `v2026.5.28` : 1.9s
 
   </Card>
   <Card title="Package publié" icon="package">
-    **Archive tar de 17,8 Mo**
+    **Archive tar de 17.9Mo**
 
-    Dernier package stable, en baisse par rapport au pic de taille de package de 43,3 Mo en mars.
+    Dernier package stable, en baisse par rapport au pic de taille de package de 43.3Mo en mars.
 
   </Card>
   <Card title="Dernière installation stable" icon="hard-drive">
-    **786,9 Mo pour une nouvelle installation**
+    **361,7 Mo pour une nouvelle installation**
 
-    `v2026.5.27`OpenClaw contient encore l'arborescence de dépendances OpenClaw imbriquée. L'état de la prochaine version sur `main` est de 407,4 Mo.
+    `v2026.5.28` réduit considérablement l'arborescence des dépendances OpenClaw imbriquées, mais un
+    arbre imbriqué plus petit de 259,7 Mo persiste dans l'audit d'installation locale.
 
   </Card>
   <Card title="Graphe des dépendances" icon="boxes">
-    **371 packages installés**
+    **300 paquets installés**
 
-    Dernière version stable. `main` actuel est descendu à 314 après le nettoyage des dépendances.
+    Dernière version stable, mesurée en racines uniques de nom/version de paquet dans une
+    nouvelle installation avec les scripts désactivés.
 
   </Card>
 </CardGroup>
@@ -56,44 +72,47 @@ Couverture des performances : **76 publications demandées**, **73 points basés
   <Card title="Maximum mensuel" icon="triangle-alert">
     **645 dépendances**
 
-    `2026.2.26` a été le nombre mensuel de dépendances le plus élevé dans cet échantillon.
+    `2026.2.26` a été le maximum mensuel du nombre de dépendances dans cet échantillon.
 
   </Card>
   <Card title="Introduction du shrinkwrap" icon="lock">
-    **1 020,6 Mo d'installation**
+    **Installation de 1 020,6 Mo**
 
-    `2026.5.22` a ajouté un shrinkwrap racine et a révélé un problème de forme de package : 911,8 Mo ont atterri sous `openclaw/node_modules` imbriqué.
-
-  </Card>
-  <Card title="Dernier stable" icon="tag">
-    **786,9 Mo d'installation**
-
-    `2026.5.27`OpenClaw a réduit le pic mais a toujours installé un arbre OpenClaw imbriqué de 675,9 Mo.
+    `2026.5.22` a ajouté un shrinkwrap racine et a révélé un problème de forme de paquet :
+    911,8 Mo ont atterri sous `openclaw/node_modules` imbriqué.
 
   </Card>
-  <Card title="État de la prochaine version" icon="scissors">
-    **407,4 Mo d'installation**
+  <Card title="Dernière version stable" icon="tag">
+    **Installation de 361,7 Mo**
 
-    `main` actuel conserve le shrinkwrap, supprime l'arbre imbriqué et installe 314 packages.
+    `2026.5.28` réduit la taille d'une nouvelle installation de 52,8 % par rapport à `2026.5.27`, mais installe
+    toujours un arbre OpenClaw imbriqué de 259,7 Mo.
+
+  </Card>
+  <Card title="Graphe des dépendances" icon="scissors">
+    **300 racines de paquets**
+
+    `2026.5.28` installe 71 racines uniques de nom/version de paquet de moins que
+    `2026.5.27`.
 
   </Card>
 </CardGroup>
 
-<Tip>Shrinkwrap n'était pas le problème en soi. C'était la mauvaise forme du package. Les versions actuelles de `main`npmOpenClaw incluent toujours le shrinkwrap, mais npm ne matérialise plus un second arbre de dépendances OpenClaw lors de l'installation.</Tip>
+<Tip>Le shrinkwrap n'était pas le problème en soi. C'était la mauvaise forme du paquet. `v2026.5.28` fournit toujours un shrinkwrap, mais l'arborescence des dépendances imbriquées est beaucoup plus petite et le déploiement multicorbeille pour toutes les plateformes a disparu dans l'audit local.</Tip>
 
-## Ce qui a changé après la 5.27
+## Ce qui a changé dans la 5.28
 
-Le nettoyage entre `v2026.5.27` et la version actuelle `main` a supprimé le graphe d'installation par défaut en double au lieu de supprimer les capacités elles-mêmes.
+Le nettoyage entre `v2026.5.27` et `v2026.5.28` a réduit le graphe d'installation par défaut au lieu de supprimer les capacités elles-mêmes.
 
 <CardGroup cols={2}>
-  <Card title="Graphe racine par défaut" icon="git-branch">
-    Les chemins de packages shrinkwrap racine sont passés de **372** à **331**. Les noms de packages uniques sont passés de **357** à **318**.
+  <Card title="Racine du graphe par défaut" icon="git-branch">
+    Les racines uniques de nom/version de paquet sont passées de **371** à **300**. Les instances de paquet sont passées de **372** à **301**.
   </Card>
-  <Card title="Dépendances racine directes" icon="unplug">
-    `@earendil-works/pi-agent-core`, `@earendil-works/pi-ai`, `@earendil-works/pi-coding-agent` et `pdfjs-dist` ont quitté le chemin des dépendances racine par défaut.
+  <Card title="Arborescence imbriquée" icon="unplug">
+    L'imbrication `openclaw/node_modules` est passée de **656.1MiB** à **259.7MiB** dans le même audit d'installation locale.
   </Card>
-  <Card title="Cones optionnels natifs" icon="cpu">
-    Les cones de packages natifs toutes plates-formes `@napi-rs/canvas` et `@mariozechner/clipboard` ont cessé d'atterrir dans l'installation par défaut.
+  <Card title="Cônes natifs optionnels" icon="cpu">
+    Le cône de paquets natifs toutes plateformes `@napi-rs/canvas` a cessé d'être inclus dans l'installation par défaut.
   </Card>
   <Card title="Surface de la chaîne d'approvisionnement" icon="shield">
     Moins de packages par défaut signifie moins d'archives tarballs, de mainteneurs, de binaires natifs, de comportements au moment de l'installation et de chemins de mise à jour transitifs à faire confiance par défaut.
@@ -102,49 +121,45 @@ Le nettoyage entre `v2026.5.27` et la version actuelle `main` a supprimé le gra
 
 ## Chiffres clés
 
-N'utilisez pas les lignes cassées de fin avril comme références de performances publiques.
-`v2026.4.23` et `v2026.4.29` sont des preuves de régression utiles, mais les grands deltas de style `14x` décrivent principalement le rétablissement d'une ligne de publication défectueuse.
+N'utilisez pas les lignes cassées de fin avril comme références de performance publiques.
+`v2026.4.23` et `v2026.4.29` sont des preuves de régression utiles, mais les grands deltas de style `14x` décrivent principalement le rétablissement après une ligne de version défectueuse.
 
 Pour le fil du blog, utilisez la référence publiée début avril comme échelle :
 
-| Métrique             | Référence début avril | `v2026.5.27` |                              Delta |
-| -------------------- | --------------------: | -----------: | ---------------------------------: |
-| Tour d'agent à froid |              9 819 ms |     3 378 ms | 65,6 % inférieur, 2,9x plus rapide |
-| Tour d'agent à chaud |               7,458ms |      2,973ms | 60,1 % inférieur, 2,5x plus rapide |
-| Pic RSS de l'agent   |              686,2 Mo |     635,5 Mo |                    7,4 % inférieur |
+| Métrique             | Référence début avril | `v2026.5.28` |                             Delta |
+| -------------------- | --------------------: | -----------: | --------------------------------: |
+| Tour d'agent à froid |              9 819 ms |      1,908ms | 80.6% inférieur, 5.1x plus rapide |
+| Tour d'agent à chaud |               7,458ms |      1,870ms | 74.9% inférieur, 4.0x plus rapide |
+| Pic RSS de l'agent   |              686,2 Mo |      581.0Mo |                   15.3% inférieur |
 
-La base de référence d'avril est `v2026.4.14` issue de l'exécution
-`clawgrit-reports` du mock-provider publiée. Cette exécution utilisait la répétition 3 et n'a échoué que
-parce que la chronologie de diagnostic n'a pas été émise ; les médianes à froid, à chaud et RSS
-sont toujours utiles comme échelle approximative. Considérez ceci comme un contexte narratif, et non comme une
-statistique de barrière de version.
+La référence d'avril est `v2026.4.14` issue de l'exécution publiée du `clawgrit-reports` mock-provider. Cette exécution a utilisé le mode répétition 3 et n'a échoué que parce que la chronologie de diagnostic n'a pas été émise ; les médianes à froid, à chaud et RSS sont toujours utiles comme échelle approximative. Considérez cela comme un contexte narratif, et non comme une statistique de barrière de version.
 
-Dans le balayage stable de mai à échantillon unique, la ligne a évolué plus modestement :
+Dans le balayage de mai, la ligne de la branche de version la plus récente a changé de manière significative par rapport à `v2026.5.2` :
 
-| Métrique             | `v2026.5.2` | `v2026.5.27` |            Delta |
-| -------------------- | ----------: | -----------: | ---------------: |
-| Tour d'agent à froid |     3,897ms |      3,378ms | 13,3 % inférieur |
-| Tour d'agent à chaud |     3,610ms |      2,973ms | 17,6 % inférieur |
-| Pic RSS de l'agent   |    613,7 Mo |     635,5 Mo |  3,6 % supérieur |
+| Métrique             | `v2026.5.2` | `v2026.5.28` |           Delta |
+| -------------------- | ----------: | -----------: | --------------: |
+| Tour d'agent à froid |     3,897ms |      1,908ms | 51.0% inférieur |
+| Tour d'agent à chaud |     3,610ms |      1,870ms | 48.2% inférieur |
+| Pic RSS de l'agent   |    613,7 Mo |      581.0Mo |  5.3% inférieur |
 
-Meilleur point de pré-version dans le balayage à échantillon unique :
+Par rapport à la version stable précédente :
 
-| Métrique             | `v2026.5.27` | `v2026.5.27-beta.1` |            Delta |
-| -------------------- | -----------: | ------------------: | ---------------: |
-| Tour d'agent à froid |      3,378ms |             2,575ms | 23,8 % inférieur |
-| Tour d'agent à chaud |      2,973ms |             2,217ms | 25,4 % inférieur |
-| Pic RSS de l'agent   |     635,5 Mo |            635,3 Mo |           stable |
+| Métrique             | `v2026.5.27` | `v2026.5.28` |           Delta |
+| -------------------- | -----------: | -----------: | --------------: |
+| Tour d'agent à froid |      2,231ms |      1,908ms | 14.5% inférieur |
+| Tour d'agent à chaud |      2,226ms |      1,870ms | 16.0% inférieur |
+| Pic RSS de l'agent   |      649.0Mo |      581.0Mo | 10.5% inférieur |
 
 ### Empreinte d'installation
 
-| Métrique                                                     | Base de référence | Main actuel |            Delta |
-| ------------------------------------------------------------ | ----------------: | ----------: | ---------------: |
-| Taille d'installation depuis le pic `2026.5.22`              |        1 020,6 Mo |    407,4 Mo | 60,1 % inférieur |
-| Taille d'installation depuis la dernière version `2026.5.27` |          786,9 Mo |    407,4 Mo | 48,2 % inférieur |
-| Dépendances depuis le pic mensuel `2026.2.26`                |               645 |         314 | 51,3 % inférieur |
-| Dépendances depuis la dernière version `2026.5.27`           |               371 |         314 | 15,4 % inférieur |
-| `openclaw/node_modules` imbriqués depuis `2026.5.22`         |          911,8 Mo |        0 Mo |         supprimé |
-| `openclaw/node_modules` imbriqués depuis `2026.5.27`         |          675,9 Mo |        0 Mo |         supprimé |
+| Métrique                                                 | Base de référence | `v2026.5.28` |               Delta |
+| -------------------------------------------------------- | ----------------: | -----------: | ------------------: |
+| Taille d'installation par rapport au pic `2026.5.22`     |        1 020,6 Mo |      361.7Mo |     64.6% inférieur |
+| Taille d'installation de la dernière version `2026.5.27` |          767,1 Mo |     361,7 Mo | réduction de 52,8 % |
+| Dépendances depuis le pic mensuel `2026.2.26`            |               645 |          300 | réduction de 53,5 % |
+| Dépendances depuis la dernière version `2026.5.27`       |               371 |          300 | réduction de 19,1 % |
+| `openclaw/node_modules` imbriqué depuis `2026.5.22`      |          911,8 Mo |     259,7 Mo | réduction de 71,5 % |
+| `openclaw/node_modules` imbriqué depuis `2026.5.27`      |          656,1 Mo |     259,7 Mo | réduction de 60,4 % |
 
 ### Taille du paquet npm
 
@@ -156,155 +171,146 @@ Meilleur point de pré-version dans le balayage à échantillon unique :
 | `2026.4.29` |           22,9 Mo |            74,6 Mo |    9 309 | élagage de paquet visible               |
 | `2026.5.12` |           23,4 Mo |            80,1 Mo |   12 035 | fractionnement majeur du plugin externe |
 | `2026.5.22` |           17,2 Mo |            76,9 Mo |   12 386 | docs/assets exclus du paquet            |
-| `2026.5.27` |           17,8 Mo |            79,0 Mo |   12 509 | dernier paquet stable                   |
+| `2026.5.27` |           17,8 Mo |            79,0 Mo |   12 509 | paquet stable précédent                 |
+| `2026.5.28` |           17,9 Mo |            81,0 Mo |    9 082 | dernier paquet stable                   |
 
-`2026.5.12`Amazon Bedrock est l'étape visible de l'extraction de plugins dans le journal des modifications :
+`2026.5.12` est le jalon visible d'extraction de plugins dans le journal des modifications :
 Amazon Bedrock, Bedrock Mantle, Slack, le bac à sable OpenShell, Anthropic Vertex,
-Matrix et WhatsApp ont été déplacés hors du chemin des dépendances principales, de sorte que leurs cônes de dépendances s'installent avec ces plugins au lieu de chaque installation principale.
+Matrix et WhatsApp ont été retirés du chemin de dépendance principal, de sorte que leurs cônes de dépendance s'installent avec ces plugins au lieu de chaque installation principale.
 
-## Résumé du tour de l'agent Kova
+## Résumé des tours de l'agent Kova
 
 La ligne stable d'avril contient deux histoires différentes. Le début d'avril était lent
-mais reconnaissable. Fin avril est devenu une falaise de régression. `v2026.5.2` est là où
-la ligne mock-provider tombe pour la première fois dans la plage 3-5s et commence à passer
+mais reconnaissable. Fin avril, c'est devenu une falaise de régression. `v2026.5.2` est l'endroit où
+la voie mock-provider tombe pour la première fois dans la plage 3-5s et commence à réussir
 constamment dans le balayage fourni.
 
-Contexte publié précédemment :
+Contexte publié précédemment :
 
-| Release      | Kova | Cold turn | Warm turn | Agent peak RSS |
-| ------------ | ---- | --------: | --------: | -------------: |
-| `v2026.4.10` | FAIL | 11 031 ms |  7 962 ms |       679,0 Mo |
-| `v2026.4.12` | FAIL | 11 965 ms |  8 289 ms |       713,5 Mo |
-| `v2026.4.14` | FAIL |  9 819 ms |  7 458 ms |       686,2 Mo |
-| `v2026.4.20` | FAIL | 22 314 ms | 18 811 ms |       810,8 Mo |
-| `v2026.4.22` | FAIL |  9 630 ms |  7 459 ms |       743,0 Mo |
+| Version      | Kova  | Tour à froid | Tour à chaud | Pic RSS de l'agent |
+| ------------ | ----- | -----------: | -----------: | -----------------: |
+| `v2026.4.10` | FAIL  |    11 031 ms |     7 962 ms |           679,0 Mo |
+| `v2026.4.12` | FAIL  |    11 965 ms |     8 289 ms |           713,5 Mo |
+| `v2026.4.14` | FAIL  |     9 819 ms |     7 458 ms |           686,2 Mo |
+| `v2026.4.20` | FAIL  |    22 314 ms |    18 811 ms |           810,8 Mo |
+| `v2026.4.22` | ÉCHEC |     9 630 ms |     7 459 ms |           743,0 Mo |
 
-Balayage à échantillon unique fourni :
+Balayage fourni :
 
-| Release             | Kova | Cold turn | Warm turn | Agent peak RSS |
-| ------------------- | ---- | --------: | --------: | -------------: |
-| `v2026.4.23`        | FAIL | 47 847 ms |  8 010 ms |     1 082,7 Mo |
-| `v2026.4.24`        | FAIL | 48 264 ms | 25 483 ms |       996,0 Mo |
-| `v2026.4.25`        | FAIL | 81 080 ms | 59 172 ms |     1 113,9 Mo |
-| `v2026.4.26`        | FAIL | 76 771 ms | 54 941 ms |     1 140,8 Mo |
-| `v2026.4.27`        | FAIL | 60 902 ms | 33 699 ms |     1 156,0 Mo |
-| `v2026.4.29`        | FAIL | 94 031 ms | 57 334 ms |     3 613,7 Mo |
-| `v2026.5.2`         | PASS |  3 897 ms |  3 610 ms |       613,7 Mo |
-| `v2026.5.7`         | PASS |  3 923 ms |  3 693 ms |       654,1 Mo |
-| `v2026.5.12`        | PASS |  7 248 ms |  6 629 ms |       834,8 Mo |
-| `v2026.5.18`        | PASS |  3 301 ms |  2 913 ms |       630,3 Mo |
-| `v2026.5.20`        | PASS |  3 413 ms |  2 952 ms |       643,2 Mo |
-| `v2026.5.22`        | PASS |  4 494 ms |  4 093 ms |       654,3 Mo |
-| `v2026.5.26`        | PASS |   2,626ms |   2,282ms |        660,4MB |
-| `v2026.5.27-beta.1` | PASS |   2,575ms |   2,217ms |        635,3MB |
-| `v2026.5.27`        | PASS |   3,378ms |   2,973ms |        635,5MB |
+| Version             | Kova     | Tour à froid | Tour à chaud | Pic RSS de l'agent |
+| ------------------- | -------- | -----------: | -----------: | -----------------: |
+| `v2026.4.23`        | FAIL     |    47 847 ms |     8 010 ms |         1 082,7 Mo |
+| `v2026.4.24`        | FAIL     |    48 264 ms |    25 483 ms |           996,0 Mo |
+| `v2026.4.25`        | FAIL     |    81 080 ms |    59 172 ms |         1 113,9 Mo |
+| `v2026.4.26`        | FAIL     |     76,771ms |     54,941ms |          1,140.8Mo |
+| `v2026.4.27`        | FAIL     |     60,902ms |     33,699ms |          1,156.0Mo |
+| `v2026.4.29`        | ÉCHEC    |     94,031ms |     57,334ms |          3,613.7Mo |
+| `v2026.5.2`         | PASS     |      3,897ms |      3,610ms |            613,7Mo |
+| `v2026.5.7`         | PASS     |      3,923ms |      3,693ms |            654,1Mo |
+| `v2026.5.12`        | PASS     |      7,248ms |      6,629ms |            834,8Mo |
+| `v2026.5.18`        | PASS     |      3,301ms |      2,913ms |            630,3Mo |
+| `v2026.5.20`        | PASS     |      3,413ms |      2,952ms |            643,2Mo |
+| `v2026.5.22`        | PASS     |      4,494ms |      4,093ms |            654,3Mo |
+| `v2026.5.26`        | PASS     |      2,626ms |      2,282ms |            660,4Mo |
+| `v2026.5.27-beta.1` | PASS     |      2,575ms |      2,217ms |            635,3Mo |
+| `v2026.5.27`        | RÉUSSITE |      2,231ms |      2,226ms |            649,0Mo |
+| `v2026.5.28`        | RÉUSSITE |      1,908ms |      1,870ms |            581,0Mo |
 
-## Sondes source
+## Sondages source
 
-Les sondes source ont été ignorées pour 17 anciennes références réussies car ces arbres source ne possédaient pas encore les points d'entrée de sonde requis. Les métriques de tours d'agent existent toujours pour ces références.
+Les sondes de source ont été ignorées pour 17 anciennes références réussies car ces arbres source ne possédaient pas encore les points d'entrée de sonde requis. Les métriques de tours d'agent existent toujours pour ces références.
 
-Points de sonde source représentatifs :
+Points de sonde de source représentatifs :
 
-| Version             | Défaut `readyz` p50 | 50 plugins `readyz` p50 | Santé CLI p50 | RSS max du plugin |
-| ------------------- | ------------------: | ----------------------: | ------------: | ----------------: |
-| `v2026.4.29`        |             2,819ms |                 2,618ms |       1,679ms |           389,0MB |
-| `v2026.5.2`         |             2,324ms |                 2,013ms |       1,384ms |           377,2MB |
-| `v2026.5.7`         |             1,649ms |                 1,540ms |       1,175ms |           387,6MB |
-| `v2026.5.18`        |             1,942ms |                 1,927ms |         607ms |           426,5MB |
-| `v2026.5.20`        |             1,966ms |                 1,987ms |         621ms |           455,0MB |
-| `v2026.5.22`        |             2,081ms |                 1,884ms |       5,095ms |           444,2MB |
-| `v2026.5.26`        |             1,546ms |                 1,634ms |         656ms |           400,4MB |
-| `v2026.5.27-beta.1` |             1,462ms |                 1,548ms |         548ms |           394,0MB |
-| `v2026.5.27`        |             1,874ms |                 1,925ms |         660ms |           398,0MB |
+| Release             | `readyz` p50 par défaut | 50 plugins `readyz` p50 | Santé CLI p50 | RSS max du plugin |
+| ------------------- | ----------------------: | ----------------------: | ------------: | ----------------: |
+| `v2026.4.29`        |                2 819 ms |                2 618 ms |      1 679 ms |          389,0 Mo |
+| `v2026.5.2`         |                2 324 ms |                2 013 ms |      1 384 ms |          377,2 Mo |
+| `v2026.5.7`         |                1 649 ms |                1 540 ms |      1 175 ms |          387,6 Mo |
+| `v2026.5.18`        |                1 942 ms |                1 927 ms |        607 ms |          426,5 Mo |
+| `v2026.5.20`        |                1 966 ms |                1 987 ms |        621 ms |          455,0 Mo |
+| `v2026.5.22`        |                2 081 ms |                1 884 ms |      5 095 ms |          444,2 Mo |
+| `v2026.5.26`        |                1 546 ms |                1 634 ms |        656 ms |          400,4 Mo |
+| `v2026.5.27-beta.1` |                 1,462ms |                 1,548ms |         548ms |           394,0Mo |
+| `v2026.5.27`        |                 1,491ms |                 1,571ms |         553ms |           401,5Mo |
+| `v2026.5.28`        |                 1,457ms |                 1,474ms |         623ms |           386,1Mo |
 
-Le pic de santé CLI de `v2026.5.22` est visible dans ce tableau même si la voie de tours d'agent a toujours réussi. Gardez les sondes source lors de l'enquête sur les régressions ciblées du CLI ou de la passerelle.
+Le pic de santé du `v2026.5.22` CLI est visible dans ce tableau même si la voie agent-turn a toujours réussi. Conservez les sondes source lors de l'enquête sur les régressions ciblées du CLI ou de la passerelle.
 
 ## Audit de l'empreinte d'installation
 
-Les échantillons de dépendances utilisent une version stable par mois, ainsi que l'événement d'introduction du shrinkwrap `2026.5.22`, la dernière version `2026.5.27`, et la version `main` actuelle.
+Dependency samples use one stable release per month, plus the
+`2026.5.22` shrinkwrap-introduction event and the latest `2026.5.28` release.
 
-| Point                | Dépendances installées | Installation fraîche | Paquet OpenClaw | `openclaw/node_modules` imbriqué | Racine shrinkwrap | Comportement d'installation Canvas           |
-| -------------------- | ---------------------: | -------------------: | --------------: | -------------------------------: | ----------------- | -------------------------------------------- |
-| Jan `2026.1.30`      |                    605 |              438,4MB |          45,8MB |                            2,4MB | non               | wrapper de premier niveau + `darwin-arm64`   |
-| Fév `2026.2.26`      |                    645 |              575,7MB |         110,1MB |                            3,5MB | non               | wrapper de premier niveau + `darwin-arm64`   |
-| Mar `2026.3.31`      |                    438 |              584,1MB |        234,8 Mo |                             0 Mo | non               | wrapper de premier niveau + `darwin-arm64`   |
-| avril `2026.4.29`    |                    392 |             335,0 Mo |         97,4 Mo |                             0 Mo | non               | aucun installé                               |
-| `2026.5.22`          |                    401 |           1 020,6 Mo |      1 020,4 Mo |                         911,8 Mo | oui               | imbriqué : les 12 packages `@napi-rs/canvas` |
-| mai `2026.5.26`      |                    371 |             767,5 Mo |        767,4 Mo |                         656,4 Mo | oui               | imbriqué : les 12 packages `@napi-rs/canvas` |
-| Dernière `2026.5.27` |                    371 |             786,9 Mo |        786,7 Mo |                         675,9 Mo | oui               | imbriqué : les 12 packages `@napi-rs/canvas` |
-| `main` actuel        |                    314 |             407,4 Mo |        101,0 Mo |                             0 Mo | oui               | wrapper de premier niveau + `darwin-arm64`   |
+| Point              | Installed deps | Fresh install | OpenClaw package | Nested `openclaw/node_modules` | Root shrinkwrap | Canvas install behavior                   |
+| ------------------ | -------------: | ------------: | ---------------: | -----------------------------: | --------------- | ----------------------------------------- |
+| Jan `2026.1.30`    |            605 |       438.4MB |           45.8MB |                          2.4MB | no              | top-level wrapper + `darwin-arm64`        |
+| Feb `2026.2.26`    |            645 |       575.7MB |          110.1MB |                          3.5MB | no              | top-level wrapper + `darwin-arm64`        |
+| Mar `2026.3.31`    |            438 |       584.1MB |          234.8MB |                            0MB | no              | top-level wrapper + `darwin-arm64`        |
+| Apr `2026.4.29`    |            392 |       335.0MB |           97.4MB |                            0MB | no              | none installed                            |
+| `2026.5.22`        |            401 |     1,020.6MB |        1,020.4MB |                        911.8MB | yes             | nested: all 12 `@napi-rs/canvas` packages |
+| May `2026.5.26`    |            371 |       767.5MB |          767.4MB |                        656.4MB | yes             | nested: all 12 `@napi-rs/canvas` packages |
+| `2026.5.27`        |            371 |      767.1MiB |         766.9MiB |                       656.1MiB | yes             | nested: all 12 `@napi-rs/canvas` packages |
+| Latest `2026.5.28` |            300 |      361.7MiB |         361.6MiB |                       259.7MiB | yes             | none installed                            |
 
-### Limite du shrinkwrap
+### Shrinkwrap boundary
 
 <CardGroup cols={2}>
   <Card title="Avant shrinkwrap" icon="unlock">
-    `2026.5.20` n'a pas de shrinkwrap racine et aucun grand arbre de dépendances OpenClaw imbriqué.
+    `2026.5.20` n'a pas de shrinkwrap racine et pas d'arbre de dépendances OpenClaw imbriqué important.
   </Card>
   <Card title="Introduit" icon="lock">
-    `2026.5.22` ajoute un shrinkwrap racine et installe 911,8 Mo sous `openclaw/node_modules` imbriqué.
+    `2026.5.22` ajoute un shrinkwrap racine et installe 911.8MB sous `openclaw/node_modules` imbriqué.
   </Card>
   <Card title="Dernière stable" icon="tag">
-    `2026.5.27` conserve le shrinkwrap et installe toujours 675,9 Mo sous `openclaw/node_modules` imbriqué.
+    `2026.5.28` conserve le shrinkwrap et installe toujours 259.7MiB sous `openclaw/node_modules` imbriqué.
   </Card>
-  <Card title="Main actuel" icon="check">
-    `main` conserve le shrinkwrap et supprime l'arbre de dépendances OpenClaw imbriqué.
+  <Card title="CanvasExtension de répartition Canvas corrigée" icon="check">
+    `2026.5.28` n'installe plus aucun package `@napi-rs/canvas` lors de l'audit d'installation fraîche locale.
   </Card>
 </CardGroup>
 
 L'inspection de l'archive tarball publiée vérifie la limite :
 
-| Version     | Stable publiée ? | `npm-shrinkwrap.json` racine | Notes                                                           |
-| ----------- | ---------------- | ---------------------------- | --------------------------------------------------------------- |
-| `2026.5.20` | oui              | non                          | dernière version stable avant le shrinkwrap                     |
-| `2026.5.21` | non              | n/a                          | aucune publication stable npm                                   |
-| `2026.5.22` | oui              | oui                          | shrinkwrap introduit                                            |
-| `2026.5.23` | non              | n/a                          | aucune version stable npm                                       |
-| `2026.5.24` | non              | n/a                          | aucune version stable npm                                       |
-| `2026.5.25` | non              | n/a                          | aucune version stable npm                                       |
-| `2026.5.26` | oui              | oui                          | l'arborescence des dépendances imbriquées est toujours présente |
-| `2026.5.27` | oui              | oui                          | l'arborescence des dépendances imbriquées est toujours présente |
-| `main`      | n/a              | oui                          | l'arborescence des dépendances imbriquées a été supprimée       |
+| Version     | Version stable publiée ? | Racine `npm-shrinkwrap.json` | Notes                                                      |
+| ----------- | ------------------------ | ---------------------------- | ---------------------------------------------------------- |
+| `2026.5.20` | oui                      | non                          | dernière version stable avant shrinkwrap                   |
+| `2026.5.21` | non                      | n/a                          | aucune version stable npm publiée                          |
+| `2026.5.22` | oui                      | oui                          | shrinkwrap introduit                                       |
+| `2026.5.23` | non                      | n/a                          | aucune version stable npm publiée                          |
+| `2026.5.24` | non                      | n/a                          | aucune version stable npm publiée                          |
+| `2026.5.25` | non                      | n/a                          | aucune version stable npm publiée                          |
+| `2026.5.26` | oui                      | oui                          | arborescence de dépendances imbriquée toujours présente    |
+| `2026.5.27` | oui                      | oui                          | arborescence de dépendances imbriquée toujours présente    |
+| `2026.5.28` | oui                      | oui                          | arborescence de dépendances imbriquée beaucoup plus petite |
 
-La distinction importante : **le shrinkwrap lui-même n'est pas le problème**. Le `main` actuel fournit toujours un shrinkwrap racine. Le problème était la forme du package qui a fait que npm a matérialisé un grand arbre de dépendances OpenClaw imbriquées et les 12 packages de plate-forme `@napi-rs/canvas`.
+La distinction importante : **le shrinkwrap lui-même n'est pas le problème**.
+`v2026.5.28` livre toujours un shrinkwrap racine. Le problème était la forme du package
+qui obligeait npm à matérialiser une grande arborescence de dépendances OpenClaw imbriquée et les 12
+packages de plateforme `@napi-rs/canvas`. L'arborescence imbriquée est plus petite dans `v2026.5.28`,
+et l'extension de la plateforme Canvas n'apparaît plus dans l'audit local.
 
-Pour une explication en langage clair du shrinkwrap et des vérifications de package au niveau du mainteneur, voir [npm shrinkwrap](/fr/gateway/security/shrinkwrap).
+Pour une explication en langage clair du shrinkwrap et des vérifications de package
+au niveau mainteneur, consultez [npm shrinkwrap](/fr/gateway/security/shrinkwrap).
 
 ## Interprétation de la chaîne d'approvisionnement
 
-Le nombre de dépendances est une métrique de sécurité opérationnelle, et pas seulement une métrique de taille d'installation. Chaque package élargit l'ensemble des mainteneurs, des archives tar, des mises à jour transitives, des binaires natifs facultatifs et des comportements au moment de l'installation que les opérateurs doivent faire confiance.
+Le nombre de dépendances est une mesure de sécurité opérationnelle, et pas seulement une mesure
+de taille d'installation. Chaque package élargit l'ensemble des mainteneurs, des archives tarball, des mises à jour
+transitives, des binaires natifs facultatifs et des comportements au moment de l'installation que les opérateurs
+doivent faire confiance.
 
 La direction du nettoyage est :
 
-- garder les capacités lourdes et facultatives en dehors de l'installation principale par défaut
+- garder les capacités lourdes et facultatives en dehors de l'installation centrale par défaut
 - faire en sorte que les packages de plugins possèdent leur propre graphe de dépendances d'exécution
-- éviter la réparation du gestionnaire de packages au moment de l'exécution lors du démarrage du Gateway
-- préserver les installations déterministes sans provoquer la matérialisation de packages natifs pour toutes les plateformes
+- éviter les réparations du gestionnaire de packages lors du démarrage du Gateway
+- préserver les installations déterministes sans provoquer la matérialisation de packages natifs pour toutes les plates-formes
 - garder les scripts d'installation désactivés dans les chemins d'acceptation et de mesure des packages
-- détecter les arbres de dépendances imbriquées et les explosions de dépendances facultatives natives avant la publication
+- intercepter les arbres de dépendances imbriqués et les explosions de dépendances natives optionnelles avant la publication
 
 Documentation connexe :
 
-- [Résolution des dépendances des plugins](/fr/plugins/dependency-resolution)
+- [Résolution des dépendances de plugin](/fr/plugins/dependency-resolution)
 - [Inventaire des plugins](/fr/plugins/plugin-inventory)
-- [Validation complète des versions](/fr/reference/full-release-validation)
-
-## Exécutions de performances indisponibles
-
-| Version             | Exécution                                                                    | Résultat | Raison                                                                                                        |
-| ------------------- | ---------------------------------------------------------------------------- | -------- | ------------------------------------------------------------------------------------------------------------- |
-| `v2026.5.3-1`       | [26561664645](https://github.com/openclaw/openclaw/actions/runs/26561664645) | échec    | mock-provider job failed: CLI startup timed out waiting for qa-channel ready; no qa-channel accounts reported |
-| `v2026.5.3`         | [26561666722](https://github.com/openclaw/openclaw/actions/runs/26561666722) | échec    | mock-provider job failed: CLI startup timed out waiting for qa-channel ready; no qa-channel accounts reported |
-| `v2026.4.29-beta.2` | [26561683635](https://github.com/openclaw/openclaw/actions/runs/26561683635) | annulé   | optional baseline fetch hung before artifact upload                                                           |
-
-## Follow-up gates
-
-Recommended release checks from this sweep:
-
-1. Run the mock-provider performance smoke for release candidates and retain
-   artifacts.
-2. Track cold turn, warm turn, agent RSS, Gateway `readyz`, and CLI health.
-3. Fresh-install the packed tarball with scripts disabled.
-4. Record installed dependency count, install size, package size, nested
-   `openclaw/node_modules` size, and native optional package shape.
-5. Fail or hold release review when nested dependency trees or all-platform
-   native packages appear unexpectedly.
+- [Validation complète de la version](/fr/reference/full-release-validation)

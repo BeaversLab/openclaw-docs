@@ -215,7 +215,7 @@ Le fournisseur Hermes inclus détecte l'état à `~/.hermes` par défaut. Utilis
 - Valeurs par défaut de configuration de la mémoire pour la mémoire de fichier OpenClaw, plus les éléments d'archive ou de révision manuelle pour les fournisseurs de mémoire externes tels que Honcho.
 - Skills qui incluent un fichier `SKILL.md` sous `skills/<name>/`.
 - Valeurs de configuration par Skill depuis `skills.config`.
-- Identifiants OAuth pris en charge provenant de Hermes OAuth`auth.json`OpenAIOAuth et identifiants OAuth OpenAI d'OpenCode provenant d'OpenCode `auth.json` lorsque la migration interactive des identifiants est acceptée, ou lorsque `--include-secrets` est défini.
+- Identifiants OAuth OpenAI OAuth d'OpenCode à partir d'OpenCode `auth.json` lorsque la migration interactive des identifiants est acceptée, ou lorsque `--include-secrets` est défini. Les entrées OAuth OAuth d'Hermes `auth.json` sont un état hérité signalé pour une réauthentification manuelle OpenAI ou une réparation via doctor.
 - Clés API et jetons pris en charge provenant de Hermes API`.env` et d'OpenCode `auth.json` lorsque la migration interactive des identifiants est acceptée, ou lorsque `--include-secrets` est défini.
 
 ### Clés `.env` prises en charge

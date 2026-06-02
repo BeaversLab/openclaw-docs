@@ -169,7 +169,7 @@ openclaw doctor --lint --skip core/doctor/skills-readiness
 
 備註：
 
-- 在 Nix 模式 (`OPENCLAW_NIX_MODE=1`) 下，唯讀的 doctor 檢查仍然有效，但 `doctor --fix`、`doctor --repair`、`doctor --yes` 和 `doctor --generate-gateway-token` 已停用，因為 `openclaw.json` 是不可變的。請改為編輯此安裝的 Nix 來源；對於 nix-openclaw，請使用 agent-first [Quick Start](https://github.com/openclaw/nix-openclaw#quick-start)。
+- 在 Nix 模式 (`OPENCLAW_NIX_MODE=1`) 下，唯讀的 doctor 檢查仍然有效，但 `doctor --fix`、`doctor --repair`、`doctor --yes` 和 `doctor --generate-gateway-token` 會被停用，因為 `openclaw.json` 是不可變的。請改為編輯此安裝的 Nix 原始碼；對於 nix-openclaw，請使用 agent-first [Quick Start](https://github.com/openclaw/nix-openclaw#quick-start)。
 - 互動式提示 (例如鑰匙圈/OAuth 修復) 僅在 stdin 為 TTY 且未設定 `--non-interactive` 時執行。無頭執行 (cron、Telegram、無終端機) 將跳過提示。
 - 效能：非互動式 `doctor` 執行會跳過急切載入外掛，以保持無頭健康檢查的快速性。互動式 doctor 工作階段仍會載入舊版健康和修復流程所需的外掛介面。
 - `--lint` 比 `--non-interactive` 更嚴格：它始終是唯讀的，從不提示，也從不套用安全遷移。當您希望 doctor 進行變更時，請執行 `doctor --fix` 或 `doctor --repair`。
@@ -182,29 +182,29 @@ openclaw doctor --lint --skip core/doctor/skills-readiness
 - Doctor 會回報具有明確 `payload.model` 覆蓋的 cron jobs，包括提供者命名空間計數以及與 `agents.defaults.model` 的不符之處，以便在驗證或計費調查期間看到未繼承預設模型的已排程工作。
 - 在 Linux 上，當使用者的 crontab 仍在執行舊版 `~/.openclaw/bin/ensure-whatsapp.sh` 時，doctor 會發出警告；該腳本已不再維護，並且當 cron 缺少 systemd user-bus 環境時，可能會記錄錯誤的 WhatsApp gateway 停機訊息。
 - 當啟用 WhatsApp 時，doctor 會檢查是否有本機 `openclaw-tui` 用戶端仍在運行的已降級 Gateway 事件循環。`doctor --fix` 僅停止已驗證的本機 TUI 用戶端，以便 WhatsApp 回覆不會排在過時的 TUI 重新整理循環之後。
-- Doctor 會將主要的模型、後備、心跳/子代理/壓縮覆寫、鉤子、通道模型覆寫和過時的會話路由釘選中的舊式 `openai-codex/*` 模型參照重寫為標準 `openai/*` 參照。`--fix` 會將 Codex 意圖移至提供者/模型範圍的 `agentRuntime.id: "codex"` 項目，保留會話 auth-profile 釘選（例如 `openai-codex:...`），移除過時的全代理/會話執行時釘選，並在 Codex auth 路由上保留修復後的 OpenAI 代理參照，而不是直接使用 OpenAI API 金鑰進行驗證。
-- Doctor 會清除舊版 OpenClaw 版本建立的舊版外掛程式相依性暫存狀態，並為將其宣告為對等相依性的受管理 npm 外掛程式重新連結主機 `openclaw` 套件。它還會修復設定參照的遺失可下載外掛程式，例如 `plugins.entries`、設定的通道、設定的提供者/搜尋設定或設定的代理執行時。在套件更新期間，doctor 會跳過套件管理員外掛程式修復，直到套件交換完成；如果設定的外掛程式仍需要復原，請在之後重新執行 `openclaw doctor --fix`。如果下載失敗，doctor 會回報安裝錯誤並保留設定的外掛程式項目，以供下次修復嘗試。
-- 當外掛程式探索狀況良好時，Doctor 會透過從 `plugins.allow`/`plugins.deny`/`plugins.entries` 中移除遺失的外掛程式 ID，以及移除相符的懸空通道設定、心跳目標和通道模型覆寫，來修復過時的外掛程式設定。
-- Doctor 會透過停用受影響的 `plugins.entries.<id>` 項目並移除其無效的 `config` 載荷，來隔離無效的外掛程式設定。Gateway 啟動時已經會跳過該錯誤的外掛程式，以便其他外掛程式和通道可以繼續執行。
-- 當另一個監督器擁有 gateway 生命週期時，設定 `OPENCLAW_SERVICE_REPAIR_POLICY=external`。Doctor 仍會報告 gateway/服務的健康狀態並套用非服務修復，但會跳過服務安裝/啟動/重新啟動/啟動引導 以及舊版服務清理。
-- 在 Linux 上，doctor 會忽略非額外作用中的類似 gateway systemd 單元，並且在修復期間不會重寫正在執行的 systemd gateway 服務的 command/entrypoint 中繼資料。請先停止服務，或者當您有意取代作用中的啟動器時使用 `openclaw gateway install --force`。
-- Doctor 會自動將舊版扁平 Talk 設定（`talk.voiceId`、`talk.modelId` 和相關項目）遷移至 `talk.provider` + `talk.providers.<provider>`。
-- 重複執行 `doctor --fix` 時，若唯一差異在於物件鍵 的順序，則不再報告/套用 Talk 標準化。
-- Doctor 包含記憶體搜尋就緒檢查，並且當缺少嵌入式憑證時可以建議使用 `openclaw configure --section model`。
-- 當未設定指令擁有者 時，Doctor 會發出警告。指令擁有者是指被允許執行僅限擁有者指令並核准危險操作的人類操作員帳戶。DM 配對僅允許某人與 Bot 對話；如果您在首次擁有者啟動引導 存在之前就已核准了發送者，請明確設定 `commands.ownerAllowFrom`。
-- 當設定 Codex 模式 代理程式 且操作員的 Codex 主目錄中存在個人 Codex CLI 資產時，Doctor 會報告一則資訊備註。本機 Codex 應用程式伺服器啟動會使用各自獨立的每個代理程式主目錄，因此如有需要請先安裝 Codex 外掛程式，然後使用 `openclaw migrate plan codex` 來盤點應刻意提升的資產。
-- Doctor 會移除已淘汰的 `plugins.entries.codex.config.codexDynamicToolsProfile`；Codex 應用程式伺服器會始終將 Codex 原生工作區工具保持為原生狀態。
-- 當允許預設代理程式使用的技能因缺少 bins、env vars、config 或 OS 需求而在目前執行時環境中無法使用時，Doctor 會發出警告。`doctor --fix` 可以使用 `skills.entries.<skill>.enabled=false` 停用那些無法使用的技能；當您想保持該技能啟用時，請改為安裝/設定缺失的需求。
-- 如果啟用了沙箱模式但 Docker 不可用，doctor 會報告一個高信號警告並提供補救措施（`install Docker` 或 `openclaw config set agents.defaults.sandbox.mode off`）。
-- 如果存在舊版沙箱註冊表檔案（`~/.openclaw/sandbox/containers.json` 或 `~/.openclaw/sandbox/browsers.json`），doctor 會報告它們；`openclaw doctor --fix` 會將有效條目遷移到分片註冊表目錄中，並隔離無效的舊版檔案。
-- 如果 `gateway.auth.token`/`gateway.auth.password` 由 SecretRef 管理且在當前指令路徑中不可用，doctor 會報告唯讀警告，且不會寫入純文字後備憑證。對於由 exec 支援的 SecretRef，除非存在 `--allow-exec`，否則 doctor 會跳過執行。
+- Doctor 會將舊版 `openai-codex/*` 模型參照重寫為主要模型、後備模型、影像/視訊生成模型、heartbeat/subagent/compaction 覆寫、hooks、通道模型覆寫以及過時的會話路由釘選中的正式 `openai/*` 參照。`--fix` 也會將舊版 `openai-codex:*` 驗證設定檔和 `auth.order.openai-codex` 項目遷移至 `openai:*`，將 Codex intent 移至提供者/模型範圍的 `agentRuntime.id: "codex"` 項目，移除過時的全 agent/會話執行階段釘選，並將修復後的 OpenAI agent 參照保留在 Codex 驗證路由上，而不是直接使用 OpenAI API 金鑰驗證。
+- Doctor 會清理舊版 OpenClaw 版本建立的舊版外掛相依性暫存狀態，並為將其宣告為同儕相依性的受管理 npm 外掛重新連結主機 `openclaw` 套件。它還會修復設定參照的遺失可下載外掛，例如 `plugins.entries`、設定的通道、設定的提供者/搜尋設定或設定的 agent 執行階段。在套件更新期間，doctor 會跳過套件管理員外掛修復，直到套件交換完成；如果設定的外掛仍需要復原，請在之後重新執行 `openclaw doctor --fix`。如果下載失敗，doctor 會回報安裝錯誤並保留設定的外掛項目以供下次修復嘗試。
+- Doctor 會透過從 `plugins.allow`/`plugins.deny`/`plugins.entries` 移除遺失的 plugin id 來修復過時的 plugin 設定，並在 plugin 探索正常時，移除相符的懸置 channel 設定、心跳目標以及 channel 模型覆寫。
+- Doctor 會透過停用受影響的 `plugins.entries.<id>` 項目並移除其無效的 `config` payload 來隔離無效的 plugin 設定。Gateway 啟動時本來就只會跳過那個有問題的 plugin，讓其他 plugins 和 channels 能繼續執行。
+- 當另一個 supervisor 擁有 gateway 生命週期時，請設定 `OPENCLAW_SERVICE_REPAIR_POLICY=external`。Doctor 仍然會回報 gateway/service 健康狀況並套用非服務修復，但會跳過服務安裝/啟動/重新啟動/引導 (bootstrap) 以及舊版服務清理。
+- 在 Linux 上，doctor 會忽略非作用中的額外類 gateway systemd 單元，並且在修復期間不會重寫執行中 systemd gateway 服務的 command/entrypoint 中繼資料。請先停止服務，或者當您有意要替換使用中的啟動器 時，使用 `openclaw gateway install --force`。
+- Doctor 會自動將舊版平面 Talk 設定 (`talk.voiceId`、`talk.modelId` 等) 遷移至 `talk.provider` + `talk.providers.<provider>`。
+- 重複執行 `doctor --fix` 時，如果唯一的差異在於物件鍵 的順序，將不再回報/套用 Talk 正規化。
+- Doctor 包含記憶體搜尋就緒檢查，並且在遺失內嵌憑證 時可以建議 `openclaw configure --section model`。
+- 當未設定指令擁有者 時，Doctor 會發出警告。指令擁有者是允許執行擁有者專用指令和核准危險操作的人类操作員帳戶。DM 配對僅允許某人與機器人交談；如果您在首次擁有者引導 (first-owner bootstrap) 存在之前就已核准過傳送者，請明確設定 `commands.ownerAllowFrom`。
+- 當配置了 Codex 模式 agents 且操作員的 Codex home 中存在個人 Codex CLI 資產 時，Doctor 會回報一則資訊說明。本機 Codex app-server 啟動會使用隔離的 per-agent homes，因此如果需要請先安裝 Codex plugin，然後使用 `openclaw migrate plan codex` 來清點應刻意提升的資產。
+- Doctor 會移除已退役的 `plugins.entries.codex.config.codexDynamicToolsProfile`；Codex app-server 會始終保持 Codex 原生工作區工具的原生狀態。
+- 當允許預設 agent 使用的技能因缺少 bins、env vars、config 或 OS 需求而無法在目前執行時環境中使用時，Doctor 會發出警告。`doctor --fix` 可以使用 `skills.entries.<skill>.enabled=false` 停用那些不可用的技能；如果您想保持該技能處於啟用狀態，請改為安裝/配置缺失的需求。
+- 如果已啟用沙盒模式但 Docker 不可用，doctor 會報告一個帶有修復建議的高信號警告 (`install Docker` 或 `openclaw config set agents.defaults.sandbox.mode off`)。
+- 如果存在舊版沙盒註冊表檔案 (`~/.openclaw/sandbox/containers.json` 或 `~/.openclaw/sandbox/browsers.json`)，doctor 會將其報告出來；`openclaw doctor --fix` 會將有效項目遷移到分片註冊表目錄，並隔離無效的舊版檔案。
+- 如果 `gateway.auth.token`/`gateway.auth.password` 是由 SecretRef 管理的，且在目前指令路徑中不可用，doctor 會報告唯讀警告，且不會寫入純文字後備憑證。對於由 exec 支援的 SecretRefs，除非存在 `--allow-exec`，否則 doctor 會跳過執行。
 - 如果在修復路徑中通道 SecretRef 檢查失敗，doctor 會繼續並報告警告，而不是提前退出。
-- 在狀態目錄遷移後，如果已啟用的預設 Telegram 或 Discord 帳號依賴 env 後備，且 doctor 程序無法存取 `TELEGRAM_BOT_TOKEN` 或 `DISCORD_BOT_TOKEN`，doctor 會發出警告。
-- Telegram `allowFrom` 使用者名稱自動解析（`doctor --fix`）需要在當前指令路徑中有可解析的 Telegram token。如果 token 檢查不可用，doctor 會報告警告並在該次過程中跳過自動解析。
+- 在狀態目錄遷移之後，當已啟用的預設 Telegram 或 Discord 帳戶依賴環境變數後備，且 `TELEGRAM_BOT_TOKEN` 或 `DISCORD_BOT_TOKEN` 對 doctor 程序不可用時，doctor 會發出警告。
+- Telegram `allowFrom` 使用者名稱自動解析 (`doctor --fix`) 需要在目前指令路徑中有一個可解析的 Telegram token。如果無法檢查 token，doctor 會報告警告並在該次檢查中跳過自動解析。
 
-## macOS：`launchctl` env 覆蓋
+## macOS：`launchctl` 環境變數覆寫
 
-如果您之前執行過 `launchctl setenv OPENCLAW_GATEWAY_TOKEN ...`（或 `...PASSWORD`），該值將覆蓋您的設定檔，並可能導致持續的「未授權」錯誤。
+如果您先前執行過 `launchctl setenv OPENCLAW_GATEWAY_TOKEN ...` (或 `...PASSWORD`)，該值會覆寫您的設定檔，並可能導致持續的「未授權」錯誤。
 
 ```bash
 launchctl getenv OPENCLAW_GATEWAY_TOKEN
@@ -216,5 +216,5 @@ launchctl unsetenv OPENCLAW_GATEWAY_PASSWORD
 
 ## 相關
 
-- [CLI 參考](/zh-Hant/cli)
+- [CLI 參考資料](/zh-Hant/cli)
 - [Gateway doctor](/zh-Hant/gateway/doctor)

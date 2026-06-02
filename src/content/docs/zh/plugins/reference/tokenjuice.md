@@ -12,7 +12,7 @@ title: "Tokenjuice 插件"
 ## 分发
 
 - 包： `@openclaw/tokenjuice`
-- 安装途径：包含在 OpenClaw 中
+- 安装途径：npm；ClawHub：npmClawHub`clawhub:@openclaw/tokenjuice`
 
 ## 暴露接口
 

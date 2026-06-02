@@ -164,6 +164,13 @@ SecretRefs 仅在有效活动的表面上进行验证。
         passEnv: ["PATH", "VAULT_ADDR"],
         jsonOnly: true,
       },
+      "team-secrets": {
+        source: "exec",
+        pluginIntegration: {
+          pluginId: "acme-secrets",
+          integrationId: "secret-store",
+        },
+      },
     },
     defaults: {
       env: "default",
@@ -194,26 +201,30 @@ SecretRefs 仅在有效活动的表面上进行验证。
 
   </Accordion>
   <Accordion title="Exec 提供商">
-    - 运行配置的绝对二进制路径，无 Shell。
+    - 运行配置的绝对二进制路径，不使用 shell。
     - 默认情况下，`command` 必须指向常规文件（而非符号链接）。
     - 设置 `allowSymlinkCommand: true` 以允许符号链接命令路径（例如 Homebrew shims）。OpenClaw 会验证解析后的目标路径。
-    - 将 `allowSymlinkCommand` 与 `trustedDirs` 配对，用于包管理器路径（例如 `["/opt/homebrew"]`）。
-    - 支持超时、无输出超时、输出字节限制、环境变量允许列表和受信任目录。
-    - Windows 失败关闭说明：如果命令路径无法进行 ACL 验证，解析将失败。对于仅受信任的路径，在该提供商上设置 `allowInsecurePath: true` 以绕过路径安全检查。
+    - 将 `allowSymlinkCommand` 与 `trustedDirs` 配对使用，以处理包管理器路径（例如 `["/opt/homebrew"]`）。
+    - 支持超时、无输出超时、输出字节限制、环境变量允许列表以及受信任目录。
+    - Windows 失败关闭提示：如果命令路径无法进行 ACL 验证，解析将失败。仅对于受信任的路径，在该提供商上设置 `allowInsecurePath: true` 可绕过路径安全检查。
+    - 插件管理的 exec 提供商可以使用 `pluginIntegration`，而不是
+      复制的 `command`/`args`。OpenClaw 会在启动/重载期间从已安装的插件清单中解析当前命令详细信息。如果插件被
+      禁用、移除、不受信任或不再声明该集成，
+      使用该提供商的活跃 SecretRefs 将以失败关闭的方式处理。
 
-    请求负载 (stdin)：
+    请求负载 (stdin):
 
     ```json
     { "protocolVersion": 1, "provider": "vault", "ids": ["providers/openai/apiKey"] }
     ```
 
-    响应负载 (stdout)：
+    响应负载 (stdout):
 
     ```jsonc
     { "protocolVersion": 1, "values": { "providers/openai/apiKey": "<openai-api-key>" } } // pragma: allowlist secret
     ```
 
-    可选的按 ID 错误：
+    可选的按 ID 错误:
 
     ```json
     {
@@ -228,7 +239,8 @@ SecretRefs 仅在有效活动的表面上进行验证。
 
 ## 文件支持的 API 密钥
 
-不要在配置 `env` 块中放置 `file:...` 字符串。`env` 块是字面的且不可覆盖，因此 `file:...` 不会被解析。
+请勿在配置 `env` 块中放置 `file:...` 字符串。`env` 块是
+字面量的且不可覆盖，因此不会解析 `file:...`。
 
 改为在支持的凭据字段上使用文件 SecretRef：
 
@@ -253,12 +265,11 @@ SecretRefs 仅在有效活动的表面上进行验证。
 }
 ```
 
-对于 `mode: "singleValue"`，SecretRef `id` 为 `"value"`。对于
+对于 `mode: "singleValue"`，SecretRef `id` 是 `"value"`。对于
 `mode: "json"`，请使用绝对 JSON 指针，例如
 `"/providers/xai/apiKey"`。
 
-请参阅 [SecretRef credential surface](/zh/reference/secretref-credential-surface) 以了解
-接受 SecretRef 的配置字段。
+有关接受 SecretRefs 的配置字段，请参阅 [SecretRef 凭证界面](/zh/reference/secretref-credential-surface)。
 
 ## Exec 集成示例
 
@@ -292,15 +303,15 @@ SecretRefs 仅在有效活动的表面上进行验证。
     ```
   </Accordion>
   <Accordion title="Bitwarden 机密管理器 (`bws`)">
-    当您希望 SecretRef id 映射到 Bitwarden 机密管理器项的密钥时，请使用解析器包装器。仓库包含
+    当您希望 SecretRef id 映射到 Bitwarden 机密管理器 item keys 时，请使用解析器包装器。仓库包含
     `scripts/secrets/openclaw-bws-resolver.mjs`；请将其安装或复制到运行 Gateway(网关) 的主机上的绝对受信任路径中。
 
     要求：
 
     - 在 CLI 主机上安装了 Bitwarden 机密管理器 Gateway(网关) (`bws`)。
     - `BWS_ACCESS_TOKEN` 对 Gateway(网关) 服务可用。
-    - 传递给解析器的 `PATH`，或设置为 `bws`
-      二进制文件的绝对路径的 `BWS_BIN`。
+    - 将 `PATH` 传递给解析器，或者将 `BWS_BIN` 设置为绝对 `bws`
+      二进制路径。
 
     ```json5
     {
@@ -330,13 +341,7 @@ SecretRefs 仅在有效活动的表面上进行验证。
     }
     ```
 
-    解析器对请求的 id 进行批处理，运行 `bws secret list`，并返回
-    匹配的机密 `key` 字段的值。使用满足 exec
-    SecretRef id 契约的密钥，例如 `openclaw/providers/openai/apiKey`；带有下划线的
-    env-var 风格密钥将在解析器运行之前被拒绝。如果
-    多个可见的 Bitwarden 机密具有相同的请求密钥，则解析器
-    将因歧义而使该 id 失败，而不是选择其中一个。更新配置后，
-    验证解析器路径：
+    解析器将请求的 id 分批处理，运行 `bws secret list`，并返回匹配的机密 `key` 字段的值。使用满足 exec SecretRef id 协定的键，例如 `openclaw/providers/openai/apiKey`；在解析器运行之前，将拒绝带有下划线的 env-var 样式键。如果有多个可见的 Bitwarden 机密具有相同的请求键，解析器将该 id 视为模糊并失败，而不是选择其中一个。更新配置后，验证解析器路径：
 
     ```bash
     openclaw secrets audit --allow-exec
@@ -372,13 +377,9 @@ SecretRefs 仅在有效活动的表面上进行验证。
     ```
   </Accordion>
   <Accordion title="password-store (`pass`)">
-    当您希望 SecretRef id 直接映射到
-    `pass` 条目时，请使用一个小的解析器包装器。将其保存为绝对路径下的可执行文件，该路径需通过
-    您的 exec-提供商 路径检查，例如
+    当您希望 SecretRef id 直接映射到 `pass` 条目时，请使用一个小的解析器封装程序。将其作为可执行文件保存在通过 exec-提供商 路径检查的绝对路径中，例如
     `/usr/local/bin/openclaw-pass-resolver`。`#!/usr/bin/env node` shebang
-    从解析器进程 `PATH` 中解析 `node`，因此请在
-    `passEnv` 中包含 `PATH`。如果 `pass` 不在该 `PATH` 上，请在父
-    环境中设置 `PASS_BIN` 并将其也包含在 `passEnv` 中：
+    从解析器进程 `PATH` 解析 `node`，因此请在 `passEnv` 中包含 `PATH`。如果 `pass` 不在该 `PATH` 上，请在父环境中设置 `PASS_BIN` 并将其也包含在 `passEnv` 中：
 
     ```js
     #!/usr/bin/env node
@@ -419,7 +420,7 @@ SecretRefs 仅在有效活动的表面上进行验证。
     });
     ```
 
-    然后配置 exec 提供商并将 `apiKey` 指向 `pass` 条目路径：
+    然后配置 exec 提供商 并将 `apiKey` 指向 `pass` 条目路径：
 
     ```json5
     {
@@ -449,8 +450,7 @@ SecretRefs 仅在有效活动的表面上进行验证。
     }
     ```
 
-    将密保存在 `pass` 条目的第一行，或者如果您想返回完整的 `pass show` 输出，请自定义
-    包装器。更新配置后，验证静态审计和 exec 解析器路径：
+    将密钥保留在 `pass` 条目的第一行，或者如果您想返回完整的 `pass show` 输出，则可以自定义封装程序。更新配置后，请验证静态审计和 exec 解析器路径：
 
     ```bash
     openclaw secrets audit --check
@@ -519,11 +519,11 @@ SecretRefs 仅在有效活动的表面上进行验证。
 }
 ```
 
-明文字符串值仍然有效。像 `${MCP_SERVER_API_KEY}` 这样的环境模板引用和 SecretRef 对象在生成 MCP 服务器进程之前的网关激活期间被解析。与其他 SecretRef 表面一样，未解析的引用只有在 `acpx` 插件有效激活时才会阻止激活。
+明文字符串值仍然有效。像 `${MCP_SERVER_API_KEY}` 这样的环境模板引用和 SecretRef 对象会在生成 MCP 服务器进程之前的网关激活期间解析。与其他 SecretRef 表面一样，只有当 `acpx` 插件实际处于活动状态时，未解析的引用才会阻止激活。
 
 ## 沙箱 SSH 认证材料
 
-核心 `ssh` 沙盒后端也支持用于 SSH 身份验证材料的 SecretRefs：
+核心 `ssh` 沙盒后端也支持用于 SSH 认证材料的 SecretRefs：
 
 ```json5
 {
@@ -554,7 +554,7 @@ SecretRefs 仅在有效活动的表面上进行验证。
 
 规范的支持和不支持的凭据列于：
 
-- [SecretRef 凭据表面](/zh/reference/secretref-credential-surface)
+- [SecretRef 凭证表面](/zh/reference/secretref-credential-surface)
 
 <Note>运行时创建或轮换的凭据和 OAuth 刷新材料有意从只读 SecretRef 解析中排除。</Note>
 
@@ -563,12 +563,12 @@ SecretRefs 仅在有效活动的表面上进行验证。
 - 没有引用的字段：保持不变。
 - 带有引用的字段：在激活期间的活动界面上是必需的。
 - 如果同时存在明文和引用，则在支持的优先级路径上引用优先。
-- 编辑哨兵 `__OPENCLAW_REDACTED__` 保留用于内部配置编辑/恢复，并作为字面提交的配置数据被拒绝。
+- 编辑哨兵 `__OPENCLAW_REDACTED__` 保留用于内部配置编辑/还原，并会被拒绝作为字面提交的配置数据。
 
 警告和审计信号：
 
-- `SECRETS_REF_OVERRIDES_PLAINTEXT`（运行时警告）
-- `REF_SHADOWED`（当 `auth-profiles.json` 凭据优先于 `openclaw.json` 引用时的审计发现）
+- `SECRETS_REF_OVERRIDES_PLAINTEXT` (运行时警告)
+- `REF_SHADOWED` (审计发现，当 `auth-profiles.json` 凭据优先于 `openclaw.json` 引用时)
 
 Google Chat 兼容性行为：
 
@@ -583,7 +583,7 @@ Google Chat 兼容性行为：
 - 配置重新加载热应用路径
 - 配置重新加载重启检查路径
 - 通过 `secrets.reload` 手动重新加载
-- Gateway(网关) 配置写入 RPC 预检（Gateway(网关)RPC`config.set` / `config.apply` / `config.patch`），用于在持久化编辑之前检查提交的配置负载中活动面 SecretRef 的可解析性
+- 在持久化编辑之前，对所提交的配置负载中的活动面 SecretRef 可解析性执行 Gateway(网关) 配置写入 RPC 预检 (Gateway(网关)RPC`config.set` / `config.apply` / `config.patch`)
 
 激活契约：
 
@@ -617,17 +617,17 @@ Google Chat 兼容性行为：
 
 <Tabs>
   <Tab title="严格命令路径">
-    例如 `openclaw memory` 远程内存路径和 `openclaw qr --remote`，当它需要远程共享机密引用时。它们从活动快照读取，并在所需的 SecretRef 不可用时快速失败。
+    例如 `openclaw memory` 远程内存路径和 `openclaw qr --remote`，当它需要远程共享密钥引用时。它们从活动快照读取，并在所需的 SecretRef 不可用时快速失败。
   </Tab>
-  <Tab title="Read-only command paths">
-    例如 `openclaw status`、`openclaw status --all`、`openclaw channels status`、`openclaw channels resolve`、`openclaw security audit` 以及只读的 doctor/config 修复流程。它们也首选活动快照，但在该命令路径中目标 SecretRef 不可用时，会降级而不是中止。
+  <Tab title="只读命令路径">
+    例如 `openclaw status`、`openclaw status --all`、`openclaw channels status`、`openclaw channels resolve`、`openclaw security audit` 和只读的 doctor/配置修复流程。它们也优先使用活动快照，但当该命令路径中目标 SecretRef 不可用时会降级而不是中止。
 
     只读行为：
 
-    - 当 Gateway(网关) 正在运行时，这些命令首先从活动快照读取。
-    - 如果 Gateway(网关) 解析不完整或 Gateway(网关) 不可用，它们会尝试针对特定命令表面的目标本地回退。
-    - 如果目标 SecretRef 仍然不可用，命令将继续并输出降级的只读结果和明确的诊断信息，例如“已配置但在该命令路径中不可用”。
-    - 这种降级行为仅限于本地命令。它不会削弱运行时启动、重新加载或发送/认证路径。
+    - 当 Gateway(网关) 运行时，这些命令首先从活动快照读取。
+    - 如果 Gateway(网关) 解析不完整或 Gateway(网关) 不可用，它们会尝试针对特定命令表面的本地回退。
+    - 如果目标 SecretRef 仍然不可用，命令将以降级的只读输出和显式诊断信息（例如“在此命令路径中已配置但不可用”）继续执行。
+    - 这种降级行为仅限于命令本地。它不会削弱运行时启动、重新加载或发送/认证路径。
 
   </Tab>
 </Tabs>
@@ -649,54 +649,54 @@ Google Chat 兼容性行为：
 
 在重新审计干净之前，不要认为迁移已完成。如果审计仍然报告静态的明文值，即使运行时 API 返回编辑后的值，代理访问风险仍然存在。
 
-如果您在 `configure` 期间保存计划而不是应用它，请在重新审核之前使用 `openclaw secrets apply --from <plan-path>` 应用该保存的计划。
+如果您在 `configure` 期间保存计划而不是应用，请在重新审核之前使用 `openclaw secrets apply --from <plan-path>` 应用该已保存的计划。
 
 <AccordionGroup>
   <Accordion title="secrets audit">
-    检查结果包括：
+    发现结果包括：
 
-    - 静态明文值（`openclaw.json`、`auth-profiles.json`、`.env` 和生成的 `agents/*/agent/models.json`）
-    - 生成的 `models.json` 条目中敏感提供商标头的明文残留
+    - 静态纯文本值（`openclaw.json`、`auth-profiles.json`、`.env` 和生成的 `agents/*/agent/models.json`）
+    - 生成的 `models.json` 条目中的敏感提供商纯文本头部残留
     - 未解析的引用
-    - 优先级遮蔽（`auth-profiles.json` 优先于 `openclaw.json` 引用）
-    - 传统残留（`auth.json`、OAuth 提醒）
+    - 优先级覆盖（`auth-profiles.json` 优先于 `openclaw.json` 引用）
+    - 遗留残留（`auth.json`、OAuth 提醒）
 
     Exec 说明：
 
     - 默认情况下，审计会跳过 exec SecretRef 可解析性检查，以避免命令副作用。
     - 使用 `openclaw secrets audit --allow-exec` 在审计期间执行 exec 提供商。
 
-    标头残留说明：
+    头部残留说明：
 
-    - 敏感提供商标头检测基于名称启发式（常见的身份验证/凭证标头名称和片段，例如 `authorization`、`x-api-key`、`token`、`secret`、`password` 和 `credential`）。
+    - 敏感提供商头部检测基于名称启发式方法（常见的身份验证/凭据头部名称和片段，例如 `authorization`、`x-api-key`、`token`、`secret`、`password` 和 `credential`）。
 
   </Accordion>
   <Accordion title="secrets configure">
-    交互式辅助工具，功能如下：
+    交互式辅助工具，用于：
 
     - 首先配置 `secrets.providers`（`env`/`file`/`exec`，添加/编辑/删除）
-    - 允许您在一个代理范围内选择 `openclaw.json` 中支持的字段以及 `auth-profiles.json`
+    - 允许您为一个代理范围在 `openclaw.json` 中选择支持的秘密承载字段，外加 `auth-profiles.json`
     - 可以直接在目标选择器中创建新的 `auth-profiles.json` 映射
-    - 捕获 SecretRef 详细信息（`source`、`provider`、`id`）
+    - 捕获 SecretRef 详情（`source`、`provider`、`id`）
     - 运行预检解析
     - 可以立即应用
 
-    Exec 说明：
+    Exec 注意事项：
 
-    - 除非设置了 `--allow-exec`，否则预检会跳过 exec SecretRef 检查。
-    - 如果您直接从 `configure --apply` 应用且计划包含 exec 引用/提供程序，请在应用步骤中也保持 `--allow-exec` 设置。
+    - 除非设置了 `--allow-exec`，否则预检将跳过 exec SecretRef 检查。
+    - 如果您直接从 `configure --apply` 应用且计划包含 exec 引用/提供者，请在应用步骤中也保持设置 `--allow-exec`。
 
-    有用模式：
+    有用的模式：
 
     - `openclaw secrets configure --providers-only`
     - `openclaw secrets configure --skip-provider-setup`
     - `openclaw secrets configure --agent <id>`
 
-    `configure` 应用默认设置：
+    `configure` 应用默认值：
 
-    - 从目标提供程序的 `auth-profiles.json` 中清除匹配的静态凭据
-    - 从 `auth.json` 中清除旧的静态 `api_key` 条目
-    - 从 `<config-dir>/.env` 中清除匹配的已知密钥行
+    - 从 `auth-profiles.json` 中清除针对提供者的匹配静态凭据
+    - 从 `auth.json` 中清除遗留的静态 `api_key` 条目
+    - 从 `<config-dir>/.env` 中清除匹配的已知秘密行
 
   </Accordion>
   <Accordion title="secrets apply">
@@ -709,12 +709,12 @@ Google Chat 兼容性行为：
     openclaw secrets apply --from /tmp/openclaw-secrets-plan.json --dry-run --allow-exec
     ```
 
-    Exec 说明：
+    Exec 注意事项：
 
-    - 除非设置了 `--allow-exec`，否则 dry-run 会跳过 exec 检查。
-    - 除非设置了 `--allow-exec`，否则写入模式会拒绝包含 exec SecretRefs/提供程序的计划。
+    - 除非设置了 `--allow-exec`，否则 dry-run 将跳过 exec 检查。
+    - 除非设置了 `--allow-exec`，否则写入模式将拒绝包含 exec SecretRefs/提供者的计划。
 
-    有关严格的目标/路径合同详细信息和确切的拒绝规则，请参阅 [Secrets Apply Plan Contract](/zh/gateway/secrets-plan-contract)。
+    有关严格的目标/路径合约详情和确切的拒绝规则，请参阅 [Secrets Apply Plan Contract](/zh/gateway/secrets-plan-contract)。
 
   </Accordion>
 </AccordionGroup>
@@ -734,7 +734,7 @@ Google Chat 兼容性行为：
 对于静态凭据，运行时不再依赖明文旧版身份验证存储。
 
 - 运行时凭据来源是已解析的内存快照。
-- 当发现旧的静态 `api_key` 条目时，它们将被清除。
+- 当发现遗留的静态 `api_key` 条目时，会将其清除。
 - 与 OAuth 相关的兼容性行为保持独立。
 
 ## Web UI 说明
@@ -744,8 +744,8 @@ Google Chat 兼容性行为：
 ## 相关
 
 - [身份验证](/zh/gateway/authentication) — 身份验证设置
-- [CLI: secrets](/zh/cli/secrets) — CLI 命令
-- [环境变量](/zh/help/environment) —— 环境优先级
-- [SecretRef 凭据范围](/zh/reference/secretref-credential-surface) —— 凭据范围
-- [Secrets 应用计划约定](/zh/gateway/secrets-plan-contract) —— 计划约定详情
-- [安全性](/zh/gateway/security) —— 安全态势
+- [CLI: secrets](CLI/en/cli/secretsCLI) — CLI 命令
+- [环境变量](/zh/help/environment) — 环境优先级
+- [SecretRef 凭据范围](/zh/reference/secretref-credential-surface) — 凭据范围
+- [Secrets 应用计划契约](/zh/gateway/secrets-plan-contract) — 计划契约详情
+- [安全性](/zh/gateway/security) — 安全态势

@@ -59,9 +59,9 @@ OpenClaw 支持 agent 工作流的 **camera capture**：
 
 与 `canvas.*` 类似，iOS 节点只允许在 **前台** 执行 `camera.*` 命令。后台调用返回 `NODE_BACKGROUND_UNAVAILABLE`。
 
-### CLI 辅助工具 (临时文件 + MEDIA)
+### CLI helper
 
-获取附件的最简单方法是通过 CLI 辅助工具，它会将解码后的媒体写入临时文件并打印 `MEDIA:<path>`。
+The easiest way to get media files is via the CLI helper, which writes decoded media to a temp file and prints the saved path.
 
 示例:
 
@@ -74,35 +74,35 @@ openclaw nodes camera clip --node <id> --no-audio
 
 注意:
 
-- `nodes camera snap` 默认为 **both** (两个) 摄像头朝向，以便为代理提供两种视图。
+- `nodes camera snap` 默认为 **both**（两者），以便为代理提供两个视图。
 - 除非您构建自己的包装器，否则输出文件是临时的（位于操作系统临时目录中）。
 
 ## Android 节点
 
 ### Android 用户设置 (默认开启)
 
-- Android 设置表单 → **相机** → **允许相机** (`camera.enabled`)
+- Android 设置表单 → **Camera** → **Allow Camera** (`camera.enabled`)
   - 默认: **on** (缺少的键将被视为已启用)。
-  - 关闭时: `camera.*` 命令返回 `CAMERA_DISABLED`。
+  - When off: `camera.*` commands return `CAMERA_DISABLED`.
 
 ### 权限
 
 - Android 需要运行时权限:
-  - `CAMERA` 用于 `camera.snap` 和 `camera.clip`。
-  - 当 `includeAudio=true` 时，`camera.clip` 需要 `RECORD_AUDIO`。
+  - `CAMERA` for both `camera.snap` and `camera.clip`.
+  - `RECORD_AUDIO` for `camera.clip` when `includeAudio=true`.
 
-如果缺少权限，应用程序会在可能的情况下提示；如果被拒绝，`camera.*` 请求将失败并返回
-`*_PERMISSION_REQUIRED` 错误。
+If permissions are missing, the app will prompt when possible; if denied, `camera.*` requests fail with a
+`*_PERMISSION_REQUIRED` error.
 
 ### Android 前台要求
 
-与 `canvas.*` 类似，Android 节点只允许在 **前台** 执行 `camera.*` 命令。后台调用返回 `NODE_BACKGROUND_UNAVAILABLE`。
+Like `canvas.*`, the Android node only allows `camera.*` commands in the **foreground**. Background invocations return `NODE_BACKGROUND_UNAVAILABLE`.
 
-### Android 命令（通过 Gateway `node.invoke`）
+### Android commands (via Gateway(网关) `node.invoke`)
 
 - `camera.list`
   - 响应负载：
-    - `devices`：`{ id, name, position, deviceType }` 数组
+    - `devices`: array of `{ id, name, position, deviceType }`
 
 ### 负载保护
 
@@ -114,45 +114,45 @@ openclaw nodes camera clip --node <id> --no-audio
 
 macOS 配套应用提供了一个复选框：
 
-- **设置 → 通用 → 允许相机** (`openclaw.cameraEnabled`)
+- **Settings → General → Allow Camera** (`openclaw.cameraEnabled`)
   - 默认：**关闭**
   - 关闭时：相机请求将返回“Camera disabled by user”。
 
 ### CLI 帮助程序（节点调用）
 
-使用主 `openclaw` CLI 在 macOS 节点上调用相机命令。
+Use the main `openclaw` CLI to invoke camera commands on the macOS node.
 
 示例：
 
 ```bash
 openclaw nodes camera list --node <id>            # list camera ids
-openclaw nodes camera snap --node <id>            # prints MEDIA:<path>
+openclaw nodes camera snap --node <id>            # prints saved path
 openclaw nodes camera snap --node <id> --max-width 1280
 openclaw nodes camera snap --node <id> --delay-ms 2000
 openclaw nodes camera snap --node <id> --device-id <id>
-openclaw nodes camera clip --node <id> --duration 10s          # prints MEDIA:<path>
-openclaw nodes camera clip --node <id> --duration-ms 3000      # prints MEDIA:<path> (legacy flag)
+openclaw nodes camera clip --node <id> --duration 10s          # prints saved path
+openclaw nodes camera clip --node <id> --duration-ms 3000      # prints saved path (legacy flag)
 openclaw nodes camera clip --node <id> --device-id <id>
 openclaw nodes camera clip --node <id> --no-audio
 ```
 
 注意：
 
-- 除非被覆盖，`openclaw nodes camera snap` 默认为 `maxWidth=1600`。
-- 在 macOS 上，`camera.snap` 在预热/曝光稳定后会等待 `delayMs`（默认 2000ms）再进行捕获。
+- `openclaw nodes camera snap` defaults to `maxWidth=1600` unless overridden.
+- On macOS, `camera.snap` waits `delayMs` (default 2000ms) after warm-up/exposure settle before capturing.
 - 照片负载会被重新压缩，以将 base64 大小保持在 5 MB 以下。
 
 ## 安全性与实际限制
 
 - 相机和麦克风访问会触发常规的操作系统权限提示（并且需要在 Info.plist 中包含使用说明字符串）。
-- 视频片段设有上限（目前为 `<= 60s`），以避免节点负载过大（base64 开销 + 消息限制）。
+- Video clips are capped (currently `<= 60s`) to avoid oversized node payloads (base64 overhead + message limits).
 
 ## macOS 屏幕视频（操作系统级别）
 
 对于*屏幕*视频（而非相机），请使用 macOS 配套应用：
 
 ```bash
-openclaw nodes screen record --node <id> --duration 10s --fps 15   # prints MEDIA:<path>
+openclaw nodes screen record --node <id> --duration 10s --fps 15   # prints saved path
 ```
 
 注意：
@@ -161,6 +161,6 @@ openclaw nodes screen record --node <id> --duration 10s --fps 15   # prints MEDI
 
 ## 相关
 
-- [图像和媒体支持](/zh/nodes/images)
-- [媒体理解](/zh/nodes/media-understanding)
-- [位置命令](/zh/nodes/location-command)
+- [Image and media support](/zh/nodes/images)
+- [Media understanding](/zh/nodes/media-understanding)
+- [Location command](/zh/nodes/location-command)

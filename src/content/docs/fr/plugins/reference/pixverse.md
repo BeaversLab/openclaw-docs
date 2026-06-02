@@ -12,7 +12,7 @@ Plug-in du provider de génération vidéo OpenClaw PixVerse.
 ## Distribution
 
 - Paquet : `@openclaw/pixverse-provider`
-- Méthode d'installation : npm ; ClawHub
+- Voie d'installation : npm; ClawHub : `clawhub:@openclaw/pixverse-provider`
 
 ## Surface
 

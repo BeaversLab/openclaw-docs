@@ -24,51 +24,56 @@ title: "WebChat"
 
 - UI 連線到 Gateway WebSocket 並使用 `chat.history`、`chat.send` 和 `chat.inject`。
 - `chat.history` 為了穩定性設有界限：Gateway 可能會截斷長文字欄位，省略繁重的元數據，並用 `[chat.history omitted: message too large]` 替換過大的項目。
-- `chat.history` 遵循現代僅追加會話檔案的作用中抄錄分支，因此被放棄的重寫分支和被取代的提示副本不會在 WebChat 中呈現。
-- 壓縮條目會呈現為明確的壓縮歷史記錄分隔線。該分隔線說明壓縮的對話記錄會保留為檢查點，並連結到「Sessions」檢查點控制項，操作員可在權限允許的情況下，從該壓縮視圖分支還原。
-- Control UI 會記住 `chat.history` 傳回的後端 Gateway `sessionId`，並將其包含在後續的 `chat.send` 呼叫中，因此除非使用者啟動或重置會話，否則重新連線和重新整理頁面都會繼續相同的儲存對話。
-- Control UI 會在產生新的 `chat.send` 執行 ID 之前，針對相同的會話、訊息和附件合併重複的進中提交；Gateway 仍會對重複使用相同等冪性金鑰的重複請求進行去重。
-- 工作區啟動檔案和待處理的 `BOOTSTRAP.md` 指令是透過代理程式系統提示詞的專案內容提供，而非複製到 WebChat 使用者訊息中。啟動截斷僅會新增簡潔的系統提示詞復原通知；詳細計數和設定旋鈕則保留在診斷介面上。
-- `chat.history` 也經過顯示正規化處理：僅限執行時的 OpenClaw 內容、
-  传入信封包裝器、行內傳遞指令標籤
-  （例如 `[[reply_to_*]]` 和 `[[audio_as_voice]]`）、純文字工具呼叫 XML
+- 當可見的助理訊息在 `chat.history` 中被截斷時，控制 UI 可以開啟側邊閱讀器，並透過 `chat.message.get` 按需獲取完整的顯示正規化條目，而不會增加預設的歷史記錄酬載。
+- `chat.history` 會跟隨作用中的轉錄分支（針對現代僅附加的會話檔案），因此被放棄的重寫分支和被取代的提示副本不會在 WebChat 中呈現。
+- 壓縮條目會呈現為明確的壓縮歷史記錄分隔線。該分隔線說明壓縮後的轉錄會作為檢查點保留，並連結至「工作階段」檢查點控制項，操作員可在權限允許的情況下，從該壓縮視圖建立分支或還原。
+- 控制 UI 會記住由 `chat.history` 傳回的備份閘道 `sessionId`，並將其包含在後續的 `chat.send` 呼叫中，因此除非使用者啟動或重設會話，否則重新連線和頁面重新整理都會繼續同一個已儲存的對話。
+- 控制 UI 會在產生新的 `chat.send` 執行 ID 之前，合併相同會話、訊息和附件的重複進行中提交；閘道仍會對重複使用相同冪等金鑰的重複請求進行去重。
+- 工作區啟動檔案和待處理的 `BOOTSTRAP.md` 指令是透過代理人系統提示的專案內容提供，而非複製到 WebChat 使用者訊息中。啟動截斷僅會新增簡明的系統提示恢復通知；詳細計數和配置旋鈕保留在診斷介面上。
+- `chat.history` 也會經過顯示正規化處理：僅限運行時的 OpenClaw 上下文、
+  入站信封封裝器、內嵌傳遞指令標籤
+  （如 `[[reply_to_*]]` 和 `[[audio_as_voice]]`）、純文字工具呼叫 XML
   載荷（包括 `<tool_call>...</tool_call>`、
   `<function_call>...</function_call>`、`<tool_calls>...</tool_calls>`、
-  `<function_calls>...</function_calls>` 以及被截斷的工具呼叫區塊），以及
+  `<function_calls>...</function_calls>`，以及被截斷的工具呼叫區塊），以及
   外洩的 ASCII/全形模型控制權杖都會從可見文字中移除，
-  且若助手條目的整個可見文字僅為確切的靜默
+  且若助理條目的整體可見文字僅為精確的靜音
   權杖 `NO_REPLY` / `no_reply`，則會被省略。
-- 標記為推理的回覆載荷（`isReasoning: true`）會從 WebChat 助手內容、抄錄重播文字和音訊內容區塊中排除，因此僅限思考的載荷不會顯示為可見的助手訊息或可播放的音訊。
-- `chat.inject` 會將助理註釋直接附加到對話紀錄並廣播到 UI（不執行代理程式運行）。
-- 已中止的運行可讓部分助理輸出在 UI 中保持可見。
-- 當存在緩衝輸出時，Gateway 會將已中止的部分助理文字持久化到對話紀錄歷史中，並用中止元資料標記這些條目。
-- 歷史紀錄總是從 Gateway 獲取（不監看本地檔案）。
+- 標記為推理的回覆載荷（`isReasoning: true`）會從 WebChat 助理內容、逐字重播文字和音訊內容區塊中排除，因此純推理的載荷不會顯示為可見的助理訊息或可播放的音訊。
+- `chat.inject` 會將助理註記直接附加到逐字紀錄並將其廣播至 UI（無需執行代理程式）。
+- 中止的執行可讓部分的助理輸出保留在 UI 中可見。
+- 當存在緩衝輸出時，Gateway 會將中止的部分助理文字保存到逐字紀錄歷史中，並以中止中繼資料標示這些項目。
+- 歷史記錄總是從 Gateway 獲取（不監看本地檔案）。
 - 如果無法連線到 Gateway，WebChat 將處於唯讀狀態。
 
-### 對話紀錄與傳遞模型
+### 逐字紀錄與傳遞模型
 
-WebChat 有兩條獨立的資料路徑：
+WebChat 有兩個獨立的資料路徑：
 
-- Session JSONL 檔案是持久的模型/運行時對話記錄。對於正常的 Agent 執行，內嵌的 OpenClaw 運行時會透過其會話管理員保存模型可見的 `user`、`assistant` 和 `toolResult` 訊息。WebChat 不會將任意傳送、狀態或輔助文字寫入該對話記錄中。
-- Gateway `ReplyPayload` 事件是即時傳遞投影。它們可以針對 WebChat/頻道顯示、區塊串流、指令標籤、媒體嵌入、TTS/音訊標誌和 UI 後援行為進行正規化。它們本身不是規範的會話日誌。
-- 需要透過 `tools.message` 顯示回覆的測試線路仍將 WebChat 作為當前執行內部的來源回覆接收器。來自該活動 WebChat 執行的無目標 `message.send` 會被投影到相同的聊天中，並映照到會話記錄稿；WebChat 不會變成可重複使用的輸出通道，也從不繼承 `lastChannel`。
-- WebChat 僅在 Gateway 擁有正常內嵌 Agent 週期之外顯示的訊息時，才會插入 Assistant 對話記錄條目：`chat.inject`、非 Agent 指令回覆、已中止的部分輸出，以及 WebChat 管理的媒體對話記錄補充內容。
-- `chat.history` 會讀取儲存的會話記錄稿並套用 WebChat 顯示投影。如果在執行期間出現即時助手文字，但在重新載入歷程記錄後消失，請先檢查原始 JSONL 是否包含該助手文字，然後檢查是否 `chat.history` 投影將其剝除，再檢查 Control UI 樂觀尾部合併是否用持續性快照取代了本機傳遞狀態。
+- 工作階段 JSONL 檔案是持久的模型/運行時逐字紀錄。對於一般的代理程式執行，內嵌的 OpenClaw 運行時會透過其工作階段管理器將模型可見的 `user`、`assistant` 和 `toolResult` 訊息保存下來。WebChat 不會將任意的傳遞、狀態或協助文字寫入該逐字紀錄中。
+- Gateway `ReplyPayload` 事件是即時傳遞投影。它們可以針對 WebChat/通道顯示、區塊串流、指令標籤、媒體嵌入、TTS/音訊旗標以及 UI 退回行為進行正規化。它們本身並非正式的工作階段紀錄。
+- 需要透過 `tools.message` 顯示回覆的 Harness 仍將 WebChat 作為當前運行的內部來源回覆接收器。來自該活躍 WebChat 運行的無目標 `message.send` 會被投影到同一個聊天中並鏡像到會話文字記錄；WebChat 不會變成可重複使用的出站通道，也從不繼承 `lastChannel`。
+- 僅當 Gateway 在正常的嵌入式 Agent 輪次之外擁有顯示的訊息時，WebChat 才會插入 Assistant 文字記錄條目：`chat.inject`、非 Agent 指令回覆、已中止的部分輸出，以及由 WebChat 管理的媒體文字記錄補充內容。
+- `chat.history` 讀取已儲存的會話文字記錄並套用 WebChat 顯示投影。如果在運行期間出現即時 Assistant 文字，但在重新載入歷史記錄後消失，請首先檢查原始 JSONL 是否包含該 Assistant 文字，然後檢查是否由 `chat.history` 投影將其剝離，再檢查 Control UI 的樂觀尾部合併是否已用持久化的快照取代了本機傳遞狀態。
+- `chat.message.get` 使用與 `chat.history` 相同的文字記錄分支和顯示投影規則（包括活躍 Agent 範圍設定），但透過 `messageId` 鎖定單一文字記錄條目，並在無法傳回完整內容時傳回真實的不可用原因。
 
-正常的 Agent 執行最終答案應該是持久的，因為內嵌運行時會寫入 Assistant `message_end`。任何將已傳送的最終 Payload 鏡像到對話記錄中的後備機制，首先必須避免重複內嵌運行時已經寫入的 Assistant 週期。
+正常的 Agent 運行最終答案應該是持久的，因為嵌入式運行時會寫入 Assistant `message_end`。任何將已傳遞的最終 Payload 鏡像到文字記錄的後備機制，都必須首先避免重複嵌入式運行時已寫入的 Assistant 輪次。
 
-## Control UI 代理程式工具面板
+## Control UI Agent 工具面板
 
-- Control UI `/agents` 工具面板有兩個獨立檢視：
-  - **可用工具** 使用 `tools.effective(sessionKey=...)`，並顯示目前 Session 清單的伺服器衍生唯讀投影，包括核心、外掛、通道擁有，以及已探索的 MCP 伺服器工具。
-  - **工具設定** 使用 `tools.catalog` 並持續專注於設定檔、覆寫和目錄語意。
-- 運行時可用性是以 Session 為範圍。在相同 Agent 上切換 Session 可能會變更 **可用工具** 清單。如果設定的 MCP 伺服器尚未連線，或是自上次探索後已變更，面板會顯示通知，而不是在讀取路徑中靜默啟動 MCP 傳輸。
-- 設定編輯器並不代表執行時期的可用性；有效存取仍然遵循原則優先順序 (`allow`/`deny`，每個代理程式和提供者/通道覆寫)。
+- Control UI `/agents` 工具面板有兩個獨立的視圖：
+  - **目前可用** 使用 `tools.effective(sessionKey=...)`，並顯示伺服器衍生的目前會庫存唯讀投影，包括核心、外掛、通道擁有以及已發現的 MCP 伺服器工具。
+  - **工具組態** 使用 `tools.catalog`，並專注於設定檔、覆寫和目錄語意。
+- 執行時可用性僅限於目前工作階段。在同一個代理程式上切換工作階段可能會改變
+  **目前可用** 清單。如果已設定的 MCP 伺服器尚未連線，或自上次探索後有所變更，
+  面板會顯示通知，而不是從讀取路徑無聲地啟動 MCP 傳輸。
+- 設定編輯器並不代表執行時可用；有效存取仍遵循原則
+  優先順序 (`allow`/`deny`、每個代理程式與提供者/通道覆寫)。
 
 ## 遠端使用
 
-- 遠端模式透過 SSH/Tailscale 建立網關 WebSocket 的通道。
-- 您不需要執行個別的 WebChat 伺服器。
+- 遠端模式會透過 SSH/Tailscale 建立通道傳輸閘道 WebSocket。
+- 您不需要執行單獨的 WebChat 伺服器。
 
 ## 設定參考 (WebChat)
 
@@ -76,20 +81,20 @@ WebChat 有兩條獨立的資料路徑：
 
 WebChat 選項：
 
-- `gateway.webchat.chatHistoryMaxChars`：`chat.history` 回應中文字欄位的最大字元數。當交談紀錄項目超過此限制時，Gateway 會截斷長文字欄位，並可能會用預留位置取代過大的訊息。用戶端也可以傳送單次請求的 `maxChars` 來覆寫單一 `chat.history` 呼叫的此預設值。
+- `gateway.webchat.chatHistoryMaxChars`：`chat.history` 回應中文字欄位的最大字元數。當逐字稿項目超過此限制時，閘道會截斷長文字欄位，並可能用預留位置取代過大的訊息。用戶端也可以傳送每個請求的 `maxChars` 來覆寫單一 `chat.history` 呼叫的此預設值。
 
 相關的全域選項：
 
 - `gateway.port`、`gateway.bind`：WebSocket 主機/連接埠。
 - `gateway.auth.mode`、`gateway.auth.token`、`gateway.auth.password`：
   共用金鑰 WebSocket 驗證。
-- `gateway.auth.allowTailscale`：啟用時，瀏覽器 Control UI 聊天分頁可以使用 Tailscale
-  供應身分標頭。
-- `gateway.auth.mode: "trusted-proxy"`：位於具備身分感知能力的**非回送**代理伺服器來源後方的瀏覽器用戶端的反向代理驗證（請參閱[信任的代理驗證](/zh-Hant/gateway/trusted-proxy-auth)）。
+- `gateway.auth.allowTailscale`：啟用時，瀏覽器控制 UI 聊天分頁可以使用 Tailscale
+  Serve 身分標頭。
+- `gateway.auth.mode: "trusted-proxy"`：針對位於具身分識別感知 **非回送** 來源代理後方的瀏覽器用戶端進行反向代理驗證 (請參閱 [受信任的代理驗證](/zh-Hant/gateway/trusted-proxy-auth))。
 - `gateway.remote.url`、`gateway.remote.token`、`gateway.remote.password`：遠端閘道目標。
-- `session.*`：會話儲存和主金鑰預設值。
+- `session.*`：工作階段儲存與主金鑰預設值。
 
 ## 相關
 
-- [Control UI](/zh-Hant/web/control-ui)
+- [控制 UI](/zh-Hant/web/control-ui)
 - [儀表板](/zh-Hant/web/dashboard)

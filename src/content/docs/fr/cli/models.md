@@ -12,8 +12,8 @@ Découverte, analyse et configuration de modèles (modèle par défaut, replis, 
 
 Connexes :
 
-- Providers + models : [Models](/fr/providers/models)
-- Concepts de sélection de modèle + commande slash `/models` : [Models concept](/fr/concepts/models)
+- Providers + models : [Modèles](/fr/providers/models)
+- Concepts de sélection de modèle + commande slash `/models` : [Concept de modèle](/fr/concepts/models)
 - Configuration de l'authentification du provider : [Getting started](/fr/start/getting-started)
 
 ## Commandes courantes
@@ -25,25 +25,24 @@ openclaw models set <model-or-alias>
 openclaw models scan
 ```
 
-`openclaw models status` affiche les valeurs par défaut résolues/secours ainsi qu'une vue d'ensemble de l'authentification.
-Lorsque des instantanés d'utilisation du provider sont disponibles, la section de statut OAuth/clé OAuthAPI comprend
-les fenêtres d'utilisation du provider et des instantanés de quota.
-Providers actuels avec fenêtre d'utilisation : Anthropic, GitHub Copilot, Gemini CLI, OpenAI
-Codex, MiniMax, Xiaomi et z.ai. L'authentification d'utilisation provient de hooks spécifiques au provider
-lorsqu'ils sont disponibles ; sinon OpenClawOAuth revient à faire correspondre les identifiants
-OAuth/clé API à partir des profils d'authentification, de l'environnement ou de la configuration.
-Dans la sortie de `--json`, `auth.providers` est la vue d'ensemble du provider
-consciente de l'environnement/configuration/stockage, tandis que `auth.oauth` concerne uniquement la santé du profil de stockage d'authentification.
-Ajoutez `--probe` pour exécuter des sondages d'authentification en direct sur chaque profil de provider configuré.
-Les sondages sont de vraies requêtes (peuvent consommer des jetons et déclencher des limites de taux).
-Utilisez `--agent <id>` pour inspecter l'état du modèle/d'authentification d'un agent configuré. Si omis,
-la commande utilise `OPENCLAW_AGENT_DIR` si défini, sinon
-l'agent par défaut configuré.
-Les lignes de sondage peuvent provenir des profils d'authentification, des identifiants de l'environnement ou de `models.json`OAuth.
-Pour le dépannage OAuth de Codex, `openclaw models status`,
-`openclaw models auth list --provider openai-codex` et
+`openclaw models status` affiche les valeurs par défaut résolues/fallbacks ainsi qu'un aperçu de l'auth.
+Lorsque des instantanés d'utilisation de providers sont disponibles, la section de statut OAuth/clé API inclut
+les fenêtres d'utilisation des providers et des instantanés de quota.
+Providers actuels à fenêtre d'utilisation : AnthropicGitHub, GitHub Copilot, Gemini CLI, OpenAI,
+MiniMax, Xiaomi et z.ai. L'auth d'utilisation provient de hooks spécifiques au provider
+lorsqu'ils sont disponibles ; sinon OpenClaw revient à faire correspondre les identifiants OAuth/clé API
+depuis les profils d'auth, l'env ou la config.
+Dans la sortie `--json`, `auth.providers` est l'aperçu du provider
+conscient de l'env/config/store, tandis que `auth.oauth` concerne uniquement la santé des profils du magasin d'auth.
+Ajoutez `--probe` pour exécuter des sondes d'auth en direct contre chaque profil de provider configuré.
+Les sondes sont de vraies requêtes (peuvent consommer des jetons et déclencher des limites de taux).
+Utilisez `--agent <id>` pour inspecter l'état du modèle/auth d'un agent configuré. Si omis,
+la commande utilise `OPENCLAW_AGENT_DIR` si défini, sinon l'agent par défaut configuré.
+Les lignes de sonde peuvent provenir des profils d'auth, des identifiants de l'env ou de `models.json`.
+Pour le troubleshooting OpenAI ChatGPT/Codex OAuth, `openclaw models status`,
+`openclaw models auth list --provider openai` et
 `openclaw config get agents.defaults.model --json` sont le moyen le plus rapide de
-confirmer si un agent dispose d'un profil d'authentification `openai-codex` utilisable pour
+confirmer si un agent dispose d'un profil OAuth `openai` utilisable pour
 `openai/*` via le runtime natif Codex. Voir [Configuration du provider OpenAI](/fr/providers/openai#check-and-recover-codex-oauth-routing).
 
 Notes :
@@ -55,7 +54,9 @@ Notes :
 - `models list` garde le plan de contrôle réactif pendant que la découverte du catalogue du provider est lente. Les vues par défaut et configurées reviennent aux lignes de modèle configurées ou synthétiques après une courte attente et laissent la découverte se terminer en arrière-plan. Utilisez `--all` lorsque vous avez besoin du catalogue complet découvert exact et que vous êtes prêt à attendre la découverte du provider.
 - Le `models list --all` large fusionne les lignes de catalogue de manifeste par-dessus les lignes de registre sans charger les crochets de complément de runtime du provider. Les chemins rapides de manifeste filtrés par provider utilisent uniquement les providers marqués `static` ; les providers marqués `refreshable` restent basés sur le registre/le cache et ajoutent les lignes de manifeste comme suppléments, tandis que les providers marqués `runtime` restent sur la découverte de registre/runtime.
 - `models list` distingue les métadonnées natives des modèles et les limites d'exécution (runtime caps). Dans la sortie de tableau, `Ctx` affiche `contextTokens/contextWindow` lorsqu'une limite d'exécution effective diffère de la fenêtre de contexte native ; les lignes JSON incluent `contextTokens` lorsqu'un provider expose cette limite.
-- `models list --provider <id>` filtre par identifiant de provider, tel que `moonshot` ou `openai-codex`. Il n'accepte pas les libellés d'affichage des sélecteurs de provider interactifs, tels que `Moonshot AI`.
+- `models list --provider <id>` filtre par identifiant de fournisseur, tel que `moonshot` ou
+  `openai`. Il n'accepte pas les libellés d'affichage des sélecteurs
+  interactifs de fournisseurs, tels que `Moonshot AI`.
 - Les références de modèle sont analysées en divisant sur la **première** `/`. Si l'ID du modèle inclut `/` (style OpenRouter), incluez le préfixe du fournisseur (exemple : `openrouter/moonshotai/kimi-k2`).
 - Si vous omettez le provider, OpenClaw résout d'abord l'entrée comme un alias, puis
   comme une correspondance unique de provider configuré pour cet identifiant de model exact, et ce n'est qu'alors
@@ -144,7 +145,9 @@ openclaw models auth paste-token
 
 `models auth add` est l'assistant d'auth interactif. Il peut lancer un flux d'auth de provider (OAuth /clé API ) ou vous guider vers un collage manuel de jeton, selon le provider que vous choisissez.
 
-`models auth list` liste les profils d'auth enregistrés pour l'agent sélectionné sans imprimer de jeton, de clé API ou de matériel secret OAuth. Utilisez `--provider <id>` pour filtrer par un provider, tel que `openai-codex` , et `--json` pour les scripts.
+`models auth list`APIOAuth liste les profils d'authentification enregistrés pour l'agent sélectionné sans
+afficher le jeton, la clé API ou le secret OAuth. Utilisez `--provider <id>` pour
+filtrer par fournisseur, tel que `openai`, et `--json` pour les scripts.
 
 `models auth login` exécute le flux d'authentification du plugin de provider (OAuth/clé API). Utilisez
 `openclaw plugins list` pour voir quels providers sont installés.
@@ -153,48 +156,50 @@ magasin d'agent configuré spécifique. L'indicateur parent `--agent` est respec
 `add`, `list`, `login`, `paste-api-key`, `setup-token`, `paste-token`, et
 `login-github-copilot`.
 
-Pour les modèles OpenAI, `--provider openai` utilise par défaut la connexion au compte ChatGPT/Codex.
-Utilisez `--method api-key` uniquement lorsque vous souhaitez ajouter un profil de clé OpenAI API,
-généralement comme sauvegarde pour les limites d'abonnement Codex. L'orthographe
-historique `--provider openai-codex` fonctionne toujours pour les scripts existants.
+Pour les modèles OpenAI, OpenAI`--provider openai` utilise par défaut la connexion au compte ChatGPT/Codex.
+Utilisez `--method api-key`OpenAIAPI uniquement lorsque vous souhaitez ajouter un profil de clé API OpenAI,
+généralement comme sauvegarde pour les limites d'abonnement Codex. Exécutez `openclaw doctor --fix`OpenAI
+pour migrer l'ancien état d'authentification/profil du préfixe OpenAI Codex vers `openai`.
 
 Exemples :
 
 ```bash
 openclaw models auth login --provider openai --set-default
 openclaw models auth login --provider openai --method api-key
-openclaw models auth paste-api-key --provider openai-codex
+openclaw models auth paste-api-key --provider openai
 openclaw models auth list --provider openai
 ```
 
 Notes :
 
-- `login` accepte `--profile-id <id>` pour les providers qui prennent en charge les
-  profils nommés lors de la connexion. Utilisez ceci pour garder plusieurs connexions pour le même
-  provider séparées.
-- `paste-api-key` accepte les clés API générées ailleurs, demande la valeur
-  de la clé et l'écrit dans l'ID de profil par défaut `<provider>:manual`, sauf si vous
+- `login` accepte `--profile-id <id>` pour les fournisseurs qui prennent en charge les profils
+  nommés lors de la connexion. Utilisez ceci pour garder plusieurs connexions pour le même
+  fournisseur séparées.
+- `paste-api-key`API accepte les clés API générées ailleurs, demande la valeur de la clé
+  et l'écrit dans l'identifiant de profil par défaut `<provider>:manual`, sauf si vous
   passez `--profile-id`. Dans l'automatisation, envoyez la clé via stdin, par exemple
-  `printf "%s\n" "$OPENAI_API_KEY" | openclaw models auth paste-api-key --provider openai-codex`.
-- `setup-token` et `paste-token` restent des commandes de token génériques pour les providers
-  qui exposent des méthodes d'authentification par token.
-- `setup-token` nécessite un TTY interactif et exécute la méthode token-auth
-  du provider (par défaut, la méthode `setup-token` de ce provider lorsqu'il en expose
+  `printf "%s\n" "$OPENAI_API_KEY" | openclaw models auth paste-api-key --provider openai`.
+- `setup-token` et `paste-token` restent des commandes génériques de jeton pour les fournisseurs
+  qui exposent des méthodes d'authentification par jeton.
+- `setup-token` nécessite un TTY interactif et exécute la méthode d'authentification par jeton
+  du fournisseur (par défaut, la méthode `setup-token` de ce fournisseur lorsqu'il en expose
   une).
-- `paste-token` accepte une chaîne de token générée ailleurs ou via l'automatisation.
+- `paste-token` accepte une chaîne de jeton générée ailleurs ou issue de l'automatisation.
 - `paste-token` nécessite `--provider`, demande la valeur du jeton par défaut,
-  et l'écrit dans l'ID de profil par défaut `<provider>:manual` à moins que vous ne passiez
+  et l'écrit dans l'ID de profil par défaut `<provider>:manual`, sauf si vous transmettez
   `--profile-id`.
 - Dans le cadre de l'automatisation, transmettez le jeton via stdin au lieu de le passer en argument pour que
   les informations d'identification du provider n'apparaissent pas dans l'historique du shell ou les listes de processus.
 - `paste-token --expires-in <duration>` stocke une expiration absolue du jeton à partir d'une
   durée relative telle que `365d` ou `12h`.
-- Pour `openai-codex`, les clés d'API OpenAIAPI et les éléments de jeton ChatGPT/OAuth sont des formes d'authentification différentes. Utilisez `paste-api-key``sk-...` pour les clés d'API OpenAI API et `paste-token` uniquement pour les éléments d'authentification par jeton.
-- Remarque Anthropic : le personnel de Anthropic nous a informés que l'utilisation du OpenClaw Claude de style CLI est à nouveau autorisée, donc OpenClaw considère la réutilisation du CLI Claude et l'utilisation de `claude -p` comme étant sanctionnées pour cette intégration, à moins que Anthropic ne publie une nouvelle politique.
-- Anthropic Anthropic`setup-token` / `paste-token`OpenClawOpenClawCLI restent disponibles en tant que chemin de jeton OpenClaw pris en charge, mais OpenClaw préfère désormais la réutilisation du Claude CLI et `claude -p` lorsqu'ils sont disponibles.
+- Pour `openai`, les clés d'OpenAI API et les éléments de jeton ChatGPT/OAuth
+  sont des formes d'authentification différentes. Utilisez `paste-api-key` pour les clés d'OpenAI API
+  `sk-...` et `paste-token` uniquement pour les éléments d'authentification par jeton.
+- Note Anthropic : Le personnel de Anthropic nous a indiqué que l'utilisation de la ligne de commande Claude de style OpenClawCLI est à nouveau autorisée, donc OpenClawCLI considère la réutilisation de la ligne de commande Claude et l'utilisation de `claude -p` comme approuvées pour cette intégration, sauf si Anthropic publie une nouvelle politique.
+- Le Anthropic `setup-token` / `paste-token` reste disponible en tant que chemin de jeton pris en charge par OpenClaw, mais OpenClawCLI préfère désormais la réutilisation de la ligne de commande Claude et `claude -p` lorsqu'ils sont disponibles.
 
 ## Connexes
 
-- [Référence CLI](CLI/en/cli)
-- [Sélection de modèle](/fr/concepts/model-providers)
+- [Référence de la CLI](/fr/cli)
+- [Sélection du modèle](/fr/concepts/model-providers)
 - [Basculement de modèle](/fr/concepts/model-failover)

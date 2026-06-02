@@ -12,7 +12,7 @@ OpenClaw PixVerse 视频生成提供商插件。
 ## 分发
 
 - 软件包： `@openclaw/pixverse-provider`
-- 安装方式： npm； ClawHub
+- 安装方式：npm；ClawHub：npmClawHub`clawhub:@openclaw/pixverse-provider`
 
 ## 接口
 

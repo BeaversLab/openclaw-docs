@@ -8,7 +8,7 @@ sidebarTitle: "Referencia de CLI"
 ---
 
 Esta página es la referencia completa de `openclaw onboard`.
-Para la guía breve, consulte [Onboarding (CLI)](/es/start/wizard).
+Para la guía breve, consulta [Incorporación (CLI)](/es/start/wizard).
 
 ## Lo que hace el asistente
 
@@ -40,13 +40,13 @@ No instala ni modifica nada en el host remoto.
 
   </Step>
   <Step title="Modelo y autenticación">
-    - La matriz de opciones completa está en [Auth and model options](#auth-and-model-options).
+    - La matriz completa de opciones está en [Opciones de autenticación y modelo](#auth-and-model-options).
 
   </Step>
   <Step title="Espacio de trabajo">
-    - Por defecto `~/.openclaw/workspace` (configurable).
-    - Siembra los archivos del espacio de trabajo necesarios para el ritual de arranque inicial.
-    - Diseño del espacio de trabajo: [Agent workspace](/es/concepts/agent-workspace).
+    - Predeterminado `~/.openclaw/workspace` (configurable).
+    - Siembra los archivos del espacio de trabajo necesarios para el ritual de inicio de la primera ejecución.
+    - Diseño del espacio de trabajo: [Espacio de trabajo del agente](/es/concepts/agent-workspace).
 
   </Step>
   <Step title="Puerta de enlace">
@@ -70,9 +70,9 @@ No instala ni modifica nada en el host remoto.
     - [Google Chat](/es/channels/googlechat): JSON de cuenta de servicio + audiencia del webhook
     - [Mattermost](/es/channels/mattermost): token del bot + URL base
     - [Signal](/es/channels/signal): instalación opcional de `signal-cli` + configuración de cuenta
-    - [iMessage](/es/channels/imessage): ruta de la CLI `imsg` + acceso a la base de datos de Messages; use un contenedor SSH cuando el Gateway se ejecuta fuera de Mac
-    - Seguridad de DM: el valor predeterminado es emparejamiento. El primer DM envía un código; apruébelo a través de
-      `openclaw pairing approve <channel> <code>` o use listas de permitidos.
+    - [iMessage](/es/channels/imessage): ruta de la CLI de `imsg` + acceso a la BD de Messages; usa un contenedor SSH cuando el Gateway se ejecuta fuera de Mac
+    - Seguridad de MD: el valor predeterminado es el emparejamiento. El primer MD envía un código; apruébalo mediante
+      `openclaw pairing approve <channel> <code>` o usa listas de permitidos.
   </Step>
   <Step title="Instalación del Demonio">
     - macOS: LaunchAgent
@@ -143,23 +143,23 @@ Lo que configura:
 
   </Accordion>
   <Accordion title="Clave de API de OpenAI">
-    Usa `OPENAI_API_KEY` si está presente o solicita una clave, y luego almacena la credencial en los perfiles de autenticación.
+    Usa `OPENAI_API_KEY` si está presente o solicita una clave, luego almacena la credencial en los perfiles de autenticación.
 
-    Establece `agents.defaults.model` en `openai/gpt-5.5` cuando el modelo no está configurado, `openai/*`, o `openai-codex/*`.
+    Establece `agents.defaults.model` en `openai/gpt-5.5` cuando el modelo no está configurado, `openai/*`, o referencias de modelos heredados de Codex.
 
   </Accordion>
   <Accordion title="OAuth de xAI (Grok)">
     Inicio de sesión en el navegador para cuentas elegibles de SuperGrok o X Premium. Esta es la
-    ruta recomendada de xAI para la mayoría de los usuarios. OpenClaw almacena el perfil de autenticación resultante
-    para modelos Grok, Grok `web_search`, `x_search` y `code_execution`.
+    ruta recomendada de xAI para la mayoría de los usuarios. OpenClaw almacena el perfil de autenticación
+    resultante para los modelos Grok, Grok `web_search`, `x_search`, y `code_execution`.
   </Accordion>
   <Accordion title="Código de dispositivo de xAI (Grok)">
     Inicio de sesión en el navegador compatible con entornos remotos con un código corto en lugar de una
     devolución de llamada de localhost. Use esto desde hosts SSH, Docker o VPS.
   </Accordion>
-  <Accordion title="Clave API de xAI (Grok)">
-    Solicita `XAI_API_KEY` y configura xAI como proveedor de modelos. Use esto
-    cuando desee una clave API de la consola xAI en lugar de OAuth de suscripción.
+  <Accordion title="Clave de API de xAI (Grok)">
+    Solicita `XAI_API_KEY` y configura xAI como proveedor de modelo. Utilice esto
+    cuando desee una clave de API de xAI Console en lugar de OAuth de suscripción.
   </Accordion>
   <Accordion title="OpenCode">
     Solicita `OPENCODE_API_KEY` (o `OPENCODE_ZEN_API_KEY`) y te permite elegir el catálogo Zen o Go.
@@ -177,24 +177,24 @@ Lo que configura:
     Más detalles: [Cloudflare AI Gateway](/es/providers/cloudflare-ai-gateway).
   </Accordion>
   <Accordion title="MiniMax">
-    La configuración se escribe automáticamente. El valor predeterminado alojado es `MiniMax-M2.7`; la configuración de clave de API usa
-    `minimax/...`, y la configuración de OAuth usa `minimax-portal/...`.
+    La configuración se escribe automáticamente. El alojamiento predeterminado es `MiniMax-M2.7`; la configuración con clave de API utiliza
+    `minimax/...` y la configuración OAuth utiliza `minimax-portal/...`.
     Más detalles: [MiniMax](/es/providers/minimax).
   </Accordion>
   <Accordion title="StepFun">
     La configuración se escribe automáticamente para StepFun estándar o Step Plan en endpoints de China o globales.
-    El estándar actualmente incluye `step-3.5-flash`, y Step Plan también incluye `step-3.5-flash-2603`.
+    Estándar actualmente incluye `step-3.5-flash`, y Step Plan también incluye `step-3.5-flash-2603`.
     Más detalles: [StepFun](/es/providers/stepfun).
   </Accordion>
-  <Accordion title="Synthetic (Anthropic-compatible)">
+  <Accordion title="Sintético (compatible con Anthropic)">
     Solicita `SYNTHETIC_API_KEY`.
     Más detalles: [Synthetic](/es/providers/synthetic).
   </Accordion>
   <Accordion title="Ollama (Cloud and local open models)">
     Solicita `Cloud + Local`, `Cloud only` o `Local only` primero.
     `Cloud only` usa `OLLAMA_API_KEY` con `https://ollama.com`.
-    Los modos gestionados por el host solicitan la URL base (por defecto `http://127.0.0.1:11434`), detectan los modelos disponibles y sugieren valores predeterminados.
-    `Cloud + Local` también verifica si ese host de Ollama ha iniciado sesión para el acceso en la nube.
+    Los modos respaldados por el host solicitan la URL base (por defecto `http://127.0.0.1:11434`), descubren los modelos disponibles y sugieren valores predeterminados.
+    `Cloud + Local` también verifica si ese host Ollama ha iniciado sesión para el acceso en la nube.
     Más detalles: [Ollama](/es/providers/ollama).
   </Accordion>
   <Accordion title="Moonshot and Kimi Coding">
@@ -204,9 +204,9 @@ Lo que configura:
   <Accordion title="Custom provider">
     Funciona con endpoints compatibles con OpenAI y Anthropic.
 
-    La integración interactiva admite las mismas opciones de almacenamiento de claves API que otros flujos de claves API de proveedores:
-    - **Paste API key now** (texto plano)
-    - **Use secret reference** (ref de entorno o ref de proveedor configurado, con validación previa al vuelo)
+    La incorporación interactiva admite las mismas opciones de almacenamiento de claves API que otros flujos de claves API de proveedores:
+    - **Pegar clave API ahora** (texto plano)
+    - **Usar referencia secreta** (ref de env o ref de proveedor configurado, con validación previa al vuelo)
 
     Marcas no interactivas:
     - `--auth-choice custom-api-key`
@@ -214,7 +214,7 @@ Lo que configura:
     - `--custom-model-id`
     - `--custom-api-key` (opcional; recurre a `CUSTOM_API_KEY`)
     - `--custom-provider-id` (opcional)
-    - `--custom-compatibility <openai|anthropic>` (opcional; por defecto `openai`)
+    - `--custom-compatibility <openai|anthropic>` (opcional; predeterminado `openai`)
     - `--custom-image-input` / `--custom-text-input` (opcional; anula la capacidad de entrada del modelo inferida)
 
   </Accordion>
@@ -227,8 +227,8 @@ Comportamiento del modelo:
 
 - Elija el modelo predeterminado de las opciones detectadas o ingrese el proveedor y el modelo manualmente.
 - La incorporación de proveedores personalizados infiere la compatibilidad de imágenes para IDs de modelos comunes y solo pregunta cuando el nombre del modelo es desconocido.
-- Cuando la integración comienza desde una elección de autenticación de proveedor, el selector de modelos prefiere
-  ese proveedor automáticamente. Para Volcengine y BytePlus, la misma preferencia
+- Cuando la incorporación comienza desde una elección de autenticación de proveedor, el selector de modelos prefiere
+  automáticamente ese proveedor. Para Volcengine y BytePlus, la misma preferencia
   también coincide con sus variantes de plan de codificación (`volcengine-plan/*`,
   `byteplus-plan/*`).
 - Si ese filtro de proveedor preferido estuviera vacío, el selector recurre al catálogo completo en lugar de no mostrar ningún modelo.
@@ -242,30 +242,30 @@ Rutas de credenciales y perfiles:
 Modo de almacenamiento de credenciales:
 
 - El comportamiento predeterminado del onboarding persiste las claves de API como valores de texto sin formato en los perfiles de autenticación.
-- `--secret-input-mode ref` habilita el modo de referencia en lugar del almacenamiento de clave en texto plano.
+- `--secret-input-mode ref` habilita el modo de referencia en lugar del almacenamiento de claves en texto plano.
   En la configuración interactiva, puede elegir cualquiera de:
-  - referencia de variable de entorno (por ejemplo `keyRef: { source: "env", provider: "default", id: "OPENAI_API_KEY" }`)
+  - referencia de variable de entorno (por ejemplo, `keyRef: { source: "env", provider: "default", id: "OPENAI_API_KEY" }`)
   - referencia de proveedor configurado (`file` o `exec`) con alias de proveedor + id
 - El modo de referencia interactivo ejecuta una validación previa rápida antes de guardar.
   - Referencias de entorno: valida el nombre de la variable + un valor no vacío en el entorno de onboarding actual.
   - Referencias de proveedor: valida la configuración del proveedor y resuelve el id solicitado.
   - Si la validación previa falla, el onboarding muestra el error y le permite reintentar.
-- En modo no interactivo, `--secret-input-mode ref` solo se respalda en variables de entorno.
+- En modo no interactivo, `--secret-input-mode ref` solo admite respaldo de variables de entorno.
   - Establezca la variable de entorno del proveedor en el entorno del proceso de onboarding.
-  - Las banderas de clave en línea (por ejemplo `--openai-api-key`) requieren que se establezca esa variable de entorno; de lo contrario, la integración falla rápidamente.
-  - Para proveedores personalizados, el modo no interactivo `ref` almacena `models.providers.<id>.apiKey` como `{ source: "env", provider: "default", id: "CUSTOM_API_KEY" }`.
-  - En ese caso de proveedor personalizado, `--custom-api-key` requiere que `CUSTOM_API_KEY` esté establecido; de lo contrario, la integración falla rápidamente.
+  - Las opciones de clave en línea (por ejemplo, `--openai-api-key`) requieren que se establezca esa variable de entorno; de lo contrario, la incorporación falla rápidamente.
+  - Para proveedores personalizados, el modo `ref` no interactivo almacena `models.providers.<id>.apiKey` como `{ source: "env", provider: "default", id: "CUSTOM_API_KEY" }`.
+  - En ese caso de proveedor personalizado, `--custom-api-key` requiere que se establezca `CUSTOM_API_KEY`; de lo contrario, la incorporación falla rápidamente.
 - Las credenciales de autenticación de Gateway admiten opciones de texto sin formato y SecretRef en la configuración interactiva:
   - Modo de token: **Generar/almacenar token en texto sin formato** (predeterminado) o **Usar SecretRef**.
   - Modo de contraseña: texto sin formato o SecretRef.
-- Ruta SecretRef de token no interactivo: `--gateway-token-ref-env <ENV_VAR>`.
+- Ruta de SecretRef de token no interactivo: `--gateway-token-ref-env <ENV_VAR>`.
 - Las configuraciones existentes en texto plano siguen funcionando sin cambios.
 
 <Note>
-Consejo para servidores y headless: complete OAuth en una máquina con un navegador, luego copie
+Consejo para headless y servidor: complete OAuth en una máquina con un navegador, luego copie
 el `auth-profiles.json` de ese agente (por ejemplo
-`~/.openclaw/agents/<agentId>/agent/auth-profiles.json`, o la ruta
-`$OPENCLAW_STATE_DIR/...` coincidente) al host de la puerta de enlace. `credentials/oauth.json`
+`~/.openclaw/agents/<agentId>/agent/auth-profiles.json`, o la ruta `$OPENCLAW_STATE_DIR/...` correspondiente)
+al host de la puerta de enlace. `credentials/oauth.json`
 es solo una fuente de importación heredada.
 </Note>
 
@@ -276,9 +276,9 @@ Campos típicos en `~/.openclaw/openclaw.json`:
 - `agents.defaults.workspace`
 - `agents.defaults.skipBootstrap` cuando se pasa `--skip-bootstrap`
 - `agents.defaults.model` / `models.providers` (si se elige Minimax)
-- `tools.profile` (la integración local por defecto es `"coding"` cuando no está establecido; se preservan los valores explícitos existentes)
+- `tools.profile` (la incorporación local por defecto es `"coding"` cuando no está establecido; los valores explícitos existentes se conservan)
 - `gateway.*` (modo, bind, auth, tailscale)
-- `session.dmScope` (la integración local establece esto por defecto a `per-channel-peer` cuando no está establecido; se preservan los valores explícitos existentes)
+- `session.dmScope` (la incorporación local establece esto por defecto a `per-channel-peer` cuando no está establecido; los valores explícitos existentes se conservan)
 - `channels.telegram.botToken`, `channels.discord.token`, `channels.matrix.*`, `channels.signal.*`, `channels.imessage.*`
 - Listas de permitidos (allowlists) de canales (Slack, Discord, Matrix, Microsoft Teams) cuando opta por participar durante las indicaciones (los nombres se resuelven en IDs cuando es posible)
 - `skills.install.nodeManager`
@@ -309,7 +309,7 @@ Los clientes (aplicación de macOS y UI de control) pueden renderizar pasos sin 
 Comportamiento de configuración de Signal:
 
 - Descarga el recurso de lanzamiento apropiado
-- Lo almacena en `~/.openclaw/tools/signal-cli/<version>/`
+- Lo almacena bajo `~/.openclaw/tools/signal-cli/<version>/`
 - Escribe `channels.signal.cliPath` en la configuración
 - Las compilaciones de JVM requieren Java 21
 - Las compilaciones nativas se usan cuando están disponibles

@@ -18,7 +18,7 @@ OpenClaw 有兩個日誌「介面」：
 啟動時，Gateway 會記錄已解析的預設代理程式模型以及影響新工作階段的模式預設值，例如：
 
 ```text
-agent model: openai-codex/gpt-5.5 (thinking=medium, fast=on)
+agent model: openai/gpt-5.5 (thinking=medium, fast=on)
 ```
 
 `thinking` 來自預設代理程式、模型參數或全域代理程式預設值；

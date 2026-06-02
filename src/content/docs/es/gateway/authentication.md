@@ -189,8 +189,8 @@ Use `openclaw models auth login --provider <id> --profile-id <profileId>` para
 los proveedores que admiten perfiles de autenticación con nombre durante el inicio de sesión.
 
 ```bash
-openclaw models auth login --provider openai-codex --profile-id openai-codex:ritsuko
-openclaw models auth login --provider openai-codex --profile-id openai-codex:lain
+openclaw models auth login --provider openai --profile-id openai:ritsuko
+openclaw models auth login --provider openai --profile-id openai:lain
 ```
 
 Esta es la forma más fácil de mantener múltiples inicios de sesión OAuth para el mismo proveedor

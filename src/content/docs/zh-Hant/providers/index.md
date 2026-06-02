@@ -40,6 +40,7 @@ OpenClaw 可以使用許多 LLM 提供商。選擇一個提供商，進行驗證
 - [fal](/zh-Hant/providers/fal)
 - [Fireworks](/zh-Hant/providers/fireworks)
 - [GitHub Copilot](/zh-Hant/providers/github-copilot)
+- [GMI Cloud](/zh-Hant/providers/gmi)
 - [Google (Gemini)](/zh-Hant/providers/google)
 - [Gradium](/zh-Hant/providers/gradium)
 - [Groq (LPU inference)](/zh-Hant/providers/groq)
@@ -52,7 +53,9 @@ OpenClaw 可以使用許多 LLM 提供商。選擇一個提供商，進行驗證
 - [Mistral](/zh-Hant/providers/mistral)
 - [Moonshot AI (Kimi + Kimi Coding)](/zh-Hant/providers/moonshot)
 - [NVIDIA](/zh-Hant/providers/nvidia)
+- [NovitaAI](/zh-Hant/providers/novita)
 - [Ollama (cloud + local models)](/zh-Hant/providers/ollama)
+- [Ollama Cloud](/zh-Hant/providers/ollama-cloud)
 - [OpenAI (API + Codex)](/zh-Hant/providers/openai)
 - [OpenCode](/zh-Hant/providers/opencode)
 - [OpenCode Go](/zh-Hant/providers/opencode-go)
@@ -60,6 +63,7 @@ OpenClaw 可以使用許多 LLM 提供商。選擇一個提供商，進行驗證
 - [Perplexity (web search)](/zh-Hant/providers/perplexity-provider)
 - [Qianfan](/zh-Hant/providers/qianfan)
 - [Qwen Cloud](/zh-Hant/providers/qwen)
+- [Qwen OAuth / Portal](/zh-Hant/providers/qwen-oauth)
 - [Runway](/zh-Hant/providers/runway)
 - [SenseAudio](/zh-Hant/providers/senseaudio)
 - [SGLang (local models)](/zh-Hant/providers/sglang)
@@ -78,12 +82,12 @@ OpenClaw 可以使用許多 LLM 提供商。選擇一個提供商，進行驗證
 
 ## 共享概覽頁面
 
-- [Additional bundled variants](/zh-Hant/providers/models#additional-bundled-provider-variants) - Anthropic Vertex、Copilot Proxy 和 Gemini CLI OAuth
-- [Image Generation](/zh-Hant/tools/image-generation) - 共用 `image_generate` 工具、供應商選擇和故障轉移
-- [音樂生成](/zh-Hant/tools/music-generation) - 共用 `music_generate` 工具、供應商選擇與故障轉移
-- [影片生成](/zh-Hant/tools/video-generation) - 共用 `video_generate` 工具、供應商選擇與故障轉移
+- [其他內建變體](/zh-Hant/providers/models#additional-bundled-provider-variants) - Anthropic Vertex、Copilot Proxy 和 Gemini CLI OAuth
+- [影像生成](/zh-Hant/tools/image-generation) - 共用 `image_generate` 工具、提供者選擇和故障轉移
+- [音樂生成](/zh-Hant/tools/music-generation) - 共用 `music_generate` 工具、提供者選擇和故障轉移
+- [影片生成](/zh-Hant/tools/video-generation) - 共用 `video_generate` 工具、提供者選擇和故障轉移
 
-## 轉錄供應商
+## 轉錄提供者
 
 - [Deepgram (音訊轉錄)](/zh-Hant/providers/deepgram)
 - [ElevenLabs](/zh-Hant/providers/elevenlabs#speech-to-text)
@@ -94,7 +98,7 @@ OpenClaw 可以使用許多 LLM 提供商。選擇一個提供商，進行驗證
 
 ## 社群工具
 
-- [Claude Max API Proxy](/zh-Hant/providers/claude-max-api-proxy) - Claude 訂閱憑證的社群代理（使用前請先確認 Anthropic 的政策/條款）
+- [Claude Max API Proxy](/zh-Hant/providers/claude-max-api-proxy) - Claude 訂閱憑證的社群 Proxy (使用前請確認 Anthropic 政策/條款)
 
-如需完整的供應商目錄（xAI、Groq、Mistral 等）及進階設定，
-請參閱 [Model providers](/zh-Hant/concepts/model-providers)。
+如需完整的提供者目錄 (xAI、Groq、Mistral 等) 和進階設定，
+請參閱 [模型提供者](/zh-Hant/concepts/model-providers)。

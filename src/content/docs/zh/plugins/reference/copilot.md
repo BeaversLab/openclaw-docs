@@ -12,7 +12,7 @@ title: "Copilot 插件"
 ## 分发
 
 - 软件包：`@openclaw/copilot`
-- 安装路径：包含在 OpenClaw 中
+- 安装路由：npm；ClawHub：npmClawHub`clawhub:@openclaw/copilot`
 
 ## 暴露
 

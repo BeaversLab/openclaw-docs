@@ -59,9 +59,9 @@ OpenClaw 支援代理工作流程的 **相機擷取**：
 
 與 `canvas.*` 類似，iOS 節點僅允許在**前景**執行 `camera.*` 指令。背景呼叫會傳回 `NODE_BACKGROUND_UNAVAILABLE`。
 
-### CLI 助手 (暫存檔案 + MEDIA)
+### CLI 輔助工具
 
-取得附件最簡單的方式是透過 CLI 助手，它會將解碼後的媒體寫入暫存檔案並列印 `MEDIA:<path>`。
+取得媒體檔案最簡單的方法是透過 CLI 輔助工具，它會將解碼後的媒體寫入暫存檔案並列印已儲存的路徑。
 
 範例：
 
@@ -74,35 +74,35 @@ openclaw nodes camera clip --node <id> --no-audio
 
 備註：
 
-- `nodes camera snap` 預設為 **both** (雙向) 面向，以提供代理程式兩種視角。
+- `nodes camera snap` 預設為 **both**（雙向）面向，以提供代理程式兩種視圖。
 - 輸出檔案是暫時的 (位於 OS 暫存目錄中)，除非您建立自己的包裝程式。
 
 ## Android 節點
 
 ### Android 使用者設定 (預設開啟)
 
-- Android Settings sheet → **Camera** → **Allow Camera** (`camera.enabled`)
+- Android 設定頁面 → **相機** → **允許相機** (`camera.enabled`)
   - 預設：**on** (缺少索引鍵會視為已啟用)。
   - 關閉時：`camera.*` 指令會傳回 `CAMERA_DISABLED`。
 
 ### 權限
 
 - Android 需要執行階段權限：
-  - `CAMERA` 用於 `camera.snap` 和 `camera.clip` 兩者。
+  - `CAMERA` 適用於 `camera.snap` 和 `camera.clip`。
   - 當 `includeAudio=true` 時，`camera.clip` 需要 `RECORD_AUDIO`。
 
-如果缺少權限，應用程式會盡可能提示；如果被拒絕，`camera.*` 請求會失敗並出現
+如果缺少權限，應用程式會盡可能提示；如果被拒絕，`camera.*` 請求將會失敗並出現
 `*_PERMISSION_REQUIRED` 錯誤。
 
 ### Android 前景要求
 
-與 `canvas.*` 類似，Android 節點僅允許在**前景**執行 `camera.*` 指令。背景呼叫會傳回 `NODE_BACKGROUND_UNAVAILABLE`。
+與 `canvas.*` 類似，Android 節點僅允許在 **前景** 執行 `camera.*` 指令。背景呼叫會傳回 `NODE_BACKGROUND_UNAVAILABLE`。
 
-### Android 指令（透過 Gateway `node.invoke`）
+### Android 指令 (透過 Gateway `node.invoke`)
 
 - `camera.list`
   - 回應承載：
-    - `devices`: `{ id, name, position, deviceType }` 的陣列
+    - `devices`：`{ id, name, position, deviceType }` 的陣列
 
 ### 承載保護
 
@@ -114,7 +114,7 @@ openclaw nodes camera clip --node <id> --no-audio
 
 macOS 配套應用程式提供了一個核取方塊：
 
-- **Settings → General → Allow Camera** (`openclaw.cameraEnabled`)
+- **設定 → 一般 → 允許相機** (`openclaw.cameraEnabled`)
   - 預設值：**關閉**
   - 關閉時：相機請求會返回「使用者已停用相機」。
 
@@ -126,33 +126,33 @@ macOS 配套應用程式提供了一個核取方塊：
 
 ```bash
 openclaw nodes camera list --node <id>            # list camera ids
-openclaw nodes camera snap --node <id>            # prints MEDIA:<path>
+openclaw nodes camera snap --node <id>            # prints saved path
 openclaw nodes camera snap --node <id> --max-width 1280
 openclaw nodes camera snap --node <id> --delay-ms 2000
 openclaw nodes camera snap --node <id> --device-id <id>
-openclaw nodes camera clip --node <id> --duration 10s          # prints MEDIA:<path>
-openclaw nodes camera clip --node <id> --duration-ms 3000      # prints MEDIA:<path> (legacy flag)
+openclaw nodes camera clip --node <id> --duration 10s          # prints saved path
+openclaw nodes camera clip --node <id> --duration-ms 3000      # prints saved path (legacy flag)
 openclaw nodes camera clip --node <id> --device-id <id>
 openclaw nodes camera clip --node <id> --no-audio
 ```
 
 備註：
 
-- `openclaw nodes camera snap` 預設為 `maxWidth=1600`，除非另有覆蓋。
-- 在 macOS 上，`camera.snap` 會在暖機/曝光設定後等待 `delayMs`（預設 2000ms）再進行擷取。
+- `openclaw nodes camera snap` 預設為 `maxWidth=1600`，除非被覆寫。
+- 在 macOS 上，`camera.snap` 會在預熱/曝光穩定後等待 `delayMs`（預設 2000ms）再進行拍攝。
 - 照片承載會經過重新壓縮，以將 base64 保持在 5 MB 以下。
 
 ## 安全性與實際限制
 
 - 存取相機和麥克風會觸發標準的 OS 權限提示（並且需要在 Info.plist 中加入使用說明字串）。
-- 影片片段會受到上限限制（目前為 `<= 60s`），以避免節點承載過大（base64 開銷 + 訊息限制）。
+- 影片片段會受到限制（目前為 `<= 60s`），以避免節點負載過大（base64 開銷 + 訊息限制）。
 
 ## macOS 螢幕影片（OS 層級）
 
 若是 _螢幕_ 影片（非相機），請使用 macOS 配套應用程式：
 
 ```bash
-openclaw nodes screen record --node <id> --duration 10s --fps 15   # prints MEDIA:<path>
+openclaw nodes screen record --node <id> --duration 10s --fps 15   # prints saved path
 ```
 
 備註：

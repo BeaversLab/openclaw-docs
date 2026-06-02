@@ -83,8 +83,8 @@ Consulte [Seguridad](/es/gateway/security) y [Acceso remoto](/es/gateway/remote)
 Use `/v1/chat/completions` cuando esté integrando herramientas o un backend confiable del lado de la aplicación con una puerta de enlace existente y pueda mantener de forma segura las credenciales del operador de la puerta de enlace.
 
 - Prefiera esto a agregar un canal integrado nuevo cuando su integración sea simplemente otra superficie de operador/cliente para la misma puerta de enlace.
-- Para clientes móviles nativos que se conectan directamente a una puerta de enlace remota, se prefiere [WebChat](/es/web/webchat) o el [Protocolo de puerta de enlace](/es/gateway/protocol) e implementar el flujo de inicialización de dispositivo emparejado/token de dispositivo para que el dispositivo no necesite un token/contraseña HTTP compartido.
-- En su lugar, cree un complemento de canal cuando esté integrando una red de mensajería externa con sus propios usuarios, salas, entrega de webhooks o transporte de salida. Consulte [Creación de complementos](/es/plugins/building-plugins).
+- Para clientes móviles nativos que se conectan directamente a una puerta de enlace remota, prefiera [WebChat](/es/web/webchat) o el [Protocolo de puerta de enlace](/es/gateway/protocol) e implemente el flujo de arranque de dispositivo emparejado/token de dispositivo para que el dispositivo no necesite un token/contraseña HTTP compartido.
+- En su lugar, cree un complemento de canal cuando esté integrando una red de mensajería externa con sus propios usuarios, salas, entrega de webhook o transporte saliente. Consulte [Creación de complementos](/es/plugins/building-plugins).
 
 ## Contrato de modelo centrado en agentes
 
@@ -222,27 +222,28 @@ Establezca `stream: true` para recibir Server-Sent Events (SSE):
 - `frequency_penalty`: número; penalización de frecuencia de mejor esfuerzo reenviada al proveedor ascendente a través del canal de parámetros de flujo del agente. Rango validado: -2.0 a 2.0. Devuelve `400 invalid_request_error` para valores fuera de rango.
 - `presence_penalty`: número; penalización de presencia de mejor esfuerzo reenviada al proveedor ascendente a través del canal de parámetros de flujo del agente. Rango validado: -2.0 a 2.0. Devuelve `400 invalid_request_error` para valores fuera de rango.
 - `seed`: número (entero); semilla de mejor esfuerzo reenviada al proveedor ascendente a través del canal de parámetros de flujo del agente. Devuelve `400 invalid_request_error` para valores no enteros.
+- `stop`: cadena o matriz de hasta 4 cadenas; secuencias de parada mejor esfuerzo reenviadas al proveedor ascendente a través del canal de parámetros de flujo del agente. Devuelve `400 invalid_request_error` para más de 4 secuencias o entradas no cadenas/vacías.
 
-Cuando se establece cualquier campo de límite de tokens, el valor se reenvía al proveedor ascendente a través del canal de parámetros de flujo del agente. El nombre real del campo de cable enviado al proveedor ascendente es elegido por el transporte del proveedor: `max_completion_tokens` para puntos finales de la familia OpenAI, y `max_tokens` para proveedores que solo aceptan el nombre heredado (como Mistral y Chutes). Los campos de muestreo (`temperature`, `top_p`, `frequency_penalty`, `presence_penalty`, `seed`) siguen el mismo canal de parámetros de flujo; el backend de Respuestas de Codex basado en ChatGPT los elimina en el servidor ya que utiliza un muestreo fijo.
+Cuando se establece cualquiera de los campos de límite de tokens, el valor se reenvía al proveedor ascendente a través del canal de parámetros de flujo del agente. El nombre real del campo cableado enviado al proveedor ascendente lo elige el transporte del proveedor: `max_completion_tokens` para endpoints de la familia OpenAI y `max_tokens` para proveedores que solo aceptan el nombre heredado (como Mistral y Chutes). Los campos de muestreo (`temperature`, `top_p`, `frequency_penalty`, `presence_penalty`, `seed`) siguen el mismo canal de parámetros de flujo; el backend de Respuestas de Codex basado en ChatGPT los elimina en el servidor ya que utiliza un muestreo fijo. `stop` también usa el canal de parámetros de flujo y se asigna al campo de detención del transporte (`stop` para backends de Chat Completions, `stop_sequences` para Anthropic); la API de Respuestas de OpenAI no tiene parámetro de detención, por lo que `stop` no se aplica en modelos basados en Respuestas.
 
 ### Variantes no compatibles
 
-El punto final devuelve `400 invalid_request_error` para variantes de herramientas no compatibles, incluyendo:
+El endpoint devuelve `400 invalid_request_error` para variantes de herramientas no compatibles, incluyendo:
 
-- `tools` que no es una matriz
-- entradas de herramienta que no son funciones
+- `tools` que no sea matriz
+- entradas de herramientas que no son funciones
 - falta `tool.function.name`
-- variantes de `tool_choice` como `allowed_tools` y `custom`
-- `tool_choice: "required"` (aún no aplicado en tiempo de ejecución; se admitirá una vez que se implemente la aplicación estricta)
+- variantes `tool_choice` como `allowed_tools` y `custom`
+- `tool_choice: "required"` (aún no se aplica en tiempo de ejecución; se admitirá una vez que se implemente la aplicación estricta)
 - `tool_choice: { "type": "function", "function": { "name": "..." } }` (el mismo motivo que `required`)
-- valores de `tool_choice.function.name` que no coinciden con `tools` proporcionado
+- valores `tool_choice.function.name` que no coinciden con el `tools` proporcionado
 
-### Forma de respuesta de herramienta sin transmisión
+### Forma de la respuesta de herramienta sin transmisión (Non-streaming)
 
-Cuando el agente decide llamar a las herramientas, la respuesta utiliza:
+Cuando el agente decide llamar a herramientas, la respuesta utiliza:
 
 - `choices[0].finish_reason = "tool_calls"`
-- entradas de `choices[0].message.tool_calls[]` con:
+- entradas `choices[0].message.tool_calls[]` con:
   - `id`
   - `type: "function"`
   - `function.name`
@@ -250,41 +251,41 @@ Cuando el agente decide llamar a las herramientas, la respuesta utiliza:
 
 El comentario del asistente antes de la llamada a la herramienta se devuelve en `choices[0].message.content` (posiblemente vacío).
 
-### Forma de respuesta de herramienta con transmisión
+### Forma de la respuesta de herramienta con transmisión (Streaming)
 
 Cuando `stream: true`, las llamadas a herramientas se emiten como fragmentos SSE incrementales:
 
-- delta inicial de rol de asistente
+- delta inicial del rol del asistente
 - deltas opcionales de comentarios del asistente
-- uno o más fragmentos de `delta.tool_calls` que transportan la identidad de la herramienta y fragmentos de argumentos
+- uno o más fragmentos `delta.tool_calls` que llevan la identidad de la herramienta y fragmentos de argumentos
 - fragmento final con `finish_reason: "tool_calls"`
 - `data: [DONE]`
 
 Si `stream_options.include_usage=true`, se emite un fragmento de uso final antes de `[DONE]`.
 
-### Bucle de seguimiento de herramientas
+### Bucle de seguimiento de herramientas (Tool follow-up)
 
 Después de recibir `tool_calls`, el cliente debe ejecutar la(s) función(es) solicitada(s) y enviar una solicitud de seguimiento que incluya:
 
 - mensaje previo de llamada a herramienta del asistente
-- uno o más mensajes de `role: "tool"` con `tool_call_id` coincidente
+- uno o más mensajes `role: "tool"` con `tool_call_id` coincidente
 
 Esto permite que la ejecución del agente de puerta de enlace continúe con el mismo bucle de razonamiento y produzca la respuesta final del asistente.
 
 ## Configuración rápida de Open WebUI
 
-Para una conexión básica de Open WebUI:
+Para una conexión básica con Open WebUI:
 
 - URL base: `http://127.0.0.1:18789/v1`
 - URL base de Docker en macOS: `http://host.docker.internal:18789/v1`
-- Clave de API: su token de portador de Gateway
+- Clave API: su token de portador (bearer token) de Gateway
 - Modelo: `openclaw/default`
 
 Comportamiento esperado:
 
 - `GET /v1/models` debería listar `openclaw/default`
-- Open WebUI debería usar `openclaw/default` como el id del modelo de chat
-- Si deseas un proveedor/modelo de backend específico para ese agente, establece el modelo predeterminado normal del agente o envía `x-openclaw-model`
+- Open WebUI debería usar `openclaw/default` como el ID del modelo de chat
+- Si desea un proveedor/modelo de backend específico para ese agente, establezca el modelo predeterminado normal del agente o envíe `x-openclaw-model`
 
 Prueba rápida:
 
@@ -310,7 +311,7 @@ curl -sS http://127.0.0.1:18789/v1/chat/completions \
   }'
 ```
 
-Reutiliza el mismo valor de `user` en llamadas posteriores para esa conversación para continuar la misma sesión del agente.
+Reutilice el mismo valor de `user` en llamadas posteriores para esa conversación para continuar la misma sesión del agente.
 
 Sin transmisión (Non-streaming):
 
@@ -352,7 +353,7 @@ curl -sS http://127.0.0.1:18789/v1/models/openclaw%2Fdefault \
   -H 'Authorization: Bearer YOUR_TOKEN'
 ```
 
-Crear incrustaciones (embeddings):
+Crear incrustaciones:
 
 ```bash
 curl -sS http://127.0.0.1:18789/v1/embeddings \
@@ -367,9 +368,9 @@ curl -sS http://127.0.0.1:18789/v1/embeddings \
 
 Notas:
 
-- `/v1/models` devuelve los destinos de los agentes de OpenClaw, no los catálogos brutos de los proveedores.
-- `openclaw/default` siempre está presente para que un id estable funcione en diferentes entornos.
-- Las anulaciones del proveedor/modelo de backend pertenecen a `x-openclaw-model`, no al campo `model` de OpenAI.
+- `/v1/models` devuelve los destinos de los agentes de OpenClaw, no catálogos de proveedores brutos.
+- `openclaw/default` siempre está presente, por lo que un id estable funciona en diferentes entornos.
+- Las anulaciones del proveedor/modelo de backend pertenecen a `x-openclaw-model`, no al campo de OpenAI `model`.
 - `/v1/embeddings` admite `input` como una cadena o una matriz de cadenas.
 
 ## Relacionado

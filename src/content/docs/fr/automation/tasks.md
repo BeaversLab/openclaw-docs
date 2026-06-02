@@ -8,7 +8,7 @@ title: "Tâches d'arrière-plan"
 sidebarTitle: "Tâches d'arrière-plan"
 ---
 
-<Note>Vous cherchez une planification ? Consultez [Automatisation](/fr/automation) pour choisir le bon mécanisme. Cette page est le registre d'activité pour le travail en arrière-plan, et non le planificateur.</Note>
+<Note>Vous recherchez une planification ? Consultez [Automatisation](/fr/automation) pour choisir le bon mécanisme. Cette page est le registre d'activité pour le travail en arrière-plan, et non le planificateur.</Note>
 
 Les tâches d'arrière-plan suivent le travail qui s'exécute **en dehors de votre session de conversation principale** : exécutions ACP, générations de sous-agents, exécutions de tâches cron isolées et opérations initiées par la CLI.
 
@@ -92,18 +92,18 @@ Les tâches ne remplacent **pas** les sessions, les tâches cron ou les heartbea
 
 <AccordionGroup>
   <Accordion title="Notify defaults for cron and media">
-    Les tâches cron de session principale utilisent la stratégie de notification `silent` par défaut - elles créent des enregistrements pour le suivi mais ne génèrent pas de notifications. Les tâches cron isolées utilisent également `silent` par défaut mais sont plus visibles car elles s'exécutent dans leur propre session.
+    Les tâches cron de session principale utilisent par défaut la stratégie de notification `silent` - elles créent des enregistrements pour le suivi mais ne génèrent pas de notifications. Les tâches cron isolées utilisent également `silent` par défaut, mais sont plus visibles car elles s'exécutent dans leur propre session.
 
-    Les exécutions `image_generate`, `music_generate` et `video_generate` soutenues par une session utilisent également la stratégie de notification `silent`. Elles créent toujours des enregistrements de tâche, mais l'achèvement est renvoyé à la session d'agent d'origine sous forme de réveil interne afin que l'agent puisse écrire le message de suivi et joindre lui-même le média terminé. Les événements d'achèvement de média généré nécessitent une livraison par message-tool : l'agent doit envoyer le média terminé avec l'outil `message`, puis répondre `NO_REPLY`. Si la session demanderesse n'est plus active ou si son réveil actif échoue, et que l'agent d'achèvement manque une partie ou la totalité des médias générés, OpenClaw envoie un repli direct idempotent avec uniquement les médias manquants à la cible du canal d'origine.
+    Les exécutions `image_generate`, `music_generate` et `video_generate` sauvegardées par session utilisent également la stratégie de notification `silent`. Elles créent toujours des enregistrements de tâches, mais l'achèvement est renvoyé à la session de l'agent d'origine sous forme de réveil interne afin que l'agent puisse écrire le message de suivi et joindre lui-même le média fini. L'agent demandeur suit son contrat normal de réponse visible : réponse finale automatique lorsqu'il est configuré, ou `message(action="send")` plus `NO_REPLY` lorsque la session nécessite des réponses via message-tool. Si la session demanderesse n'est plus active ou si son réveil actif échoue, et que l'agent d'achèvement manque une partie ou la totalité des médias générés, OpenClaw envoie un repli direct idempotent avec uniquement les médias manquants à la cible du canal d'origine.
 
   </Accordion>
   <Accordion title="Concurrent media-generation guardrail">
     Tant qu'une tâche de génération de média basée sur une session est encore active, les outils de média agissent également comme des garde-fous contre les tentatives accidentelles. Les appels répétés à `image_generate` pour le même prompt renvoient l'état de la tâche active correspondante, tandis qu'un prompt d'image distinct peut démarrer sa propre tâche. Les appels à `music_generate` et `video_generate` renvoient toujours l'état de la tâche active pour cette session au lieu de démarrer une deuxième génération simultanée. Utilisez `action: "status"` lorsque vous souhaitez une recherche explicite de la progression ou de l'état du côté de l'agent.
   </Accordion>
-  <Accordion title="Ce qui ne crée pas de tâches">
-    - Tours de battement de cœur (heartbeat) - session principale ; voir [Battement de cœur](/fr/gateway/heartbeat)
-    - Tours de chat interactifs normaux
-    - Réponses directes `/command`
+  <Accordion title="What does not create tasks">
+    - Heartbeat turns - session principale ; voir [Heartbeat](/fr/gateway/heartbeat)
+    - Tours de discussion interactive normaux
+    - Réponses `/command` directes
 
   </Accordion>
 </AccordionGroup>
@@ -314,36 +314,36 @@ Un balayeur (sweeper) s'exécute toutes les **60 secondes** et gère quatre él�
 ## Relation des tâches avec les autres systèmes
 
 <AccordionGroup>
-  <Accordion title="Tâches et Task Flow">
-    [Task Flow](/fr/automation/taskflow) est la couche d'orchestration des flux au-dessus des tâches en arrière-plan. Un seul flux peut coordonner plusieurs tâches au cours de sa durée de vie en utilisant les modes de synchronisation gérés ou miroir. Utilisez `openclaw tasks` pour inspecter les enregistrements de tâches individuels et `openclaw tasks flow` pour inspecter le flux d'orchestration.
+  <Accordion title="Tasks and Task Flow">
+    [Task Flow](/fr/automation/taskflow) est la couche d'orchestration de flux au-dessus des tâches en arrière-plan. Un seul flux peut coordonner plusieurs tâches tout au long de sa durée de vie en utilisant des modes de synchronisation gérés ou mis en miroir. Utilisez `openclaw tasks` pour inspecter les enregistrements de tâches individuels et `openclaw tasks flow` pour inspecter le flux d'orchestration.
 
     Consultez [Task Flow](/fr/automation/taskflow) pour plus de détails.
 
   </Accordion>
-  <Accordion title="Tâches et cron"
-    Une **définition** de tâche cron réside dans `~/.openclaw/cron/jobs.json` ; l'état d'exécution au moment de l'exécution réside à côté dans `~/.openclaw/cron/jobs-state.json`. **Chaque** exécution cron crée un enregistrement de tâche, à la fois en session principale et isolée. Les tâches cron en session principale ont par défaut la stratégie de notification `silent` afin qu'elles suivent le processus sans générer de notifications.
+  <Accordion title="Tâches et cron">
+    Les définitions de tâches cron, l'état d'exécution et l'historique des exécutions résident dans la base de données d'état SQLite partagée d'OpenClaw. **Chaque** exécution cron crée un enregistrement de tâche, à la fois en session principale et isolée. Les tâches cron en session principale ont par défaut la stratégie de notification `silent` afin qu'elles suivent le travail sans générer de notifications.
 
-    Consultez [Cron Jobs](/fr/automation/cron-jobs).
+    Voir [Tâches cron](/fr/automation/cron-jobs).
 
   </Accordion>
   <Accordion title="Tâches et heartbeat">
-    Les exécutions Heartbeat sont des tours de session principale ; elles ne créent pas d'enregistrements de tâches. Lorsqu'une tâche est terminée, elle peut déclencher un réveil Heartbeat afin que vous puissiez voir le résultat rapidement.
+    Les exécutions Heartbeat sont des tours de session principale - elles ne créent pas d'enregistrements de tâches. Lorsqu'une tâche est terminée, elle peut déclencher un réveil Heartbeat afin que vous puissiez voir le résultat rapidement.
 
-    Consultez [Heartbeat](/fr/gateway/heartbeat).
+    Voir [Heartbeat](/fr/gateway/heartbeat).
 
   </Accordion>
   <Accordion title="Tâches et sessions">
-    Une tâche peut référencer une `childSessionKey` (où le travail s'exécute) et une `requesterSessionKey` (qui l'a démarrée). Les sessions sont le contexte de conversation ; les tâches sont le suivi de l'activité par-dessus cela.
+    Une tâche peut référencer une `childSessionKey` (où le travail s'exécute) et une `requesterSessionKey` (qui l'a démarrée). Les sessions sont le contexte de conversation ; les tâches sont le suivi d'activité par-dessus cela.
   </Accordion>
   <Accordion title="Tâches et exécutions d'agent">
-    Le `runId` d'une tâche renvoie à l'exécution de l'agent effectuant le travail. Les événements du cycle de vie de l'agent (démarrage, fin, erreur) mettent à jour automatiquement le statut de la tâche - vous n'avez pas besoin de gérer le cycle de vie manuellement.
+    Le `runId` d'une tâche pointe vers l'exécution de l'agent effectuant le travail. Les événements du cycle de vie de l'agent (démarrage, fin, erreur) mettent automatiquement à jour le statut de la tâche - vous n'avez pas besoin de gérer le cycle de vie manuellement.
   </Accordion>
 </AccordionGroup>
 
 ## Connexes
 
 - [Automatisation](/fr/automation) - tous les mécanismes d'automatisation en un coup d'œil
-- [CLI : Tâches](/fr/cli/tasks) - référence de la commande CLI
+- [CLI : Tâches](/fr/cli/tasks) - référence des commandes CLI
 - [Heartbeat](/fr/gateway/heartbeat) - tours de session principale périodiques
 - [Tâches planifiées](/fr/automation/cron-jobs) - planification du travail en arrière-plan
 - [Flux de tâches](/fr/automation/taskflow) - orchestration des flux au-dessus des tâches

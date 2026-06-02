@@ -16,7 +16,7 @@ title: "Workboard 插件"
 
 ## 界面
 
-插件
+contracts: 工具
 
 ## 相关文档
 

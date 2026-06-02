@@ -1,5 +1,5 @@
 ---
-summary: "以安全注意事項將 OpenClaw 作為個人助理運行的端到端指南"
+summary: "將 OpenClaw 作為個人助理運行的端到端指南，包含安全注意事項"
 read_when:
   - Onboarding a new assistant instance
   - Reviewing safety/permission implications
@@ -18,13 +18,13 @@ OpenClaw 是一個自託管的閘道，將 Discord、Google Chat、iMessage、Ma
 
 從保守開始：
 
-- 務必設定 `channels.whatsapp.allowFrom`（切勿在您的個人 Mac 上執行對外公開的服務）。
+- 請務必設定 `channels.whatsapp.allowFrom`（切勿在您的個人 Mac 上對全世界開放執行）。
 - 為助理使用專用的 WhatsApp 號碼。
-- 心跳現預設為每 30 分鐘一次。透過設定 `agents.defaults.heartbeat.every: "0m"` 將其停用，直到您信任此設定為止。
+- 心跳預設現在設定為每 30 分鐘一次。透過設定 `agents.defaults.heartbeat.every: "0m"` 來停用，直到您信任此設定為止。
 
 ## 先決條件
 
-- 已安裝並完成 OpenClaw 入門導覽 —— 若尚未完成，請參閱[入門指南](/zh-Hant/start/getting-started)
+- 已安裝並上架 OpenClaw - 如果您尚未完成此操作，請參閱 [入門指南](/zh-Hant/start/getting-started)
 - 助理的第二個電話號碼（SIM/eSIM/預付卡）
 
 ## 雙手機設定（建議）
@@ -53,7 +53,7 @@ openclaw channels login
 openclaw gateway --port 18789
 ```
 
-3. 在 `~/.openclaw/openclaw.json` 中放入一個最小設定：
+3. 將最簡設定放入 `~/.openclaw/openclaw.json`：
 
 ```json5
 {
@@ -64,21 +64,21 @@ openclaw gateway --port 18789
 
 現在從您的允許清單手機向助理號碼發送訊息。
 
-當入門導覽完成時，OpenClaw 會自動開啟儀表板並列印一個乾淨（非 Token 化）的連結。如果儀表板提示進行身份驗證，請將設定的共用金鑰貼上至 Control UI 設定中。入門導覽預設使用 Token (`gateway.auth.token`)，但如果您將 `gateway.auth.mode` 切換為 `password`，密碼驗證也可行。若稍後要重新開啟：`openclaw dashboard`。
+當上架完成時，OpenClaw 會自動開啟儀表板並列印一個乾淨（非 token 化）的連結。如果儀表板提示進行驗證，請將設定的共用金鑰貼上到 Control UI 設定中。上架預設使用 token (`gateway.auth.token`)，但如果您將 `gateway.auth.mode` 切換為 `password`，密碼驗證也可以使用。若要稍後重新開啟：`openclaw dashboard`。
 
 ## 給代理一個工作區 (AGENTS)
 
 OpenClaw 從其工作區目錄讀取操作指令和「記憶」。
 
-預設情況下，OpenClaw 使用 `~/.openclaw/workspace` 作為代理工作區，並會在設定/首次代理執行時自動建立它（以及初始的 `AGENTS.md`、`SOUL.md`、`TOOLS.md`、`IDENTITY.md`、`USER.md`、`HEARTBEAT.md`）。`BOOTSTRAP.md` 僅在工作區是全新的時候建立（您刪除它後它不應該再出現）。`MEMORY.md` 是選用的（不會自動建立）；當存在時，它會在一般工作階段中載入。子代理工作階段僅會注入 `AGENTS.md` 和 `TOOLS.md`。
+預設情況下，OpenClaw 使用 `~/.openclaw/workspace` 作為 Agent 工作區，並會在設定/首次 Agent 執行時自動建立它（以及初始的 `AGENTS.md`、`SOUL.md`、`TOOLS.md`、`IDENTITY.md`、`USER.md`、`HEARTBEAT.md`）。`BOOTSTRAP.md` 僅在工作區是全新時建立（您刪除它後不應該再次出現）。`MEMORY.md` 是可選的（不會自動建立）；當存在時，它會被載入用於一般工作階段。子 Agent 工作階段僅會注入 `AGENTS.md` 和 `TOOLS.md`。
 
-<Tip>將此資料夾視為 OpenClaw 的記憶體，並將其設為 git repo（最好是私有的），以便您的 `AGENTS.md` 和記憶體檔案都能備份。如果已安裝 git，全新的工作區會自動初始化。</Tip>
+<Tip>將此資料夾視為 OpenClaw 的記憶體，並將其設為 git 儲存庫（最好是私有的），以便您的 `AGENTS.md` 和記憶體檔案能夠備份。如果已安裝 git，全新的工作區將會自動初始化。</Tip>
 
 ```bash
 openclaw setup
 ```
 
-完整的工作區佈局 + 備份指南：[代理工作區](/zh-Hant/concepts/agent-workspace)
+完整的工作區佈局 + 備份指南：[Agent 工作區](/zh-Hant/concepts/agent-workspace)
 記憶體工作流程：[記憶體](/zh-Hant/concepts/memory)
 
 選用：使用 `agents.defaults.workspace` 選擇不同的工作區（支援 `~`）。
@@ -160,20 +160,20 @@ OpenClaw 預設為良好的助理設定，但您通常會想要調整：
 ## 會話與記憶體
 
 - Session 檔案：`~/.openclaw/agents/<agentId>/sessions/{{SessionId}}.jsonl`
-- Session 元資料（token 使用量、最近路由等）：`~/.openclaw/agents/<agentId>/sessions/sessions.json`（舊版：`~/.openclaw/sessions/sessions.json`）
-- `/new` 或 `/reset` 會為該聊天啟動一個新的 session（可透過 `resetTriggers` 設定）。如果單獨發送，OpenClaw 將確認重置而不呼叫模型。
-- `/compact [instructions]` 會壓縮 session 上下文並報告剩餘的上下文預算。
+- Session 中繼資料（token 使用量、最後路由等）：`~/.openclaw/agents/<agentId>/sessions/sessions.json`（舊版：`~/.openclaw/sessions/sessions.json`）
+- `/new` 或 `/reset` 會為該聊天啟動一個新的 session（可透過 `resetTriggers` 設定）。如果單獨發送，OpenClaw 將確認重置而不調用模型。
+- `/compact [instructions]` 會壓縮 session 語境並報告剩餘的語境預算。
 
 ## Heartbeats（主動模式）
 
-根據預設，OpenClaw 每 30 分鐘執行一次心跳，提示為：
+預設情況下，OpenClaw 每 30 分鐘執行一次心跳，提示如下：
 `Read HEARTBEAT.md if it exists (workspace context). Follow it strictly. Do not infer or repeat old tasks from prior chats. If nothing needs attention, reply HEARTBEAT_OK.`
 設定 `agents.defaults.heartbeat.every: "0m"` 以停用。
 
-- 如果 `HEARTBEAT.md` 存在但實際上是空的（只有空白行和像 `# Heading` 這樣的 markdown 標題），OpenClaw 將跳過心跳執行以節省 API 呼叫。
+- 如果 `HEARTBEAT.md` 存在但實際上是空的（只有空行和像 `# Heading` 這樣的 markdown 標題），OpenClaw 將跳過心跳執行以節省 API 呼叫。
 - 如果檔案不存在，心跳檢測仍會執行，由模型決定要做什麼。
-- 如果 agent 回覆 `HEARTBEAT_OK`（可選帶有短填充；請參閱 `agents.defaults.heartbeat.ackMaxChars`），OpenClaw 將抑制該心跳的輸出傳遞。
-- 根據預設，允許將心跳傳遞至 DM 風格的 `user:<id>` 目標。設定 `agents.defaults.heartbeat.directPolicy: "block"` 以在保持心跳執行啟用的同時抑制直接目標傳遞。
+- 如果 agent 回覆 `HEARTBEAT_OK`（可選擇性帶有短填充；請參見 `agents.defaults.heartbeat.ackMaxChars`），OpenClaw 將抑制該心跳的傳出傳送。
+- 預設情況下，允許將心跳傳送至 DM 樣式的 `user:<id>` 目標。設定 `agents.defaults.heartbeat.directPolicy: "block"` 以抑制直接目標的傳送，同時保持心跳執行處於啟用狀態。
 - 心跳檢測會執行完整的代理週期——較短的間隔會消耗更多的 tokens。
 
 ```json5
@@ -191,34 +191,28 @@ OpenClaw 預設為良好的助理設定，但您通常會想要調整：
 傳入的附件（圖片/音訊/文件）可以透過模板顯示給您的指令：
 
 - `{{MediaPath}}`（本機暫存檔案路徑）
-- `{{MediaUrl}}`（虛擬 URL）
+- `{{MediaUrl}}`（偽 URL）
 - `{{Transcript}}`（如果啟用了音訊轉錄）
 
-來自 agent 的輸出附件：在單獨一行中包含 `MEDIA:<path-or-url>`（無空格）。該指令必須以純文字開頭該行，位於程式碼區塊之外，且不包含 Markdown 包裝器（例如粗體或內聯程式碼）。範例：
+來自 agent 的傳出附件使用訊息工具或回覆酬載上的結構化媒體欄位，例如 `media`、`mediaUrl`、`mediaUrls`、`path` 或 `filePath`。訊息工具引數範例：
 
+```json
+{
+  "message": "Here's the screenshot.",
+  "mediaUrl": "https://example.com/screenshot.png"
+}
 ```
-Here's the screenshot.
-MEDIA:https://example.com/screenshot.png
-```
 
-OpenClaw 會提取這些內容，並將其隨文字一併作為媒體發送。
-
-這些形式不是附件指令，並將作為普通文字傳送：
-
-```md
-**MEDIA:https://example.com/screenshot.png**
-`MEDIA:https://example.com/screenshot.png`
-Here is the screenshot: MEDIA:https://example.com/screenshot.png
-```
+OpenClaw 會隨文字一起發送結構化媒體。為了相容性，舊版的最終助手回覆可能仍會被正規化，但工具輸出、瀏覽器輸出、串流區塊和訊息動作不會將文字解析為附件指令。
 
 本機路徑行為遵循與 agent 相同的檔案讀取信任模型：
 
-- 如果 `tools.fs.workspaceOnly` 是 `true`，輸出的 `MEDIA:` 本機路徑將僅限於 OpenClaw 暫存根目錄、媒體快取、agent 工作區路徑以及沙箱產生的檔案。
-- 如果 `tools.fs.workspaceOnly` 是 `false`，出站 `MEDIA:` 可以使用代理程式已有權限讀取的主機本機檔案。
-- 本機路徑可以是絕對路徑、相對於工作區的路徑，或使用 `~/` 的相對於家目錄的路徑。
-- 主機本機發送仍然僅允許媒體和安全文件類型（圖片、音訊、影片、PDF 和 Office 文件）。純文字和類似秘密的檔案不會被視為可發送的媒體。
+- 如果 `tools.fs.workspaceOnly` 為 `true`，輸出的本地媒體路徑將僅限於 OpenClaw 暫存根目錄、媒體快取、代理工作區路徑以及沙箱生成的檔案。
+- 如果 `tools.fs.workspaceOnly` 為 `false`，輸出的本地媒體可以使用代理已有權限讀取的主機本地檔案。
+- 本地路徑可以是絕對路徑、相對於工作區的路徑，或是使用 `~/` 的相對於使用者家目錄的路徑。
+- 主機本地傳送仍僅允許媒體和安全文件類型（圖片、音訊、視訊、PDF 和 Office 文件）。純文字和類似機密的檔案不被視為可傳送的媒體。
 
-這意味著當您的檔案系統策略已允許這些讀取時，在工作區之外產生的圖片/檔案現在可以發送，而不會重新開放任意的主機文字附件外洩風險。
+這意味著當您的檔案系統策略已允許讀取時，工作區外生成的圖片/檔案現在可以傳送，而無需重新開放任意主機文字附件的滲透風險。
 
 ## 操作檢查清單
 
@@ -229,14 +223,14 @@ openclaw status --deep   # asks the gateway for a live health probe with channel
 openclaw health --json   # gateway health snapshot (WS; default can return a fresh cached snapshot)
 ```
 
-日誌儲存在 `/tmp/openclaw/` 下（預設：`openclaw-YYYY-MM-DD.log`）。
+日誌位於 `/tmp/openclaw/` 下（預設：`openclaw-YYYY-MM-DD.log`）。
 
 ## 下一步
 
 - WebChat：[WebChat](/zh-Hant/web/webchat)
-- Gateway 操作：[Gateway runbook](/zh-Hant/gateway)
+- 閘道操作：[Gateway runbook](/zh-Hant/gateway)
 - Cron + 喚醒：[Cron jobs](/zh-Hant/automation/cron-jobs)
-- macOS 選單列伴隨應用程式：[OpenClaw macOS app](/zh-Hant/platforms/macos)
+- macOS 選單列輔助程式：[OpenClaw macOS app](/zh-Hant/platforms/macos)
 - iOS 節點應用程式：[iOS app](/zh-Hant/platforms/ios)
 - Android 節點應用程式：[Android app](/zh-Hant/platforms/android)
 - Windows 狀態：[Windows (WSL2)](/zh-Hant/platforms/windows)

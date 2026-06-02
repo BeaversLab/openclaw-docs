@@ -182,8 +182,8 @@ key in the 提供商 dashboard when you need 提供商-side invalidation.
 支持命名身份验证配置文件的提供商在登录期间进行设置。
 
 ```bash
-openclaw models auth login --provider openai-codex --profile-id openai-codex:ritsuko
-openclaw models auth login --provider openai-codex --profile-id openai-codex:lain
+openclaw models auth login --provider openai --profile-id openai:ritsuko
+openclaw models auth login --provider openai --profile-id openai:lain
 ```
 
 这是在一个代理内为同一提供商保持多个 OAuth 登录

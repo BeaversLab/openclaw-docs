@@ -381,13 +381,14 @@ Server globs 使用 provider-safe MCP 伺服器前綴，不一定是原始的 `m
 ```
 
 <AccordionGroup>
-  <Accordion title="附件備註">
-    - 附件僅支援 `runtime: "subagent"`。ACP 執行時會拒絕它們。
-    - 檔案會以 `.manifest.json` 形式具現化到子工作區的 `.openclaw/attachments/<uuid>/` 中。
-    - 附件內容會自動從對話紀錄持久性中編修。
-    - Base64 輸入會透過嚴格的字元表/填充檢查和解碼前大小防護進行驗證。
-    - 檔案權限對目錄為 `0700`，對檔案為 `0600`。
-    - 清理遵循 `cleanup` 政策：`delete` 總是會移除附件；`keep` 僅在 `retainOnSessionKeep: true` 時會保留附件。
+  <Accordion title="附件注意事項">
+    - 附件需要 `enabled: true`。
+    - 子代理附件會以 `.manifest.json` 實例化到子工作區的 `.openclaw/attachments/<uuid>/` 中。
+    - ACP 附件僅限圖片，並在通過相同的檔案計數、每檔案位元組和總位元組限制後，以內嵌方式轉發到 ACP 執行時。
+    - 附件內容會從對話紀錄持久化中自動編輯。
+    - Base64 輸入會經過嚴格的字母表/填充檢查和解碼前大小保護進行驗證。
+    - 子代理附件檔案權限對於目錄是 `0700`，對於檔案是 `0600`。
+    - 子代理清理遵循 `cleanup` 策略：`delete` 始終移除附件；`keep` 僅在 `retainOnSessionKeep: true` 時保留它們。
 
   </Accordion>
 </AccordionGroup>

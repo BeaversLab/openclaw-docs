@@ -186,8 +186,8 @@ Utilisez `openclaw models auth login --provider <id> --profile-id <profileId>` p
 les fournisseurs qui prennent en charge les profils d'authentification nommés lors de la connexion.
 
 ```bash
-openclaw models auth login --provider openai-codex --profile-id openai-codex:ritsuko
-openclaw models auth login --provider openai-codex --profile-id openai-codex:lain
+openclaw models auth login --provider openai --profile-id openai:ritsuko
+openclaw models auth login --provider openai --profile-id openai:lain
 ```
 
 C'est le moyen le plus simple de garder plusieurs connexions OAuth pour le même fournisseur

@@ -158,12 +158,12 @@ n 重新运行 `/model`，但**不带** `@profile` 后缀：
   <Accordion title="我可以在日常任务中使用 GPT 5.5，在编码中使用 Codex 5.5 吗？">
     可以。请将模型选择和运行时选择分开处理：
 
-    - **原生 Codex 编码代理：** 将 `agents.defaults.model.primary` 设置为 `openai/gpt-5.5`。当您需要 ChatGPT/Codex 订阅认证时，使用 `openclaw models auth login --provider openai-codex`OpenAIAPI 登录。
-    - **代理循环之外的直接 OpenAI API 任务：** 为图像、嵌入、语音、实时以及其他非代理 OpenAI API 表面配置 `OPENAI_API_KEY`OpenAIAPIOpenAIAPI。
-    - **OpenAI 代理 API 密钥认证：** 使用 `/model openai/gpt-5.5` 并配合有序的 `openai-codex`API API 密钥配置文件。
+    - **原生 Codex 编码代理：** 将 `agents.defaults.model.primary` 设置为 `openai/gpt-5.5`。当您需要 ChatGPT/Codex 订阅身份验证时，请使用 `openclaw models auth login --provider openai` 登录。
+    - **代理循环之外直接的 OpenAI API 任务：** 为图像、嵌入、语音、实时功能以及其他非代理 OpenAI API 表面配置 `OPENAI_API_KEY`。
+    - **OpenAI 代理 API 密钥身份验证：** 将 `/model openai/gpt-5.5` 与有序的 `openai` API 密钥配置文件一起使用。
     - **子代理：** 将编码任务路由到专注于 Codex 的代理，该代理拥有自己的 `openai/gpt-5.5` 模型。
 
-    参见 [模型](/zh/concepts/models) 和 [斜杠命令](/zh/tools/slash-commands)。
+    请参阅 [模型](/zh/concepts/models) 和 [斜杠命令](/zh/tools/slash-commands)。
 
   </Accordion>
 

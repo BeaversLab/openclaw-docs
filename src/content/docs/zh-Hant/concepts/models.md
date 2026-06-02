@@ -23,7 +23,7 @@ sidebarTitle: "Models CLI"
   </Card>
 </CardGroup>
 
-模型參照（Model refs）選擇一個供應商和模型。它們通常不選擇底層代理運行時。OpenAI 代理參照是主要的例外：`openai/gpt-5.5` 在官方 OpenAI 供應商上預設透過 Codex 應用程式伺服器運行時執行。訂閱版 Copilot 參照（`github-copilot/*`）還可以選擇加入內建的 GitHub Copilot 代理運行時 — 該路徑保持顯式（沒有 `auto` 備援）。明確的運行時覆蓋屬於供應商/模型策略，不屬於整個代理或會話。在 Codex 運行時模式下，`openai/gpt-*` 參照並不意味著 API 金鑰計費；身份驗證可以來自 Codex 帳戶或 `openai-codex` 身份驗證設定檔。參閱 [代理運行時](/zh-Hant/concepts/agent-runtimes) 和 [GitHub Copilot 代理運行時](/zh-Hant/plugins/copilot)。
+模型參照用於選擇供應商和模型。它們通常不會選擇底層的代理執行時。OpenAI 代理參照是主要的例外：在官方 OpenAI 供應商上，`openai/gpt-5.5` 預設透過 Codex app-server 執行時運作。訂閱版 Copilot 參照 (`github-copilot/*`) 除此之外還能選擇使用外部的 GitHub Copilot 代理執行時外掛 — 該路徑保持明確（無 `auto` 備援）。明確的執行時覆蓋設定屬於供應商/模型策略，而非整個代理或會話。在 Codex 執行時模式下，`openai/gpt-*` 參照並不代表 API 金鑰計費；認證可以來自 Codex 帳號或 `openai` OAuth 設定檔。請參閱 [代理執行時](/zh-Hant/concepts/agent-runtimes) 和 [GitHub Copilot 代理執行時](/zh-Hant/plugins/copilot)。
 
 ## 模型選擇機制
 
@@ -144,7 +144,7 @@ Add it with: openclaw config set agents.defaults.models '{"provider/model":{}}' 
   agents: {
     defaults: {
       models: {
-        "openai-codex/*": {},
+        "openai/*": {},
         "vllm/*": {},
       },
     },

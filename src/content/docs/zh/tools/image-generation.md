@@ -8,9 +8,9 @@ title: "图像生成"
 sidebarTitle: "图像生成"
 ---
 
-`image_generate` 工具允许代理使用您配置的提供商创建和编辑图像。在聊天会话中，图像生成异步运行：OpenClaw 记录后台任务，立即返回任务 ID，并在提供商完成时唤醒代理。完成代理必须通过 `message` 工具发送生成的图像。如果请求者会话处于非活动状态或其活动唤醒失败，并且某些生成的图像仍然缺少消息工具交付，则 OpenClaw 会发送仅包含缺失图像的幂等直接回退。
+`image_generate` 工具允许代理使用您配置的提供商创建和编辑图像。在聊天会话中，图像生成是异步运行的：OpenClaw 记录一个后台任务，立即返回任务 ID，并在提供商完成时唤醒代理。完成代理遵循会话的正常可见回复模式：配置后自动发送最终回复，或者在会话需要消息工具时发送 `message(action="send")`。如果请求者会话处于非活动状态或其活动唤醒失败，并且完成回复中仍缺少一些生成的图像，OpenClaw 将发送一个仅包含缺失图像的幂等直接回退。
 
-<Note>该工具仅在至少有一个图像生成提供商可用时才会出现。如果您在代理的工具中看不到 `image_generate`，请配置 `agents.defaults.imageGenerationModel`，设置提供商 API 密钥，或使用 OpenAI Codex OAuth 登录。</Note>
+<Note>该工具仅在至少有一个图像生成提供商可用时出现。如果您在代理的工具中看不到 `image_generate`，请配置 `agents.defaults.imageGenerationModel`，设置提供商 API 密钥，或使用 OpenAI ChatGPT/Codex OAuth 登录。</Note>
 
 ## 快速开始
 
@@ -31,14 +31,9 @@ sidebarTitle: "图像生成"
         },
       },
     }
-    ```OAuth
+    ```
 
-    Codex OAuth 使用相同的 `openai/gpt-image-2` 模型引用。当配置了
-    `openai-codex`OAuthOpenClawOAuth OAuth 个人资料时，OpenClaw 会通过该 OAuth 个人资料路由图像
-    请求，而不是首先尝试
-    `OPENAI_API_KEY`。显式的 `models.providers.openai`APIOpenAIAPI 配置（API 密钥、
-    custom/Azure 基础 URL）会选择回直接 OpenAI 图像 API
-    路由。
+    ChatGPT/Codex OAuth 使用相同的 `openai/gpt-image-2` 模型引用。当配置了 `openai` OAuth 配置文件时，OpenClaw 会通过该 OAuth 配置文件路由图像请求，而不是首先尝试 `OPENAI_API_KEY`。显式的 `models.providers.openai` 配置（API 密钥、custom/Azure 基础 URL）则选择重新使用直接的 OpenAI 图像 API 路由。
 
   </Step>
   <Step title="询问代理">
@@ -59,7 +54,7 @@ sidebarTitle: "图像生成"
 | 目标                                         | 模型引用                                           | 身份验证                                          |
 | -------------------------------------------- | -------------------------------------------------- | ------------------------------------------------- |
 | 使用 OpenAI 计费的 API 图像生成              | `openai/gpt-image-2`                               | `OPENAI_API_KEY`                                  |
-| 通过 OpenAI 订阅身份验证进行 OpenAI 图像生成 | `openai/gpt-image-2`                               | OpenAI Codex OAuth                                |
+| 通过 OpenAI 订阅身份验证进行 OpenAI 图像生成 | `openai/gpt-image-2`                               | OpenAI ChatGPT/Codex OAuth                        |
 | OpenAI 透明背景 PNG/WebP                     | `openai/gpt-image-1.5`                             | `OPENAI_API_KEY`OpenAIOAuth 或 OpenAI Codex OAuth |
 | DeepInfra 图像生成                           | `deepinfra/black-forest-labs/FLUX-1-schnell`       | `DEEPINFRA_API_KEY`                               |
 | fal Krea 2 表现力/风格导向生成               | `fal/krea/v2/medium/text-to-image`                 | `FAL_KEY`                                         |
@@ -79,7 +74,7 @@ sidebarTitle: "图像生成"
 | Google     | `gemini-3.1-flash-image-preview`        | 是                           | `GEMINI_API_KEY` 或 `GOOGLE_API_KEY`                   |
 | LiteLLM    | `gpt-image-2`                           | 是（最多 5 张输入图片）      | `LITELLM_API_KEY`                                      |
 | MiniMax    | `image-01`                              | 是（主体参考）               | `MINIMAX_API_KEY` 或 MiniMax OAuth（`minimax-portal`） |
-| OpenAI     | `gpt-image-2`                           | 是（最多 4 张图片）          | `OPENAI_API_KEY` 或 OpenAI Codex OAuth                 |
+| OpenAI     | `gpt-image-2`                           | 是（最多 4 张图片）          | `OPENAI_API_KEY` 或 OpenAI ChatGPT/Codex OAuth         |
 | OpenRouter | `google/gemini-3.1-flash-image-preview` | 是（最多 5 张输入图片）      | `OPENROUTER_API_KEY`                                   |
 | Vydra      | `grok-imagine`                          | 否                           | `VYDRA_API_KEY`                                        |
 | xAI        | `grok-imagine-image`                    | 是（最多 5 张图片）          | `XAI_API_KEY`                                          |
@@ -216,29 +211,30 @@ OpenAI、OpenRouter、Google 和 xAI 通过 `images` 参数支持最多 5 张参
 
 <AccordionGroup>
   <Accordion title="OpenAIOpenAI gpt-image-2（和 gpt-image-1.5）"OpenAI>
-    OpenAI 图像生成默认使用 `openai/gpt-image-2`。如果配置了
-    `openai-codex`OAuthOpenClawOAuth OAuth 配置文件，OpenClaw 将复用与 Codex 订阅聊天模型相同的
-    OAuth 配置文件，并通过 Codex Responses 后端发送图像请求。旧的 Codex 基础
+    OpenAI 图像生成默认为 `openai/gpt-image-2`。如果配置了
+    `openai`OAuthOpenClawOAuth OAuth 配置文件，OpenClaw 将重用 Codex 订阅聊天模型所使用的
+    相同 OAuth 配置文件，并通过 Codex Responses 后端发送
+    图像请求。传统的 Codex 基础
     URL（例如 `https://chatgpt.com/backend-api`）会被规范化为
-    `https://chatgpt.com/backend-api/codex`OpenClaw 以用于图像请求。OpenClaw
-    不会**默默**退回到 `OPENAI_API_KEY`OpenAIAPI 来处理该请求 -
-    要强制使用直接的 OpenAI Images API 路由，请使用 API 密钥、自定义基础 URL
+    `https://chatgpt.com/backend-api/codex`OpenClaw 用于图像请求。对于该请求，OpenClaw
+    **不会**自动降级使用 `OPENAI_API_KEY`OpenAIAPI ——
+    若要强制使用直接 OpenAI Images API 路由，请使用 API 密钥、自定义基础 URL
     或 Azure 端点显式配置 `models.providers.openai`API。
 
     仍然可以显式选择 `openai/gpt-image-1.5`、`openai/gpt-image-1` 和
     `openai/gpt-image-1-mini` 模型。使用
-    `gpt-image-1.5` 获取透明背景的 PNG/WebP 输出；当前的
+    `gpt-image-1.5` 获取透明背景 PNG/WebP 输出；当前的
     `gpt-image-2`API API 会拒绝 `background: "transparent"`。
 
-    `gpt-image-2` 支持通过同一个 `image_generate`OpenClaw 工具进行文本生成图像和
-    参考图像编辑。
+    `gpt-image-2` 支持通过同一个 `image_generate`OpenClaw 工具进行
+    文生图像生成和参考图像编辑。
     OpenClaw 会将 `prompt`、`count`、`size`、`quality`、`outputFormat`OpenAIOpenAI
-    和参考图像转发给 OpenAI。OpenAI **不**直接
-    接收 `aspectRatio` 或 `resolution`OpenClaw；如果可能，OpenClaw 会将其
-    映射为受支持的 `size`OpenAI，否则该工具会将它们报告为
-    被忽略的覆盖项。
+    和参考图像转发给 OpenAI。OpenAI **不会**直接接收
+    `aspectRatio` 或 `resolution`OpenClaw；如果可能，OpenClaw 会将
+    其映射为支持的 `size`OpenAI，否则该工具会将其报告为
+    已忽略的覆盖参数。
 
-    OpenAI 特定选项位于 `openai` 对象下：
+    OpenAI 特定的选项位于 `openai` 对象下：
 
     ```json
     {
@@ -254,18 +250,18 @@ OpenAI、OpenRouter、Google 和 xAI 通过 `images` 参数支持最多 5 张参
     ```
 
     `openai.background` 接受 `transparent`、`opaque` 或 `auto`；
-    透明输出需要 `outputFormat` `png` 或 `webp`OpenAIOpenClaw 以及
-    支持透明度的 OpenAI 图像模型。OpenClaw 将默认的
+    透明输出需要 `outputFormat` `png` 或 `webp`OpenAIOpenClaw 以及一个
+    支持透明度的 OpenAI 图像模型。OpenClaw 会将默认的
     `gpt-image-2` 透明背景请求路由到 `gpt-image-1.5`。
-    `openai.outputCompression` 适用于 JPEG/WebP 输出，对于
-    PNG 输出会被忽略。
+    `openai.outputCompression` 适用于 JPEG/WebP 输出，对于 PNG 输出
+    则被忽略。
 
-    顶层 `background`OpenAI 提示是提供商中立的，当选择
-    OpenAI 提供商时，它目前映射到相同的 OpenAI `background`OpenAI 请求字段。未声明背景支持的提供商
+    顶层 `background`OpenAI 提示词是提供商中立的，当前在选择 OpenAI 提供商时
+    会映射到同一个 OpenAI `background`OpenAI 请求字段。不声明支持背景的提供商
     会将其在 `ignoredOverrides`OpenAIOpenAI 中返回，而不是接收不支持的参数。
 
-    若要通过 Azure OpenAI 部署
-    路由 OpenAI 图像生成，而不是通过 `api.openai.com`OpenAI，请参阅
+    若要将 OpenAI 图像生成路由到 Azure OpenAI 部署
+    而不是 `api.openai.com`OpenAI，请参阅
     [Azure OpenAI endpoints](/zh/providers/openai#azure-openai-endpoints)。
 
   </Accordion>

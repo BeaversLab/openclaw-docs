@@ -8,9 +8,10 @@ title: "Tests : suites en direct"
 sidebarTitle: "Tests en direct"
 ---
 
-Pour un démarrage rapide, les exécuteurs QA, les suites de tests unitaires/intégration et les flux Docker, consultez
-[Testing](Docker/en/help/testingCLI). Cette page couvre les suites de tests **live** (touchant le réseau) :
-matrice de modèles, backends CLI, ACP et tests live de fournisseur de médias, ainsi que la gestion des informations d'identification.
+Pour un démarrage rapide, les exécuteurs QA, les suites de tests unitaires/d'intégration et les flux Docker, consultez
+[Testing](Docker/en/help/testingCLI). Cette page couvre les suites de tests **live** (avec accès réseau) :
+matrice de modèles, backends CLI, ACP et tests live de fournisseurs de médias, ainsi que
+la gestion des identifiants.
 
 ## En direct : commandes de fumée locales
 
@@ -51,7 +52,7 @@ sont rejetés par conception.
 - Remplacements de cibles optionnels :
   - `OPENCLAW_ANDROID_NODE_ID` ou `OPENCLAW_ANDROID_NODE_NAME`.
   - `OPENCLAW_ANDROID_GATEWAY_URL` / `OPENCLAW_ANDROID_GATEWAY_TOKEN` / `OPENCLAW_ANDROID_GATEWAY_PASSWORD`.
-- Détails complets de la configuration Android : [Android App](/fr/platforms/android)
+- Détails complets de la configuration Android : [Application Android](/fr/platforms/android)
 
 ## En direct : smoke de modèle (clés de profil)
 
@@ -74,7 +75,7 @@ Les tests en direct sont divisés en deux couches afin que nous puissions isoler
   - `OPENCLAW_LIVE_MODELS=modern` pour exécuter la liste d'autorisation moderne (Opus/Sonnet 4.6+, GPT-5.2 + Codex, Gemini 3, DeepSeek V4, GLM 4.7, MiniMax M2.7, Grok 4.3)
   - `OPENCLAW_LIVE_MODELS=small` pour exécuter la liste d'autorisation de petits modèles contraints (itinéraires compatibles locaux Qwen 8B/9B, OpenRouter Qwen/GLM, et Z.AI GLM)
   - `OPENCLAW_LIVE_MODELS=all` est un alias pour la liste d'autorisation moderne
-  - ou `OPENCLAW_LIVE_MODELS="openai/gpt-5.5,openai-codex/gpt-5.5,anthropic/claude-opus-4-6,..."` (liste d'autorisation par virgules)
+  - ou `OPENCLAW_LIVE_MODELS="openai/gpt-5.5,anthropic/claude-opus-4-6,..."` (liste d'autorisation par virgule)
   - Les parcours modernes/tous et petits utilisent par défaut leurs plafonds curés ; définissez `OPENCLAW_LIVE_MAX_MODELS=0` pour un parcours exhaustif de profils sélectionnés ou un nombre positif pour un plafond plus petit.
   - Les parcours exhaustifs utilisent `OPENCLAW_LIVE_TEST_TIMEOUT_MS` pour le délai d'expiration global du test de modèle direct. Par défaut : 60 minutes.
   - Les sondages de modèle direct s'exécutent avec un parallélisme de 20 voies par défaut ; définissez `OPENCLAW_LIVE_MODEL_CONCURRENCY` pour modifier.
@@ -337,7 +338,7 @@ Les listes d'autorisation étroites et explicites sont les plus rapides et les m
   - `OPENCLAW_LIVE_GATEWAY_MODELS="openai/gpt-5.5" pnpm test:live src/gateway/gateway-models.profiles.live.test.ts`
 
 - Appel d'outil sur plusieurs fournisseurs :
-  - `OPENCLAW_LIVE_GATEWAY_MODELS="openai/gpt-5.5,openai-codex/gpt-5.5,anthropic/claude-opus-4-6,google/gemini-3-flash-preview,deepseek/deepseek-v4-flash,zai/glm-5.1,minimax/MiniMax-M2.7" pnpm test:live src/gateway/gateway-models.profiles.live.test.ts`
+  - `OPENCLAW_LIVE_GATEWAY_MODELS="openai/gpt-5.5,anthropic/claude-opus-4-6,google/gemini-3-flash-preview,deepseek/deepseek-v4-flash,zai/glm-5.1,minimax/MiniMax-M2.7" pnpm test:live src/gateway/gateway-models.profiles.live.test.ts`
 
 - Focus Google (clé d'API Gemini + Antigravity) :
   - Gemini (clé d'API) : API`OPENCLAW_LIVE_GATEWAY_MODELS="google/gemini-3-flash-preview" pnpm test:live src/gateway/gateway-models.profiles.live.test.ts`
@@ -365,7 +366,7 @@ Il n'y a pas de « liste de models CI » fixe (live est optionnel), mais voici l
 Il s'agit de l'exécution des « models courants » que nous nous attendons à voir fonctionner :
 
 - OpenAI (non-Codex) : OpenAI`openai/gpt-5.5`
-- OpenAI Codex OAuth : OpenAIOAuth`openai-codex/gpt-5.5`
+- OpenAI ChatGPT/Codex OAuth : `openai/gpt-5.5`
 - Anthropic : Anthropic`anthropic/claude-opus-4-6` (ou `anthropic/claude-sonnet-4-6`)
 - Google (API Gemini) : API`google/gemini-3.1-pro-preview` et `google/gemini-3-flash-preview` (éviter les models Gemini 2.x plus anciens)
 - Google (Antigravity) : `google-antigravity/claude-opus-4-6-thinking` et `google-antigravity/gemini-3-flash`
@@ -373,8 +374,8 @@ Il s'agit de l'exécution des « models courants » que nous nous attendons à v
 - Z.AI (GLM) : GLM`zai/glm-5.1`
 - MiniMax : MiniMax`minimax/MiniMax-M2.7`
 
-Exécuter le smoke de passerelle avec tools + image :
-`OPENCLAW_LIVE_GATEWAY_MODELS="openai/gpt-5.5,openai-codex/gpt-5.5,anthropic/claude-opus-4-6,google/gemini-3.1-pro-preview,google/gemini-3-flash-preview,google-antigravity/claude-opus-4-6-thinking,google-antigravity/gemini-3-flash,deepseek/deepseek-v4-flash,zai/glm-5.1,minimax/MiniMax-M2.7" pnpm test:live src/gateway/gateway-models.profiles.live.test.ts`
+Exécuter le test de fumée de la passerelle avec outils + image :
+`OPENCLAW_LIVE_GATEWAY_MODELS="openai/gpt-5.5,anthropic/claude-opus-4-6,google/gemini-3.1-pro-preview,google/gemini-3-flash-preview,google-antigravity/claude-opus-4-6-thinking,google-antigravity/gemini-3-flash,deepseek/deepseek-v4-flash,zai/glm-5.1,minimax/MiniMax-M2.7" pnpm test:live src/gateway/gateway-models.profiles.live.test.ts`
 
 ### Référence : tool calling (Read + Exec optionnel)
 
@@ -407,22 +408,22 @@ Si vous avez des clés activées, nous prenons également en charge les tests vi
 
 D'autres fournisseurs que vous pouvez inclure dans la matrice live (si vous avez des identifiants/config) :
 
-- Intégrés : `openai`, `openai-codex`, `anthropic`, `google`, `google-vertex`, `google-antigravity`, `google-gemini-cli`, `zai`, `openrouter`, `opencode`, `opencode-go`, `xai`, `groq`, `cerebras`, `mistral`, `github-copilot`
+- Intégré : `openai`, `anthropic`, `google`, `google-vertex`, `google-antigravity`, `google-gemini-cli`, `zai`, `openrouter`, `opencode`, `opencode-go`, `xai`, `groq`, `cerebras`, `mistral`, `github-copilot`
 - Via `models.providers` (points de terminaison personnalisés) : `minimax` (cloud/API), ainsi que tout proxy compatible OpenAI/Anthropic (LM Studio, vLLM, LiteLLM, etc.)
 
-<Tip>Ne coded pas en dur « tous les models » dans les docs. La liste faisant autorité est ce que `discoverModels(...)` renvoie sur votre machine plus toutes les clés disponibles.</Tip>
+<Tip>Ne codifiez pas en dur « tous les modèles » dans la documentation. La liste faisant autorité est tout ce que `discoverModels(...)` renvoie sur votre machine ainsi que les clés disponibles.</Tip>
 
 ## Identifiants (jamais commit)
 
 Les tests live découvrent les identifiants de la même manière que le CLI. Conséquences pratiques :
 
 - Si le CLI fonctionne, les tests en direct devraient trouver les mêmes clés.
-- Si un test en direct indique "pas d'identifiants", déboguez de la même manière que vous débogueriez `openclaw models list` / la sélection de model.
+- Si un test en direct indique « no creds », débuguez de la même manière que vous débugeriez `openclaw models list` / la sélection de modèle.
 
-- Profils d'authentification par agent : `~/.openclaw/agents/<agentId>/agent/auth-profiles.json` (c'est ce que "clés de profil" signifie dans les tests en direct)
-- Config : `~/.openclaw/openclaw.json` (ou `OPENCLAW_CONFIG_PATH`)
+- Profils d'authentification par agent : `~/.openclaw/agents/<agentId>/agent/auth-profiles.json` (c'est ce que signifie « profile keys » dans les tests en direct)
+- Configuration : `~/.openclaw/openclaw.json` (ou `OPENCLAW_CONFIG_PATH`)
 - Répertoire d'état hérité : `~/.openclaw/credentials/` (copié dans le répertoire personnel intermédiaire en direct lorsqu'il est présent, mais pas le magasin principal de clés de profil)
-- Les exécutions locales en direct copient par défaut la configuration active, les fichiers `auth-profiles.json` par agent, le `credentials/` hérité et les répertoires d'authentification CLI externes pris en charge vers un répertoire personnel de test temporaire ; les répertoires personnels intermédiaires en direct ignorent `workspace/` et `sandboxes/`, et les substitutions de chemin `agents.*.workspace` / `agentDir` sont supprimées pour que les sondes restent en dehors de votre espace de travail hôte réel.
+- Les exécutions locales en direct copient la configuration active, les fichiers `auth-profiles.json` par agent, l'ancien `credentials/`CLI et les répertoires d'authentification CLI externes pris en charge dans un répertoire de test temporaire par défaut ; les homes de diffusion préparés ignorent `workspace/` et `sandboxes/`, et les remplacements de chemin `agents.*.workspace` / `agentDir` sont supprimés afin que les sondes restent en dehors de votre espace de travail hôte réel.
 
 Si vous souhaitez vous fier aux clés d'environnement, exportez-les avant les tests locaux ou utilisez les exécuteurs Docker ci-dessous avec un `OPENCLAW_PROFILE_FILE` explicite.
 
@@ -435,14 +436,14 @@ Si vous souhaitez vous fier aux clés d'environnement, exportez-les avant les te
 
 - Test : `extensions/byteplus/live.test.ts`
 - Activer : `BYTEPLUS_API_KEY=... BYTEPLUS_LIVE_TEST=1 pnpm test:live extensions/byteplus/live.test.ts`
-- Substitution facultative de model : `BYTEPLUS_CODING_MODEL=ark-code-latest`
+- Remplacement de modèle facultatif : `BYTEPLUS_CODING_MODEL=ark-code-latest`
 
 ## Media de workflow ComfyUI en direct
 
 - Test : `extensions/comfy/comfy.live.test.ts`
 - Activer : `OPENCLAW_LIVE_TEST=1 COMFY_LIVE_TEST=1 pnpm test:live -- extensions/comfy/comfy.live.test.ts`
 - Portée :
-  - Teste les chemins d'image comfy, vidéo et `music_generate` regroupés
+  - Exerce les chemins d'image, de vidéo et `music_generate` comfy regroupés
   - Ignore chaque capacité sauf si `plugins.entries.comfy.config.<capability>` est configuré
   - Utile après avoir modifié la soumission, l'interrogation, les téléchargements ou l'enregistrement de plugins du workflow comfy
 
@@ -454,11 +455,11 @@ Si vous souhaitez vous fier aux clés d'environnement, exportez-les avant les te
 - Portée :
   - Énumère chaque plugin de provider de génération d'images enregistré
   - Utilise les variables d'environnement de provider déjà exportées avant le sondage
-  - Utilise par défaut les clés API live/env avant les profils d'authentification stockés, afin que les clés de test obsolètes dans API`auth-profiles.json` ne masquent pas les identifiants réels du shell
+  - Utilise par défaut les clés API en direct/env avant les profils d'authentification stockés, afin que les clés de test obsolètes dans `auth-profiles.json` ne masquent pas les identifiants réels du shell
   - Ignore les fournisseurs sans auth/profil/model utilisable
   - Exécute chaque fournisseur configuré via le runtime partagé de génération d'images :
     - `<provider>:generate`
-    - `<provider>:edit` lorsque le fournisseur déclare prendre en charge la modification
+    - `<provider>:edit` lorsque le fournisseur déclare la prise en charge de la modification
 - Fournisseurs groupés actuellement couverts :
   - `deepinfra`
   - `fal`
@@ -474,9 +475,9 @@ Si vous souhaitez vous fier aux clés d'environnement, exportez-les avant les te
   - `OPENCLAW_LIVE_IMAGE_GENERATION_MODELS="openai/gpt-image-2,google/gemini-3.1-flash-image-preview,openrouter/google/gemini-3.1-flash-image-preview,xai/grok-imagine-image"`
   - `OPENCLAW_LIVE_IMAGE_GENERATION_CASES="google:flash-generate,google:pro-edit,openrouter:generate,xai:default-generate,xai:default-edit"`
 - Comportement d'authentification optionnel :
-  - `OPENCLAW_LIVE_REQUIRE_PROFILE_KEYS=1` pour forcer l'authentification du magasin de profils et ignorer les substitutions exclusives à l'environnement
+  - `OPENCLAW_LIVE_REQUIRE_PROFILE_KEYS=1` pour forcer l'authentification par magasin de profils et ignorer les remplacements uniquement basés sur l'environnement
 
-Pour le chemin CLI livré, ajoutez un test CLI`infer` après la réussite du test en direct du fournisseur/runtime :
+Pour le chemin CLI livré, ajoutez un test de fumée `infer` après la réussite du test en direct du fournisseur/runtime :
 
 ```bash
 OPENCLAW_LIVE_TEST=1 OPENCLAW_LIVE_INFER_CLI_TEST=1 pnpm test:live -- test/image-generation.infer-cli.live.test.ts
@@ -499,20 +500,20 @@ Cela couvre l'analyse des arguments CLI, la résolution config/default-agent, l'
   - Teste le chemin partagé des fournisseurs de génération de musique groupés
   - Couvre actuellement Google et MiniMax
   - Utilise les variables d'environnement de fournisseur déjà exportées avant la sonde
-  - Utilise par défaut les clés API live/env avant les profils d'authentification stockés, afin que les clés de test obsolètes dans API`auth-profiles.json` ne masquent pas les identifiants réels du shell
+  - Utilise par défaut les clés d'API live/env avant les profils d'authentification stockés, les clés de test obsolètes dans `auth-profiles.json` ne masquent donc pas les identifiants réels du shell
   - Ignore les fournisseurs sans auth/profil/model utilisable
   - Exécute les deux modes de runtime déclarés lorsqu'ils sont disponibles :
     - `generate` avec une entrée composée uniquement d'une invite
-    - `edit` lorsque le fournisseur déclare `capabilities.edit.enabled`
+    - `edit` lorsque le provider déclare `capabilities.edit.enabled`
   - Couverture actuelle des voies partagées :
     - `google` : `generate`, `edit`
     - `minimax` : `generate`
-    - `comfy` : fichier live Comfy séparé, et non ce test groupé partagé
+    - `comfy` : fichier live Comfy séparé, et non ce balayage partagé
 - Restriction facultative :
   - `OPENCLAW_LIVE_MUSIC_GENERATION_PROVIDERS="google,minimax"`
   - `OPENCLAW_LIVE_MUSIC_GENERATION_MODELS="google/lyria-3-clip-preview,minimax/music-2.6"`
 - Comportement d'authentification facultatif :
-  - `OPENCLAW_LIVE_REQUIRE_PROFILE_KEYS=1` pour forcer l'authentification via le magasin de profils et ignorer les remplacements par variables d'environnement uniquement
+  - `OPENCLAW_LIVE_REQUIRE_PROFILE_KEYS=1` pour forcer l'authentification par le magasin de profils et ignorer les remplacements basés uniquement sur l'environnement
 
 ## Test en direct de génération vidéo
 
@@ -521,33 +522,33 @@ Cela couvre l'analyse des arguments CLI, la résolution config/default-agent, l'
 - Harnais : `pnpm test:live:media video`
 - Portée :
   - Exerce le chemin de provider de génération vidéo groupé et partagé
-  - Par défaut, utilise le chemin de test de sécurité de release : providers hors FAL, une requête texte-vers-vidéo par provider, une invite d'une seconde pour le homard, et une limite d'opération par provider issue de `OPENCLAW_LIVE_VIDEO_GENERATION_TIMEOUT_MS` (`180000` par défaut)
-  - Ignore FAL par défaut car la latence de la file d'attente côté provider peut dominer le temps de release ; passez `--video-providers fal` ou `OPENCLAW_LIVE_VIDEO_GENERATION_PROVIDERS="fal"` pour l'exécuter explicitement
+  - Par défaut, utilise le chemin de test de smoke sûr pour la release : providers non-FAL, une requête texte-vidéo par provider, une invite homard d'une seconde, et une limite d'opérations par provider issue de `OPENCLAW_LIVE_VIDEO_GENERATION_TIMEOUT_MS` (`180000` par défaut)
+  - Ignore FAL par défaut car la latence de la file d'attente côté provider peut impacter le temps de release ; passez `--video-providers fal` ou `OPENCLAW_LIVE_VIDEO_GENERATION_PROVIDERS="fal"` pour l'exécuter explicitement
   - Utilise les variables d'environnement de provider déjà exportées avant le sondage
-  - Utilise par défaut les clés API live/env avant les profils d'authentification stockés, afin que les clés de test obsolètes dans `auth-profiles.json` ne masquent pas les identifiants réels du shell
+  - Utilise par défaut les clés d'API live/env avant les profils d'authentification stockés, les clés de test obsolètes dans `auth-profiles.json` ne masquent donc pas les identifiants réels du shell
   - Ignore les providers sans authentification/profil/modèle utilisable
   - N'exécute que `generate` par défaut
   - Définissez `OPENCLAW_LIVE_VIDEO_GENERATION_FULL_MODES=1` pour exécuter également les modes de transformation déclarés lorsqu'ils sont disponibles :
-    - `imageToVideo` lorsque le provider déclare `capabilities.imageToVideo.enabled` et que le provider/modèle sélectionné accepte l'entrée d'image locale soutenue par un tampon dans le test groupé partagé
-    - `videoToVideo` lorsque le provider déclare `capabilities.videoToVideo.enabled` et que le provider/modèle sélectionné accepte l'entrée de vidéo locale soutenue par un tampon dans le test groupé partagé
-  - Providers `imageToVideo` actuellement déclarés mais ignorés dans le test groupé partagé :
+    - `imageToVideo` lorsque le provider déclare `capabilities.imageToVideo.enabled` et que le provider/modèle sélectionné accepte l'entrée d'image locale soutenue par un tampon dans le balayage partagé
+    - `videoToVideo` lorsque le provider déclare `capabilities.videoToVideo.enabled` et que le provider/modèle sélectionné accepte l'entrée de vidéo locale soutenue par un tampon dans le balayage partagé
+  - Providers `imageToVideo` déclarés mais ignorés actuellement dans le balayage partagé :
     - `vydra` car le `veo3` groupé est texte uniquement et le `kling` groupé nécessite une URL d'image distante
   - Couverture Vydra spécifique au provider :
     - `OPENCLAW_LIVE_TEST=1 OPENCLAW_LIVE_VYDRA_VIDEO=1 pnpm test:live -- extensions/vydra/vydra.live.test.ts`
-    - ce fichier exécute `veo3` texte-vers-vidéo plus un canal `kling` qui utilise par défaut une fixture d'URL d'image distante
-  - Couverture live actuelle `videoToVideo` :
-    - `runway` uniquement lorsque le model sélectionné est `runway/gen4_aleph`
-  - Providers `videoToVideo` actuellement déclarés mais ignorés dans le sweep partagé :
-    - `alibaba`, `qwen`, `xai` car ces chemins nécessitent actuellement des URL de référence `http(s)` / MP4 distantes
-    - `google` car le canal partagé Gemini/Veo actuel utilise une entrée soutenue par un tampon local et ce chemin n'est pas accepté dans le sweep partagé
-    - `openai` car le canal partagé actuel ne dispose pas de garanties d'accès à l'édition vidéo spécifiques à l'organisation
+    - ce fichier exécute du texte-vers-vidéo `veo3` plus une voie `kling` qui utilise une fixture d'URL d'image distante par défaut
+  - Couverture actuelle en direct `videoToVideo` :
+    - `runway` uniquement lorsque le modèle sélectionné est `runway/gen4_aleph`
+  - Fournisseurs `videoToVideo` actuellement déclarés mais ignorés dans le balayage partagé :
+    - `alibaba`, `qwen`, `xai` car ces chemins nécessitent actuellement des URLs de référence `http(s)` / MP4 distantes
+    - `google` car la voie partagée Gemini/Veo actuelle utilise une entrée locale soutenue par un tampon et ce chemin n'est pas accepté dans le balayage partagé
+    - `openai` car la voie partagée actuelle manque de garanties d'accès spécifiques à l'organisation pour l'édition vidéo
 - Rétrécissement facultatif :
   - `OPENCLAW_LIVE_VIDEO_GENERATION_PROVIDERS="deepinfra,google,openai,runway"`
   - `OPENCLAW_LIVE_VIDEO_GENERATION_MODELS="google/veo-3.1-fast-generate-preview,openai/sora-2,runway/gen4_aleph"`
-  - `OPENCLAW_LIVE_VIDEO_GENERATION_SKIP_PROVIDERS=""` pour inclure chaque provider dans le sweep par défaut, y compris FAL
-  - `OPENCLAW_LIVE_VIDEO_GENERATION_TIMEOUT_MS=60000` pour réduire la limite d'opération de chaque provider pour une exécution de smoke agressive
+  - `OPENCLAW_LIVE_VIDEO_GENERATION_SKIP_PROVIDERS=""` pour inclure chaque fournisseur dans le balayage par défaut, y compris FAL
+  - `OPENCLAW_LIVE_VIDEO_GENERATION_TIMEOUT_MS=60000` pour réduire la limite d'opérations de chaque fournisseur pour une exécution de test de fumée agressive
 - Comportement d'auth facultatif :
-  - `OPENCLAW_LIVE_REQUIRE_PROFILE_KEYS=1` pour forcer l'auth du magasin de profils et ignorer les substitutions uniquement env
+  - `OPENCLAW_LIVE_REQUIRE_PROFILE_KEYS=1` pour forcer l'auth du magasin de profils et ignorer les remplacements uniquement environnement
 
 ## Harnais de live média
 
@@ -556,7 +557,7 @@ Cela couvre l'analyse des arguments CLI, la résolution config/default-agent, l'
   - Exécute les suites live partagées d'image, de musique et de vidéo via un point d'entrée natif du dépôt
   - Utilise les env vars de provider déjà exportées
   - Rétrécit automatiquement chaque suite aux providers qui ont actuellement une auth utilisable par défaut
-  - Réutilise `scripts/test-live.mjs`, donc le comportement de heartbeat et de mode silencieux reste cohérent
+  - Réutilise `scripts/test-live.mjs`, donc le comportement du battement de cœur et du mode silencieux reste cohérent
 - Exemples :
   - `pnpm test:live:media`
   - `pnpm test:live:media image video --providers openai,google,minimax`

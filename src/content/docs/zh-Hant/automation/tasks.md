@@ -8,7 +8,7 @@ title: "背景任務"
 sidebarTitle: "背景任務"
 ---
 
-<Note>在尋找排程功能嗎？請參閱 [Automation](/zh-Hant/automation) 以選擇正確的機制。此頁面是背景工作的活動記錄帳，而非排程器。</Note>
+<Note>尋找排程功能？請參閱 [Automation](/zh-Hant/automation) 以選擇合適的機制。此頁面是背景工作的活動記錄，而非排程器。</Note>
 
 背景任務會追蹤在您的主要對話工作階段**之外**執行的工作：ACP 執行、子代理生成、隔離的 cron 工作執行，以及 CLI 初始化的操作。
 
@@ -92,18 +92,18 @@ sidebarTitle: "背景任務"
 
 <AccordionGroup>
   <Accordion title="Notify defaults for cron and media">
-    主會話 cron 任務預設使用 `silent` 通知策略——它們會建立記錄以便追蹤，但不會產生通知。隔離 cron 任務也預設為 `silent`，但因為在自己的會話中執行，所以更為可見。
+    主會話 cron 任務預設使用 `silent` 通知政策——它們會建立追蹤記錄但不產生通知。獨立 cron 任務同樣預設為 `silent`，但因為它們在自己的會話中執行，所以更為顯眼。
 
-    由會話支援的 `image_generate`、`music_generate` 與 `video_generate` 執行也使用 `silent` 通知策略。它們仍會建立任務記錄，但完成會以內部喚醒的方式交回給原始的 agent 會話，讓 agent 可以撰寫後續訊息並自行附加完成的媒體。生成媒體的完成事件需要透過訊息工具來傳遞：agent 必須使用 `message` 工具傳送完成的媒體，然後 `NO_REPLY` 回覆。如果請求者的會話不再處於作用中，或其作用中的喚醒失敗，且完成 agent 錯過了部分或所有生成的媒體，OpenClaw 會對原始的頻道目標發送一個僅包含遺失媒體的等幕直接後援。
+    由會話支援的 `image_generate`、`music_generate` 和 `video_generate` 執行也使用 `silent` 通知政策。它們仍會建立任務記錄，但完成狀態會透過內部喚醒交還給原始代理程式會話，以便代理程式撰寫後續訊息並自行附加完成的媒體。請求代理程式遵循其一般可見回覆合約：設定時自動發出最終回覆，或在會話需要訊息工具回覆時發出 `message(action="send")` 加上 `NO_REPLY`。如果請求會話已不再有效，或其作用中的喚醒失敗，且完成代理程式遺漏了部分或全部產生的媒體，OpenClaw 會向原始頻道目標發送一個僅包含遺失媒體的等幕直接後援。
 
   </Accordion>
   <Accordion title="並行媒體生成防護機制">
     當由會話支援的媒體生成任務仍處於活躍狀態時，媒體工具也充當防止意外重試的防護機制。針對相同提示詞重複呼叫 `image_generate` 會傳回相符的活躍任務狀態，而不同的圖片提示詞則可以啟動其自身的任務。`music_generate` 和 `video_generate` 的呼叫仍然會傳回該會話的活躍任務狀態，而不是啟動第二次並行生成。當您想要從代理程式端進行明確的進度/狀態查詢時，請使用 `action: "status"`。
   </Accordion>
-  <Accordion title="什麼情況不會建立工作">
-    - Heartbeat 週期——主會話；請參閱 [Heartbeat](/zh-Hant/gateway/heartbeat)
-    - 一般的互動式聊天週期
-    - 直接的 `/command` 回應
+  <Accordion title="What does not create tasks">
+    - Heartbeat 週期 - 主會話；請參閱 [Heartbeat](/zh-Hant/gateway/heartbeat)
+    - 一般互動式聊天週期
+    - 直接 `/command` 回應
 
   </Accordion>
 </AccordionGroup>
@@ -314,34 +314,34 @@ $OPENCLAW_STATE_DIR/tasks/runs.sqlite
 
 <AccordionGroup>
   <Accordion title="Tasks and Task Flow">
-    [Task Flow](/zh-Hant/automation/taskflow) 是位於背景任務之上的流程編排層。單一流程可能會在其生命週期內使用受管或鏡像同步模式來協調多個任務。請使用 `openclaw tasks` 來檢查個別任務記錄，並使用 `openclaw tasks flow` 來檢查協調流程。
+    [Task Flow](/zh-Hant/automation/taskflow) 是位於背景任務上層的流程編排層。單一流程在其生命週期中可以使用受管或鏡像同步模式來協調多個任務。使用 `openclaw tasks` 檢查個別任務記錄，並使用 `openclaw tasks flow` 檢查編排流程。
 
     詳情請參閱 [Task Flow](/zh-Hant/automation/taskflow)。
 
   </Accordion>
   <Accordion title="Tasks and cron">
-    cron 工作**定義**存在於 `~/.openclaw/cron/jobs.json` 中；執行時期執行狀態則存在於旁邊的 `~/.openclaw/cron/jobs-state.json` 中。**每個** cron 執行都會建立一個任務記錄 — 包含主會話和隔離式。主會話 cron 任務預設為 `silent` 通知原則，因此它們會進行追蹤而不產生通知。
+    Cron 工作定義、執行時執行狀態和執行歷史記錄存在於 OpenClaw 的共享 SQLite 狀態資料庫中。**每個** Cron 執行都會建立一個任務記錄——包括主會話和獨立的。主會話 Cron 任務預設採用 `silent` 通知策略，以便它們進行追蹤而不產生通知。
 
-    請參閱 [Cron Jobs](/zh-Hant/automation/cron-jobs)。
+    參閱 [Cron Jobs](/zh-Hant/automation/cron-jobs)。
 
   </Accordion>
   <Accordion title="Tasks and heartbeat">
-    Heartbeat 執行是主會話輪次 — 它們不會建立任務記錄。當任務完成時，它可以觸發 heartbeat 喚醒，讓您即時看到結果。
+    Heartbeat 執行是主會話輪次——它們不會建立任務記錄。當任務完成時，它可以觸發 Heartbeat 喚醒，以便您及時看到結果。
 
-    請參閱 [Heartbeat](/zh-Hant/gateway/heartbeat)。
+    參閱 [Heartbeat](/zh-Hant/gateway/heartbeat)。
 
   </Accordion>
   <Accordion title="Tasks and sessions">
-    任務可能會參照 `childSessionKey` (工作執行的地方) 和 `requesterSessionKey` (發起它的人)。會話是對話上下文；任務則是建構在之上的活動追蹤。
+    任務可能會參照 `childSessionKey`（工作執行的地方）和 `requesterSessionKey`（誰啟動了它）。會話是對話上下文；任務是建構在其上的活動追蹤。
   </Accordion>
   <Accordion title="Tasks and agent runs">
-    任務的 `runId` 會連結至執行工作的 agent 執行。Agent 生命週期事件 (開始、結束、錯誤) 會自動更新任務狀態 — 您不需要手動管理生命週期。
+    任務的 `runId` 連結到執行工作的 Agent 執行。Agent 生命週期事件（開始、結束、錯誤）會自動更新任務狀態——您無需手動管理生命週期。
   </Accordion>
 </AccordionGroup>
 
 ## 相關
 
-- [Automation](/zh-Hant/automation) - 所有自動化機制一覽
+- [Automation](/zh-Hant/automation) - 一目瞭然的所有自動化機制
 - [CLI: Tasks](/zh-Hant/cli/tasks) - CLI 指令參考
 - [Heartbeat](/zh-Hant/gateway/heartbeat) - 週期性主會話輪次
 - [Scheduled Tasks](/zh-Hant/automation/cron-jobs) - 排程背景工作

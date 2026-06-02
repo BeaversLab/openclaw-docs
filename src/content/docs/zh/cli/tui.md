@@ -14,7 +14,7 @@ title: "TUI"
 
 相关：
 
-- TUI 指南：[TUI](/zh/web/tui)
+- TUI 指南：[TUI](TUITUI/en/web/tui)
 
 ## 选项
 
@@ -42,6 +42,7 @@ title: "TUI"
 - 本地模式直接使用嵌入式代理运行时。大多数本地工具都可以使用，但仅 Gateway(网关) 支持的功能不可用。
 - 本地模式在 TUI 命令界面内添加 `/auth [provider]`TUI。
 - 在本地模式下，插件批准关卡仍然适用。需要批准的工具会在终端中提示您做出决定；没有任何内容会因为不涉及 Gateway(网关) 而被静默自动批准。
+- 会话 [目标](/zh/tools/goal) 显示在页脚中，并可以使用 `/goal` 进行管理。
 
 ## 示例
 
@@ -58,7 +59,7 @@ openclaw tui --session bugfix
 
 ## 配置修复循环
 
-当当前配置已通过验证，并且您希望嵌入式代理检查它、将其与文档进行比较并帮助从同一终端修复它时，请使用本地模式：
+当当前配置已通过验证，并且您希望嵌入的代理检查它、将其与文档进行比较并在同一终端中帮助修复它时，请使用本地模式：
 
 如果 `openclaw config validate` 已经失败，请先使用 `openclaw configure` 或
 `openclaw doctor --fix`。`openclaw chat` 不会绕过无效
@@ -78,9 +79,10 @@ openclaw chat
 ```
 
 使用 `openclaw config set` 或 `openclaw configure` 应用针对性修复，然后
-重新运行 `openclaw config validate`。请参阅 [TUI](/zh/web/tui) 和 [Config](/zh/cli/config)。
+重新运行 `openclaw config validate`TUI。请参阅 [TUI](/zh/web/tui) 和 [Config](/zh/cli/config)。
 
 ## 相关
 
-- [CLI 参考](/zh/cli)
-- [TUI](/zh/web/tui)
+- [CLI 参考](CLI/en/cli)
+- [TUI](TUI/en/web/tui)
+- [目标](/zh/tools/goal)

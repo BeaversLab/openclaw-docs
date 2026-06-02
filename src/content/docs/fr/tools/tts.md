@@ -15,9 +15,9 @@ La TTS est la partie sortie vocale du mode `stt-tts` de Talk. Les sessions Talk 
 ## Quick start
 
 <Steps>
-  <Step title="Choisir un fournisseur"OpenAICLIAPI>
+  <Step title="Choisir un fournisseur">
     OpenAI et ElevenLabs sont les options hébergées les plus fiables. Microsoft et
-    Local CLI fonctionnent sans clé API. Consultez la [provider matrix](#supported-providers)
+    le CLI local fonctionnent sans clé d'API. Consultez la [matrice des fournisseurs](#supported-providers)
     pour la liste complète.
   </Step>
   <Step title="Définir la clé API">
@@ -689,18 +689,22 @@ Les formats de sortie OpenAI/ElevenLabs sont fixes par channel (voir ci-dessus).
 
 Lorsque `messages.tts.auto` est activé, OpenClaw :
 
-- Ignore le TTS si la réponse contient déjà un média ou une directive `MEDIA:`.
+- Ignore le TTS si la réponse contient déjà des médias structurés.
 - Ignore les réponses très courtes (moins de 10 caractères).
-- Résume les longues réponses lorsque les résumés sont activés, en utilisant `summaryModel` (ou `agents.defaults.model.primary`).
+- Résume les longues réponses lorsque les résumés sont activés, en utilisant
+  `summaryModel` (ou `agents.defaults.model.primary`).
 - Joint l'audio généré à la réponse.
-- En mode `mode: "final"`, envoie toujours du TTS audio uniquement pour les réponses finales en continu une fois le flux de texte terminé ; le média généré passe par la même normalisation des médias de canal que les pièces jointes de réponses normales.
+- En `mode: "final"`, envoie toujours du TTS audio uniquement pour les réponses finales en flux
+  après la fin du flux de texte ; les médias générés passent par la même
+  normalisation des médias de canal que les pièces jointes de réponses normales.
 
-Si la réponse dépasse `maxLength` et que le résumé est désactivé (ou qu'il n'y a pas de clé API pour le modèle de résumé), l'audio est ignoré et la réponse textuelle normale est envoyée.
+Si la réponse dépasse `maxLength` et que le résumé est désactivé (ou qu'il n'y a pas de clé API pour le
+model de résumé), l'audio est ignoré et la réponse textuelle normale est envoyée.
 
 ```text
 Reply -> TTS enabled?
   no  -> send text
-  yes -> has media / MEDIA: / short?
+  yes -> has media / short?
           yes -> send text
           no  -> length > limit?
                    no  -> TTS -> attach audio
@@ -711,21 +715,21 @@ Reply -> TTS enabled?
 
 ## Formats de sortie par channel
 
-| Cible                                 | Format                                                                                                                                                            |
-| ------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Feishu / Matrix / Telegram / WhatsApp | Les réponses sous forme de notes vocales préfèrent **Opus** (`opus_48000_64` de ElevenLabs, `opus` de OpenAI). 48 kHz / 64 kbps équilibre la clarté et la taille. |
-| Autres channels                       | **MP3** (`mp3_44100_128` de ElevenLabs, `mp3` de OpenAI). 44.1 kHz / 128 kbps par défaut pour la parole.                                                          |
-| Talk / téléphonie                     | **PCM** natif du fournisseur (Inworld 22050 Hz, Google 24 kHz), ou `ulaw_8000` de Gradium pour la téléphonie.                                                     |
+| Cible                                 | Format                                                                                                                                                                  |
+| ------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Feishu / Matrix / Telegram / WhatsApp | Les réponses en notes vocales privilégient **Opus** (`opus_48000_64` de ElevenLabs, `opus` de OpenAI). 48 kHz / 64 kbits/s offrent un équilibre entre clarté et taille. |
+| Autres channels                       | **MP3** (`mp3_44100_128` de ElevenLabs, `mp3` de OpenAI). 44,1 kHz / 128 kbits/s par défaut pour la voix.                                                               |
+| Talk / téléphonie                     | **PCM** natif du fournisseur (Inworld 22050 Hz, Google 24 kHz), ou `ulaw_8000` de Gradium pour la téléphonie.                                                           |
 
 Notes par provider :
 
-- **Transcodage Feishu / WhatsApp :** Lorsqu'une réponse en message vocal est au format MP3/WebM/WAV/M4A, le plugin de channel convertit en Ogg/Opus 48 kHz avec WhatsApp`ffmpeg`. WhatsApp envoie via Baileys avec `ptt: true` et `audio/ogg; codecs=opus`. Si la conversion échoue : Feishu revient à joindre le fichier original ; l'envoi WhatsApp échoue plutôt que de poster une charge PTT incompatible.
-- **MiniMaxXiaomi / Xiaomi MiMo :** MP3 par défaut (32 kHz pour MiniMax `speech-2.8-hd`) ; converti en Opus 48 kHz pour les cibles de message vocal via `ffmpeg`.
-- **CLI local :** Utilise le `outputFormat` configuré. Les cibles de message vocal sont converties en Ogg/Opus et la sortie téléphonique en PCM mono brut 16 kHz.
+- **Transcodage Feishu / WhatsApp :** Lorsqu'une réponse en note vocale est au format MP3/WebM/WAV/M4A, le plug-in du canal convertit en Ogg/Opus 48 kHz avec `ffmpeg`. WhatsApp envoie via Baileys avec `ptt: true` et `audio/ogg; codecs=opus`. Si la conversion échoue : Feishu revient à joindre le fichier original ; l'envoi WhatsApp échoue plutôt que de poster une charge utile PTT incompatible.
+- **MiniMax / Xiaomi MiMo :** MP3 par défaut (32 kHz pour MiniMax MiniMaxXiaomiMiniMax`speech-2.8-hd`) ; transcodé en Opus 48 kHz pour les cibles de notes vocales via `ffmpeg`.
+- **Local CLI :** Utilise le CLI`outputFormat` configuré. Les cibles de notes vocales sont converties en Ogg/Opus et la sortie téléphonique en PCM mono brut 16 kHz.
 - **Google Gemini :** Renvoie du PCM brut 24 kHz. OpenClaw l'enveloppe en WAV pour les pièces jointes, le convertit en Opus 48 kHz pour les cibles de notes vocales, et renvoie le PCM directement pour Talk/téléphonie.
-- **Inworld :** Pièces jointes MP3, message vocal natif `OGG_OPUS`, `PCM` brut 22050 Hz pour Talk/téléphonie.
-- **xAI :** MP3 par défaut ; `responseFormat` peut être `mp3|wav|pcm|mulaw|alaw`. Utilise le point de terminaison REST par lots d'xAI — le TTS WebSocket en continu n'est **pas** utilisé. Le format de message vocal Opus natif n'est **pas** pris en charge.
-- **Microsoft :** Utilise `microsoft.outputFormat` (défaut `audio-24khz-48kbitrate-mono-mp3`). Telegram `sendVoice` accepte OGG/MP3/M4A ; utilisez OpenAI/ElevenLabs si vous avez besoin de messages vocaux Opus garantis. Si le format Microsoft configuré échoue, OpenClaw réessaie avec MP3.
+- **Inworld :** Pièces jointes MP3, note vocale native `OGG_OPUS`, `PCM` brut 22050 Hz pour Talk/téléphonie.
+- **xAI :** MP3 par défaut ; `responseFormat` peut être `mp3|wav|pcm|mulaw|alaw`. Utilise le point de terminaison REST batch de xAI — le TTS WebSocket en streaming n'est **pas** utilisé. Le format de note vocale Opus natif n'est **pas** pris en charge.
+- **Microsoft :** Utilise `microsoft.outputFormat` (`audio-24khz-48kbitrate-mono-mp3`Telegram par défaut). `sendVoice`OpenAIOpenClaw Telegram accepte OGG/MP3/M4A ; utilisez OpenAI/ElevenLabs si vous avez besoin de messages vocaux Opus garantis. Si le format Microsoft configuré échoue, OpenClaw réessaie avec MP3.
 
 Les formats de sortie d'OpenAI et ElevenLabs sont fixes par canal, comme indiqué ci-dessus.
 
@@ -734,19 +738,19 @@ Les formats de sortie d'OpenAI et ElevenLabs sont fixes par canal, comme indiqu�
 <AccordionGroup>
   <Accordion title="Top-level messages.tts.*">
     <ParamField path="auto" type='"off" | "always" | "inbound" | "tagged"'>
-      Mode TTS automatique. `inbound` n'envoie de l'audio qu'après un message vocal entrant ; `tagged` n'envoie de l'audio que lorsque la réponse inclut des directives `[[tts:...]]` ou un bloc `[[tts:text]]`.
+      Mode Auto-TTS. `inbound` n'envoye de l'audio qu'après un message vocal entrant ; `tagged` n'envoye de l'audio que si la réponse inclut des directives `[[tts:...]]` ou un bloc `[[tts:text]]`.
     </ParamField>
     <ParamField path="enabled" type="boolean" deprecated>
-      Interrupteur hérité. `openclaw doctor --fix` migre ceci vers `auto`.
+      Bascule héritée. `openclaw doctor --fix` migre ceci vers `auto`.
     </ParamField>
     <ParamField path="mode" type='"final" | "all"' default="final">
       `"all"` inclut les réponses d'outil/bloc en plus des réponses finales.
     </ParamField>
-    <ParamField path="provider" type="string"OpenClaw>
-      Identifiant du fournisseur de synthèse vocale. Si non défini, OpenClaw utilise le premier fournisseur configuré dans l'ordre de sélection automatique du registre. L'ancien `provider: "edge"` est réécrit en `"microsoft"` par `openclaw doctor --fix`.
+    <ParamField path="provider" type="string">
+      Id du fournisseur de synthèse vocale. Si non défini, OpenClaw utilise le premier fournisseur configuré dans l'ordre de sélection automatique du registre. L'ancien `provider: "edge"` est réécrit en `"microsoft"` par `openclaw doctor --fix`.
     </ParamField>
     <ParamField path="persona" type="string">
-      Identifiant de persona actif depuis `personas`. Normalisé en minuscules.
+      Id de persona actif depuis `personas`. Normalisé en minuscules.
     </ParamField>
     <ParamField path="personas.<id>" type="object">
       Identité vocale stable. Champs : `label`, `description`, `provider`, `fallbackPolicy`, `prompt`, `providers.<provider>`. Voir [Personas](#personas).
@@ -755,10 +759,10 @@ Les formats de sortie d'OpenAI et ElevenLabs sont fixes par canal, comme indiqu�
       Modèle économique pour le résumé automatique ; par défaut `agents.defaults.model.primary`. Accepte `provider/model` ou un alias de modèle configuré.
     </ParamField>
     <ParamField path="modelOverrides" type="object">
-      Autoriser le modèle à émettre des directives TTS. `enabled` par défaut `true` ; `allowProvider` par défaut `false`.
+      Autoriser le modèle à émettre des directives TTS. `enabled` par défaut est `true` ; `allowProvider` par défaut est `false`.
     </ParamField>
     <ParamField path="providers.<id>" type="object">
-      Paramètres propres au fournisseur, indexés par l'identifiant du fournisseur de synthèse vocale. Les blocs directs hérités (`messages.tts.openai`, `.elevenlabs`, `.microsoft`, `.edge`) sont réécrits par `openclaw doctor --fix` ; ne committez que `messages.tts.providers.<id>`.
+      Paramètres propriétaires du fournisseur, indexés par l'id du fournisseur de synthèse vocale. Les blocs directs hérités (`messages.tts.openai`, `.elevenlabs`, `.microsoft`, `.edge`) sont réécrits par `openclaw doctor --fix` ; ne commettez que `messages.tts.providers.<id>`.
     </ParamField>
     <ParamField path="maxTextLength" type="number">
       Limite stricte pour les caractères d'entrée TTS. `/tts audio` échoue si dépassé.
@@ -773,7 +777,7 @@ Les formats de sortie d'OpenAI et ElevenLabs sont fixes par canal, comme indiqu�
 
 <Accordion title="Azure Speech">
   <ParamField path="apiKey" type="string">
-    Env : `AZURE_SPEECH_KEY`, `AZURE_SPEECH_API_KEY` ou `SPEECH_KEY`.
+    Env : `AZURE_SPEECH_KEY`, `AZURE_SPEECH_API_KEY`, ou `SPEECH_KEY`.
   </ParamField>
   <ParamField path="region" type="string">
     Région Azure Speech (p. ex. `eastus`). Env : `AZURE_SPEECH_REGION` ou `SPEECH_REGION`.
@@ -782,7 +786,7 @@ Les formats de sortie d'OpenAI et ElevenLabs sont fixes par canal, comme indiqu�
     Remplacement facultatif du point de terminaison Azure Speech (alias `baseUrl`).
   </ParamField>
   <ParamField path="speakerVoice" type="string">
-    ShortName de la voix Azure. Par défaut `en-US-JennyNeural`. Alias de compatibilité : `voice`.
+    Nom court de la voix Azure. Par défaut `en-US-JennyNeural`. Alias de l'ancienne version : `voice`.
   </ParamField>
   <ParamField path="lang" type="string">
     Code de langue SSML. Par défaut `en-US`.
@@ -797,13 +801,13 @@ Les formats de sortie d'OpenAI et ElevenLabs sont fixes par canal, comme indiqu�
 
 <Accordion title="ElevenLabs">
   <ParamField path="apiKey" type="string">
-    Revient à `ELEVENLABS_API_KEY` ou `XI_API_KEY`.
+    Retourne à `ELEVENLABS_API_KEY` ou `XI_API_KEY`.
   </ParamField>
   <ParamField path="model" type="string">
     ID du modèle (par ex. `eleven_multilingual_v2`, `eleven_v3`).
   </ParamField>
   <ParamField path="speakerVoiceId" type="string">
-    ID de voix ElevenLabs. Alias hérité : `voiceId`.
+    ID de voix ElevenLabs. Alias obsolète : `voiceId`.
   </ParamField>
   <ParamField path="voiceSettings" type="object">
     `stability`, `similarityBoost`, `style` (chaque `0..1`), `useSpeakerBoost` (`true|false`), `speed` (`0.5..2.0`, `1.0` = normal).
@@ -812,10 +816,10 @@ Les formats de sortie d'OpenAI et ElevenLabs sont fixes par canal, comme indiqu�
     Mode de normalisation du texte.
   </ParamField>
   <ParamField path="languageCode" type="string">
-    ISO 639-1 sur 2 lettres (par ex. `en`, `de`).
+    2 lettres ISO 639-1 (par ex. `en`, `de`).
   </ParamField>
   <ParamField path="seed" type="number">
-    Entier `0..4294967295` pour un déterminisme de meilleur effort.
+    Entier `0..4294967295` pour le déterminisme au mieux.
   </ParamField>
   <ParamField path="baseUrl" type="string">
     Remplacer l'URL de base de l'API ElevenLabs.
@@ -824,25 +828,25 @@ Les formats de sortie d'OpenAI et ElevenLabs sont fixes par canal, comme indiqu�
 
 <Accordion title="Google Gemini">
   <ParamField path="apiKey" type="string">
-    Retourne à `GEMINI_API_KEY` / `GOOGLE_API_KEY`. Si omis, le TTS peut réutiliser `models.providers.google.apiKey` avant le retour à l'environnement.
+    Retourne à `GEMINI_API_KEY` / `GOOGLE_API_KEY`. Si omis, TTS peut réutiliser `models.providers.google.apiKey` avant le retour de l'environnement.
   </ParamField>
   <ParamField path="model" type="string">
-    Modèle TTS Gemini. Par défaut `gemini-3.1-flash-tts-preview`.
+    Model TTS Gemini. Par défaut `gemini-3.1-flash-tts-preview`.
   </ParamField>
   <ParamField path="speakerVoice" type="string">
-    Nom de la voix préconstruite Gemini. Par défaut `Kore`. Anciens alias : `voiceName`, `voice`.
+    Nom de voix préconstruite Gemini. Par défaut `Kore`. Alias historiques : `voiceName`, `voice`.
   </ParamField>
   <ParamField path="audioProfile" type="string">
     Invite de style en langage naturel ajoutée avant le texte parlé.
   </ParamField>
   <ParamField path="speakerName" type="string">
-    Étiquette de locuteur facultative ajoutée avant le texte parlé lorsque votre invite utilise un locuteur nommé.
+    Étiquette de locuteur optionnelle ajoutée avant le texte parlé lorsque votre invite utilise un locuteur nommé.
   </ParamField>
   <ParamField path="promptTemplate" type='"audio-profile-v1"'>
-    Définir sur `audio-profile-v1` pour encapsuler les champs d'invite de persona actifs dans une structure d'invite TTS Gemini déterministe.
+    Définissez sur `audio-profile-v1` pour envelopper les champs d'invite de persona actifs dans une structure d'invite TTS Gemini déterministe.
   </ParamField>
   <ParamField path="personaPrompt" type="string">
-    Texte d'invite de persona supplémentaire spécifique à Google ajouté aux notes du réalisateur du modèle.
+    Texte d'invite de persona supplémentaire spécifique à Google ajouté aux Director's Notes du modèle.
   </ParamField>
   <ParamField path="baseUrl" type="string">
     Seul `https://generativelanguage.googleapis.com` est accepté.
@@ -857,7 +861,7 @@ Les formats de sortie d'OpenAI et ElevenLabs sont fixes par canal, comme indiqu�
     Par défaut `https://api.gradium.ai`.
   </ParamField>
   <ParamField path="speakerVoiceId" type="string">
-    Par défaut Emma (`YTpq7expH9539ERJ`). Ancien alias : `voiceId`.
+    Emma par défaut (`YTpq7expH9539ERJ`). Alias historique : `voiceId`.
   </ParamField>
 </Accordion>
 
@@ -865,52 +869,40 @@ Les formats de sortie d'OpenAI et ElevenLabs sont fixes par canal, comme indiqu�
     ### Inworld principal
 
     <ParamField path="apiKey" type="string">Env : `INWORLD_API_KEY`.</ParamField>
-    <ParamField path="baseUrl" type="string">Par défaut `https://api.inworld.ai`.</ParamField>
-    <ParamField path="modelId" type="string">Par défaut `inworld-tts-1.5-max`. Aussi : `inworld-tts-1.5-mini`, `inworld-tts-1-max`, `inworld-tts-1`.</ParamField>
-    <ParamField path="speakerVoiceId" type="string">Par défaut `Sarah`. Alias de l'ancienne version : `voiceId`.</ParamField>
+    <ParamField path="baseUrl" type="string">Défaut `https://api.inworld.ai`.</ParamField>
+    <ParamField path="modelId" type="string">Défaut `inworld-tts-1.5-max`. Aussi : `inworld-tts-1.5-mini`, `inworld-tts-1-max`, `inworld-tts-1`.</ParamField>
+    <ParamField path="speakerVoiceId" type="string">Défaut `Sarah`. Alias hérité : `voiceId`.</ParamField>
     <ParamField path="temperature" type="number">Température d'échantillonnage `0..2`.</ParamField>
 
   </Accordion>
 
-<Accordion title="CLILocal CLI (tts-local-cli)">
-  <ParamField path="command" type="string" CLI>
-    Exécutable local ou chaîne de commande pour le TTS CLI.
-  </ParamField>
-  <ParamField path="args" type="string[]">
-    Arguments de commande. Prend en charge les espaces réservés `{{ Text }}`, `{{ OutputPath }}`, `{{ OutputDir }}`, `{{ OutputBase }}`.
-  </ParamField>
-  <ParamField path="outputFormat" type='"mp3" | "opus" | "wav"' CLI>
-    Format de sortie attendu de la CLI. Par défaut `mp3` pour les pièces jointes audio.
-  </ParamField>
-  <ParamField path="timeoutMs" type="number">
-    Délai d'expiration de la commande en millisecondes. Par défaut `120000`.
-  </ParamField>
-  <ParamField path="cwd" type="string">
-    Répertoire de travail de la commande optionnel.
-  </ParamField>
-  <ParamField path="env" type="Record<string, string>">
-    Redéfinitions d'environnement optionnelles pour la commande.
-  </ParamField>
-</Accordion>
+  <Accordion title="Local CLI (tts-local-cli)">
+    <ParamField path="command" type="string">Exécutable local ou chaîne de commande pour le TTS CLI.</ParamField>
+    <ParamField path="args" type="string[]">Arguments de commande. Prend en charge les espaces réservés `{{Text}}`, `{{OutputPath}}`, `{{OutputDir}}`, `{{OutputBase}}`.</ParamField>
+    <ParamField path="outputFormat" type='"mp3" | "opus" | "wav"'>Format de sortie CLI attendu. Défaut `mp3` pour les pièces jointes audio.</ParamField>
+    <ParamField path="timeoutMs" type="number"Délai d'expiration de la commande en millisecondes. Défaut `120000`.</ParamField>
+    <ParamField path="cwd" type="string">Répertoire de travail optionnel pour la commande.</ParamField>
+    <ParamField path="env" type="Record<string, string>">Remplacements d'environnement optionnels pour la commande.</ParamField>
+  </Accordion>
 
 <Accordion title="APIMicrosoft (sans clé API)">
   <ParamField path="enabled" type="boolean" default="true">
     Autoriser l'utilisation de la synthèse vocale Microsoft.
   </ParamField>
   <ParamField path="speakerVoice" type="string">
-    Nom de la voix neurale Microsoft (ex. `en-US-MichelleNeural`). Alias hérité : `voice`.
+    Nom de la voix neurale Microsoft (ex. : `en-US-MichelleNeural`). Ancien alias : `voice`.
   </ParamField>
   <ParamField path="lang" type="string">
-    Code de langue (ex. `en-US`).
+    Code de langue (ex. : `en-US`).
   </ParamField>
   <ParamField path="outputFormat" type="string">
     Format de sortie Microsoft. Par défaut `audio-24khz-48kbitrate-mono-mp3`. Tous les formats ne sont pas pris en charge par le transport Edge inclus.
   </ParamField>
   <ParamField path="rate / pitch / volume" type="string">
-    Chaînes de pourcentage (ex. `+10%`, `-5%`).
+    Chaînes de pourcentage (ex. : `+10%`, `-5%`).
   </ParamField>
   <ParamField path="saveSubtitles" type="boolean">
-    Écrire des sous-titres JSON alongside le fichier audio.
+    Écrire des sous-titres JSON à côté du fichier audio.
   </ParamField>
   <ParamField path="proxy" type="string">
     URL du proxy pour les requêtes de synthèse vocale Microsoft.
@@ -919,7 +911,7 @@ Les formats de sortie d'OpenAI et ElevenLabs sont fixes par canal, comme indiqu�
     Délai d'expiration de la requête (ms).
   </ParamField>
   <ParamField path="edge.*" type="object" deprecated>
-    Alias hérité. Exécutez `openclaw doctor --fix` pour réécrire la configuration persistante vers `providers.microsoft`.
+    Ancien alias. Exécutez `openclaw doctor --fix` pour réécrire la configuration persistante en `providers.microsoft`.
   </ParamField>
 </Accordion>
 
@@ -928,22 +920,22 @@ Les formats de sortie d'OpenAI et ElevenLabs sont fixes par canal, comme indiqu�
     Retourne à `MINIMAX_API_KEY`. Auth Token Plan via `MINIMAX_OAUTH_TOKEN`, `MINIMAX_CODE_PLAN_KEY`, ou `MINIMAX_CODING_API_KEY`.
   </ParamField>
   <ParamField path="baseUrl" type="string">
-    Défaut `https://api.minimax.io`. Env : `MINIMAX_API_HOST`.
+    Par défaut `https://api.minimax.io`. Env : `MINIMAX_API_HOST`.
   </ParamField>
   <ParamField path="model" type="string">
-    Défaut `speech-2.8-hd`. Env : `MINIMAX_TTS_MODEL`.
+    Par défaut `speech-2.8-hd`. Env : `MINIMAX_TTS_MODEL`.
   </ParamField>
   <ParamField path="speakerVoiceId" type="string">
-    Défaut `English_expressive_narrator`. Env : `MINIMAX_TTS_VOICE_ID`. Alias hérité : `voiceId`.
+    Par défaut `English_expressive_narrator`. Env : `MINIMAX_TTS_VOICE_ID`. Alias hérité : `voiceId`.
   </ParamField>
   <ParamField path="speed" type="number">
-    `0.5..2.0`. Défaut `1.0`.
+    `0.5..2.0`. Par défaut `1.0`.
   </ParamField>
   <ParamField path="vol" type="number">
-    `(0, 10]`. Défaut `1.0`.
+    `(0, 10]`. Par défaut `1.0`.
   </ParamField>
   <ParamField path="pitch" type="number">
-    Entier `-12..12`. Défaut `0`. Les valeurs fractionnaires sont tronquées avant la requête.
+    Entier `-12..12`. Par défaut `0`. Les valeurs fractionnaires sont tronquées avant la requête.
   </ParamField>
 </Accordion>
 
@@ -955,7 +947,7 @@ Les formats de sortie d'OpenAI et ElevenLabs sont fixes par canal, comme indiqu�
     Identifiant du model TTS OpenAI (par ex. `gpt-4o-mini-tts`).
   </ParamField>
   <ParamField path="speakerVoice" type="string">
-    Nom de la voix (par ex. `alloy`, `cedar`). Alias historique : `voice`.
+    Nom de la voix (par ex. `alloy`, `cedar`). Alias legacy : `voice`.
   </ParamField>
   <ParamField path="instructions" type="string" OpenAI>
     Champ `instructions` OpenAI explicite. Lorsqu'il est défini, les champs de prompt de persona ne sont **pas** mappés automatiquement.
@@ -964,7 +956,7 @@ Les formats de sortie d'OpenAI et ElevenLabs sont fixes par canal, comme indiqu�
     Champs JSON supplémentaires fusionnés dans les corps de requête `/audio/speech`OpenAIOpenAI après les champs TTS OpenAI générés. À utiliser pour les points de terminaison compatibles OpenAI tels que Kokoro qui nécessitent des clés spécifiques au provider comme `lang` ; les clés de prototype non sécurisées sont ignorées.
   </ParamField>
   <ParamField path="baseUrl" type="string" OpenAI>
-    Remplacer le point de terminaison TTS OpenAI. Ordre de résolution : config → `OPENAI_TTS_BASE_URL` → `https://api.openai.com/v1`OpenAI. Les valeurs non par défaut sont traitées comme des points de terminaison TTS compatibles OpenAI, donc les noms de model et de voix personnalisés sont acceptés.
+    Remplacer le point de terminaison TTS OpenAI. Ordre de résolution : config → `OPENAI_TTS_BASE_URL` → `https://api.openai.com/v1`OpenAI. Les valeurs autres que par défaut sont traitées comme des points de terminaison TTS compatibles OpenAI, par conséquent les noms de model et de voix personnalisés sont acceptés.
   </ParamField>
 </Accordion>
 
@@ -973,16 +965,16 @@ Les formats de sortie d'OpenAI et ElevenLabs sont fixes par canal, comme indiqu�
     Env : `OPENROUTER_API_KEY`. Peut réutiliser `models.providers.openrouter.apiKey`.
   </ParamField>
   <ParamField path="baseUrl" type="string">
-    Par défaut `https://openrouter.ai/api/v1`. L'ancien `https://openrouter.ai/v1` est normalisé.
+    Défaut `https://openrouter.ai/api/v1`. L'ancien `https://openrouter.ai/v1` est normalisé.
   </ParamField>
   <ParamField path="model" type="string">
-    Par défaut `hexgrad/kokoro-82m`. Alias : `modelId`.
+    Défaut `hexgrad/kokoro-82m`. Alias : `modelId`.
   </ParamField>
   <ParamField path="speakerVoice" type="string">
-    Par défaut `af_alloy`. Anciens alias : `voice`, `voiceId`.
+    Défaut `af_alloy`. Anciens alias : `voice`, `voiceId`.
   </ParamField>
   <ParamField path="responseFormat" type='"mp3" | "pcm"'>
-    Par défaut `mp3`.
+    Défaut `mp3`.
   </ParamField>
   <ParamField path="speed" type="number">
     Substitution de vitesse native du fournisseur.
@@ -1000,13 +992,13 @@ Les formats de sortie d'OpenAI et ElevenLabs sont fixes par canal, comme indiqu�
     En-tête de clé d'application. Défaut `aGjiRDfUWi`. Env : `VOLCENGINE_TTS_APP_KEY`.
   </ParamField>
   <ParamField path="baseUrl" type="string">
-    Remplacer le point de terminaison HTTP TTS Seed Speech. Env : `VOLCENGINE_TTS_BASE_URL`.
+    Remplacer le point de terminaison HTTP TTS de Seed Speech. Env : `VOLCENGINE_TTS_BASE_URL`.
   </ParamField>
   <ParamField path="speakerVoice" type="string">
     Type de voix. Défaut `en_female_anna_mars_bigtts`. Env : `VOLCENGINE_TTS_VOICE`. Alias hérité : `voice`.
   </ParamField>
   <ParamField path="speedRatio" type="number">
-    Ratio de vitesse natif du fournisseur.
+    Rapport de vitesse natif du fournisseur.
   </ParamField>
   <ParamField path="emotion" type="string">
     Balise d'émotion native du fournisseur.
@@ -1021,19 +1013,19 @@ Les formats de sortie d'OpenAI et ElevenLabs sont fixes par canal, comme indiqu�
     Env : `XAI_API_KEY`.
   </ParamField>
   <ParamField path="baseUrl" type="string">
-    Défaut `https://api.x.ai/v1`. Env : `XAI_BASE_URL`.
+    Par défaut `https://api.x.ai/v1`. Env : `XAI_BASE_URL`.
   </ParamField>
   <ParamField path="speakerVoiceId" type="string">
-    Défaut `eve`. Voix en direct : `ara`, `eve`, `leo`, `rex`, `sal`, `una`. Alias historique : `voiceId`.
+    Par défaut `eve`. Voix en direct : `ara`, `eve`, `leo`, `rex`, `sal`, `una`. Alias hérité : `voiceId`.
   </ParamField>
   <ParamField path="language" type="string">
-    Code de langue BCP-47 ou `auto`. Défaut `en`.
+    Code de langue BCP-47 ou `auto`. Par défaut `en`.
   </ParamField>
   <ParamField path="responseFormat" type='"mp3" | "wav" | "pcm" | "mulaw" | "alaw"'>
-    Défaut `mp3`.
+    Par défaut `mp3`.
   </ParamField>
   <ParamField path="speed" type="number">
-    Redéfinition de la vitesse native du fournisseur.
+    Substitution de vitesse native du fournisseur.
   </ParamField>
 </Accordion>
 
@@ -1041,36 +1033,36 @@ Les formats de sortie d'OpenAI et ElevenLabs sont fixes par canal, comme indiqu�
     <ParamField path="apiKey" type="string">Env : `XIAOMI_API_KEY`.</ParamField>
     <ParamField path="baseUrl" type="string">Par défaut `https://api.xiaomimimo.com/v1`. Env : `XIAOMI_BASE_URL`.</ParamField>
     <ParamField path="model" type="string">Par défaut `mimo-v2.5-tts`. Env : `XIAOMI_TTS_MODEL`. Prend également en charge `mimo-v2-tts`.</ParamField>
-    <ParamField path="speakerVoice" type="string">Par défaut `mimo_default`. Env : `XIAOMI_TTS_VOICE`. Alias hérité : `voice`.</ParamField>
+    <ParamField path="speakerVoice" type="string">Par défaut `mimo_default`. Env : `XIAOMI_TTS_VOICE`. Alias de l'ancienne version : `voice`.</ParamField>
     <ParamField path="format" type='"mp3" | "wav"'>Par défaut `mp3`. Env : `XIAOMI_TTS_FORMAT`.</ParamField>
-    <ParamField path="style" type="string">Instruction de style en langage naturel facultative envoyée en tant que message utilisateur ; non prononcée.</ParamField>
+    <ParamField path="style" type="string">Instruction de style en langage naturel optionnelle envoyée en tant que message utilisateur ; non prononcée.</ParamField>
   </Accordion>
 </AccordionGroup>
 
 ## Outil de l'agent
 
-Le `tts` tool convertit du texte en parole et renvoie une pièce jointe audio pour
+Le tool `tts`MatrixTelegramWhatsAppWhatsApp convertit le texte en parole et renvoie une pièce jointe audio pour
 la livraison de la réponse. Sur Feishu, Matrix, Telegram et WhatsApp, l'audio est
-délivré sous forme de message vocal plutôt que de pièce jointe. Feishu et
+livré sous forme de message vocal plutôt que de pièce jointe de fichier. Feishu et
 WhatsApp peuvent transcoder la sortie TTS non-Opus sur ce chemin lorsque `ffmpeg` est
 disponible.
 
-WhatsApp envoie l'audio via Baileys sous forme de note vocale PTT (`audio` avec
+WhatsApp envoie l'audio via Baileys sous forme de note vocale PTT (WhatsAppBaileys`audio` avec
 `ptt: true`) et envoie le texte visible **séparément** de l'audio PTT car
 les clients ne rendent pas systématiquement les légendes sur les notes vocales.
 
-L'outil accepte les champs facultatifs `channel` et `timeoutMs` ; `timeoutMs` est un
-délai d'expiration de la demande provider par appel en millisecondes. Les valeurs par appel remplacent
-`messages.tts.timeoutMs` ; les délais d'expiration TTS configurés remplacent toute valeur par défaut de
-provider créée par un plugin.
+L'outil accepte des champs facultatifs `channel` et `timeoutMs` ; `timeoutMs` est un
+délai d'expiration de la requête du provider par appel en millisecondes. Les valeurs par appel remplacent
+`messages.tts.timeoutMs` ; les délais d'expiration TTS configurés remplacent toute valeur par défaut du
+provider définie par un plugin.
 
 ## Gateway RPC
 
 | Méthode           | Objectif                                               |
 | ----------------- | ------------------------------------------------------ |
 | `tts.status`      | Lire l'état TTS actuel et la dernière tentative.       |
-| `tts.enable`      | Définir la préférence automatique locale sur `always`. |
-| `tts.disable`     | Définir la préférence automatique locale sur `off`.    |
+| `tts.enable`      | Définir la préférence locale automatique sur `always`. |
+| `tts.disable`     | Définir la préférence locale automatique sur `off`.    |
 | `tts.convert`     | Conversion ponctuelle texte → audio.                   |
 | `tts.setProvider` | Définir la préférence locale de provider.              |
 | `tts.setPersona`  | Définir la préférence locale de persona.               |
@@ -1096,7 +1088,7 @@ provider créée par un plugin.
 ## Connexes
 
 - [Aperçu des médias](/fr/tools/media-overview)
-- [Génération de musique](/fr/tools/music-generation)
+- [Génération musicale](/fr/tools/music-generation)
 - [Génération vidéo](/fr/tools/video-generation)
 - [Commandes slash](/fr/tools/slash-commands)
 - [Plugin d'appel vocal](/fr/plugins/voice-call)

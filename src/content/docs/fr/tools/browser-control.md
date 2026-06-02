@@ -7,9 +7,9 @@ read_when:
 title: "APIAPI de contrôle de navigateur"
 ---
 
-Pour la configuration, le dépannage, consultez [Navigateur](/fr/tools/browserAPI).
-Cette page est la référence pour l'API HTTP de contrôle local, la ligne de commande `openclaw browser`CLI
-CLI, et les modèles de script (instantanés, références, attentes, flux de débogage).
+Pour la configuration et le dépannage, consultez [Navigateur](/fr/tools/browserAPI).
+Cette page est la référence de l'API HTTP de contrôle local, de la `openclaw browser`CLI
+CLI et des modèles de scripts (snapshots, refs, attentes, flux de débogage).
 
 ## API de contrôle (facultatif)
 
@@ -116,7 +116,7 @@ docker compose run --rm openclaw-cli \
 
 Pour conserver les téléchargements du navigateur, définissez `PLAYWRIGHT_BROWSERS_PATH` (par exemple,
 `/home/node/.cache/ms-playwright`) et assurez-vous que `/home/node` est conservé via
-`OPENCLAW_HOME_VOLUME` ou un montage de liaison. OpenClaw détecte automatiquement le
+`OPENCLAW_HOME_VOLUME` ou un montage de liaison (bind mount). OpenClaw détecte automatiquement le
 Chromium conservé sur Linux. Voir [Docker](/fr/install/docker).
 
 ## Fonctionnement (interne)
@@ -188,6 +188,7 @@ openclaw browser select 9 OptionA OptionB
 openclaw browser download e12 report.pdf
 openclaw browser waitfordownload report.pdf
 openclaw browser upload /tmp/openclaw/uploads/file.pdf
+openclaw browser upload media://inbound/file.pdf
 openclaw browser fill --fields '[{"ref":"1","type":"text","value":"Ada"}]'
 openclaw browser dialog --accept
 openclaw browser dialog --dismiss --dialog-id d1
@@ -229,54 +230,62 @@ Notes :
 
 - `upload` et `dialog` sont des appels d'**armement** ; exécutez-les avant le clic/appui qui déclenche le sélecteur/la boîte de dialogue. Si une action ouvre une fenêtre modale, la réponse de l'action inclut `blockedByDialog` et `browserState.dialogs.pending` ; transmettez ce `dialogId` pour répondre directement. Les boîtes de dialogue gérées en dehors de OpenClaw apparaissent sous `browserState.dialogs.recent`.
 - `click`/`type`/etc nécessitent un `ref` de `snapshot` (référence numérique `12`, référence de rôle `e12`, ou référence ARIA actionnable `ax12`). Les sélecteurs CSS ne sont intentionnellement pas pris en charge pour les actions. Utilisez `click-coords` lorsque la position dans la fenêtre d'affichage visible est la seule cible fiable.
-- Les chemins de téléchargement, de trace et de téléversement sont limités aux racines temporaires de OpenClaw : `/tmp/openclaw{,/downloads,/uploads}` (secours : `${os.tmpdir()}/openclaw/...`).
+- Les chemins de téléchargement et de trace sont limités aux racines temporaires OpenClaw : `/tmp/openclaw{,/downloads}` (secours : `${os.tmpdir()}/openclaw/...`).
+- `upload` accepte les fichiers de la racine des téléchargements temporaires OpenClaw et
+  les médias entrants gérés par OpenClaw. Les médias entrants gérés peuvent être référencés comme
+  `media://inbound/<id>`, `media/inbound/<id>` relatif au bac à sable, ou un chemin résolu
+  à l'intérieur du répertoire des médias entrants gérés. Les références de médias imbriquées,
+  les traversals, les liens symboliques, les liens physiques et les chemins locaux arbitraires sont toujours rejetés.
 - `upload` peut également définir directement les entrées de fichiers via `--input-ref` ou `--element`.
 
-Les ID et étiquettes d'onglets stables survivent au remplacement de la cible brute de Chromium lorsque OpenClaw peut prouver l'onglet de remplacement, par exemple la même URL ou un seul vieil onglet devenant un seul nouvel onglet après l'envoi du formulaire. Les ID de cibles brutes restent volatiles ; privilégiez `suggestedTargetId` depuis `tabs` dans les scripts.
+Les identifiants et les étiquettes d'onglets stables survivent au remplacement des cibles brutes Chromium lorsque OpenClaw
+peut prouver l'onglet de remplacement, tel que la même URL ou un seul vieil onglet devenant un
+seul nouvel onglet après la soumission du formulaire. Les identifiants de cibles brutes sont toujours volatiles ; préférez
+`suggestedTargetId` de `tabs` dans les scripts.
 
-Aperçu des indicateurs de snapshot :
+Indicateurs de snapshot en un coup d'œil :
 
-- `--format ai` (par défaut avec Playwright) : capture instantanée IA avec références numériques (`aria-ref="<n>"`).
-- `--format aria` : arborescence d'accessibilité avec références `axN`. Lorsque Playwright est disponible, OpenClaw lie les références avec les ID DOM du backend à la page active pour que les actions de suivi puissent les utiliser ; sinon, traitez la sortie comme une inspection uniquement.
-- `--efficient` (ou `--mode efficient`) : préréglage d'instantané de rôle compact. Définissez `browser.snapshotDefaults.mode: "efficient"` pour en faire la valeur par défaut (voir [configuration du Gateway](/fr/gateway/configuration-reference#browser)).
-- `--interactive`, `--compact`, `--depth`, `--selector` forcent une capture instantanée de rôle avec des références `ref=e12`. `--frame "<iframe>"` limite la portée des captures instantanées de rôle à une iframe.
-- `--labels` ajoute une capture d'écran de la fenêtre d'affichage uniquement avec des étiquettes de référence superposées (imprime `MEDIA:<path>`).
-- `--urls` ajoute les destinations de lien découvertes aux captures instantanées IA.
+- `--format ai` (par défaut avec Playwright) : snapshot IA avec références numériques (`aria-ref="<n>"`).
+- `--format aria` : arborescence d'accessibilité avec des références `axN` . Lorsque Playwright est disponible, OpenClaw lie les références aux identifiants DOM du backend vers la page active afin que les actions suivantes puissent les utiliser ; sinon, traitez la sortie comme une inspection uniquement.
+- `--efficient` (ou `--mode efficient` ) : préréglage de snapshot de rôle compact. Définissez `browser.snapshotDefaults.mode: "efficient"` pour en faire la valeur par défaut (voir [Gateway configuration](/fr/gateway/configuration-reference#browser)).
+- `--interactive` , `--compact` , `--depth` , `--selector` forcent un snapshot de rôle avec des références `ref=e12` . `--frame "<iframe>"` délimite les snapshots de rôle à une iframe.
+- `--labels` ajoute une capture d'écran de la seule fenêtre d'affichage avec des étiquettes de référence superposées et imprime le chemin enregistré.
+- `--urls` ajoute les destinations de lien découvertes aux snapshots IA.
 
-## Instantanés et refs
+## Snapshots et références
 
-OpenClaw prend en charge deux styles d'"instantané" :
+OpenClaw prend en charge deux styles de « snapshot » :
 
-- **Capture instantanée IA (références numériques)** : `openclaw browser snapshot` (par défaut ; `--format ai`)
-  - Sortie : un instantané texte incluant des réfs numériques.
-  - Actions : `openclaw browser click 12`, `openclaw browser type 23 "hello"`.
+- **Snapshot IA (références numériques)** : `openclaw browser snapshot` (par défaut ; `--format ai`)
+  - Sortie : un instantané texte incluant des références numériques.
+  - Actions : `openclaw browser click 12` , `openclaw browser type 23 "hello"` .
   - En interne, la référence est résolue via `aria-ref` de Playwright.
 
-- **Capture instantanée de rôle (références de rôle comme `e12`)** : `openclaw browser snapshot --interactive` (ou `--compact`, `--depth`, `--selector`, `--frame`)
-  - Sortie : une liste/arborescence basée sur les rôles avec `[ref=e12]` (et `[nth=1]` en option).
-  - Actions : `openclaw browser click e12`, `openclaw browser highlight e12`.
+- **Snapshot de rôle (références de rôle comme `e12` )** : `openclaw browser snapshot --interactive` (ou `--compact` , `--depth` , `--selector` , `--frame`)
+  - Sortie : une liste/arborescence basée sur les rôles avec `[ref=e12]` (et `[nth=1]` optionnel).
+  - Actions : `openclaw browser click e12` , `openclaw browser highlight e12` .
   - En interne, la référence est résolue via `getByRole(...)` (plus `nth()` pour les doublons).
   - Ajoutez `--labels` pour inclure une capture d'écran de la fenêtre d'affichage avec des étiquettes `e12` superposées.
   - Ajoutez `--urls` lorsque le texte du lien est ambigu et que l'agent a besoin de cibles de navigation concrètes.
 
-- **Instantané ARIA (références ARIA comme `ax12`)** : `openclaw browser snapshot --format aria`
+- **Snapshot ARIA (références ARIA comme `ax12`)** : `openclaw browser snapshot --format aria`
   - Sortie : l'arbre d'accessibilité sous forme de nœuds structurés.
-  - Actions : `openclaw browser click ax12` fonctionne lorsque le chemin de l'instantané peut lier la référence via Playwright et les identifiants DOM du backend Chrome.
-- Si Playwright n'est pas disponible, les instantanés ARIA peuvent toujours être utiles pour l'inspection, mais les références peuvent ne pas être actionnables. Reprenez un instantané avec `--format ai` ou `--interactive` lorsque vous avez besoin de références d'action.
-- Preuve Docker pour le chemin de repli raw-CDP : `pnpm test:docker:browser-cdp-snapshot` démarre Chromium avec CDP, exécute `browser doctor --deep` et vérifie que les instantanés de rôle incluent les URLs des liens, les éléments cliquables promus par le curseur et les métadonnées iframe.
+  - Actions : `openclaw browser click ax12` fonctionne lorsque le chemin du snapshot peut lier la référence via Playwright et les identifiants DOM du backend Chrome.
+- Si Playwright n'est pas disponible, les snapshots ARIA peuvent toujours être utiles pour l'inspection, mais les références peuvent ne pas être actionnables. Re-snapshottez avec `--format ai` ou `--interactive` lorsque vous avez besoin de références d'action.
+- Preuve Docker pour le chemin de repli raw-CDP : `pnpm test:docker:browser-cdp-snapshot` démarre Chromium avec CDP, exécute `browser doctor --deep`, et vérifie que les snapshots de rôle incluent les URL des liens, les éléments cliquables promus par le curseur, et les métadonnées des iframes.
 
 Comportement des références :
 
-- Les références **ne sont pas stables lors des navigations** ; si quelque chose échoue, relancez `snapshot` et utilisez une référence fraîche.
-- `/act` renvoie l'`targetId` brut actuel après remplacement déclenché par une action lorsqu'il peut prouver l'onglet de remplacement. Continuez à utiliser des identifiants/étiquettes d'onglet stables pour les commandes de suivi.
-- Si l'instantané de rôle a été pris avec `--frame`, les références de rôle sont limitées à cet iframe jusqu'au prochain instantané de rôle.
-- Les références `axN` inconnues ou périmées échouent rapidement au lieu de passer par défaut au sélecteur `aria-ref` de Playwright. Lancez un nouvel instantané sur le même onglet lorsque cela se produit.
+- Les références **ne sont pas stables entre les navigations** ; si quelque chose échoue, réexécutez `snapshot` et utilisez une nouvelle référence.
+- `/act` renvoie l'`targetId` brut actuel après un remplacement déclenché par une action lorsqu'il peut prouver l'onglet de remplacement. Continuez à utiliser des identifiants/labels d'onglet stables pour les commandes de suivi.
+- Si le snapshot de rôle a été pris avec `--frame`, les références de rôle sont limitées à cet iframe jusqu'au prochain snapshot de rôle.
+- Les références `axN` inconnues ou obsolètes échouent rapidement au lieu de revenir au sélecteur `aria-ref` de Playwright. Exécutez un nouveau snapshot sur le même onglet lorsque cela se produit.
 
 ## Améliorations d'attente
 
 Vous pouvez attendre plus que le temps/le texte :
 
-- Attendre une URL (les globs pris en charge par Playwright) :
+- Attendre une URL (globs pris en charge par Playwright) :
   - `openclaw browser wait --url "**/dash"`
 - Attendre l'état de chargement :
   - `openclaw browser wait --load networkidle`
@@ -295,24 +304,24 @@ openclaw browser wait "#main" \
   --timeout-ms 15000
 ```
 
-## Flux de travail de débogage
+## Workflows de débogage
 
-Lorsqu'une action échoue (par exemple, « non visible », « violation du mode strict », « couvert ») :
+Lorsqu'une action échoue (par exemple, "non visible", "violation du mode strict", "couvert") :
 
 1. `openclaw browser snapshot --interactive`
 2. Utilisez `click <ref>` / `type <ref>` (préférez les références de rôle en mode interactif)
 3. Si cela échoue toujours : `openclaw browser highlight <ref>` pour voir ce que Playwright cible
-4. Si la page se comporte bizarrement :
+4. Si la page se comporte de manière étrange :
    - `openclaw browser errors --clear`
    - `openclaw browser requests --filter api --clear`
 5. Pour un débogage approfondi : enregistrez une trace :
    - `openclaw browser trace start`
-   - reproduire le problème
-   - `openclaw browser trace stop` (affiche `TRACE:<path>`)
+   - reproduisez le problème
+   - `openclaw browser trace stop` (imprime `TRACE:<path>`)
 
 ## Sortie JSON
 
-`--json` est destiné aux scripts et aux outils structurés.
+`--json` est destiné au scriptage et aux outils structurés.
 
 Exemples :
 
@@ -323,11 +332,11 @@ openclaw browser requests --filter api --json
 openclaw browser cookies --json
 ```
 
-Les instantanés de rôles au format JSON incluent `refs` ainsi qu'un petit bloc `stats` (lignes/caractères/réfs/interactif) afin que les outils puissent évaluer la taille et la densité de la charge utile.
+Les instantanés de rôle (snapshots) en JSON incluent `refs` ainsi qu'un petit bloc `stats` (lignes/caractères/réfs/interactif) pour que les outils puissent évaluer la taille et la densité de la charge utile.
 
 ## Contrôles d'état et d'environnement
 
-Ceux-ci sont utiles pour les workflows « faire se comporter le site comme X » :
+Ceci est utile pour les workflows du type « faire se comporter le site comme X » :
 
 - Cookies : `cookies`, `cookies set`, `cookies clear`
 - Stockage : `storage local|session get|set|clear`
@@ -337,7 +346,7 @@ Ceux-ci sont utiles pour les workflows « faire se comporter le site comme X » 
 - Géolocalisation : `set geo <lat> <lon> --origin "https://example.com"` (ou `--clear`)
 - Média : `set media dark|light|no-preference|none`
 - Fuseau horaire / langue : `set timezone ...`, `set locale ...`
-- Appareil / fenêtre d'affichage :
+- Appareil / zone d'affichage (viewport) :
   - `set device "iPhone 14"` (préréglages d'appareils Playwright)
   - `set viewport 1280 720`
 
@@ -345,16 +354,15 @@ Ceux-ci sont utiles pour les workflows « faire se comporter le site comme X » 
 
 - Le profil de navigateur openclaw peut contenir des sessions connectées ; traitez-le comme sensible.
 - `browser act kind=evaluate` / `openclaw browser evaluate` et `wait --fn`
-  exécutent du JavaScript arbitraire dans le contexte de la page. L'instruction
-  (prompt injection) peut influencer ce comportement. Désactivez-le avec
-  `browser.evaluateEnabled=false` si vous n'en avez pas besoin.
+  exécutent du JavaScript arbitraire dans le contexte de la page. L'injection de prompt peut
+  influencer cela. Désactivez-le avec `browser.evaluateEnabled=false` si vous n'en avez pas besoin.
 - Utilisez `openclaw browser evaluate --timeout-ms <ms>` lorsque la fonction côté page
   peut avoir besoin de plus de temps que le délai d'évaluation par défaut.
-- Pour les notes de connexion et anti-bot (X/Twitter, etc.), voir [Connexion au navigateur + publication sur X/Twitter](/fr/tools/browser-login).
-- Gardez l'hôte du Gateway/nœud privé (boucle locale ou tailnet uniquement).
+- Pour les notes sur les connexions et les anti-bots (X/Twitter, etc.), voir [Connexion au navigateur + publication sur X/Twitter](/fr/tools/browser-login).
+- Gardez l'hôte Gateway/node privé (bouclage ou tailnet uniquement).
 - Les points de terminaison CDP distants sont puissants ; placez-les dans un tunnel et protégez-les.
 
-Exemple en mode strict (bloquer les destinations privées/internal par défaut) :
+Exemple en mode strict (bloquer les destinations privées/interne par défaut) :
 
 ```json5
 {
@@ -370,7 +378,7 @@ Exemple en mode strict (bloquer les destinations privées/internal par défaut) 
 
 ## Connexes
 
-- [Navigateur](/fr/tools/browser) - aperçu, configuration, profils, sécurité
-- [Connexion au navigateur](/fr/tools/browser-login) - connexion aux sites
-- [Dépannage du navigateur sur Linux](/fr/tools/browser-linux-troubleshooting)
-- [Dépannage du navigateur sur WSL2](/fr/tools/browser-wsl2-windows-remote-cdp-troubleshooting)
+- [Browser](/fr/tools/browser) - vue d'ensemble, configuration, profils, sécurité
+- [Browser login](/fr/tools/browser-login) - connexion aux sites
+- [Browser Linux troubleshooting](Linux/en/tools/browser-linux-troubleshooting)
+- [Browser WSL2 troubleshooting](WSL2/en/tools/browser-wsl2-windows-remote-cdp-troubleshooting)

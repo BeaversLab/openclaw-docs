@@ -12,7 +12,7 @@ title: "Tokenjuice 外掛程式"
 ## 發行
 
 - 套件：`@openclaw/tokenjuice`
-- 安裝途徑：包含在 OpenClaw 中
+- 安裝途徑：npm；ClawHub：`clawhub:@openclaw/tokenjuice`
 
 ## 介面
 

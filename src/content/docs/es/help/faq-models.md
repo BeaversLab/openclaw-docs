@@ -159,12 +159,12 @@ Preguntas y respuestas sobre modelos y perfiles de autenticación. Para la confi
   <Accordion title="¿Puedo usar GPT 5.5 para tareas diarias y Codex 5.5 para programación?">
     Sí. Trate la elección del modelo y la elección del tiempo de ejecución por separado:
 
-    - **Agente de programación Codex nativo:** establezca `agents.defaults.model.primary` en `openai/gpt-5.5`. Inicie sesión con `openclaw models auth login --provider openai-codex` cuando desee autenticación de suscripción ChatGPT/Codex.
-    - **Tareas directas de la API de OpenAI fuera del bucle del agente:** configure `OPENAI_API_KEY` para imágenes, incrustaciones, voz, tiempo real y otras superficies de la API de OpenAI que no son de agentes.
-    - **Autenticación por clave de API del agente OpenAI:** use `/model openai/gpt-5.5` con un perfil de clave de API `openai-codex` ordenado.
-    - **Sub-agentes:** enrute las tareas de programación a un agente centrado en Codex con su propio modelo `openai/gpt-5.5`.
+    - **Agente de programación nativo de Codex:** establezca `agents.defaults.model.primary` en `openai/gpt-5.5`. Inicie sesión con `openclaw models auth login --provider openai` cuando desee la autenticación de suscripción de ChatGPT/Codex.
+    - **Tareas directas de la API de OpenAI fuera del bucle del agente:** configure `OPENAI_API_KEY` para imágenes, incrustaciones, voz, tiempo real y otras superficies de la API de OpenAI que no son de agente.
+    - **Autenticación de clave de API del agente de OpenAI:** use `/model openai/gpt-5.5` con un perfil de clave de API `openai` ordenado.
+    - **Subagentes:** enrute las tareas de programación a un agente centrado en Codex con su propio modelo `openai/gpt-5.5`.
 
-    Consulte [Models](/es/concepts/models) y [Slash commands](/es/tools/slash-commands).
+    Consulte [Modelos](/es/concepts/models) y [Comandos de barra](/es/tools/slash-commands).
 
   </Accordion>
 

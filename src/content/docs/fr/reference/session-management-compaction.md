@@ -21,10 +21,10 @@ Si vous souhaitez d'abord un aperçu de plus haut niveau, commencez par :
 
 - [Gestion de session](/fr/concepts/session)
 - [Compactage](/fr/concepts/compaction)
-- [Vue d'ensemble de la mémoire](/fr/concepts/memory)
-- [Recherche dans la mémoire](/fr/concepts/memory-search)
+- [Aperçu de la mémoire](/fr/concepts/memory)
+- [Recherche en mémoire](/fr/concepts/memory-search)
 - [Élagage de session](/fr/concepts/session-pruning)
-- [Hygiène de la transcription](/fr/reference/transcript-hygiene)
+- [Hygiène des transcripts](/fr/reference/transcript-hygiene)
 
 ---
 
@@ -110,41 +110,41 @@ openclaw sessions cleanup --enforce
 Les exécutions cron isolées créent également des entrées de session/transcripts, et elles disposent de contrôles de rétention dédiés :
 
 - `cron.sessionRetention` (par défaut `24h`) élimine les anciennes sessions isolées d'exécution cron du store de session (`false` désactive).
-- `cron.runLog.maxBytes` + `cron.runLog.keepLines` élaguent les fichiers `~/.openclaw/cron/runs/<jobId>.jsonl` (par défaut : `2_000_000` octets et `2000` lignes).
+- `cron.runLog.keepLines` nettoie les lignes d'historique d'exécution SQLite conservées par tâche cron (par défaut : `2000`). `cron.runLog.maxBytes` reste accepté pour les anciens journaux d'exécution basés sur des fichiers.
 
-Lorsque cron force la création d'une nouvelle session d'exécution isolée, il nettoie l'entrée de session `cron:<jobId>` précédente avant d'écrire la nouvelle ligne. Il conserve les préférences sûres telles que les paramètres thinking/fast/verbose, les étiquettes et les substitutions explicites de model/auth sélectionnées par l'utilisateur. Il supprime le contexte de conversation ambiant tel que le routage channel/group, la stratégie d'envoi ou de file d'attente, l'élévation, l'origine et la liaison d'exécution ACP afin qu'une nouvelle exécution isolée ne puisse pas hériter d'autorités de livraison ou d'exécution obsolètes d'une exécution plus ancienne.
+Lorsque cron force la création d'une nouvelle session d'exécution isolée, il nettoie l'entrée de session `cron:<jobId>` précédente avant d'écrire la nouvelle ligne. Il conserve des préférences sûres telles que les paramètres thinking/fast/verbose, les étiquettes et les substitutions explicites de modèle/auth sélectionnées par l'utilisateur. Il supprime le contexte ambiant de la conversation tel que le routage channel/group, la stratégie d'envoi ou de file d'attente, l'élévation, l'origine et la liaison d'exécution ACP afin qu'une nouvelle exécution isolée ne puisse pas hériter d'une autorisation de livraison ou d'exécution obsolète d'une exécution plus ancienne.
 
 ---
 
 ## Clés de session (`sessionKey`)
 
-Une `sessionKey` identifie _à quel compartiment de conversation_ vous appartenez (routage + isolation).
+Un `sessionKey` identifie _à quel compartiment de conversation_ vous appartenez (routage + isolation).
 
 Modèles courants :
 
-- Chat principal/direct (par agent) : `agent:<agentId>:<mainKey>` (défaut `main`)
+- Chat principal/direct (par agent) : `agent:<agentId>:<mainKey>` (par défaut `main`)
 - Groupe : `agent:<agentId>:<channel>:group:<id>`
-- Salon/channel (Discord/Slack) : `agent:<agentId>:<channel>:channel:<id>` ou `...:room:<id>`
+- Salon/channel (Discord/Slack) : DiscordSlack`agent:<agentId>:<channel>:channel:<id>` ou `...:room:<id>`
 - Cron : `cron:<job.id>`
-- Webhook : `hook:<uuid>` (sauf en cas de substitution)
+- Webhook : `hook:<uuid>` (sauf si remplacé)
 
-Les règles canoniques sont documentées dans [/concepts/session](/fr/concepts/session).
+Les règles canoniques sont documentées sur [/concepts/session](/fr/concepts/session).
 
 ---
 
-## Identifiants de session (`sessionId`)
+## Ids de session (`sessionId`)
 
 Chaque `sessionKey` pointe vers un `sessionId` actuel (le fichier de transcription qui poursuit la conversation).
 
 Règles empiriques :
 
-- **Réinitialisation** (`/new`, `/reset`) crée un nouveau `sessionId` pour cette `sessionKey`.
-- **Réinitialisation quotidienne** (défaut 4h00 heure locale sur l'hôte de la passerelle) crée un nouveau `sessionId` lors du prochain message après la limite de réinitialisation.
-- **Expiration d'inactivité** (`session.reset.idleMinutes` ou l'ancien `session.idleMinutes`) crée un nouveau `sessionId` lorsqu'un message arrive après la fenêtre d'inactivité. Lorsque la réinitialisation quotidienne et l'inactivité sont toutes deux configurées, la première à expirer l'emporte.
+- **Reset** (`/new`, `/reset`) crée un nouveau `sessionId` pour ce `sessionKey`.
+- **Reset quotidien** (par défaut à 4h00 heure locale sur l'hôte de la passerelle) crée un nouveau `sessionId` sur le prochain message après la limite de reset.
+- **Idle expiry** (`session.reset.idleMinutes` ou l'ancien `session.idleMinutes`) crée un nouveau `sessionId` lorsqu'un message arrive après la fenêtre d'inactivité. Lorsque les paramètres quotidien et inactif sont tous deux configurés, celui qui expire primeiro prime.
 - **System events** (heartbeat, réveils cron, notifications d'exécution, maintenance de la passerelle) peuvent modifier la ligne de session mais n'étendent pas la fraîcheur de la réinitialisation quotidienne/inactive. Le basculement de réinitialisation ignore les avis d'événements système mis en file d'attente pour la session précédente avant la construction du nouveau prompt.
-- La **stratégie de bifurcation parente** utilise la branche active d'OpenClaw lors de la création d'un fil ou d'une bifurcation de sous-agent. Si cette branche est trop grande, OpenClaw démarre l'enfant avec un contexte isolé au lieu d'échouer ou d'hériter d'un historique inutilisable. La stratégie de dimensionnement est automatique ; la configuration héritée `session.parentForkMaxTokens` est supprimée par `openclaw doctor --fix`.
+- **Parent fork policy** utilise la branche active d'OpenClaw lors de la création d'un fork de thread ou de sous-agent. Si cette branche est trop grande, OpenClaw démarre l'enfant avec un contexte isolé au lieu d'échouer ou d'hériter d'un historique inutilisable. La politique de dimensionnement est automatique ; l'ancienne configuration `session.parentForkMaxTokens` est supprimée par `openclaw doctor --fix`.
 
-Détail d'implémentation : la décision a lieu dans `initSessionState()` dans `src/auto-reply/reply/session.ts`.
+Détail d'implémentation : la décision se prend dans `initSessionState()` dans `src/auto-reply/reply/session.ts`.
 
 ---
 
@@ -154,18 +154,18 @@ Le type de valeur du magasin est `SessionEntry` dans `src/config/sessions.ts`.
 
 Champs clés (non exhaustifs) :
 
-- `sessionId` : identifiant de la transcription actuelle (le nom de fichier est dérivé de celui-ci sauf si `sessionFile` est défini)
-- `sessionStartedAt` : horodatage de début pour l'`sessionId` actuel ; la fraîcheur
+- `sessionId` : identifiant actuel de la transcription (le nom de fichier est dérivé de celui-ci sauf si `sessionFile` est défini)
+- `sessionStartedAt` : horodatage de début pour la `sessionId` actuelle ; la fraîcheur
   de la réinitialisation quotidienne utilise ceci. Les lignes héritées peuvent le dériver de l'en-tête de session JSONL.
-- `lastInteractionAt` : horodatage de la dernière véritable interaction utilisateur/channel ; la fraîcheur
-  de la réinitialisation inactive utilise ceci afin que les événements de heartbeat, cron et exec ne gardent pas
-  les sessions en vie. Les lignes héritées sans ce champ reviennent à l'heure de début de session
-  récupérée pour la fraîcheur inactive.
-- `updatedAt` : horodatage de la dernière mutation de ligne du magasin, utilisé pour le listage, l'élagage et
-  la tenue de livres. Il n'est pas l'autorité pour la fraîcheur de réinitialisation quotidienne/inactive.
-- `sessionFile` : remplacement facultatif explicite du chemin de transcription
-- `chatType` : `direct | group | room` (aide les interfaces utilisateur et la politique d'envoi)
-- `provider`, `subject`, `room`, `space`, `displayName` : métadonnées pour l'étiquetage de groupe/channel
+- `lastInteractionAt` : horodatage de la dernière véritable interaction utilisateur/canal ; la fraîcheur
+  de la réinitialisation inactive utilise ceci afin que les événements de heartbeat, cron et exec ne gardent pas les sessions
+  en vie. Les lignes héritées sans ce champ reviennent à l'heure de début de session récupérée
+  pour la fraîcheur inactive.
+- `updatedAt` : horodatage de la dernière mutation de la ligne du magasin, utilisé pour la liste, l'élagage et
+  la tenue de livres. Ce n'est pas l'autorité pour la fraîcheur de la réinitialisation quotidienne/inactive.
+- `sessionFile` : substitution facultative du chemin explicite de la transcription
+- `chatType` : `direct | group | room` (aide les UI et la politique d'envoi)
+- `provider`, `subject`, `room`, `space`, `displayName` : métadonnées pour l'étiquetage de groupe/canal
 - Bascules :
   - `thinkingLevel`, `verboseLevel`, `reasoningLevel`, `elevatedLevel`
   - `sendPolicy` (remplacement par session)
@@ -173,32 +173,32 @@ Champs clés (non exhaustifs) :
   - `providerOverride`, `modelOverride`, `authProfileOverride`
 - Compteurs de jetons (meilleur effort / dépendant du provider) :
   - `inputTokens`, `outputTokens`, `totalTokens`, `contextTokens`
-- `compactionCount` : fréquence à laquelle la compactage automatique s'est terminé pour cette clé de session
-- `memoryFlushAt` : horodatage de la dernière vidange de mémoire pré-compactage
-- `memoryFlushCompactionCount` : nombre de compactages au moment où la dernière vidange a été exécutée
+- `compactionCount` : fréquence à laquelle l'auto-compaction s'est terminée pour cette clé de session
+- `memoryFlushAt` : horodatage de la dernière purge mémoire de pré-compaction
+- `memoryFlushCompactionCount` : nombre de compactages lors de l'exécution de la dernière purge
 
 Le magasin peut être édité en toute sécurité, mais le Gateway fait autorité : il peut réécrire ou réhydrater les entrées au fur et à mesure que les sessions s'exécutent.
 
 ---
 
-## Structure du transcript (`*.jsonl`)
+## Structure de la transcription (`*.jsonl`)
 
-Les transcriptions sont gérées par le `SessionManager` d'`openclaw/plugin-sdk/agent-sessions`.
+Les transcriptions sont gérées par le `SessionManager` de `openclaw/plugin-sdk/agent-sessions`.
 
 Le fichier est un JSONL :
 
 - Première ligne : en-tête de session (`type: "session"`, inclut `id`, `cwd`, `timestamp`, `parentSession` facultatif)
-- Ensuite : entrées de session avec `id` + `parentId` (arborescence)
+- Ensuite : entrées de session avec `id` + `parentId` (arbre)
 
 Types d'entrées notables :
 
 - `message` : messages utilisateur/assistant/toolResult
-- `custom_message` : messages injectés par l'extension qui _entrent_ dans le contexte du modèle (peuvent être masqués dans l'interface utilisateur)
-- `custom` : état de l'extension qui _n'entre pas_ dans le contexte du modèle
-- `compaction` : résumé de compactage persistant avec `firstKeptEntryId` et `tokensBefore`
-- `branch_summary` : résumé persistant lors de la navigation dans une branche d'arborescence
+- `custom_message` : messages injectés par l'extension qui entrent dans le contexte du modèle (peuvent être masqués dans l'interface utilisateur)
+- `custom` : état de l'extension qui n'entre pas dans le contexte du modèle
+- `compaction` : résumé de compactage persisté avec `firstKeptEntryId` et `tokensBefore`
+- `branch_summary` : résumé persisté lors de la navigation dans une branche d'arbre
 
-OpenClaw ne "corrige" volontairement pas les transcripts ; le OpenClawGateway utilise `SessionManager` pour les lire et les écrire.
+OpenClaw ne corrige volontairement pas les transcriptions ; le OpenClawGateway utilise `SessionManager` pour les lire/écrire.
 
 ---
 
@@ -207,12 +207,12 @@ OpenClaw ne "corrige" volontairement pas les transcripts ; le OpenClawGateway ut
 Deux concepts différents comptent :
 
 1. **Fenêtre de contexte du modèle** : limite stricte par modèle (jetons visibles par le modèle)
-2. **Compteurs du magasin de sessions** : statistiques roulantes écrites dans `sessions.json` (utilisées pour /status et les tableaux de bord)
+2. **Compteurs de session store** : statistiques déroulantes écrites dans `sessions.json` (utilisés pour /status et les tableaux de bord)
 
 Si vous ajustez les limites :
 
 - La fenêtre de contexte provient du catalogue de modèles (et peut être remplacée via la configuration).
-- `contextTokens` dans le magasin est une valeur d'estimation/rapport lors de l'exécution ; ne la traitez pas comme une garantie stricte.
+- `contextTokens` dans le store est une valeur d'estimation/rapport à l'exécution ; ne le traitez pas comme une garantie stricte.
 
 Pour plus d'informations, consultez [/token-use](/fr/reference/token-use).
 
@@ -220,23 +220,23 @@ Pour plus d'informations, consultez [/token-use](/fr/reference/token-use).
 
 ## Compactage : ce que c'est
 
-Le compactage résume l'ancienne conversation dans une entrée `compaction` persistante du transcript et conserve les messages récents intacts.
+La compactation résume l'ancienne conversation dans une entrée persistante `compaction` de la transcription et conserve les messages récents intacts.
 
 Après le compactage, les futurs tours voient :
 
 - Le résumé de compactage
 - Messages après `firstKeptEntryId`
 
-La réinjection de section AGENTS.md après compactage est facultative via
-`agents.defaults.compaction.postCompactionSections` ; lorsqu'elle n'est pas définie ou est `[]`,
+La réinjection de la section AGENTS.md après la compactage est optionnelle via
+`agents.defaults.compaction.postCompactionSections` ; lorsqu'elle est non définie ou `[]`OpenClaw,
 OpenClaw n'ajoute pas d'extraits AGENTS.md au-dessus du résumé de compactage.
 
-Le compactage est **persistant** (contrairement à l'élagage de session). Consultez [/concepts/session-pruning](/fr/concepts/session-pruning).
+Le compactage est **persistant** (contrairement à l'élagage de session). Voir [/concepts/session-pruning](/fr/concepts/session-pruning).
 
 ## Limites des blocs de compactage et appariement d'outils
 
-Lorsque OpenClaw divise une longue transcription en blocs de compactage, il maintient
-les appels d'outils de l'assistant associés à leurs entrées `toolResult` correspondantes.
+Lorsqu'OpenClaw divise une longue transcription en blocs de compactage, il conserve
+les appels d'outil de l'assistant associés à leurs entrées OpenClaw`toolResult` correspondantes.
 
 - Si la division de la part de jetons atterrit entre un appel d'outil et son résultat, OpenClaw
   déplace la limite vers le message d'appel d'outil de l'assistant au lieu de séparer
@@ -255,15 +255,15 @@ Dans l'agent OpenClaw intégré, l'auto-compaction se déclenche dans deux cas :
 1. **Récupération de dépassement** : le modèle renvoie une erreur de dépassement de contexte
    (`request_too_large`, `context length exceeded`, `input exceeds the maximum
 number of tokens`, `input token count exceeds the maximum number of input
-tokens`, `input is too long for the model`, `ollama error: context length
-exceeded`, et autres variantes de format fournisseur) → compacter → réessayer.
-   Lorsque le fournisseur signale le nombre de jetons tenté, OpenClaw transmet ce
-   nombre observé à la récupération de dépassement par compactage. Si le fournisseur confirme
-   le dépassement mais n'expose pas de nombre analysable, OpenClaw transmet un nombre
-   synthétique légèrement supérieur au budget aux moteurs de compactage et aux diagnostics.
-   Si la récupération de dépassement échoue toujours, OpenClaw présente des instructions explicites à
-   l'utilisateur et préserve le mappage de session actuel au lieu de faire tourner silencieusement
-   la clé de session vers un nouvel ID de session. L'étape suivante est contrôlée par l'opérateur :
+tokens`, `input is too long for the model`, `OpenClawOpenClawOpenClawollama error: context length
+exceeded`, et variantes similaires propres aux fournisseurs) → compacter → réessayer.
+   Lorsque le fournisseur signale le nombre de jetons tenté, OpenClaw transfère ce
+   nombre observé vers le compactage de récupération de dépassement. Si le fournisseur confirme
+   le dépassement mais n'expose pas un nombre analysable, OpenClaw transmet un nombre
+   synthétique légèrement au-delà du budget aux moteurs de compactage et aux diagnostics.
+   Si la récupération de dépassement échoue toujours, OpenClaw présente des conseils explicites à
+   l'utilisateur et préserve le mappage de session actuel au lieu de faire pivoter silencieusement
+   la clé de session vers un identifiant de session frais. L'étape suivante est contrôlée par l'opérateur :
    réessayer le message, exécuter `/compact`, ou exécuter `/new` lorsqu'une session fraîche est
    préférée.
 2. **Maintenance du seuil** : après un tour réussi, lorsque :
@@ -277,30 +277,13 @@ Où :
 
 Ce sont les sémantiques d'exécution de OpenClaw.
 
-OpenClaw peut également déclencher une compactage local pré-vol avant d'ouvrir le prochain
-exécution lorsque `agents.defaults.compaction.maxActiveTranscriptBytes` est défini et que le
-fichier de transcription actuel atteint cette taille. Il s'agit d'une garde de taille de fichier pour le coût
-de réouverture locale, pas d'archivage brut : OpenClaw exécute toujours la compactage sémantique normale,
-et il nécessite `truncateAfterCompaction` afin que le résumé compacté puisse devenir une
-nouvelle transcription successeur.
+OpenClaw peut également déclencher une pré-compaction locale avant l'ouverture de la prochaine exécution lorsque OpenClaw`agents.defaults.compaction.maxActiveTranscriptBytes`OpenClaw est défini et que le fichier de transcription actif atteint cette taille. Il s'agit d'une garde de taille de fichier pour le coût de réouverture local, et non d'archivage brut : OpenClaw exécute toujours la compaction sémantique normale, et nécessite `truncateAfterCompaction` pour que le résumé compacté puisse devenir une nouvelle transcription de successeur.
 
-Pour les exécutions intégrées d'OpenClaw, OpenClaw`agents.defaults.compaction.midTurnPrecheck.enabled: true`OpenClawOpenClaw
-ajoute une garde de boucle d'outils (tool-loop) optionnelle. Après l'ajout d'un résultat d'outil et avant
-l'appel suivant au model, OpenClaw estime la pression sur le prompt en utilisant la même logique de budget
-préliminaire (preflight) utilisée au début du tour. Si le contexte ne tient plus, la garde ne
-compacte pas à l'intérieur du hook `transformContext` du runtime OpenClaw. Elle lève un signal
-précheck structuré en cours de tour, arrête la soumission actuelle du prompt, et permet à la
-boucle d'exécution externe d'utiliser le chemin de récupération existant : tronquer les résultats d'outils trop volumineux
-si cela suffit, ou déclencher le mode de compactage configuré et réessayer. L'option
-est désactivée par défaut et fonctionne avec les modes de compactage `default` et `safeguard`,
-y compris le compactage de sauvegarde (safeguard) soutenu par le provider.
-Ceci est indépendant de `maxActiveTranscriptBytes`OpenClaw : la garde de taille en octets s'exécute
-avant l'ouverture d'un tour, tandis que le précheck en cours de tour s'exécute plus tard dans la boucle d'outils OpenClaw intégrée
-après l'ajout de nouveaux résultats d'outils.
+Pour les exécutions OpenClaw intégrées, OpenClaw`agents.defaults.compaction.midTurnPrecheck.enabled: true`OpenClawOpenClaw ajoute une garde de boucle d'outils facultative. Après qu'un résultat d'outil est ajouté et avant le prochain appel de modèle, OpenClaw estime la pression du prompt en utilisant la même logique de budget préliminaire utilisée au début du tour. Si le contexte ne tient plus, la garde ne compacte pas à l'intérieur du hook `transformContext` du runtime OpenClaw. Il lève un signal de pré-vérification structuré en milieu de tour, arrête la soumission du prompt actuel, et permet à la boucle d'exécution externe d'utiliser le chemin de récupération existant : tronquer les résultats d'outil trop volumineux lorsque cela suffit, ou déclencher le mode de compaction configuré et réessayer. L'option est désactivée par défaut et fonctionne avec les modes de compaction `default` et `safeguard`, y compris la compaction de sauvegarde prise en charge par le fournisseur. Ceci est indépendant de `maxActiveTranscriptBytes`OpenClaw : la garde de taille en octets s'exécute avant l'ouverture d'un tour, tandis que la pré-vérification en milieu de tour s'exécute plus tard dans la boucle d'outils OpenClaw intégrée après l'ajout de nouveaux résultats d'outil.
 
 ---
 
-## Paramètres de compactage (`reserveTokens`, `keepRecentTokens`)
+## Paramètres de compaction (`reserveTokens`, `keepRecentTokens`)
 
 Les paramètres de compactage du runtime OpenClaw se trouvent dans les paramètres de l'agent :
 
@@ -317,27 +300,24 @@ Les paramètres de compactage du runtime OpenClaw se trouvent dans les paramètr
 OpenClaw applique également un plancher de sécurité pour les exécutions intégrées :
 
 - Si `compaction.reserveTokens < reserveTokensFloor`OpenClaw, OpenClaw l'augmente.
-- Le plancher par défaut est `20000` tokens.
+- Le plancher par défaut est de `20000` jetons.
 - Définissez `agents.defaults.compaction.reserveTokensFloor: 0` pour désactiver le plancher.
 - S'il est déjà plus élevé, OpenClaw le laisse tel quel.
-- Le `/compact` manuel respecte un `agents.defaults.compaction.keepRecentTokens`OpenClaw explicite
-  et conserve le point de coupure de la queue récente du runtime OpenClaw. Sans un budget de conservation explicite,
-  le compactage manuel reste un point de contrôle strict et le contexte reconstruit commence à
-  partir du nouveau résumé.
-- Définissez `agents.defaults.compaction.midTurnPrecheck.enabled: true` pour exécuter le
-  précheck optionnel de la boucle d'outils après les nouveaux résultats d'outils et avant l'appel suivant au model
-  . Ce n'est qu'un déclencheur ; la génération de résumé utilise toujours le chemin de compactage
+- La `/compact` manuelle respecte un `agents.defaults.compaction.keepRecentTokens`OpenClaw explicite et conserve le point de coupe de fin récent du runtime OpenClaw. Sans un budget de conservation explicite, la compaction manuelle reste un point de contrôle strict et le contexte reconstruit commence à partir du nouveau résumé.
+- Définissez `agents.defaults.compaction.midTurnPrecheck.enabled: true` pour exécuter la
+  pré-vérification optionnelle de la boucle d'outils après les nouveaux résultats d'outils et avant l'appel suivant au
+  model. Il s'agit uniquement d'un déclencheur ; la génération de résumé utilise toujours le chemin de compactage
   configuré. Il est indépendant de `maxActiveTranscriptBytes`, qui est une
   garde de taille en octets de la transcription active en début de tour.
 - Définissez `agents.defaults.compaction.maxActiveTranscriptBytes` sur une valeur en octets ou
-  une chaîne telle que `"20mb"` pour exécuter une compactage local avant un tour lorsque la transcription
-  active devient volumineuse. Cette garde n'est active que lorsque
+  une chaîne telle que `"20mb"` pour exécuter un compactage local avant un tour lorsque la
+  transcription active devient volumineuse. Cette garde n'est active que lorsque
   `truncateAfterCompaction` est également activé. Laissez-le non défini ou définissez `0` pour
   désactiver.
 - Lorsque `agents.defaults.compaction.truncateAfterCompaction` est activé,
-  OpenClaw fait pivoter la transcription active vers un fichier JSONL successeur compacté après
-  compactage. Les actions de point de contrôle de branche/restauration utilisent ce successeur compacté ;
-  les fichiers de point de contrôle pré-compaction hérités restent lisibles tant qu'ils sont référencés.
+  OpenClaw fait pivoter la transcription active vers un JSONL successeur compacté après
+  compactage. Les actions de point de contrôle de branchement/restauration utilisent ce successeur compacté ;
+  les fichiers de point de contrôle de pré-compactage hérités restent lisibles tant qu'ils sont référencés.
 
 Pourquoi : laisser suffisamment de marge pour le « nettoyage » multi-tours (comme les écritures en mémoire) avant que le compactage ne devienne inévitable.
 
@@ -348,15 +328,15 @@ Implémentation : `ensureAgentCompactionReserveTokens()` dans `src/agents/agent-
 
 ## Fournisseurs de compactage enfichables
 
-Les plugins peuvent enregistrer un fournisseur de compactage via `registerCompactionProvider()` sur le plugin API. Lorsque `agents.defaults.compaction.provider` est défini sur un id de fournisseur enregistré, l'extension de sécurité délègue la synthèse à ce fournisseur au lieu du pipeline `summarizeInStages` intégré.
+Les plugins peuvent enregistrer un provider de compactage via `registerCompactionProvider()` sur l'API du plugin. Lorsque `agents.defaults.compaction.provider` est défini sur un id de provider enregistré, l'extension de sécurité délègue la synthèse à ce provider au lieu du pipeline intégré `summarizeInStages`.
 
-- `provider` : id d'un plugin fournisseur de compactage enregistré. Laisser non défini pour la synthèse LLM par défaut.
+- `provider` : id d'un plugin provider de compactage enregistré. Laissez non défini pour la synthèse LLM par défaut.
 - Définir un `provider` force `mode: "safeguard"`.
 - Les fournisseurs reçoivent les mêmes instructions de compactage et la même politique de préservation des identifiants que le chemin intégré.
 - La sécurité préserve toujours le contexte de suffixe de tour récent et de tour fractionné après la sortie du fournisseur.
 - La synthèse de sécurité intégrée redistille les synthèses précédentes avec de nouveaux messages
   au lieu de préserver l'intégralité de la synthèse précédente mot pour mot.
-- Le mode sécurité active les audits de qualité de synthèse par défaut ; définissez
+- Le mode mode garde active les audits de qualité de résumé par défaut ; définissez
   `qualityGuard.enabled: false` pour ignorer le comportement de nouvelle tentative en cas de sortie malformée.
 - Si le fournisseur échoue ou renvoie un résultat vide, OpenClaw revient automatiquement à la synthèse LLM intégrée.
 - Les signaux d'abort/délai d'attente sont relancés (non ignorés) pour respecter l'annulation de l'appelant.
@@ -369,11 +349,11 @@ Source : `src/plugins/compaction-provider.ts`, `src/agents/agent-hooks/compactio
 
 Vous pouvez observer la compactage et l'état de la session via :
 
-- `/status` (dans n'importe quelle session de discussion)
+- `/status` (dans n'importe quelle session de chat)
 - `openclaw status` (CLI)
 - `openclaw sessions` / `sessions --json`
-- Journaux du Gateway (`pnpm gateway:watch` ou `openclaw logs --follow`) : `embedded run auto-compaction start` + `complete`
-- Mode verbeux : `🧹 Auto-compaction complete` + compteur de compactage
+- Journaux de la Gateway (Gateway`pnpm gateway:watch` ou `openclaw logs --follow`) : `embedded run auto-compaction start` + `complete`
+- Mode verbeux : `🧹 Auto-compaction complete` + nombre de compactages
 
 ---
 
@@ -383,60 +363,65 @@ OpenClaw prend en charge les tours "silencieux" pour les tâches en arrière-pla
 
 Convention :
 
-- L'assistant commence sa sortie par le jeton silencieux exact `NO_REPLY` / `no_reply` pour indiquer "ne pas envoyer de réponse à l'utilisateur".
+- L'assistant commence sa sortie par le jeton silencieux exact `NO_REPLY` /
+  `no_reply` pour indiquer « ne pas délivrer de réponse à l'utilisateur ».
 - OpenClaw supprime/masque cela dans la couche de diffusion.
-- La suppression exacte du jeton silencieux est insensible à la casse, donc `NO_REPLY` et `no_reply` comptent tous les deux lorsque la charge utile entière est uniquement le jeton silencieux.
+- La suppression exacte du jeton silencieux ne respecte pas la casse, donc `NO_REPLY` et
+  `no_reply` comptent tous les deux lorsque la charge utile entière est uniquement le jeton silencieux.
 - Ceci est réservé aux véritables tours en arrière-plan/sans diffusion ; ce n'est pas un raccourci pour les demandes utilisateur ordinaires faisables.
 
-Depuis `2026.1.10`, OpenClaw supprime également le **streaming de brouillon/frappe** lorsqu'un
-chunk partiel commence par `NO_REPLY`, afin que les opérations silencieuses ne fuient pas de sortie partielle en cours de tour.
+Depuis `2026.1.10`OpenClaw, OpenClaw supprime également le **streaming de brouillon/frappe** lorsqu'un
+bloc partiel commence par `NO_REPLY`, afin que les opérations silencieuses ne fuient pas de sortie
+partielle en cours de tour.
 
 ---
 
 ## "Vidange de la mémoire" avant compactage (implémenté)
 
-Objectif : avant que le compactage automatique ne se produise, exécuter un tour agent silencieux qui écrit l'état durable sur le disque (par exemple `memory/YYYY-MM-DD.md` dans l'espace de travail de l'agent) afin que le compactage ne puisse pas effacer le contexte critique.
+Objectif : avant que l'auto-compactage n'ait lieu, exécuter un tour agent silencieux qui écrit l'état
+durable sur le disque (par exemple `memory/YYYY-MM-DD.md` dans l'espace de travail de l'agent) afin que le compactage ne puisse
+pas effacer le contexte critique.
 
 OpenClaw utilise l'approche de **vidange avant seuil** :
 
 1. Surveiller l'utilisation du contexte de session.
 2. Lorsqu'il dépasse un "seuil souple" (en dessous du seuil de compactage du runtime OpenClaw), exécuter une directive silencieuse "écrire la mémoire maintenant" à l'agent.
-3. Utiliser le jeton silencieux exact `NO_REPLY` / `no_reply` pour que l'utilisateur ne voie rien.
+3. Utilisez le jeton silencieux exact `NO_REPLY` / `no_reply` pour que l'utilisateur ne
+   voie rien.
 
-Config (`agents.defaults.compaction.memoryFlush`) :
+Configuration (`agents.defaults.compaction.memoryFlush`) :
 
 - `enabled` (par défaut : `true`)
-- `model` (remplacement facultatif exact du provider/model pour le tour de flush, par exemple `ollama/qwen3:8b`)
+- `model` (remplacement facultatif exact de provider/model pour le tour de flush, par exemple `ollama/qwen3:8b`)
 - `softThresholdTokens` (par défaut : `4000`)
 - `prompt` (message utilisateur pour le tour de flush)
-- `systemPrompt` (invite système supplémentaire ajoutée pour le tour de flush)
+- `systemPrompt` (prompt système supplémentaire ajouté pour le tour de flush)
 
 Notes :
 
-- L'invite système par défaut inclut un indicateur `NO_REPLY` pour supprimer
+- Le prompt système par défaut inclut un indice `NO_REPLY` pour supprimer
   la livraison.
 - Lorsque `model` est défini, le tour de flush utilise ce modèle sans hériter de la
-  chaîne de repli de session active, afin que la maintenance locale ne revienne pas
+  chaîne de repli de session active, afin que la maintenance locale uniquement ne revienne pas
   silencieusement à un modèle de conversation payant.
 - Le flush s'exécute une fois par cycle de compactage (suivi dans `sessions.json`).
 - Le flush ne s'exécute que pour les sessions OpenClaw intégrées (les backends CLI l'ignorent).
-- Le flush est ignoré lorsque l'espace de travail de la session est en lecture seule (`workspaceAccess: "ro"` ou `"none"`).
-- Voir [Memory](/fr/concepts/memory) pour la disposition des fichiers de l'espace de travail et les modèles d'écriture.
+- Le vidage est ignoré lorsque l'espace de travail de la session est en lecture seule (`workspaceAccess: "ro"` ou `"none"`).
+- Consultez [Mémoire](/fr/concepts/memory) pour la disposition des fichiers de l'espace de travail et les modèles d'écriture.
 
-OpenClaw expose également un hook `session_before_compact` dans l'API d'extension, mais la logique de flush de OpenClaw
-réside aujourd'hui du côté du Gateway.
+OpenClaw expose également un hook OpenClaw`session_before_compact`APIOpenClawGateway dans l'API d'extension, mais la logique de vidage d'OpenClaw réside aujourd'hui du côté de la Gateway.
 
 ---
 
 ## Liste de contrôle de dépannage
 
 - Clé de session incorrecte ? Commencez par [/concepts/session](/fr/concepts/session) et confirmez le `sessionKey` dans `/status`.
-- Inadéquation entre le magasin et le transcript ? Confirmez l'hôte du Gateway et le chemin du magasin à partir de `openclaw status`.
+- Inadéquation entre le magasin et la transcription ? Confirmez l'hôte de la Gateway et le chemin du magasin à partir de Gateway`openclaw status`.
 - Spam de compactage ? Vérifiez :
   - fenêtre de contexte du modèle (trop petite)
   - paramètres de compactage (`reserveTokens` trop élevé pour la fenêtre du modèle peut provoquer un compactage plus précoce)
   - bloat des résultats d'outil : activer/régler l'élagage de session
-- Fuites de tours silencieux ? Confirmez que la réponse commence par `NO_REPLY` (jeton exact insensible à la casse) et que vous êtes sur une version qui inclut le correctif de suppression du streaming.
+- Fuite de tours silencieux ? Confirmez que la réponse commence par `NO_REPLY` (jeton exact insensible à la casse) et que vous êtes sur une version qui inclut la correction de la suppression du streaming.
 
 ## Connexes
 

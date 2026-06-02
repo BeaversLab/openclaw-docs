@@ -63,8 +63,8 @@ OpenClaw importa el estado de Hermes a través de un proveedor de migración inc
   <Accordion title="Habilidades">
     Las habilidades con un archivo `SKILL.md` bajo `skills/<name>/` se copian, junto con los valores de configuración por habilidad de `skills.config`.
   </Accordion>
-  <Accordion title="Credenciales de autenticación">
-    El `openclaw migrate` interactivo pregunta antes de importar las credenciales de autenticación, con sí seleccionado por defecto. Las importaciones aceptadas incluyen las credenciales OAuth compatibles de Hermes `auth.json`, las credenciales OAuth de OpenAI de OpenCode de OpenCode `auth.json`, las entradas de OpenCode y GitHub Copilot de OpenCode `auth.json` y las [claves `.env` compatibles](/es/cli/migrate#supported-env-keys). Use `--include-secrets` para la importación de credenciales `openclaw migrate` no interactiva, `--no-auth-credentials` para omitirla o la incorporación `--import-secrets` al importar desde el asistente de incorporación.
+  <Accordion title="Auth credentials">
+    El modo interactivo `openclaw migrate` pregunta antes de importar las credenciales de autenticación, con "sí" seleccionado por defecto. Las importaciones aceptadas incluyen las credenciales OAuth de OpenAI de OpenCode desde OpenCode `auth.json`, las entradas de OpenCode y GitHub Copilot desde OpenCode `auth.json` y las [claves `.env` compatibles](/es/cli/migrate#supported-env-keys). Las entradas OAuth de Hermes `auth.json` son un estado heredado y se presentan como trabajo de reautenticación manual o reparación (doctor) en lugar de importarse a la autenticación en vivo. Use `--include-secrets` para la importación de credenciales no interactiva `openclaw migrate`, `--no-auth-credentials` para omitirla, o la incorporación (onboarding) `--import-secrets` al importar desde el asistente de incorporación.
   </Accordion>
 </AccordionGroup>
 
@@ -133,7 +133,7 @@ Si surge un conflicto durante la aplicación (por ejemplo, una carrera inesperad
 
 El `openclaw migrate` interactivo pregunta si se deben importar las credenciales de autenticación detectadas, con sí seleccionado de forma predeterminada.
 
-- Aceptar la sugerencia importa las credenciales OAuth compatibles desde Hermes `auth.json`, las credenciales OAuth de OpenAI de OpenCode desde OpenCode `auth.json`, las entradas de OpenCode y GitHub Copilot desde OpenCode `auth.json`, y las [claves `.env` compatibles](/es/cli/migrate#supported-env-keys).
+- Aceptar el aviso importa las credenciales OAuth de OpenAI de OpenCode desde OpenCode `auth.json`, las entradas de OpenCode y GitHub Copilot desde OpenCode `auth.json` y las [claves `.env` compatibles](/es/cli/migrate#supported-env-keys). Las entradas OAuth de Hermes `auth.json` se reportan para la reautenticación manual de OpenAI o la reparación mediante doctor.
 - Use `--no-auth-credentials` o elija no en la sugerencia para importar solo el estado que no sea secreto.
 - Use `--include-secrets` cuando se ejecute desatendido con `--yes`.
 - Use el `--import-secrets` de incorporación al importar credenciales desde el asistente de incorporación.

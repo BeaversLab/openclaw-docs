@@ -8,9 +8,10 @@ read_when:
   - You need to understand how the Codex plugin relates to model providers
 ---
 
-Un **agent harness** es el ejecutor de bajo nivel para un turno de agente
-OpenClaw preparado. No es un proveedor de modelos, ni un canal, ni un registro de
-herramientas. Para el modelo mental orientado al usuario, consulte [Agent runtimes](/es/concepts/agent-runtimes).
+Un **agente harness** es el ejecutor de bajo nivel para un turno de agente
+OpenClaw preparado. No es un proveedor de modelos, ni un canal, ni un
+registro de herramientas. Para el modelo mental orientado al usuario,
+consulte [Runtimes de agentes](/es/concepts/agent-runtimes).
 
 Utilice esta superficie solo para complementos nativos agrupados o de confianza. El contrato sigue siendo experimental porque los tipos de parámetros reflejan intencionalmente el ejecutor integrado actual.
 
@@ -24,8 +25,8 @@ Ejemplos:
 - un CLI local o un demonio que debe transmitir eventos nativos de planificación/razonamiento/herramienta
 - un tiempo de ejecución de modelo que necesita su propio ID de reanudación además de la transcripción de sesión de OpenClaw
 
-**No** registre un harness solo para añadir una nueva API de LLM. Para APIs de
-modelos HTTP o WebSocket normales, cree un [provider plugin](/es/plugins/sdk-provider-plugins).
+No\*\* registre un harness solo para añadir una nueva API de LLM. Para APIs de
+modelos HTTP o WebSocket normales, cree un [plugin de proveedor](/es/plugins/sdk-provider-plugins).
 
 ## Lo que el núcleo todavía posee
 
@@ -146,8 +147,8 @@ El complemento Codex es aditivo. Las referencias de agente `openai/gpt-*` simple
 oficial de OpenAI seleccionan el arnés Codex de forma predeterminada. Las referencias `codex/gpt-*` más antiguas
 siguen seleccionando el proveedor y arnés Codex para compatibilidad.
 
-Para la configuración del operador, ejemplos de prefijos de modelo y configuraciones exclusivas de Codex, consulte
-[Codex Harness](/es/plugins/codex-harness).
+Para la configuración del operador, ejemplos de prefijos de modelo y
+configuraciones exclusivas de Codex, consulte [Codex Harness](/es/plugins/codex-harness).
 
 OpenClaw requiere el servidor de aplicaciones Codex `0.125.0` o más reciente. El complemento Codex verifica
 el protocolo de enlace de inicialización del servidor de aplicaciones y bloquea los servidores más antiguos o sin versión para que
@@ -181,19 +182,39 @@ las respuestas silenciosas intencionales como `NO_REPLY` sin clasificar.
 
 ### Modo de arnés nativo de Codex
 
-El arnés `codex` incluido es el modo Codex nativo para los turnos del agente
-OpenClaw integrado. Habilite primero el complemento `codex` incluido e incluya `codex` en
-`plugins.allow` si su configuración usa una lista blanca restrictiva. Las configuraciones
-nativas del servidor de aplicaciones deberían usar `openai/gpt-*`; los turnos del agente de OpenAI
-seleccionan el arnés Codex de manera predeterminada. Las rutas `openai-codex/*` heredadas deben repararse con
-`openclaw doctor --fix`, y las referencias de modelo `codex/*` heredadas siguen siendo alias de
-compatibilidad para el arnés nativo.
+El harness `codex` incluido es el modo nativo Codex para turnos de
+agente OpenClaw integrados. Habilite primero el plugin `codex` incluido e incluya
+`codex` en `plugins.allow` si su configuración usa una lista de
+permitidos restrictiva. Las configuraciones de servidor de aplicaciones nativas
+deben usar `openai/gpt-*`; los turnos de agente OpenAI seleccionan el harness
+Codex de manera predeterminada. Las rutas de referencias de modelos Codex heredadas
+deben repararse con `openclaw doctor --fix`, y las referencias de modelos
+`codex/*` heredadas siguen siendo alias de compatibilidad para el
+harness nativo.
 
-Cuando se ejecuta este modo, Codex posee el ID de subproceso nativo, el comportamiento de reanudación, la compactación y la ejecución del servidor de aplicaciones. OpenClaw todavía posee el canal de chat, el espejo de transcripción visible, la política de herramientas, las aprobaciones, la entrega de medios y la selección de sesión. Use el proveedor/modelo `agentRuntime.id: "codex"` cuando necesite probar que solo la ruta del servidor de aplicaciones de Codex puede reclamar la ejecución. Los tiempos de ejecución de complementos explícitos fallan cerrados; los fallos de selección del servidor de aplicaciones de Codex y los fallos de tiempo de ejecución no se reintentan a través de otro tiempo de ejecución.
+Cuando se ejecuta este modo, Codex posee el id de subproceso nativo, el
+comportamiento de reanudación, la compactación y la ejecución del servidor de
+aplicaciones. OpenClaw sigue siendo el propietario del canal de chat, el espejo
+de transcripción visible, la política de herramientas, las aprobaciones, la
+entrega de medios y la selección de sesión. Use el proveedor/modelo
+`agentRuntime.id: "codex"` cuando necesite demostrar que solo la ruta del servidor de
+aplicaciones de Codex puede reclamar la ejecución. Los tiempos de ejecución de
+plugins explícitos fallan cerrados; los errores de selección del servidor de
+aplicaciones de Codex y los fallos del tiempo de ejecución no se reintentan a
+través de otro tiempo de ejecución.
 
 ## Estrictitud del tiempo de ejecución
 
-De forma predeterminada, OpenClaw utiliza la política de tiempo de ejecución de proveedor/modelo `auto`: los arneses de complementos registrados pueden reclamar un par proveedor/modelo, y el tiempo de ejecución integrado maneja el turno cuando ninguno coincide. Las referencias de agente de OpenAI en el proveedor oficial de OpenAI son predeterminadas para Codex. Use un tiempo de ejecución de complemento explícito proveedor/modelo como `agentRuntime.id: "codex"` cuando la falta de selección de arnés deba fallar en lugar de enrutar a través del tiempo de ejecución integrado. Los fallos del arnés de complementos seleccionado siempre fallan severamente. Esto no bloquea un proveedor/modelo explícito `agentRuntime.id: "openclaw"`.
+De manera predeterminada, OpenClaw utiliza la política de tiempo de ejecución de
+proveedor/modelo `auto`: los harnesses de plugins registrados pueden
+reclamar un par proveedor/modelo, y el tiempo de ejecución integrado maneja el
+turno cuando ninguno coincide. Las referencias de agente OpenAI en el proveedor
+oficial de OpenAI son predeterminadas para Codex. Use un tiempo de ejecución de
+plugin de proveedor/modelo explícito como `agentRuntime.id: "codex"` cuando la selección
+de harness faltante debería fallar en lugar de enrutar a través del tiempo de
+ejecución integrado. Los fallos del harness de plugin seleccionado siempre fallan
+de manera estricta. Esto no bloquea un proveedor/modelo explícito
+`agentRuntime.id: "openclaw"`.
 
 Para ejecuciones integradas solo de Codex:
 
@@ -290,10 +311,9 @@ La transcripción de OpenClaw sigue siendo la capa de compatibilidad para:
 - historial de sesión visible para el canal
 - búsqueda e indexación de transcripciones
 - volver al arnés integrado de OpenClaw en un turno posterior
-- comportamiento genérico `/new`, `/reset` y de eliminación de sesión
+- comportamiento genérico de `/new`, `/reset` y eliminación de sesión
 
-Si su harness almacena una vinculación de sidecar, implemente `reset(...)` para que OpenClaw pueda
-limpiarla cuando se restablezca la sesión de OpenClaw propietaria.
+Si su arnés almacena un enlace asociado (sidecar binding), implemente `reset(...)` para que OpenClaw pueda limpiarlo cuando se restablezca la sesión de OpenClaw propietaria.
 
 ## Resultados de herramientas y medios
 
@@ -315,7 +335,7 @@ Esto mantiene los resultados de texto, imagen, video, música, TTS, aprobaciones
 ## Relacionado
 
 - [Descripción general del SDK](/es/plugins/sdk-overview)
-- [Auxiliares de tiempo de ejecución](/es/plugins/sdk-runtime)
-- [Complementos de proveedores](/es/plugins/sdk-provider-plugins)
+- [Ayudantes de tiempo de ejecución](/es/plugins/sdk-runtime)
+- [Complementos de proveedor](/es/plugins/sdk-provider-plugins)
 - [Arnés de Codex](/es/plugins/codex-harness)
 - [Proveedores de modelos](/es/concepts/model-providers)

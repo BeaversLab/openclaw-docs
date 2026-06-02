@@ -1,5 +1,5 @@
 ---
-summary: "OpenAIOpenAIOpenClawAjoute la prise en charge des fournisseurs de modèles OpenAI et OpenAI Codex pour OpenClaw."
+summary: "OpenAIOpenClawAjoute la prise en charge du provider de modèle OpenAI à OpenClaw."
 read_when:
   - You are installing, configuring, or auditing the openai plugin
 title: "OpenAIPlugin OpenAI"
@@ -7,7 +7,7 @@ title: "OpenAIPlugin OpenAI"
 
 # Plugin OpenAI
 
-Ajoute la prise en charge des fournisseurs de modèles OpenAI et OpenAI Codex pour OpenClaw.
+Ajoute la prise en charge du provider de modèle OpenAI à OpenClaw.
 
 ## Distribution
 
@@ -16,7 +16,7 @@ Ajoute la prise en charge des fournisseurs de modèles OpenAI et OpenAI Codex po
 
 ## Surface
 
-providers : openai, openai-codex ; contrats : imageGenerationProviders, mediaUnderstandingProviders, memoryEmbeddingProviders, realtimeTranscriptionProviders, realtimeVoiceProviders, speechProviders, videoGenerationProviders
+providers: openai; contracts: imageGenerationProviders, mediaUnderstandingProviders, memoryEmbeddingProviders, realtimeTranscriptionProviders, realtimeVoiceProviders, speechProviders, videoGenerationProviders
 
 ## Docs connexes
 

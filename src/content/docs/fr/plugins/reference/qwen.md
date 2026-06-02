@@ -1,5 +1,5 @@
 ---
-summary: "QwenQwenOpenClawAjoute la prise en charge des fournisseurs de modèles Qwen, Qwen Cloud, Model Studio et DashScope à OpenClaw."
+summary: "Ajoute la prise en charge des fournisseurs de modèles Qwen, Qwen Cloud, Model Studio, DashScope, Qwen Oauth, Qwen Portal et Qwen CLI à OpenClaw."
 read_when:
   - You are installing, configuring, or auditing the qwen plugin
 title: "QwenPlugin Qwen"
@@ -7,7 +7,7 @@ title: "QwenPlugin Qwen"
 
 # Plugin Qwen
 
-Ajoute la prise en charge des fournisseurs de modèles Qwen, Qwen Cloud, Model Studio et DashScope à OpenClaw.
+Ajoute la prise en charge des fournisseurs de modèles Qwen, Qwen Cloud, Model Studio, DashScope, Qwen Oauth, Qwen Portal et Qwen CLI pour OpenClaw.
 
 ## Distribution
 
@@ -16,8 +16,9 @@ Ajoute la prise en charge des fournisseurs de modèles Qwen, Qwen Cloud, Model S
 
 ## Surface
 
-fournisseurs : qwen, qwencloud, modelstudio, dashscope ; contrats : mediaUnderstandingProviders, videoGenerationProviders
+providers: qwen, qwencloud, modelstudio, dashscope, qwen-oauth, qwen-portal, qwen-cli; contracts: mediaUnderstandingProviders, videoGenerationProviders
 
 ## Documentation connexe
 
 - [qwen](/fr/providers/qwen)
+- [qwen-oauth](/fr/providers/qwen-oauth)

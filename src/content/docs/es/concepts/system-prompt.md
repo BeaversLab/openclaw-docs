@@ -165,17 +165,19 @@ superficie del mensaje que coincida con su vida útil:
 - `MEMORY.md` cuando está presente
 
 En el arnés nativo de Codex, OpenClaw evita repetir archivos estables del espacio de trabajo
-durante cada turno del usuario. Codex carga `AGENTS.md` a través de su propio descubrimiento de documentos del proyecto.
-`SOUL.md`, `IDENTITY.md`, `TOOLS.md` y `USER.md` se reenvían como
-instrucciones para desarrolladores de Codex. El contenido de `HEARTBEAT.md` no se inyecta; los turnos de
-latido reciben una nota en modo de colaboración que apunta al archivo cuando existe y no
-está vacío. El contenido de `MEMORY.md` del espacio de trabajo del agente configurado no se pega
-en cada turno nativo de Codex; cuando las herramientas de memoria están disponibles para ese espacio de trabajo,
-los turnos de Codex reciben una pequeña nota sobre la memoria del espacio de trabajo y deben usar `memory_search` o
-`memory_get` cuando la memoria duradera sea relevante. Si las herramientas están desactivadas, la búsqueda de
-memoria no está disponible, o el espacio de trabajo activo difiere del espacio de trabajo de memoria del agente,
+cada turno de usuario. Codex carga `AGENTS.md` a través de su propio descubrimiento de
+documentos del proyecto. `SOUL.md`, `IDENTITY.md`, `TOOLS.md` y `USER.md` se reenvían como
+instrucciones de desarrollador de Codex. La lista compacta de habilidades de OpenClaw también se reenvía
+como instrucciones de desarrollador de colaboración con ámbito de turno. El contenido de `HEARTBEAT.md` no
+se inyecta; los turnos de latido reciben una nota en modo de colaboración que apunta al archivo
+cuando existe y no está vacío. El contenido de `MEMORY.md` del espacio de trabajo del agente
+configurado no se pega en cada turno nativo de Codex; cuando las herramientas de memoria están
+disponibles para ese espacio de trabajo, los turnos de Codex reciben una pequeña nota de memoria del espacio de trabajo en
+las instrucciones de desarrollador de colaboración con ámbito de turno y deben usar `memory_search`
+o `memory_get` cuando la memoria duradera sea relevante. Si las herramientas están deshabilitadas, la búsqueda
+de memoria no está disponible, o el espacio de trabajo activo difiere del espacio de trabajo de memoria del agente,
 `MEMORY.md` vuelve a la ruta normal de contexto de turno delimitado. El contenido activo de
-`BOOTSTRAP.md` mantiene el rol de contexto de turno normal por ahora.
+`BOOTSTRAP.md` mantiene por ahora el rol normal de contexto de turno.
 
 En arneses que no son Codex, los archivos de arranque continúan componiéndose en el
 mensaje de OpenClaw según sus compuertas existentes. `HEARTBEAT.md` se omite en
@@ -245,17 +247,21 @@ prompt instruye al modelo a usar `read` para cargar el SKILL.md en la ubicación
 listada (espacio de trabajo, gestionada o empaquetada). Si no hay habilidades elegibles, la
 sección de Habilidades se omite.
 
-La ubicación puede apuntar a una habilidad anidada, tal como
-`skills/personal/foo/SKILL.md`. El anidamiento es solo organizativo; el prompt todavía
-usa el nombre de habilidad plano del frontmatter `SKILL.md`.
+Los turnos nativos de Codex reciben esta lista como instrucciones de desarrollador de colaboración
+con ámbito de turno en lugar de entrada de usuario por turno, excepto los turnos ligeros de cron que
+conservan el mensaje programado exacto. Otros arneses mantienen la sección normal
+del mensaje.
 
-La elegibilidad incluye las puertas de metadatos de habilidades, las comprobaciones de configuración/entorno de ejecución,
+La ubicación puede apuntar a una habilidad anidada, tal como
+`skills/personal/foo/SKILL.md`. El anidamiento es solo organizativo; el mensaje todavía
+usa el nombre plano de la habilidad del frontmatter `SKILL.md`.
+
+La elegibilidad incluye puertas de metadatos de habilidades, verificaciones de entorno/configuración en tiempo de ejecución,
 y la lista blanca efectiva de habilidades del agente cuando `agents.defaults.skills` o
 `agents.list[].skills` están configurados.
 
-Las habilidades empaquetadas por complementos son elegibles solo cuando el complemento propietario está habilitado.
-Esto permite que los complementos de herramientas exponguen guías operativas más profundas sin incrustar toda
-esa guía directamente en cada descripción de herramienta.
+Las habilidades agrupadas en complementos solo son elegibles cuando el complemento propietario está habilitado.
+Esto permite que los complementos de herramientas expongan guías operativas más profundas sin incrustar toda\esa guía directamente en cada descripción de herramienta.
 
 ```
 <available_skills>
@@ -267,26 +273,25 @@ esa guía directamente en cada descripción de herramienta.
 </available_skills>
 ```
 
-Esto mantiene el prompt base pequeño mientras todavía permite el uso dirigido de habilidades.
+Esto mantiene el mensaje base pequeño mientras permite el uso dirigido de habilidades.
 
 El presupuesto de la lista de habilidades es propiedad del subsistema de habilidades:
 
 - Predeterminado global: `skills.limits.maxSkillsPromptChars`
-- Anulación por agente: `agents.list[].skillsLimits.maxSkillsPromptChars`
+- Invalidación por agente: `agents.list[].skillsLimits.maxSkillsPromptChars`
 
-Los extractos de tiempo de ejecución genéricos y delimitados usan una superficie diferente:
+Los fragmentos acotados genéricos en tiempo de ejecución utilizan una superficie diferente:
 
 - `agents.defaults.contextLimits.*`
 - `agents.list[].contextLimits.*`
 
-Esa división mantiene el tamaño de las habilidades separado del tamaño de lectura/inyección en tiempo de ejecución, como `memory_get`, resultados en vivo de herramientas y actualizaciones de AGENTS.md después de la compactación.
+Esa división mantiene el tamaño de las habilidades separado del tamaño de lectura/inyección en tiempo de ejecución, como `memory_get`, resultados de herramientas en vivo y actualizaciones de AGENTS.md posteriores a la compactación.
 
 ## Documentación
 
-El prompt del sistema incluye una sección de **Documentación**. Cuando hay documentación local disponible, apunta al directorio de documentación local de OpenClaw (`docs/` en una copia de trabajo de Git o la documentación del paquete npm incluido). Si la documentación local no está disponible, recurre a [https://docs.openclaw.ai](https://docs.openclaw.ai).
+El mensaje del sistema incluye una sección **Documentación**. Cuando hay documentación local disponible, apunta al directorio de documentación local de OpenClaw (`docs/` en una extracción de Git o la documentación del paquete npm incluido). Si la documentación local no está disponible, recurre a [https://docs.openclaw.ai](https://docs.openclaw.ai).
 
-La misma sección también incluye la ubicación de la fuente de OpenClaw. Las copias de trabajo de Git exponen la raíz de la fuente local para que el agente pueda inspeccionar el código directamente. Las instalaciones de paquetes incluyen la URL de la fuente de GitHub e indican al agente que revise la fuente allí siempre que la documentación esté incompleta o obsoleta. El prompt también indica el espejo de la documentación pública, el Discord de la comunidad y ClawHub ([https://clawhub.ai](https://clawhub.ai)) para el descubrimiento de habilidades. Indica al modelo que consulte primero la documentación sobre el comportamiento, comandos, configuración o arquitectura de OpenClaw, y que ejecute `openclaw status` por sí mismo cuando sea posible (preguntando al usuario solo cuando no tenga acceso).
-Específicamente para la configuración, dirige a los agentes a la acción de herramienta `gateway` `config.schema.lookup` para obtener documentación y restricciones exactas a nivel de campo, y luego a `docs/gateway/configuration.md` y `docs/gateway/configuration-reference.md` para obtener una orientación más amplia.
+La misma sección también incluye la ubicación del código fuente de OpenClaw. Las extracciones de Git exponen la raíz del código fuente local para que el agente pueda inspeccionar el código directamente. Las instalaciones del paquete incluyen la URL del código fuente de GitHub e indican al agente que revise el código fuente allí siempre que la documentación esté incompleta o obsoleta. El mensaje también indica el espejo de la documentación pública, el Discord de la comunidad y ClawHub ([https://clawhub.ai](https://clawhub.ai)) para el descubrimiento de habilidades. Indica al modelo que consulte primero la documentación sobre el comportamiento, los comandos, la configuración o la arquitectura de OpenClaw, y que ejecute `openclaw status` por sí mismo cuando sea posible (solicitando al usuario solo cuando no tenga acceso). Para la configuración específicamente, señala a los agentes a la acción de herramienta `gateway` `config.schema.lookup` para obtener documentación y restricciones exactas a nivel de campo, y luego a `docs/gateway/configuration.md` y `docs/gateway/configuration-reference.md` para obtener orientación más amplia.
 
 ## Relacionado
 

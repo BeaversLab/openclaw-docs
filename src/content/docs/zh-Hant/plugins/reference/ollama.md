@@ -1,5 +1,5 @@
 ---
-summary: "為 OpenClaw 新增 Ollama 模型供應商支援。"
+summary: "Adds Ollama, Ollama Cloud model provider support to OpenClaw."
 read_when:
   - You are installing, configuring, or auditing the ollama plugin
 title: "Ollama 外掛程式"
@@ -7,7 +7,7 @@ title: "Ollama 外掛程式"
 
 # Ollama 外掛程式
 
-為 OpenClaw 新增 Ollama 模型供應商支援。
+為 OpenClaw 新增 Ollama、Ollama Cloud 模型提供者支援。
 
 ## 發行
 
@@ -16,8 +16,9 @@ title: "Ollama 外掛程式"
 
 ## 介面
 
-providers: ollama; contracts: memoryEmbeddingProviders, webSearchProviders
+提供者: ollama, ollama-cloud; 契約: memoryEmbeddingProviders, webSearchProviders
 
 ## 相關文件
 
 - [ollama](/zh-Hant/providers/ollama)
+- [ollama-cloud](/zh-Hant/providers/ollama-cloud)

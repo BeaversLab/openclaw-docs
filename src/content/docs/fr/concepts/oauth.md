@@ -45,7 +45,7 @@ Pour réduire cela, OpenClaw traite `auth-profiles.json` comme un **puits de jet
 
 - le runtime lit les identifiants à partir d'**un seul endroit**
 - nous pouvons conserver plusieurs profils et les router de manière déterministe
-- la réutilisation externe du CLI est spécifique au provider : le CLI Codex peut amorcer un profil `openai-codex:default` vide, mais une fois que OpenClaw possède un profil OAuth local, le jeton d'actualisation local est canonique. Si ce jeton d'actualisation local est rejeté, OpenClaw peut utiliser un jeton CLI Codex du même compte utilisable comme solution de repli uniquement au moment de l'exécution ; les autres intégrations peuvent rester gérées externement et relire leur magasin d'auth CLI
+- la réutilisation externe de CLI est spécifique au fournisseur : la CLI Codex peut amorcer un profil CLICLI`openai:default`OpenClawOAuthOpenClawCLICLI vide, mais une fois qu'OpenClaw a un profil OAuth local, le jeton d'actualisation local est canonique. Si ce jeton d'actualisation local est rejeté, OpenClaw peut utiliser un jeton CLI Codex utilisable du même compte comme solution de secours uniquement pour l'exécution ; d'autres intégrations peuvent rester gérées de manière externe et relire leur magasin d'authentification CLI
 - les chemins de statut et de démarrage qui connaissent déjà l'ensemble de providers configurés limitent
   la découverte CLI externe à cet ensemble, afin qu'un magasin de connexion CLI non lié ne soit pas
   sondé pour une configuration à fournisseur unique
@@ -124,7 +124,7 @@ Forme du flux (PKCE) :
 5. échanger à `https://auth.openai.com/oauth/token`
 6. extraire `accountId` du jeton d'accès et stocker `{ access, refresh, expires, accountId }`
 
-Le chemin de l'assistant est `openclaw onboard` → choix d'auth `openai-codex`.
+Le chemin de l'assistant est `openclaw onboard` → choix d'authentification `openai`.
 
 ## Actualisation + expiration
 
@@ -137,13 +137,7 @@ Les profils stockent un horodatage `expires`.
 - si un agent secondaire lit un profil OAuth hérité d'un agent principal, l'actualisation
   réécrit dans le stock de l'agent principal au lieu de copier le jeton d'actualisation dans
   le stock de l'agent secondaire
-- exception : certaines identifiants CLI externes restent gérés de manière externe ; CLIOpenClawCLICLI
-  relit ces magasins d'auth CLI au lieu de dépenser des jetons d'actualisation copiés.
-  L'amorçage de la CLI Codex est intentionnellement plus étroit : il initialise un profil
-  `openai-codex:default` vide, puis les actualisations appartenant à OpenClawCLI maintiennent le profil
-  local comme canonique. Si l'actualisation Codex locale échoue et que la CLI Codex possède un
-  jeton utilisable pour le même compte, OpenClaw peut utiliser ce jeton pour la requête
-  d'exécution actuelle sans le réécrire dans `auth-profiles.json`.
+- exception : certaines identifiants CLI externes restent gérés de manière externe ; OpenClaw relit ces magasins d'authentification CLI au lieu de dépenser des jetons d'actualisation copiés. L'amorçage de la CLI Codex est intentionnellement plus étroit : il initialise un profil CLIOpenClawCLICLI`openai:default`OpenClawCLIOpenClaw vide, puis les actualisations appartenant à OpenClaw maintiennent le profil local comme canonique. Si l'actualisation Codex locale échoue et que la CLI Codex dispose d'un jeton utilisable pour le même compte, OpenClaw peut utiliser ce jeton pour la requête d'exécution actuelle sans l'écrire dans `auth-profiles.json`.
 
 Le flux d'actualisation est automatique ; vous n'avez généralement pas besoin de gérer les jetons manuellement.
 

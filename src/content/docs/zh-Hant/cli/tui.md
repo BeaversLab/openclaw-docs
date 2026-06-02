@@ -42,6 +42,7 @@ title: "TUI"
 - 本機模式直接使用內嵌代理執行環境。大多數本機工具均可運作，但僅限 Gateway 的功能則無法使用。
 - 本機模式會在 TUI 指令介面內新增 `/auth [provider]`。
 - 外掛程式核准閘門在本地模式中仍然適用。需要核准的工具會在終端機中提示做出決定；不會有因為不涉及 Gateway 而被靜默自動核准的情況。
+- Session [目標](/zh-Hant/tools/goal) 會顯示在頁尾中，並可以使用 `/goal` 進行管理。
 
 ## 範例
 
@@ -56,19 +57,19 @@ openclaw chat --message "Compare my config to the docs and tell me what to fix"
 openclaw tui --session bugfix
 ```
 
-## 設定修復迴圈
+## 設定修復循環
 
-當目前的設定已經驗證通過，並且您希望內嵌代理程式檢查它、將其與文件進行比較，並在同一個終端機中協助修復它時，請使用本機模式：
+當目前的設定已經通過驗證，且您希望嵌入式代理程式檢查它、將其與文件進行比較，並在同一個終端機中協助修復它時，請使用本機模式：
 
 如果 `openclaw config validate` 已經失敗，請先使用 `openclaw configure` 或
 `openclaw doctor --fix`。`openclaw chat` 不會繞過無效
-設定的防護。
+設定的防護機制。
 
 ```bash
 openclaw chat
 ```
 
-然後在 TUI 內：
+然後在 TUI 內部：
 
 ```text
 !openclaw config file
@@ -77,10 +78,11 @@ openclaw chat
 !openclaw doctor
 ```
 
-使用 `openclaw config set` 或 `openclaw configure` 套用目標修正，然後
+使用 `openclaw config set` 或 `openclaw configure` 套用特定的修復，然後
 重新執行 `openclaw config validate`。請參閱 [TUI](/zh-Hant/web/tui) 和 [Config](/zh-Hant/cli/config)。
 
 ## 相關
 
 - [CLI 參考](/zh-Hant/cli)
 - [TUI](/zh-Hant/web/tui)
+- [目標](/zh-Hant/tools/goal)

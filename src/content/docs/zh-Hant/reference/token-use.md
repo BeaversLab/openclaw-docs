@@ -13,12 +13,10 @@ OpenClaw 追蹤的是 **tokens**，而非字元。Token 是特定於模型的，
 OpenClaw 會在每次執行時組裝自己的系統提示詞。它包含：
 
 - 工具列表 + 簡短描述
-- 技能列表（僅包含中繼資料；指令會根據需求透過 `read` 載入）。
-  精簡的技能區塊由 `skills.limits.maxSkillsPromptChars` 界定，
-  並可透過
-  `agents.list[].skillsLimits.maxSkillsPromptChars` 針對每個代理進行選擇性覆寫。
+- 技能列表（僅限元資料；指令會透過 `read` 按需載入）。
+  原生 Codex 回合會將緊湊的技能區塊作為回合範圍的協作開發者指令接收；其他框架則在一般提示表面接收它。它受 `skills.limits.maxSkillsPromptChars` 限制，並可透過 `agents.list[].skillsLimits.maxSkillsPromptChars` 進行每個代理的選擇性覆寫。
 - 自我更新指令
-- Workspace + bootstrap files (`AGENTS.md`, `SOUL.md`, `TOOLS.md`, `IDENTITY.md`, `USER.md`, `HEARTBEAT.md`, `BOOTSTRAP.md` when new, plus `MEMORY.md` when present). Native Codex turns do not paste raw `MEMORY.md` from the configured agent workspace when memory tools are available for that workspace; they include a small memory pointer and use memory tools on demand. If tools are disabled, memory search is unavailable, or the active workspace differs from the agent memory workspace, `MEMORY.md` uses the normal bounded turn-context path. Lowercase root `memory.md` is not injected; it is legacy repair input for `openclaw doctor --fix` when paired with `MEMORY.md`. Large injected files are truncated by `agents.defaults.bootstrapMaxChars` (default: 12000), and total bootstrap injection is capped by `agents.defaults.bootstrapTotalMaxChars` (default: 60000). `memory/*.md` daily files are not part of the normal bootstrap prompt; they remain on-demand via memory tools on ordinary turns, but reset/startup model runs can prepend a one-shot startup-context block with recent daily memory for that first turn. Bare chat `/new` and `/reset` commands are acknowledged without invoking the model. The startup prelude is controlled by `agents.defaults.startupContext`. Post-compaction AGENTS.md excerpts are separate and require explicit `agents.defaults.compaction.postCompactionSections` opt-in.
+- 工作區 + 引導檔案（`AGENTS.md`、`SOUL.md`、`TOOLS.md`、`IDENTITY.md`、`USER.md`、`HEARTBEAT.md`、`BOOTSTRAP.md` 當它們是新的時，加上 `MEMORY.md` 當它們存在時）。原生 Codex 回合不會在記憶工具可用於該工作區時，從設定的代理工作區貼上原始 `MEMORY.md`；它們會在回合範圍的協作開發者指令中包含一個小型記憶指標，並按需使用記憶工具。如果工具被停用、記憶搜尋不可用，或目前工作區與代理記憶工作區不同，`MEMORY.md` 會使用一般限制的回合內容路徑。小寫根 `memory.md` 不會被注入；當與 `MEMORY.md` 配對時，它是 `openclaw doctor --fix` 的舊版修復輸入。大型注入的檔案會被 `agents.defaults.bootstrapMaxChars` 截斷（預設值：12000），且總引導注入會受到 `agents.defaults.bootstrapTotalMaxChars` 上限（預設值：60000）。`memory/*.md` 每日檔案不是一般引導提示的一部分；它們在普通回合中透過記憶工具保持按需使用，但重置/啟動模型執行可以在第一個回合前面加上包含近期每日記憶的一次性啟動內容區塊。純聊天 `/new` 和 `/reset` 指令會被確認而不會呼叫模型。啟動前奏由 `agents.defaults.startupContext` 控制。壓縮後的 AGENTS.md 摘要是分開的，並需要明確的 `agents.defaults.compaction.postCompactionSections` 選擇加入。
 - 時間 (UTC + 使用者時區)
 - 回覆標籤 + 心跳行為
 - 執行時期中繼資料 (主機/作業系統/模型/思考)

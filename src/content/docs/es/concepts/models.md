@@ -23,7 +23,7 @@ sidebarTitle: "CLI de modelos"
   </Card>
 </CardGroup>
 
-Las referencias de modelos eligen un proveedor y un modelo. Por lo general, no eligen el entorno de ejecución del agente de bajo nivel. Las referencias de agente de OpenAI son la excepción principal: `openai/gpt-5.5` se ejecuta a través del entorno de ejecución del servidor de aplicaciones de Codex de forma predeterminada en el proveedor oficial de OpenAI. Las referencias de Copilot de suscripción (`github-copilot/*`) adicionalmente pueden optar por el entorno de ejecución del agente de GitHub Copilot incluido; esa ruta permanece explícita (sin alternancia `auto`). Las anulaciones explícitas del entorno de ejecución pertenecen a la política del proveedor/modelo, no a todo el agente o sesión. En el modo de entorno de ejecución de Codex, la referencia `openai/gpt-*` no implica facturación con clave de API; la autenticación puede provenir de una cuenta de Codex o de un perfil de autenticación `openai-codex`. Consulte [Entornos de ejecución del agente](/es/concepts/agent-runtimes) y [Entorno de ejecución del agente de GitHub Copilot](/es/plugins/copilot).
+Las referencias de modelos (model refs) eligen un proveedor y un modelo. Por lo general, no eligen el runtime del agente de bajo nivel. Las referencias de agente de OpenAI son la excepción principal: `openai/gpt-5.5` se ejecuta a través del runtime del servidor de aplicaciones de Codex de forma predeterminada en el proveedor oficial de OpenAI. Las referencias de suscripción de Copilot (`github-copilot/*`) también pueden optar por el complemento del runtime del agente externo de GitHub Copilot; esa ruta permanece explícita (sin `auto` de respaldo). Las anulaciones explícitas del runtime pertenecen a la política del proveedor/modelo, no a todo el agente o sesión. En el modo de runtime de Codex, la referencia `openai/gpt-*` no implica facturación con clave de API; la autenticación puede provenir de una cuenta de Codex o un perfil de OAuth `openai`. Consulte [Agent runtimes](/es/concepts/agent-runtimes) y [GitHub Copilot agent runtime](/es/plugins/copilot).
 
 ## Cómo funciona la selección de modelos
 
@@ -145,7 +145,7 @@ entradas `provider/*` a `agents.defaults.models`:
   agents: {
     defaults: {
       models: {
-        "openai-codex/*": {},
+        "openai/*": {},
         "vllm/*": {},
       },
     },

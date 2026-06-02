@@ -25,7 +25,7 @@ OpenClaw fournit OpenClaw`pixverse` en tant que plugin externe officiel pour la 
 <Steps>
   <Step title="Installer le plugin">
     ```bash
-    openclaw plugins install @openclaw/pixverse-provider
+    openclaw plugins install clawhub:@openclaw/pixverse-provider
     openclaw gateway restart
     ```
   </Step>

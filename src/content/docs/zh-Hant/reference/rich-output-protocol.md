@@ -1,53 +1,56 @@
 ---
-summary: "用於嵌入、媒體、音訊提示和回覆的 Rich output shortcode 協議"
+summary: "Rich output protocol for structured media, embeds, audio hints, and replies"
 read_when:
   - Changing assistant output rendering in the Control UI
-  - Debugging `[embed ...]`, `MEDIA:`, reply, or audio presentation directives
-title: "Rich output 協議"
+  - Debugging `[embed ...]`, structured media, reply, or audio presentation directives
+title: "Rich output protocol"
 ---
 
 助理輸出可以攜帶少量的傳遞/渲染指令：
 
-- `MEDIA:` 用於附件傳遞
-- `[[audio_as_voice]]` 用於音訊呈現提示
-- `[[reply_to_current]]` / `[[reply_to:<id>]]` 用於回覆元資料
-- `[embed ...]` 用於 Control UI 的 Rich 渲染
+- 用於附件傳遞的結構化 `mediaUrl` / `mediaUrls` 欄位
+- 用於音訊呈現提示的 `[[audio_as_voice]]`
+- 用於回覆元資料的 `[[reply_to_current]]` / `[[reply_to:<id>]]`
+- 用於 Control UI 豐富渲染的 `[embed ...]`
 
-遠端 `MEDIA:` 附件必須是公開的 `https:` URL。純文字 `http:`、loopback、link-local、private 和 internal 主機名稱會被忽略，視為附件指令；伺服器端的媒體擷取器仍會執行自身的網路防護。
+遠端媒體附件必須是公開的 `https:` URL。純 `http:`、
+loopback、link-local、private 和 internal 主機名稱會被忽略為附件
+指令；伺服器端媒體擷取器仍會執行其自身的網路防護。
 
-本機 `MEDIA:` 附件可以使用絕對路徑、工作區相對路徑，或使用者家目錄相對路徑 `~/`。在傳遞之前，它們仍會通過代理程式的檔案讀取政策和媒體類型檢查。
+本地媒體附件可以使用絕對路徑、工作區相對路徑，或
+家目錄相對 `~/` 路徑。在傳遞之前，它們仍需通過代理程式檔案讀取策略和
+媒體類型檢查。
 
 <Warning>
-`MEDIA:` 僅被解析為純文字。如果將該指令包覆在 Markdown 格式（粗體、行內程式碼、圍欄程式碼）中，會導致解析器無法識別它，且該附件會在傳遞時被靜默捨棄。
+請不要針對來自工具、外掛程式、串流區塊、
+瀏覽器輸出或訊息動作的附件發出文字指令。請改用結構化媒體欄位。
 
-有效：
+有效的 message-tool payload：
 
-```text
-MEDIA:/workspace/image.png
+```json
+{ "message": "Here is your image.", "mediaUrl": "/workspace/image.png" }
 ```
 
-無效（被解析為散文，不會傳遞附件）：
-
-```text
-**MEDIA:/workspace/image.png**
-`MEDIA:/workspace/image.png`
-Here is your image: MEDIA:/workspace/image.png
-```
-
-請將 `MEDIA:` 保持在獨立的一行，以純文字呈現，且周圍沒有任何格式。
+舊版的最終助理回覆文字可能仍會為了相容性而被正規化，但
+這並非通用的外掛程式/工具通訊協定。
 
 </Warning>
 
-標準 Markdown 圖片語法預設保持為文字。有意將 Markdown 圖片回應對應到媒體附件的頻道，會在其輸出配接器中選擇加入；Telegram 會這樣做，以便 `![alt](url)` 仍能成為媒體回覆。
+純 Markdown 圖片語法預設保持為文字。有意將
+Markdown 圖片回覆對應至媒體附件的頻道，會在其輸出
+介面卡中選擇加入；Telegram 這樣做是為了讓 `![alt](url)` 仍可成為媒體回覆。
 
-這些指令是分開的。`MEDIA:` 和 reply/voice 標籤仍是傳遞元資料；`[embed ...]` 則是僅限網頁的 Rich 渲染路徑。
-受信任的工具結果媒體在傳遞前會使用相同的 `MEDIA:` / `[[audio_as_voice]]` 解析器，因此文字工具輸出仍可將音訊附件標記為語音訊息。
+這些指令是分開的。結構化媒體欄位和回覆/語音標籤是
+傳遞元資料；`[embed ...]` 僅用於網頁豐富渲染路徑。
 
-啟用區塊串流時，`MEDIA:` 仍為單次傳遞的元資料。若相同的媒體 URL 在串流區塊中發送，並在最終的助手酬載中重複出現，OpenClaw 將只傳遞一次附件，並從最終酬載中移除重複項。
+啟用區塊串流時，媒體必須透過結構化 payload
+欄位傳送。如果相同的媒體 URL 在串流區塊中發送，並在最終
+助理 payload 中重複出現，OpenClaw 會傳遞附件一次並從最終
+payload 中移除重複項目。
 
 ## `[embed ...]`
 
-`[embed ...]` 是 Control UI 中唯一面向代理的富渲染語法。
+`[embed ...]` 是 Control UI 唯一面向代理程式的豐富渲染語法。
 
 自閉範例：
 
@@ -57,16 +60,16 @@ Here is your image: MEDIA:/workspace/image.png
 
 規則：
 
-- `[view ...]` 對新的輸出不再有效。
+- `[view ...]` 不再適用於新的輸出。
 - 嵌入短代碼僅在助手訊息表面渲染。
-- 僅渲染基於 URL 的嵌入。請使用 `ref="..."` 或 `url="..."`。
+- 僅渲染基於 URL 的嵌入內容。請使用 `ref="..."` 或 `url="..."`。
 - 區塊形式的行內 HTML 嵌入短代碼不會被渲染。
 - 網頁 UI 會從可見文字中移除短代碼，並行內渲染嵌入內容。
-- `MEDIA:` 不是嵌入別名，不應用於富嵌入渲染。
+- 結構化媒體不是嵌入別名，不應用於富嵌入渲染。
 
 ## 儲存的渲染形狀
 
-標準化/儲存的助手內容區塊是一個結構化的 `canvas` 項目：
+正規化/儲存的助手內容區塊是結構化的 `canvas` 項目：
 
 ```json
 {
@@ -87,5 +90,5 @@ Here is your image: MEDIA:/workspace/image.png
 
 ## 相關
 
-- [RPC 介接卡](/zh-Hant/reference/rpc)
+- [RPC 配接器](/zh-Hant/reference/rpc)
 - [Typebox](/zh-Hant/concepts/typebox)

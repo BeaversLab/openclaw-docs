@@ -1,36 +1,39 @@
 ---
-summary: "使用可選的內建外掛程式精簡嘈雜的 exec 和 bash 工具結果"
+summary: "使用選用的 Tokenjuice 外掛程式壓縮嘈雜的 exec 和 bash 工具結果"
 title: "Tokenjuice"
 read_when:
   - You want shorter `exec` or `bash` tool results in OpenClaw
-  - You want to enable the bundled tokenjuice plugin
+  - You want to install or enable the Tokenjuice plugin
   - You need to understand what tokenjuice changes and what it leaves raw
 ---
 
-`tokenjuice` 是一個可選的內建外掛程式，可在命令執行後精簡嘈雜的 `exec` 和 `bash`
+`tokenjuice` 是一個選用的外部外掛程式，可在命令執行後壓縮嘈雜的 `exec` 和 `bash`
 工具結果。
 
-它會變更傳回的 `tool_result`，而不是命令本身。Tokenjuice 不會
-重寫 shell 輸入、重新執行命令或變更結束代碼。
+它會變更傳回的 `tool_result`，而非命令本身。Tokenjuice 不會
+重寫 shell 輸入、重新執行命令或變更退出代碼。
 
 目前這適用於 Codex app-server harness 中的 OpenClaw 嵌入式運行和 OpenClaw 動態工具。Tokenjuice 掛鉤 OpenClaw 的工具結果中介軟體，並在輸出返回到作用中的 harness 會話之前對其進行修剪。
 
 ## 啟用外掛程式
 
-快速途徑：
+安裝一次：
+
+```bash
+openclaw plugins install clawhub:@openclaw/tokenjuice
+```
+
+然後啟用它：
 
 ```bash
 openclaw config set plugins.entries.tokenjuice.enabled true
 ```
 
-對等項目：
+同等於：
 
 ```bash
 openclaw plugins enable tokenjuice
 ```
-
-OpenClaw 已隨附此外掛程式。沒有額外的 `plugins install`
-或 `tokenjuice install openclaw` 步驟。
 
 如果您偏好直接編輯組態：
 
@@ -48,7 +51,7 @@ OpenClaw 已隨附此外掛程式。沒有額外的 `plugins install`
 
 ## Tokenjuice 的變更內容
 
-- 在將結果輸送回工作階段之前，精簡嘈雜的 `exec` 和 `bash` 結果。
+- 在將嘈雜的 `exec` 和 `bash` 結果饋送回工作階段之前壓縮它們。
 - 保持原始命令執行不變。
 - 保留精確的檔案內容讀取，以及 tokenjuice 應保持原樣的其他命令。
 - 保持選擇性加入：如果您希望到處都是逐字輸出，請停用外掛程式。

@@ -54,13 +54,9 @@ Légende :
 
 ### Livraison de médias avec le block streaming
 
-Les directives `MEDIA:`OpenClaw sont des métadonnées de livraison normales. Lorsque la block streaming envoie un bloc média tôt, OpenClaw se souvient de cette livraison pour le tour. Si la charge utile finale de l'assistant répète la même URL média, la livraison finale supprime le média en double au lieu d'envoyer à nouveau la pièce jointe.
+Le streaming de médias doit utiliser des champs de charge utile structurés tels que `mediaUrl` ou `mediaUrls` ; le texte diffusé en continu n'est pas analysé comme une commande de pièce jointe. Lorsque le streaming par blocs envoie des médias tôt, OpenClaw mémorise cet envoi pour le tour. Si la charge utile finale de l'assistant répète la même URL multimédia, l'envoi final supprime le média en double au lieu de renvoyer la pièce jointe.
 
-Les payloads finaux exactement en double sont supprimés. Si le payload final ajoute
-du texte distinct autour de médias déjà diffusés, OpenClaw envoie toujours le
-nouveau texte tout en maintenant la diffusion unique des médias. Cela empêche les notes vocales
-ou fichiers en double sur des channels tels que Telegram lorsqu'un agent émet `MEDIA:` pendant
-le streaming et que le provider l'inclut également dans la réponse terminée.
+Les charges utiles finales en double exact sont supprimées. Si la charge utile finale ajoute du texte distinct autour d'un média déjà diffusé, OpenClaw envoie toujours le nouveau texte tout en conservant l'envoi unique du média. Cela empêche les notes vocales ou fichiers en double sur des canaux tels que Telegram.
 
 ## Algorithme de chunking (bornes basse/haute)
 

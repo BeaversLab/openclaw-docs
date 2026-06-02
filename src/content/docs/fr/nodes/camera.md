@@ -59,9 +59,9 @@ Tout accès à l'appareil photo est protégé par des **paramètres contrôlés 
 
 Comme `canvas.*`, le nœud iOS n'autorise les commandes `camera.*` qu'en **premier plan**. Les appels en arrière-plan renvoient `NODE_BACKGROUND_UNAVAILABLE`.
 
-### Assistant CLI (fichiers temporaires + MEDIA)
+### Assistant CLI
 
-Le moyen le plus simple d'obtenir des pièces jointes consiste à utiliser l'assistant CLI, qui écrit les médias décodés dans un fichier temporaire et imprime `MEDIA:<path>`.
+Le moyen le plus simple d'obtenir des fichiers médias consiste à utiliser l'assistant CLI, qui écrit les médias décodés dans un fichier temporaire et imprime le chemin enregistré.
 
 Exemples :
 
@@ -74,7 +74,7 @@ openclaw nodes camera clip --node <id> --no-audio
 
 Notes :
 
-- `nodes camera snap` correspond par défaut aux orientations **deux** pour donner à l'agent les deux vues.
+- `nodes camera snap` est réglé par défaut sur **les deux** orientations pour donner à l'agent les deux vues.
 - Les fichiers de sortie sont temporaires (dans le répertoire temporaire de l'OS) sauf si vous créez votre propre wrapper.
 
 ## Nœud Android
@@ -83,22 +83,22 @@ Notes :
 
 - Feuille de paramètres Android → **Camera** → **Allow Camera** (`camera.enabled`)
   - Par défaut : **on** (l'absence de clé est traitée comme activée).
-  - Lorsqu'il est désactivé : les commandes `camera.*` renvoient `CAMERA_DISABLED`.
+  - Si désactivé : les commandes `camera.*` renvoient `CAMERA_DISABLED`.
 
 ### Autorisations
 
 - Android nécessite des autorisations d'exécution :
   - `CAMERA` pour `camera.snap` et `camera.clip`.
-  - `RECORD_AUDIO` pour `camera.clip` lorsque `includeAudio=true`.
+  - `RECORD_AUDIO` pour `camera.clip` lors du `includeAudio=true`.
 
-Si les autorisations sont manquantes, l'application demandera si possible ; si refusées, les requêtes `camera.*` échouent avec une erreur
+Si les autorisations sont manquantes, l'application les demandera si possible ; si elles sont refusées, les requêtes `camera.*` échouent avec une erreur
 `*_PERMISSION_REQUIRED`.
 
 ### Exigence de premier plan Android
 
 Comme `canvas.*`, le nœud Android n'autorise les commandes `camera.*` qu'en **premier plan**. Les appels en arrière-plan renvoient `NODE_BACKGROUND_UNAVAILABLE`.
 
-### Commandes Android (via Android `node.invoke`)
+### Commandes Android (via Gateway `node.invoke`)
 
 - `camera.list`
   - Charge utile de réponse :
@@ -114,45 +114,45 @@ Les photos sont recompressées pour maintenir la charge utile base64 sous 5 Mo.
 
 L'application compagnon macOS expose une case à cocher :
 
-- **Paramètres → Général → Autoriser l'appareil photo** (`openclaw.cameraEnabled`)
+- **Settings → General → Allow Camera** (`openclaw.cameraEnabled`)
   - Par défaut : **désactivé**
   - Lorsqu'elle est désactivée : les demandes d'accès à la caméra renvoient "Camera disabled by user".
 
 ### Assistant CLI (appel de nœud)
 
-Utilisez la CLI `openclaw` principale pour appeler des commandes d'appareil photo sur le nœud macOS.
+Utilisez la CLI principale `openclaw` pour invoquer les commandes de caméra sur le nœud macOS.
 
 Exemples :
 
 ```bash
 openclaw nodes camera list --node <id>            # list camera ids
-openclaw nodes camera snap --node <id>            # prints MEDIA:<path>
+openclaw nodes camera snap --node <id>            # prints saved path
 openclaw nodes camera snap --node <id> --max-width 1280
 openclaw nodes camera snap --node <id> --delay-ms 2000
 openclaw nodes camera snap --node <id> --device-id <id>
-openclaw nodes camera clip --node <id> --duration 10s          # prints MEDIA:<path>
-openclaw nodes camera clip --node <id> --duration-ms 3000      # prints MEDIA:<path> (legacy flag)
+openclaw nodes camera clip --node <id> --duration 10s          # prints saved path
+openclaw nodes camera clip --node <id> --duration-ms 3000      # prints saved path (legacy flag)
 openclaw nodes camera clip --node <id> --device-id <id>
 openclaw nodes camera clip --node <id> --no-audio
 ```
 
 Remarques :
 
-- `openclaw nodes camera snap` vaut `maxWidth=1600` par défaut, sauf si elle est remplacée.
-- Sur macOS, `camera.snap` attend `delayMs` (2000 ms par défaut) après le réglage de l'échauffement/exposition avant de capturer.
+- `openclaw nodes camera snap` est réglé par défaut sur `maxWidth=1600` sauf en cas de substitution.
+- Sur macOS, `camera.snap` attend `delayMs` (2000 ms par défaut) après le réglage du chauffage/de l'exposition avant de capturer.
 - Les charges utiles des photos sont recompressées pour maintenir le base64 sous 5 Mo.
 
 ## Limites de sécurité et pratiques
 
 - L'accès à l'appareil photo et au microphone déclenche les invites d'autorisation habituelles du système d'exploitation (et nécessite des chaînes d'utilisation dans Info.plist).
-- Les clips vidéo sont limités (actuellement `<= 60s`) pour éviter des charges utiles de nœud trop volumineuses (surcharge base64 + limites de message).
+- Les clips vidéo sont plafonnés (actuellement `<= 60s`) pour éviter des charges utiles de nœud trop volumineuses (surcharge base64 + limites de messages).
 
 ## Vidéo d'écran macOS (niveau système d'exploitation)
 
 Pour la vidéo d'_écran_ (pas l'appareil photo), utilisez le compagnon macOS :
 
 ```bash
-openclaw nodes screen record --node <id> --duration 10s --fps 15   # prints MEDIA:<path>
+openclaw nodes screen record --node <id> --duration 10s --fps 15   # prints saved path
 ```
 
 Remarques :
@@ -161,6 +161,6 @@ Remarques :
 
 ## Connexes
 
-- [Support des images et médias](/fr/nodes/images)
+- [Support des images et des médias](/fr/nodes/images)
 - [Compréhension des médias](/fr/nodes/media-understanding)
 - [Commande de localisation](/fr/nodes/location-command)

@@ -126,7 +126,7 @@ Ce tableau mappe les tâches d'inférence courantes vers la commande infer corre
 - Utilisez `model run --thinking <level>` pour passer un niveau de réflexion/raisonnement ponctuel (`off`, `minimal`, `low`, `medium`, `high`, `adaptive`, `xhigh` ou `max`) tout en gardant l'exécution brute.
 - Pour `image describe`, `audio transcribe` et `video describe`, `--model` doit utiliser la forme `<provider/model>`.
 - Pour `image describe`, `--file` accepte les chemins locaux et les URL d'image HTTP(S). Les URL distantes utilisent la stratégie SSRF normale de récupération de médias.
-- Pour `image describe`, un `--model` explicite exécute directement ce provider/modèle. Le modèle doit être capable de traiter des images dans le catalogue de modèles ou la configuration du provider. `codex/<model>` exécute un tour de compréhension d'image limité du serveur d'application Codex ; `openai-codex/<model>` utilise le chemin de provider OAuth OpenAI Codex OAuth.
+- Pour `image describe`, un `--model` explicite exécute directement ce provider/model. Le modèle doit être capable de traiter des images dans le catalogue de modèles ou la configuration du provider. `codex/<model>` exécute un tour de compréhension d'image Codex app-server délimité ; `openai/<model>` utilise le chemin du provider OpenAI avec une authentification par clé API ou OAuth ChatGPT/Codex.
 - Les commandes d'exécution sans état sont par défaut locales.
 - Les commandes d'état gérées par la Gateway sont par défaut sur la Gateway.
 - Le chemin local normal ne nécessite pas que la Gateway soit en cours d'exécution.
@@ -169,18 +169,18 @@ Notes :
 - Le `model run` local est le test de fumée CLI le plus strict pour la santé provider/model/auth car, pour les providers non-Codex, il n'envoie que le prompt fourni au modèle sélectionné.
 - Le `model run --model <provider/model>` local peut utiliser des lignes exactes du catalogue statique regroupé issues de `models list --all` avant que ce provider ne soit écrit dans la configuration. L'authentification du provider est toujours requise ; les identifiants manquants échouent avec des erreurs d'authentification, et non comme `Unknown model`.
 - Pour les sondes de raisonnement Mistral Medium 3.5, laissez la température non définie/par défaut. Mistral rejette `reasoning_effort="high"` plus `temperature: 0` ; utilisez `mistral/mistral-medium-3-5` avec la température par défaut ou une valeur non nulle pour le mode de raisonnement telle que `0.7`.
-- Les sondes locales `openai-codex/*` constituent l'étroite exception : OpenClaw ajoute une instruction système minimale pour que le transport Codex Responses puisse remplir son champ `instructions` requis, sans ajouter le contexte complet de l'agent, les outils, la mémoire ou la transcription de session.
-- Le `model run --file` local conserve ce chemin allégé et attache le contenu de l'image directement au message utilisateur unique. Les fichiers image courants tels que PNG, JPEG et WebP fonctionnent lorsque leur type MIME est détecté comme `image/*` ; les fichiers non pris en charge ou non reconnus échouent avant l'appel au provider.
-- `model run --file` est idéal lorsque vous souhaitez tester directement le modèle de texte multimodal sélectionné. Utilisez `infer image describe` lorsque vous souhaitez la sélection de provider de compréhension d'image et le routage par défaut du modèle d'image de OpenClaw.
+- Les sondes locales de Codex Responses constituent l'étroite exception : OpenClaw ajoute une instruction système minimale afin que le transport puisse remplir son champ `instructions` requis, sans ajouter le contexte complet de l'agent, les outils, la mémoire ou la transcription de la session.
+- Le `model run --file` local conserve ce chemin allégé et joint le contenu de l'image directement au seul message utilisateur. Les fichiers image courants tels que PNG, JPEG et WebP fonctionnent lorsque leur type MIME est détecté comme `image/*` ; les fichiers non pris en charge ou non reconnus échouent avant que le provider ne soit appelé.
+- `model run --file` est idéal lorsque vous souhaitez tester directement le modèle de texte multimodal sélectionné. Utilisez `infer image describe` lorsque vous souhaitez la sélection du provider de compréhension d'image et le routage par défaut du modèle d'image de OpenClaw.
 - Le modèle sélectionné doit prendre en charge l'entrée d'image ; les modèles texte uniquement peuvent rejeter la demande au niveau de la couche provider.
-- `model run --prompt` doit contenir du texte non vide (non composé uniquement d'espaces) ; les prompts vides sont rejetés avant l'appel aux providers locaux ou à la Gateway.
-- Local `model run` exits non-zero when the provider returns no text output, so unreachable local providers and empty completions do not look like successful probes.
-- Use `model run --gateway` when you need to test Gateway routing, agent-runtime setup, or Gateway-managed provider state while keeping the model input raw. Use `openclaw agent` or chat surfaces when you want the full agent context, tools, memory, and session transcript.
-- `model auth login`, `model auth logout`, and `model auth status` manage saved provider auth state.
+- `model run --prompt` doit contenir du texte non vide ; les invites vides sont rejetées avant que les providers locaux ou le Gateway ne soient appelés.
+- Le `model run` local se termine avec un code non nul lorsque le provider ne renvoie aucune sortie textuelle, de sorte que les providers locaux inaccessibles et les achèvements vides ne ressemblent pas à des sondes réussies.
+- Utilisez `model run --gateway` lorsque vous devez tester le routage Gateway, la configuration du runtime de l'agent ou l'état du provider géré par le Gateway tout en gardant l'entrée du modèle brute. Utilisez `openclaw agent` ou les surfaces de chat lorsque vous souhaitez le contexte complet de l'agent, les outils, la mémoire et la transcription de la session.
+- `model auth login`, `model auth logout` et `model auth status` gèrent l'état d'authentification du provider enregistré.
 
 ## Image
 
-Use `image` for generation, edit, and description.
+Utilisez `image` pour la génération, l'édition et la description.
 
 ```bash
 openclaw infer image generate --prompt "friendly lobster illustration" --json
@@ -199,18 +199,18 @@ openclaw infer image describe --file ./photo.jpg --model ollama/qwen2.5vl:7b --p
 
 Notes :
 
-- Use `image edit` when starting from existing input files.
-- Use `--size`, `--aspect-ratio`, or `--resolution` with `image edit` for
-  providers/models that support geometry hints on reference-image edits.
-- Use `--output-format png --background transparent` with
-  `--model openai/gpt-image-1.5` for transparent-background OpenAI PNG output;
-  `--openai-background` remains available as an OpenAI-specific alias. Providers
-  that do not declare background support report the hint as an ignored override.
-- Use `image providers --json` to verify which bundled image providers are
-  discoverable, configured, selected, and which generation/edit capabilities
-  each provider exposes.
-- Use `image generate --model <provider/model> --json` as the narrowest live
-  CLI smoke for image generation changes. Example :
+- Utilisez `image edit` lorsque vous partez de fichiers d'entrée existants.
+- Utilisez `--size`, `--aspect-ratio`, ou `--resolution` avec `image edit` pour
+  les providers/models qui prennent en charge les indications de géométrie sur les modifications d'image de référence.
+- Utilisez `--output-format png --background transparent` avec
+  `--model openai/gpt-image-1.5` pour une sortie PNG avec fond transparent de OpenAI ;
+  `--openai-background` reste disponible comme un alias spécifique à OpenAI. Les providers
+  qui ne déclarent pas la prise en charge de l'arrière-plan signalent l'indication comme un paramètre ignoré.
+- Utilisez `image providers --json` pour vérifier quels providers d'image intégrés sont
+  détectables, configurés, sélectionnés, et quelles capacités de génération/modification
+  chaque provider expose.
+- Utilisez `image generate --model <provider/model> --json` comme le test de fumée (smoke) CLI en direct le plus ciblé
+  pour les modifications de génération d'images. Exemple :
 
   ```bash
   openclaw infer image providers --json
@@ -221,14 +221,14 @@ Notes :
     --json
   ```
 
-  The JSON response reports `ok`, `provider`, `model`, `attempts`, and written
-  output paths. When `--output` is set, the final extension may follow the
-  provider's returned MIME type.
+  La réponse JSON rapporte `ok`, `provider`, `model`, `attempts`, et les chemins
+  de sortie écrits. Lorsque `--output` est défini, l'extension finale peut suivre le
+  type MIME renvoyé par le provider.
 
 - Pour `image describe` et `image describe-many`, utilisez `--prompt` pour donner au modèle de vision une instruction spécifique à la tâche telle que l'OCR, la comparaison, l'inspection de l'interface utilisateur ou la légende concise.
-- Utilisez `--timeout-ms` avec des modèles de vision locaux lents ou des démarrages à froid d'Ollama.
-- Pour `image describe`, `--model` doit être un `<provider/model>` compatible avec les images.
-- Pour les modèles de vision locaux Ollama, tirez d'abord le modèle et définissez `OLLAMA_API_KEY` sur n'importe quelle valeur d'espace réservé, par exemple `ollama-local`. Voir [Ollama](/fr/providers/ollama#vision-and-image-description).
+- Utilisez `--timeout-ms` avec des modèles de vision locaux lents ou des démarrages à froid de Ollama.
+- Pour `image describe`, `--model` doit être un `<provider/model>` capable de traiter des images.
+- Pour les modèles de vision locaux Ollama, téléchargez d'abord le modèle et définissez `OLLAMA_API_KEY` à n'importe quelle valeur d'espace réservé, par exemple `ollama-local`. Voir [Ollama](/fr/providers/ollama#vision-and-image-description).
 
 ## Audio
 
@@ -242,7 +242,7 @@ openclaw infer audio transcribe --file ./memo.m4a --model openai/whisper-1 --jso
 
 Remarques :
 
-- `audio transcribe` est destiné à la transcription de fichiers, et non à la gestion de session en temps réel.
+- `audio transcribe` est destiné à la transcription de fichiers, non à la gestion de session en temps réel.
 - `--model` doit être `<provider/model>`.
 
 ## TTS
@@ -258,7 +258,7 @@ openclaw infer tts status --json
 
 Remarques :
 
-- `tts status` est par défaut la passerelle (gateway) car elle reflète l'état TTS géré par la passerelle.
+- `tts status` est par défaut sur la passerelle (gateway) car il reflète l'état TTS géré par la passerelle.
 - Utilisez `tts providers`, `tts voices` et `tts set-provider` pour inspecter et configurer le comportement TTS.
 
 ## Vidéo
@@ -294,7 +294,7 @@ Remarques :
 
 ## Embedding
 
-Utilisez `embedding` pour la création de vecteurs et l'inspection du provider d'embeddings.
+Utilisez `embedding` pour la création de vecteurs et l'inspection des providers d'intégration (embedding).
 
 ```bash
 openclaw infer embedding create --text "friendly lobster" --json
@@ -330,8 +330,8 @@ Les champs de premier niveau sont stables :
 - `error`
 
 Pour les commandes de média générés, `outputs` contient les fichiers écrits par OpenClaw. Utilisez
-le `path`, `mimeType`, `size`, et toutes les dimensions spécifiques au média dans ce tableau
-pour l'automatisation au lieu d'analyser la stdout lisible par l'homme.
+le `path`, `mimeType`, `size` et toutes les dimensions spécifiques au média dans ce tableau
+pour l'automatisation au lieu d'analyser la sortie stdout lisible par l'homme.
 
 ## Pièges courants
 

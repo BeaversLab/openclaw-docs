@@ -384,12 +384,13 @@ Contrôle la prise en charge des pièces jointes en ligne pour `sessions_spawn`.
 
 <AccordionGroup>
   <Accordion title="Notes sur les pièces jointes">
-    - Les pièces jointes sont prises en charge uniquement pour `runtime: "subagent"`. Le runtime ACP les rejette.
-    - Les fichiers sont matérialisés dans l'espace de travail enfant à `.openclaw/attachments/<uuid>/` avec un `.manifest.json`.
+    - Les pièces jointes nécessitent `enabled: true`.
+    - Les pièces jointes de sous-agent sont matérialisées dans l'espace de travail enfant à `.openclaw/attachments/<uuid>/` avec un `.manifest.json`.
+    - Les pièces jointes ACP sont des images uniquement et sont transmises en ligne au runtime ACP une fois que les limites de nombre de fichiers, d'octets par fichier et d'octets totaux sont passées.
     - Le contenu des pièces jointes est automatiquement expurgé de la persistance des transcriptions.
-    - Les entrées Base64 sont validées avec des vérifications strictes de l'alphabet/remplissage et une garde de taille pré-décodage.
-    - Les permissions de fichiers sont `0700` pour les répertoires et `0600` pour les fichiers.
-    - Le nettoyage suit la stratégie `cleanup` : `delete` supprime toujours les pièces jointes ; `keep` les conserve uniquement lorsque `retainOnSessionKeep: true`.
+    - Les entrées Base64 sont validées avec des vérifications strictes de l'alphabet et du remplissage, ainsi qu'une garde de taille avant décodage.
+    - Les autorisations de fichiers de pièces jointes de sous-agent sont `0700` pour les répertoires et `0600` pour les fichiers.
+    - Le nettoyage des sous-agents suit la stratégie `cleanup` : `delete` supprime toujours les pièces jointes ; `keep` les conserve uniquement lorsque `retainOnSessionKeep: true`.
 
   </Accordion>
 </AccordionGroup>

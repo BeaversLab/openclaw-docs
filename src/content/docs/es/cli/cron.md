@@ -10,7 +10,7 @@ title: "Cron"
 
 Administra trabajos de cron para el programador del Gateway.
 
-<Tip>Ejecute `openclaw cron --help` para ver la superficie completa de comandos. Consulte [Cron jobs](/es/automation/cron-jobs) para la guía conceptual.</Tip>
+<Tip>Ejecute `openclaw cron --help` para ver la superficie completa de comandos. Consulte [Cron jobs](/es/automation/cron-jobs) para obtener la guía conceptual.</Tip>
 
 ## Crear trabajos rápidamente
 
@@ -102,7 +102,7 @@ Las ejecuciones omitidas se rastrean por separado de los errores de ejecución. 
 
 Para trabajos aislados que tienen como objetivo un proveedor de modelos configurado localmente, cron ejecuta una verificación previa ligera del proveedor antes de iniciar el turno del agente. Los proveedores de bucle de retorno (loopback), red privada y `.local` `api: "ollama"` se sondean en `/api/tags`; los proveedores locales compatibles con OpenAI, como vLLM, SGLang y LM Studio, se sondean en `/models`. Si el punto final es inalcanzable, la ejecución se registra como `skipped` y se reintenta en un horario posterior; los puntos finales muertos coincidentes se almacenan en caché durante 5 minutos para evitar que muchos trabajos sobrecarguen el mismo servidor local.
 
-Nota: las definiciones de trabajos de cron residen en `jobs.json`, mientras que el estado de tiempo de ejecución pendiente reside en `jobs-state.json`. Si `jobs.json` se edita externamente, el Gateway recarga los horarios modificados y borra las ranuras pendientes obsoletas; las reescrituras que solo cambian el formato no borran la ranura pendiente. Las filas de trabajos con formato incorrecto se eliminan de `jobs.json` activo en el momento de la carga después de que sus contenidos sin procesar se copian a `jobs-quarantine.json`.
+Nota: los trabajos de cron, el estado de tiempo de ejecución pendiente y el historial de ejecuciones residen en la base de datos de estado SQLite compartida. Los archivos heredados `jobs.json`, `jobs-state.json` y `runs/*.jsonl` se importan una vez y se renombran con un sufijo `.migrated`. Después de la importación, edite las programaciones con `openclaw cron add|edit|remove` en lugar de editar archivos JSON.
 
 ### Ejecuciones manuales
 
@@ -179,13 +179,13 @@ Cron no clasifica la prosa de salida final ni las frases de rechazo que parecen 
 La retención y la poda se controlan en la configuración:
 
 - `cron.sessionRetention` (predeterminado `24h`) poda las sesiones de ejecución aisladas completadas.
-- `cron.runLog.maxBytes` y `cron.runLog.keepLines` podan `~/.openclaw/cron/runs/<jobId>.jsonl`.
+- `cron.runLog.keepLines` limpia las filas del historial de ejecuciones de SQLite retenidas por trabajo. `cron.runLog.maxBytes` sigue siendo aceptado por compatibilidad con registros de ejecución respaldados en archivos antiguos.
 
 ## Migración de trabajos antiguos
 
 <Note>
-  Si tiene trabajos cron anteriores al formato actual de entrega y almacenamiento, ejecute `openclaw doctor --fix`. Doctor normaliza los campos cron heredados (`jobId`, `schedule.cron`, campos de entrega de nivel superior incluyendo el `threadId` heredado, alias de entrega de carga útil `provider`) y migra los trabajos de reserva de webhook `notify: true` simples a una entrega de webhook explícita
-  cuando `cron.webhook` está configurado.
+  Si tiene trabajos de cron anteriores al formato de entrega y almacenamiento actual, ejecute `openclaw doctor --fix`. Doctor normaliza los campos de cron heredados (`jobId`, `schedule.cron`, campos de entrega de nivel superior incluyendo `threadId` heredado, alias de entrega de carga útil `provider`) y migra los trabajos de reserva de webhook simples `notify: true` a una entrega de webhook
+  explícita cuando `cron.webhook` está configurado.
 </Note>
 
 ## Ediciones comunes
@@ -231,7 +231,7 @@ openclaw cron create "0 7 * * *" \
   --no-deliver
 ```
 
-`--light-context` se aplica solo a trabajos aislados de turno de agente. Para las ejecuciones de cron, el modo ligero mantiene el contexto de arranque vacío en lugar de inyectar el conjunto de arranque completo del espacio de trabajo.
+`--light-context` se aplica solo a trabajos de turno de agente aislados. Para las ejecuciones de cron, el modo ligero mantiene el contexto de arranque vacío en lugar de inyectar el conjunto de arranque completo del espacio de trabajo.
 
 ## Comandos de administración comunes
 
@@ -250,13 +250,13 @@ openclaw cron runs --id <job-id> --limit 50
 openclaw cron runs --id <job-id> --run-id <run-id>
 ```
 
-`openclaw cron list` muestra todos los trabajos que coinciden de forma predeterminada. Pase `--agent <id>` para mostrar solo los trabajos cuyo ID de agente normalizado efectivo coincida; los trabajos sin un ID de agente almacenado cuentan como el agente predeterminado configurado.
+`openclaw cron list` muestra todos los trabajos coincidentes de forma predeterminada. Pase `--agent <id>` para mostrar solo los trabajos cuyo ID de agente normalizado efectivo coincida; los trabajos sin un ID de agente almacenado cuentan como el agente predeterminado configurado.
 
 `openclaw cron get <job-id>` devuelve el JSON del trabajo almacenado directamente. Use `cron show <job-id>` cuando desee la vista legible por humanos con la vista previa de la ruta de entrega.
 
-`cron list --json` y `cron show <job-id> --json` incluyen un campo `status` de nivel superior en cada trabajo, calculado a partir de `enabled`, `state.runningAtMs` y `state.lastRunStatus`. Valores: `disabled`, `running`, `ok`, `error`, `skipped` o `idle`. Esto refleja la columna de estado legible por humanos para que las herramientas externas puedan leer el estado del trabajo sin volver a derivarlo.
+`cron list --json` y `cron show <job-id> --json` incluyen un campo `status` de nivel superior en cada trabajo, calculado a partir de `enabled`, `state.runningAtMs` y `state.lastRunStatus`. Valores: `disabled`, `running`, `ok`, `error`, `skipped` o `idle`. Esto refleja la columna de estado legible por humanos para que las herramientas externas puedan leer el estado del trabajo sin derivarlo nuevamente.
 
-Las entradas `cron runs` incluyen diagnósticos de entrega con el objetivo cron previsto, el objetivo resuelto, los envíos de la herramienta de mensajes, el uso de reserva y el estado de entrega.
+Las entradas de `cron runs` incluyen diagnósticos de entrega con el objetivo cron previsto, el objetivo resuelto, los envíos de la herramienta de mensajes, el uso de alternativa y el estado de entrega.
 
 Redirección de agente y sesión:
 
@@ -267,7 +267,7 @@ openclaw cron edit <job-id> --session current
 openclaw cron edit <job-id> --session "session:daily-brief"
 ```
 
-`openclaw cron add` avisa cuando se omite `--agent` en trabajos de turno de agente y vuelve al agente predeterminado (`main`). Pase `--agent <id>` en el momento de creación para fijar un agente específico.
+`openclaw cron add` advierte cuando se omite `--agent` en los trabajos de agente y vuelve al agente predeterminado (`main`). Pase `--agent <id>` en el momento de la creación para fijar un agente específico.
 
 Ajustes de entrega:
 
@@ -281,5 +281,5 @@ openclaw cron edit <job-id> --no-deliver
 
 ## Relacionado
 
-- [Referencia de CLI](/es/cli)
+- [Referencia de la CLI](/es/cli)
 - [Tareas programadas](/es/automation/cron-jobs)

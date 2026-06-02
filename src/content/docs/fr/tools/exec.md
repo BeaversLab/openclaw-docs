@@ -102,16 +102,16 @@ Notes :
 - `tools.exec.host` (par défaut : `auto` ; résout à `sandbox` lorsque le runtime sandbox est actif, `gateway` sinon)
 - `tools.exec.security` (par défaut : `deny` pour le sandbox, `full` pour la passerelle + le nœud si non défini)
 - `tools.exec.ask` (par défaut : `off`)
-- L'exécution hôte sans approbation est la valeur par défaut pour la passerelle + le nœud. Si vous souhaitez un comportement d'approbations/liste blanche, renforcez à la fois `tools.exec.*` et `~/.openclaw/exec-approvals.json` de l'hôte ; voir [Exec approvals](/fr/tools/exec-approvals#yolo-mode-no-approval).
+- L'exécution sur l'hôte sans approbation est la valeur par défaut pour la passerelle et le nœud. Si vous souhaitez un comportement d'approbation/liste d'autorisation, renforcez à la fois `tools.exec.*` et l'`~/.openclaw/exec-approvals.json` de l'hôte ; voir [Approbations Exec](/fr/tools/exec-approvals#yolo-mode-no-approval).
 - YOLO provient des valeurs par défaut de la stratégie hôte (`security=full`, `ask=off`), et non de `host=auto`. Si vous souhaitez forcer le routage via la passerelle ou le nœud, définissez `tools.exec.host` ou utilisez `/exec host=...`.
 - En mode `security=full` plus `ask=off`, l'exécution hôte suit directement la stratégie configurée ; il n'y a pas de couche supplémentaire de préfiltre heuristique d'obfuscation de commande ou de rejet de prévol de script.
 - `tools.exec.node` (par défaut : non défini)
-- `tools.exec.strictInlineEval` (par défaut : false) : lorsqu'il est true, les formes d'évaluation de l'interpréteur en ligne telles que `python -c`, `node -e`, `ruby -e`, `perl -e`, `php -r`, `lua -e` et `osascript -e` nécessitent une approbation du réviseur ou explicite. Dans `mode=auto`, l'auto-réviseur natif peut autoriser une commande ponctuelle clairement à faible risque ; si le réviseur le demande, la demande est transmise à un humain. `allow-always` peut toujours rendre persistantes les invocations bénignes d'interpréteur/de script, mais les formes d'évaluation en ligne ne deviennent pas des règles de autorisation durables.
-- `tools.exec.commandHighlighting` (par défaut : false) : lorsqu'il est true, les invites d'approbation peuvent mettre en surbrillance les étendues de commande dérivées de l'analyseur dans le texte de la commande. Définissez sur `true` globalement ou par agent pour activer la mise en surbrillance du texte de la commande sans modifier la stratégie d'approbation d'exécution.
+- `tools.exec.strictInlineEval` (par défaut : false) : lorsqu'il est vrai, les formes d'évaluation de l'interpréteur en ligne telles que `python -c`, `node -e`, `ruby -e`, `perl -e`, `php -r`, `lua -e` et `osascript -e` nécessitent une révision ou une approbation explicite. Dans `mode=auto`, le chemin normal d'approbation exec peut permettre au réviseur automatique natif d'autoriser une commande unique clairement à faible risque ; les appels directs `system.run` de l'hôte nœud nécessitent toujours une approbation explicite car ils ne peuvent pas transmettre la commande à un chemin d'approbation humain. Si le réviseur le demande, la demande est transmise à un humain. `allow-always` peut toujours rendre persistantes les invocations bénignes d'interpréteur/de script, mais les formes d'évaluation en ligne ne deviennent pas des règles d'autorisation durables.
+- `tools.exec.commandHighlighting` (par défaut : false) : lorsqu'il est vrai, les invites d'approbation peuvent mettre en surbrillance les étendues de commande dérivées de l'analyseur dans le texte de la commande. Définissez sur `true` globalement ou par agent pour activer la mise en surbrillance du texte de commande sans modifier la stratégie d'approbation exec.
 - `tools.exec.pathPrepend` : liste des répertoires à ajouter au début de `PATH` pour les exécutions exec (passerelle + sandbox uniquement).
-- `tools.exec.safeBins` : binaires sécurisés stdin uniquement qui peuvent s'exécuter sans entrées de liste d'autorisation explicites. Pour plus de détails sur le comportement, consultez [Safe bins](/fr/tools/exec-approvals-advanced#safe-bins-stdin-only).
-- `tools.exec.safeBinTrustedDirs` : répertoires explicites supplémentaires approuvés pour les vérifications de chemin `safeBins`. Les entrées `PATH` ne sont jamais automatiquement approuvées. Les valeurs par défaut intégrées sont `/bin` et `/usr/bin`.
-- `tools.exec.safeBinProfiles` : stratégie argv personnalisée facultative par binaires sécurisés (`minPositional`, `maxPositional`, `allowedValueFlags`, `deniedFlags`).
+- `tools.exec.safeBins` : binaires sûrs stdin uniquement qui peuvent s'exécuter sans entrées de liste d'autorisation explicites. Pour plus de détails sur le comportement, voir [Bacs sûrs](/fr/tools/exec-approvals-advanced#safe-bins-stdin-only).
+- `tools.exec.safeBinTrustedDirs` : répertoires explicites supplémentaires de confiance pour les vérifications de chemin `safeBins`. Les entrées `PATH` ne sont jamais automatiquement fiables. Les valeurs par défaut intégrées sont `/bin` et `/usr/bin`.
+- `tools.exec.safeBinProfiles` : stratégie argv personnalisée facultative par bac sûr (`minPositional`, `maxPositional`, `allowedValueFlags`, `deniedFlags`).
 
 Exemple :
 
@@ -127,17 +127,17 @@ Exemple :
 
 ### Gestion du PATH
 
-- `host=gateway` : fusionne votre `PATH` de shell de connexion dans l'environnement d'exécution. Les substitutions `env.PATH` sont
-  rejetées pour l'exécution sur l'hôte. Le démon lui-même s'exécute toujours avec un `PATH` minimal :
-  - macOS : macOS`/opt/homebrew/bin`, `/usr/local/bin`, `/usr/bin`, `/bin`
-  - Linux : Linux`/usr/local/bin`, `/usr/bin`, `/bin`
-    - Pour empêcher la configuration de l'interpréteur de commande de l'utilisateur (comme `~/.zshenv` ou `/etc/zshenv`) de remplacer les chemins prioritaires lors du démarrage, les entrées `tools.exec.pathPrepend` sont ajoutées de manière sécurisée au `PATH` final dans la commande de l'interpréteur juste avant l'exécution.
-- `host=sandbox` : exécute `sh -lc` (interpréteur de connexion) à l'intérieur du conteneur, `/etc/profile` peut donc réinitialiser `PATH`OpenClaw.
-  OpenClaw ajoute `env.PATH` après le chargement du profil via une variable d'environnement interne (pas d'interpolation par l'interpréteur) ;
-  `tools.exec.pathPrepend` s'applique également ici.
-- `host=node` : seules les substitutions d'environnement non bloquées que vous transmettez sont envoyées au nœud. Les substitutions `env.PATH` sont
-  rejetées pour l'exécution sur l'hôte et ignorées par les hôtes de nœuds. Si vous avez besoin d'entrées PATH supplémentaires sur un nœud,
-  configurez l'environnement du service d'hôte de nœud (systemd/launchd) ou installez les outils dans des emplacements standard.
+- `host=gateway` : fusionne votre `PATH` de shell de connexion dans l'environnement exec. Les remplacements de `env.PATH`
+  sont rejetés pour l'exécution sur l'hôte. Le démon lui-même s'exécute toujours avec un `PATH` minimal :
+  - macOS : `/opt/homebrew/bin`, `/usr/local/bin`, `/usr/bin`, `/bin`
+  - Linux : `/usr/local/bin`, `/usr/bin`, `/bin`
+    - Pour empêcher la configuration du shell utilisateur (comme `~/.zshenv` ou `/etc/zshenv`) de remplacer les chemins prioritaires lors du démarrage, les entrées `tools.exec.pathPrepend` sont ajoutées de manière sécurisée au `PATH` final à l'intérieur de la commande shell juste avant l'exécution.
+- `host=sandbox` : exécute `sh -lc` (shell de connexion) à l'intérieur du conteneur, donc `/etc/profile` peut réinitialiser `PATH`.
+  OpenClaw ajoute `env.PATH` après le sourçage du profil via une env var interne (pas d'interpolation shell) ;
+  `tools.exec.pathPrepend` s'applique aussi ici.
+- `host=node` : seuls les remplacements d'environnement non bloqués que vous transmettez sont envoyés au nœud. Les remplacements de `env.PATH` sont
+  rejetés pour l'exécution sur l'hôte et ignorés par les hôtes de nœud. Si vous avez besoin d'entrées PATH supplémentaires sur un nœud,
+  configurez l'environnement du service hôte de nœud (systemd/launchd) ou installez les outils dans des emplacements standards.
 
 Liaison de nœud par agent (utilisez l'index de la liste des agents dans la configuration) :
 
@@ -148,10 +148,10 @@ openclaw config set 'agents.list[0].tools.exec.node' "node-id-or-name"
 
 Interface de contrôle : l'onglet Nœuds comprend un petit panneau « Liaison de nœud Exec » pour les mêmes paramètres.
 
-## Substitutions de session (`/exec`)
+## Remplacements de session (`/exec`)
 
-Utilisez `/exec` pour définir les valeurs par défaut **par session** pour `host`, `security`, `ask` et `node`.
-Envoyez `/exec` sans arguments pour afficher les valeurs actuelles.
+Utilisez `/exec` pour définir des valeurs par défaut **par session** pour `host`, `security`, `ask` et `node`.
+Envoyez `/exec` sans argument pour afficher les valeurs actuelles.
 
 Exemple :
 
@@ -161,48 +161,48 @@ Exemple :
 
 ## Modèle d'autorisation
 
-`/exec` n'est honoré que pour les **expéditeurs autorisés** (listes d'autorisation de channel/appairage plus `commands.useAccessGroups`).
-Il met à jour **uniquement l'état de session** et n'écrit pas la configuration. Les expéditeurs de channel externes autorisés peuvent
-définir ces valeurs par défaut de session. Les clients internes gateway/webchat ont besoin de `operator.admin` pour les rendre persistants.
-Pour désactiver définitivement exec, refusez-le via la politique de tool (`tools.deny: ["exec"]` ou par agent). Les approbations de l'hôte
-s'appliquent toujours, sauf si vous définissez explicitement `security=full` et `ask=off`.
+`/exec` est uniquement honoré pour les **expéditeurs autorisés** (listes d'autorisation/appairage de channel plus `commands.useAccessGroups`).
+Il met à jour **uniquement l'état de la session** et n'écrit pas la configuration. Les expéditeurs de channel externes autorisés peuvent
+définir ces valeurs par défaut de session. Les clients internes du Gateway/webchat ont besoin de `operator.admin` pour les rendre persistants.
+Pour désactiver définitivement exec, refusez-le via la stratégie de tool (`tools.deny: ["exec"]` ou par agent). Les approbations de l'hôte
+s'appliquent toujours sauf si vous définissez explicitement `security=full` et `ask=off`.
 
 ## Approbations Exec (application compagnon / hôte de nœud)
 
-Les agents sandboxed peuvent exiger une approbation par requête avant que `exec` ne s'exécute sur la gateway ou l'hôte de nœud.
-Voir [Exec approvals](/fr/tools/exec-approvals) pour la politique, la liste d'autorisation et le flux de l'interface utilisateur.
+Les agents Sandboxed peuvent exiger une approbation par requête avant que `exec` ne s'exécute sur le Gateway ou l'hôte de nœud.
+Voir [Exec approvals](/fr/tools/exec-approvals) pour la stratégie, la liste d'autorisation et le flux de l'interface utilisateur.
 
-Lorsque des approbations sont requises, l'outil exec renvoie immédiatement
+Lorsque des approbations sont requises, l'outil exec retourne immédiatement avec
 `status: "approval-pending"` et un identifiant d'approbation. Une fois approuvé (ou refusé / expiré),
-le Gateway émet des événements système de progression et de completion de commande uniquement pour les exécutions approuvées
+le Gateway émet des événements système de progression et d'exécution de commande uniquement pour les exécutions approuvées
 (`Exec running` / `Exec finished`). Les approbations refusées ou expirées sont terminales et ne
 réveillent pas la session de l'agent avec un événement système de refus.
-Sur les channels avec des boutons/cartes d'approbation natifs, l'agent doit d'abord s'appuyer sur cette
-interface utilisateur native et n'inclure une commande manuelle `/approve` que lorsque le résultat de l'outil
-indique explicitement que les approbations par chat sont indisponibles ou que l'approbation manuelle est la
-seule solution.
+Sur les channels avec des cartes/boutons d'approbation natifs, l'agent doit s'appuyer sur cette
+interface utilisateur native en premier et inclure uniquement une commande `/approve` manuelle lorsque le résultat de l'outil
+indique explicitement que les approbations de chat sont indisponibles ou que l'approbation manuelle est la
+seule option.
 
 ## Liste d'autorisation + bins sûrs
 
-L'application stricte de la liste d'autorisation correspond aux globs de chemins résolus des binaires et aux globs de noms de commandes nus. Les noms nus ne correspondent qu'aux commandes invoquées via le PATH, donc `rg` peut correspondre à `/opt/homebrew/bin/rg` lorsque la commande est `rg`, mais pas à `./rg` ou `/tmp/rg`.
-Lorsque `security=allowlist`, les commandes shell sont automatiquement autorisées uniquement si chaque segment du pipeline est sur la liste d'autorisation ou est un binaire sécurisé (safe bin). Les chaînes (`;`, `&&`, `||`) et les redirections sont rejetées en mode liste d'autorisation, à moins que chaque segment de niveau supérieur ne satisfasse la liste d'autorisation (y compris les bins sécurisés). Les redirections restent non prises en charge.
-La confiance durable `allow-always` ne contourne pas cette règle : une commande chaînée exige toujours que chaque segment de niveau supérieur corresponde.
+L'application manuelle de la liste d'autorisation correspond aux modèles glob des chemins binaires résolus et aux modèles glob des noms de commandes nus. Les noms nus ne correspondent qu'aux commandes invoquées via PATH, donc `rg` peut correspondre à `/opt/homebrew/bin/rg` lorsque la commande est `rg`, mais pas à `./rg` ou `/tmp/rg`.
+Lorsque `security=allowlist`, les commandes shell sont automatiquement autorisées uniquement si chaque segment du pipeline est sur la liste d'autorisation ou un bac sécurisé. Les chaînages (`;`, `&&`, `||`) et les redirections sont rejetés en mode liste d'autorisation, sauf si chaque segment de premier niveau satisfait la liste d'autorisation (y compris les bacs sécurisés). Les redirections restent non prises en charge.
+La confiance durable `allow-always` ne contourne pas cette règle : une commande chaînée exige toujours que chaque segment de premier niveau corresponde.
 
-`autoAllowSkills` est un chemin de commodité distinct dans les approbations d'exécution. Ce n'est pas la même chose que les entrées manuelles de liste d'autorisation de chemins. Pour une confiance explicite stricte, gardez `autoAllowSkills` désactivé.
+`autoAllowSkills` est un chemin de commodité distinct dans les approbations d'exécution. Ce n'est pas la même chose que les entrées manuelles de la liste d'autorisation des chemins. Pour une confiance explicite stricte, gardez `autoAllowSkills` désactivé.
 
 Utilisez les deux contrôles pour des tâches différentes :
 
 - `tools.exec.safeBins` : petits filtres de flux stdin uniquement.
-- `tools.exec.safeBinTrustedDirs` : répertoires supplémentaires explicitement approuvés pour les chemins d'exécutables des bins sécurisés.
-- `tools.exec.safeBinProfiles` : stratégie argv explicite pour les bins sécurisés personnalisés.
+- `tools.exec.safeBinTrustedDirs` : répertoires supplémentaires explicitement approuvés pour les chemins exécutables des bacs sécurisés.
+- `tools.exec.safeBinProfiles` : politique argv explicite pour les bacs sécurisés personnalisés.
 - allowlist : confiance explicite pour les chemins d'exécutables.
 
-Ne traitez pas `safeBins` comme une liste d'autorisation générique, et n'ajoutez pas de binaires d'interpréteur/runtime (par exemple `python3`, `node`, `ruby`, `bash`). Si vous en avez besoin, utilisez des entrées de liste d'autorisation explicites et gardez les invites d'approbation activées.
-`openclaw security audit` avertit lorsque les entrées d'interpréteur/runtime `safeBins` manquent de profils explicites, et `openclaw doctor --fix` peut échafauder les entrées personnalisées `safeBinProfiles` manquantes.
-`openclaw security audit` et `openclaw doctor` avertissent également lorsque vous ajoutez explicitement des bins à comportement large tels que `jq` dans `safeBins`.
-Si vous autorisez explicitement des interpréteurs, activez `tools.exec.strictInlineEval` afin que les formulaires d'évaluation de code en ligne nécessitent toujours un réviseur ou une approbation explicite.
+Ne traitez pas `safeBins` comme une liste d'autorisation générique, et n'ajoutez pas de binaires d'interpréteur/d'exécution (par exemple `python3`, `node`, `ruby`, `bash`). Si vous en avez besoin, utilisez des entrées explicites de la liste d'autorisation et gardez les invites d'approbation activées.
+`openclaw security audit` avertit lorsque les entrées d'interpréteur/exécution `safeBins` manquent de profils explicites, et `openclaw doctor --fix` peut générer des entrées `safeBinProfiles` personnalisées manquantes.
+`openclaw security audit` et `openclaw doctor` avertissent également lorsque vous rajoutez explicitement des bins à comportement étendu tels que `jq` dans `safeBins`.
+Si vous autorisez explicitement les interpréteurs, activez `tools.exec.strictInlineEval` afin que les formes d'évaluation de code en ligne nécessitent toujours une approbation du réviseur ou explicite.
 
-Pour plus de détails sur la politique et des exemples, consultez [Approbations Exec](/fr/tools/exec-approvals-advanced#safe-bins-stdin-only) et [Bins sûrs par rapport à la liste d'autorisation](/fr/tools/exec-approvals-advanced#safe-bins-versus-allowlist).
+Pour plus de détails et d'exemples sur la politique, consultez [Exec approvals](/fr/tools/exec-approvals-advanced#safe-bins-stdin-only) et [Safe bins versus allowlist](/fr/tools/exec-approvals-advanced#safe-bins-versus-allowlist).
 
 ## Exemples
 
@@ -244,7 +244,7 @@ Coller (mis entre crochets par défaut) :
 
 ## apply_patch
 
-`apply_patch` est un sous-outil de `exec` pour les modifications structurées multi-fichiers.
+`apply_patch` est un sous-tool de `exec` pour les modifications multi-fichiers structurées.
 Il est activé par défaut pour les modèles OpenAI et OpenAI Codex. Utilisez la configuration uniquement
 lorsque vous souhaitez le désactiver ou le restreindre à des modèles spécifiques :
 
@@ -265,11 +265,11 @@ Notes :
 - `deny: ["write"]` ne refuse pas `apply_patch` ; refusez `apply_patch` explicitement ou utilisez `deny: ["group:fs"]` lorsque les écritures de correctifs doivent également être bloquées.
 - La configuration se trouve sous `tools.exec.applyPatch`.
 - `tools.exec.applyPatch.enabled` est `true` par défaut ; définissez-le sur `false` pour désactiver l'outil pour les modèles OpenAI.
-- `tools.exec.applyPatch.workspaceOnly` est `true` par défaut (contenu dans l'espace de travail). Définissez-le sur `false` uniquement si vous souhaitez intentionnellement que `apply_patch` écrive ou supprime en dehors du répertoire de l'espace de travail.
+- `tools.exec.applyPatch.workspaceOnly` est par défaut `true` (contenu dans l'espace de travail). Réglez-le sur `false` uniquement si vous souhaitez intentionnellement que `apply_patch` écrive/supprime en dehors du répertoire de l'espace de travail.
 
 ## Connexes
 
 - [Exec Approvals](/fr/tools/exec-approvals) — portes d'approbation pour les commandes shell
-- [Sandboxing](/fr/gateway/sandboxing) — exécution de commandes dans des environnements sandboxés
-- [Background Process](/fr/gateway/background-process) — outil d'exécution et de processus long cours
-- [Security](/fr/gateway/security) — politique d'outil et accès élevé
+- [Sandboxing](/fr/gateway/sandboxing) — exécution de commandes dans des environnements sandboxed
+- [Background Process](/fr/gateway/background-process) — tool d'exécution et de processus longue durée
+- [Security](/fr/gateway/security) — stratégie de tool et accès élevé

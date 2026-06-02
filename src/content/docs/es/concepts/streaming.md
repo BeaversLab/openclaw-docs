@@ -54,13 +54,16 @@ Leyenda:
 
 ### Entrega de medios con streaming de bloques
 
-Las directivas `MEDIA:` son metadatos de entrega normales. Cuando el streaming de bloques envía un bloque de medios temprano, OpenClaw recuerda esa entrega para el turno. Si la carga útil final del asistente repite la misma URL de medios, la entrega final elimina los medios duplicados en lugar de enviar el adjunto nuevamente.
+Los medios de streaming deben usar campos de carga útil estructurados como `mediaUrl` o
+`mediaUrls`; el texto transmitido no se analiza como un comando de adjunto. Cuando el streaming
+de bloques envía medios temprano, OpenClaw recuerda ese envío para el turno. Si
+la carga útil final del asistente repite la misma URL de medio, el envío final
+elimina el medio duplicado en lugar de enviar el adjunto nuevamente.
 
-Los payloads finales duplicados exactos se suprimen. Si el payload final añade
-texto distinto alrededor de medios que ya se han transmitido, OpenClaw aún envía el
-nuevo texto manteniendo la entrega única de los medios. Esto evita notas de voz
-o archivos duplicados en canales como Telegram cuando un agente emite `MEDIA:` durante
-la transmisión y el proveedor también lo incluye en la respuesta completada.
+Las cargas útiles finales duplicadas exactas se suprimen. Si la carga útil final agrega
+texto distinto alrededor de un medio que ya se transmitió, OpenClaw aún envía el
+nuevo texto manteniendo el medio con un solo envío. Esto evita notas de voz
+o archivos duplicados en canales como Telegram.
 
 ## Algoritmo de fragmentación (límites inferior/superior)
 

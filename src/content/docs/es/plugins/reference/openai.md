@@ -1,5 +1,5 @@
 ---
-summary: "Añade compatibilidad de proveedor de modelos OpenAI y OpenAI Codex a OpenClaw."
+summary: "Añade compatibilidad con el proveedor de modelos de OpenAI a OpenClaw."
 read_when:
   - You are installing, configuring, or auditing the openai plugin
 title: "Plugin de OpenAI"
@@ -7,7 +7,7 @@ title: "Plugin de OpenAI"
 
 # Plugin de OpenAI
 
-Añade compatibilidad de proveedor de modelos OpenAI y OpenAI Codex a OpenClaw.
+Añade compatibilidad con el proveedor de modelos de OpenAI a OpenClaw.
 
 ## Distribución
 
@@ -16,7 +16,7 @@ Añade compatibilidad de proveedor de modelos OpenAI y OpenAI Codex a OpenClaw.
 
 ## Superficie
 
-proveedores: openai, openai-codex; contratos: imageGenerationProviders, mediaUnderstandingProviders, memoryEmbeddingProviders, realtimeTranscriptionProviders, realtimeVoiceProviders, speechProviders, videoGenerationProviders
+providers: openai; contracts: imageGenerationProviders, mediaUnderstandingProviders, memoryEmbeddingProviders, realtimeTranscriptionProviders, realtimeVoiceProviders, speechProviders, videoGenerationProviders
 
 ## Documentos relacionados
 

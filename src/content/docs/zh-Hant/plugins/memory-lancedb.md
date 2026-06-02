@@ -120,14 +120,16 @@ openclaw plugins list
 }
 ```
 
-OpenAI Codex / ChatGPT OAuth (`openai-codex`) 不是 OpenAI 平台
-嵌入憑證。若要使用 OpenAI 嵌入，請使用 OpenAI API 金鑰驗證設定檔、
+OpenAI Codex / ChatGPT OAuth 不是 OpenAI Platform 嵌入式憑證。
+對於 OpenAI 嵌入，請使用 OpenAI API 金鑰驗證設定檔、
 `OPENAI_API_KEY` 或 `models.providers.openai.apiKey`。僅使用 OAuth 的使用者可以使用
 其他支援嵌入的提供者，例如 GitHub Copilot 或 Ollama。
 
 ## Ollama 嵌入
 
-對於 Ollama 嵌入，建議優先使用內建的 Ollama 嵌入提供者。它使用原生的 Ollama `/api/embed` 端點，並遵循與 [Ollama](/zh-Hant/providers/ollama) 文件中記載的 Ollama 提供者相同的驗證/基底 URL 規則。
+對於 Ollama 嵌入，建議優先使用內建的 Ollama 嵌入提供者。它使用
+原生的 Ollama `/api/embed` 端點，並遵循與 [Ollama](/zh-Hant/providers/ollama) 文件中
+記載的 Ollama 提供者相同的驗證/基礎 URL 規則。
 
 ```json5
 {
@@ -155,17 +157,25 @@ OpenAI Codex / ChatGPT OAuth (`openai-codex`) 不是 OpenAI 平台
 }
 ```
 
-為非標準的嵌入模型設定 `dimensions`。OpenClaw 知道 `text-embedding-3-small` 和 `text-embedding-3-large` 的維度；自訂模型需要在設定中提供此值，以便 LanceDB 建立向量欄。
+對於非標準的嵌入模型，請設定 `dimensions`。OpenClaw 知道
+`text-embedding-3-small` 和 `text-embedding-3-large` 的維度；自訂
+模型需要在設定中提供此值，以便 LanceDB 建立向量欄位。
 
-對於小型本地嵌入模型，如果您看到來自本地伺服器的內容長度錯誤，請降低 `recallMaxChars`。
+對於小型本地嵌入模型，如果您從本地伺服器看到
+內容長度錯誤，請降低 `recallMaxChars`。
 
 ## OpenAI 相容的提供者
 
-某些 OpenAI 相容的嵌入提供者會拒絕 `encoding_format` 參數，而其他的則會忽略它並總是返回 `number[]` 向量。因此，`memory-lancedb` 在嵌入請求中會省略 `encoding_format`，並接受浮點陣列回應或 base64 編碼的 float32 回應。
+某些 OpenAI 相容的嵌入提供者會拒絕 `encoding_format`
+參數，而其他提供者則會忽略它並總是傳回 `number[]` 向量。
+因此 `memory-lancedb` 會在嵌入請求中省略 `encoding_format` 並
+接受浮點陣列回應或 base64 編碼的 float32 回應。
 
-如果您有一個沒有內建提供者配接器的原始 OpenAI 相容嵌入端點，請省略 `embedding.provider`（或將其保留為 `openai`）並設定 `embedding.apiKey` 和 `embedding.baseUrl`。這保留了直接的 OpenAI 相容客戶端路徑。
+如果您有一個沒有內建提供者配接器的原始 OpenAI 相容嵌入端點，請省略 `embedding.provider`（或將其保留為 `openai`）並
+設定 `embedding.apiKey` 加上 `embedding.baseUrl`。這會保留直接的
+OpenAI 相容用戶端路徑。
 
-針對模型維度未內建的提供者，請設定 `embedding.dimensions`。例如，智譜 `embedding-3` 使用 `2048` 維度：
+對於模型維度未內建的提供者，請設定 `embedding.dimensions`。例如，智譜 `embedding-3` 使用 `2048` 維度：
 
 ```json5
 {
@@ -197,15 +207,15 @@ OpenAI Codex / ChatGPT OAuth (`openai-codex`) 不是 OpenAI 平台
 | `captureMaxChars` | `500`  | 100-10000 | 符合自動擷取條件的訊息長度      |
 | `customTriggers`  | `[]`   | 0-50      | 使自動擷取考慮訊息的字面詞組    |
 
-`recallMaxChars` 控制自動回溯、`memory_recall` 工具、`memory_forget` 查詢路徑以及 `openclaw ltm search`。自動回溯優先選取該輪次中最新的使用者訊息，僅在沒有使用者訊息可用時才回退到完整提示。這可將頻道詮中繼資料和大型提示區塊排除在嵌入請求之外。
+`recallMaxChars` 控制自動召回、`memory_recall` 工具、`memory_forget` 查詢路徑以及 `openclaw ltm search`。自動召回優先使用該輪次中最新的使用者訊息，並僅在沒有使用者訊息可用時才回退到完整提示。這可將頻道中繼資料和大型提示區塊排除在嵌入請求之外。
 
-`captureMaxChars` 控制回應是否足夠短以納入考量進行自動擷取。它不會限制回溯查詢嵌入。
+`captureMaxChars` 控制回應是否足夠短以被視為進行自動捕獲的候選。它不限制召回查詢嵌入。
 
-`customTriggers` 讓您無需撰寫正規表示式即可新增字面自動擷取片語。內建觸發條件包含常見的英文、捷克文、中文、日文和韓文記憶片語。
+`customTriggers` 讓您無需編寫正則表示式即可新增字面自動捕獲片語。內建觸發器包含常見的英文、捷克文、中文、日文和韓文記憶片語。
 
 ## 指令
 
-當 `memory-lancedb` 是啟用的記憶外掛時，它會註冊 `ltm` CLI 命名空間：
+當 `memory-lancedb` 是作用中的記憶外掛時，它會註冊 `ltm` CLI 命名空間：
 
 ```bash
 openclaw ltm list
@@ -213,7 +223,7 @@ openclaw ltm search "project preferences"
 openclaw ltm stats
 ```
 
-`query` 子指令直接對 LanceDB 資料表執行非向量查詢：
+`query` 子指令會直接對 LanceDB 資料表執行非向量查詢：
 
 ```bash
 openclaw ltm query --cols id,text,createdAt --limit 20
@@ -227,13 +237,13 @@ openclaw ltm query --filter "category = 'preference'" --order-by createdAt:desc
 
 代理程式也可以從啟用的記憶外掛取得 LanceDB 記憶工具：
 
-- 用於 LanceDB 支援的召回功能的 `memory_recall`
-- 用於儲存重要事實、偏好設定、決策和實體的 `memory_store`
-- 用於移除符合記憶的 `memory_forget`
+- `memory_recall` 用於基於 LanceDB 的召回
+- `memory_store` 用於儲存重要事實、偏好、決策和實體
+- `memory_forget` 用於移除符合的記憶
 
 ## 儲存
 
-預設情況下，LanceDB 資料存放在 `~/.openclaw/memory/lancedb` 下。可使用 `dbPath` 覆蓋路徑：
+預設情況下，LanceDB 資料位於 `~/.openclaw/memory/lancedb` 之下。使用 `dbPath` 覆蓋路徑：
 
 ```json5
 {
@@ -254,7 +264,7 @@ openclaw ltm query --filter "category = 'preference'" --order-by createdAt:desc
 }
 ```
 
-`storageOptions` 接受用於 LanceDB 儲存後端的字串鍵/值對，並支援 `${ENV_VAR}` 擴充：
+`storageOptions` 接受用於 LanceDB 儲存後端的字串鍵值對，並支援 `${ENV_VAR}` 擴充：
 
 ```json5
 {
@@ -282,11 +292,18 @@ openclaw ltm query --filter "category = 'preference'" --order-by createdAt:desc
 
 ## 執行階段相依性
 
-`memory-lancedb` 依賴原生的 `@lancedb/lancedb` 套件。打包的 OpenClaw 將該套件視為外掛程式套件的一部分。Gateway 啟動不會修復外掛程式相依性；如果缺少相依性，請重新安裝或更新外掛程式套件並重新啟動 Gateway。
+`memory-lancedb` 取決於原生 `@lancedb/lancedb` 套件。打包的
+OpenClaw 將該套件視為外掛程式套件的一部分。Gateway 啟動
+不會修復外掛程式相依性；如果缺少相依性，請重新安裝或
+更新外掛程式套件並重新啟動 Gateway。
 
-如果較舊的安裝在載入外掛程式時記錄了缺少 `dist/package.json` 或缺少 `@lancedb/lancedb` 的錯誤，請升級 OpenClaw 並重新啟動 Gateway。
+如果較舊的安裝在外掛程式載入期間記錄了缺少 `dist/package.json` 或缺少
+`@lancedb/lancedb` 錯誤，請升級 OpenClaw 並重新啟動
+Gateway。
 
-如果外掛程式記錄顯示 LanceDB 在 `darwin-x64` 上無法使用，請在該機器上使用預設記憶體後端、將 Gateway 移至支援的平台，或停用 `memory-lancedb`。
+如果外掛程式記錄 LanceDB 在 `darwin-x64` 上無法使用，請在該機器上使用預設
+記憶體後端，將 Gateway 移動到支援的平台，或
+停用 `memory-lancedb`。
 
 ## 疑難排解
 
@@ -324,8 +341,8 @@ curl http://127.0.0.1:11434/v1/embeddings \
 
 ### 不支援的嵌入模型
 
-若沒有 `dimensions`，僅會知道內建的 OpenAI 嵌入維度。
-對於本地或自訂的嵌入模型，請將 `embedding.dimensions` 設定為該模型回報的向量
+如果沒有 `dimensions`，則只知道內建的 OpenAI 嵌入維度。
+對於本機或自訂嵌入模型，請將 `embedding.dimensions` 設定為該模型報告的向量
 大小。
 
 ### 外掛程式已載入但沒有記憶體出現
@@ -337,14 +354,14 @@ openclaw ltm stats
 openclaw ltm search "recent preference"
 ```
 
-如果 `autoCapture` 被停用，外掛程式將會召回現有的記憶，但不會
-自動儲存新的記憶。如果您想要自動擷取，請使用 `memory_store` 工具或啟用
+如果停用了 `autoCapture`，外掛程式將會呼叫現有的記憶體，但不會
+自動儲存新的記憶體。如果您想要自動擷取，請使用 `memory_store` 工具或啟用
 `autoCapture`。
 
 ## 相關
 
-- [記憶概覽](/zh-Hant/concepts/memory)
-- [主動記憶](/zh-Hant/concepts/active-memory)
-- [記憶搜尋](/zh-Hant/concepts/memory-search)
-- [記憶 Wiki](/zh-Hant/plugins/memory-wiki)
+- [記憶體概觀](/zh-Hant/concepts/memory)
+- [主動記憶體](/zh-Hant/concepts/active-memory)
+- [記憶體搜尋](/zh-Hant/concepts/memory-search)
+- [記憶體 Wiki](/zh-Hant/plugins/memory-wiki)
 - [Ollama](/zh-Hant/providers/ollama)

@@ -7,7 +7,7 @@ status: activo
 
 Objetivo: ejecutar OpenClaw como un **delegado con nombre** - un agente con su propia identidad que actúa "en nombre de" las personas de una organización. El agente nunca suplanta a un ser humano. Envía, lee y programa bajo su propia cuenta con permisos de delegación explícitos.
 
-Esto extiende el [Enrutamiento multiagente](/es/concepts/multi-agent) del uso personal a los despliegues organizacionales.
+Esto extiende el [Enrutamiento Multi-Agente](/es/concepts/multi-agent) del uso personal a los despliegues organizacionales.
 
 ## ¿Qué es un delegado?
 
@@ -16,7 +16,7 @@ Un **delegado** es un agente de OpenClaw que:
 - Tiene su **propia identidad** (dirección de correo electrónico, nombre para mostrar, calendario).
 - Actúa **en nombre de** uno o más humanos: nunca finge serlos.
 - Opera bajo **permisos explícitos** otorgados por el proveedor de identidad de la organización.
-- Sigue **[órdenes permanentes](/es/automation/standing-orders)** - reglas definidas en el `AGENTS.md` del agente que especifican qué puede hacer de forma autónoma frente a lo que requiere aprobación humana (ver [Cron Jobs](/es/automation/cron-jobs) para la ejecución programada).
+- Sigue **[órdenes permanentes](/es/automation/standing-orders)** - reglas definidas en el `AGENTS.md` del agente que especifican lo que puede hacer de forma autónoma frente a lo que requiere aprobación humana (ver [Cron Jobs](/es/automation/cron-jobs) para la ejecución programada).
 
 El modelo de delegado se asigna directamente a cómo funcionan los asistentes ejecutivos: tienen sus propias credenciales, envían correos "en nombre de" su principal y siguen un ámbito de autoridad definido.
 
@@ -68,7 +68,7 @@ El delegado opera de manera **autónoma** según una programación, ejecutando �
 - Publicación automatizada en redes sociales mediante colas de contenido aprobado.
 - Triaje de la bandeja de entrada con autocategorización y marcado.
 
-Este nivel combina los permisos del Nivel 2 con [Cron Jobs](/es/automation/cron-jobs) y [Standing Orders](/es/automation/standing-orders).
+Este nivel combina los permisos del Nivel 2 con [Cron Jobs](/es/automation/cron-jobs) y [Órdenes Permanentes](/es/automation/standing-orders).
 
 <Warning>El Nivel 3 requiere una configuración cuidadosa de bloques duros: acciones que el agente nunca debe tomar independientemente de la instrucción. Complete los requisitos previos a continuación antes de otorgar cualquier permiso del proveedor de identidades.</Warning>
 
@@ -123,7 +123,7 @@ Consulte [Sandboxing](/es/gateway/sandboxing) y [Multi-Agent Sandbox & Tools](/e
 
 Configure el registro antes de que el delegado maneje cualquier dato real:
 
-- Historial de ejecuciones de Cron: `~/.openclaw/cron/runs/<jobId>.jsonl`
+- Historial de ejecuciones de Cron: base de datos de estado SQLite compartida de OpenClaw
 - Transcripciones de sesión: `~/.openclaw/agents/delegate/sessions`
 - Registros de auditoría del proveedor de identidad (Exchange, Google Workspace)
 
@@ -150,7 +150,7 @@ Esto crea:
 Configure la personalidad del delegado en sus archivos de espacio de trabajo:
 
 - `AGENTS.md`: rol, responsabilidades y órdenes permanentes.
-- `SOUL.md`: personalidad, tono y reglas de seguridad estrictas (incluidos los bloqueos estrictos definidos anteriormente).
+- `SOUL.md`: personalidad, tono y reglas de seguridad estrictas (incluidos los bloques estrictos definidos anteriormente).
 - `USER.md`: información sobre el/los principal(es) a los que sirve el delegado.
 
 ### 2. Configurar la delegación del proveedor de identidad
@@ -159,7 +159,7 @@ El delegado necesita su propia cuenta en su proveedor de identidad con permisos 
 
 #### Microsoft 365
 
-Cree una cuenta de usuario dedicada para el delegado (p. ej., `delegate@[organization].org`).
+Cree una cuenta de usuario dedicada para el delegado (por ejemplo, `delegate@[organization].org`).
 
 **Enviar en nombre de** (Tier 2):
 
@@ -171,7 +171,7 @@ Set-Mailbox -Identity "principal@[organization].org" `
 
 **Acceso de lectura** (Graph API con permisos de aplicación):
 
-Registre una aplicación de Azure AD con permisos de aplicación `Mail.Read` y `Calendars.Read`. **Antes de usar la aplicación**, limite el acceso con una [política de acceso de la aplicación](https://learn.microsoft.com/graph/auth-limit-mailbox-access) para restringir la aplicación únicamente a los buzones del delegado y del principal:
+Registre una aplicación de Azure AD con permisos de aplicación `Mail.Read` y `Calendars.Read`. **Antes de usar la aplicación**, limite el acceso con una [política de acceso de la aplicación](https://learn.microsoft.com/graph/auth-limit-mailbox-access) para restringir la aplicación solo a los buzones del delegado y de los principales:
 
 ```powershell
 New-ApplicationAccessPolicy `
@@ -180,7 +180,7 @@ New-ApplicationAccessPolicy `
   -AccessRight RestrictAccess
 ```
 
-<Warning>Sin una política de acceso de la aplicación, el permiso de aplicación `Mail.Read` otorga acceso a **todos los buzones del inquilino**. Cree siempre la política de acceso antes de que la aplicación lea cualquier correo. Pruebe confirmando que la aplicación devuelve `403` para los buzones fuera del grupo de seguridad.</Warning>
+<Warning>Sin una política de acceso de la aplicación, el permiso de aplicación `Mail.Read` concede acceso a **todos los buzones del inquilino**. Cree siempre la política de acceso antes de que la aplicación lea cualquier correo. Pruebe confirmando que la aplicación devuelve `403` para los buzones fuera del grupo de seguridad.</Warning>
 
 #### Google Workspace
 
@@ -202,7 +202,7 @@ La delegación en todo el dominio permite a la cuenta de servicio suplantar a **
 
 ### 3. Vincular el delegado a los canales
 
-Enrute los mensajes entrantes al agente delegado mediante vinculaciones de [Enrutamiento multiagente](/es/concepts/multi-agent):
+Envíe los mensajes entrantes al agente delegado usando enlaces de [Enrutamiento Multi-Agente](/es/concepts/multi-agent):
 
 ```json5
 {
@@ -244,7 +244,7 @@ Copie o cree perfiles de autenticación para el `agentDir` del delegado:
 ~/.openclaw/agents/delegate/agent/auth-profiles.json
 ```
 
-Nunca comparta el `agentDir` del agente principal con el delegado. Consulte [Enrutamiento multiagente](/es/concepts/multi-agent) para obtener detalles sobre el aislamiento de autenticación.
+Nunca compartas el `agentDir` del agente principal con el delegado. Consulta [Multi-Agent Routing](/es/concepts/multi-agent) para obtener detalles sobre el aislamiento de autenticación.
 
 ## Ejemplo: asistente organizacional
 
@@ -280,12 +280,12 @@ Una configuración delegada completa para un asistente organizacional que maneja
 }
 ```
 
-El `AGENTS.md` del delegado define su autoridad autónoma: qué puede hacer sin preguntar, qué requiere aprobación y qué está prohibido. Los [Cron Jobs](/es/automation/cron-jobs) impulsan su horario diario.
+El `AGENTS.md` del delegado define su autoridad autónoma: qué puede hacer sin pedir permiso, qué requiere aprobación y qué está prohibido. Los [Cron Jobs](/es/automation/cron-jobs) impulsan su programación diaria.
 
-Si concede `sessions_history`, recuerde que es una vista de recuerdo limitada y filtrada por seguridad. OpenClaw redacta texto similar a credenciales/tokens, trunca contenido largo, elimina etiquetas de pensamiento / andamiaje de `<relevant-memories>` / cargas útiles XML de llamadas a herramientas en texto plano (incluyendo `<tool_call>...</tool_call>`,
+Si otorgas `sessions_history`, recuerda que es una vista de recuperación limitada y filtrada por seguridad. OpenClaw redacta texto similar a credenciales/tokens, trunca contenido largo, elimina etiquetas de pensamiento / andamiaje `<relevant-memories>` / cargas XML de llamadas a herramientas en texto plano (incluyendo `<tool_call>...</tool_call>`,
 `<function_call>...</function_call>`, `<tool_calls>...</tool_calls>`,
-`<function_calls>...</function_calls>`, y bloques de llamadas a herramientas truncados) /
-andamiaje de llamadas a herramientas degradado / tokens de control de modelo ASCII/ ancho completo filtrados / XML de llamadas a herramientas de MiniMax malformados del recuerdo del asistente, y puede
+`<function_calls>...</function_calls>` y bloques de llamadas a herramientas truncados) /
+andamiaje de llamadas a herramientas degradado / tokens de control de modelo ASCII/anchura completa filtrados / XML de llamadas a herramientas MiniMax malformados de la recuperación del asistente, y puede
 reemplazar filas sobredimensionadas con `[sessions_history omitted: message too large]`
 en lugar de devolver un volcado de transcripción sin procesar.
 
@@ -296,7 +296,7 @@ El modelo de delegado funciona para cualquier organización pequeña:
 1. **Cree un agente delegado** por organización.
 2. **Primero endurezca (Harden first)** - restricciones de herramientas, sandbox, bloqueos duros, registro de auditoría.
 3. **Otorgue permisos con ámbito** a través del proveedor de identidad (mínimo privilegio).
-4. **Defina [órdenes permanentes](/es/automation/standing-orders)** para operaciones autónomas.
+4. **Define [órdenes permanentes](/es/automation/standing-orders)** para operaciones autónomas.
 5. **Programe trabajos cron** para tareas recurrentes.
 6. **Revise y ajuste** el nivel de capacidad a medida que se construye la confianza.
 
@@ -304,6 +304,6 @@ Múltiples organizaciones pueden compartir un servidor Gateway utilizando el enr
 
 ## Relacionado
 
-- [Entorno de ejecución del agente](/es/concepts/agent)
+- [Agent runtime](/es/concepts/agent)
 - [Sub-agentes](/es/tools/subagents)
 - [Enrutamiento multiagente](/es/concepts/multi-agent)

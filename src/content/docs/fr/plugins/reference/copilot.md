@@ -12,7 +12,7 @@ Enregistre le runtime de l'agent GitHub Copilot.
 ## Distribution
 
 - Package : `@openclaw/copilot`
-- Route d'installation : incluse dans OpenClaw
+- Route d'installation : npm ; ClawHub : `clawhub:@openclaw/copilot`
 
 ## Surface
 

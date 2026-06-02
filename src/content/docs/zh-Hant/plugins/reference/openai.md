@@ -1,5 +1,5 @@
 ---
-summary: "新增對 OpenClaw 的 OpenAI、OpenAI Codex 模型提供者支援。"
+summary: "將 OpenAI 模型提供者支援新增至 OpenClaw。"
 read_when:
   - You are installing, configuring, or auditing the openai plugin
 title: "OpenAI 外掛程式"
@@ -7,7 +7,7 @@ title: "OpenAI 外掛程式"
 
 # OpenAI 外掛程式
 
-新增對 OpenClaw 的 OpenAI、OpenAI Codex 模型提供者支援。
+將 OpenAI 模型提供者支援新增至 OpenClaw。
 
 ## 發佈
 
@@ -16,7 +16,7 @@ title: "OpenAI 外掛程式"
 
 ## 表面
 
-提供者：openai、openai-codex；合約：imageGenerationProviders、mediaUnderstandingProviders、memoryEmbeddingProviders、realtimeTranscriptionProviders、realtimeVoiceProviders、speechProviders、videoGenerationProviders
+providers: openai; contracts: imageGenerationProviders, mediaUnderstandingProviders, memoryEmbeddingProviders, realtimeTranscriptionProviders, realtimeVoiceProviders, speechProviders, videoGenerationProviders
 
 ## 相關文件
 

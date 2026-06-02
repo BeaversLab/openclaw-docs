@@ -1,5 +1,5 @@
 ---
-summary: "Añade compatibilidad con el proveedor de modelos Xiaomi a OpenClaw."
+summary: "Añade compatibilidad con proveedores de modelos Xiaomi y Xiaomi Token Plan a OpenClaw."
 read_when:
   - You are installing, configuring, or auditing the xiaomi plugin
 title: "Plugin de Xiaomi"
@@ -7,7 +7,7 @@ title: "Plugin de Xiaomi"
 
 # Plugin de Xiaomi
 
-Añade compatibilidad con el proveedor de modelos Xiaomi a OpenClaw.
+Añade compatibilidad con proveedores de modelos Xiaomi y Xiaomi Token Plan a OpenClaw.
 
 ## Distribución
 
@@ -16,7 +16,7 @@ Añade compatibilidad con el proveedor de modelos Xiaomi a OpenClaw.
 
 ## Superficie
 
-proveedores: xiaomi; contratos: speechProviders
+proveedores: xiaomi, xiaomi-token-plan; contratos: speechProviders
 
 ## Documentos relacionados
 

@@ -70,7 +70,7 @@ title: "思考層級"
   4. 個別模型設定：`agents.defaults.models["<provider>/<model>"].params.fastMode`
   5. 後備選項：`off`
 - 對於 `openai/*`，快速模式會透過在支援的 Responses 請求中發送 `service_tier=priority` 來對應至 OpenAI 的優先處理。
-- 對於 `openai-codex/*`，快速模式會在 Codex 回應中發送相同的 `service_tier=priority` 標誌。OpenClaw 在這兩種驗證路徑之間維護一個共享的 `/fast` 切換開關。
+- 對於由 Codex 支援的 `openai/*` 模型，快速模式會在 Codex Responses 上傳送相同的 `service_tier=priority` 標誌。OpenClaw 在這兩種驗證路徑之間保持一個共享的 `/fast` 切換開關。
 - 對於直接公開的 `anthropic/*` 請求，包括發送到 `api.anthropic.com` 的 OAuth 驗證流量，快速模式會對應到 Anthropic 服務等級：`/fast on` 設定 `service_tier=auto`，`/fast off` 設定 `service_tier=standard_only`。
 - 對於 Anthropic 相容路徑上的 `minimax/*`，`/fast on`（或 `params.fastMode: true`）會將 `MiniMax-M2.7` 重寫為 `MiniMax-M2.7-highspeed`。
 - 當同時設定時，明確的 Anthropic `serviceTier` / `service_tier` 模型參數會覆蓋快速模式的預設值。對於非 Anthropic 代理基底 URL，OpenClaw 仍然會跳過 Anthropic 服務等級的注入。

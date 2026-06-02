@@ -349,7 +349,7 @@ Pour restreindre les personnes pouvant cliquer sur un bouton, définissez `allow
 
 Les rappels de composants expirent après 30 minutes par défaut. Définissez `channels.discord.agentComponents.ttlMs` pour modifier cette durée de vie du registre de rappels pour le compte Discord par défaut, ou `channels.discord.accounts.<accountId>.agentComponents.ttlMs` pour remplacer un compte dans une configuration multi-comptes. La valeur est en millisecondes, doit être un entier positif et est plafonnée à `86400000` (24 heures). Les TTL plus longues sont utiles pour les flux de travail de révision ou d'approbation qui nécessitent que les boutons restent utilisables, mais elles étendent également la fenêtre pendant laquelle un ancien message Discord peut encore déclencher une action. Privilégiez le TTL le plus court qui convient au flux de travail, et gardez la valeur par défaut lorsque des rappels obsolètes seraient surprenants.
 
-Les commandes slash `/model` et `/models` ouvrent un sélecteur de modèle interactif avec des menus déroulants pour le fournisseur, le model et le runtime compatible, ainsi qu'une étape Soumettre. `/models add`Discord est obsolète et renvoie désormais un message d'obsolescence au lieu d'enregistrer des modèles depuis le chat. La réponse du sélecteur est éphémère et seul l'utilisateur à l'origine de la commande peut l'utiliser. Les menus de sélection de Discord sont limités à 25 options, ajoutez donc des entrées `provider/*` à `agents.defaults.models` lorsque vous souhaitez que le sélecteur n'affiche que les modèles découverts dynamiquement pour les fournisseurs sélectionnés tels que `openai-codex` ou `vllm`.
+Les commandes slash `/model` et `/models` ouvrent un sélecteur de modèle interactif avec des menus déroulants pour le fournisseur, le modèle et le runtime compatible, plus une étape de soumission. `/models add` est obsolète et renvoie désormais un message d'obsolescence au lieu d'enregistrer des modèles depuis le chat. La réponse du sélecteur est éphémère et seul l'utilisateur l'ayant invoqué peut l'utiliser. Les menus de sélection Discord sont limités à 25 options, ajoutez donc des entrées `provider/*` à `agents.defaults.models` lorsque vous souhaitez que le sélecteur n'affiche les modèles découverts dynamiquement que pour des fournisseurs sélectionnés tels que `openai` ou `vllm`.
 
 Pièces jointes :
 
@@ -1189,7 +1189,7 @@ Exemple de jointure automatique :
     discord: {
       voice: {
         enabled: true,
-        model: "openai-codex/gpt-5.5",
+        model: "openai/gpt-5.5",
         autoJoin: [
           {
             guildId: "123456789012345678",
@@ -1226,7 +1226,7 @@ Notes :
 - `voice.followUsers` permet au bot de rejoindre, de déplacer et de quitter la voix Discord avec les utilisateurs sélectionnés. Voir [Follow users in voice](#follow-users-in-voice) pour les règles de comportement et les exemples.
 - `agent-proxy` achemine la parole via `discord-voice`, ce qui préserve l'autorisation propriétaire/tool normale pour le locuteur et la session cible, mais masque l'outil `tts` de l'agent car la voix Discord possède la lecture. Par défaut, `agent-proxy` accorde à la consultation un accès complet aux outils équivalent à celui du propriétaire pour les locuteurs propriétaires (`voice.realtime.toolPolicy: "owner"`) et privilégie fortement la consultation de l'agent OpenClaw avant les réponses substantielles (`voice.realtime.consultPolicy: "always"`). Dans ce mode `always` par défaut, la couche en temps réel ne prononce pas automatiquement de texte de remplissage avant la réponse de la consultation ; elle capture et transcrit la parole, puis prononce la réponse OpenClaw acheminée. Si plusieurs réponses de consultation forcée se terminent alors que Discord lit toujours la première réponse, les réponses ultérieures en parole exacte sont mises en file d'attente jusqu'à ce que la lecture devienne inactive, au lieu de remplacer la parole en milieu de phrase.
 - En mode `stt-tts`, la STT utilise `tools.media.audio` ; `voice.model` n'affecte pas la transcription.
-- Dans les modes en temps réel, `voice.realtime.provider`, `voice.realtime.model` et `voice.realtime.speakerVoice` configurent la session audio en temps réel. Pour OpenAI Realtime 2 plus le cerveau Codex, utilisez `voice.realtime.model: "gpt-realtime-2"` et `voice.model: "openai-codex/gpt-5.5"`.
+- En modes temps réel, `voice.realtime.provider`, `voice.realtime.model` et `voice.realtime.speakerVoice` configurent la session audio temps réel. Pour OpenAI Realtime 2 ainsi que le cerveau Codex, utilisez `voice.realtime.model: "gpt-realtime-2"` et `voice.model: "openai/gpt-5.5"`.
 - Les modes vocaux en temps réel incluent de petits fichiers de profil `IDENTITY.md`, `USER.md` et `SOUL.md` dans les instructions du fournisseur en temps réel par défaut, afin que les tours directs rapides conservent la même identité, le même ancrage utilisateur et la même persona que l'agent OpenClaw routé. Définissez `voice.realtime.bootstrapContextFiles` sur un sous-ensemble pour personnaliser cela, ou `[]` pour le désactiver. Les fichiers d'amorçage en temps réel pris en charge sont limités à ces fichiers de profil ; `AGENTS.md` reste dans le contexte normal de l'agent. Le contexte de profil injecté ne remplace pas `openclaw_agent_consult` pour le travail d'espace de travail, les faits actuels, la recherche en mémoire ou les actions basées sur des outils.
 - Dans le mode temps réel `agent-proxy` de OpenAI, définissez `voice.realtime.requireWakeName: true` pour maintenir la voix temps réel Discord silencieuse jusqu'à ce qu'une transcription commence ou se termine par un nom de réveil. Les noms de réveil configurés doivent comporter un ou deux mots. Si `voice.realtime.wakeNames` n'est pas défini, OpenClaw utilise l'agent routé `name` plus `OpenClaw`, en revenant à l'id de l'agent plus `OpenClaw`. Le filtrage par nom de réveil désactive la réponse automatique du fournisseur en temps réel, achemine les tours acceptés via le chemin de consultation de l'agent OpenClaw et donne un court accusé de réception vocal lorsqu'un nom de réveil initial est reconnu à partir d'une transcription partielle avant l'arrivée de la transcription finale.
 - Le fournisseur temps réel OpenAI accepte les noms d'événements actuels de Realtime 2 et les alias compatibles avec Codex hérités pour les événements audio et de transcription de sortie, de sorte que les instantanés de fournisseurs compatibles peuvent dériver sans perdre l'audio de l'assistant.
@@ -1317,7 +1317,7 @@ Exemple de session de canal vocal par défaut pour le proxy d'agent :
     discord: {
       voice: {
         enabled: true,
-        model: "openai-codex/gpt-5.5",
+        model: "openai/gpt-5.5",
         followUsersEnabled: true,
         followUsers: ["123456789012345678"],
         realtime: {
@@ -1367,7 +1367,7 @@ Exemple bidirectionnel en temps réel :
       voice: {
         enabled: true,
         mode: "bidi",
-        model: "openai-codex/gpt-5.5",
+        model: "openai/gpt-5.5",
         realtime: {
           provider: "openai",
           model: "gpt-realtime-2",
@@ -1390,7 +1390,7 @@ Voix en tant qu'extension d'une session de canal Discord existante :
       voice: {
         enabled: true,
         mode: "agent-proxy",
-        model: "openai-codex/gpt-5.5",
+        model: "openai/gpt-5.5",
         agentSession: {
           mode: "target",
           target: "channel:123456789012345678",
@@ -1425,7 +1425,7 @@ Exemple Echo-heavy OpenAI Realtime :
       voice: {
         enabled: true,
         mode: "bidi",
-        model: "openai-codex/gpt-5.5",
+        model: "openai/gpt-5.5",
         realtime: {
           provider: "openai",
           model: "gpt-realtime-2",

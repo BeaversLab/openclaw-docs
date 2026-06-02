@@ -121,14 +121,16 @@ embeddings:
 }
 ```
 
-OpenAI Codex / ChatGPT OAuth (`openai-codex`) no es una credencial de
-embeddings de la plataforma OpenAI. Para embeddings de OpenAI, usa un perfil de autenticación de clave de API de OpenAI,
+OpenAI Codex / ChatGPT OAuth no es una credencial de incrustaciones de la plataforma OpenAI.
+Para las incrustaciones de OpenAI, use un perfil de autenticación con clave de API de OpenAI,
 `OPENAI_API_KEY` o `models.providers.openai.apiKey`. Los usuarios que solo usan OAuth pueden usar
-otro proveedor compatible con embeddings, como GitHub Copilot u Ollama.
+otro proveedor con capacidades de incrustación, como GitHub Copilot u Ollama.
 
 ## Embeddings de Ollama
 
-Para las incrustaciones de Ollama, se prefiere el proveedor de incrustaciones de Ollama incluido. Utiliza el endpoint nativo de Ollama `/api/embed` y sigue las mismas reglas de autenticación/URL base que el proveedor de Ollama documentado en [Ollama](/es/providers/ollama).
+Para las incrustaciones de Ollama, se prefiere el proveedor de incrustaciones de Ollama incluido. Utiliza el
+extremo nativo de Ollama `/api/embed` y sigue las mismas reglas de autenticación/URL base que
+el proveedor Ollama documentado en [Ollama](/es/providers/ollama).
 
 ```json5
 {
@@ -156,17 +158,28 @@ Para las incrustaciones de Ollama, se prefiere el proveedor de incrustaciones de
 }
 ```
 
-Establezca `dimensions` para modelos de incrustación no estándar. OpenClaw conoce las dimensiones de `text-embedding-3-small` y `text-embedding-3-large`; los modelos personalizados necesitan el valor en la configuración para que LanceDB pueda crear la columna de vectores.
+Establezca `dimensions` para modelos de incrustación no estándar. OpenClaw conoce las
+dimensiones para `text-embedding-3-small` y `text-embedding-3-large`; los modelos
+personalizados necesitan el valor en la configuración para que LanceDB pueda crear la columna vectorial.
 
-Para modelos de incrustación locales pequeños, reduzca `recallMaxChars` si ve errores de longitud de contexto del servidor local.
+Para modelos pequeños de incrustación locales, reduzca `recallMaxChars` si ve errores de
+longitud de contexto del servidor local.
 
 ## Proveedores compatibles con OpenAI
 
-Algunos proveedores de incrustación compatibles con OpenAI rechazan el parámetro `encoding_format`, mientras que otros lo ignoran y siempre devuelven vectores `number[]`. `memory-lancedb` por lo tanto omite `encoding_format` en las solicitudes de incrustación y acepta respuestas de matriz de flotantes o respuestas de flotantes32 codificados en base64.
+Algunos proveedores de incrustaciones compatibles con OpenAI rechazan el parámetro
+`encoding_format`, mientras que otros lo ignoran y siempre devuelven vectores
+`number[]`.
+`memory-lancedb`, por lo tanto, omite `encoding_format` en las solicitudes de incrustación y
+acepta respuestas de matriz de flotantes o respuestas de flotantes codificadas en base64.
 
-Si tiene un punto final de incrustaciones compatible con OpenAI sin procesar que no tiene un adaptador de proveedor incluido, omita `embedding.provider` (o déjelo como `openai`) y configure `embedding.apiKey` más `embedding.baseUrl`. Esto preserva la ruta directa del cliente compatible con OpenAI.
+Si tiene un extremo de incrustaciones compatible con OpenAI sin procesar que no tiene un
+adaptador de proveedor incluido, omita `embedding.provider` (o déjelo como `openai`) y
+establezca `embedding.apiKey` más `embedding.baseUrl`. Esto preserva la ruta directa
+del cliente compatible con OpenAI.
 
-Establezca `embedding.dimensions` para proveedores cuyas dimensiones del modelo no estén integradas. Por ejemplo, ZhiPu `embedding-3` utiliza `2048` dimensiones:
+Establezca `embedding.dimensions` para proveedores cuyas dimensiones del modelo no estén
+incorporadas. Por ejemplo, ZhiPu `embedding-3` usa dimensiones `2048`:
 
 ```json5
 {
@@ -198,15 +211,15 @@ Establezca `embedding.dimensions` para proveedores cuyas dimensiones del modelo 
 | `captureMaxChars` | `500`          | 100-10000 | longitud del mensaje elegible para captura automática                     |
 | `customTriggers`  | `[]`           | 0-50      | frases literales que hacen que la captura automática considere un mensaje |
 
-`recallMaxChars` controla el recuerdo automático, la herramienta `memory_recall`, la ruta de consulta `memory_forget` y `openclaw ltm search`. El recuerdo automático prefiere el último mensaje de usuario del turno y solo recurre al mensaje completo (prompt) cuando no hay ningún mensaje de usuario disponible. Esto evita que los metadatos del canal y los bloques de mensajes grandes se incluyan en la solicitud de incrustación (embedding).
+`recallMaxChars` controla el recuerdo automático, la herramienta `memory_recall`, la ruta de consulta `memory_forget` y `openclaw ltm search`. El recuerdo automático prefiere el último mensaje de usuario del turno y solo recurre al mensaje completo cuando no hay ningún mensaje de usuario disponible. Esto mantiene los metadatos del canal y los grandes bloques de mensajes fuera de la solicitud de incrustación.
 
-`captureMaxChars` controla si una respuesta es lo suficientemente corta como para ser considerada para su captura automática. No limita las incrustaciones de las consultas de recuerdo.
+`captureMaxChars` controla si una respuesta es lo suficientemente corta como para ser considerada para la captura automática. No limita las incrustaciones de consultas de recuerdo.
 
-`customTriggers` le permite agregar frases literales de captura automática sin escribir expresiones regulares. Los activadores integrados incluyen frases de memoria comunes en inglés, checo, chino, japonés y coreano.
+`customTriggers` le permite agregar frases literales de captura automática sin escribir expresiones regulares. Los disparadores integrados incluyen frases comunes de memoria en inglés, checo, chino, japonés y coreano.
 
 ## Comandos
 
-Cuando `memory-lancedb` es el complemento de memoria activo, registra el espacio de nombres de la CLI `ltm`:
+Cuando `memory-lancedb` es el complemento de memoria activo, registra el espacio de nombres de CLI `ltm`:
 
 ```bash
 openclaw ltm list
@@ -228,13 +241,13 @@ openclaw ltm query --filter "category = 'preference'" --order-by createdAt:desc
 
 Los agentes también obtienen herramientas de memoria LanceDB del complemento de memoria activo:
 
-- `memory_recall` para la recuperación respaldada por LanceDB
+- `memory_recall` para el recuerdo respaldado por LanceDB
 - `memory_store` para guardar hechos importantes, preferencias, decisiones y entidades
-- `memory_forget` para eliminar memorias coincidentes
+- `memory_forget` para eliminar recuerdos coincidentes
 
 ## Almacenamiento
 
-De forma predeterminada, los datos de LanceDB residen bajo `~/.openclaw/memory/lancedb`. Anule la ruta con `dbPath`:
+Por defecto, los datos de LanceDB se encuentran en `~/.openclaw/memory/lancedb`. Anule la ruta con `dbPath`:
 
 ```json5
 {
@@ -255,7 +268,7 @@ De forma predeterminada, los datos de LanceDB residen bajo `~/.openclaw/memory/l
 }
 ```
 
-`storageOptions` acepta pares clave/valor de cadena para los backends de almacenamiento LanceDB y admite la expansión de `${ENV_VAR}`:
+`storageOptions` acepta pares clave/valor de cadena para los backends de almacenamiento LanceDB y admite la expansión `${ENV_VAR}`:
 
 ```json5
 {
@@ -285,7 +298,7 @@ De forma predeterminada, los datos de LanceDB residen bajo `~/.openclaw/memory/l
 
 `memory-lancedb` depende del paquete nativo `@lancedb/lancedb`. OpenClaw empaquetado trata ese paquete como parte del paquete del complemento. El inicio de Gateway no repara las dependencias del complemento; si falta la dependencia, reinstale o actualice el paquete del complemento y reinicie Gateway.
 
-Si una instalación antigua registra un error de `dist/package.json` faltante o `@lancedb/lancedb` faltante durante la carga del complemento, actualice OpenClaw y reinicie Gateway.
+Si una instalación antigua registra un error de `dist/package.json` faltante o de `@lancedb/lancedb` faltante durante la carga del complemento, actualice OpenClaw y reinicie Gateway.
 
 Si el complemento registra que LanceDB no está disponible en `darwin-x64`, use el backend de memoria predeterminado en esa máquina, mueva Gateway a una plataforma compatible o deshabilite `memory-lancedb`.
 
@@ -299,7 +312,7 @@ Esto generalmente significa que el modelo de incrustación rechazó la consulta 
 memory-lancedb: recall failed: Error: 400 the input length exceeds the context length
 ```
 
-Establezca un `recallMaxChars` más bajo y luego reinicie el Gateway:
+Establezca un `recallMaxChars` más bajo y luego reinicie Gateway:
 
 ```json5
 {
@@ -325,9 +338,7 @@ curl http://127.0.0.1:11434/v1/embeddings \
 
 ### Modelo de incrustación no compatible
 
-Sin `dimensions`, solo se conocen las dimensiones de incrustación integradas de OpenAI.
-Para modelos de incrustación locales o personalizados, establezca `embedding.dimensions` en el tamaño
-del vector informado por ese modelo.
+Sin `dimensions`, solo se conocen las dimensiones de incrustación integradas de OpenAI. Para modelos de incrustación locales o personalizados, establezca `embedding.dimensions` en el tamaño de vector informado por ese modelo.
 
 ### El complemento se carga pero no aparecen memorias
 
@@ -338,9 +349,7 @@ openclaw ltm stats
 openclaw ltm search "recent preference"
 ```
 
-Si `autoCapture` está deshabilitado, el complemento recordará los recuerdos existentes pero no
-almacenará automáticamente los nuevos. Utilice la herramienta `memory_store` o habilite
-`autoCapture` si desea una captura automática.
+Si `autoCapture` está deshabilitado, el complemento recordará los recuerdos existentes, pero no almacenará automáticamente los nuevos. Use la herramienta `memory_store` o habilite `autoCapture` si desea una captura automática.
 
 ## Relacionado
 

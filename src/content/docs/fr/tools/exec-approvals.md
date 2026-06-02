@@ -338,7 +338,10 @@ Lorsque **Autoriser automatiquement les CLI de compétences** est activé, les e
 
 ## Bacs sécurisés et transfert des approbations
 
-Pour les bacs sécurisés (le chemin rapide stdin uniquement), les détails de liaison de l'interpréteur et la manière de transférer les invites d'approbation vers Slack/Discord/Telegram (ou de les exécuter en tant que clients d'approbation natifs), consultez la section [Exec approvals - advanced](/fr/tools/exec-approvals-advanced).
+Pour les bins sûrs (le chemin rapide stdin uniquement), les détails de liaison de l'interpréteur, et
+comment transférer les invites d'approbation vers Slack/Discord/Telegram (ou les exécuter en tant que
+clients d'approbation natifs), consultez
+[Exec approvals - advanced](/fr/tools/exec-approvals-advanced).
 
 ## Modification de l'interface utilisateur de contrôle
 
@@ -347,7 +350,8 @@ Utilisez la carte **Control UI → Nodes → Exec approvals** pour modifier les 
 Le sélecteur de cible choisit **Gateway** (approbations locales) ou un **Node**.
 Les nœuds doivent annoncer `system.execApprovals.get/set` (application macOS ou hôte de nœud headless). Si un nœud n'annonce pas encore les approbations d'exécution, modifiez directement son fichier `~/.openclaw/exec-approvals.json` local.
 
-CLI : `openclaw approvals` prend en charge la modification de la passerelle ou du nœud - voir [Approvals CLI](/fr/cli/approvals).
+CLI : `openclaw approvals` prend en charge l'édition de passerelle ou de nœud - consultez
+[Approvals CLI](/fr/cli/approvals).
 
 ## Flux d'approbation
 
@@ -370,23 +374,34 @@ Le cycle de vie de l'exécution est présenté sous forme de messages système :
 - `Exec running` (uniquement si la commande dépasse le seuil d'avertissement d'exécution).
 - `Exec finished`.
 
-Ceux-ci sont publiés dans la session de l'agent après que le nœud a signalé l'événement.
-Les approbations d'exécution refusées sont terminales : OpenClaw peut signaler le refus à l'opérateur ou à la route de discussion directe, mais il ne publie pas `Exec denied` dans la session de l'agent ni ne réveille le travail de l'agent.
-Les approbations d'exécution hébergées par Gateway émettent les mêmes événements de cycle de vie lorsque la commande se termine (et facultativement lorsqu'elle s'exécute plus longtemps que le seuil).
-Les exécutions avec approbation réutilisent l'ID d'approbation comme `runId` dans ces messages pour une corrélation facile.
+Ces éléments sont publiés dans la session de l'agent après que le nœud a signalé l'événement.
+Les approbations d'exécution refusées sont terminales pour la commande hôte elle-même : la commande
+ne s'exécute pas. Pour les approbations asynchrones de l'agent principal avec une session d'origine,
+OpenClaw renvoie le refus dans cette session en tant que suivi interne afin que l'agent puisse cesser d'attendre la commande asynchrone et éviter une réparation de résultat manquant.
+S'il n'y a pas de session ou si la session ne peut pas être reprise, OpenClaw peut toujours
+signaler un refus concis à l'opérateur ou à la route de chat direct. Les refus pour
+les sessions de sous-agents ne sont pas renvoyés dans le sous-agent.
+Les approbations d'exécution hébergées par Gateway émettent les mêmes événements de cycle de vie lorsque la
+commande se termine (et éventuellement lorsqu'elle s'exécute plus longtemps que le seuil).
+Les exécutions avec approbation réutilisent l'identifiant d'approbation comme `runId` dans ces
+messages pour une corrélation facile.
 
 ## Comportement en cas de refus d'approbation
 
-Lorsqu'une approbation d'exécution asynchrone est refusée, OpenClaw traite la demande comme terminale.
-Il peut afficher un refus concis à l'opérateur ou à la route de discussion directe, mais il n'envoie pas de directive de refus via la session de l'agent. Cela empêche une commande refusée de devenir un autre tour de modèle et empêche l'agent de réutiliser la sortie d'une exécution antérieure de la même commande.
+Lorsqu'une approbation d'exécution asynchrone est refusée, OpenClaw traite la commande hôte comme
+terminale et échoue de manière fermée. Pour les sessions de l'agent principal, le refus est délivré sous forme de
+suivi de session interne qui indique à l'agent que la commande asynchrone ne s'est pas exécutée.
+Cela préserve la continuité de la transcription sans exposer de sortie de commande obsolète. Si la
+livraison de session est indisponible, OpenClaw se rabat sur un refus concis à l'opérateur ou
+via chat direct lorsqu'une route sûre existe.
 
 ## Implications
 
-- **`full`** est puissant ; privilégiez les listes d'autorisation lorsque cela est possible.
+- **`full`** est puissant ; préférez les listes d'autorisation (allowlists) lorsque cela est possible.
 - **`ask`** vous tient informé tout en permettant des approbations rapides.
 - Les listes d'autorisation par agent empêchent les approbations d'un agent de fuir vers d'autres.
-- Les approbations ne s'appliquent qu'aux demandes d'exécution sur l'hôte provenant d'**expéditeurs autorisés**. Les expéditeurs non autorisés ne peuvent pas émettre `/exec`.
-- `/exec security=full` est une commodité au niveau de la session pour les opérateurs autorisés et saute les approbations par conception. Pour bloquer fermement l'exécution sur l'hôte, définissez la sécurité des approbations sur `deny` ou refusez l'outil `exec` via la stratégie d'outil.
+- Les approbations ne s'appliquent qu'aux requêtes d'exécution hôte provenant d'**expéditeurs autorisés**. Les expéditeurs non autorisés ne peuvent pas émettre `/exec`.
+- `/exec security=full` est une commodité au niveau de la session pour les opérateurs autorisés et saute les approubations par conception. Pour bloquer fermement l'exécution sur l'hôte, définissez la sécurité des approubations sur `deny` ou refusez le tool `exec` via la stratégie de tool.
 
 ## Connexes
 

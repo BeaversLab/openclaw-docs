@@ -16,7 +16,7 @@ Tableau de travail pour les problèmes et sessions détenus par des agents.
 
 ## Surface
 
-plugin
+contrats : outils
 
 ## Documentation connexe
 

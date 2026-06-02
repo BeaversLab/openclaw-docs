@@ -43,6 +43,7 @@ Notes :
 - Le mode local utilise directement le runtime de l'agent embarqué. La plupart des outils locaux fonctionnent, mais les fonctionnalités exclusives au Gateway ne sont pas disponibles.
 - Le mode local ajoute `/auth [provider]`TUI à l'intérieur de la surface de commande du TUI.
 - Les portes d'approbation des plugins s'appliquent toujours en mode local. Les outils nécessitant une approbation demandent une décision dans le terminal ; rien n'est approuvé automatiquement en silence car le Gateway n'est pas impliqué.
+- Les [objectifs](/fr/tools/goal) de la session apparaissent dans le pied de page et peuvent être gérés avec `/goal`.
 
 ## Exemples
 
@@ -59,19 +60,15 @@ openclaw tui --session bugfix
 
 ## Boucle de réparation de la configuration
 
-Utilisez le mode local lorsque la configuration actuelle est déjà valide et que vous souhaitez que
-l'agent embarqué l'inspecte, la compare à la documentation et aide à la réparer
-depuis le même terminal :
+Utilisez le mode local lorsque la configuration actuelle est déjà validée et que vous souhaitez que l'agent intégré l'inspecte, la compare à la documentation et aide à la réparer depuis le même terminal :
 
-Si `openclaw config validate` échoue déjà, utilisez `openclaw configure` ou
-`openclaw doctor --fix` en premier. `openclaw chat` ne contourne pas la garde de
-configuration invalide.
+Si `openclaw config validate` échoue déjà, utilisez `openclaw configure` ou `openclaw doctor --fix` en premier. `openclaw chat` ne contourne pas la garde de configuration invalide.
 
 ```bash
 openclaw chat
 ```
 
-Puis à l'intérieur du TUI :
+Ensuite à l'intérieur du TUI :
 
 ```text
 !openclaw config file
@@ -80,10 +77,10 @@ Puis à l'intérieur du TUI :
 !openclaw doctor
 ```
 
-Appliquez des correctifs ciblés avec `openclaw config set` ou `openclaw configure`, puis
-relancez `openclaw config validate`TUI. Voir [TUI](/fr/web/tui) et [Config](/fr/cli/config).
+Appliquez des corrections ciblées avec `openclaw config set` ou `openclaw configure`, puis relancez `openclaw config validate`TUI. Voir [TUI](/fr/web/tui) et [Config](/fr/cli/config).
 
 ## Connexes
 
 - [Référence CLI](CLI/en/cli)
 - [TUI](TUI/en/web/tui)
+- [Objectif](/fr/tools/goal)

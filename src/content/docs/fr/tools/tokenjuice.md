@@ -1,17 +1,17 @@
 ---
-summary: "Compactez les résultats bruyants des outils exec et bash avec un plugin groupé facultatif"
+summary: "Compacter les résultats bruyants des outils exec et bash avec le plugin optionnel Tokenjuice"
 title: "Tokenjuice"
 read_when:
   - You want shorter `exec` or `bash` tool results in OpenClaw
-  - You want to enable the bundled tokenjuice plugin
+  - You want to install or enable the Tokenjuice plugin
   - You need to understand what tokenjuice changes and what it leaves raw
 ---
 
-`tokenjuice` est un plugin groupé facultatif qui compacte les résultats `exec` et `bash` bruyants
-suite à l'exécution de la commande.
+`tokenjuice` est un plugin externe optionnel qui compacte les résultats bruyants des `exec` et `bash`
+tools après l'exécution de la commande.
 
-Il modifie la `tool_result` renvoyée, et non la commande elle-même. Tokenjuice ne
-réécrit pas l'entrée du shell, ne relance pas les commandes et ne modifie pas les codes de sortie.
+Il modifie le `tool_result` renvoyé, et non la commande elle-même. Tokenjuice ne
+réécrit pas l'entrée du shell, ne réexécute pas les commandes et ne modifie pas les codes de sortie.
 
 Aujourd'hui, cela s'applique aux exécutions intégrées OpenClaw et aux outils dynamiques OpenClaw dans le harnais
 app-server Codex. Tokenjuice intercepte le middleware de résultat d'outil de OpenClaw et
@@ -19,20 +19,23 @@ réduit la sortie avant qu'elle ne retourne dans la session de harnais active.
 
 ## Activer le plugin
 
-Accès rapide :
+Installer une fois :
+
+```bash
+openclaw plugins install clawhub:@openclaw/tokenjuice
+```
+
+Puis activez-le :
 
 ```bash
 openclaw config set plugins.entries.tokenjuice.enabled true
 ```
 
-Équivalent à :
+Équivalent :
 
 ```bash
 openclaw plugins enable tokenjuice
 ```
-
-OpenClaw fournit déjà le plugin. Il n'y a pas d'étape `plugins install`
-ou `tokenjuice install openclaw` séparée.
 
 Si vous préférez modifier la configuration directement :
 
@@ -50,7 +53,7 @@ Si vous préférez modifier la configuration directement :
 
 ## Ce que tokenjuice modifie
 
-- Compacte les résultats bruyants de `exec` et `bash` avant qu'ils ne soient réinjectés dans la session.
+- Compacte les résultats bruyants de `exec` et `bash` avant qu'ils ne soient renvoyés dans la session.
 - Garde l'exécution de la commande d'origine intacte.
 - Conserve les lectures exactes du contenu des fichiers et autres commandes que tokenjuice doit laisser telles quelles.
 - Reste optionnel : désactivez le plugin si vous souhaitez une sortie verbatim partout.

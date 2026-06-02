@@ -61,11 +61,9 @@ openclaw plugins build --entry ./dist/index.js --check
 openclaw plugins validate --entry ./dist/index.js
 ```
 
-Para investigar instalaciones lentas, inspecciones, desinstalaciones o actualizaciones del registro, ejecute el
-comando con `OPENCLAW_PLUGIN_LIFECYCLE_TRACE=1`. El seguimiento escribe los tiempos de las fases
-en stderr y mantiene la salida JSON analizable. Consulte [Debugging](/es/help/debugging#plugin-lifecycle-trace).
+Para investigar instalaciones, inspecciones, desinstalaciones o actualizaciones de registro lentas, ejecute el comando con `OPENCLAW_PLUGIN_LIFECYCLE_TRACE=1`. El rastro escribe los tiempos de las fases en stderr y mantiene la salida JSON analizable. Consulte [Depuración](/es/help/debugging#plugin-lifecycle-trace).
 
-<Note>En modo Nix (`OPENCLAW_NIX_MODE=1`), los mutadores del ciclo de vida de los complementos están deshabilitados. Use la fuente Nix para esta instalación en lugar de `plugins install`, `plugins update`, `plugins uninstall`, `plugins enable` o `plugins disable`; para nix-openclaw, use el [Quick Start](https://github.com/openclaw/nix-openclaw#quick-start) centrado en el agente.</Note>
+<Note>En modo Nix (`OPENCLAW_NIX_MODE=1`), los mutadores del ciclo de vida del complemento están deshabilitados. Utilice la fuente Nix para esta instalación en lugar de `plugins install`, `plugins update`, `plugins uninstall`, `plugins enable` o `plugins disable`; para nix-openclaw, utilice el [Inicio rápido](https://github.com/openclaw/nix-openclaw#quick-start) centrado en el agente.</Note>
 
 <Note>
 Los complementos agrupados se envían con OpenClaw. Algunos están habilitados de forma predeterminada (por ejemplo, proveedores de modelos agrupados, proveedores de voz agrupados y el complemento de navegador agrupado); otros requieren `plugins enable`.
@@ -85,12 +83,7 @@ npm run plugin:build
 npm run plugin:validate
 ```
 
-`plugins init` crea un complemento de herramienta TypeScript mínimo que usa
-`defineToolPlugin`. `plugins build` importa esa entrada, lee sus metadatos de herramienta
-estática, escribe `openclaw.plugin.json` y mantiene `package.json`
-`openclaw.extensions` alineados. `plugins validate` comprueba que el manifiesto
-generado, los metadatos del paquete y la exportación de entrada actual todavía coinciden. Consulte
-[Tool Plugins](/es/plugins/tool-plugins) para el flujo de trabajo completo de creación.
+`plugins init` crea un complemento de herramienta TypeScript mínimo que usa `defineToolPlugin`. `plugins build` importa esa entrada, lee sus metadatos estáticos de herramienta, escribe `openclaw.plugin.json` y mantiene `package.json` `openclaw.extensions` alineados. `plugins validate` verifica que el manifiesto generado, los metadatos del paquete y la exportación de la entrada actual aún estén de acuerdo. Consulte [Complementos de herramientas](/es/plugins/tool-plugins) para el flujo de trabajo completo de creación.
 
 El andamiaje escribe código fuente TypeScript pero genera metadatos a partir de la entrada
 `./dist/index.js` construida, por lo que el flujo de trabajo también funciona con la CLI publicada. Use
@@ -117,9 +110,7 @@ openclaw plugins install <plugin> --marketplace <name>  # marketplace (explicit)
 openclaw plugins install <plugin> --marketplace https://github.com/<owner>/<repo>
 ```
 
-Los encargados del mantenimiento que prueban instalaciones en el momento de la configuración pueden anular las fuentes de instalación automática de complementos
-con variables de entorno protegidas. Consulte
-[Plugin install overrides](/es/plugins/install-overrides).
+Los mantenedores que prueben instalaciones en el momento de la configuración pueden anular las fuentes de instalación automática de complementos con variables de entorno protegidas. Consulte [Anulaciones de instalación de complementos](/es/plugins/install-overrides).
 
 <Warning>
 Los nombres de paquetes simples se instalan desde npm por defecto durante el cambio de lanzamiento, a menos que coincidan con un id de complemento oficial. Las especificaciones de paquetes `@openclaw/*` sin procesar que coinciden con complementos empaquetados usan la copia empaquetada que se envió con la compilación actual de OpenClaw. Use `npm:<package>` cuando deliberadamente desee un paquete npm externo en su lugar. Use `clawhub:<package>` para ClawHub. Trate las instalaciones de complementos como ejecutar código. Prefiera versiones fijas.
@@ -130,15 +121,15 @@ nombres de paquetes listos para instalar. Busca paquetes de complemento de códi
 no habilidades. Use `openclaw skills search` para habilidades de ClawHub.
 
 <Note>
-  ClawHub es la superficie principal de distribución y descubrimiento para la mayoría de los complementos. Npm sigue siendo una alternativa compatible y una ruta de instalación directa. Los paquetes de complementos de `@openclaw/*` propiedad de OpenClaw se publican de nuevo en npm; consulte la lista actual en [npmjs.com/org/openclaw](https://www.npmjs.com/org/openclaw) o en el [inventario de
-  complementos](/es/plugins/plugin-inventory). Las instalaciones estables utilizan `latest`. Las instalaciones y actualizaciones del canal beta prefieren la etiqueta de distribución `beta` de npm cuando esa etiqueta está disponible y luego recurren a `latest`.
+  ClawHub es la superficie principal de distribución y descubrimiento para la mayoría de los complementos. Npm sigue siendo una ruta alternativa compatible y de instalación directa. Los paquetes de complementos `@openclaw/*` propiedad de OpenClaw se publican en npm nuevamente; consulte la lista actual en [npmjs.com/org/openclaw](https://www.npmjs.com/org/openclaw) o en el [inventario de
+  complementos](/es/plugins/plugin-inventory). Las instalaciones estables usan `latest`. Las instalaciones y actualizaciones del canal beta prefieren la etiqueta de distribución npm `beta` cuando esa etiqueta está disponible, y luego recurren a `latest`.
 </Note>
 
 <AccordionGroup>
   <Accordion title="Config includes and invalid-config repair">
-    Si su sección `plugins` está respaldada por un único archivo `$include`, `plugins install/update/enable/disable/uninstall` escribirá directamente en ese archivo incluido y dejará `openclaw.json` sin modificar. Las inclusiones raíz, las matrices de inclusión y las inclusiones con anulaciones secundarias fallan de forma cerrada en lugar de aplanarse. Consulte [Config includes](/es/gateway/configuration) para conocer las formas compatibles.
+    Si su sección `plugins` está respaldada por un archivo único `$include`, `plugins install/update/enable/disable/uninstall` escribirá directamente en ese archivo incluido y dejará `openclaw.json` sin modificar. Las inclusiones raíz, las matrices de inclusión y las inclusiones con anulaciones de hermanos fallan cerradas en lugar de aplanarse. Consulte [Config includes](/es/gateway/configuration) para conocer las formas admitidas.
 
-    Si la configuración no es válida durante la instalación, `plugins install` normalmente falla de forma cerrada y le indica que ejecute `openclaw doctor --fix` primero. Durante el inicio y la recarga en caliente de Gateway, la configuración de complementos no válida falla de forma cerrada como cualquier otra configuración no válida; `openclaw doctor --fix` puede poner en cuarentena la entrada de complemento no válida. La única excepción documentada en el momento de la instalación es una ruta de recuperación estrecha para complementos agrupados que optan explícitamente por `openclaw.install.allowInvalidConfigRecovery`.
+    Si la configuración no es válida durante la instalación, `plugins install` normalmente falla cerrada y le indica que ejecute `openclaw doctor --fix` primero. Durante el inicio y la recarga en caliente de Gateway, la configuración no válida del complemento falla cerrada como cualquier otra configuración no válida; `openclaw doctor --fix` puede poner en cuarentena la entrada del complemento no válida. La única excepción documentada en el momento de la instalación es una ruta de recuperación estrecha de complementos empaquetados para complementos que explícitamente optan por `openclaw.install.allowInvalidConfigRecovery`.
 
   </Accordion>
   <Accordion title="--force and reinstall vs update">
@@ -151,13 +142,13 @@ no habilidades. Use `openclaw skills search` para habilidades de ClawHub.
     `--pin` se aplica solo a instalaciones de npm. No es compatible con instalaciones `git:`; use una referencia git explícita como `git:github.com/acme/plugin@v1.2.3` cuando desee una fuente fija. No es compatible con `--marketplace`, porque las instalaciones del mercado persisten los metadatos de la fuente del mercado en lugar de una especificación npm.
   </Accordion>
   <Accordion title="--dangerously-force-unsafe-install">
-    `--dangerously-force-unsafe-install` es una opción de emergencia para los falsos positivos en el escáner de código peligroso integrado. Permite que la instalación continúe incluso cuando el escáner integrado reporta `critical` hallazgos, pero **no** evita los bloqueos de política de gancho del complemento `before_install` y **no** evita los fallos de escaneo.
+    `--dangerously-force-unsafe-install` es una opción de emergencia para los falsos positivos en el escáner de código peligroso integrado. Permite que la instalación continúe incluso cuando el escáner integrado reporta `critical` hallazgos, pero **no** evita los bloqueos de política de enganches del `before_install` del complemento y **no** evita los fallos del escaneo.
 
     Los escaneos de instalación ignoran los archivos y directorios de prueba comunes como `tests/`, `__tests__/`, `*.test.*` y `*.spec.*` para evitar bloquear los simulacros de prueba empaquetados; los puntos de entrada de tiempo de ejecución del complemento declarados aún se escanean incluso si usan uno de esos nombres.
 
-    Este indicador de CLI se aplica a los flujos de instalación/actualización de complementos. Las instalaciones de dependencias de habilidades respaldadas por Gateway usan la anulación de solicitud `dangerouslyForceUnsafeInstall` coincidente, mientras que `openclaw skills install` sigue siendo un flujo separado de descarga/instalación de habilidades de ClawHub.
+    Esta bandera de CLI se aplica a los flujos de instalación/actualización de complementos. Las instalaciones de dependencias de habilidades respaldadas por Gateway usan la anulación de solicitud `dangerouslyForceUnsafeInstall` coincidente, mientras que `openclaw skills install` sigue siendo un flujo de descarga/instalación de habilidad de ClawHub separado.
 
-    Si un complemento que publicaste en ClawHub está oculto o bloqueado por un escaneo de registro, usa los pasos del editor en [ClawHub publishing](/es/clawhub/publishing). `--dangerously-force-unsafe-install` solo afecta las instalaciones en tu propia máquina; no le pide a ClawHub que vuelva a escanear el complemento ni que haga pública una versión bloqueada.
+    Si un complemento que publicaste en ClawHub está oculto o bloqueado por un escaneo de registro, usa los pasos del editor en [Publicación en ClawHub](/es/clawhub/publishing). `--dangerously-force-unsafe-install` solo afecta las instalaciones en tu propia máquina; no le pide a ClawHub que vuelva a escanear el complemento ni hace pública una versión bloqueada.
 
   </Accordion>
   <Accordion title="Hook packs y especificaciones npm">
@@ -318,18 +309,20 @@ Use `--link` para evitar copiar un directorio local (agrega a `plugins.load.path
 openclaw plugins install -l ./my-plugin
 ```
 
+Los archivos de complemento independientes deben listarse en `plugins.load.paths` en lugar de colocarse directamente en `~/.openclaw/extensions` o `<workspace>/.openclaw/extensions`. Esas raíces de autodescubrimiento cargan directorios de paquetes o paquetes de complementos, mientras que los archivos de script de nivel superior se tratan como ayudantes locales y se omiten.
+
 <Note>
 `--force` no es compatible con `--link` porque las instalaciones vinculadas reutilizan la ruta de origen en lugar de copiar sobre un objetivo de instalación administrado.
 
-Use `--pin` en instalaciones de npm para guardar la especificación exacta resuelta (`name@version`) en el índice de complementos administrados mientras mantiene el comportamiento predeterminado sin anclar.
+Usa `--pin` en las instalaciones de npm para guardar la especificación exacta resuelta (`name@version`) en el índice de complementos administrados mientras se mantiene el comportamiento predeterminado sin anclar.
 
 </Note>
 
-### Índice de plugins
+### Índice de complementos
 
-Los metadatos de instalación del complemento son un estado gestionado por máquina, no configuración de usuario. Las instalaciones y actualizaciones lo escriben en `plugins/installs.json` en el directorio de estado activo de OpenClaw. Su mapa `installRecords` de nivel superior es la fuente duradera de los metadatos de instalación, incluidos los registros de manifiestos de complementos rotos o faltantes. La matriz `plugins` es la caché del registro en frío derivada del manifiesto. El archivo incluye una advertencia de no editar y es utilizado por `openclaw plugins update`, desinstalación, diagnósticos y el registro de complementos en frío.
+Los metadatos de instalación del complemento son un estado gestionado por la máquina, no una configuración de usuario. Las instalaciones y actualizaciones los escriben en `plugins/installs.json` bajo el directorio de estado activo de OpenClaw. Su mapa `installRecords` de nivel superior es la fuente duradera de los metadatos de instalación, incluidos los registros de manifiestos de complementos rotos o faltantes. La matriz `plugins` es la caché del registro en frío derivada del manifiesto. El archivo incluye una advertencia de no editar y lo utilizan `openclaw plugins update`, la desinstalación, el diagnóstico y el registro de complementos en frío.
 
-Cuando OpenClaw detecta registros heredados enviados `plugins.installs` en la configuración, las lecturas en tiempo de ejecución los tratan como entrada de compatibilidad sin reescribir `openclaw.json`. Las escrituras explícitas de complementos y `openclaw doctor --fix` mueven esos registros al índice de complementos y eliminan la clave de configuración cuando se permiten escrituras en la configuración; si alguna escritura falla, los registros de configuración se mantienen para que no se pierdan los metadatos de instalación.
+Cuando OpenClaw ve registros heredados enviados `plugins.installs` en la configuración, las lecturas en tiempo de ejecución los tratan como entrada de compatibilidad sin reescribir `openclaw.json`. Las escrituras explícitas de complementos y `openclaw doctor --fix` mueven esos registros al índice de complementos y eliminan la clave de configuración cuando se permiten las escrituras de configuración; si alguna escritura falla, los registros de configuración se mantienen para que no se pierdan los metadatos de instalación.
 
 ### Desinstalar
 
@@ -339,9 +332,9 @@ openclaw plugins uninstall <id> --dry-run
 openclaw plugins uninstall <id> --keep-files
 ```
 
-`uninstall` elimina los registros de complementos de `plugins.entries`, el índice de complementos persistido, las entradas de la lista de permitidos/denegados de complementos y las entradas `plugins.load.paths` vinculadas, cuando corresponda. A menos que se establezca `--keep-files`, la desinstalación también elimina el directorio de instalación administrada rastreado cuando está dentro de la raíz de extensiones de complementos de OpenClaw. Para complementos de memoria activos, la ranura de memoria se restablece a `memory-core`.
+`uninstall` elimina los registros del complemento de `plugins.entries`, el índice de complementos persistente, las entradas de la lista de permitir/denegar del complemento y las entradas `plugins.load.paths` vinculadas cuando corresponda. A menos que se establezca `--keep-files`, la desinstalación también elimina el directorio de instalación administrada rastreado cuando se encuentra dentro de la raíz de extensiones de complementos de OpenClaw. Para complementos de memoria activos, la ranura de memoria se restablece a `memory-core`.
 
-<Note>`--keep-config` es compatible como un alias obsoleto para `--keep-files`.</Note>
+<Note>`--keep-config` es compatible como un alias en desuso para `--keep-files`.</Note>
 
 ### Actualizar
 
@@ -353,29 +346,29 @@ openclaw plugins update @openclaw/voice-call
 openclaw plugins update openclaw-codex-app-server --dangerously-force-unsafe-install
 ```
 
-Las actualizaciones se aplican a las instalaciones de complementos rastreadas en el índice de complementos administrado y a las instalaciones de hook-pack rastreadas en `hooks.internal.installs`.
+Las actualizaciones se aplican a las instalaciones de complementos rastreadas en el índice de complementos administrado y a las instalaciones de hook-packs rastreadas en `hooks.internal.installs`.
 
 <AccordionGroup>
   <Accordion title="Resolución de id de complemento vs especificación npm">
-    Cuando pasas un id de complemento, OpenClaw reutiliza la especificación de instalación registrada para ese complemento. Eso significa que las dist-tags previamente almacenadas, como `@beta` y las versiones fijas exactas, siguen usándose en ejecuciones posteriores de `update <id>`.
+    Cuando pasas un id de complemento, OpenClaw reutiliza la especificación de instalación registrada para ese complemento. Eso significa que las dist-tags almacenadas previamente, como `@beta` y las versiones fijas exactas, continúan usándose en ejecuciones posteriores de `update <id>`.
 
-    Para las instalaciones de npm, también puedes pasar una especificación explícita de paquete npm con una dist-tag o una versión exacta. OpenClaw resuelve ese nombre de paquete de vuelta al registro del complemento rastreado, actualiza ese complemento instalado y registra la nueva especificación npm para futuras actualizaciones basadas en id.
+    Para instalaciones npm, también puedes pasar una especificación explícita de paquete npm con una dist-tag o versión exacta. OpenClaw resuelve ese nombre de paquete de vuelta al registro del complemento rastreado, actualiza ese complemento instalado y registra la nueva especificación npm para futuras actualizaciones basadas en id.
 
-    Pasar el nombre del paquete npm sin una versión o etiqueta también se resuelve de vuelta al registro del complemento rastreado. Usa esto cuando un complemento estaba fijado a una versión exacta y deseas moverlo de vuelta a la línea de lanzamiento predeterminada del registro.
+    Pasar el nombre del paquete npm sin una versión o etiqueta también se resuelve de vuelta al registro del complemento rastreado. Usa esto cuando un complemento se fijó a una versión exacta y quieres volverlo a mover a la línea de lanzamiento predeterminada del registro.
 
   </Accordion>
   <Accordion title="Actualizaciones del canal beta">
-    `openclaw plugins update` reutiliza la especificación del complemento rastreada a menos que pases una nueva especificación. `openclaw update` también conoce el canal de actualización activo de OpenClaw: en el canal beta, los registros de complementos npm y ClawHub de línea predeterminada intentan `@beta` primero. Recurren a la especificación predeterminada/latest registrada si no existe una versión beta del complemento; los complementos npm también recurren cuando el paquete beta existe pero falla la validación de instalación. Esa alternativa se informa como una advertencia y no hace que la actualización principal falle. Las versiones exactas y las etiquetas explícitas permanecen fijadas a ese selector.
+    `openclaw plugins update` reutiliza la especificación del complemento rastreado a menos que pases una nueva especificación. `openclaw update` additionally conoce el canal de actualización activo de OpenClaw: en el canal beta, los registros de complementos npm y ClawHub de línea predeterminada intentan `@beta` primero. Recurren a la especificación predeterminada/latest registrada si no existe una versión beta del complemento; los complementos npm también recurren cuando el paquete beta existe pero falla la validación de la instalación. Esa recuperación se reporta como una advertencia y no falla la actualización principal. Las versiones exactas y las etiquetas explícitas permanecen fijas a ese selector.
 
   </Accordion>
-  <Accordion title="Verificaciones de versión y desviación de integridad">
-    Antes de una actualización en vivo de npm, OpenClaw verifica la versión del paquete instalado con los metadatos del registro npm. Si la versión instalada y la identidad del artefacto registrado ya coinciden con el objetivo resuelto, la actualización se omite sin descargar, reinstalar o reescribir `openclaw.json`.
+  <Accordion title="Comprobaciones de versión y deriva de integridad">
+    Antes de una actualización en vivo de npm, OpenClaw verifica la versión del paquete instalado frente a los metadatos del registro npm. Si la versión instalada y la identidad del artefacto registrado coinciden con el objetivo resuelto, la actualización se omite sin descargar, reinstalar o reescribir `openclaw.json`.
 
-    Cuando existe un hash de integridad almacenado y el hash del artefacto obtenido cambia, OpenClaw lo trata como una desviación del artefacto npm. El comando interactivo `openclaw plugins update` imprime los hashes esperados y reales y pide confirmación antes de continuar. Los asistentes de actualización no interactivos fallan de forma cerrada a menos que quien llama suministre una política de continuación explícita.
+    Cuando existe un hash de integridad almacenado y el hash del artefacto recuperado cambia, OpenClaw lo trata como una deriva de artefacto npm. El comando interactivo `openclaw plugins update` imprime los hashes esperados y reales y solicita confirmación antes de continuar. Las ayudas de actualización no interactivas fallan de forma cerrada a menos que la persona que llama proporcione una política de continuación explícita.
 
   </Accordion>
   <Accordion title="--dangerously-force-unsafe-install en la actualización">
-    `--dangerously-force-unsafe-install` también está disponible en `plugins update` como una anulación de emergencia para falsos positivos del escaneo de código peligroso integrado durante las actualizaciones de complementos. Aun así, no omite los bloqueos de política `before_install` del complemento ni el bloqueo por falla de escaneo, y solo se aplica a las actualizaciones de complementos, no a las actualizaciones de paquetes de ganchos.
+    `--dangerously-force-unsafe-install` también está disponible en `plugins update` como una anulación de emergencia para los falsos positivos del escaneo de código peligroso integrado durante las actualizaciones de complementos. Aún así, no omite los bloques de política `before_install` del complemento ni el bloqueo por fallas de escaneo, y solo se aplica a las actualizaciones de complementos, no a las actualizaciones de hook-packs.
   </Accordion>
 </AccordionGroup>
 
@@ -387,20 +380,20 @@ openclaw plugins inspect <id> --runtime
 openclaw plugins inspect <id> --json
 ```
 
-Inspect muestra la identidad, el estado de carga, la fuente, las capacidades del manifiesto, los indicadores de política, los diagnósticos, los metadatos de instalación, las capacidades del paquete y cualquier compatibilidad detectada con servidores MCP o LSP sin importar el tiempo de ejecución del complemento de forma predeterminada. Agregue `--runtime` para cargar el módulo del complemento e incluir los hooks, herramientas, comandos, servicios, métodos de puerta de enlace y rutas HTTP registrados. La inspección del tiempo de ejecución informa directamente las dependencias faltantes del complemento; las instalaciones y reparaciones permanecen en `openclaw plugins install`, `openclaw plugins update` y `openclaw doctor --fix`.
+Inspeccionar muestra la identidad, el estado de carga, la fuente, las capacidades del manifiesto, las marcas de política, los diagnósticos, los metadatos de instalación, las capacidades del paquete y cualquier soporte detectado de servidor MCP o LSP sin importar el tiempo de ejecución del complemento de forma predeterminada. Agregue `--runtime` para cargar el módulo del complemento e incluir los hooks, herramientas, comandos, servicios, métodos de puerta de enlace y rutas HTTP registrados. La inspección del tiempo de ejecución informa directamente las dependencias faltantes del complemento; las instalaciones y reparaciones permanecen en `openclaw plugins install`, `openclaw plugins update` y `openclaw doctor --fix`.
 
-Los comandos de CLI propiedad del complemento generalmente se instalan como grupos de comandos raíz `openclaw`, pero los complementos también pueden registrar comandos anidados bajo un elemento principal central como `openclaw nodes`. Después de que `inspect --runtime` muestra un comando bajo `cliCommands`, ejecútelo en la ruta listada; por ejemplo, un complemento que registra `demo-git` se puede verificar con `openclaw demo-git ping`.
+Los comandos de CLI propiedad de plugins generalmente se instalan como grupos de comandos raíz `openclaw`, pero los plugins también pueden registrar comandos anidados bajo un padre principal como `openclaw nodes`. Después de que `inspect --runtime` muestra un comando bajo `cliCommands`, ejecútelo en la ruta listada; por ejemplo, un plugin que registra `demo-git` se puede verificar con `openclaw demo-git ping`.
 
-Cada complemento se clasifica por lo que realmente registra en tiempo de ejecución:
+Cada plugin se clasifica por lo que realmente registra en tiempo de ejecución:
 
-- **plain-capability** — un tipo de capacidad (p. ej., un complemento solo de proveedor)
+- **plain-capability** — un tipo de capacidad (p. ej., un plugin solo de proveedor)
 - **hybrid-capability** — múltiples tipos de capacidades (p. ej., texto + voz + imágenes)
-- **hook-only** — solo ganchos, sin capacidades ni superficies
+- **hook-only** — solo hooks, sin capacidades ni superficies
 - **non-capability** — herramientas/comandos/servicios pero sin capacidades
 
 Consulte [Plugin shapes](/es/plugins/architecture#plugin-shapes) para obtener más información sobre el modelo de capacidades.
 
-<Note>El indicador `--json` genera un informe legible por máquina adecuado para scripts y auditorías. `inspect --all` renderiza una tabla de toda la flota con columnas de forma, tipos de capacidades, avisos de compatibilidad, capacidades del paquete y resumen de hooks. `info` es un alias para `inspect`.</Note>
+<Note>El indicador `--json` genera un informe legible por máquina adecuado para secuencias de comandos y auditorías. `inspect --all` renderiza una tabla de toda la flota con columnas de forma, tipos de capacidades, avisos de compatibilidad, capacidades de paquetes y resumen de hooks. `info` es un alias para `inspect`.</Note>
 
 ### Doctor
 
@@ -408,9 +401,9 @@ Consulte [Plugin shapes](/es/plugins/architecture#plugin-shapes) para obtener m�
 openclaw plugins doctor
 ```
 
-`doctor` informa los errores de carga del complemento, los diagnósticos de manifiesto/descubrimiento, los avisos de compatibilidad y las referencias obsoletas a la configuración del complemento, como las ranuras de complemento faltantes. Cuando el árbol de instalación y la configuración del complemento están limpios, imprime `No plugin issues detected.` Si la configuración obsoleta permanece pero el árbol de instalación está sano por lo demás, el resumen indica esto en lugar de implicar la salud completa del complemento.
+`doctor` informa errores de carga de plugins, diagnósticos de manifiesto/descubrimiento, avisos de compatibilidad y referencias de configuración de plugins obsoletas, como slots de plugins faltantes. Cuando el árbol de instalación y la configuración del plugin están limpios, imprime `No plugin issues detected.` Si la configuración obsoleta permanece pero el árbol de instalación está sano por lo demás, el resumen lo indica en lugar de implicar la salud completa del plugin.
 
-Si un complemento configurado está presente en el disco pero está bloqueado por las comprobaciones de seguridad de la ruta del cargador, la validación de la configuración mantiene la entrada del complemento y lo informa como `present but blocked`. Solucione el diagnóstico previo de complemento bloqueado, como la propiedad de la ruta o los permisos de escritura para todos, en lugar de eliminar la configuración `plugins.entries.<id>``plugins.allow` o %%PH:INLINE_CODE:269:b591d8c%%.
+Si un plugin configurado está presente en el disco pero está bloqueado por las comprobaciones de seguridad de ruta del cargador, la validación de la configuración mantiene la entrada del plugin y lo informa como `present but blocked`. Corrija el diagnóstico de plugin bloqueado precedente, como la propiedad de la ruta o los permisos de escritura mundial, en lugar de eliminar la configuración `plugins.entries.<id>``plugins.allow` o %%PH:INLINE_CODE:272:b591d8c%%.
 
 Para fallos de forma de módulo, como exportaciones `register`/`activate` faltantes, vuelva a ejecutar con `OPENCLAW_PLUGIN_LOAD_DEBUG=1` para incluir un resumen compacto de la forma de exportación en la salida de diagnóstico.
 
@@ -422,25 +415,25 @@ openclaw plugins registry --refresh
 openclaw plugins registry --json
 ```
 
-El registro de complementos local es el modelo de lectura en frío persistente de OpenClaw para la identidad del complemento instalado, su habilitación, metadatos de origen y propiedad de la contribución. El inicio normal, la búsqueda del propietario del proveedor, la clasificación de configuración del canal y el inventario de complementos pueden leerlo sin importar módulos de tiempo de ejecución del complemento.
+El registro local de complementos es el modelo de lectura en frío persistente de OpenClaw para la identidad del complemento instalado, su habilitación, metadatos de origen y propiedad de la contribución. El inicio normal, la búsqueda del propietario del proveedor, la clasificación de configuración del canal y el inventario de complementos pueden leerlo sin importar módulos de tiempo de ejecución del complemento.
 
-Use `plugins registry` para inspeccionar si el registro persistente está presente, actualizado o obsoleto. Use `--refresh` para reconstruirlo a partir del índice de complementos persistente, la política de configuración y los metadatos del manifiesto/paquete. Esta es una ruta de reparación, no una ruta de activación en tiempo de ejecución.
+Use `plugins registry` para inspeccionar si el registro persistente está presente, actualizado o obsoleto. Use `--refresh` para reconstruirlo a partir del índice persistente de complementos, la política de configuración y los metadatos del manifiesto/paquete. Esta es una ruta de reparación, no una ruta de activación en tiempo de ejecución.
 
-`openclaw doctor --fix` también repara la deriva de npm administrada adyacente al registro: si un paquete `@openclaw/*` huérfano o recuperado bajo un proyecto npm de complemento administrado o la raíz plana administrada heredada ensombrece un complemento empaquetado, doctor elimina ese paquete obsoleto y reconstruye el registro para que el inicio se valide contra el manifiesto empaquetado. Doctor también vuelve a vincular el paquete host `openclaw` en los complementos npm administrados que declaran `peerDependencies.openclaw`, de modo que las importaciones en tiempo de ejecución locales del paquete, como `openclaw/plugin-sdk/*`, se resuelvan después de las actualizaciones o reparaciones de npm.
+`openclaw doctor --fix` también repara la deriva administrada de npm adyacente al registro: si un paquete `@openclaw/*` huérfano o recuperado bajo un proyecto npm de complemento administrado o la raíz administrada plana heredada ensombrece un complemento agrupado, doctor elimina ese paquete obsoleto y reconstruye el registro para que el inicio se valide contra el manifiesto agrupado. Doctor también vuelve a vincular el paquete anfitrión `openclaw` en complementos npm administrados que declaran `peerDependencies.openclaw`, de modo que las importaciones de tiempo de ejecución locales del paquete, como `openclaw/plugin-sdk/*`, se resuelvan después de actualizaciones o reparaciones de npm.
 
-<Warning>`OPENCLAW_DISABLE_PERSISTED_PLUGIN_REGISTRY=1` es un interruptor de compatibilidad de emergencia (break-glass) obsoleto para fallos de lectura del registro. Prefiera `plugins registry --refresh` o `openclaw doctor --fix`; la reserva de entorno es solo para la recuperación de emergencia del inicio mientras se implementa la migración.</Warning>
+<Warning>`OPENCLAW_DISABLE_PERSISTED_PLUGIN_REGISTRY=1` es un interruptor de compatibilidad de emergencia en caso de fallos de lectura del registro. Prefiera `plugins registry --refresh` o `openclaw doctor --fix`; la opción de respaldo de entorno es solo para la recuperación de inicio de emergencia mientras se implementa la migración.</Warning>
 
-### Marketplace
+### Mercado
 
 ```bash
 openclaw plugins marketplace list <source>
 openclaw plugins marketplace list <source> --json
 ```
 
-La lista del Marketplace acepta una ruta de Marketplace local, una ruta `marketplace.json`, una abreviatura de GitHub como `owner/repo`, una URL de repositorio de GitHub o una URL de git. `--json` imprime la etiqueta de fuente resuelta más el manifiesto del Marketplace analizado y las entradas de complementos.
+La lista del mercado acepta una ruta de mercado local, una ruta `marketplace.json`, una abreviatura de GitHub como `owner/repo`, una URL de repositorio de GitHub o una URL de git. `--json` imprime la etiqueta de fuente resuelta más el manifiesto de mercado analizado y las entradas de complementos.
 
 ## Relacionado
 
 - [Construcción de complementos](/es/plugins/building-plugins)
-- [Referencia de la CLI](/es/cli)
+- [Referencia de CLI](/es/cli)
 - [ClawHub](/es/clawhub)

@@ -172,7 +172,7 @@ Codex `config.toml`、本地 `hooks/hooks.json`、非精选市场、不是源安
 - OpenClaw 文件内存的内存配置默认值，以及 Honcho 等外部内存提供商的存档或人工审查项。
 - 在 `skills/<name>/` 下包含 `SKILL.md` 文件的 Skills。
 - 来自 `skills.config` 的每项 Skill 配置值。
-- 当接受交互式凭据迁移，或设置了 `--include-secrets` 时，支持从 Hermes OAuth`auth.json`OpenAIOAuth 导入 OAuth 凭据，以及从 OpenCode `auth.json` 导入 OpenCode OpenAI OAuth 凭据。
+- 当接受交互式凭证迁移或设置了 `--include-secrets` 时，从 OpenCode OpenAIOAuth`auth.json` 导入 OpenCode OpenAI OAuth 凭证。Hermes `auth.json`OAuthOpenAI OAuth 条目是遗留状态，用于手动 OpenAI 重新身份验证或 doctor 修复。
 - 当接受交互式凭据迁移，或设置了 `--include-secrets` 时，支持从 Hermes API`.env` 和 OpenCode `auth.json` 导入 API 密钥和令牌。
 
 ### 支持的 `.env` 密钥

@@ -40,19 +40,22 @@ Vous cherchez de la documentation sur les canaux de chat (WhatsApp/Telegram/Disc
 - [fal](/fr/providers/fal)
 - [Fireworks](/fr/providers/fireworks)
 - [GitHub Copilot](/fr/providers/github-copilot)
+- [GMI Cloud](/fr/providers/gmi)
 - [Google (Gemini)](/fr/providers/google)
 - [Gradium](/fr/providers/gradium)
-- [Groq (LPU inference)](/fr/providers/groq)
-- [Hugging Face (Inference)](/fr/providers/huggingface)
-- [inferrs (local models)](/fr/providers/inferrs)
+- [Groq (inférence LPU)](/fr/providers/groq)
+- [Hugging Face (Inférence)](/fr/providers/huggingface)
+- [inferrs (modèles locaux)](/fr/providers/inferrs)
 - [Kilocode](/fr/providers/kilocode)
-- [LiteLLM (unified gateway)](/fr/providers/litellm)
-- [LM Studio (local models)](/fr/providers/lmstudio)
+- [LiteLLM (passerelle unifiée)](/fr/providers/litellm)
+- [LM Studio (modèles locaux)](/fr/providers/lmstudio)
 - [MiniMax](/fr/providers/minimax)
 - [Mistral](/fr/providers/mistral)
-- [Moonshot IA (Kimi + Kimi Coding)](/fr/providers/moonshot)
+- [Moonshot AI (Kimi + Kimi Coding)](/fr/providers/moonshot)
 - [NVIDIA](/fr/providers/nvidia)
+- [NovitaAI](/fr/providers/novita)
 - [Ollama (cloud + modèles locaux)](/fr/providers/ollama)
+- [Ollama Cloud](/fr/providers/ollama-cloud)
 - [OpenAI (API + Codex)](/fr/providers/openai)
 - [OpenCode](/fr/providers/opencode)
 - [OpenCode Go](/fr/providers/opencode-go)
@@ -60,6 +63,7 @@ Vous cherchez de la documentation sur les canaux de chat (WhatsApp/Telegram/Disc
 - [Perplexity (recherche web)](/fr/providers/perplexity-provider)
 - [Qianfan](/fr/providers/qianfan)
 - [Qwen Cloud](/fr/providers/qwen)
+- [Qwen OAuth / Portail](/fr/providers/qwen-oauth)
 - [Runway](/fr/providers/runway)
 - [SenseAudio](/fr/providers/senseaudio)
 - [SGLang (modèles locaux)](/fr/providers/sglang)
@@ -67,8 +71,8 @@ Vous cherchez de la documentation sur les canaux de chat (WhatsApp/Telegram/Disc
 - [Synthetic](/fr/providers/synthetic)
 - [Tencent Cloud (TokenHub)](/fr/providers/tencent)
 - [Together AI](/fr/providers/together)
-- [Venice (Venice IA, axé sur la confidentialité)](/fr/providers/venice)
-- [Vercel IA Gateway](/fr/providers/vercel-ai-gateway)
+- [Venice (Venice AI, respectueux de la vie privée)](/fr/providers/venice)
+- [Vercel AI Gateway](/fr/providers/vercel-ai-gateway)
 - [vLLM (modèles locaux)](/fr/providers/vllm)
 - [Volcengine (Doubao)](/fr/providers/volcengine)
 - [Vydra](/fr/providers/vydra)
@@ -76,25 +80,25 @@ Vous cherchez de la documentation sur les canaux de chat (WhatsApp/Telegram/Disc
 - [Xiaomi](/fr/providers/xiaomi)
 - [Z.AI (GLM)](/fr/providers/zai)
 
-## Pages de vue d'ensemble partagées
+## Pages d'aperçu partagées
 
-- [Variantes groupées supplémentaires](/fr/providers/models#additional-bundled-provider-variants) - Anthropic Vertex, Copilot Proxy et CLI OAuth
-- [Génération d'images](/fr/tools/image-generation) - `image_generate` tool partagé, sélection du provider et basculement
-- [Génération de musique](/fr/tools/music-generation) - `music_generate` tool partagé, sélection du provider et basculement
-- [Génération vidéo](/fr/tools/video-generation) - outil `video_generate` partagé, sélection de provider et basculement
+- [Variantes groupées supplémentaires](/fr/providers/models#additional-bundled-provider-variants) - Anthropic Vertex, Copilot Proxy et Gemini CLI OAuth
+- [Génération d'images](/fr/tools/image-generation) - `image_generate` tool partagé, sélection de provider et basculement
+- [Génération de musique](/fr/tools/music-generation) - `music_generate` tool partagé, sélection de provider et basculement
+- [Génération de vidéo](/fr/tools/video-generation) - `video_generate` tool partagé, sélection de provider et basculement
 
 ## Providers de transcription
 
-- [Deepgram (transcription audio)](Deepgram/en/providers/deepgram)
+- [Deepgram (transcription audio)](/fr/providers/deepgram)
 - [ElevenLabs](/fr/providers/elevenlabs#speech-to-text)
 - [Mistral](/fr/providers/mistral#audio-transcription-voxtral)
-- [OpenAI](OpenAI/en/providers/openai#speech-to-text)
+- [OpenAI](/fr/providers/openai#speech-to-text)
 - [SenseAudio](/fr/providers/senseaudio)
 - [xAI](/fr/providers/xai#speech-to-text)
 
 ## Outils communautaires
 
-- [Claude Max API Proxy](API/en/providers/claude-max-api-proxyAnthropic) - Proxy communautaire pour les identifiants d'abonnement Claude (vérifiez la politique/les conditions d'utilisation d'Anthropic avant emploi)
+- [Claude Max API Proxy](/fr/providers/claude-max-api-proxy) - Proxy communautaire pour les identifiants d'abonnement Claude (vérifiez la politique/les conditions d'Anthropic avant utilisation)
 
 Pour le catalogue complet des providers (xAI, Groq, Mistral, etc.) et la configuration avancée,
-voir [Model providers](/fr/concepts/model-providers).
+consultez [Model providers](/fr/concepts/model-providers).

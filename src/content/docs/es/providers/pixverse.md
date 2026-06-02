@@ -25,7 +25,7 @@ OpenClaw proporciona `pixverse` como un complemento externo oficial para la gene
 <Steps>
   <Step title="Instalar el complemento">
     ```bash
-    openclaw plugins install @openclaw/pixverse-provider
+    openclaw plugins install clawhub:@openclaw/pixverse-provider
     openclaw gateway restart
     ```
   </Step>

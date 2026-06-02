@@ -1,5 +1,5 @@
 ---
-summary: "CLI 參考手冊，用於 `openclaw sessions`（列出已儲存的會話 + 用法）"
+summary: "CLI reference for `openclaw sessions` (list stored sessions + usage)"
 read_when:
   - You want to list stored sessions and see recent activity
 title: "Sessions"
@@ -9,11 +9,24 @@ title: "Sessions"
 
 列出已儲存的對話會話。
 
-會話列表並非通道/提供者的存活性檢查。它們顯示的是來自會話儲存的持久化對話記錄。一個安靜的 Discord、Slack、Telegram 或其他通道可以在不建立新會話記錄的情況下成功重新連線，直到處理訊息為止。當您需要即時通道連線時，請使用 `openclaw channels status --probe`、`openclaw status --deep` 或 `openclaw health --verbose`。
+Session lists are not channel/provider liveness checks. They show persisted
+conversation rows from session stores. A quiet Discord, Slack, Telegram, or
+other channel can reconnect successfully without creating a new session row
+until a message is processed. Use `openclaw channels status --probe`,
+`openclaw status --deep`, or `openclaw health --verbose` when you need live
+channel connectivity.
 
-`openclaw sessions` 和 Gateway `sessions.list` 回應預設是有界的，因此大型長期儲存無法壟斷 CLI 程序或 Gateway 事件迴圈。CLI 預設會傳回最新的 100 個會話；若需更小/更大的視窗，請傳遞 `--limit <n>`；當您有意需要完整儲存時，則傳遞 `--limit all`。當呼叫者需要顯示還有更多記錄時，JSON 回應會包含 `totalCount`、`limitApplied` 和 `hasMore`。
+`openclaw sessions` and Gateway `sessions.list` responses are bounded by
+default so large long-lived stores cannot monopolize the CLI process or Gateway
+event loop. The CLI returns the newest 100 sessions by default; pass
+`--limit <n>` for a smaller/larger window or `--limit all` when you intentionally
+need the full store. JSON responses include `totalCount`, `limitApplied`, and
+`hasMore` when callers need to show that more rows exist.
 
-RPC 用戶端可以傳遞 `configuredAgentsOnly: true` 以保留廣泛的合併探索來源，但僅傳回目前設定中存在的代理程式記錄。Control UI 預設使用該模式，因此已刪除或僅在磁碟上的代理程式儲存不會再次出現在 Sessions 視圖中。
+RPC clients can pass `configuredAgentsOnly: true` to keep the broad combined
+discovery source but return only rows for agents currently present in config.
+Control UI uses that mode by default so deleted or disk-only agent stores do
+not reappear in the Sessions view.
 
 ```bash
 openclaw sessions
@@ -28,11 +41,25 @@ openclaw sessions --json
 範圍選擇：
 
 - 預設值：設定的預設代理程式儲存
-- `--verbose`：詳細記錄
-- `--agent <id>`：一個設定的代理程式儲存
-- `--all-agents`：聚合所有設定的代理程式儲存
-- `--store <path>`：明確的儲存路徑（無法與 `--agent` 或 `--all-agents` 結合使用）
-- `--limit <n|all>`：要輸出的最大記錄數（預設為 `100`；`all` 可恢復完整輸出）
+- `--verbose`: verbose logging
+- `--agent <id>`: one configured agent store
+- `--all-agents`: aggregate all configured agent stores
+- `--store <path>`: explicit store path (cannot be combined with `--agent` or `--all-agents`)
+- `--limit <n|all>`: max rows to output (default `100`; `all` restores full output)
+
+Tail human-readable trajectory progress for stored sessions:
+
+```bash
+openclaw sessions tail
+openclaw sessions tail --follow
+openclaw sessions tail --session-key "agent:main:telegram:direct:123" --tail 25
+openclaw sessions --agent work tail --follow
+openclaw sessions --all-agents tail --follow
+```
+
+`openclaw sessions tail` 會將最近的軌跡 JSONL 事件渲染為簡潔的進度列。如果沒有 `--session-key`，它會首先監看正在執行的會話，然後是最新儲存的會話。`--tail <count>` 控制在進入跟隨模式之前列印多少現有事件；預設值是 `80`，而 `0` 從目前的結尾開始。`--follow` 會持續監看選定的軌跡檔案，包括由 `<session>.trajectory-path.json` 引用的已重新定位檔案。
+
+進度檢視被刻意設計得較為保守：不會列印提示詞文字、工具引數和工具結果主體。工具呼叫會顯示帶有 `{...redacted...}` 的工具名稱；工具結果會顯示諸如 `ok`、`error` 或 `done` 的狀態；模型完成列會顯示供應商/模型和最終狀態。
 
 匯出已儲存會話的軌跡套件：
 
@@ -41,9 +68,9 @@ openclaw sessions export-trajectory --session-key "agent:main:telegram:direct:12
 openclaw sessions export-trajectory --session-key "agent:main:telegram:direct:123" --output bug-123 --json
 ```
 
-這是擁有者批准執行請求後，`/export-trajectory` 斜線指令使用的指令路徑。輸出目錄總是在所選工作區內的 `.openclaw/trajectory-exports/` 中解析。
+這是所有者批准執行請求後，`/export-trajectory` 斜線指令所使用的指令路徑。輸出目錄始終在所選工作區內的 `.openclaw/trajectory-exports/` 中解析。
 
-`openclaw sessions --all-agents` 會讀取已設定的 agent stores。Gateway 和 ACP session 探索範圍更廣：它們也包含在預設 `agents/` 根目錄或樣板化 `session.store` 根目錄下找到的僅磁碟 stores。這些探索到的 stores 必須解析為 agent 根目錄內的常規 `sessions.json` 檔案；符號連結和根目錄外的路徑會被跳過。
+`openclaw sessions --all-agents` 會讀取已設定的代理程式存放區。Gateway 和 ACP 會話探索的範圍更廣：它們也包括在預設 `agents/` 根目錄或範本化 `session.store` 根目錄下找到的僅磁碟存放區。這些探索到的存放區必須解析為代理程式根目錄內的常規 `sessions.json` 檔案；符號連結和根目錄外的路徑會被跳過。
 
 JSON 範例：
 
@@ -71,7 +98,7 @@ JSON 範例：
 
 ## 清理維護
 
-立即執行維護（而非等待下一個寫入週期）：
+立即執行維護（而不是等待下一個寫入週期）：
 
 ```bash
 openclaw sessions cleanup --dry-run
@@ -83,23 +110,23 @@ openclaw sessions cleanup --dry-run --fix-dm-scope
 openclaw sessions cleanup --json
 ```
 
-`openclaw sessions cleanup` 使用來自設定的 `session.maintenance` 設定：
+`openclaw sessions cleanup` 使用組態中的 `session.maintenance` 設定：
 
-- 範圍說明：`openclaw sessions cleanup` 維護 session stores、文字紀錄和 trajectory sidecars。它不會修剪 cron 執行日誌 (`cron/runs/<jobId>.jsonl`)，這些日誌是由 [Cron 設定](/zh-Hant/automation/cron-jobs#configuration) 中的 `cron.runLog.maxBytes` 和 `cron.runLog.keepLines` 管理的，並在 [Cron 維護](/zh-Hant/automation/cron-jobs#maintenance) 中說明。
-- 清理也會修剪未被參照的主要文字紀錄、壓縮檢查點以及比 `session.maintenance.pruneAfter` 更舊的 trajectory sidecars；仍被 `sessions.json` 參照的檔案會被保留。
+- 範圍說明：`openclaw sessions cleanup` 會維護會話存放區、逐字稿和軌跡附屬檔案。它不會修剪 cron 執行記錄，該記錄是由 [Cron 組態](/zh-Hant/automation/cron-jobs#configuration) 中的 `cron.runLog.keepLines` 管理，並在 [Cron 維護](/zh-Hant/automation/cron-jobs#maintenance) 中說明。
+- 清理也會修剪未被引用的主要文字記錄、壓縮檢查點以及早於 `session.maintenance.pruneAfter` 的軌跡副檔案；仍被 `sessions.json` 引用的檔案將會被保留。
 
-- `--dry-run`：預覽有多少項目會被修剪/上限限制，而不進行寫入。
-  - 在文字模式下，dry-run 會列印每個 session 的動作表 (`Action`, `Key`, `Age`, `Model`, `Flags`)，以便您查看會保留什麼與移除什麼。
-- `--enforce`：即使 `session.maintenance.mode` 為 `warn`，仍執行維護。
-- `--fix-missing`：移除缺少文字記錄檔案或僅有標頭/空白資料的條目，即使它們尚未達到正常的過期/計數淘汰條件。
-- `--fix-dm-scope`：當 `session.dmScope` 為 `main` 時，淘汰先前 `per-peer`、`per-channel-peer` 或 `per-account-channel-peer` 路由留下的過時對方鍵值直接 DM 資料列。請先使用 `--dry-run`；套用清理會從 `sessions.json` 中移除這些資料列，並將其文字記錄保留為已刪除的封存。
-- `--active-key <key>`：保護特定的啟用金鑰免於磁碟預算驅逐。耐久的外部對話指標，例如群組工作階段和執行緒範圍的聊天工作階段，也會依據年齡/計數/磁碟預算維護而保留。
-- `--agent <id>`：對單一設定的代理程式存放區執行清理。
-- `--all-agents`：對所有設定的代理程式存放區執行清理。
+- `--dry-run`：預覽將修剪/封頂多少條目，而不進行寫入。
+  - 在文字模式下，dry-run 會列印每個會話的操作表（`Action`、`Key`、`Age`、`Model`、`Flags`），以便您查看將保留或移除的內容。
+- `--enforce`：即使 `session.maintenance.mode` 為 `warn`，也套用維護。
+- `--fix-missing`：移除文字記錄檔案遺失或僅有標頭/空白檔案的條目，即使它們尚未達到正常的老化/計數淘汰標準。
+- `--fix-dm-scope`：當 `session.dmScope` 為 `main` 時，淘汰較早 `per-peer`、`per-channel-peer` 或 `per-account-channel-peer` 路由留下的過時對方金鑰 direct-DM 列。請先使用 `--dry-run`；套用清理會將這些列從 `sessions.json` 中移除，並將其文字記錄作為已刪除的檔案保留。
+- `--active-key <key>`：保護特定的作用中金鑰不被磁碟預算驅逐。持久的對外公交談指標，例如群組會話和執行緒範圍的聊天會話，也會透過老化/計數/磁碟預算維護予以保留。
+- `--agent <id>`：對一個已設定的代理儲存庫執行清理。
+- `--all-agents`：對所有已設定的代理儲存庫執行清理。
 - `--store <path>`：針對特定的 `sessions.json` 檔案執行。
-- `--json`：列印 JSON 摘要。配合 `--all-agents` 使用時，輸出包含每個存放區的摘要。
+- `--json`：列印 JSON 摘要。使用 `--all-agents` 時，輸出包含每個儲存庫的摘要。
 
-當 Gateway 可連線時，對設定之代理程式存放區的非試執行清理會透過 Gateway 傳送，使其與執行時期流量共用相同的工作階段存放區寫入器。請使用 `--store <path>` 進行存放區檔案的明確離線修復。
+當可連線到 Gateway 時，對已設定代理儲存庫的非 dry-run 清理會透過 Gateway 傳送，以便其與執行時期流量共用相同的會話儲存庫寫入器。請使用 `--store <path>` 進行儲存庫檔案的明確離線修復。
 
 `openclaw sessions cleanup --all-agents --dry-run --json`：
 
@@ -135,9 +162,9 @@ openclaw sessions cleanup --json
 
 相關：
 
-- 工作階段設定：[設定參考](/zh-Hant/gateway/config-agents#session)
+- Session 配置：[Configuration reference](/zh-Hant/gateway/config-agents#session)
 
 ## 相關
 
-- [CLI 參考](/zh-Hant/cli)
-- [工作階段管理](/zh-Hant/concepts/session)
+- [CLI reference](/zh-Hant/cli)
+- [Session management](/zh-Hant/concepts/session)

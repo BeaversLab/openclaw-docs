@@ -206,7 +206,7 @@ OpenClaw 为常见的源代码、配置和文档语言提供语法高亮：
 安装 Diff Viewer Language Pack 插件以高亮其他语言：
 
 ```bash
-openclaw plugins install diffs-language-pack
+openclaw plugins install clawhub:@openclaw/diffs-language-pack
 ```
 
 如果有语言包可用，OpenClaw 会自动将其用于默认列表之外的语言。如果没有，这些文件仍可作为纯文本阅读。

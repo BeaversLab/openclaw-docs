@@ -80,7 +80,7 @@ OpenClaw utiliza **perfiles de autenticación** tanto para claves de API como pa
 - La configuración `auth.profiles` / `auth.order` es **solo metadatos + enrutamiento** (sin secretos).
 - Archivo de OAuth heredado de solo importación: `~/.openclaw/credentials/oauth.json` (importado a `auth-profiles.json` en el primer uso).
 
-Más detalles: [OAuth](/es/concepts/oauth)
+Más información: [OAuth](/es/concepts/oauth)
 
 Tipos de credenciales:
 
@@ -139,19 +139,13 @@ Use `auth.order.openai` para el orden orientado al usuario:
 {
   auth: {
     order: {
-      openai: ["openai-codex:user@example.com", "openai:api-key-backup"],
+      openai: ["openai:user@example.com", "openai:api-key-backup"],
     },
   },
 }
 ```
 
-Los perfiles de suscripción de Codex existentes aún pueden usar el id. de perfil heredado
-`openai-codex:*`. La copia de seguridad ordenada de la clave de API puede ser un perfil de clave de API normal
-`openai:*`. Cuando la suscripción alcanza un límite de uso de Codex,
-OpenClaw registra la hora exacta de restablecimiento cuando Codex proporciona una, prueba el siguiente
-perfil de autenticación ordenado y mantiene la ejecución dentro del arnés de Codex. Una vez que pasa la hora
-de restablecimiento, el perfil de suscripción vuelve a ser elegible y la siguiente selección
-automática puede volver a él.
+Use `openai:*` tanto para los perfiles OAuth de ChatGPT/Codex como para los perfiles de clave de API de OpenAI. Cuando la suscripción alcanza un límite de uso de Codex, OpenClaw registra la hora exacta de restablecimiento cuando Codex proporciona una, prueba el siguiente perfil de autenticación ordenado y mantiene la ejecución dentro del arnés de Codex. Una vez que pasa la hora de restablecimiento, el perfil de suscripción vuelve a ser elegible y la siguiente selección automática puede volver a él.
 
 Use un perfil fijado por el usuario solo cuando desee forzar una cuenta/clave para esa
 sesión. Los perfiles fijados por el usuario son intencionalmente estrictos y no saltan
@@ -163,23 +157,23 @@ Cuando un perfil falla debido a errores de autenticación/límite de tasa (o un 
 
 <AccordionGroup>
   <Accordion title="Lo que entra en el cubo de límite de velocidad / tiempo de espera">
-    Ese cubo de límite de velocidad es más amplio que el simple `429`: también incluye mensajes del proveedor como `Too many concurrent requests`, `ThrottlingException`, `concurrency limit reached`, `workers_ai ... quota limit exceeded`, `throttled`, `resource exhausted`, y límites periódicos de ventana de uso como `weekly/monthly limit reached`.
+    Ese cubo de límite de velocidad es más amplio que el simple `429`: también incluye mensajes de proveedores como `Too many concurrent requests`, `ThrottlingException`, `concurrency limit reached`, `workers_ai ... quota limit exceeded`, `throttled`, `resource exhausted` y límites periódicos de la ventana de uso como `weekly/monthly limit reached`.
 
-    Los errores de formato/solicitud no válida suelen ser terminales porque reintentar la misma carga fallaría de la misma manera, por lo que OpenClaw los muestra en lugar de rotar los perfiles de autenticación. Las rutas conocidas de reparación por reintento pueden participar explícitamente: por ejemplo, los fallos de validación del ID de llamada de herramienta de Cloud Code Assist se sanean y se reintentan una vez a través de la política `allowFormatRetry`. Los errores de motivo de detención compatibles con OpenAI, como `Unhandled stop reason: error`, `stop reason: error` y `reason: error`, se clasifican como señales de tiempo de espera/conmutación por error.
+    Los errores de formato/solicitud no válida suelen ser terminales porque reintentar la misma carga fallaría de la misma manera, por lo que OpenClaw los expone en lugar de rotar los perfiles de autenticación. Las rutas conocidas de reparación por reintentos pueden optar explícitamente: por ejemplo, los fallos de validación del ID de llamada de herramienta de Cloud Code Assist se sanitizan y se reintentan una vez a través de la política `allowFormatRetry`. Los errores de razón de detención compatibles con OpenAI, como `Unhandled stop reason: error`, `stop reason: error` y `reason: error`, se clasifican como señales de tiempo de espera/conmutación por error.
 
-    El texto genérico del servidor también puede entrar en ese cubo de tiempo de espera cuando el origen coincide con un patrón transitorio conocido. Por ejemplo, el mensaje simple de envoltura de flujo (stream-wrapper) del tiempo de ejecución del modelo `An unknown error occurred` se trata como digno de conmutación por error para cada proveedor porque el tiempo de ejecución del modelo compartido lo emite cuando los flujos del proveedor terminan con `stopReason: "aborted"` o `stopReason: "error"` sin detalles específicos. Las cargas útiles JSON `api_error` con texto transitorio del servidor como `internal server error`, `unknown error, 520`, `upstream error` o `backend error` también se tratan como tiempos de espera dignos de conmutación por error.
+    El texto genérico del servidor también puede entrar en ese cubo de tiempo de espera cuando el origen coincide con un patrón transitorio conocido. Por ejemplo, el mensaje del contenedor de flujo del tiempo de ejecución del modelo simple `An unknown error occurred` se trata como digno de conmutación por error para cada proveedor porque el tiempo de ejecución del modelo compartido lo emite cuando los flujos de los proveedores terminan con `stopReason: "aborted"` o `stopReason: "error"` sin detalles específicos. Las cargas JSON `api_error` con texto transitorio del servidor como `internal server error`, `unknown error, 520`, `upstream error` o `backend error` también se tratan como tiempos de espera dignos de conmutación por error.
 
-    El texto genérico de upstream específico de OpenRouter, como el simple `Provider returned error`, se trata como tiempo de espera solo cuando el contexto del proveedor es realmente OpenRouter. El texto genérico de respaldo interno, como `LLM request failed with an unknown error.`, se mantiene conservador y no activa la conmutación por error por sí solo.
+    El texto genérico ascendente específico de OpenRouter, como el `Provider returned error` simple, se trata como un tiempo de espera solo cuando el contexto del proveedor es realmente OpenRouter. El texto genérico de reserva interno, como `LLM request failed with an unknown error.`, se mantiene conservador y no activa la conmutación por error por sí solo.
 
   </Accordion>
-  <Accordion title="Límites de reintentos posteriores del SDK">
-    Algunos SDK de proveedores podrían permanecer inactivos durante una ventana de tiempo larga `Retry-After` antes de devolver el control a OpenClaw. Para los SDK basados en Stainless, como Anthropic y OpenAI, OpenClaw limita a 60 segundos por defecto las esperas internas del SDK de `retry-after-ms` / `retry-after` y muestra respuestas reintentables más largas inmediatamente para que se pueda ejecutar esta ruta de conmutación por error. Ajuste o desactive el límite con `OPENCLAW_SDK_RETRY_MAX_WAIT_SECONDS`; consulte [Comportamiento de reintento](/es/concepts/retry).
+  <Accordion title="Límites de reintento posterior del SDK">
+    De lo contrario, algunos SDK de proveedores podrían permanecer inactivos durante un largo periodo `Retry-After` antes de devolver el control a OpenClaw. Para los SDK basados en Stainless, como Anthropic y OpenAI, OpenClaw limita las esperas internas del SDK de `retry-after-ms` / `retry-after` a 60 segundos de forma predeterminada y expone inmediatamente las respuestas reintentables más largas para que se pueda ejecutar esta ruta de conmutación por error. Ajuste o desactive el límite con `OPENCLAW_SDK_RETRY_MAX_WAIT_SECONDS`; consulte [Comportamiento de reintento](/es/concepts/retry).
   </Accordion>
-  <Accordion title="Períodos de enfriamiento con ámbito de modelo">
-    Los períodos de enfriamiento por límite de velocidad también pueden tener un ámbito de modelo:
+  <Accordion title="Períodos de enfriamiento específicos del modelo">
+    Los períodos de enfriamiento por límite de velocidad también pueden ser específicos del modelo:
 
-    - OpenClaw registra `cooldownModel` para fallos por límite de velocidad cuando se conoce el id del modelo que falló.
-    - Un modelo hermano en el mismo proveedor aún se puede intentar cuando el período de enfriamiento está limitado a un modelo diferente.
+    - OpenClaw registra `cooldownModel` para los fallos de límite de velocidad cuando se conoce el ID del modelo fallido.
+    - Todavía se puede intentar un modelo hermano en el mismo proveedor cuando el período de enfriamiento está limitado a un modelo diferente.
     - Las ventanas de facturación/deshabilitadas siguen bloqueando todo el perfil entre modelos.
 
   </Accordion>
@@ -211,9 +205,9 @@ El estado se almacena en `auth-state.json` bajo `usageStats`:
 Los fallos de facturación/crédito (por ejemplo, "créditos insuficientes" / "saldo de crédito demasiado bajo") se tratan como aptos para la conmutación por error, pero generalmente no son transitorios. En lugar de un período de enfriamiento corto, OpenClaw marca el perfil como **deshabilitado** (con un retroceso más largo) y cambia al siguiente perfil/proveedor.
 
 <Note>
-No todas las respuestas con forma de facturación son `402`, y no todos los HTTP `402` llegan aquí. OpenClaw mantiene el texto de facturación explícito en el carril de facturación incluso cuando un proveedor devuelve `401` o `403` en su lugar, pero los comparadores específicos del proveedor permanecen limitados al proveedor que los posee (por ejemplo, OpenRouter `403 Key limit exceeded`).
+No todas las respuestas con forma de facturación son `402`, y no todos los `402` HTTP aterrizan aquí. OpenClaw mantiene el texto de facturación explícito en el carril de facturación incluso cuando un proveedor devuelve `401` o `403` en su lugar, pero los comparadores específicos del proveedor permanecen limitados al proveedor que los posee (por ejemplo, OpenRouter `403 Key limit exceeded`).
 
-Mientras tanto, los errores temporales de ventana de uso `402` y límite de gasto de organización/espacio de trabajo se clasifican como `rate_limit` cuando el mensaje parece reintentable (por ejemplo, `weekly usage limit exhausted`, `daily limit reached, resets tomorrow` o `organization spending limit exceeded`). Esos se mantienen en la ruta de enfriamiento/conmutación por error corta en lugar de la ruta de deshabilitación de facturación larga.
+Mientras tanto, los errores temporales de ventana de uso `402` y límite de gasto de organización/espacio de trabajo se clasifican como `rate_limit` cuando el mensaje parece reintentable (por ejemplo, `weekly usage limit exhausted`, `daily limit reached, resets tomorrow` o `organization spending limit exceeded`). Esos permanecen en la ruta de enfriamiento/conmutación por error corta en lugar de la ruta de deshabilitación de facturación larga.
 
 </Note>
 
@@ -239,11 +233,11 @@ Valores predeterminados:
 
 ## Conmutación por error del modelo
 
-Si fallan todos los perfiles de un proveedor, OpenClaw pasa al siguiente modelo en `agents.defaults.model.fallbacks`. Esto se aplica a fallos de autenticación, límites de tasa y tiempos de espera que agotaron la rotación de perfiles (otros errores no avanzan la conmutación por error). Los errores del proveedor que no exponen suficientes detalles todavía se etiquetan con precisión en el estado de conmutación por error: `empty_response` significa que el proveedor no devolvió ningún mensaje o estado utilizable, `no_error_details` significa que el proveedor devolvió explícitamente `Unknown error (no error details in response)`, y `unclassified` significa que OpenClaw conservó la vista previa sin procesar pero ningún clasificador la ha coincidido todavía.
+Si fallan todos los perfiles de un proveedor, OpenClaw pasa al siguiente modelo en `agents.defaults.model.fallbacks`. Esto se aplica a fallos de autenticación, límites de tasa y tiempos de espera que agotaron la rotación de perfiles (otros errores no avanzan la alternativa). Los errores del proveedor que no exponen suficientes detalles aún se etiquetan con precisión en el estado de alternativa: `empty_response` significa que el proveedor no devolvió ningún mensaje o estado utilizable, `no_error_details` significa que el proveedor devolvió explícitamente `Unknown error (no error details in response)`, y `unclassified` significa que OpenClaw conservó la vista previa sin procesar pero ningún clasificador la ha coincidido aún.
 
-Los errores de sobrecarga y límite de tasa se manejan de manera más agresiva que los períodos de enfriamiento de facturación. De forma predeterminada, OpenClaw permite un reintento de perfil de autenticación del mismo proveedor y luego cambia a la siguiente alternativa de modelo configurada sin esperar. Las señales de proveedor ocupado, como `ModelNotReadyException`, caen en ese grupo de sobrecarga. Ajuste esto con `auth.cooldowns.overloadedProfileRotations`, `auth.cooldowns.overloadedBackoffMs` y `auth.cooldowns.rateLimitedProfileRotations`.
+Los errores de sobrecarga y límite de tasa se manejan de manera más agresiva que los períodos de enfriamiento de facturación. De forma predeterminada, OpenClaw permite un reintento de perfil de autenticación del mismo proveedor y luego cambia a la siguiente alternativa de modelo configurada sin esperar. Las señales de proveedor ocupado, como `ModelNotReadyException`, caen en ese cubo de sobrecarga. Ajuste esto con `auth.cooldowns.overloadedProfileRotations`, `auth.cooldowns.overloadedBackoffMs` y `auth.cooldowns.rateLimitedProfileRotations`.
 
-Cuando una ejecución se inicia desde el principal predeterminado configurado, un trabajo cron principal, un agente principal con alternativas explícitas o una anulación de alternativa seleccionada automáticamente, OpenClaw puede recorrer la cadena de alternativas configurada coincidente. Los agentes principales sin alternativas explícitas y las selecciones explícitas del usuario (por ejemplo `/model ollama/qwen3.5:27b`, el selector de modelos, `sessions.patch` o anulaciones de proveedor/modelo de CLI únicas) son estrictas: si ese proveedor/modelo es inalcanzable o falla antes de producir una respuesta, OpenClaw informa el error en lugar de responder desde una alternativa no relacionada.
+Cuando una ejecución se inicia desde el principal predeterminado configurado, un principal de trabajo programado, un principal de agente con alternativas explícitas o una invalidación de alternativa seleccionada automáticamente, OpenClaw puede recorrer la cadena de alternativas configurada coincidente. Los principales de agente sin alternativas explícitas y las selecciones explícitas del usuario (por ejemplo, `/model ollama/qwen3.5:27b`, el selector de modelos, `sessions.patch` o invalidaciones únicas de proveedor/modelo de CLI) son estrictas: si ese proveedor/modelo es inalcanzable o falla antes de producir una respuesta, OpenClaw informa el fallo en lugar de responder desde una alternativa no relacionada.
 
 ### Reglas de la cadena de candidatos
 
@@ -252,11 +246,11 @@ OpenClaw construye la lista de candidatos a partir del `provider/model` solicita
 <AccordionGroup>
   <Accordion title="Reglas">
     - El modelo solicitado siempre es el primero.
-    - Las alternativas configuradas explícitas se deduplican pero no se filtran por la lista blanca de modelos. Se tratan como una intención explícita del operador.
-    - Si la ejecución actual ya está en una alternativa configurada en la misma familia de proveedores, OpenClaw sigue usando la cadena configurada completa.
-    - Cuando no se suministra una anulación de alternativa explícita, se prueban las alternativas configuradas antes que el principal configurado, incluso si el modelo solicitado utiliza un proveedor diferente.
-    - Cuando no se suministra una anulación de alternativa explícita al ejecutor de alternativas, el principal configurado se añade al final para que la cadena pueda volver al valor predeterminado normal una vez que se agoten los candidatos anteriores.
-    - Cuando un solicitante suministra `fallbacksOverride`, el ejecutor usa exactamente el modelo solicitado más esa lista de anulación. Una lista vacía deshabilita la alternativa de modelo y evita que el principal configurado se añada como un objetivo de reintento oculto.
+    - Las reservas (fallbacks) configuradas explícitamente se deduplican pero no se filtran por la lista de permitidos del modelo. Se tratan como una intención explícita del operador.
+    - Si la ejecución actual ya está en una reserva configurada dentro de la misma familia de proveedores, OpenClaw sigue usando la cadena configurada completa.
+    - Cuando no se proporciona ninguna anulación de reserva explícita, se intentan las reservas configuradas antes que el primario configurado, incluso si el modelo solicitado usa un proveedor diferente.
+    - Cuando no se proporciona ninguna anulación de reserva explícita al ejecutor de reserva, el primario configurado se agrega al final para que la cadena pueda volver al valor predeterminado normal una vez que se agoten los candidatos anteriores.
+    - Cuando un llamador proporciona `fallbacksOverride`, el ejecutor usa exactamente el modelo solicitado más esa lista de anulación. Una lista vacía deshabilita la reserva del modelo y evita que el primario configurado se agregue como un objetivo de reintento oculto.
 
   </Accordion>
 </AccordionGroup>
@@ -266,18 +260,18 @@ OpenClaw construye la lista de candidatos a partir del `provider/model` solicita
 <Tabs>
   <Tab title="Continúa en">
     - fallos de autenticación
-    - límites de velocidad y agotamiento del tiempo de espera
+    - límites de velocidad y agotamiento del período de enfriamiento (cooldown)
     - errores de sobrecarga/proveedor ocupado
-    - errores de conmutación por error de forma de tiempo de espera
+    - errores de failover con forma de tiempo de espera
     - deshabilitaciones de facturación
-    - `LiveSessionModelSwitchError`, que se normaliza en una ruta de conmutación por error para que un modelo persistente obsoleto no cree un bucle de reinterno externo
+    - `LiveSessionModelSwitchError`, que se normaliza en una ruta de failover para que un modelo persistente obsoleto no cree un bucle de reinterno externo
     - otros errores no reconocidos cuando todavía quedan candidatos
 
   </Tab>
   <Tab title="No continúa en">
-    - interrupciones explícitas que no son de tiempo de espera o de forma de conmutación por error
-    - errores de desbordamiento de contexto que deben permanecer dentro de la lógica de compactación/reintento (por ejemplo, `request_too_large`, `INVALID_ARGUMENT: input exceeds the maximum number of tokens`, `input token count exceeds the maximum number of input tokens`, `The input is too long for the model` o `ollama error: context length exceeded`)
-    - un error desconocido final cuando no quedan candidatos
+    - interrupciones explícitas que no tienen forma de tiempo de espera/failover
+    - errores de desbordamiento de contexto que deben permanecer dentro de la lógica de compactación/reintento (por ejemplo `request_too_large`, `INVALID_ARGUMENT: input exceeds the maximum number of tokens`, `input token count exceeds the maximum number of input tokens`, `The input is too long for the model` o `ollama error: context length exceeded`)
+    - un error final desconocido cuando no quedan candidatos
 
   </Tab>
 </Tabs>
@@ -288,28 +282,28 @@ Cuando todos los perfiles de autenticación de un proveedor ya están en tiempo 
 
 <AccordionGroup>
   <Accordion title="Decisiones por candidato">
-    - Los fallos persistentes de autenticación omiten todo el proveedor inmediatamente.
-    - Las deshabilitaciones de facturación generalmente se omiten, pero el candidato principal aún se puede sondear en un acelerador para que la recuperación sea posible sin reiniciar.
-    - El candidato principal se puede sondear cerca de la expiración del tiempo de espera, con un acelerador por proveedor.
-    - Los hermanos de conmutación por error del mismo proveedor se pueden intentar a pesar del tiempo de espera cuando el fallo parece transitorio (`rate_limit`, `overloaded` o desconocido). Esto es especialmente relevante cuando un límite de velocidad está limitado al modelo y un modelo hermano aún puede recuperarse inmediatamente.
-    - Las sondas de tiempo de espera transitorias se limitan a una por proveedor por ejecución de conmutación por error para que un solo proveedor no detenga la conmutación por error entre proveedores.
+    - Los fallos de autenticación persistentes omiten todo el proveedor inmediatamente.
+    - Las deshabilitaciones de facturación generalmente se omiten, pero el candidato principal aún puede sondearse con un acelerador para que la recuperación sea posible sin reiniciar.
+    - El candidato principal puede sondearse cerca de la expiración del enfriamiento, con un acelerador por proveedor.
+    - Los hermanos de reserva del mismo proveedor pueden intentarse a pesar del enfriamiento cuando el fallo parece transitorio (`rate_limit`, `overloaded` o desconocido). Esto es especialmente relevante cuando un límite de velocidad está limitado al modelo y un modelo hermano aún puede recuperarse inmediatamente.
+    - Los sondeos de enfriamiento transitorio se limitan a uno por proveedor por ejecución de reserva para que un solo proveedor no detenga la reserva entre proveedores.
 
   </Accordion>
 </AccordionGroup>
 
 ## Invalidaciones de sesión y cambio en vivo de modelo
 
-Los cambios de modelo de sesión son un estado compartido. El ejecutor activo, el comando `/model`, las actualizaciones de compactación/sesión y la conciliación de sesión en vivo todos leen o escriben partes de la misma entrada de sesión.
+Los cambios de modelo de sesión son un estado compartido. El ejecutor activo, el comando `/model`, las actualizaciones de compactación/sesión y la conciliación de sesión en vivo leen o escriben partes de la misma entrada de sesión.
 
 Esto significa que los reintentos de conmutación por error deben coordinarse con el cambio en vivo de modelo:
 
-- Solo los cambios de modelo explícitos iniciados por el usuario marcan un cambio en vivo pendiente. Esto incluye `/model`, `session_status(model=...)` y `sessions.patch`.
+- Solo los cambios de modelo impulsados explícitamente por el usuario marcan un cambio en vivo pendiente. Esto incluye `/model`, `session_status(model=...)` y `sessions.patch`.
 - Los cambios de modelo iniciados por el sistema, como la rotación de respaldo (fallback), las anulaciones de latido (heartbeat) o la compactación, nunca marcan por sí solos un cambio en vivo pendiente.
-- Las anulaciones de modelo iniciadas por el usuario se tratan como selecciones exactas para la política de respaldo, por lo que un proveedor seleccionado inalcanzable se manifiesta como un error en lugar de ocultarse mediante `agents.defaults.model.fallbacks`.
+- Las anulaciones de modelo impulsadas por el usuario se tratan como selecciones exactas para la política de reserva, por lo que un proveedor seleccionado inalcanzable se manifiesta como un fallo en lugar de ser enmascarado por `agents.defaults.model.fallbacks`.
 - Antes de que comience un reintento de respaldo, el ejecutor de respuestas persiste los campos de anulación de respaldo seleccionados en la entrada de la sesión.
-- Las anulaciones de respaldo automático permanecen seleccionadas en los turnos posteriores para que OpenClaw no sondee un primario defectuoso conocido en cada mensaje. OpenClaw sondea periódicamente el origen configurado nuevamente y borra la anulación automática cuando se recupera; `/new`, `/reset` y `sessions.reset` borran las anulaciones de origen automático inmediatamente.
+- Las anulaciones de reserva automática permanecen seleccionadas en los turnos posteriores para que OpenClaw no sondee un principal defectuoso conocido en cada mensaje. OpenClaw sondea periódicamente el origen configurado nuevamente y borra la anulación automática cuando se recupera; `/new`, `/reset` y `sessions.reset` borran las anulaciones de origen automático inmediatamente.
 - Las respuestas del usuario anuncian las transiciones de respaldo y la recuperación tras el borrado del respaldo una vez por cada cambio de estado. Los turnos de respaldo fijo (sticky) no repiten el aviso.
-- `/status` muestra el modelo seleccionado y, cuando el estado de respaldo difiere, el modelo de respaldo activo y el motivo.
+- `/status` muestra el modelo seleccionado y, cuando el estado de reserva difiere, el modelo de reserva activo y el motivo.
 - La conciliación de sesiones en vivo prefiere las anulaciones de sesión persistidas sobre los campos de modelo de tiempo de ejecución obsoletos.
 - Si un error de cambio en vivo apunta a un candidato posterior en la cadena de respaldo activa, OpenClaw salta directamente a ese modelo seleccionado en lugar de recorrer primero candidatos no relacionados.
 - Si el intento de respaldo falla, el ejecutor revierte solo los campos de anulación que escribió, y solo si aún coinciden con ese candidato fallido.
@@ -328,16 +322,16 @@ La invalidación persistente de conmutación por error cierra esa ventana, y la 
 
 ## Observabilidad y resúmenes de fallos
 
-`runWithModelFallback(...)` registra detalles por intento que alimentan los registros y los mensajes de tiempo de espera visibles para el usuario:
+`runWithModelFallback(...)` registra detalles por intento que alimentan los registros y los mensajes de enfriamiento visibles para el usuario:
 
 - proveedor/modelo intentado
-- motivo (`rate_limit`, `overloaded`, `billing`, `auth`, `model_not_found` y motivos similares de conmutación por error)
+- razón (`rate_limit`, `overloaded`, `billing`, `auth`, `model_not_found` y motivos de reserva similares)
 - estado/código opcional
 - resumen del error legible por humanos
 
-Los registros estructurados de `model_fallback_decision` también incluyen campos planos de `fallbackStep*` cuando un candidato falla, se omite o una conmutación por error posterior tiene éxito. Estos campos hacen explícita la transición intentada (`fallbackStepFromModel`, `fallbackStepToModel`, `fallbackStepFromFailureReason`, `fallbackStepFromFailureDetail`, `fallbackStepFinalOutcome`) para que los exportadores de registros y diagnósticos puedan reconstruir el fallo principal incluso cuando la conmutación por error terminal también falla.
+Los registros estructurados `model_fallback_decision` también incluyen campos planos `fallbackStep*` cuando un candidato falla, se omite o una conmutación por error posterior tiene éxito. Estos campos hacen que la transición intentada sea explícita (`fallbackStepFromModel`, `fallbackStepToModel`, `fallbackStepFromFailureReason`, `fallbackStepFromFailureDetail`, `fallbackStepFinalOutcome`) para que los exportadores de registros y diagnósticos puedan reconstruir el fallo principal incluso cuando la conmutación por error final también falla.
 
-Cuando todos los candidatos fallan, OpenClaw lanza `FallbackSummaryError`. El ejecutor de respuestas externo puede usarlo para construir un mensaje más específico, como "todos los modelos están temporalmente limitados por tasa", e incluir la caducidad del tiempo de espera más próxima cuando se conozca una.
+Cuando todos los candidatos fallan, OpenClaw lanza `FallbackSummaryError`. El ejecutor de respuesta externo puede usar esto para construir un mensaje más específico, como "todos los modelos están temporalmente limitados por tasa", e incluir la caducidad de enfriamiento más próxima cuando se conozca una.
 
 Ese resumen de tiempo de espera es consciente del modelo:
 
@@ -346,7 +340,7 @@ Ese resumen de tiempo de espera es consciente del modelo:
 
 ## Configuración relacionada
 
-Consulte [Configuración de la puerta de enlace](/es/gateway/configuration) para:
+Consulte [Configuración de Gateway](/es/gateway/configuration) para:
 
 - `auth.profiles` / `auth.order`
 - `auth.cooldowns.billingBackoffHours` / `auth.cooldowns.billingBackoffHoursByProvider`
@@ -354,6 +348,6 @@ Consulte [Configuración de la puerta de enlace](/es/gateway/configuration) para
 - `auth.cooldowns.overloadedProfileRotations` / `auth.cooldowns.overloadedBackoffMs`
 - `auth.cooldowns.rateLimitedProfileRotations`
 - `agents.defaults.model.primary` / `agents.defaults.model.fallbacks`
-- enrutamiento `agents.defaults.imageModel`
+- Enrutamiento `agents.defaults.imageModel`
 
-Consulte [Modelos](/es/concepts/models) para obtener una visión general más amplia de la selección y conmutación por error de modelos.
+Consulte [Modelos](/es/concepts/models) para obtener la visión general más amplia de la selección y conmutación por error de modelos.

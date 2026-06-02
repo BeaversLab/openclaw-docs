@@ -12,7 +12,7 @@ Complemento del proveedor de generación de videos OpenClaw PixVerse.
 ## Distribución
 
 - Paquete: `@openclaw/pixverse-provider`
-- Ruta de instalación: npm; ClawHub
+- Ruta de instalación: npm; ClawHub: `clawhub:@openclaw/pixverse-provider`
 
 ## Superficie
 

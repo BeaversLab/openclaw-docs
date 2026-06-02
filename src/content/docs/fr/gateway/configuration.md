@@ -301,10 +301,10 @@ Le Gateway conserve une copie de confiance du dernier état connu après chaque 
 
   </Accordion>
 
-  <Accordion title="Activer la Push basée sur relais pour les versions officielles iOS">
-    La Push basée sur relais est configurée dans `openclaw.json`.
+  <Accordion title="iOSActiver la push relayée pour les versions iOS officielles"OpenClaw>
+    La push relayée utilise par défaut le relais OpenClaw hébergé : `https://ios-push-relay.openclaw.ai`.
 
-    Définissez ceci dans la configuration de la passerelle :
+    Pour utiliser un relais personnalisé, définissez ceci dans la configuration de la passerelle :
 
     ```json5
     {
@@ -320,7 +320,7 @@ Le Gateway conserve une copie de confiance du dernier état connu après chaque 
         },
       },
     }
-    ```
+    ```CLI
 
     Équivalent CLI :
 
@@ -330,29 +330,30 @@ Le Gateway conserve une copie de confiance du dernier état connu après chaque 
 
     Ce que cela fait :
 
-    - Permet à la passerelle d'envoyer des `push.test`, des signaux de réveil et des réveils de reconnexion via le relais externe.
-    - Utilise un jeton d'envoi délimité par l'enregistrement, transféré par l'application iOS appariée. La passerelle n'a pas besoin d'un jeton de relais à l'échelle du déploiement.
-    - Lie chaque enregistrement basé sur relais à l'identité de la passerelle avec laquelle l'application iOS a été appariée, afin qu'une autre passerelle ne puisse pas réutiliser l'enregistrement stocké.
-    - Maintient les versions locales/manuelles iOS sur les APNs directs. Les envois basés sur relais s'appliquent uniquement aux versions distribuées officielles qui se sont enregistrées via le relais.
-    - Doit correspondre à l'URL de base du relais intégrée dans la version officielle/TestFlight iOS, afin que le trafic d'enregistrement et d'envoi atteigne le même déploiement de relais.
+    - Permet à la passerelle d'envoyer des `push.test`iOSiOSiOSiOSiOS, des notifications de réveil et des réveils de reconnexion via le relais externe.
+    - Utilise un droit d'envoi délimité par l'enregistrement, transféré par l'application iOS jumelée. La passerelle n'a pas besoin de jeton de relai à l'échelle du déploiement.
+    - Lie chaque enregistrement relayé à l'identité de la passerelle avec laquelle l'application iOS est jumelée, empêchant ainsi une autre passerelle de réutiliser l'enregistrement stocké.
+    - Conserve les versions iOS locales/manuelles sur les APNs directs. Les envois relayés s'appliquent uniquement aux versions distribuées officielles qui se sont enregistrées via le relais.
+    - Doit correspondre à l'URL de base du relais intégrée dans la version iOS officielle/TestFlight, afin que le trafic d'enregistrement et d'envoi atteigne le même déploiement de relais.
 
     Flux de bout en bout :
 
-    1. Installez une version officielle/TestFlight iOS qui a été compilée avec la même URL de base de relais.
-    2. Configurez `gateway.push.apns.relay.baseUrl` sur la passerelle.
-    3. Appariez l'application iOS à la passerelle et laissez les sessions de nœud et d'opérateur se connecter.
-    4. L'application iOS récupère l'identité de la passerelle, s'enregistre auprès du relais à l'aide d'App Attest et du reçu de l'application, puis publie la charge utile `push.apns.register` basée sur relais vers la passerelle appariée.
-    5. La passerelle stocke le gestionnaire de relais et le jeton d'envoi, puis les utilise pour les `push.test`, les signaux de réveil et les réveils de reconnexion.
+    1. Installez une version iOS officielle/TestFlight.
+    2. Optionnel : configurez `gateway.push.apns.relay.baseUrl`iOSiOS sur la passerelle uniquement lors de l'utilisation d'un déploiement de relais personnalisé.
+    3. Associez l'application iOS à la passerelle et laissez les sessions nœud et opérateur se connecter.
+    4. L'application iOS récupère l'identité de la passerelle, s'inscrit auprès du relais à l'aide d'App Attest et du reçu de l'application, puis publie la charge utile `push.apns.register` relayée vers la passerelle associée.
+    5. La passerelle stocke le gestionnaire de relais et le droit d'envoi, puis les utilise pour les `push.test`iOSiOS, les notifications de réveil et les réveils de reconnexion.
 
     Notes opérationnelles :
 
     - Si vous basculez l'application iOS vers une autre passerelle, reconnectez l'application afin qu'elle puisse publier un nouvel enregistrement de relais lié à cette passerelle.
-    - Si vous publiez une nouvelle version iOS qui pointe vers un déploiement de relais différent, l'application actualise son enregistrement de relais mis en cache au lieu de réutiliser l'ancienne origine du relais.
+    - Si vous publiez une nouvelle version iOS pointant vers un déploiement de relais différent, l'application actualise son enregistrement de relais mis en cache au lieu de réutiliser l'origine de l'ancien relais.
 
     Note de compatibilité :
 
-    - `OPENCLAW_APNS_RELAY_BASE_URL` et `OPENCLAW_APNS_RELAY_TIMEOUT_MS` fonctionnent toujours comme substitutions d'environnement temporaires.
-    - `OPENCLAW_APNS_RELAY_ALLOW_HTTP=true` reste une porte de secours de développement en boucle uniquement (loopback-only) ; ne persistez pas les URL de relais HTTP dans la configuration.
+    - `OPENCLAW_APNS_RELAY_BASE_URL` et `OPENCLAW_APNS_RELAY_TIMEOUT_MS`iOS fonctionnent toujours comme des substitutions temporaires d'environnement.
+    - Les URL de relais de passerelle personnalisées doivent correspondre à l'URL de base du relais intégrée dans la version iOS officielle/TestFlight.
+    - `OPENCLAW_APNS_RELAY_ALLOW_HTTP=true`iOS reste une échappatoire de développement en boucle locale uniquement ; ne persistez pas les URL de relais HTTP dans la configuration.
 
     Voir [Application iOS](/fr/platforms/ios#relay-backed-push-for-official-builds) pour le flux de bout en bout et [Flux d'authentification et de confiance](/fr/platforms/ios#authentication-and-trust-flow) pour le modèle de sécurité du relais.
 
@@ -394,8 +395,8 @@ Le Gateway conserve une copie de confiance du dernier état connu après chaque 
     }
     ```
 
-    - `sessionRetention`: supprimer les sessions d'exécution isolées terminées de `sessions.json` (par défaut `24h`; définissez `false` pour désactiver).
-    - `runLog`: nettoyer `cron/runs/<jobId>.jsonl` par taille et lignes conservées.
+    - `sessionRetention` : éliminer les sessions d'exécution isolées terminées de `sessions.json` (défaut `24h` ; définir `false` pour désactiver).
+    - `runLog` : éliminer les lignes d'historique d'exécution cron conservées par tâche. `maxBytes` reste accepté pour les anciens journaux d'exécution basés sur des fichiers.
     - Voir [Cron jobs](/fr/automation/cron-jobs) pour un aperçu des fonctionnalités et des exemples CLI.
 
   </Accordion>

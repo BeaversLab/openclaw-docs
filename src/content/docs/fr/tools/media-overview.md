@@ -80,22 +80,17 @@ La parole en direct utilise le contrat de session Talk plutôt que le chemin de 
 | Vidéo           | Asynchrone | Le traitement du fournisseur prend de 30 s à plusieurs minutes ; les files d'attente lentes peuvent aller jusqu'au délai d'expiration configuré. |
 | Musique         | Asynchrone | Même caractéristique de traitement par le fournisseur que pour la vidéo.                                                                         |
 
-Pour les outils asynchrones, OpenClaw soumet la demande au provider, renvoie un identifiant de tâche immédiatement et suit le travail dans le registre des tâches. L'agent continue de répondre à d'autres messages pendant l'exécution du travail. Lorsque le provider a terminé, OpenClaw réveille l'agent avec les chemins des médias générés afin qu'il puisse en informer l'utilisateur et transmettre le résultat via le tool de message. Si la session du demandeur est inactive ou si son réveil actif échoue, et que certains médias générés sont toujours absents de la livraison par le tool de message, OpenClaw envoie un secours direct idempotent avec uniquement les médias manquants. Les médias déjà livrés via le tool de message ne sont pas publiés à nouveau.
+Pour les outils asynchrones, OpenClaw soumet la demande au provider, renvoie un id de tâche immédiatement, et suit le travail dans le registre des tâches. L'agent continue de répondre à d'autres messages pendant que le travail s'exécute. Lorsque le provider a terminé, OpenClaw réveille l'agent avec les chemins des médias générés afin qu'il puisse informer l'utilisateur via le mode de réponse visible normal de la session : livraison automatique de la réponse finale lorsque configuré, ou `message(action="send")` lorsque la session nécessite l'outil de message. Si la session demanderesse est inactive ou si son réveil actif échoue, et qu'il manque encore certains médias générés dans la réponse d'achèvement, OpenClaw envoie un repli direct idempotent avec uniquement les médias manquants. Les médias déjà livrés par la réponse d'achèvement ne sont pas postés à nouveau.
 
 ## Speech-to-text et Appel vocal
 
-Deepgram, DeepInfra, ElevenLabs, Mistral, OpenAI, OpenRouter, SenseAudio et xAI peuvent tous transcrire
-l'audio entrant via le chemin batch `tools.media.audio` lorsqu'ils sont configurés.
-Les plugins de canal qui effectuent un prévol d'une note vocale pour le filtrage par mention ou l'analyse
-de commandes marquent la pièce jointe transcrite dans le contexte entrant, afin que la passe
-d'analyse des médias partagée réutilise cette transcription au lieu de faire un second
-appel STT pour le même audio.
+Deepgram, DeepInfra, ElevenLabs, Mistral, OpenAI, OpenRouter, SenseAudio et xAI peuvent tous transcrire l'audio entrant via le chemin de lot `tools.media.audio` lorsqu'ils sont configurés. Les plugins de canal qui effectuent un contrôle préalable d'une note vocale pour le filtrage des mentions ou l'analyse des commandes marquent la pièce jointe transcrite dans le contexte entrant, afin que la passe partagée de compréhension des médias réutilise cette transcription au lieu de faire un deuxième appel STT pour le même audio.
 
 Deepgram, ElevenLabs, Mistral, OpenAI et xAI enregistrent également des providers
 STT en flux pour Appel vocal, permettant ainsi de transférer l'audio téléphonique en direct au fournisseur
 sélectionné sans attendre un enregistrement complet.
 
-Pour les conversations utilisateur en direct, privilégiez le [mode Talk](/fr/nodes/talk). Les pièces jointes audio groupées restent sur le chemin média ; la diffusion en temps réel du navigateur, le mode push-to-talk natif, la téléphonie et l'audio de réunion doivent utiliser les événements Talk et les catalogues délimités par la session renvoyés par le Gateway.
+Pour les conversations en direct avec l'utilisateur, privilégiez le [Talk mode](/fr/nodes/talk). Les pièces jointes audio de lot restent sur le chemin des médias ; le temps réel du navigateur, le push-to-talk natif, la téléphonie et l'audio de réunion doivent utiliser les événements Talk et les catalogues délimités à la session renvoyés par le Gateway.
 
 ## Mappings de providers (comment les fournisseurs se répartissent sur les surfaces)
 
@@ -111,7 +106,7 @@ Pour les conversations utilisateur en direct, privilégiez le [mode Talk](/fr/no
 - [Génération d'images](/fr/tools/image-generation)
 - [Génération de vidéos](/fr/tools/video-generation)
 - [Génération de musique](/fr/tools/music-generation)
-- [Synthèse vocale (Text-to-speech)](/fr/tools/tts)
-- [Compréhension média](/fr/nodes/media-understanding)
+- [Synthèse vocale](/fr/tools/tts)
+- [Compréhension des médias](/fr/nodes/media-understanding)
 - [Nœuds audio](/fr/nodes/audio)
-- [Mode Talk](/fr/nodes/talk)
+- [Talk mode](/fr/nodes/talk)

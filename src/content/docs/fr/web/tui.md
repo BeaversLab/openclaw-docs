@@ -54,7 +54,7 @@ Notes :
 - En-tête : URL de connexion, agent actuel, session actuelle.
 - Journal de discussion : messages utilisateur, réponses de l'assistant, avis système, cartes d'outils.
 - Ligne d'état : état de connexion/exécution (connexion, en cours, streaming, inactif, erreur).
-- Pied de page : état de connexion + agent + session + model + réflexion/rapide/verbeux/trace/raisonnement + nombre de jetons + livrer.
+- Pied de page : état de la connexion + agent + session + modèle + état de l'objectif + think/fast/verbose/trace/reasoning + nombre de jetons + deliver.
 - Saisie : éditeur de texte avec autocomplétion.
 
 ## Modèle mental : agents + sessions
@@ -68,12 +68,15 @@ Notes :
   - `per-sender` (par défaut) : chaque agent possède plusieurs sessions.
   - `global` : le TUI utilise toujours la session `global` (le sélecteur peut être vide).
 - L'agent actuel + la session sont toujours visibles dans le pied de page.
-- Lorsqu'il est démarré sans `--session`TUI, la TUI en mode Gateway reprend la dernière session sélectionnée pour la même passerelle, le même agent et la même portée de session si cette session existe toujours. Le passage de `--session`, `/session`, `/new` ou `/reset` reste explicite.
+- Si la session a un [goal](/fr/tools/goal), le pied de page affiche son état compact
+  tel que `Pursuing goal`, `Goal paused (/goal resume)` ou
+  `Goal achieved`.
+- Lorsqu'il est démarré sans `--session`, le TUI en mode passerelle reprend la dernière session sélectionnée pour la même passerelle, le même agent et la même portée de session si cette session existe toujours. Passer `--session`, `/session`, `/new` ou `/reset` reste explicite.
 
 ## Envoi + livraison
 
-- Les messages sont envoyés à la Gateway ; la livraison aux fournisseurs est désactivée par défaut.
-- La TUI est une surface source interne comme WebChat, et non un canal de sortie générique. Les harnais qui nécessitent TUIWebChat`tools.message`TUI pour les réponses visibles peuvent satisfaire le tour TUI actif avec un `message.send` sans cible ; la livraison explicite du fournisseur utilise toujours les canaux configurés normalement et ne revient jamais à `lastChannel`.
+- Les messages sont envoyés au Gateway ; la livraison aux providers est désactivée par défaut.
+- Le TUI est une surface source interne comme WebChat, et non un canal générique sortant. Les harnais qui nécessitent `tools.message` pour les réponses visibles peuvent satisfaire le tour actif du TUI avec un `message.send` sans cible ; la livraison explicite au provider utilise toujours les canaux configurés normalement et ne revient jamais à `lastChannel`.
 - Activer la livraison :
   - `/deliver on`
   - ou le panneau Paramètres
@@ -81,26 +84,26 @@ Notes :
 
 ## Sélecteurs + superpositions
 
-- Sélecteur de modèle : lister les modèles disponibles et définir la priorité de la session.
-- Sélecteur d'agent : choisir un autre agent.
-- Sélecteur de session : affiche jusqu'à 50 sessions pour l'agent actuel mises à jour au cours des 7 derniers jours. Utilisez `/session <key>` pour accéder à une session antérieure connue.
-- Paramètres : activer/désactiver la livraison, l'extension de la sortie des outils et la visibilité de la réflexion.
+- Sélecteur de modèle : liste les modèles disponibles et définit la substitution de session.
+- Sélecteur d'agent : choisit un autre agent.
+- Sélecteur de session : affiche jusqu'à 50 sessions pour l'agent actuel mises à jour au cours des 7 derniers jours. Utilisez `/session <key>` pour accéder à une session connue plus ancienne.
+- Paramètres : activer/désactiver la livraison, l'expansion de la sortie des outils et la visibilité de la réflexion.
 
 ## Raccourcis clavier
 
 - Entrée : envoyer le message
-- Échap : abandonner l'exécution active
-- Ctrl+C : effacer l'entrée (appuyer deux fois pour quitter)
+- Échap : annuler l'exécution active
+- Ctrl+C : effacer la saisie (appuyer deux fois pour quitter)
 - Ctrl+D : quitter
 - Ctrl+L : sélecteur de modèle
 - Ctrl+G : sélecteur d'agent
 - Ctrl+P : sélecteur de session
-- Ctrl+O : activer/désactiver l'extension de la sortie des outils
-- Ctrl+T : activer/désactiver la visibilité de la réflexion (recharge l'historique)
+- Ctrl+O : basculer l'expansion de la sortie des outils
+- Ctrl+T : basculer la visibilité de la réflexion (recharge l'historique)
 
 ## Commandes slash
 
-Cœur :
+Principal :
 
 - `/help`
 - `/status`
@@ -116,6 +119,7 @@ Contrôles de session :
 - `/trace <on|off>`
 - `/reasoning <on|off|stream>`
 - `/usage <off|tokens|full>`
+- `/goal [status] | /goal start <objective> | /goal pause|resume|complete|block|clear`
 - `/elevated <on|off|ask|full>` (alias : `/elev`)
 - `/activation <mention|always>`
 - `/deliver <on|off>`
@@ -123,7 +127,7 @@ Contrôles de session :
 Cycle de vie de la session :
 
 - `/new` ou `/reset` (réinitialiser la session)
-- `/abort` (abandonner l'exécution active)
+- `/abort` (interrompre l'exécution active)
 - `/settings`
 - `/exit`
 
@@ -131,25 +135,23 @@ Mode local uniquement :
 
 - `/auth [provider]` ouvre le flux d'authentification/connexion du provider à l'intérieur du TUI.
 
-Les autres commandes slash du Gateway (par exemple, `/context`) sont transférées au Gateway et affichées comme sortie système. Voir [Slash commands](/fr/tools/slash-commands).
+Les autres commandes slash du Gateway (par exemple, `/context`) sont transmises au Gateway et affichées comme sortie système. Voir [Slash commands](/fr/tools/slash-commands).
 
-## Commandes du shell local
+## Commandes de shell local
 
 - Préfixez une ligne avec `!` pour exécuter une commande de shell local sur l'hôte du TUI.
 - Le TUI demande une fois par session d'autoriser l'exécution locale ; refuser laisse `!` désactivé pour la session.
 - Les commandes s'exécutent dans un shell frais et non interactif dans le répertoire de travail du TUI (pas de `cd`/env persistant).
-- Les commandes du shell local reçoivent `OPENCLAW_SHELL=tui-local` dans leur environnement.
+- Les commandes de shell local reçoivent `OPENCLAW_SHELL=tui-local` dans leur environnement.
 - Un `!` seul est envoyé comme un message normal ; les espaces au début ne déclenchent pas l'exécution locale.
 
-## Réparer les configurations à partir du TUI local
+## Réparer les configurations depuis le TUI local
 
-Utilisez le mode local lorsque la configuration actuelle est déjà valide et que vous souhaitez que
-l'agent embarqué l'inspecte sur la même machine, la compare aux docs,
-et aide à réparer les dérives sans dépendre d'un Gateway en cours d'exécution.
+Utilisez le mode local lorsque la configuration actuelle est déjà valide et que vous voulez que l'agent intégré l'inspecte sur la même machine, la compare à la documentation et aide à réparer les divergences sans dépendre d'un Gateway en cours d'exécution.
 
 Si `openclaw config validate` échoue déjà, commencez par `openclaw configure`
-ou `openclaw doctor --fix` d'abord. `openclaw chat` ne contourne pas la garde
-de configuration invalide.
+ou `openclaw doctor --fix` d'abord. `openclaw chat` ne contourne pas la garde de
+configuration invalide.
 
 Boucle typique :
 
@@ -165,7 +167,7 @@ openclaw chat
 Compare my gateway auth config with the docs and suggest the smallest fix.
 ```
 
-3. Utilisez les commandes du shell local pour des preuves exactes et une validation :
+3. Utilisez les commandes shell locales pour des preuves exactes et une validation :
 
 ```text
 !openclaw config file
@@ -174,32 +176,32 @@ Compare my gateway auth config with the docs and suggest the smallest fix.
 !openclaw doctor
 ```
 
-4. Appliquez des modifications ciblées avec `openclaw config set` ou `openclaw configure`, puis relancez `!openclaw config validate`.
-5. Si Doctor recommande une migration ou une réparation automatique, révisez-la et exécutez `!openclaw doctor --fix`.
+4. Appliquez des modifications étroites avec `openclaw config set` ou `openclaw configure`, puis relancez `!openclaw config validate`.
+5. Si Doctor recommande une migration ou une réparation automatique, examinez-la et exécutez `!openclaw doctor --fix`.
 
 Conseils :
 
 - Préférez `openclaw config set` ou `openclaw configure` à l'édition manuelle de `openclaw.json`.
-- `openclaw docs "<query>"` recherche l'index des docs en direct à partir de la même machine.
-- `openclaw config validate --json` est utile lorsque vous voulez des erreurs de schéma structuré et SecretRef/resolvability.
+- `openclaw docs "<query>"` recherche l'index de documentation en direct depuis la même machine.
+- `openclaw config validate --json` est utile lorsque vous voulez des erreurs de schéma structuré et de résolution SecretRef.
 
 ## Sortie de l'outil
 
 - Les appels d'outils s'affichent sous forme de cartes avec les arguments + résultats.
 - Ctrl+O bascule entre les vues réduites et développées.
-- Pendant l'exécution des outils, les mises à jour partielles sont diffusées dans la même carte.
+- Pendant que les outils s'exécutent, des mises à jour partielles diffusent dans la même carte.
 
 ## Couleurs du terminal
 
 - Le TUI conserve le texte du corps de l'assistant dans la couleur de premier plan par défaut de votre terminal, de sorte que les terminaux clairs et sombres restent lisibles.
 - Si votre terminal utilise un arrière-plan clair et que la détection automatique est incorrecte, définissez `OPENCLAW_THEME=light` avant de lancer `openclaw tui`.
-- Pour forcer à la place la palette sombre d'origine, définissez `OPENCLAW_THEME=dark`.
+- Pour forcer plutôt la palette sombre d'origine, définissez `OPENCLAW_THEME=dark`.
 
 ## Historique + diffusion en continu
 
 - Lors de la connexion, le TUI charge le dernier historique (200 messages par défaut).
 - Les réponses diffusées en continu sont mises à jour sur place jusqu'à ce qu'elles soient finalisées.
-- Le TUI écoute également les événements d'outil de l'agent pour des cartes d'outils plus riches.
+- Le TUI écoute également les événements d'outils de l'agent pour des cartes d'outils plus riches.
 
 ## Détails de la connexion
 
@@ -208,20 +210,20 @@ Conseils :
 
 ## Options
 
-- `--local` : Exécuter sur le runtime d'agent local intégré
-- `--url <url>` : URL WebSocket du Gateway (par défaut la configuration ou `ws://127.0.0.1:<port>`)
-- `--token <token>` : Jeton du Gateway (si requis)
-- `--password <password>` : Mot de passe du Gateway (si requis)
+- `--local` : Exécuter par rapport au runtime d'agent intégré local
+- `--url <url>` : URL WebSocket du Gateway (par défaut, la configuration ou `ws://127.0.0.1:<port>`)
+- `--token <token>`Gateway : Jeton du Gateway (si requis)
+- `--password <password>`Gateway : Mot de passe du Gateway (si requis)
 - `--session <key>` : Clé de session (par défaut : `main`, ou `global` lorsque la portée est globale)
-- `--deliver` : Envoyer les réponses de l'assistant au provider (désactivé par défaut)
-- `--thinking <level>` : Remplacer le niveau de réflexion pour les envois
+- `--deliver` : Livrer les réponses de l'assistant au provider (désactivé par défaut)
+- `--thinking <level>` : Remplacer le niveau de réflexion pour l'envoi
 - `--message <text>` : Envoyer un message initial après la connexion
-- `--timeout-ms <ms>` : Délai d'attente de l'agent en ms (par défaut `agents.defaults.timeoutSeconds`)
+- `--timeout-ms <ms>` : Délai d'expiration de l'agent en ms (par défaut `agents.defaults.timeoutSeconds`)
 - `--history-limit <n>` : Entrées d'historique à charger (par défaut `200`)
 
-<Warning>Lorsque vous définissez `--url`TUI, le TUI ne revient pas aux identifiants de configuration ou d'environnement. Passez `--token` ou `--password` explicitement. L'absence d'identifiants explicites est une erreur. En mode local, ne passez pas `--url`, `--token` ou `--password`.</Warning>
+<Warning>Lorsque vous définissez `--url`TUI, le TUI n'utilise pas les identifiants de la configuration ou de l'environnement en secours. Passez `--token` ou `--password` explicitement. L'absence d'identifiants explicites est une erreur. En mode local, ne passez pas `--url`, `--token`, ou `--password`.</Warning>
 
-## Dépannage
+## Troubleshooting
 
 Pas de sortie après l'envoi d'un message :
 
@@ -234,11 +236,11 @@ Pas de sortie après l'envoi d'un message :
 
 - `disconnected`Gateway : assurez-vous que le Gateway est en cours d'exécution et que vos `--url/--token/--password` sont corrects.
 - Aucun agent dans le sélecteur : vérifiez `openclaw agents list` et votre configuration de routage.
-- Sélecteur de session vide : vous êtes peut-être dans la portée globale ou vous n'avez pas encore de sessions.
+- Sélecteur de session vide : vous pourriez être dans la portée globale ou n'avoir aucune session pour le moment.
 
 ## Connexes
 
-- [Control UI](/fr/web/control-ui) — interface de contrôle basée sur le Web
-- [Config](/fr/cli/config) — inspecter, valider et modifier `openclaw.json`
+- [Interface de contrôle](/fr/web/control-ui) — interface de contrôle basée sur le web
+- [Configuration](/fr/cli/config) — inspecter, valider et modifier `openclaw.json`
 - [Doctor](/fr/cli/doctor) — vérifications guidées de réparation et de migration
-- [Référence CLI](CLI/en/cliCLI) — référence complète des commandes CLI
+- [Référence CLI](/fr/cli) — référence complète des commandes CLI

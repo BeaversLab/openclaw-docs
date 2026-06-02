@@ -40,6 +40,7 @@ OpenClaw 可以使用许多 LLM 提供商。选择一个提供商，进行身份
 - [fal](/zh/providers/fal)
 - [Fireworks](/zh/providers/fireworks)
 - [GitHub Copilot](/zh/providers/github-copilot)
+- [GMI Cloud](/zh/providers/gmi)
 - [Google (Gemini)](/zh/providers/google)
 - [Gradium](/zh/providers/gradium)
 - [Groq (LPU inference)](/zh/providers/groq)
@@ -50,16 +51,19 @@ OpenClaw 可以使用许多 LLM 提供商。选择一个提供商，进行身份
 - [LM Studio (local models)](/zh/providers/lmstudio)
 - [MiniMax](/zh/providers/minimax)
 - [Mistral](/zh/providers/mistral)
-- [Moonshot AI (Kimi + Kimi Coding)](Moonshot/en/providers/moonshot)
+- [Moonshot AI (Kimi + Kimi Coding)](/zh/providers/moonshot)
 - [NVIDIA](/zh/providers/nvidia)
-- [Ollama (cloud + local models)](Ollama/en/providers/ollama)
-- [OpenAI (API + Codex)](OpenAIAPI/en/providers/openai)
+- [NovitaAI](/zh/providers/novita)
+- [Ollama (cloud + local models)](/zh/providers/ollama)
+- [Ollama Cloud](/zh/providers/ollama-cloud)
+- [OpenAI (API + Codex)](/zh/providers/openai)
 - [OpenCode](/zh/providers/opencode)
 - [OpenCode Go](/zh/providers/opencode-go)
-- [OpenRouter](OpenRouter/en/providers/openrouter)
-- [Perplexity (web search)](Perplexity/en/providers/perplexity-provider)
+- [OpenRouter](/zh/providers/openrouter)
+- [Perplexity (web search)](/zh/providers/perplexity-provider)
 - [Qianfan](/zh/providers/qianfan)
-- [Qwen Cloud](Qwen/en/providers/qwen)
+- [Qwen Cloud](/zh/providers/qwen)
+- [Qwen OAuth / Portal](/zh/providers/qwen-oauth)
 - [Runway](/zh/providers/runway)
 - [SenseAudio](/zh/providers/senseaudio)
 - [SGLang (local models)](/zh/providers/sglang)
@@ -67,25 +71,25 @@ OpenClaw 可以使用许多 LLM 提供商。选择一个提供商，进行身份
 - [Synthetic](/zh/providers/synthetic)
 - [Tencent Cloud (TokenHub)](/zh/providers/tencent)
 - [Together AI](/zh/providers/together)
-- [Venice (Venice AI, privacy-focused)](VeniceVenice/en/providers/venice)
-- [Vercel AI Gateway](<VercelGateway(网关)/en/providers/vercel-ai-gateway>)
-- [vLLM (local models)](/zh/providers/vllm)
-- [Volcengine (Doubao)](/zh/providers/volcengine)
+- [Venice (Venice AI, privacy-focused)](/zh/providers/venice)
+- [Vercel AI Gateway(网关)](/zh/providers/vercel-ai-gateway)
+- [vLLM（本地模型）](/zh/providers/vllm)
+- [Volcengine（Doubao）](/zh/providers/volcengine)
 - [Vydra](/zh/providers/vydra)
 - [xAI](/zh/providers/xai)
-- [Xiaomi](Xiaomi/en/providers/xiaomi)
+- [Xiaomi](/zh/providers/xiaomi)
 - [Z.AI (GLM)](/zh/providers/zai)
 
 ## 共享概述页面
 
-- [其他捆绑变体](/zh/providers/models#additional-bundled-provider-variantsAnthropicCLIOAuth) - Anthropic Vertex、Copilot Proxy 和 Gemini CLI OAuth
-- [图像生成](/zh/tools/image-generation) - 共享的 `image_generate` 工具、提供商选择和故障转移
-- [音乐生成](/zh/tools/music-generation) - 共享的 `music_generate` 工具、提供商选择和故障转移
+- [其他捆绑变体](/zh/providers/models#additional-bundled-provider-variants) - Anthropic Vertex、Copilot Proxy 和 Gemini CLI OAuth
+- [图像生成](/zh/tools/image-generation) - 共享 `image_generate` 工具、提供商选择和故障转移
+- [音乐生成](/zh/tools/music-generation) - 共享 `music_generate` 工具、提供商选择和故障转移
 - [视频生成](/zh/tools/video-generation) - 共享 `video_generate` 工具、提供商选择和故障转移
 
 ## 转录提供商
 
-- [Deepgram (音频转录)](/zh/providers/deepgram)
+- [Deepgram（音频转录）](/zh/providers/deepgram)
 - [ElevenLabs](/zh/providers/elevenlabs#speech-to-text)
 - [Mistral](/zh/providers/mistral#audio-transcription-voxtral)
 - [OpenAI](/zh/providers/openai#speech-to-text)
@@ -94,7 +98,7 @@ OpenClaw 可以使用许多 LLM 提供商。选择一个提供商，进行身份
 
 ## 社区工具
 
-- [Claude Max API 代理](/zh/providers/claude-max-api-proxy) - Claude 订阅凭证的社区代理（使用前请验证 Anthropic 政策/条款）
+- [Claude Max API Proxy](/zh/providers/claude-max-api-proxy) - Claude 订阅凭据的社区代理（使用前请验证 Anthropic 政策/条款）
 
 有关完整的提供商目录（xAI、Groq、Mistral 等）和高级配置，
-请参阅 [模型提供商](/zh/concepts/model-providers)。
+请参阅[模型提供商](/zh/concepts/model-providers)。

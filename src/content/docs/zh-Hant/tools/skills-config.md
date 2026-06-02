@@ -25,6 +25,14 @@ title: "Skills 配置"
       nodeManager: "npm", // npm | pnpm | yarn | bun (Gateway runtime still Node; bun not recommended)
       allowUploadedArchives: false,
     },
+    workshop: {
+      autonomous: {
+        enabled: false,
+      },
+      approvalPolicy: "pending", // pending | auto
+      maxPending: 50,
+      maxSkillBytes: 40000,
+    },
     entries: {
       "image-lab": {
         enabled: true,
@@ -108,15 +116,17 @@ title: "Skills 配置"
   用戶端安裝透過 `skills.upload.*` 暫存的私人 zip 壓縮檔
   （預設為 false）。這僅啟用上傳壓縮檔路徑；正常的 ClawHub
   安裝不需要它。
-- `entries.<skillKey>`：個別技能的覆蓋設定。
-- `agents.defaults.skills`：可選的預設技能允許清單，由省略
-  `agents.list[].skills` 的代理程式繼承。
-- `agents.list[].skills`：可選的個別代理程式最終技能允許清單；明確的
-  清單會取代繼承的預設值，而不是合併。
+- `workshop.autonomous.enabled`：允許代理在成功的輪次後，從持續的對話訊號中建立待處理的 Skill Workshop 提案（預設值：false）。使用者提示的技能建立仍需透過 Skill Workshop 進行。
+- `workshop.approvalPolicy`：提案生命週期策略。`pending` 要求在代理發起的應用/拒絕/隔離動作之前進行核准；`auto` 允許在無需核准的情況下執行這些動作。
+- `workshop.maxPending`：每個工作區保留的最大待處理/隔離提案數量（預設值：50）。
+- `workshop.maxSkillBytes`：產生的提案主體大小上限（以位元組為單位，預設值：40000）。由於提案描述會顯示在技能探索和提案清單中，因此也會硬性限制為 160 位元組。
+- `entries.<skillKey>`：個別技能的覆寫設定。
+- `agents.defaults.skills`：可選的預設技能允許清單，由省略 `agents.list[].skills` 的代理繼承。
+- `agents.list[].skills`：可選的個別代理最終技能允許清單；明確的清單會取代繼承的預設值，而不是進行合併。
 
-## 符號連結的姊妹儲存庫
+## 符號連結的同級存儲庫
 
-預設情況下，workspace、project-agent、extra-dir 和 bundled skill 根目錄是隔離邊界。如果 `<workspace>/skills` 下的技能資料夾是指向 `<workspace>/skills` 外部的符號連結，OpenClaw 將會跳過它並記錄 `Skipping escaped skill path outside its configured root`。
+預設情況下，工作區、專案代理、額外目錄和附帶的技能根目錄都是隔離邊界。如果 `<workspace>/skills` 下的技能資料夾是指向 `<workspace>/skills` 外部的符號連結，OpenClaw 將會跳過它並記錄 `Skipping escaped skill path outside its configured root`。
 
 保留符號連結佈局並僅允許受信任的目標根目錄：
 
@@ -131,52 +141,52 @@ title: "Skills 配置"
 }
 ```
 
-使用此配置，諸如 `<workspace>/skills/manager -> ~/Projects/manager/skills` 的符號連結在解析實際路徑後會被接受。`extraDirs` 也會直接掃描同層級存放庫，而 `allowSymlinkTargets` 則保留符號連結路徑以維持現有的 workspace-skill 佈局。Managed `~/.openclaw/skills` 和 personal `~/.agents/skills` 目錄已經接受技能目錄的符號連結，因為這些根目錄是用戶擁有的本地 skill-manager 介面；個別技能的 `SKILL.md` 隔離仍然適用。請保持目標條目狹窄；除非該根目錄下的每個技能樹都受信任，否則不要指向廣泛的根目錄，例如 `~` 或 `~/Projects`。
+使用此設定，類似於 `<workspace>/skills/manager -> ~/Projects/manager/skills` 的符號連結在經過 realpath 解析後會被接受。`extraDirs` 也會直接掃描同級存儲庫，而 `allowSymlinkTargets` 則會為現有的工作區技能佈局保留符號連結路徑。受管理的 `~/.openclaw/skills` 和個人的 `~/.agents/skills` 目錄已經接受技能目錄的符號連結，因為這些根目錄是使用者擁有的本地技能管理介面；個別技能的 `SKILL.md` 隔離仍然適用。請保持目標條目狹窄；不要指向 `~` 或 `~/Projects` 等廣泛的根目錄，除非該根目錄下的每個技能樹都是受信任的。
 
-每個技能的欄位：
+個別技能欄位：
 
-- `enabled`：將 `false` 設定為以停用技能，即使該技能已打包/安裝。
-- `env`：為代理執行注入的環境變數（僅在尚未設定時）。
-- `apiKey`：對於宣告主要環境變數的技能而言，這是可選的便利設定。
-  支援純文字字串或 SecretRef 物件 (`{ source, provider, id }`)。
+- `enabled`：將 `false` 設定為停用某項技能，即使該技能已內建或已安裝。
+- `env`：為 Agent 執行注入的環境變數（僅在尚未設定時）。
+- `apiKey`：針對宣告主要環境變數的技能所提供的可選便利設定。
+  支援純文字字串或 SecretRef 物件（`{ source, provider, id }`）。
 
 ## 注意事項
 
-- `entries` 下的金鑰預設對應至技能名稱。如果技能定義了
-  `metadata.openclaw.skillKey`，請改用該金鑰。
+- `entries` 下的鍵預設會對應至技能名稱。如果技能定義了
+  `metadata.openclaw.skillKey`，則改用該鍵。
 - 載入優先順序為 `<workspace>/skills` → `<workspace>/.agents/skills` →
-  `~/.agents/skills` → `~/.openclaw/skills` → bundled skills →
+  `~/.agents/skills` → `~/.openclaw/skills` → 內建技能 →
   `skills.load.extraDirs`。
-- 當啟用監看器時，技能的變更將在下一輪 agent 週期時被載入。
+- 當啟用監看器時，對技能所做的變更會在下一個 Agent 輪次中被套用。
 
 ### 沙盒化技能與環境變數
 
-當會話處於**沙盒**狀態時，技能程序會在設定的沙盒後端內執行。沙盒**不會**繼承主機的 `process.env`。
+當工作階段處於**沙盒化**狀態時，技能程序會在設定的沙盒後端內執行。沙盒**不會**繼承主機的 `process.env`。
 
 <Warning>
-  全域 `env` 和 `skills.entries.<skill>.env`/`apiKey` 僅適用於 **主機** 執行。在沙箱內它們沒有作用，因此依賴 `GEMINI_API_KEY` 的技能將會因 `apiKey not configured` 而失敗，除非單獨將該變數提供給沙箱。
+  全域 `env` 和 `skills.entries.<skill>.env`/`apiKey` 僅套用於 **host** 執行。在沙盒內它們不會產生任何作用，因此依賴 `GEMINI_API_KEY` 的技能將會因 `apiKey not configured` 而失敗，除非將該變數單獨提供給沙盒。
 </Warning>
 
-使用下列其中一種方式：
+使用以下任一方式：
 
-- 對於 Docker 後端使用 `agents.defaults.sandbox.docker.env`（或是針對每個 Agent 使用 `agents.list[].sandbox.docker.env`）。
+- 針對 Docker 後端使用 `agents.defaults.sandbox.docker.env`（或個別 Agent 的 `agents.list[].sandbox.docker.env`）。
 - 將環境變數內建至您的自訂沙盒映像檔或遠端沙盒環境中。
 
-對於 Docker 沙箱，設定的 `sandbox.docker.env` 值會變成明確的容器環境變數。擁有 Docker daemon 存取權的使用者可以透過 Docker 中繼資料檢查它們，因此當這種暴露是不可接受時，請使用掛載的秘密檔案、自訂映像檔或其他傳遞路徑。
+對於 Docker 沙盒，設定的 `sandbox.docker.env` 值會成為明確的容器環境變數。具有 Docker daemon 存取權的使用者可以透過 Docker 元資料檢查這些值，因此當此暴露方式不可接受時，請使用掛載的密碼檔案、自訂映像檔或其他傳遞途徑。
 
-## 相關
+## 相關連結
 
 <CardGroup cols={2}>
-  <Card title="Skills" href="/zh-Hant/tools/skills" icon="puzzle-piece">
-    什麼是技能以及它們如何載入。
+  <Card title="技能" href="/zh-Hant/tools/skills" icon="puzzle-piece">
+    技能是什麼以及它們如何載入。
   </Card>
-  <Card title="Creating skills" href="/zh-Hant/tools/creating-skills" icon="hammer">
-    撰寫自訂技能包。
+  <Card title="建立技能" href="/zh-Hant/tools/creating-skills" icon="hammer">
+    撰寫自訂技能套件。
   </Card>
-  <Card title="Slash commands" href="/zh-Hant/tools/slash-commands" icon="terminal">
-    原生命令目錄和聊天指令。
+  <Card title="斜線指令" href="/zh-Hant/tools/slash-commands" icon="terminal">
+    原生命令目錄與聊天指令。
   </Card>
-  <Card title="Configuration reference" href="/zh-Hant/gateway/configuration-reference" icon="gear">
-    完整的 `skills` 和 `agents.skills` 結構描述。
+  <Card title="設定參考" href="/zh-Hant/gateway/configuration-reference" icon="gear">
+    完整的 `skills` 與 `agents.skills` 綱要 (schema)。
   </Card>
 </CardGroup>

@@ -12,7 +12,7 @@ Compacta los resultados de herramientas exec y bash con reductores de tokenjuice
 ## Distribución
 
 - Paquete: `@openclaw/tokenjuice`
-- Ruta de instalación: incluido en OpenClaw
+- Ruta de instalación: npm; ClawHub: `clawhub:@openclaw/tokenjuice`
 
 ## Superficie
 

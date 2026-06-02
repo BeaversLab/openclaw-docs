@@ -1,5 +1,5 @@
 ---
-summary: "OpenAIOpenAIOpenClaw为 OpenClaw 添加 OpenAI、OpenAI Codex 模型提供商支持。"
+summary: "OpenAIOpenClaw向OpenClaw添加OpenAI模型提供商支持。"
 read_when:
   - You are installing, configuring, or auditing the openai plugin
 title: "OpenAIOpenAI 插件"
@@ -7,7 +7,7 @@ title: "OpenAIOpenAI 插件"
 
 # OpenAI 插件
 
-为 OpenClaw 添加 OpenAI、OpenAI Codex 模型提供商支持。
+向OpenClaw添加OpenAI模型提供商支持。
 
 ## 分发
 
@@ -16,7 +16,7 @@ title: "OpenAIOpenAI 插件"
 
 ## 对外接口
 
-providers: openai, openai-codex; contracts: imageGenerationProviders, mediaUnderstandingProviders, memoryEmbeddingProviders, realtimeTranscriptionProviders, realtimeVoiceProviders, speechProviders, videoGenerationProviders
+providers: openai; contracts: imageGenerationProviders, mediaUnderstandingProviders, memoryEmbeddingProviders, realtimeTranscriptionProviders, realtimeVoiceProviders, speechProviders, videoGenerationProviders
 
 ## 相关文档
 

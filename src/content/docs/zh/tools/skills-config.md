@@ -23,6 +23,14 @@ title: "Skills 配置"
       nodeManager: "npm", // npm | pnpm | yarn | bun (Gateway runtime still Node; bun not recommended)
       allowUploadedArchives: false,
     },
+    workshop: {
+      autonomous: {
+        enabled: false,
+      },
+      approvalPolicy: "pending", // pending | auto
+      maxPending: 50,
+      maxSkillBytes: 40000,
+    },
     entries: {
       "image-lab": {
         enabled: true,
@@ -100,20 +108,20 @@ title: "Skills 配置"
   客户端安装通过 `skills.upload.*` 暂存的私有 zip 档案
   （默认值：false）。这仅启用上传的档案路径；普通的 ClawHub
   安装不需要它。
-- `entries.<skillKey>`：按技能覆盖设置。
-- `agents.defaults.skills`：可选的默认技能允许列表，由省略
-  `agents.list[].skills` 的代理继承。
-- `agents.list[].skills`：可选的按代理最终技能允许列表；显式
-  列表将替换继承的默认值，而不是合并。
+- `workshop.autonomous.enabled`：允许代理在成功的轮次之后，从持久的对话信号创建待处理的 Skill Workshop 提案（默认：false）。用户提示的技能创建仍需通过 Skill Workshop。
+- `workshop.approvalPolicy`：提案生命周期策略。`pending` 要求在代理发起的 apply/reject/quarantine 操作之前进行审批；`auto` 允许无需审批即可执行这些操作。
+- `workshop.maxPending`：每个工作区保留的最大待处理/隔离提案数（默认：50）。
+- `workshop.maxSkillBytes`：生成的提案正文的字节大小上限（默认：40000）。
+  由于提案描述可能会显示在技能发现和提案列表中，因此也被硬性限制为 160 字节。
+- `entries.<skillKey>`：针对特定技能的覆盖设置。
+- `agents.defaults.skills`：可选的默认技能允许列表，由省略 `agents.list[].skills` 的代理继承。
+- `agents.list[].skills`：可选的针对特定代理的最终技能允许列表；显式列表将替换继承的默认值，而不是进行合并。
 
 ## 符号链接的兄弟仓库
 
-默认情况下，workspace、project-agent、extra-dir 和 bundled skill 根目录是
-包含边界。如果 `<workspace>/skills` 下的技能文件夹是
-解析到 `<workspace>/skills` 之外的符号链接，OpenClaw 将跳过它并记录
-`Skipping escaped skill path outside its configured root`。
+默认情况下，workspace、project-agent、extra-dir 和 bundled skill 根目录是隔离边界。如果 `<workspace>/skills` 下的技能文件夹是指向 `<workspace>/skills` 之外的符号链接，OpenClaw 将跳过它并记录 `Skipping escaped skill path outside its configured root`。
 
-保留符号链接布局并仅允许受信任的目标根目录：
+保持符号链接布局，并仅允许受信任的目标根目录：
 
 ```json5
 {
@@ -126,45 +134,36 @@ title: "Skills 配置"
 }
 ```
 
-使用此配置后，诸如
-`<workspace>/skills/manager -> ~/Projects/manager/skills` 之类的符号链接将在
-realpath 解析后被接受。`extraDirs` 也会直接扫描同级仓库，而
-`allowSymlinkTargets` 会为现有 workspace-skill 布局保留符号链接路径。托管 `~/.openclaw/skills` 和个人 `~/.agents/skills`
-目录已接受技能目录符号链接，因为这些根目录是
-用户拥有的本地 skill-manager 界面；每个技能的 `SKILL.md` 包含仍然
-适用。请保持目标条目狭窄；不要指向 `~` 或
-`~/Projects` 等广泛根目录，除非该根目录下的每个技能树都是受信任的。
+使用此配置，在解析 realpath 后，诸如 `<workspace>/skills/manager -> ~/Projects/manager/skills` 之类的符号链接将被接受。`extraDirs` 也会直接扫描同级仓库，而 `allowSymlinkTargets` 则为现有的工作区技能布局保留符号链接路径。托管 `~/.openclaw/skills` 和个人 `~/.agents/skills` 目录已接受技能目录符号链接，因为这些根目录是用户拥有的本地技能管理器界面；每个技能的 `SKILL.md` 隔离仍然适用。保持目标条目狭窄；除非该根目录下的每个技能树都是受信任的，否则不要指向诸如 `~` 或 `~/Projects` 之类的广泛根目录。
 
-逐个技能字段：
+每个技能的字段：
 
-- `enabled`：设置 `false` 以禁用技能，即使它已被打包/安装。
+- `enabled`：设置 `false` 以禁用技能，即使该技能已捆绑/安装。
 - `env`：为代理运行注入的环境变量（仅当尚未设置时）。
-- `apiKey`：对于声明主环境变量的技能的可选便捷方式。
-  支持纯文本字符串或 SecretRef 对象 (`{ source, provider, id }`)。
+- `apiKey`：针对声明了主要环境变量的技能的可选便利设置。支持纯文本字符串或 SecretRef 对象 (`{ source, provider, id }`)。
 
-## 注意事项
+## 注意
 
-- 默认情况下，`entries` 下的键映射到技能名称。如果技能定义了
-  `metadata.openclaw.skillKey`，请改用该键。
+- `entries` 下的键默认映射到技能名称。如果技能定义了 `metadata.openclaw.skillKey`，请改用该键。
 - 加载优先级为 `<workspace>/skills` → `<workspace>/.agents/skills` →
-  `~/.agents/skills` → `~/.openclaw/skills` → bundled skills →
+  `~/.agents/skills` → `~/.openclaw/skills` → 捆绑的技能 →
   `skills.load.extraDirs`。
 - 当启用监视器时，对技能的更改将在下一次代理轮次中被获取。
 
 ### 沙箱隔离技能和环境变量
 
-当会话处于 **沙箱隔离** 状态时，技能进程在配置的沙箱后端内运行。沙箱 **不会** 继承主机 `process.env`。
+当会话处于**沙箱隔离**状态时，技能进程在配置的沙箱后端内运行。沙箱**不**继承主机的 `process.env`。
 
 <Warning>
-  全局 `env` 和 `skills.entries.<skill>.env`/`apiKey` 仅适用于 **host** 运行。在沙盒中它们无效，因此依赖 `GEMINI_API_KEY` 的技能将因 `apiKey not configured` 而失败，除非单独为沙盒提供该变量。
+  全局 `env` 和 `skills.entries.<skill>.env`/`apiKey` 仅适用于**主机**运行。在沙箱内它们无效，因此依赖 `GEMINI_API_KEY` 的技能将因 `apiKey not configured` 而失败，除非单独向沙箱提供该变量。
 </Warning>
 
-使用以下方法之一：
+使用以下选项之一：
 
-- `agents.defaults.sandbox.docker.env` 用于 Docker 后端（或每个 `agents.list[].sandbox.docker.env`）。
-- 将环境变量嵌入到您的自定义沙箱镜像或远程沙箱环境中。
+- `agents.defaults.sandbox.docker.env`Docker 用于 Docker 后端（或每个代理的 `agents.list[].sandbox.docker.env`）。
+- 将环境变量烘焙到您的自定义沙箱镜像或远程沙箱环境中。
 
-对于 Docker 沙盒，配置的 `sandbox.docker.env` 值将成为显式的容器环境变量。拥有 Docker 守护进程访问权限的用户可以通过 Docker 元数据检查它们，因此当这种暴露不可接受时，请使用挂载的机密文件、自定义镜像或其他传递路径。
+对于 Docker 沙箱，配置的 Docker`sandbox.docker.env`DockerDocker 值将成为显式的容器环境变量。拥有 Docker 守护进程访问权限的用户可以通过 Docker 元数据检查这些变量，因此当这种暴露不可接受时，请使用挂载的机密文件、自定义镜像或其他传递路径。
 
 ## 相关
 
@@ -173,12 +172,12 @@ realpath 解析后被接受。`extraDirs` 也会直接扫描同级仓库，而
     什么是 Skills 以及它们如何加载。
   </Card>
   <Card title="Creating skills" href="/zh/tools/creating-skills" icon="hammer">
-    编写自定义技能包。
+    编写自定义 skill 包。
   </Card>
   <Card title="Slash commands" href="/zh/tools/slash-commands" icon="terminal">
     原生命令目录和聊天指令。
   </Card>
   <Card title="Configuration reference" href="/zh/gateway/configuration-reference" icon="gear">
-    完整的 `skills` 和 `agents.skills` 模式。
+    完整的 `skills` 和 `agents.skills` 架构。
   </Card>
 </CardGroup>

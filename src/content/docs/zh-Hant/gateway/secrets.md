@@ -164,6 +164,13 @@ SecretRefs 僅在有效啟用的表面上進行驗證。
         passEnv: ["PATH", "VAULT_ADDR"],
         jsonOnly: true,
       },
+      "team-secrets": {
+        source: "exec",
+        pluginIntegration: {
+          pluginId: "acme-secrets",
+          integrationId: "secret-store",
+        },
+      },
     },
     defaults: {
       env: "default",
@@ -194,26 +201,30 @@ SecretRefs 僅在有效啟用的表面上進行驗證。
 
   </Accordion>
   <Accordion title="Exec provider">
-    - 執行設定的絕對二進位路徑，不使用 shell。
-    - 根據預設，`command` 必須指向一個正規檔案（而非符號連結）。
-    - 設定 `allowSymlinkCommand: true` 以允許符號連結指令路徑（例如 Homebrew shims）。OpenClaw 會驗證解析後的目標路徑。
-    - 搭配 `allowSymlinkCommand` 與 `trustedDirs` 以使用套件管理器路徑（例如 `["/opt/homebrew"]`）。
-    - 支援逾時、無輸出逾時、輸出位元組限制、環境變數白名單和信任目錄。
-    - Windows 失敗封閉（fail-closed）備註：若無法針對指令路徑進行 ACL 驗證，解析將會失敗。僅對信任的路徑，請在該 provider 上設定 `allowInsecurePath: true` 以略過路徑安全檢查。
+    - 執行設定的絕對二進制路徑，不使用 shell。
+    - 預設情況下，`command` 必須指向常規文件（而非符號連結）。
+    - 設定 `allowSymlinkCommand: true` 以允許符號連結命令路徑（例如 Homebrew shims）。OpenClaw 會驗證解析後的目標路徑。
+    - 為套件管理器路徑（例如 `["/opt/homebrew"]`）配對 `allowSymlinkCommand` 與 `trustedDirs`。
+    - 支援逾時、無輸出逾時、輸出位元組限制、環境變數允許清單及受信任目錄。
+    - Windows fail-closed 註記：如果命令路徑無法進行 ACL 驗證，解析將會失敗。僅對受信任路徑，請在該提供者上設定 `allowInsecurePath: true` 以略過路徑安全性檢查。
+    - 外掛程式管理的 exec 提供者可以使用 `pluginIntegration`，而不使用
+      複製的 `command`/`args`。OpenClaw 會在啟動/重新載入期間從已安裝的外掛程式清單中解析目前的命令詳情。如果外掛程式
+      已停用、移除、不受信任，或不再宣告此整合，
+      使用該提供者的使用中 SecretRef 將會 fail closed。
 
-    要求 payload (stdin):
+    Request payload (stdin):
 
     ```json
     { "protocolVersion": 1, "provider": "vault", "ids": ["providers/openai/apiKey"] }
     ```
 
-    回應 payload (stdout):
+    Response payload (stdout):
 
     ```jsonc
     { "protocolVersion": 1, "values": { "providers/openai/apiKey": "<openai-api-key>" } } // pragma: allowlist secret
     ```
 
-    選用的個別錯誤 (per-id errors):
+    Optional per-id errors:
 
     ```json
     {
@@ -228,8 +239,8 @@ SecretRefs 僅在有效啟用的表面上進行驗證。
 
 ## 檔案支援的 API 金鑰
 
-請勿將 `file:...` 字串放在 config `env` 區塊中。`env` 區塊是
-字面且無法覆寫的，因此 `file:...` 將不會被解析。
+請勿將 `file:...` 字串放在設定 `env` 區塊中。`env` 區塊是
+字面意義且不可覆寫的，因此 `file:...` 不會被解析。
 
 請改用支援的憑證欄位上的檔案 SecretRef：
 
@@ -254,12 +265,12 @@ SecretRefs 僅在有效啟用的表面上進行驗證。
 }
 ```
 
-對於 `mode: "singleValue"`，SecretRef `id` 為 `"value"`。對於
+對於 `mode: "singleValue"`，SecretRef `id` 是 `"value"`。對於
 `mode: "json"`，請使用絕對 JSON 指標，例如
 `"/providers/xai/apiKey"`。
 
 請參閱 [SecretRef credential surface](/zh-Hant/reference/secretref-credential-surface) 以了解
-接受 SecretRef 的設定欄位。
+接受 SecretRefs 的設定欄位。
 
 ## Exec 整合範例
 
@@ -293,17 +304,16 @@ SecretRefs 僅在有效啟用的表面上進行驗證。
     ```
   </Accordion>
   <Accordion title="Bitwarden Secrets Manager (`bws`)">
-    當您希望 SecretRef id 對應到 Bitwarden Secrets Manager
-    項目金鑰時，請使用解析器包裝器。儲存庫包含
-    `scripts/secrets/openclaw-bws-resolver.mjs`；將其安裝或複製到執行 Gateway
-    的主機上的一個絕對受信任路徑。
+    當您希望 SecretRef id 對應到 Bitwarden Secrets Manager 項目金鑰時，請使用解析器包裝器。該儲存庫包含
+    `scripts/secrets/openclaw-bws-resolver.mjs`；請將其安裝或複製到執行 Gateway 的主機上的絕對
+    受信任路徑。
 
     需求：
 
-    - 在 Gateway 主機上安裝 Bitwarden Secrets Manager CLI (`bws`)。
+    - 在 Gateway 主機上安裝的 Bitwarden Secrets Manager CLI (`bws`)。
     - `BWS_ACCESS_TOKEN` 可供 Gateway 服務使用。
-    - 傳遞給解析器 `PATH`，或將 `BWS_BIN` 設定為絕對 `bws`
-      二進制路徑。
+    - 傳遞給解析器的 `PATH`，或設定為絕對 `bws`
+      二進位路徑的 `BWS_BIN`。
 
     ```json5
     {
@@ -333,12 +343,12 @@ SecretRefs 僅在有效啟用的表面上進行驗證。
     }
     ```
 
-    解析器會對請求的 id 進行批次處理，執行 `bws secret list`，並傳回
-    匹配的 secret `key` 欄位的值。請使用滿足 exec
+    解析器會將請求的 id 分批處理，執行 `bws secret list`，並返回
+    匹配的秘密 `key` 欄位的值。請使用符合 exec
     SecretRef id 合約的金鑰，例如 `openclaw/providers/openai/apiKey`；帶有底線的
-    env-var 樣式金鑰會在解析器執行前被拒絕。如果有多個可見的 Bitwarden secret
-    具有相同的請求金鑰，解析器會將該 id 視為模稜兩可而失敗，而不是選擇其中之一。
-    更新設定後，驗證解析器路徑：
+    環境變數風格金鑰會在解析器執行前被拒絕。如果多於一個可見的 Bitwarden 秘密具有相同的請求金鑰，
+    解析器會將該 id 視為模稜兩可而失敗，而不是選擇其中一個。更新配置後，
+    請驗證解析器路徑：
 
     ```bash
     openclaw secrets audit --allow-exec
@@ -375,12 +385,12 @@ SecretRefs 僅在有效啟用的表面上進行驗證。
   </Accordion>
   <Accordion title="password-store (`pass`)">
     當您希望 SecretRef id 直接對應到
-    `pass` 條目時，請使用一個小型的解析器包裝程式。將此保存為位於絕對路徑的可執行檔，該路徑需通過
-    您的 exec-provider 路徑檢查，例如
+    `pass` 條目時，請使用小型解析器包裝器。將其作為可執行檔案儲存在通過
+    exec-provider 路徑檢查的絕對路徑中，例如
     `/usr/local/bin/openclaw-pass-resolver`。`#!/usr/bin/env node` shebang
-    從解析器行程 `PATH` 中解析 `node`，因此請將 `PATH` 包含在
-    `passEnv` 中。如果 `pass` 不在該 `PATH` 上，請在父環境中設定
-    `PASS_BIN` 並將其也包含在 `passEnv` 中：
+    從解析器行程 `PATH` 解析 `node`，因此請將 `PATH` 包含在
+    `passEnv` 中。如果 `pass` 不在該 `PATH` 上，請在父環境中設定 `PASS_BIN` 並將其包含在
+    `passEnv` 中：
 
     ```js
     #!/usr/bin/env node
@@ -421,7 +431,7 @@ SecretRefs 僅在有效啟用的表面上進行驗證。
     });
     ```
 
-    然後設定 exec provider 並將 `apiKey` 指向 `pass` 條目路徑：
+    然後設定 exec 提供者並將 `apiKey` 指向 `pass` 條目路徑：
 
     ```json5
     {
@@ -451,8 +461,7 @@ SecretRefs 僅在有效啟用的表面上進行驗證。
     }
     ```
 
-    將密鑰保持在 `pass` 條目的第一行，或者如果您想改為傳回完整的 `pass show` 輸出，則自訂
-    包裝程式。更新設定後，請同時驗證靜態稽核和 exec 解析器路徑：
+    將機密儲存在 `pass` 條目的第一行，或者如果您想要改為傳回完整的 `pass show` 輸出，請自訂包裝器。更新設定後，請驗證靜態稽核和 exec 解析器路徑：
 
     ```bash
     openclaw secrets audit --check
@@ -492,7 +501,7 @@ SecretRefs 僅在有效啟用的表面上進行驗證。
 
 ## MCP 伺服器環境變數
 
-透過 `plugins.entries.acpx.config.mcpServers` 設定的 MCP 伺服器環境變數支援 SecretInput。這使 API 金鑰和令牌不會出現在明文設定中：
+透過 `plugins.entries.acpx.config.mcpServers` 設定的 MCP 伺服器環境變數支援 SecretInput。這可以避免 API 金鑰和令牌出現在明文設定中：
 
 ```json5
 {
@@ -521,11 +530,11 @@ SecretRefs 僅在有效啟用的表面上進行驗證。
 }
 ```
 
-明文字串值仍然有效。像 `${MCP_SERVER_API_KEY}` 這樣的環境範本參照和 SecretRef 物件會在 MCP 伺服器行程產生之前，於閘道啟用期間解析。與其他 SecretRef 介面一樣，未解析的參照僅在 `acpx` 外掛程式實際上處於啟用狀態時才會阻止啟用。
+純文字字串值仍然有效。像 `${MCP_SERVER_API_KEY}` 這樣的 Env-template 引用和 SecretRef 物件會在產生 MCP 伺服器行程之前的啟用閘道期間解析。與其他 SecretRef 表面一樣，未解析的引用只有在 `acpx` 外掛程式實際上處於活動狀態時才會封鎖啟用。
 
 ## Sandbox SSH 認證材料
 
-核心 `ssh` 沙盒後端也支援用於 SSH 驗證資料的 SecretRefs：
+核心 `ssh` 沙盒後端也支援用於 SSH 認證資料的 SecretRefs：
 
 ```json5
 {
@@ -550,13 +559,13 @@ SecretRefs 僅在有效啟用的表面上進行驗證。
 
 - OpenClaw 會在 sandbox 啟動期間解析這些參照，而不是在每次 SSH 呼叫時延遲解析。
 - 解析出的值會被寫入具有嚴格權限的暫存檔案，並在產生的 SSH 配置中使用。
-- 如果有效的沙盒後端不是 `ssh`，這些參照將保持非啟用狀態，並且不會阻止啟動。
+- 如果有效的沙盒後端不是 `ssh`，這些引用將保持非活動狀態，且不會封鎖啟動。
 
 ## 支援的憑證介面
 
 標準的支援與不支援憑證列於：
 
-- [SecretRef 認證介面](/zh-Hant/reference/secretref-credential-surface)
+- [SecretRef 憑證表面](/zh-Hant/reference/secretref-credential-surface)
 
 <Note>執行時期產生或輪換的憑證以及 OAuth 更新材料，刻意不包含在唯讀 SecretRef 解析中。</Note>
 
@@ -565,12 +574,12 @@ SecretRefs 僅在有效啟用的表面上進行驗證。
 - 不含參照的欄位：保持不變。
 - 含參照的欄位：在啟用期間，若位於活動介面上則為必填。
 - 如果同時存在純文字與參照，在支援的優先路徑上，參照優先。
-- 編輯哨兵 `__OPENCLAW_REDACTED__` 是保留給內部設定編輯/還原使用的，並且會被拒絕作為字面提交的設定資料。
+- 編輯標記 `__OPENCLAW_REDACTED__` 是保留用於內部設定編輯/還原的，並且會作為字面提交的設定資料被拒絕。
 
 警告與審計訊號：
 
-- `SECRETS_REF_OVERRIDES_PLAINTEXT` (執行時警告)
-- `REF_SHADOWED` (稽核發現，當 `auth-profiles.json` 憑證優先於 `openclaw.json` 參考時)
+- `SECRETS_REF_OVERRIDES_PLAINTEXT` (執行階段警告)
+- `REF_SHADOWED` (稽核結果，當 `auth-profiles.json` 憑證優先於 `openclaw.json` refs 時)
 
 Google Chat 相容性行為：
 
@@ -585,7 +594,7 @@ Secret 啟用執行於：
 - 配置重新載入熱套用路徑
 - 配置重新載入重啟檢查路徑
 - 透過 `secrets.reload` 手動重新載入
-- Gateway 設定寫入 RPC 預檢 (`config.set` / `config.apply` / `config.patch`)，針對提交的設定承載內容中的有效表面 SecretRef 可解析性，於持久化編輯之前進行
+- Gateway config 寫入 RPC 預檢 (`config.set` / `config.apply` / `config.patch`)，用於在持續編輯之前解析已提交設定 payload 內的 active-surface SecretRef
 
 啟用合約：
 
@@ -593,7 +602,7 @@ Secret 啟用執行於：
 - 啟動失敗會中止 gateway 啟動。
 - 執行時期重新載入失敗會保留最後已知有效的快照。
 - Write-RPC 預檢失敗會拒絕提交的配置，並保持磁碟配置與執行時期快照均不變。
-- 為出站 helper/tool 呼叫提供明確的單次呼叫通道 token 並不會觸發 SecretRef 啟用；啟用點仍維持在啟動、重新載入和明確的 `secrets.reload`。
+- 提供給輔助工具/工具呼叫的明確單次呼叫通道權杖不會觸發 SecretRef 啟動；啟動點仍維持為啟動、重新載入和明確的 `secrets.reload`。
 
 ## 降級與恢復訊號
 
@@ -618,25 +627,25 @@ Secret 啟用執行於：
 有兩種廣泛的行為：
 
 <Tabs>
-  <Tab title="嚴格指令路徑">
-    例如 `openclaw memory` 遠端記憶體路徑和 `openclaw qr --remote` 當它需要遠端共享秘密參考時。它們從有效快照讀取，並在所需的 SecretRef 不可用時快速失敗。
+  <Tab title="Strict command paths">
+    例如 `openclaw memory` 遠端記憶體路徑，以及當它需要遠端共享秘密 ref 時的 `openclaw qr --remote`。它們會從目前快照讀取，並在所需的 SecretRef 無法使用時快速失敗。
   </Tab>
-  <Tab title="唯讀指令路徑">
-    例如 `openclaw status`、`openclaw status --all`、`openclaw channels status`、`openclaw channels resolve`、`openclaw security audit` 和唯讀 doctor/config 修復流程。它們也傾向於使用有效快照，但在該指令路徑中目標 SecretRef 不可用時會降級而不是中止。
+  <Tab title="Read-only command paths">
+    例如 `openclaw status`、`openclaw status --all`、`openclaw channels status`、`openclaw channels resolve`、`openclaw security audit`，以及唯讀的 doctor/config 修復流程。它們也偏好使用目前快照，但在該指令路徑中目標 SecretRef 無法使用時會降級執行，而不是中止。
 
     唯讀行為：
 
-    - 當 gateway 正在執行時，這些指令首先從有效快照讀取。
-    - 如果 gateway 解析未完成或 gateway 不可用，它們會針對特定指令表面嘗試目標本機備援。
-    - 如果目標 SecretRef 仍然不可用，該指令會繼續執行並產生降級的唯讀輸出和明確的診斷，例如「已設定但在本指令路徑中不可用」。
-    - 這種降級行為僅限於指令本機。它不會減弱執行時啟動、重新載入或 send/auth 路徑。
+    - 當 gateway 正在執行時，這些指令會先從目前快照讀取。
+    - 如果 gateway 解析不完整或 gateway 無法使用，它們會針對特定指令介面嘗試目標本機回退。
+    - 如果目標 SecretRef 仍然無法使用，該指令會繼續執行並產生降級的唯讀輸出及明確的診斷資訊，例如「已設定但在此指令路徑中無法使用」。
+    - 這種降級行為僅限於指令本機。它不會削弱執行階段啟動、重新載入，或 send/auth 路徑。
 
   </Tab>
 </Tabs>
 
 其他備註：
 
-- 後端金鑰輪替後的快照重新整理由 `openclaw secrets reload` 處理。
+- 後端密鑰輪替後的快照重新整理由 `openclaw secrets reload` 處理。
 - 這些指令路徑使用的 Gateway RPC 方法：`secrets.resolve`。
 
 ## 稽核與設定工作流程
@@ -651,44 +660,44 @@ Secret 啟用執行於：
 
 在重新稽核結果乾淨之前，請勿視為遷移完成。如果稽核仍然報告靜態明文值，即使執行階段 API 回傳編輯過的值，agent 存取風險仍然存在。
 
-如果您在 `configure` 期間儲存計劃而非套用，請在重新稽核前使用 `openclaw secrets apply --from <plan-path>` 套用該已儲存的計劃。
+如果您在 `configure` 期間儲存計畫而不是直接套用，請在重新稽核之前使用 `openclaw secrets apply --from <plan-path>` 套用該儲存的計畫。
 
 <AccordionGroup>
   <Accordion title="secrets audit">
-    調查結果包括：
+    發現事項包括：
 
-    - 靜態純文字值 (`openclaw.json`、`auth-profiles.json`、`.env` 以及產生的 `agents/*/agent/models.json`)
-    - 產生的 `models.json` 項目中的純文字敏感供應商標頭殘留
+    - 靜態純文字值 (`openclaw.json`, `auth-profiles.json`, `.env`，以及產生的 `agents/*/agent/models.json`)
+    - 產生的 `models.json` 項目中的純文字敏感提供者標頭殘留
     - 未解析的參照
     - 優先順序遮蔽 (`auth-profiles.json` 優先於 `openclaw.json` 參照)
-    - 舊版殘留 (`auth.json`、OAuth 提醒)
+    - 舊版殘留 (`auth.json`, OAuth 提醒)
 
-    Exec 說明：
+    Exec 備註：
 
-    - 預設情況下，稽核會略過 exec SecretRef 解析性檢查，以避免指令副作用。
-    - 請使用 `openclaw secrets audit --allow-exec` 在稽核期間執行 exec 提供商。
+    - 預設情況下，稽核會跳過 exec SecretRef 解析性檢查，以避免指令副作用。
+    - 使用 `openclaw secrets audit --allow-exec` 在稽核期間執行 exec 提供者。
 
-    標頭殘留說明：
+    標頭殘留備註：
 
-    - 敏感供應商標頭偵測是基於名稱啟發式 (常見的驗證/憑證標頭名稱和片段，例如 `authorization`、`x-api-key`、`token`、`secret`、`password` 和 `credential`)。
+    - 敏感提供者標頭偵測是基於名稱啟發式 (常見的驗證/憑證標頭名稱和片段，例如 `authorization`, `x-api-key`, `token`, `secret`, `password`, 和 `credential`)。
 
   </Accordion>
   <Accordion title="secrets configure">
-    互動式輔助工具，其功能如下：
+    互動式輔助工具，功能如下：
 
     - 首先設定 `secrets.providers` (`env`/`file`/`exec`，新增/編輯/移除)
-    - 讓您在單一 agent 範圍的 `openclaw.json` 以及 `auth-profiles.json` 中選擇支援的秘密欄位
-    - 可以直接在目標選擇器中建立新的 `auth-profiles.json` 對應
-    - 擷取 SecretRef 詳細資訊 (`source`、`provider`、`id`)
-    - 執行前檢查解析
+    - 讓您針對單一 Agent 範圍，在 `openclaw.json` 中選取支援的秘密欄位以及 `auth-profiles.json`
+    - 可直接在目標選擇器中建立新的 `auth-profiles.json` 對應
+    - 擷取 SecretRef 詳細資料 (`source`、`provider`、`id`)
+    - 執行 preflight 解析
     - 可立即套用
 
     Exec 註記：
 
-    - 前檢查會跳過 exec SecretRef 檢查，除非設定了 `--allow-exec`。
-    - 如果您直接從 `configure --apply` 套用，且計畫包含 exec 參照/provider，請在套用步驟中也保持 `--allow-exec` 的設定。
+    - 除非設定了 `--allow-exec`，否則 Preflight 會跳過 exec SecretRef 檢查。
+    - 如果您直接從 `configure --apply` 套用，且計畫包含 exec refs/providers，請在套用步驟中保持設定 `--allow-exec`。
 
-    實用模式：
+    有用的模式：
 
     - `openclaw secrets configure --providers-only`
     - `openclaw secrets configure --skip-provider-setup`
@@ -696,8 +705,8 @@ Secret 啟用執行於：
 
     `configure` 套用預設值：
 
-    - 從目標 provider 的 `auth-profiles.json` 中清除相符的靜態憑證
-    - 從 `auth.json` 中清除舊版靜態 `api_key` 項目
+    - 從 `auth-profiles.json` 中清除目標供應商的相符靜態憑證
+    - 從 `auth.json` 中清除舊版的靜態 `api_key` 項目
     - 從 `<config-dir>/.env` 中清除相符的已知秘密行
 
   </Accordion>
@@ -713,10 +722,10 @@ Secret 啟用執行於：
 
     Exec 註記：
 
-    - dry-run 會跳過 exec 檢查，除非設定了 `--allow-exec`。
-    - 寫入模式會拒絕包含 exec SecretRefs/provider 的計畫，除非設定了 `--allow-exec`。
+    - 除非設定了 `--allow-exec`，否則 dry-run 會跳過 exec 檢查。
+    - 除非設定了 `--allow-exec`，否則寫入模式會拒絕包含 exec SecretRefs/providers 的計畫。
 
-    如需嚴格的目標/路徑合約詳細資訊和確切的拒絕規則，請參閱 [Secrets Apply Plan Contract](/zh-Hant/gateway/secrets-plan-contract)。
+    如需嚴格的目標/路徑合約詳細資料和確切的拒絕規則，請參閱 [Secrets Apply Plan Contract](/zh-Hant/gateway/secrets-plan-contract)。
 
   </Accordion>
 </AccordionGroup>
@@ -736,7 +745,7 @@ Secret 啟用執行於：
 對於靜態憑證，執行時期不再依賴純文字的舊版驗證儲存。
 
 - 執行時期憑證來源是已解析的記憶體內快照。
-- 發現舊版靜態 `api_key` 項目時會將其清除。
+- 當發現舊版靜態 `api_key` 項目時會將其清除。
 - OAuth 相關的相容性行為保持分開。
 
 ## Web UI 說明
@@ -748,6 +757,6 @@ Secret 啟用執行於：
 - [驗證](/zh-Hant/gateway/authentication) — 驗證設定
 - [CLI: secrets](/zh-Hant/cli/secrets) — CLI 指令
 - [環境變數](/zh-Hant/help/environment) — 環境優先順序
-- [SecretRef Credential Surface](/zh-Hant/reference/secretref-credential-surface) — 憑證介面
-- [Secrets Apply Plan Contract](/zh-Hant/gateway/secrets-plan-contract) — 計畫合約詳細資訊
-- [Security](/zh-Hant/gateway/security) — 安全性狀態
+- [SecretRef 憑證介面](/zh-Hant/reference/secretref-credential-surface) — 憑證介面
+- [Secrets 套用計畫合約](/zh-Hant/gateway/secrets-plan-contract) — 計畫合約細節
+- [安全性](/zh-Hant/gateway/security) — 安全性狀態

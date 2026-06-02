@@ -10,14 +10,15 @@ sidebarTitle: "Generación de imágenes"
 
 La herramienta `image_generate` permite al agente crear y editar imágenes utilizando sus
 proveedores configurados. En las sesiones de chat, la generación de imágenes se ejecuta de forma asíncrona:
-OpenClaw registra una tarea en segundo plano, devuelve el id de la tarea inmediatamente y despierta
-al agente cuando el proveedor finaliza. El agente de finalización debe enviar las imágenes
-generadas a través de la herramienta `message`. Si la sesión solicitante está inactiva o
-su activación falla, y faltan algunas imágenes generadas de
-la entrega de la herramienta de mensaje, OpenClaw envía un respaldo directo idempotente con solo
-las imágenes que faltan.
+OpenClaw registra una tarea en segundo plano, devuelve el ID de la tarea inmediatamente y despierta
+al agente cuando el proveedor termina. El agente de finalización sigue el
+modo de respuesta visible normal de la sesión: entrega automática de la respuesta final cuando
+está configurado, o `message(action="send")` cuando la sesión requiere la herramienta
+de mensaje. Si la sesión solicitante está inactiva o su activación falla, y algunas
+imágenes generadas aún faltan en la respuesta de finalización, OpenClaw envía un
+fallback directo idempotente solo con las imágenes faltantes.
 
-<Note>La herramienta solo aparece cuando al menos un proveedor de generación de imágenes está disponible. Si no ve `image_generate` en las herramientas de su agente, configure `agents.defaults.imageGenerationModel`, configure una clave de API de proveedor, o inicie sesión con OpenAI Codex OAuth.</Note>
+<Note>La herramienta solo aparece cuando al menos un proveedor de generación de imágenes está disponible. Si no ve `image_generate` en las herramientas de su agente, configure `agents.defaults.imageGenerationModel`, configure una clave de API del proveedor, o inicie sesión con OpenAI ChatGPT/Codex OAuth.</Note>
 
 ## Inicio rápido
 
@@ -40,11 +41,11 @@ las imágenes que faltan.
     }
     ```
 
-    Codex OAuth utiliza la misma referencia de modelo `openai/gpt-image-2`. Cuando se
-    configura un perfil `openai-codex` OAuth, OpenClaw enruta las solicitudes de
-    imágenes a través de ese perfil OAuth en lugar de intentar primero
-    `OPENAI_API_KEY`. La configuración `models.providers.openai` explícita (clave de API,
-    URL base personalizada/Azure) vuelve a optar por la ruta directa de la API de imágenes de OpenAI.
+    ChatGPT/Codex OAuth utiliza la misma referencia de modelo `openai/gpt-image-2`. Cuando un
+    perfil OAuth `openai` está configurado, OpenClaw enruta las solicitudes de imagen
+    a través de ese perfil OAuth en lugar de intentar primero
+    `OPENAI_API_KEY`. Una configuración `models.providers.openai` explícita (clave de API,
+    URL base personalizada/Azure) opta por volver a la ruta directa de la API de OpenAI Images.
 
   </Step>
   <Step title="Pídele al agente">
@@ -66,7 +67,7 @@ las imágenes que faltan.
 | Objetivo                                                                  | Referencia del modelo                              | Autenticación                            |
 | ------------------------------------------------------------------------- | -------------------------------------------------- | ---------------------------------------- |
 | Generación de imágenes de OpenAI con facturación de API                   | `openai/gpt-image-2`                               | `OPENAI_API_KEY`                         |
-| Generación de imágenes de OpenAI con autenticación de suscripción a Codex | `openai/gpt-image-2`                               | OpenAI Codex OAuth                       |
+| Generación de imágenes de OpenAI con autenticación de suscripción a Codex | `openai/gpt-image-2`                               | OpenAI ChatGPT/Codex OAuth               |
 | OpenAI PNG/WebP con fondo transparente                                    | `openai/gpt-image-1.5`                             | `OPENAI_API_KEY` u OAuth de OpenAI Codex |
 | Generación de imágenes DeepInfra                                          | `deepinfra/black-forest-labs/FLUX-1-schnell`       | `DEEPINFRA_API_KEY`                      |
 | fal Krea 2 generación expresiva/dirigida por estilo                       | `fal/krea/v2/medium/text-to-image`                 | `FAL_KEY`                                |
@@ -95,7 +96,7 @@ backend lo emite.
 | Google     | `gemini-3.1-flash-image-preview`        | Sí                                              | `GEMINI_API_KEY` o `GOOGLE_API_KEY`                  |
 | LiteLLM    | `gpt-image-2`                           | Sí (hasta 5 imágenes de entrada)                | `LITELLM_API_KEY`                                    |
 | MiniMax    | `image-01`                              | Sí (referencia de sujeto)                       | `MINIMAX_API_KEY` o MiniMax OAuth (`minimax-portal`) |
-| OpenAI     | `gpt-image-2`                           | Sí (hasta 4 imágenes)                           | `OPENAI_API_KEY` u OpenAI Codex OAuth                |
+| OpenAI     | `gpt-image-2`                           | Sí (hasta 4 imágenes)                           | `OPENAI_API_KEY` u OpenAI ChatGPT/Codex OAuth        |
 | OpenRouter | `google/gemini-3.1-flash-image-preview` | Sí (hasta 5 imágenes de entrada)                | `OPENROUTER_API_KEY`                                 |
 | Vydra      | `grok-imagine`                          | No                                              | `VYDRA_API_KEY`                                      |
 | xAI        | `grok-imagine-image`                    | Sí (hasta 5 imágenes)                           | `XAI_API_KEY`                                        |
@@ -241,32 +242,31 @@ parámetro `images`. fal admite 1 imagen de referencia para Flux de imagen a ima
 
 <AccordionGroup>
   <Accordion title="OpenAI gpt-image-2 (y gpt-image-1.5)">
-    La generación de imágenes de OpenAI usa por defecto `openai/gpt-image-2`. Si se
-    ha configurado un perfil OAuth de `openai-codex`, OpenClaw reutiliza el mismo
-    perfil OAuth que usan los modelos de chat de suscripción Codex y envía la
-    solicitud de imagen a través del backend de Codex Responses. Las URLs base
-    heredadas de Codex, como `https://chatgpt.com/backend-api`, se canonifican a
+    La generación de imágenes de OpenAI usa por defecto `openai/gpt-image-2`. Si está
+    configurado un perfil OAuth de `openai`, OpenClaw reutiliza el mismo
+    perfil OAuth que utilizan los modelos de chat de suscripción Codex y envía la
+    solicitud de imagen a través del backend de Codex Responses. Las URL base
+    heredadas de Codex como `https://chatgpt.com/backend-api` se canonicizan a
     `https://chatgpt.com/backend-api/codex` para las solicitudes de imagen. OpenClaw
-    **no** vuelve silenciosamente a `OPENAI_API_KEY` para esa solicitud; 
+    **no** retrocede silenciosamente a `OPENAI_API_KEY` para esa solicitud -
     para forzar el enrutamiento directo a la API de OpenAI Images, configure
-    `models.providers.openai` explícitamente con una clave API, URL base personalizada
+    `models.providers.openai` explícitamente con una clave API, URL base personalizada,
     o punto de conexión de Azure.
 
     Los modelos `openai/gpt-image-1.5`, `openai/gpt-image-1` y
     `openai/gpt-image-1-mini` todavía se pueden seleccionar explícitamente. Use
-    `gpt-image-1.5` para obtener salida PNG/WebP con fondo transparente; la API
-    actual de `gpt-image-2` rechaza `background: "transparent"`.
+    `gpt-image-1.5` para una salida PNG/WebP con fondo transparente; la API actual de
+    `gpt-image-2` rechaza `background: "transparent"`.
 
-    `gpt-image-2` admite tanto la generación de texto a imagen como
-    la edición de imágenes de referencia a través de la misma herramienta
-    `image_generate`. OpenClaw reenvía `prompt`, `count`, `size`, `quality`, `outputFormat`
+    `gpt-image-2` admite tanto la generación de texto a imagen como la
+    edición de imágenes de referencia a través de la misma herramienta `image_generate`.
+    OpenClaw reenvía `prompt`, `count`, `size`, `quality`, `outputFormat`,
     e imágenes de referencia a OpenAI. OpenAI **no** recibe
     `aspectRatio` o `resolution` directamente; cuando es posible, OpenClaw las
-    asigna a un `size` admitido; de lo contrario, la herramienta las reporta
-    como anulaciones ignoradas.
+    mapea a un `size` compatible, de lo contrario la herramienta las reporta como
+    anulaciones ignoradas.
 
-    Las opciones específicas de OpenAI se encuentran en el objeto
-    `openai`:
+    Las opciones específicas de OpenAI se encuentran en el objeto `openai`:
 
     ```json
     {
@@ -283,19 +283,18 @@ parámetro `images`. fal admite 1 imagen de referencia para Flux de imagen a ima
 
     `openai.background` acepta `transparent`, `opaque` o `auto`;
     las salidas transparentes requieren `outputFormat` `png` o `webp` y un
-    modelo de imagen de OpenAI con capacidad de transparencia. OpenClaw enruta
-    las solicitudes de fondo transparente de `gpt-image-2` por defecto a
-    `gpt-image-1.5`.
+    modelo de imagen de OpenAI con capacidad de transparencia. OpenClaw enruta las solicitudes
+    predeterminadas de fondo transparente de `gpt-image-2` a `gpt-image-1.5`.
     `openai.outputCompression` se aplica a las salidas JPEG/WebP y se ignora
     para las salidas PNG.
 
-    La sugerencia `background` de nivel superior es neutral al proveedor y actualmente se
-    asigna al mismo campo de solicitud `background` de OpenAI cuando se selecciona el
-    proveedor de OpenAI. Los proveedores que no declaran soporte para fondos lo
-    devuelven en `ignoredOverrides` en lugar de recibir el parámetro no admitido.
+    La sugerencia de nivel superior `background` es neutral para el proveedor y actualmente se
+    asigna al mismo campo de solicitud `background` de OpenAI cuando se selecciona
+    el proveedor OpenAI. Los proveedores que no declaran compatibilidad con el fondo lo devuelven
+    en `ignoredOverrides` en lugar de recibir el parámetro no compatible.
 
-    Para enrutar la generación de imágenes de OpenAI a través de un
-    despliegue de Azure OpenAI en lugar de `api.openai.com`, consulte
+    Para enrutar la generación de imágenes de OpenAI a través de un despliegue de
+    Azure OpenAI en lugar de `api.openai.com`, consulte
     [Puntos de conexión de Azure OpenAI](/es/providers/openai#azure-openai-endpoints).
 
   </Accordion>

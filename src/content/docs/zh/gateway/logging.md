@@ -18,7 +18,7 @@ OpenClaw 有两个日志“表面”：
 启动时，Gateway(网关) 会记录已解析的默认代理模型以及影响新会话的模式默认值，例如：
 
 ```text
-agent model: openai-codex/gpt-5.5 (thinking=medium, fast=on)
+agent model: openai/gpt-5.5 (thinking=medium, fast=on)
 ```
 
 `thinking` 来自默认代理、模型参数或全局代理默认值；当其未设置时，启动摘要显示 `medium`。`fast` 来自默认代理或模型 `fastMode` 参数。

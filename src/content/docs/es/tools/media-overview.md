@@ -81,32 +81,33 @@ El habla en vivo utiliza el contrato de sesión Talk en lugar de la ruta de la h
 | Música                    | Asíncrono | La misma característica de procesamiento del proveedor que el vídeo.                                                                           |
 
 Para herramientas asíncronas, OpenClaw envía la solicitud al proveedor, devuelve un
-di de tarea inmediatamente y rastrea el trabajo en el libro mayor de tareas. El agente continúa
+di de tarea inmediatamente y rastrea el trabajo en el libro de tareas. El agente continúa
 respondiendo a otros mensajes mientras se ejecuta el trabajo. Cuando el proveedor termina,
 OpenClaw despierta al agente con las rutas de los medios generados para que pueda informar al
-usuario y retransmitir el resultado a través de la herramienta de mensaje. Si la sesión solicitante
-está inactiva o su activación falla, y falta algún medio generado
-del envío de la herramienta de mensaje, OpenClaw envía un retorno directo
-dempotente con solo los medios faltantes. Los medios ya enviados a través de la
-herramienta de mensaje no se publican nuevamente.
+usuario a través del modo de respuesta visible normal de la sesión: entrega automática de la respuesta final
+cuando está configurado, o `message(action="send")` cuando la sesión requiere
+la herramienta de mensaje. Si la sesión solicitante está inactiva o su activación activa
+falla, y faltan algunos medios generados en la respuesta de finalización,
+OpenClaw envía un respaldo directo idempotente solo con los medios faltantes. Los medios
+ya entregados por la respuesta de finalización no se publican de nuevo.
 
 ## Conversión de voz a texto y llamada de voz
 
 Deepgram, DeepInfra, ElevenLabs, Mistral, OpenAI, OpenRouter, SenseAudio y xAI pueden todos transcribir
 audio entrante a través de la ruta por lotes `tools.media.audio` cuando están configurados.
-Los complementos de canal que realizan un reconocimiento previo de una nota de voz para la filtración de menciones o el análisis
-de comandos marcan los datos adjuntos transcritos en el contexto entrante, por lo que el pase
-compartido de comprensión de medios reutiliza esa transcripción en lugar de realizar una segunda
+Los complementos de canal que realizan un prevuelo de una nota de voz para el control de menciones o el análisis
+de comandos marcan el archivo transcrito en el contexto entrante, por lo que el pase compartido
+de comprensión de medios reutiliza esa transcripción en lugar de hacer una segunda
 llamada STT para el mismo audio.
 
 Deepgram, ElevenLabs, Mistral, OpenAI y xAI también registran proveedores de STT en
 streaming para Voice Call, por lo que el audio telefónico en vivo se puede reenviar al proveedor
 seleccionado sin esperar a que se complete la grabación.
 
-Para conversaciones de usuario en vivo, prefiera el [modo Talk](/es/nodes/talk). Los datos adjuntos
-de audio por lotes permanecen en la ruta de medios; el tiempo real del navegador, el pulsar para hablar nativo,
-la telefonía y el audio de reuniones deben usar los eventos de Talk y los catálogos con ámbito de sesión
-devueltos por el Gateway.
+Para conversaciones en vivo con el usuario, prefiera el [modo Talk](/es/nodes/talk). Los archivos de audio
+por lotes permanecen en la ruta de medios; el tiempo real del navegador, la pulsación para hablar nativa,
+la telefonía y el audio de reuniones deben usar los eventos Talk y los catálogos
+de alcance de sesión devueltos por el Gateway.
 
 ## Asignaciones de proveedores (cómo se dividen los proveedores en las distintas superficies)
 
@@ -120,9 +121,9 @@ devueltos por el Gateway.
 ## Relacionado
 
 - [Generación de imágenes](/es/tools/image-generation)
-- [Generación de videos](/es/tools/video-generation)
+- [Generación de video](/es/tools/video-generation)
 - [Generación de música](/es/tools/music-generation)
-- [Conversión de texto a voz](/es/tools/tts)
+- [Texto a voz](/es/tools/tts)
 - [Comprensión de medios](/es/nodes/media-understanding)
 - [Nodos de audio](/es/nodes/audio)
 - [Modo Talk](/es/nodes/talk)

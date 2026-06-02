@@ -1,5 +1,5 @@
 ---
-summary: "Añade compatibilidad con el proveedor de modelos Ollama a OpenClaw."
+summary: "Añade soporte de proveedor de modelos Ollama y Ollama Cloud a OpenClaw."
 read_when:
   - You are installing, configuring, or auditing the ollama plugin
 title: "Complemento de Ollama"
@@ -7,7 +7,7 @@ title: "Complemento de Ollama"
 
 # Complemento de Ollama
 
-Añade compatibilidad con el proveedor de modelos Ollama a OpenClaw.
+Añade soporte de proveedor de modelos Ollama y Ollama Cloud a OpenClaw.
 
 ## Distribución
 
@@ -16,8 +16,9 @@ Añade compatibilidad con el proveedor de modelos Ollama a OpenClaw.
 
 ## Superficie
 
-proveedores: ollama; contratos: memoryEmbeddingProviders, webSearchProviders
+proveedores: ollama, ollama-cloud; contratos: memoryEmbeddingProviders, webSearchProviders
 
 ## Documentación relacionada
 
 - [ollama](/es/providers/ollama)
+- [ollama-cloud](/es/providers/ollama-cloud)

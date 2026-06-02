@@ -142,14 +142,13 @@ Les exécutions d'interpréteur/d'exécution soutenus par une approbation sont i
 - Si OpenClaw ne peut pas identifier exactement un fichier local concret pour une commande d'interpréteur/d'exécution (par exemple les scripts de paquet, les formulaires eval, les chaînes de chargeur spécifiques à l'exécution, ou les formes multi-fichiers ambiguës), l'exécution soutenue par une approbation est refusée au lieu de prétendre à une couverture sémantique qu'elle n'a pas.
 - Pour ces flux de travail, privilégiez la sandboxing, une frontière d'hôte séparée, ou une liste de confiance/explicite de flux complet où l'opérateur accepte la sémantique d'exécution plus large.
 
-Lorsque des approbations sont requises, l'outil exec renvoie immédiatement un identifiant d'approbation. Utilisez cet identifiant pour
-corréler les événements système d'exécution approuvés ultérieurs (`Exec finished`, et `Exec running` lorsque configurés).
-Si aucune décision n'arrive avant l'expiration du délai, la demande est traitée comme un dépassement de délai d'approbation et
-présentée comme un refus terminal plutôt que comme un événement système de réveil de l'agent.
+Lorsque des approbations sont requises, l'outil exec renvoie immédiatement un identifiant d'approbation. Utilisez cet identifiant pour mettre en corrélation les événements système d'exécution approuvés ultérieurs (`Exec finished`, et `Exec running` si configurés).
+Si aucune décision n'arrive avant l'expiration du délai, la demande est traitée comme un dépassement de délai d'approbation et signalée comme un refus de commande hôte terminal. Pour les approbations asynchrones de l'agent principal avec une session d'origine, OpenClaw reprend également cette session avec un suivi interne afin que l'agent observe que la commande ne s'est pas exécutée au lieu de tenter ultérieurement de réparer un résultat manquant.
 
 ### Comportement de livraison de suivi
 
-Après qu'un exec asynchrone approuvé est terminé, OpenClaw envoie un tour `agent` de suivi à la même session.
+Après l'exécution asynchrone approuvée, OpenClaw envoie un tour de suivi `agent` à la même session.
+Les approbations asynchrones refusées utilisent le même chemin de suivi de session principale pour le statut de refus, mais elles n'enregistrent pas les transferts d'exécution élevés et n'exécutent pas la commande. Les refus sans une session principale reprise sont soit supprimés, soit signalés via un itinéraire direct sécurisé lorsqu'un tel itinéraire existe.
 
 - Si une cible de livraison externe valide existe (channel pouvant être livré plus cible `to`), la livraison de suivi utilise ce channel.
 - Dans les flux webchat-only ou internal-session sans cible externe, la livraison de suivi reste uniquement pour la session (`deliver: false`).

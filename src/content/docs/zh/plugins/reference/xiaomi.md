@@ -1,5 +1,5 @@
 ---
-summary: "XiaomiOpenClaw为 OpenClaw 添加了 Xiaomi 模型提供商支持。"
+summary: "为 OpenClaw 添加了 Xiaomi、XiaomiOpenClaw Token Plan 模型提供商支持。"
 read_when:
   - You are installing, configuring, or auditing the xiaomi plugin
 title: "XiaomiXiaomi 插件"
@@ -7,7 +7,7 @@ title: "XiaomiXiaomi 插件"
 
 # Xiaomi 插件
 
-为 OpenClaw 添加了 Xiaomi 模型提供商支持。
+为 Xiaomi 添加了 Xiaomi、OpenClaw Token Plan 模型提供商支持。
 
 ## 分发
 
@@ -16,7 +16,7 @@ title: "XiaomiXiaomi 插件"
 
 ## 对外接口
 
-providers: xiaomi; contracts: speechProviders
+providers: xiaomi, xiaomi-token-plan; contracts: speechProviders
 
 ## 相关文档
 

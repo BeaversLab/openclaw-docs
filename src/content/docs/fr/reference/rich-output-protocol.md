@@ -1,61 +1,56 @@
 ---
-summary: "Protocole de shortcode de sortie enrichie pour les intégrations, les médias, les indices audio et les réponses"
+summary: "Protocole de sortie enrichie pour les médias structurés, les intégrations, les indices audio et les réponses"
 read_when:
   - Changing assistant output rendering in the Control UI
-  - Debugging `[embed ...]`, `MEDIA:`, reply, or audio presentation directives
+  - Debugging `[embed ...]`, structured media, reply, or audio presentation directives
 title: "Protocole de sortie enrichie"
 ---
 
 La sortie de l'assistant peut transporter un petit ensemble de directives de livraison/restitution :
 
-- `MEDIA:` pour la livraison des pièces jointes
+- champs `mediaUrl` / `mediaUrls` structurés pour la livraison de pièces jointes
 - `[[audio_as_voice]]` pour les indices de présentation audio
 - `[[reply_to_current]]` / `[[reply_to:<id>]]` pour les métadonnées de réponse
-- `[embed ...]` pour le rendu enrichi de l'interface de contrôle
+- `[embed ...]` pour le rendu enrichi de l'interface utilisateur de contrôle
 
-Les pièces jointes distantes `MEDIA:` doivent être des URL `https:` publiques. Les noms d'hôtes `http:` simples,
-bouclage, lien local, privés et internes sont ignorés en tant que directives
-de pièce jointe ; les récupérateurs de médias côté serveur appliquent toujours leurs propres protections réseau.
+Les pièces jointes de médias distants doivent être des URL `https:` publiques. Les noms d'hôte `http:` simples,
+bouclage, lien local, privé et interne sont ignorés en tant que directives de
+pièce jointe ; les récupérateurs de médias côté serveur appliquent toujours leurs propres gardes réseau.
 
-Les pièces jointes locales `MEDIA:` peuvent utiliser des chemins absolus, des chemins relatifs à l'espace de travail ou des
-chemins relatifs au répertoire personnel `~/`. Ils passent toujours par la stratégie de lecture de fichiers de l'agent et les
-vérifications de type de média avant livraison.
+Les pièces jointes de médias locaux peuvent utiliser des chemins absolus, des chemins relatifs à l'espace de travail ou des
+chemins `~/` relatifs au domicile. Ils passent toujours par la stratégie de lecture de fichiers de l'agent et
+les vérifications de type de média avant livraison.
 
 <Warning>
-`MEDIA:` n'est analysé que comme du texte brut. Envelopper la directive dans un formatage
-Markdown (gras, code en ligne, code clôturé) empêche l'analyseur de
-la reconnaître, et la pièce jointe est silencieusement abandonnée lors de la livraison.
+N'émettez pas de commandes texte pour les pièces jointes provenant d'outils, de plugins, de blocs de streaming,
+de sortie du navigateur ou d'actions de message. Utilisez plutôt des champs de médias structurés.
 
-Valide :
+Charge utile de message-tool valide :
 
-```text
-MEDIA:/workspace/image.png
+```json
+{ "message": "Here is your image.", "mediaUrl": "/workspace/image.png" }
 ```
 
-Non valide (analysé comme du texte, aucune pièce jointe livrée) :
-
-```text
-**MEDIA:/workspace/image.png**
-`MEDIA:/workspace/image.png`
-Here is your image: MEDIA:/workspace/image.png
-```
-
-Gardez `MEDIA:` sur sa propre ligne, en texte brut, sans aucun formatage environnant.
+Le texte de réponse final de l'assistant hérité peut toujours être normalisé pour la compatibilité, mais
+ce n'est pas un protocole général de plugin/tool.
 
 </Warning>
 
-La syntaxe d'image Markdown brute reste du texte par défaut. Les canaux qui mappent intentionnellement
-les réponses image Markdown aux pièces jointes multimédias optent pour cette option au niveau de leur adaptateur
-sortant ; Telegram le fait afin que `![alt](url)` puisse toujours devenir une réponse multimédia.
+La syntaxe d'image Markdown brut reste du texte par défaut. Les canaux qui mappent intentionnellement
+les réponses image Markdown aux pièces jointes multimédias s'abonnent au niveau de leur adaptateur
+sortant ; Telegram le fait pour que `![alt](url)` puisse toujours devenir une réponse média.
 
-Ces directives sont distinctes. `MEDIA:` et les balises de réponse/voix restent des métadonnées de livraison ; `[embed ...]` est le chemin de rendu enrichi uniquement pour le web.
-Les médias de résultats d'outil de confiance utilisent le même analyseur `MEDIA:` / `[[audio_as_voice]]` avant livraison, donc les résultats d'outil texte peuvent toujours marquer une pièce jointe audio comme une note vocale.
+Ces directives sont distinctes. Les champs de médias structurés et les balises de réponse/voix sont
+des métadonnées de livraison ; `[embed ...]` est le chemin de rendu enrichi uniquement web.
 
-Lorsque le block streaming est activé, `MEDIA:` reste des métadonnées de livraison unique pour un tour. Si la même URL média est envoyée dans un bloc diffusé et répétée dans la charge utile finale de l'assistant, OpenClaw délivre la pièce jointe une seule fois et supprime le doublon de la charge utile finale.
+Lorsque le block streaming est activé, les médias doivent être transportés sur les champs de
+charge utile structurés. Si la même URL média est envoyée dans un bloc diffusé et répétée dans la
+charge utile finale de l'assistant, OpenClaw livre la pièce jointe une fois et supprime le
+doublon de la charge utile finale.
 
 ## `[embed ...]`
 
-`[embed ...]` est la seule syntaxe de rendu riche orientée agent pour l'interface de contrôle.
+`[embed ...]` est la seule syntaxe de rendu enrichie orientée agent pour l'interface utilisateur de contrôle.
 
 Exemple de fermeture automatique :
 
@@ -67,14 +62,14 @@ Règles :
 
 - `[view ...]` n'est plus valide pour les nouvelles sorties.
 - Les shortcodes d'intégration (embed) sont rendus uniquement dans la surface du message de l'assistant.
-- Seules les intégrations basées sur une URL sont rendues. Utilisez `ref="..."` ou `url="..."`.
+- Seuls les intégrations basées sur une URL sont rendues. Utilisez `ref="..."` ou `url="..."`.
 - Les shortcodes d'intégration HTML en ligne sous forme de bloc ne sont pas rendus.
 - L'interface Web supprime le shortcode du texte visible et rend l'intégration en ligne.
-- `MEDIA:` n'est pas un alias d'intégration et ne doit pas être utilisé pour le rendu d'intégrations riches.
+- Le média structuré n'est pas un alias d'intégration et ne doit pas être utilisé pour le rendu d'intégrations riches.
 
 ## Forme de rendu stockée
 
-Le bloc de contenu de l'assistant normalisé/stocké est un élément `canvas` structuré :
+Le bloc de contenu de l'assistant normalisé/enregistré est un élément `canvas` structuré :
 
 ```json
 {
@@ -91,7 +86,7 @@ Le bloc de contenu de l'assistant normalisé/stocké est un élément `canvas` s
 }
 ```
 
-Les blocs riches stockés/rendus utilisent directement cette forme `canvas`. `present_view` n'est pas reconnu.
+Les blocs riches enregistrés/rendus utilisent directement cette forme `canvas`. `present_view` n'est pas reconnu.
 
 ## Connexes
 

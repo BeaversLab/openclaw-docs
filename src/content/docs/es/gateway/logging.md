@@ -19,7 +19,7 @@ Al iniciarse, el Gateway registra el modelo de agente predeterminado resuelto ju
 predeterminados del modo que afectan a las nuevas sesiones, por ejemplo:
 
 ```text
-agent model: openai-codex/gpt-5.5 (thinking=medium, fast=on)
+agent model: openai/gpt-5.5 (thinking=medium, fast=on)
 ```
 
 `thinking` proviene del agente predeterminado, los parámetros del modelo o el agente global predeterminado;

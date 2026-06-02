@@ -51,13 +51,13 @@ OpenClaw 將影片生成視為三種執行時模式：
 1. OpenClaw 會將請求提交給提供者，並立即傳回任務 ID。
 2. 提供者會在背景處理工作（通常為 30 秒到數分鐘，視提供者和解析度而定；緩慢的佇列支援提供者可能執行到設定的逾時時間）。
 3. 當影片準備好時，OpenClaw 會透過內部完成事件喚醒同一個工作階段。
-4. 代理會通知使用者並透過訊息工具附加完成的影片。如果請求者會話處於非活動狀態或其主動喚醒失敗，且仍有部分產生的影片未透過訊息工具傳送，OpenClaw 會發送一個等冪的直接備援，其中僅包含缺失的影片。
+4. 代理會透過工作階段的一般可見回覆模式告知使用者：若是自動模式則在最終回覆傳遞時；若工作階段需要訊息工具則為 `message(action="send")`。如果請求者工作階段處於非活動狀態或其喚醒失敗，且完成回覆中仍缺少部分生成的影片，OpenClaw 會傳送一個等幂的直接後援（fallback），其中僅包含缺失的影片。
 
-當工作正在進行時，同一工作階段中重複的 `video_generate` 呼叫會傳回目前的任務狀態，而不是開始另一個生成作業。請使用 `openclaw tasks list` 或 `openclaw tasks show <taskId>` 從 CLI 檢查進度。
+當任務正在進行時，同一工作階段中重複的 `video_generate` 呼叫會傳回目前的任務狀態，而不是開始另一個生成作業。請使用 `openclaw tasks list` 或 `openclaw tasks show <taskId>` 從 CLI 檢查進度。
 
 在非 session 支援的 Agent 執行（例如直接工具呼叫）中，該工具會改為即時生成，並在同一輪次中傳回最終媒體路徑。
 
-當提供商返回位元組時，生成的影片檔案會儲存在 OpenClaw 管理的媒體儲存空間下。預設的生成影片儲存上限遵循影片媒體限制，而 `agents.defaults.mediaMaxMb` 會為更大的渲染提高此上限。當提供商同時返回託管的輸出 URL 時，如果本機持續性儲存拒絕過大的檔案，OpenClaw 可以提供該 URL 而不是使任務失敗。
+當提供者傳回位元組時，生成的影片檔案會儲存在 OpenClaw 管理的媒體儲存空間下。預設的生成影片儲存上限遵循影片媒體限制，而 `agents.defaults.mediaMaxMb` 會為較大的渲染提升此上限。當提供者也傳回託管輸出 URL 時，如果本機持續性拒絕過大的檔案，OpenClaw 可以傳遞該 URL 而不是讓任務失敗。
 
 ### 任務生命週期
 
@@ -76,7 +76,7 @@ openclaw tasks show <taskId>
 openclaw tasks cancel <taskId>
 ```
 
-如果目前會話已經有影片任務處於 `queued` 或 `running` 狀態，`video_generate` 將返回現有任務狀態而不是啟動新任務。使用 `action: "status"` 來明確檢查而不觸發新的生成。
+如果目前的影片任務已經是 `queued` 或 `running`，`video_generate` 將傳回現有的任務狀態，而不是開始新任務。使用 `action: "status"` 可在不觸發新生成的情況下明確檢查狀態。
 
 ## 支援的供應商
 
@@ -95,41 +95,41 @@ openclaw tasks cancel <taskId>
 | OpenRouter            | `google/veo-3.1-fast`           |  ✓   | 最多 4 張圖片（首幀/尾幀或參考圖）               | -                                       | `OPENROUTER_API_KEY`                     |
 | Qwen                  | `wan2.6-t2v`                    |  ✓   | 是（遠端 URL）                                   | 是（遠端 URL）                          | `QWEN_API_KEY`                           |
 | Runway                | `gen4.5`                        |  ✓   | 1 張圖片                                         | 1 部影片                                | `RUNWAYML_API_SECRET`                    |
-| Together              | `Wan-AI/Wan2.2-T2V-A14B`        |  ✓   | 僅限 `Wan-AI/Wan2.2-I2V-A14B`                    | -                                       | `TOGETHER_API_KEY`                       |
+| Together              | `Wan-AI/Wan2.2-T2V-A14B`        |  ✓   | `Wan-AI/Wan2.2-I2V-A14B` 僅                      | -                                       | `TOGETHER_API_KEY`                       |
 | Vydra                 | `veo3`                          |  ✓   | 1 張圖片 (`kling`)                               | -                                       | `VYDRA_API_KEY`                          |
-| xAI                   | `grok-imagine-video`            |  ✓   | 1 張第一幀圖片或最多 7 個 `reference_image`      | 1 部影片                                | `XAI_API_KEY`                            |
+| xAI                   | `grok-imagine-video`            |  ✓   | 1 張首幀圖片或多達 7 個 `reference_image`        | 1 部影片                                | `XAI_API_KEY`                            |
 
-部分供應商接受額外或替代的 API 金鑰環境變數。詳情請參閱個別[供應商頁面](#related)。
+部分提供者接受額外或替代的 API 金鑰環境變數。詳情請參閱個別[提供者頁面](#related)。
 
-執行 `video_generate action=list` 以在執行時檢查可用的供應商、模型和執行模式。
+執行 `video_generate action=list` 以在執行時檢查可用的提供者、模型和執行模式。
 
 ### 功能矩陣
 
-`video_generate`、合約測試和共用的即時掃描所使用的明確模式合約：
+由 `video_generate`、合約測試和共用即時掃描所使用的明確模式合約：
 
-| 供應商     | `generate` | `imageToVideo` | `videoToVideo` | 目前的共用即時通道                                                                                       |
-| ---------- | :--------: | :------------: | :------------: | -------------------------------------------------------------------------------------------------------- |
-| Alibaba    |     ✓      |       ✓        |       ✓        | `generate`、`imageToVideo`；已跳過 `videoToVideo`，因為此供應商需要遠端 `http(s)` 影片 URL               |
-| BytePlus   |     ✓      |       ✓        |       -        | `generate`、`imageToVideo`                                                                               |
-| ComfyUI    |     ✓      |       ✓        |       -        | 不在共用掃描中；特定工作流程的覆蓋範圍位於 Comfy 測試中                                                  |
-| DeepInfra  |     ✓      |       -        |       -        | `generate`；在捆綁合約中，原生的 DeepInfra 影片架構是文字生成影片                                        |
-| fal        |     ✓      |       ✓        |       ✓        | `generate`、`imageToVideo`；僅在使用 Seedance 參考生成影片時才支援 `videoToVideo`                        |
-| Google     |     ✓      |       ✓        |       ✓        | `generate`、`imageToVideo`；共用 `videoToVideo` 已跳過，因為目前的緩衝區支援 Gemini/Veo 掃描不接受該輸入 |
-| MiniMax    |     ✓      |       ✓        |       -        | `generate`、`imageToVideo`                                                                               |
-| OpenAI     |     ✓      |       ✓        |       ✓        | `generate`、`imageToVideo`；共用 `videoToVideo` 已跳過，因為此組織/輸入路徑目前需要供應商端影片編輯權限  |
-| OpenRouter |     ✓      |       ✓        |       -        | `generate`、`imageToVideo`                                                                               |
-| Qwen       |     ✓      |       ✓        |       ✓        | `generate`，`imageToVideo`；`videoToVideo` 已跳過，因為此供應商需要遠端 `http(s)` 影片 URL               |
-| Runway     |     ✓      |       ✓        |       ✓        | `generate`，`imageToVideo`；`videoToVideo` 僅在選定的模型為 `runway/gen4_aleph` 時執行                   |
-| Together   |     ✓      |       ✓        |       -        | `generate`，`imageToVideo`                                                                               |
-| Vydra      |     ✓      |       ✓        |       -        | `generate`；共用 `imageToVideo` 已跳過，因為內建的 `veo3` 僅支援文字，且內建的 `kling` 需要遠端圖片 URL  |
-| xAI        |     ✓      |       ✓        |       ✓        | `generate`，`imageToVideo`；`videoToVideo` 已跳過，因為此供應商目前需要遠端 MP4 URL                      |
+| 供應商     | `generate` | `imageToVideo` | `videoToVideo` | 目前的共用即時通道                                                                                          |
+| ---------- | :--------: | :------------: | :------------: | ----------------------------------------------------------------------------------------------------------- |
+| Alibaba    |     ✓      |       ✓        |       ✓        | `generate`、`imageToVideo`；因為此提供者需要遠端 `http(s)` 視訊 URL，所以跳過 `videoToVideo`                |
+| BytePlus   |     ✓      |       ✓        |       -        | `generate`、`imageToVideo`                                                                                  |
+| ComfyUI    |     ✓      |       ✓        |       -        | 不在共用掃描中；特定工作流程的覆蓋範圍位於 Comfy 測試中                                                     |
+| DeepInfra  |     ✓      |       -        |       -        | `generate`；原生 DeepInfra 視訊架構在打包合約中為文字生成視訊                                               |
+| fal        |     ✓      |       ✓        |       ✓        | `generate`、`imageToVideo`；僅在使用 Seedance 參考生成視訊時 `videoToVideo`                                 |
+| Google     |     ✓      |       ✓        |       ✓        | `generate`、`imageToVideo`；共用 `videoToVideo` 被跳過，因為目前的緩衝支援 Gemini/Veo 掃描不接受該輸入      |
+| MiniMax    |     ✓      |       ✓        |       -        | `generate`、`imageToVideo`                                                                                  |
+| OpenAI     |     ✓      |       ✓        |       ✓        | `generate`、`imageToVideo`；共用 `videoToVideo` 被跳過，因為此 org/input 路徑目前需要提供者端視訊編輯存取權 |
+| OpenRouter |     ✓      |       ✓        |       -        | `generate`、`imageToVideo`                                                                                  |
+| Qwen       |     ✓      |       ✓        |       ✓        | `generate`、`imageToVideo`；`videoToVideo` 已跳過，因為此提供者需要遠端 `http(s)` 視訊 URL                  |
+| Runway     |     ✓      |       ✓        |       ✓        | `generate`、`imageToVideo`；`videoToVideo` 僅在選取的模型為 `runway/gen4_aleph` 時執行                      |
+| Together   |     ✓      |       ✓        |       -        | `generate`、`imageToVideo`                                                                                  |
+| Vydra      |     ✓      |       ✓        |       -        | `generate`；共用的 `imageToVideo` 已跳過，因為套件 `veo3` 僅支援文字，且套件 `kling` 需要遠端圖片 URL       |
+| xAI        |     ✓      |       ✓        |       ✓        | `generate`、`imageToVideo`；`videoToVideo` 已跳過，因為此提供者目前需要遠端 MP4 URL                         |
 
 ## Tool parameters
 
 ### Required
 
 <ParamField path="prompt" type="string" required>
-  要產生影片的文字描述。`action: "generate"` 必填。
+  待生成視訊的文字描述。`action: "generate"` 的必要項目。
 </ParamField>
 
 ### Content inputs
@@ -141,7 +141,7 @@ openclaw tasks cancel <taskId>
   多張參考圖片（最多 9 張）。
 </ParamField>
 <ParamField path="imageRoles" type="string[]">
-  可選的每位置角色提示，與組合圖片清單平行。 標準值：`first_frame`、`last_frame`、`reference_image`。
+  與合併圖片列表平行的選用性每個位置角色提示。 標準值：`first_frame`、`last_frame`、`reference_image`。
 </ParamField>
 <ParamField path="video" type="string">
   單一參考影片（路徑或 URL）。
@@ -150,68 +150,68 @@ openclaw tasks cancel <taskId>
   多個參考影片（最多 4 個）。
 </ParamField>
 <ParamField path="videoRoles" type="string[]">
-  可選的每位置角色提示，與組合影片清單平行。 標準值：`reference_video`。
+  與合併影片列表平行的選用性每個位置角色提示。 標準值：`reference_video`。
 </ParamField>
 <ParamField path="audioRef" type="string">
-  單一參考音訊（路徑或 URL）。當供應商支援音訊輸入時，用於背景音樂或語音參考。
+  單一參考音訊（路徑或 URL）。當供應商支援音訊輸入時，用於背景音樂或人聲參考。
 </ParamField>
 <ParamField path="audioRefs" type="string[]">
   多個參考音訊（最多 3 個）。
 </ParamField>
 <ParamField path="audioRoles" type="string[]">
-  可選的每位置角色提示，與組合音訊清單平行。 標準值：`reference_audio`。
+  與合併音訊列表平行的選用性每個位置角色提示。 標準值：`reference_audio`。
 </ParamField>
 
-<Note>角色提示會原樣轉發給供應商。標準值來自 `VideoGenerationAssetRole` 聯集，但供應商可能接受其他角色字串。`*Roles` 陣列的項目數不得超過對應的參考清單；差一錯誤會導致明確的失敗訊息。 使用空字串來保留空位不設定。對於 xAI，將每個圖片角色設定為 `reference_image` 以使用其 `reference_images` 生成模式；對於單圖片圖片轉影片，請省略角色或使用 `first_frame`。</Note>
+<Note>角色提示會原樣轉發給供應商。標準值來自 `VideoGenerationAssetRole` 聯集，但供應商可能接受額外的角色字串。`*Roles` 陣列的項目數不得超過對應的參考列表；相差一個的錯誤會導致明確的失敗訊息。 使用空字串來保留位置不設定。對於 xAI，將每個圖片角色設為 `reference_image` 以使用其 `reference_images` 生成模式；針對單圖片圖片轉影片，請省略角色或使用 `first_frame`。</Note>
 
 ### 樣式控制
 
 <ParamField path="aspectRatio" type="string">
-  長寬比提示，例如 `1:1`、`16:9`、`9:16`、`adaptive` 或提供者特定的值。OpenClaw 會根據各個提供者對不支援的值進行正規化或忽略。
+  長寬比提示，例如 `1:1`、`16:9`、`9:16`、`adaptive` 或供應商特定的值。OpenClaw 會根據各個供應商對不支援的值進行正規化或忽略。
 </ParamField>
 <ParamField path="resolution" type="string">
-  解析度提示，例如 `480P`、`720P`、`768P`、`1080P`、`4K` 或提供者特定的值。OpenClaw 會根據各個提供者對不支援的值進行正規化或忽略。
+  解析度提示，例如 `480P`、`720P`、`768P`、`1080P`、`4K` 或供應商特定的值。OpenClaw 會根據各個供應商對不支援的值進行正規化或忽略。
 </ParamField>
 <ParamField path="durationSeconds" type="number">
-  目標持續時間（以秒為單位，四捨五入至最接近的提供者支援值）。
+  目標持續時間，以秒為單位（四捨五入至最接近的供應商支援值）。
 </ParamField>
 <ParamField path="size" type="string">
-  當提供者支援時的尺寸提示。
+  當供應商支援時的尺寸提示。
 </ParamField>
 <ParamField path="audio" type="boolean">
-  當支援時在輸出中啟用生成的音訊。與 `audioRef*`（輸入）不同。
+  當支援時，在輸出中啟用生成的音訊。與 `audioRef*`（輸入）不同。
 </ParamField>
 <ParamField path="watermark" type="boolean">
-  當支援時切換提供者浮水印。
+  當支援時切換供應商浮水印。
 </ParamField>
 
-`adaptive` 是一個提供者特定的標記：它會原封不動地轉發給在其功能中宣告 `adaptive` 的提供者（例如 BytePlus Seedance 使用它從輸入圖片尺寸自動偵測長寬比）。未宣告它的提供者會透過工具結果中的 `details.ignoredOverrides` 呈現該值，以便捨棄該值的行為可見。
+`adaptive` 是一個供應商特定的標記：它會原樣轉發給在其功能中聲明 `adaptive` 的供應商（例如 BytePlus Seedance 使用它從輸入圖片尺寸自動偵測長寬比）。未聲明此標記的供應商會透過工具結果中的 `details.ignoredOverrides` 顯示該值，以便可以看到捨棄的情況。
 
 ### 進階
 
 <ParamField path="action" type='"generate" | "status" | "list"' default="generate">
-  `"status"` 傳回目前的工作階段任務；`"list"` 檢查提供者。
+  `"status"` 傳回目前的工作階段任務；`"list"` 檢視提供者。
 </ParamField>
 <ParamField path="model" type="string">提供者/模型覆寫（例如 `runway/gen4.5`）。</ParamField>
 <ParamField path="filename" type="string">輸出檔名提示。</ParamField>
-<ParamField path="timeoutMs" type="number">選用的提供者操作逾時時間，以毫秒為單位。若省略，OpenClaw 會使用 `agents.defaults.videoGenerationModel.timeoutMs`（若已設定），否則使用插件撰寫者預設的提供者預設值（若有的話）。</ParamField>
+<ParamField path="timeoutMs" type="number">選用的提供者操作逾時時間（毫秒）。若省略，OpenClaw 會使用已設定的 `agents.defaults.videoGenerationModel.timeoutMs`，否則使用外掛作者設定的提供者預設值（若存在）。</ParamField>
 <ParamField path="providerOptions" type="object">
-  提供者專屬選項，為 JSON 物件（例如 `{"seed": 42, "draft": true}`）。
-  宣告類型架構的提供者會驗證金鑰和類型；未知
-  金鑰或類型不符會在容錯移轉期間跳過該候選項。未宣告
-  架構的提供者會照單全收這些選項。執行 `video_generate action=list`
-  以查看各提供者接受的內容。
+  提供者特定選項，以 JSON 物件形式呈現（例如 `{"seed": 42, "draft": true}`）。
+  宣告型別架構的提供者會驗證金鑰與類型；未知的
+  金鑰或類型不符會在後援期間跳過該候選項。未宣告
+  架構的提供者會原樣接收選項。執行 `video_generate action=list`
+  以查看各提供者接受哪些選項。
 </ParamField>
 
-<Note>並非所有提供者都支援所有參數。OpenClaw 會將持續時間標準化 為最接近的提供者支援值，並在容錯移轉提供者公開不同的 控制介面時，重新映射已翻譯的幾何提示，例如尺寸到長寬比。真正不支援的覆寫會盡力 予以忽略，並在工具結果中回報為警告。嚴格的功能限制 （例如參考輸入過多）會在提交前失敗。工具結果 會回報已套用的設定；`details.normalization` 會擷取 任何從請求到已套用的轉換。</Note>
+<Note>並非所有提供者都支援所有參數。OpenClaw 會將持續時間正規化為 最接近提供者支援的值，並在後援提供者公開不同的 控制介面時，重新映射已翻譯的幾何提示（例如 尺寸到長寬比）。真正不支援的覆寫會盡力忽略，並在工具結果中回報為警告。硬體能力限制 （例如參考輸入過多）會在提交前失敗。工具結果 會回報已套用的設定；`details.normalization` 會擷取任何 從請求到套用的轉換。</Note>
 
 參考輸入會選擇執行時期模式：
 
 - 無參考媒體 → `generate`
 - 任何圖片參考 → `imageToVideo`
 - 任何影片參考 → `videoToVideo`
-- 參考音訊輸入**不會**改變解析模式；它們會套用
-  於圖片/影片參考所選擇的任何模式之上，且僅適用於
+- 參考音訊輸入**不會**改變解析模式；它們會套用在
+  圖片/影片參考所選取的任何模式之上，且僅適用於
   宣告 `maxInputAudios` 的提供者。
 
 混合圖片和影片參考並非穩定的共享功能介面。每次請請求請優先使用一種參考類型。
@@ -220,21 +220,16 @@ openclaw tasks cancel <taskId>
 
 某些能力檢查是在備援層而非工具邊界應用的，因此超過主要提供者限制的請求仍可在有能力的備援提供者上執行：
 
-- 當請求包含音訊參考時，會跳過宣告不支援 `maxInputAudios`（或 `0`）的目前候選者；並嘗試下一個候選者。
-- 目前候選者的 `maxDurationSeconds` 低於請求的 `durationSeconds`
-  且未宣告 `supportedDurationSeconds` 清單 → 跳過。
-- 請求包含 `providerOptions` 且目前候選者明確
-  宣告了類型化的 `providerOptions` 結構描述 → 如果提供的索引鍵
-  不在結構描述中或值類型不相符，則會跳過。未宣告
-  結構描述的供應者會原樣接收選項（向後相容
-  的直通傳遞）。供應者可以透過
-  宣告空結構描述（`capabilities.providerOptions: {}`）來選擇不接收所有供應者選項，這
-  會導致與類型不符相同的跳過結果。
+- 當請求包含音訊參考時，聲明不支援 `maxInputAudios`（或 `0`）的有效候選會被跳過，並嘗試下一個候選。
+- 若有效候選的 `maxDurationSeconds` 低於請求的 `durationSeconds`
+  且未聲明 `supportedDurationSeconds` 列表 → 跳過。
+- 如果請求包含 `providerOptions` 且有效候選明確
+  聲明了類型化的 `providerOptions` 結構描述 → 如果提供的鍵不在結構描述中或數值類型不符則跳過。未聲明結構描述的提供者會按原樣接收選項（向後相容的透傳）。提供者可以透過聲明空結構描述（`capabilities.providerOptions: {}`）來選擇不接受所有提供者選項，這會導致與類型不符時相同的跳過結果。
 
-請求中的第一個跳過原因會記錄在 `warn`，以便操作員知道
-何時略過了其主要供應者；後續的跳過會記錄在 `debug` 以
-保持冗長的後援鏈安靜。如果跳過了每個候選者，
-彙總錯誤會包含每個候選者的跳過原因。
+請求中的第一次跳過原因會以 `warn` 記錄，以便操作員查看其
+主要提供者何時被跳過；後續跳過會以 `debug` 記錄，以
+保持長串後援鏈的安靜。如果每個候選都被跳過，
+聚合錯誤會包含每個候選的跳過原因。
 
 ## 動作
 
@@ -248,9 +243,9 @@ openclaw tasks cancel <taskId>
 
 OpenClaw 依以下順序解析模型：
 
-1. **`model` 工具參數** —— 如果代理在呼叫中指定了參數。
+1. **`model` 工具參數** - 如果代理在呼叫中指定了一個。
 2. 來自組態的 **`videoGenerationModel.primary`**。
-3. 依序使用 **`videoGenerationModel.fallbacks`**。
+3. **`videoGenerationModel.fallbacks`** 按順序。
 4. **自動偵測** - 具有有效驗證的提供者，從
    目前的預設提供者開始，然後是依字母順序排列的
    其餘提供者。
@@ -258,8 +253,8 @@ OpenClaw 依以下順序解析模型：
 如果提供者失敗，會自動嘗試下一個候選者。如果所有
 候選者都失敗，錯誤會包含每次嘗試的詳細資訊。
 
-設定 `agents.defaults.mediaGenerationAutoProviderFallback: false` 以
-僅使用明確的 `model`、`primary` 和 `fallbacks` 項目。
+設定 `agents.defaults.mediaGenerationAutoProviderFallback: false` 以僅
+使用明確的 `model`、`primary` 和 `fallbacks` 項目。
 
 ```json5
 {
@@ -278,19 +273,19 @@ OpenClaw 依以下順序解析模型：
 
 <AccordionGroup>
   <Accordion title="Alibaba">
-    使用 DashScope / Model Studio 非同步端點。參考影像和
+    使用 DashScope / Model Studio 非同步端點。參考圖片和
     影片必須是遠端 `http(s)` URL。
   </Accordion>
   <Accordion title="BytePlus (1.0)">
-    提供者 ID：`byteplus`。
+    提供商 ID：`byteplus`。
 
-    模型：`seedance-1-0-pro-250528`（預設），
+    模型：`seedance-1-0-pro-250528`（預設）、
     `seedance-1-0-pro-t2v-250528`、`seedance-1-0-pro-fast-251015`、
     `seedance-1-0-lite-t2v-250428`、`seedance-1-0-lite-i2v-250428`。
 
-    T2V 模型（`*-t2v-*`）不接受圖片輸入；I2V 模型和通用
-    `*-pro-*` 模型支援單一參考圖片（第一
-    幀）。請依位置傳遞圖片或設定 `role: "first_frame"`。
+    T2V 模型（`*-t2v-*`）不接受圖片輸入；I2V 模型和
+    一般 `*-pro-*` 模型支援單一參考圖片（第一
+    幀）。請以位置方式傳遞圖片或設定 `role: "first_frame"`。
     當提供圖片時，T2V 模型 ID 會自動切換至對應的 I2V
     變體。
 
@@ -300,22 +295,22 @@ OpenClaw 依以下順序解析模型：
   </Accordion>
   <Accordion title="BytePlus Seedance 1.5">
     需要 [`@openclaw/byteplus-modelark`](https://www.npmjs.com/package/@openclaw/byteplus-modelark)
-    外掛程式。提供者 ID：`byteplus-seedance15`。模型：
+    外掛程式。提供商 ID：`byteplus-seedance15`。模型：
     `seedance-1-5-pro-251215`。
 
-    使用統一 `content[]` API。最多支援 2 個輸入圖片
+    使用統一的 `content[]` API。最多支援 2 張輸入圖片
     （`first_frame` + `last_frame`）。所有輸入必須是遠端 `https://`
-    URLs。請在每張圖片上設定 `role: "first_frame"` / `"last_frame"`，或
-    依位置傳遞圖片。
+    URL。請在每張圖片上設定 `role: "first_frame"` / `"last_frame"`，或
+    以位置方式傳遞圖片。
 
-    `aspectRatio: "adaptive"` 會從輸入圖片自動偵測比例。
+    `aspectRatio: "adaptive"` 會自動從輸入圖片偵測比例。
     `audio: true` 對應至 `generate_audio`。`providerOptions.seed`
     （數字）會被轉發。
 
   </Accordion>
   <Accordion title="BytePlus Seedance 2.0">
-    需要安裝 [`@openclaw/byteplus-modelark`](https://www.npmjs.com/package/@openclaw/byteplus-modelark)
-    外掛程式。供應商 ID：`byteplus-seedance2`。模型：
+    需要 [`@openclaw/byteplus-modelark`](https://www.npmjs.com/package/@openclaw/byteplus-modelark)
+    插件。供應商 ID：`byteplus-seedance2`。模型：
     `dreamina-seedance-2-0-260128`、
     `dreamina-seedance-2-0-fast-260128`。
 
@@ -325,7 +320,7 @@ OpenClaw 依以下順序解析模型：
     `"first_frame"`、`"last_frame"`、`"reference_image"`、
     `"reference_video"`、`"reference_audio"`。
 
-    `aspectRatio: "adaptive"` 會從輸入圖片自動偵測比例。
+    `aspectRatio: "adaptive"` 會從輸入圖片自動偵測長寬比。
     `audio: true` 會對應到 `generate_audio`。`providerOptions.seed`
     (數字) 會被轉發。
 
@@ -343,44 +338,48 @@ n    逾時。大多數 fal 影片模型
     總共最多 12 個參考檔案。
   </Accordion>
   <Accordion title="Google (Gemini / Veo)">
-    支援一張圖片或一個影片參考。在 Gemini API 路徑上，生成音訊的要求會被忽略並顯示警告，因為該 API 會拒絕目前 Veo 影片生成的 `generateAudio` 參數。
+    支援一張圖片或一個影片參考。由於 Gemini API 拒絕
+    目前 Veo 影片生成功能的 `generateAudio` 參數，因此
+    在 Gemini API 路徑上會忽略產生音訊的請求並發出警告。
   </Accordion>
   <Accordion title="MiniMax">
     僅支援單一圖片參考。MiniMax 接受 `768P` 和 `1080P`
-    解析度；諸如 `720P` 的要求會在提交前正規化為最接近的
-    支援值。
+    解析度；諸如 `720P` 的請求會在提交前
+    標準化為最接近的支援值。
   </Accordion>
   <Accordion title="OpenAI">
     僅轉發 `size` 覆寫。其他樣式覆寫
-    (`aspectRatio`、`resolution`、`audio`、`watermark`) 會被忽略並
-    顯示警告。
+    (`aspectRatio`、`resolution`、`audio`、`watermark`) 將被忽略並
+    發出警告。
   </Accordion>
   <Accordion title="OpenRouter">
-    使用 OpenRouter 的非同步 `/videos` API。OpenClaw 提交任務、
-    輪詢 `polling_url`，並下載 `unsigned_urls` 或文件記載的任務內容端點。內建的 `google/veo-3.1-fast` 預設值
-    宣稱支援 4/6/8 秒時長、`720P`/`1080P` 解析度，以及
+    使用 OpenRouter 的異步 `/videos` API。OpenClaw 提交
+    工作，輪詢 `polling_url`，並下載 `unsigned_urls` 或
+    記錄的工作內容端點。捆綁的 `google/veo-3.1-fast` 預設
+    宣告支援 4/6/8 秒的持續時間、`720P`/`1080P` 解析度，以及
     `16:9`/`9:16` 長寬比。
   </Accordion>
   <Accordion title="Qwen">
-    使用與 Alibaba 相同的 DashScope 後端。參考輸入必須是遠端
-    `http(s)` URL；本機檔案會被直接拒絕。
+    與 Alibaba 使用相同的 DashScope 後端。參考輸入必須是遠端
+    `http(s)` URL；本機檔案會在開始時被拒絕。
   </Accordion>
   <Accordion title="Runway">
-    透過 data URIs 支援本機檔案。視訊轉視訊需要
-    `runway/gen4_aleph`。純文字執行會公開 `16:9` 和 `9:16` 長寬
+    透過 data URI 支援本機檔案。影片生成影片需要
+    `runway/gen4_aleph`。僅文字執行會公開 `16:9` 和 `9:16` 長寬
     比。
   </Accordion>
   <Accordion title="Together">
     僅支援單一圖片參考。
   </Accordion>
   <Accordion title="Vydra">
-    直接使用 `https://www.vydra.ai/api/v1` 以避免遺失認證的
-    重新導向。`veo3` 僅作為文字產生視訊打包；`kling` 需要
+    直接使用 `https://www.vydra.ai/api/v1` 以避免丟失驗證的
+    重新導向。`veo3` 捆綁為僅文字生成影片；`kling` 需要
     遠端圖片 URL。
   </Accordion>
   <Accordion title="xAI">
-    支援文字產生視訊、單一第一幀圖片產生視訊、透過 xAI `reference_images` 最多 7 個
-    `reference_image` 輸入，以及遠端視訊編輯/延伸流程。
+    支援文字生成影片、單一第一幀圖片生成影片，透過 xAI `reference_images` 最多 7 個
+    `reference_image` 輸入，以及遠端
+    影片編輯/擴充流程。
   </Accordion>
 </AccordionGroup>
 
@@ -411,13 +410,13 @@ capabilities: {
 }
 ```
 
-諸如 `maxInputImages` 和 `maxInputVideos` 這類扁平聚合欄位並
-**不**足以宣稱支援轉換模式。供應商應該
+諸如 `maxInputImages` 和 `maxInputVideos` 之類的扁平聚合欄位並
+**不足以**宣告轉換模式支援。供應商應
 明確宣告 `generate`、`imageToVideo` 和 `videoToVideo`，以便即時
-測試、合約測試和共享的 `video_generate` 工具能夠確定性地驗證
-模式支援。
+測試、合約測試和共用的 `video_generate` 工具能夠確定性地
+驗證模式支援。
 
-當供應商中的某個模型比其他模型具有更廣泛的參考輸入支援時，請使用 `maxInputImagesByModel`、`maxInputVideosByModel` 或 `maxInputAudiosByModel`，而不是提高模式範圍的限制。
+當供應商中的某個模型比其他模型支援更廣泛的參考輸入時，請使用 `maxInputImagesByModel`、`maxInputVideosByModel` 或 `maxInputAudiosByModel`，而不是提高模式範圍的限制。
 
 ## 即時測試
 
@@ -435,9 +434,9 @@ pnpm test:live:media video
 
 此即時檔案預設會優先使用已匯出的供應商環境變數，而非儲存的驗證設定檔，並預設執行釋放安全的冒煙測試：
 
-- 針對掃描中的每個非 FAL 供應商 `generate`。
+- 針對掃描中的每個非 FAL 供應商執行 `generate`。
 - 一秒鐘的龍蝦提示。
-- 來自 `OPENCLAW_LIVE_VIDEO_GENERATION_TIMEOUT_MS` 的每個供應商的操作上限（預設為 `180000`）。
+- 來自 `OPENCLAW_LIVE_VIDEO_GENERATION_TIMEOUT_MS`（預設為 `180000`）的單一供應商操作上限。
 
 FAL 為選用，因為供應商端的佇列延遲可能會主導發行時間：
 
@@ -445,12 +444,12 @@ FAL 為選用，因為供應商端的佇列延遲可能會主導發行時間：
 pnpm test:live:media video --video-providers fal
 ```
 
-設定 `OPENCLAW_LIVE_VIDEO_GENERATION_FULL_MODES=1` 以同時運行共享掃描可以安全地對本地媒體進行練習的已聲明轉換模式：
+設定 `OPENCLAW_LIVE_VIDEO_GENERATION_FULL_MODES=1` 以同時執行共用的掃描可以透過本機媒體安全運作的已宣告轉換模式：
 
-- 當 `capabilities.imageToVideo.enabled` 時 `imageToVideo`。
-- 當 `capabilities.videoToVideo.enabled` 且供應商/模型在共享掃描中接受緩衝支援的本地影片輸入時 `videoToVideo`。
+- 當 `capabilities.imageToVideo.enabled` 時執行 `imageToVideo`。
+- 當 `capabilities.videoToVideo.enabled` 且供應商/模型在共用的掃描中接受緩衝區支援的本機影片輸入時，執行 `videoToVideo`。
 
-目前，共享的 `videoToVideo` 即時通道僅在您選擇 `runway/gen4_aleph` 時涵蓋 `runway`。
+目前共用的 `videoToVideo` 即時通道僅在您選擇 `runway/gen4_aleph` 時涵蓋 `runway`。
 
 ## 組態
 
@@ -477,11 +476,11 @@ openclaw config set agents.defaults.videoGenerationModel.primary "qwen/wan2.6-t2
 
 ## 相關
 
-- [阿裡巴巴模型工作室](/zh-Hant/providers/alibaba)
-- [背景任務](/zh-Hant/automation/tasks) - 異步影片生成的任務追蹤
+- [阿里雲模型工作室](/zh-Hant/providers/alibaba)
+- [背景任務](/zh-Hant/automation/tasks) - 用於非同步影片產生的任務追蹤
 - [BytePlus](/zh-Hant/concepts/model-providers#byteplus-international)
 - [ComfyUI](/zh-Hant/providers/comfy)
-- [配置參考](/zh-Hant/gateway/config-agents#agent-defaults)
+- [組態參考](/zh-Hant/gateway/config-agents#agent-defaults)
 - [fal](/zh-Hant/providers/fal)
 - [Google (Gemini)](/zh-Hant/providers/google)
 - [MiniMax](/zh-Hant/providers/minimax)

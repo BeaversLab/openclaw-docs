@@ -12,7 +12,7 @@ Docker es **opcional**. Úselo solo si desea una puerta de enlace contenerizada 
 
 - **Sí**: desea un entorno de puerta de enlace aislado y desechable o ejecutar OpenClaw en un host sin instalaciones locales.
 - **No**: está ejecutando en su propia máquina y solo desea el bucle de desarrollo más rápido. Use el flujo de instalación normal en su lugar.
-- **Nota sobre el aislamiento**: el backend de sandbox predeterminado utiliza Docker cuando el aislamiento está habilitado, pero el aislamiento está desactivado de forma predeterminada y **no** requiere que la puerta de enlace completa se ejecute en Docker. También están disponibles los backends de sandbox SSH y OpenShell. Consulte [Sandboxing](/es/gateway/sandboxing).
+- **Nota sobre el sandbox**: el backend de sandbox predeterminado utiliza Docker cuando el sandbox está activado, pero el sandbox está desactivado de forma predeterminada y **no** requiere que la pasarela completa se ejecute en Docker. Los backends de sandbox SSH y OpenShell también están disponibles. Consulte [Sandboxing](/es/gateway/sandboxing).
 
 ## Requisitos previos
 
@@ -21,7 +21,7 @@ Docker es **opcional**. Úselo solo si desea una puerta de enlace contenerizada 
 - Suficiente espacio en disco para imágenes y registros
 - Si se ejecuta en un VPS/host público, revise
   [Endurecimiento de seguridad para la exposición a la red](/es/gateway/security),
-  especialmente la política de firewall `DOCKER-USER` de Docker.
+  especialmente la política de cortafuegos `DOCKER-USER` de Docker.
 
 ## Puerta de enlace contenerizada
 
@@ -33,16 +33,16 @@ Docker es **opcional**. Úselo solo si desea una puerta de enlace contenerizada 
     ./scripts/docker/setup.sh
     ```
 
-    Esto construye la imagen de la puerta de enlace localmente. Para utilizar una imagen precompilada en su lugar:
+    Esto construye la imagen de la pasarela localmente. Para utilizar una imagen preconstruida en su lugar:
 
     ```bash
     export OPENCLAW_IMAGE="ghcr.io/openclaw/openclaw:latest"
     ./scripts/docker/setup.sh
     ```
 
-    Las imágenes precompiladas se publican en el
+    Las imágenes preconstruidas se publican en el
     [GitHub Container Registry](https://github.com/openclaw/openclaw/pkgs/container/openclaw).
-    Etiquetas comunes: `main`, `latest`, `<version>` (p. ej., `2026.2.26`).
+    Etiquetas comunes: `main`, `latest`, `<version>` (ej. `2026.2.26`).
 
   </Step>
 
@@ -75,7 +75,7 @@ Docker es **opcional**. Úselo solo si desea una puerta de enlace contenerizada 
   </Step>
 
   <Step title="Configurar canales (opcional)">
-    Use el contenedor de la CLI para añadir canales de mensajería:
+    Utilice el contenedor de CLI para agregar canales de mensajería:
 
     ```bash
     # WhatsApp (QR)
@@ -180,7 +180,7 @@ Las métricas de Prometheus utilizan el puerto del Gateway ya publicado. Instale
 http://<gateway-host>:18789/api/diagnostics/prometheus
 ```
 
-La ruta está protegida por la autenticación del Gateway. No exponga un puerto público `/metrics` separado ni una ruta de proxy inverso sin autenticación. Consulte
+La ruta está protegida por la autenticación de la pasarela. No exponga un puerto `/metrics` público separado ni una ruta de proxy inverso sin autenticar. Consulte
 [Métricas de Prometheus](/es/gateway/prometheus).
 
 ### Verificaciones de estado
@@ -250,7 +250,7 @@ Utilice la URL de Gateway publicada, Tailscale o DNS-SD de área amplia para hos
 Establezca `OPENCLAW_DISABLE_BONJOUR=0` solo cuando se ejecute con red de host, macvlan,
 u otra red donde se sepa que el multidifusión mDNS funciona.
 
-Para ver problemas y solución de problemas, consulte [Descubrimiento Bonjour](/es/gateway/bonjour).
+Para problemas y solución de problemas, consulte [Descubrimiento Bonjour](/es/gateway/bonjour).
 
 ### Almacenamiento y persistencia
 
@@ -277,10 +277,10 @@ inicio de OpenClaw montado, por lo que los registros de instalación del complem
 reemplazo del contenedor. El inicio de Gateway no genera árboles de dependencias de complementos incluidos.
 
 Para obtener detalles completos sobre la persistencia en implementaciones de VM, consulte
-[Docker VM Runtime - What persists where](/es/install/docker-vm-runtime#what-persists-where).
+[Ejecución en VM de Docker - Qué persiste dónde](/es/install/docker-vm-runtime#what-persists-where).
 
-**Puntos calientes de crecimiento del disco:** vigile `media/`, archivos JSONL de sesión,
-`cron/runs/*.jsonl`, raíces de paquetes de plugins instalados y registros de archivos rotativos
+**Puntos críticos de crecimiento del disco:** vigile `media/`, los archivos JSONL de sesión, la base de datos
+de estado SQLite compartida, las raíces de los paquetes de complementos instalados y los registros de archivo rotativos
 bajo `/tmp/openclaw/`.
 
 ### Auxiliares de shell (opcionales)
@@ -292,20 +292,20 @@ mkdir -p ~/.clawdock && curl -sL https://raw.githubusercontent.com/openclaw/open
 echo 'source ~/.clawdock/clawdock-helpers.sh' >> ~/.zshrc && source ~/.zshrc
 ```
 
-Si instaló ClawDock desde la ruta `scripts/shell-helpers/clawdock-helpers.sh` antigua, vuelva a ejecutar el comando de instalación anterior para que su archivo auxiliar local rastree la nueva ubicación.
+Si instaló ClawDock desde la ruta sin formato `scripts/shell-helpers/clawdock-helpers.sh` antigua, vuelva a ejecutar el comando de instalación anterior para que su archivo auxiliar local rastree la nueva ubicación.
 
-Luego use `clawdock-start`, `clawdock-stop`, `clawdock-dashboard`, etc. Ejecute
+Luego usa `clawdock-start`, `clawdock-stop`, `clawdock-dashboard`, etc. Ejecuta
 `clawdock-help` para todos los comandos.
-Consulte [ClawDock](/es/install/clawdock) para obtener la guía completa de auxiliares.
+Consulta [ClawDock](/es/install/clawdock) para la guía completa del asistente.
 
 <AccordionGroup>
-  <Accordion title="Enable agent sandbox for Docker gateway">
+  <Accordion title="Habilitar el sandbox del agente para la puerta de enlace Docker">
     ```bash
     export OPENCLAW_SANDBOX=1
     ./scripts/docker/setup.sh
     ```
 
-    Ruta de socket personalizada (por ejemplo, Docker sin privilegios):
+    Ruta de socket personalizada (por ejemplo, Docker sin root):
 
     ```bash
     export OPENCLAW_SANDBOX=1
@@ -314,15 +314,15 @@ Consulte [ClawDock](/es/install/clawdock) para obtener la guía completa de auxi
     ```
 
     El script monta `docker.sock` solo después de que se cumplan los requisitos previos del sandbox. Si
-    la configuración del sandbox no puede completarse, el script restablece `agents.defaults.sandbox.mode`
-    a `off`. Los turnos en modo de código de Codex siguen restringidos a Codex
-    `workspace-write` mientras el sandbox de OpenClaw está activo; no monte el
-    socket Docker del host en contenedores del sandbox del agente.
+    la configuración del sandbox no se puede completar, el script restablece `agents.defaults.sandbox.mode`
+    a `off`. Los turnos en modo de código de Codex todavía están restringidos a Codex
+    `workspace-write` mientras el sandbox de OpenClaw está activo; no montes el
+    socket Docker del host en los contenedores del sandbox del agente.
 
   </Accordion>
 
-  <Accordion title="Automation / CI (non-interactive)">
-    Deshabilite la asignación de pseudo-TTY de Compose con `-T`:
+  <Accordion title="Automatización / CI (no interactivo)">
+    Deshabilita la asignación de pseudo-TTY de Compose con `-T`:
 
     ```bash
     docker compose run -T --rm openclaw-cli gateway probe
@@ -332,18 +332,17 @@ Consulte [ClawDock](/es/install/clawdock) para obtener la guía completa de auxi
   </Accordion>
 
 <Accordion title="Nota de seguridad de red compartida">
-  `openclaw-cli` usa `network_mode: "service:openclaw-gateway"` para que los comandos de la CLI puedan alcanzar la puerta de enlace a través de `127.0.0.1`. Trate esto como un límite de confianza compartido. La configuración de compose elimina `NET_RAW`/`NET_ADMIN` y habilita `no-new-privileges` tanto en `openclaw-gateway` como en `openclaw-cli`.
+  `openclaw-cli` usa `network_mode: "service:openclaw-gateway"` para que los comandos de la CLI puedan alcanzar la puerta de enlace a través de `127.0.0.1`. Trata esto como un límite de confianza compartida. La configuración de compose elimina `NET_RAW`/`NET_ADMIN` y habilita `no-new-privileges` tanto en `openclaw-gateway` como en `openclaw-cli`.
 </Accordion>
 
   <Accordion title="Fallos de DNS de Docker Desktop en openclaw-cli">
-    Algunas configuraciones de Docker Desktop fallan en las búsquedas de DNS desde el sidecar
-    `openclaw-cli` de red compartida después de que se elimina `NET_RAW`, lo que se manifiesta como
+    Algunas configuraciones de Docker Desktop fallan las búsquedas de DNS desde el sidecar de la `openclaw-cli` red compartida después de que se `NET_RAW` elimina, lo que aparece como
     `EAI_AGAIN` durante los comandos respaldados por npm como `openclaw plugins install`.
-    Mantenga el archivo compose reforzado predeterminado para el funcionamiento normal de la puerta de enlace. La
-    sustitución local a continuación relaja la postura de seguridad del contenedor de la CLI
-    restaurando las capacidades predeterminadas de Docker, así que úsela solo para el comando de la CLI
+    Mantenga el archivo de compose reforzado predeterminado para la operación normal de la puerta de enlace. La
+    anulación local a continuación relaja la postura de seguridad del contenedor CLI al
+    restaurar las capacidades predeterminadas de Docker, así que úsela solo para el comando CLI
     ocasional que necesita acceso al registro de paquetes, no como su invocación
-    predeterminada de Compose:
+    de Compose predeterminada:
 
     ```bash
     printf '%s\n' \
@@ -355,15 +354,15 @@ Consulte [ClawDock](/es/install/clawdock) para obtener la guía completa de auxi
     docker compose -f docker-compose.yml -f docker-compose.cli-no-dropped-caps.local.yml run --rm openclaw-cli plugins install <package>
     ```
 
-    Si ya creó un contenedor `openclaw-cli` de larga ejecución, vuelva a crearlo
-    con la misma sustitución. `docker compose exec` y `docker exec` no pueden
+    Si ya creó un contenedor `openclaw-cli` de larga duración, recréelo
+    con la misma anulación. `docker compose exec` y `docker exec` no pueden
     cambiar las capacidades de Linux en un contenedor ya creado.
 
   </Accordion>
 
   <Accordion title="Permisos y EACCES">
-    La imagen se ejecuta como `node` (uid 1000). Si ves errores de permisos en
-    `/home/node/.openclaw`, asegúrate de que tus montajes de enlace del host sean propiedad del uid 1000:
+    La imagen se ejecuta como `node` (uid 1000). Si ve errores de permisos en
+    `/home/node/.openclaw`, asegúrese de que sus montajes de enlace de host sean propiedad de uid 1000:
 
     ```bash
     sudo chown -R 1000:1000 /path/to/openclaw-config /path/to/openclaw-workspace
@@ -372,15 +371,15 @@ Consulte [ClawDock](/es/install/clawdock) para obtener la guía completa de auxi
     La misma discrepancia puede aparecer como una advertencia de complemento tal como
     `blocked plugin candidate: suspicious ownership (... uid=1000, expected uid=0 or root)`
     seguida de `plugin present but blocked`. Eso significa que el uid del proceso y el
-    propietario del directorio del complemento montado no coinciden. Se prefiere ejecutar el contenedor como el
-    uid 1000 predeterminado y corregir la propiedad del montaje de enlace. Solo ejecuta chown
-    `/path/to/openclaw-config/npm` a `root:root` si ejecutas intencionalmente
-    OpenClaw como root a largo plazo.
+    propietario del directorio del complemento montado no coinciden. Prefiera ejecutar el contenedor como el
+    uid 1000 predeterminado y corregir la propiedad del montaje de enlace. Solo use chown
+    `/path/to/openclaw-config/npm` a `root:root` si ejecuta
+    OpenClaw como root intencionalmente a largo plazo.
 
   </Accordion>
 
-  <Accordion title="Reconstrucciones más rápidas">
-    Ordena tu Dockerfile para que las capas de dependencias se almacenen en caché. Esto evita volver a ejecutar
+  <Accordion title="Recompilaciones más rápidas">
+    Ordene su Dockerfile para que las capas de dependencias se almacenen en caché. Esto evita volver a ejecutar
     `pnpm install` a menos que cambien los archivos de bloqueo:
 
     ```dockerfile
@@ -416,46 +415,39 @@ Consulte [ClawDock](/es/install/clawdock) para obtener la guía completa de auxi
        docker compose run --rm openclaw-cli \
          node /app/node_modules/playwright-core/cli.js install chromium
        ```
-    6. **Persistir las descargas del navegador**: usa `OPENCLAW_HOME_VOLUME` o
+    6. **Persistir las descargas del navegador**: use `OPENCLAW_HOME_VOLUME` o
        `OPENCLAW_EXTRA_MOUNTS`. OpenClaw detecta automáticamente el Chromium
-       administrado por Playwright de la imagen Docker en Linux.
+       administrado por Playwright de la imagen de Docker en Linux.
 
   </Accordion>
 
 <Accordion title="OAuth de OpenAI Codex (Docker sin cabeza)">Si eliges OAuth de OpenAI Codex en el asistente, abre una URL del navegador. En configuraciones de Docker o sin cabeza, copia la URL de redireccionamiento completa donde aterrices y pégala de nuevo en el asistente para finalizar la autenticación.</Accordion>
 
   <Accordion title="Metadatos de la imagen base">
-    La imagen de tiempo de ejecución principal de Docker usa `node:24-bookworm-slim` e incluye `tini` como proceso de init de entrada (PID 1) para asegurar que los procesos zombie sean recogidos y las señales se manejen correctamente en contenedores de larga duración. Publica anotaciones de imagen base OCI incluyendo `org.opencontainers.image.base.name`,
-    `org.opencontainers.image.source`, y otras. El resumen base de Node se
-    actualiza a través de PRs de imagen base Docker de Dependabot; las compilaciones de lanzamiento no ejecutan
-    una capa de actualización de distribución. Consulte
-    [OCI image annotations](https://github.com/opencontainers/image-spec/blob/main/annotations.md).
+    La imagen de tiempo de ejecución principal de Docker utiliza `node:24-bookworm-slim` e incluye `tini` como proceso de init de entrada (PID 1) para garantizar que los procesos zombies se recojan y que las señales se manejen correctamente en contenedores de larga duración. Publica anotaciones de imagen base de OCI, incluyendo `org.opencontainers.image.base.name`,
+    `org.opencontainers.image.source` y otras. El resumen base de Node se
+    actualiza a través de PRs de Dependabot de imagen base de Docker; las compilaciones de lanzamiento no ejecutan
+    una capa de actualización de la distribución. Consulte
+    [anotaciones de imagen OCI](https://github.com/opencontainers/image-spec/blob/main/annotations.md).
   </Accordion>
 </AccordionGroup>
 
 ### ¿Ejecutando en un VPS?
 
 Consulte [Hetzner (Docker VPS)](/es/install/hetzner) y
-[Docker VM Runtime](/es/install/docker-vm-runtime) para los pasos de implementación en VM compartida
-incluyendo la creación de binarios, persistencia y actualizaciones.
+[Docker VM Runtime](/es/install/docker-vm-runtime) para ver los pasos de implementación en VM compartida,
+incluyendo la creación de binarios, la persistencia y las actualizaciones.
 
 ## Sandbox del agente
 
-Cuando `agents.defaults.sandbox` está habilitado con el backend de Docker, la puerta de enlace
-ejecuta la ejecución de herramientas del agente (shell, lectura/escritura de archivos, etc.) dentro de contenedores Docker
-aislados mientras que la puerta de enlace misma se mantiene en el host. Esto le da un muro sólido
-alrededor de sesiones de agente que no son de confianza o multiinquilino sin contenedorizar toda la
-puerta de enlace.
+Cuando `agents.defaults.sandbox` está habilitado con el backend de Docker, la puerta de enlace ejecuta la ejecución de herramientas del agente (shell, lectura/escritura de archivos, etc.) dentro de contenedores Docker aislados, mientras que la propia puerta de enlace se mantiene en el host. Esto le proporciona un muro sólido alrededor de sesiones de agentes que no son de confianza o de múltiples inquilinos sin contenerizar toda la puerta de enlace.
 
-El ámbito del sandbox puede ser por agente (predeterminado), por sesión o compartido. Cada ámbito
-obtiene su propio espacio de trabajo montado en `/workspace`. También puede configurar
-políticas de herramientas de permitir/denegar, aislamiento de red, límites de recursos y contenedores
-del navegador.
+El alcance del sandbox puede ser por agente (predeterminado), por sesión o compartido. Cada ámbito obtiene su propio espacio de trabajo montado en `/workspace`. También puede configurar políticas de permiso/denegación de herramientas, aislamiento de red, límites de recursos y contenedores del navegador.
 
 Para la configuración completa, imágenes, notas de seguridad y perfiles de múltiples agentes, consulte:
 
 - [Sandboxing](/es/gateway/sandboxing) -- referencia completa del sandbox
-- [OpenShell](/es/gateway/openshell) -- acceso interactivo de shell a los contenedores del sandbox
+- [OpenShell](/es/gateway/openshell) -- acceso al shell interactivo de los contenedores del sandbox
 - [Multi-Agent Sandbox and Tools](/es/tools/multi-agent-sandbox-tools) -- anulaciones por agente
 
 ### Activación rápida
@@ -479,27 +471,27 @@ Construya la imagen de sandbox predeterminada (desde una verificación de fuente
 scripts/sandbox-setup.sh
 ```
 
-Para instalaciones de npm sin una verificación de fuente, consulte [Sandboxing § Images and setup](/es/gateway/sandboxing#images-and-setup) para comandos en línea `docker build`.
+Para instalaciones de npm sin un código fuente descargado, consulte [Sandboxing § Images and setup](/es/gateway/sandboxing#images-and-setup) para comandos `docker build` en línea.
 
 ## Solución de problemas
 
 <AccordionGroup>
-  <Accordion title="Imagen faltante o contenedor de espacio aislado no se inicia">
-    Construya la imagen del espacio aislado con
+  <Accordion title="Falta la imagen o el contenedor del sandbox no se inicia">
+    Compile la imagen del sandbox con
     [`scripts/sandbox-setup.sh`](https://github.com/openclaw/openclaw/blob/main/scripts/sandbox-setup.sh)
-    (source checkout) o el comando en línea `docker build` de [Sandboxing § Imágenes y configuración](/es/gateway/sandboxing#images-and-setup) (npm install),
-    o establezca `agents.defaults.sandbox.docker.image` en su imagen personalizada.
+    (código fuente descargado) o el comando `docker build` en línea de [Sandboxing § Images and setup](/es/gateway/sandboxing#images-and-setup) (instalación npm),
+    o establezca `agents.defaults.sandbox.docker.image` a su imagen personalizada.
     Los contenedores se crean automáticamente por sesión bajo demanda.
   </Accordion>
 
-<Accordion title="Errores de permisos en el espacio aislado">Establezca `docker.user` en un UID:GID que coincida con la propiedad de su espacio de trabajo montado, o ejecute chown en la carpeta del espacio de trabajo.</Accordion>
+<Accordion title="Errores de permiso en el sandbox">Establezca `docker.user` a un UID:GID que coincida con la propiedad de su espacio de trabajo montado, o ejecute chown en la carpeta del espacio de trabajo.</Accordion>
 
-<Accordion title="Herramientas personalizadas no encontradas en el espacio aislado">OpenClaw ejecuta comandos con `sh -lc` (shell de inicio de sesión), lo que hace sourcing de `/etc/profile` y puede restablecer PATH. Establezca `docker.env.PATH` para anteponer sus rutas de herramientas personalizadas, o agregue un script bajo `/etc/profile.d/` en su Dockerfile.</Accordion>
+<Accordion title="Herramientas personalizadas no encontradas en el sandbox">OpenClaw ejecuta comandos con `sh -lc` (shell de inicio de sesión), lo cual carga `/etc/profile` y puede restablecer PATH. Establezca `docker.env.PATH` para anteponer sus rutas de herramientas personalizadas, o agregue un script en `/etc/profile.d/` en su Dockerfile.</Accordion>
 
 <Accordion title="OOM-killed durante la construcción de la imagen (salida 137)">La VM necesita al menos 2 GB de RAM. Use una clase de máquina más grande y vuelva a intentarlo.</Accordion>
 
-  <Accordion title="No autorizado o emparejamiento requerido en la UI de Control">
-    Obtenga un enlace fresco del tablero y apruebe el dispositivo del navegador:
+  <Accordion title="No autorizado o emparejamiento requerido en el Control UI">
+    Obtenga un enlace nuevo del panel de control y apruebe el dispositivo del navegador:
 
     ```bash
     docker compose run --rm openclaw-cli dashboard --no-open
@@ -524,8 +516,8 @@ Para instalaciones de npm sin una verificación de fuente, consulte [Sandboxing 
 
 ## Relacionado
 
-- [Resumen de instalación](/es/install) — todos los métodos de instalación
+- [Install Overview](/es/install) — todos los métodos de instalación
 - [Podman](/es/install/podman) — alternativa Podman a Docker
 - [ClawDock](/es/install/clawdock) — configuración comunitaria de Docker Compose
-- [Actualización](/es/install/updating) — manteniendo OpenClaw actualizado
+- [Updating](/es/install/updating) — mantener OpenClaw actualizado
 - [Configuración](/es/gateway/configuration) — configuración de la puerta de enlace después de la instalación

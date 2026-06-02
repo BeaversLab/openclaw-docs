@@ -119,11 +119,16 @@ les embeddings :
 }
 ```
 
-OpenAI Codex / ChatGPT OAuth (`openai-codex`) n'est pas un identifiant d'embeddings de la plateforme OpenAI. Pour les embeddings OpenAI, utilisez un profil d'authentification par clé OpenAI API, `OPENAI_API_KEY` ou `models.providers.openai.apiKey`. Les utilisateurs uniquement OAuth peuvent utiliser un autre provider capable d'embeddings tel que GitHub Copilot ou Ollama.
+OpenAI Codex / ChatGPT OAuth n'est pas un identifiant d'intégration OpenAI Platform.
+Pour les intégrations OpenAI, utilisez un profil d'authentification par clé API OpenAI,
+OpenAIOAuthOpenAIOpenAIOpenAIAPI`OPENAI_API_KEY` ou `models.providers.openai.apiKey`OAuthGitHubOllama. Les utilisateurs exclusivement OAuth peuvent utiliser
+un autre fournisseur prenant en charge les intégrations, tel que GitHub Copilot ou Ollama.
 
 ## Embeddings Ollama
 
-Pour les embeddings Ollama, il est préférable d'utiliser le fournisseur d'embeddings Ollama inclus. Il utilise le point de terminaison natif Ollama OllamaOllamaOllama`/api/embed`OllamaOllama et suit les mêmes règles d'authentification/URL de base que le fournisseur Ollama documenté dans [Ollama](/fr/providers/ollama).
+Pour les intégrations Ollama, préférez le fournisseur d'intégration Ollama inclus. Il utilise le
+point de terminaison natif OllamaOllamaOllama`/api/embed`OllamaOllama d'Ollama et suit les mêmes règles d'authentification/URL de base que
+le fournisseur Ollama documenté dans [Ollama](/fr/providers/ollama).
 
 ```json5
 {
@@ -151,17 +156,26 @@ Pour les embeddings Ollama, il est préférable d'utiliser le fournisseur d'embe
 }
 ```
 
-Définissez `dimensions` pour les modèles d'embeddings non standard. OpenClaw connaît les dimensions pour `text-embedding-3-small` et `text-embedding-3-large` ; les modèles personnalisés ont besoin de cette valeur dans la configuration afin que LanceDB puisse créer la colonne de vecteurs.
+Définissez `dimensions`OpenClaw pour les modèles d'intégration non standard. OpenClaw connaît les
+dimensions pour `text-embedding-3-small` et `text-embedding-3-large` ; les modèles personnalisés
+ont besoin de cette valeur dans la configuration pour que LanceDB puisse créer la colonne de vecteurs.
 
-Pour les petits modèles d'embeddings locaux, réduisez `recallMaxChars` si vous rencontrez des erreurs de longueur de contexte de la part du serveur local.
+Pour les petits modèles d'intégration locaux, réduisez `recallMaxChars` si vous rencontrez des erreurs
+de longueur de contexte émanant du serveur local.
 
 ## Providers compatibles avec OpenAI
 
-Certains providers d'embeddings compatibles avec OpenAI rejettent le paramètre `encoding_format`, tandis que d'autres l'ignorent et renvoient toujours des vecteurs `number[]`. `memory-lancedb` omet donc `encoding_format` lors des demandes d'embeddings et accepte les réponses sous forme de tableaux de flottants ou de flottants 32 encodés en base64.
+Certains fournisseurs d'intégration compatibles OpenAI rejettent le paramètre
+OpenAI`encoding_format`, tandis que d'autres l'ignorent et renvoient toujours des vecteurs
+`number[]`. `memory-lancedb` omet donc `encoding_format` dans les demandes d'intégration et
+accepte les réponses sous forme de tableaux de flottants ou de flottants float32 encodés en base64.
 
-Si vous disposez d'un point de terminaison d'embeddings brut compatible avec OpenAI qui ne possède pas d'adaptateur de provider inclus, omettez `embedding.provider` (ou laissez-le à `openai`) et définissez `embedding.apiKey` ainsi que `embedding.baseUrl`. Cela préserve le chemin client direct compatible avec OpenAI.
+Si vous disposez d'un point de terminaison d'intégration brut compatible OpenAI qui ne possède pas
+d'adaptateur de fournisseur inclus, omettez OpenAI`embedding.provider` (ou laissez-le comme `openai`) et
+définissez `embedding.apiKey` ainsi que `embedding.baseUrl`OpenAI. Cela préserve le chemin client
+direct compatible OpenAI.
 
-Définissez `embedding.dimensions` pour les fournisseurs dont les dimensions de modèle ne sont pas intégrées. Par exemple, ZhiPu `embedding-3` utilise des dimensions `2048` :
+Définissez `embedding.dimensions` pour les fournisseurs dont les dimensions du modèle ne sont pas intégrées. Par exemple, ZhiPu `embedding-3` utilise des dimensions `2048` :
 
 ```json5
 {
@@ -193,15 +207,15 @@ Définissez `embedding.dimensions` pour les fournisseurs dont les dimensions de 
 | `captureMaxChars` | `500`      | 100-10000 | longueur de message éligible pour la capture automatique                    |
 | `customTriggers`  | `[]`       | 0-50      | phrases littérales qui font que la capture automatique considère un message |
 
-`recallMaxChars` contrôle le rappel automatique, l'outil `memory_recall`, le chemin de requête `memory_forget` et `openclaw ltm search`. Le rappel automatique préfère le dernier message utilisateur du tour et revient au prompt complet uniquement lorsqu'aucun message utilisateur n'est disponible. Cela garde les métadonnées du canal et les grands blocs de prompts hors de la requête d'embedding.
+`recallMaxChars` contrôle le rappel automatique, l'outil `memory_recall`, le chemin de requête `memory_forget` et `openclaw ltm search`. Le rappel automatique privilégie le dernier message utilisateur du tour et n'a recours au prompt complet que lorsqu'aucun message utilisateur n'est disponible. Cela permet de garder les métadonnées du channel et les grands blocs de prompt hors de la requête d'intégration.
 
-`captureMaxChars` contrôle si une réponse est assez courte pour être prise en compte pour la capture automatique. Il ne limite pas les embeddings de requête de rappel.
+`captureMaxChars` contrôle si une réponse est suffisamment courte pour être prise en compte pour la capture automatique. Elle ne limite pas les intégrations de requête de rappel.
 
-`customTriggers` vous permet d'ajouter des phrases de capture automatique littérales sans écrire d'expressions régulières. Les déclencheurs intégrés incluent des phrases de mémoire courantes en anglais, tchèque, chinois, japonais et coréen.
+`customTriggers` vous permet d'ajouter des expressions littérales de capture automatique sans écrire d'expressions régulières. Les déclencheurs intégrés incluent des phrases de mémoire courantes en anglais, tchèque, chinois, japonais et coréen.
 
 ## Commandes
 
-Lorsque `memory-lancedb` est le plugin de mémoire actif, il enregistre l'espace de noms `ltm`CLI CLI :
+Lorsque `memory-lancedb` est le plugin de mémoire actif, il enregistre l'espace de noms `ltm` CLI :
 
 ```bash
 openclaw ltm list
@@ -216,8 +230,8 @@ openclaw ltm query --cols id,text,createdAt --limit 20
 openclaw ltm query --filter "category = 'preference'" --order-by createdAt:desc
 ```
 
-- `--cols <columns>` : liste autorisée de colonnes séparées par des virgules (par défaut `id`, `text`, `importance`, `category`, `createdAt`).
-- `--filter <condition>` : clause WHERE de style SQL ; limitée à 200 caractères et restreinte aux caractères alphanumériques, opérateurs de comparaison, guillemets, parenthèses et un petit ensemble de ponctuation sûre.
+- `--cols <columns>` : liste d'autorisation de colonnes séparées par des virgules (par défaut `id`, `text`, `importance`, `category`, `createdAt`).
+- `--filter <condition>` : clause WHERE de style SQL ; limitée à 200 caractères et restreinte aux caractères alphanumériques, opérateurs de comparaison, guillemets, parenthèses et un petit ensemble de ponctuations sûres.
 - `--limit <n>` : entier positif ; par défaut `10`.
 - `--order-by <column>:<asc|desc>` : tri en mémoire appliqué après le filtre ; la colonne de tri est automatiquement incluse dans la projection.
 
@@ -280,14 +294,18 @@ prend en charge l'expansion `${ENV_VAR}` :
 
 ## Dépendances d'exécution
 
-`memory-lancedb` dépend du package natif `@lancedb/lancedb`OpenClawGatewayGateway. La version
-packagée d'OpenClaw considère ce package comme faisant partie du package du plugin. Le démarrage du
+`memory-lancedb` dépend du package natif `@lancedb/lancedb`OpenClawGatewayGateway. OpenClaw
+conditionné traite ce package comme faisant partie du package du plugin. Le démarrage du
 Gateway ne répare pas les dépendances des plugins ; si la dépendance est manquante, réinstallez ou
 mettez à jour le package du plugin et redémarrez le Gateway.
 
-Si une ancienne installation enregistre une erreur `dist/package.json` ou `@lancedb/lancedb` manquant lors du chargement du plugin, mettez à jour OpenClaw et redémarrez le Gateway.
+Si une ancienne installation enregistre une erreur de `dist/package.json` manquant ou de
+`@lancedb/lancedb`OpenClawGateway manquant lors du chargement du plugin, mettez à niveau OpenClaw et redémarrez le
+Gateway.
 
-Si le plugin indique que LanceDB n'est pas disponible sur `darwin-x64`, utilisez le moteur de mémoire par défaut sur cette machine, déplacez le Gateway vers une plateforme prise en charge ou désactivez `memory-lancedb`.
+Si le plugin enregistre que LanceDB n'est pas disponible sur `darwin-x64`Gateway, utilisez le moteur de
+mémoire par défaut sur cette machine, déplacez le Gateway vers une plate-forme prise en charge ou
+désactivez `memory-lancedb`.
 
 ## Dépannage
 
@@ -299,7 +317,7 @@ Cela signifie généralement que le model d'intégration a rejeté la requête d
 memory-lancedb: recall failed: Error: 400 the input length exceeds the context length
 ```
 
-Définissez une valeur `recallMaxChars` plus basse, puis redémarrez le Gateway :
+Définissez une valeur `recallMaxChars`Gateway inférieure, puis redémarrez le Gateway :
 
 ```json5
 {
@@ -325,9 +343,9 @@ curl http://127.0.0.1:11434/v1/embeddings \
 
 ### Model d'intégration non pris en charge
 
-Sans `dimensions`, seules les dimensions d'intégration OpenAI intégrées sont connues.
-Pour les modèles d'intégration locaux ou personnalisés, définissez `embedding.dimensions` sur la taille
-vectorielle signalée par ce modèle.
+Sans `dimensions`OpenAI, seules les dimensions de l'intégration OpenAI intégrée sont connues.
+Pour les modèles d'intégration locaux ou personnalisés, définissez `embedding.dimensions` sur la taille du
+vecteur signalée par ce modèle.
 
 ### Le plugin se charge mais aucun souvenir n'apparaît
 
@@ -338,8 +356,8 @@ openclaw ltm stats
 openclaw ltm search "recent preference"
 ```
 
-Si `autoCapture` est désactivé, le plugin rappellera les mémoires existantes mais ne
-les stockera pas automatiquement de nouvelles. Utilisez l'outil `memory_store` ou activez
+Si `autoCapture` est désactivé, le plugin rappellera les mémoires existantes mais n'en
+stockera pas automatiquement de nouvelles. Utilisez l'outil `memory_store` ou activez
 `autoCapture` si vous souhaitez une capture automatique.
 
 ## Connexes
@@ -348,4 +366,4 @@ les stockera pas automatiquement de nouvelles. Utilisez l'outil `memory_store` o
 - [Mémoire active](/fr/concepts/active-memory)
 - [Recherche de mémoire](/fr/concepts/memory-search)
 - [Wiki Mémoire](/fr/plugins/memory-wiki)
-- [Ollama](/fr/providers/ollama)
+- [Ollama](Ollama/en/providers/ollama)

@@ -144,13 +144,18 @@ Las ejecuciones de intérprete/runtime con respaldo de aprobación son intencion
 - Para esos flujos de trabajo, prefiera el uso de sandbox, un límite de host separado o una lista de permitidos/confianza explícita o un flujo de trabajo completo donde el operador acepte las semánticas de runtime más amplias.
 
 Cuando se requieren aprobaciones, la herramienta exec regresa inmediatamente con un id de aprobación. Use ese id para
-correlacionar eventos del sistema de ejecuciones aprobadas posteriores (`Exec finished`, y `Exec running` cuando esté configurado).
+correlacionar eventos del sistema de ejecuciones aprobadas posteriormente (`Exec finished`, y `Exec running` cuando estén configurados).
 Si no llega ninguna decisión antes del tiempo de espera, la solicitud se trata como un tiempo de espera de aprobación y
-se presenta como una denegación terminal en lugar de un evento del sistema que despierte al agente.
+se presenta como una denegación de comando de host terminal. Para aprobaciones asíncronas del agente principal con una sesión
+origen, OpenClaw también reanuda esa sesión con un seguimiento interno para que el agente observe que
+el comando no se ejecutó en lugar de reparar más adelante un resultado faltante.
 
 ### Comportamiento de entrega de seguimiento
 
-Después de que termina una ejecución asincrónica aprobada, OpenClaw envía un turno de seguimiento `agent` a la misma sesión.
+Después de que termina una ejecución asíncrona aprobada, OpenClaw envía un turno de seguimiento `agent` a la misma sesión.
+Las aprobaciones asíncronas denegadas usan la misma ruta de seguimiento de sesión principal para el estado de denegación, pero no
+registran traspasos de tiempo de ejecución elevados y no ejecutan el comando. Las denegaciones sin una sesión principal
+reanudable se suprimen o se informan a través de una ruta directa segura cuando existe una.
 
 - Si existe un destino de entrega externo válido (canal entregable más objetivo `to`), la entrega de seguimiento usa ese canal.
 - En flujos solo de chat web o de sesión interna sin destino externo, la entrega de seguimiento permanece solo en la sesión (`deliver: false`).

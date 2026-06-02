@@ -19,7 +19,7 @@ Au démarrage, le Gateway journalise le modèle d'agent par défaut résolu ains
 valeurs par défaut du mode qui affectent les nouvelles sessions, par exemple :
 
 ```text
-agent model: openai-codex/gpt-5.5 (thinking=medium, fast=on)
+agent model: openai/gpt-5.5 (thinking=medium, fast=on)
 ```
 
 `thinking` provient de l'agent par défaut, des paramètres du modèle, ou de l'agent global par défaut ;

@@ -12,7 +12,7 @@ OpenClaw PixVerse 影片生成提供者外掛程式。
 ## 發行
 
 - 套件： `@openclaw/pixverse-provider`
-- 安裝途徑：npm；ClawHub
+- 安裝途徑：npm；ClawHub：`clawhub:@openclaw/pixverse-provider`
 
 ## 介面
 

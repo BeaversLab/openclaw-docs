@@ -1,5 +1,5 @@
 ---
-summary: "為 OpenClaw 新增 Xiaomi 模型提供者支援。"
+summary: "為 OpenClaw 新增小米、小米 Token 計費模型提供者支援。"
 read_when:
   - You are installing, configuring, or auditing the xiaomi plugin
 title: "Xiaomi 外掛程式"
@@ -7,7 +7,7 @@ title: "Xiaomi 外掛程式"
 
 # Xiaomi 外掛程式
 
-為 OpenClaw 新增 Xiaomi 模型提供者支援。
+為 OpenClaw 新增小米、小米 Token 計費模型提供者支援。
 
 ## 發布
 
@@ -16,7 +16,7 @@ title: "Xiaomi 外掛程式"
 
 ## 介面
 
-提供者：xiaomi；合約：speechProviders
+providers: xiaomi, xiaomi-token-plan; contracts: speechProviders
 
 ## 相關文件
 

@@ -40,19 +40,22 @@ OpenClaw puede usar muchos proveedores de LLM. Elija un proveedor, autentíquese
 - [fal](/es/providers/fal)
 - [Fireworks](/es/providers/fireworks)
 - [GitHub Copilot](/es/providers/github-copilot)
+- [GMI Cloud](/es/providers/gmi)
 - [Google (Gemini)](/es/providers/google)
 - [Gradium](/es/providers/gradium)
 - [Groq (inferencia LPU)](/es/providers/groq)
 - [Hugging Face (Inferencia)](/es/providers/huggingface)
 - [inferrs (modelos locales)](/es/providers/inferrs)
 - [Kilocode](/es/providers/kilocode)
-- [LiteLLM (puerta de enlace unificada)](/es/providers/litellm)
+- [LiteLLM (pasarela unificada)](/es/providers/litellm)
 - [LM Studio (modelos locales)](/es/providers/lmstudio)
 - [MiniMax](/es/providers/minimax)
 - [Mistral](/es/providers/mistral)
 - [Moonshot AI (Kimi + Kimi Coding)](/es/providers/moonshot)
 - [NVIDIA](/es/providers/nvidia)
+- [NovitaAI](/es/providers/novita)
 - [Ollama (modelos en la nube + locales)](/es/providers/ollama)
+- [Ollama Cloud](/es/providers/ollama-cloud)
 - [OpenAI (API + Codex)](/es/providers/openai)
 - [OpenCode](/es/providers/opencode)
 - [OpenCode Go](/es/providers/opencode-go)
@@ -60,6 +63,7 @@ OpenClaw puede usar muchos proveedores de LLM. Elija un proveedor, autentíquese
 - [Perplexity (búsqueda web)](/es/providers/perplexity-provider)
 - [Qianfan](/es/providers/qianfan)
 - [Qwen Cloud](/es/providers/qwen)
+- [Qwen OAuth / Portal](/es/providers/qwen-oauth)
 - [Runway](/es/providers/runway)
 - [SenseAudio](/es/providers/senseaudio)
 - [SGLang (modelos locales)](/es/providers/sglang)
@@ -76,12 +80,12 @@ OpenClaw puede usar muchos proveedores de LLM. Elija un proveedor, autentíquese
 - [Xiaomi](/es/providers/xiaomi)
 - [Z.AI (GLM)](/es/providers/zai)
 
-## Páginas de resumen compartidas
+## Páginas de descripción general compartidas
 
-- [Variantes adicionales incluidas](/es/providers/models#additional-bundled-provider-variants) - Anthropic Vertex, Copilot Proxy y Gemini CLI OAuth
+- [Variantes incluidas adicionales](/es/providers/models#additional-bundled-provider-variants) - Anthropic Vertex, Copilot Proxy y Gemini CLI OAuth
 - [Generación de imágenes](/es/tools/image-generation) - Herramienta `image_generate` compartida, selección de proveedor y conmutación por error
 - [Generación de música](/es/tools/music-generation) - Herramienta `music_generate` compartida, selección de proveedor y conmutación por error
-- [Generación de vídeo](/es/tools/video-generation) - Herramienta `video_generate` compartida, selección de proveedor y conmutación por error
+- [Generación de videos](/es/tools/video-generation) - Herramienta `video_generate` compartida, selección de proveedor y conmutación por error
 
 ## Proveedores de transcripción
 
@@ -94,7 +98,7 @@ OpenClaw puede usar muchos proveedores de LLM. Elija un proveedor, autentíquese
 
 ## Herramientas comunitarias
 
-- [Claude Max API Proxy](/es/providers/claude-max-api-proxy) - Proxy comunitario para credenciales de suscripción de Claude (verifique la política/términos de Anthropic antes de usar)
+- [Claude Max API Proxy](/es/providers/claude-max-api-proxy) - Proxy comunitario para credenciales de suscripción a Claude (verifique la política/términos de Anthropic antes de usarlo)
 
 Para el catálogo completo de proveedores (xAI, Groq, Mistral, etc.) y la configuración avanzada,
-consulte [Model providers](/es/concepts/model-providers).
+consulte [Proveedores de modelos](/es/concepts/model-providers).

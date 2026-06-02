@@ -112,7 +112,7 @@ OpenClaw 还包含 `x_search` 用于搜索 X（前 Twitter）帖子，以及 `we
 支持 Codex 的模型可以选择使用提供商原生的 Responses `web_search`OpenClaw 工具，而不是 OpenClaw 托管的 `web_search` 函数。
 
 - 在 `tools.web.search.openaiCodex` 下进行配置
-- 它仅针对支持 Codex 的模型激活（`openai-codex/*` 或使用 `api: "openai-codex-responses"` 的提供商）
+- 它仅针对支持 Codex 的 OpenAI 模型（使用 `api: "openai-chatgpt-responses"` 的 OpenAI`openai/*` 模型）激活
 - 托管的 `web_search` 仍适用于非 Codex 模型
 - `mode: "cached"` 是默认且推荐的设置
 - `tools.web.search.enabled: false` 禁用托管搜索和原生搜索

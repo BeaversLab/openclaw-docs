@@ -12,7 +12,7 @@ Compacts exec et bash tool résultats avec des tokenjuice reducers.
 ## Distribution
 
 - Package : `@openclaw/tokenjuice`
-- Install route : inclus dans OpenClaw
+- Méthode d'installation : npm ; ClawHub : `clawhub:@openclaw/tokenjuice`
 
 ## Surface
 

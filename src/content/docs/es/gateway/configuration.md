@@ -312,10 +312,10 @@ candidato contiene marcadores de posición de secretos redactados como `***`.
 
   </Accordion>
 
-  <Accordion title="Habilitar el envío respaldado por relay para las compilaciones oficiales de iOS">
-    El envío respaldado por relay se configura en `openclaw.json`.
+  <Accordion title="Habilitar push basado en relay para compilaciones oficiales de iOS">
+    El push basado en relay utiliza el relay OpenClaw alojado de forma predeterminada: `https://ios-push-relay.openclaw.ai`.
 
-    Establézcalo en la configuración de la pasarela:
+    Para utilizar un relay personalizado, configúrelo en la configuración de la pasarela:
 
     ```json5
     {
@@ -341,29 +341,30 @@ candidato contiene marcadores de posición de secretos redactados como `***`.
 
     Lo que hace esto:
 
-    - Permite que la pasarela envíe `push.test`, notificaciones de activación (wake nudges) y reactivaciones a través del relay externo.
-    - Utiliza un permiso de envío (send grant) con ámbito de registro reenviado por la aplicación de iOS emparejada. La pasarela no necesita un token de relay para toda la implementación.
-    - Vincula cada registro respaldado por relay con la identidad de la pasarela con la que la aplicación de iOS se emparejó, por lo que otra pasarela no puede reutilizar el registro almacenado.
-    - Mantiene las compilaciones locales/manuales de iOS en APNs directas. Los envíos respaldados por relay se aplican solo a las compilaciones oficiales distribuidas que se registraron a través del relay.
-    - Debe coincidir con la URL base del relay incluida en la compilación oficial/TestFlight de iOS, para que el registro y el tráfico de envío lleguen a la misma implementación del relay.
+    - Permite que la pasarela envíe `push.test`, notificaciones de activación (wake nudges) y reactivaciones de reconexión a través del relay externo.
+    - Utiliza un permiso de envío (send grant) con alcance de registro reenviado por la aplicación iOS emparejada. La pasarela no necesita un token de relay para toda la implementación.
+    - Vincula cada registro respaldado por relay con la identidad de la pasarela con la que se emparejó la aplicación iOS, de modo que otra pasarela no pueda reutilizar el registro almacenado.
+    - Mantiene las compilaciones locales/manuales de iOS en APNs directas. Los envíos respaldados por relay se aplican solo a las compilaciones distribuidas oficialmente que se registraron a través del relay.
+    - Debe coincidir con la URL base del relay incorporada en la compilación oficial/TestFlight de iOS, para que el registro y el tráfico de envío lleguen a la misma implementación del relay.
 
     Flujo de extremo a extremo:
 
-    1. Instale una compilación oficial/TestFlight de iOS que se haya compilado con la misma URL base del relay.
-    2. Configure `gateway.push.apns.relay.baseUrl` en la pasarela.
-    3. Empareje la aplicación de iOS con la pasarela y permita que se conecten tanto las sesiones de nodo como las de operador.
-    4. La aplicación de iOS obtiene la identidad de la pasarela, se registra con el relay usando App Attest más el recibo de la aplicación y luego publica el registro respaldado por relay `push.apns.register` en la pasarela emparejada.
-    5. La pasarela almacena el identificador (handle) del relay y el permiso de envío, y luego los usa para `push.test`, notificaciones de activación y reactivaciones.
+    1. Instale una compilación oficial/TestFlight de iOS.
+    2. Opcional: configure `gateway.push.apns.relay.baseUrl` en la pasarela solo cuando use una implementación de relay personalizada.
+    3. Empareje la aplicación iOS con la pasarela y permita que se conecten tanto las sesiones de nodo como las de operador.
+    4. La aplicación iOS obtiene la identidad de la pasarela, se registra con el relay utilizando App Attest más el recibo de la aplicación y luego publica la carga útil del `push.apns.register` respaldada por relay en la pasarela emparejada.
+    5. La pasarela almacena el identificador (handle) del relay y el permiso de envío, y luego los usa para `push.test`, notificaciones de activación y reactivaciones de reconexión.
 
     Notas operativas:
 
-    - Si cambia la aplicación de iOS a una pasarela diferente, vuelva a conectar la aplicación para que pueda publicar un nuevo registro de relay vinculado a esa pasarela.
-    - Si distribuye una nueva compilación de iOS que apunta a una implementación de relay diferente, la aplicación actualiza su registro de relay almacenado en caché en lugar de reutilizar el origen del relay antiguo.
+    - Si cambia la aplicación iOS a una pasarela diferente, reconecte la aplicación para que pueda publicar un nuevo registro de relay vinculado a esa pasarela.
+    - Si lanza una nueva compilación de iOS que apunta a una implementación de relay diferente, la aplicación actualiza su registro de relay en caché en lugar de reutilizar el origen del relay antiguo.
 
     Nota de compatibilidad:
 
-    - `OPENCLAW_APNS_RELAY_BASE_URL` y `OPENCLAW_APNS_RELAY_TIMEOUT_MS` todavía funcionan como anulaciones temporales de entorno.
-    - `OPENCLAW_APNS_RELAY_ALLOW_HTTP=true` sigue siendo una vía de escape de desarrollo solo de bucle invertido (loopback); no persista las URL de relay HTTP en la configuración.
+    - `OPENCLAW_APNS_RELAY_BASE_URL` y `OPENCLAW_APNS_RELAY_TIMEOUT_MS` todavía funcionan como anulaciones temporales de variables de entorno.
+    - Las URLs de relay de pasarela personalizadas deben coincidir con la URL base del relay incorporada en la compilación oficial/TestFlight de iOS.
+    - `OPENCLAW_APNS_RELAY_ALLOW_HTTP=true` sigue siendo una salida de emergencia de desarrollo solo de bucle de retorno (loopback-only); no persista las URLs de relay HTTP en la configuración.
 
     Consulte [iOS App](/es/platforms/ios#relay-backed-push-for-official-builds) para ver el flujo de extremo a extremo y [Authentication and trust flow](/es/platforms/ios#authentication-and-trust-flow) para el modelo de seguridad del relay.
 
@@ -405,9 +406,9 @@ candidato contiene marcadores de posición de secretos redactados como `***`.
     }
     ```
 
-    - `sessionRetention`: eliminar las sesiones de ejecución aisladas completadas de `sessions.json` (predeterminado `24h`; establezca `false` para desactivar).
-    - `runLog`: eliminar `cron/runs/<jobId>.jsonl` por tamaño y líneas retenidas.
-    - Consulte [Cron jobs](/es/automation/cron-jobs) para ver la descripción general de las características y los ejemplos de CLI.
+    - `sessionRetention`: poda las sesiones de ejecución aisladas completadas de `sessions.json` (predeterminado `24h`; establezca `false` para desactivar).
+    - `runLog`: poda las filas del historial de ejecución de cron retenidas por trabajo. `maxBytes` sigue siendo aceptado para registros de ejecución antiguos basados en archivos.
+    - Consulte [Cron jobs](/es/automation/cron-jobs) para ver una descripción general de las funciones y ejemplos de CLI.
 
   </Accordion>
 

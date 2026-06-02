@@ -155,12 +155,12 @@ Questions et réponses sur les modèles et les profils d'authentification. Pour 
   </Accordion>
 
   <Accordion title="Puis-je utiliser GPT 5.5 pour les tâches quotidiennes et Codex 5.5 pour le codage ?">
-    Oui. Traitez le choix du modèle et le choix de l'environnement d'exécution séparément :
+    Oui. Traitez le choix du modèle et le choix de l'exécution séparément :
 
-    - **Agent de codage Codex natif :** définissez `agents.defaults.model.primary` sur `openai/gpt-5.5`. Connectez-vous avec `openclaw models auth login --provider openai-codex`OpenAIAPI lorsque vous souhaitez l'authentification par abonnement ChatGPT/Codex.
-    - **Tâches directes de l'API OpenAI en dehors de la boucle de l'agent :** configurez `OPENAI_API_KEY`OpenAIAPIOpenAIAPI pour les images, les intégrations (embeddings), la parole, la temps réel et d'autres surfaces de l'API OpenAI sans agent.
-    - **Authentification par clé API pour l'agent OpenAI :** utilisez `/model openai/gpt-5.5` avec un profil de clé API `openai-codex`API ordonné.
-    - **Sous-agents :** acheminez les tâches de codage vers un agent axé sur Codex avec son propre modèle `openai/gpt-5.5`.
+    - **Agent de codage Codex natif :** définissez `agents.defaults.model.primary` sur `openai/gpt-5.5`. Connectez-vous avec `openclaw models auth login --provider openai` lorsque vous souhaitez utiliser l'authentification par abonnement ChatGPT/Codex.
+    - **Tâches directes de l'OpenAI API en dehors de la boucle de l'agent :** configurez `OPENAI_API_KEY` pour les images, les embeddings, la voix, la temps réel et d'autres surfaces de l'OpenAI API sans agent.
+    - **Authentification par clé d'API de l'agent OpenAIAPI :** utilisez `/model openai/gpt-5.5` avec un profil de clé API-key `openai` ordonné.
+    - **Sous-agents :** routez les tâches de codage vers un agent axé sur Codex avec son propre modèle `openai/gpt-5.5`.
 
     Voir [Modèles](/fr/concepts/models) et [Commandes slash](/fr/tools/slash-commands).
 

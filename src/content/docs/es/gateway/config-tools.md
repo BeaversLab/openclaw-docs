@@ -383,13 +383,14 @@ Controla el soporte de archivos adjuntos en línea para `sessions_spawn`.
 ```
 
 <AccordionGroup>
-  <Accordion title="Notas sobre archivos adjuntos">
-    - Los archivos adjuntos solo son compatibles con `runtime: "subagent"`. El tiempo de ejecución de ACP los rechaza.
-    - Los archivos se materializan en el espacio de trabajo secundario en `.openclaw/attachments/<uuid>/` con un `.manifest.json`.
-    - El contenido de los archivos adjuntos se redacta automáticamente de la persistencia de la transcripción.
+  <Accordion title="Notas sobre adjuntos">
+    - Los adjuntos requieren `enabled: true`.
+    - Los adjuntos de subagentes se materializan en el espacio de trabajo secundario en `.openclaw/attachments/<uuid>/` con un `.manifest.json`.
+    - Los adjuntos de ACP son solo de imágenes y se reenvían en línea al tiempo de ejecución de ACP después de que se pasan los mismos límites de recuento de archivos, bytes por archivo y bytes totales.
+    - El contenido de los adjuntos se redacta automáticamente de la persistencia de las transcripciones.
     - Las entradas Base64 se validan con comprobaciones estrictas de alfabeto/relleno y un protector de tamaño previo a la decodificación.
-    - Los permisos de archivo son `0700` para directorios y `0600` para archivos.
-    - La limpieza sigue la política `cleanup`: `delete` siempre elimina los archivos adjuntos; `keep` los conserva solo cuando `retainOnSessionKeep: true`.
+    - Los permisos de archivo de los adjuntos de subagentes son `0700` para los directorios y `0600` para los archivos.
+    - La limpieza de subagentes sigue la política `cleanup`: `delete` siempre elimina los adjuntos; `keep` los conserva solo cuando `retainOnSessionKeep: true`.
 
   </Accordion>
 </AccordionGroup>

@@ -16,7 +16,7 @@ title: "Workboard 外掛程式"
 
 ## 介面
 
-外掛程式
+contracts: 工具
 
 ## 相關文件
 

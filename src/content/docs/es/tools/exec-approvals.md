@@ -350,7 +350,10 @@ Cuando **Permitir automáticamente CLIs de habilidades** está habilitado, los e
 
 ## Bins seguros y reenvío de aprobaciones
 
-Para obtener información sobre bins seguros (la ruta rápida solo de stdin), detalles de enlace del intérprete y cómo reenviar avisos de aprobación a Slack/Discord/Telegram (o ejecutarlos como clientes de aprobación nativos), consulte [Exec approvals - advanced](/es/tools/exec-approvals-advanced).
+Para bins seguros (la ruta rápida de solo stdin), detalles de vinculación del intérprete y
+cómo reenviar mensajes de aprobación a Slack/Discord/Telegram (o ejecutarlos como
+clientes de aprobación nativos), consulte
+[Exec approvals - advanced](/es/tools/exec-approvals-advanced).
 
 ## Edición de la interfaz de usuario de control
 
@@ -358,7 +361,8 @@ Use la tarjeta **Control UI → Nodes → Exec approvals** para editar los valor
 
 El selector de destino elige **Gateway** (aprobaciones locales) o un **Node**. Los nodos deben anunciar `system.execApprovals.get/set` (aplicación macOS o host de nodo sin interfaz gráfica). Si un nodo aún no anuncia las aprobaciones de ejecución, edite su `~/.openclaw/exec-approvals.json` local directamente.
 
-CLI: `openclaw approvals` admite la edición de puerta de enlace o nodo; consulte [Approvals CLI](/es/cli/approvals).
+CLI: `openclaw approvals` admite la edición de puerta de enlace o nodo; consulte
+[Approvals CLI](/es/cli/approvals).
 
 ## Flujo de aprobación
 
@@ -381,25 +385,34 @@ El ciclo de vida de exec se expone como mensajes del sistema:
 - `Exec finished`.
 
 Estos se publican en la sesión del agente después de que el nodo informa del evento.
-Las aprobaciones exec denegadas son terminales: OpenClaw puede informar la denegación al operador o a la ruta de chat directo, pero no publica `Exec denied` de nuevo en la sesión del agente ni reactiva el trabajo del agente.
-Las aprobaciones exec alojadas en la puerta de enlace emiten los mismos eventos de ciclo de vida cuando el comando finaliza (y opcionalmente cuando se ejecuta durante más tiempo que el umbral).
-Los exec con control de aprobación reutilizan el id de aprobación como `runId` en estos mensajes para facilitar la correlación.
+Las aprobaciones de ejecución denegadas son terminales para el comando del host en sí: el comando
+no se ejecuta. Para las aprobaciones asíncronas del agente principal con una sesión de origen,
+OpenClaw publica la denegación en esa sesión como un seguimiento interno para que el
+agente pueda dejar de esperar el comando asíncrono y evitar una reparación por falta de resultados.
+Si no hay sesión o la sesión no se puede reanudar, OpenClaw aún puede
+informar una denegación concisa al operador o a la ruta de chat directo. Las denegaciones para
+las sesiones de subagente no se publican de nuevo en el subagente.
+Las aprobaciones de ejecución del host de puerta de enlace emiten los mismos eventos del ciclo de vida cuando
+el comando termina (y opcionalmente cuando se ejecuta más tiempo que el umbral).
+Las ejecuciones con control de aprobación reutilizan el id de aprobación como el `runId` en estos
+mensajes para facilitar la correlación.
 
 ## Comportamiento de aprobación denegada
 
-Cuando se deniega una aprobación exec asíncrona, OpenClaw trata la solicitud como terminal.
-Puede mostrar una denegación concisa al operador o a la ruta de chat directo, pero no
-envía orientación de denegación a través de la sesión del agente. Esto evita que un comando
-denegado se convierta en otro turno del modelo e impide que el agente reutilice
-la salida de una ejecución anterior del mismo comando.
+Cuando se deniega una aprobación de ejecución asíncrona, OpenClaw trata el comando del host como
+terminal y falla de forma segura (fail-closed). Para las sesiones del agente principal, la denegación se entrega como un
+seguimiento de sesión interno que indica al agente que el comando asíncrono no se ejecutó.
+Eso preserva la continuidad de la transcripción sin exponer una salida de comando obsoleta. Si
+la entrega de la sesión no está disponible, OpenClaw recurre a una denegación concisa al operador o
+denegación de chat directo cuando existe una ruta segura.
 
 ## Implicaciones
 
-- **`full`** es potente; prefiera las listas de permitidos (allowlists) cuando sea posible.
-- **`ask`** le mantiene informado mientras permite aprobaciones rápidas.
+- **`full`** es potente; prefiera listas de permitidos (allowlists) cuando sea posible.
+- **`ask`** lo mantiene informado y, al mismo tiempo, permite aprobaciones rápidas.
 - Las listas de permitidos por agente evitan que las aprobaciones de un agente se filtren a otros.
-- Las aprobaciones solo se aplican a solicitudes exec de host de **remitentes autorizados**. Los remitentes no autorizados no pueden emitir `/exec`.
-- `/exec security=full` es una comodidad a nivel de sesión para operadores autorizados y omite aprobaciones por diseño. Para bloquear completamente la exec de host, establezca la seguridad de aprobaciones en `deny` o deniegue la herramienta `exec` a través de la política de herramientas.
+- Las aprobaciones solo se aplican a las solicitudes de ejecución del host de **remitentes autorizados**. Los remitentes no autorizados no pueden emitir `/exec`.
+- `/exec security=full` es una comodidad a nivel de sesión para operadores autorizados y omite aprobaciones por diseño. Para bloquear totalmente la ejecución en el host, configure la seguridad de aprobaciones en `deny` o deniegue la herramienta `exec` mediante la política de herramientas.
 
 ## Relacionado
 

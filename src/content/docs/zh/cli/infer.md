@@ -126,7 +126,7 @@ Focus on model runs, image generation, video generation, audio transcription, TT
 - 使用 `model run --thinking <level>` 传递一次性思考/推理级别（`off`、`minimal`、`low`、`medium`、`high`、`adaptive`、`xhigh` 或 `max`），同时保持运行为原始模式。
 - 对于 `image describe`、`audio transcribe` 和 `video describe`，`--model` 必须使用 `<provider/model>` 形式。
 - 对于 `image describe`，`--file` 接受本地路径和 HTTP(S) 图片 URL。远程 URL 使用常规的媒体获取 SSRF 策略。
-- 对于 `image describe`，显式的 `--model` 直接运行该提供商/模型。该模型必须在模型目录或提供商配置中具备图像处理能力。`codex/<model>` 运行有界的 Codex 应用服务器图像理解轮次；`openai-codex/<model>`OpenAIOAuth 使用 OpenAI Codex OAuth 提供商路径。
+- 对于 `image describe`，显式的 `--model` 会直接运行该提供商/模型。该模型在模型目录或提供商配置中必须具备图像处理能力。`codex/<model>` 运行一个受限的 Codex 应用服务器图像理解轮次；`openai/<model>` 使用 OpenAI 提供商路径，并支持 API 密钥或 ChatGPT/Codex OAuth 认证。
 - 无状态执行命令默认为本地。
 - Gateway(网关) 管理的状态命令默认为网关。
 - 常规的本地路径不需要网关正在运行。
@@ -169,14 +169,14 @@ openclaw infer model run --local --model ollama/qwen2.5vl:7b --prompt "Describe 
 - 本地 `model run`CLI 是用于提供商/模型/身份验证健康状况检查的最窄 CLI 冒烟测试，因为对于非 Codex 提供商，它仅将提供的提示发送给选定的模型。
 - 本地 `model run --model <provider/model>` 可以在将提供商写入配置之前，使用来自 `models list --all` 的确切捆绑静态目录行。仍然需要提供商身份验证；缺少凭据将作为身份验证错误失败，而不是 `Unknown model`。
 - 对于 Mistral Medium 3.5 推理探测，请保持 temperature 未设置/默认。Mistral 拒绝 `reasoning_effort="high"` 加 `temperature: 0`；请使用具有默认温度或非零推理模式值（例如 `0.7`）的 `mistral/mistral-medium-3-5`。
-- `openai-codex/*`OpenClaw 本地探测是一个窄例外：OpenClaw 添加了一条最小的系统指令，以便 Codex Responses 传输可以填充其必需的 `instructions` 字段，而无需添加完整的 agent 上下文、工具、内存或会话记录。
-- 本地 `model run --file` 保留该精简路径，并将图像内容直接附加到单个用户消息。当 MIME 类型被检测为 `image/*` 时，常见的图像文件（如 PNG、JPEG 和 WebP）可以工作；不支持或无法识别的文件在调用提供商之前会失败。
-- `model run --file` 最适合直接测试所选的多模态文本模型。当您需要 OpenClaw 的图像理解提供商选择和默认图像模型路由时，请使用 `infer image describe`OpenClaw。
+- Codex 响应的本地探测是极少数例外情况：OpenClaw 会添加最少的系统指令，以便传输层填充其所需的 `instructions` 字段，而无需添加完整的代理上下文、工具、内存或会话记录。
+- 本地 `model run --file` 保留了这条精简路径，并将图像内容直接附加到单条用户消息中。常见的图像文件（如 PNG、JPEG 和 WebP）在其 MIME 类型被检测为 `image/*` 时可以正常工作；不支持或无法识别的文件会在调用提供商之前失败。
+- 当您想直接测试所选的多模态文本模型时，`model run --file` 是最佳选择。当您需要 OpenClaw 的图像理解提供商选择和默认图像模型路由时，请使用 `infer image describe`。
 - 所选模型必须支持图像输入；仅文本模型可能会在提供商层拒绝请求。
-- `model run --prompt`Gateway(网关) 必须包含非空白文本；在调用本地提供商或 Gateway(网关) 之前，空提示将被拒绝。
-- 当提供商未返回文本输出时，本地 `model run` 将以非零状态退出，因此无法访问的本地提供商和空的补全不会看起来像成功的探测。
-- 当您需要测试 Gateway(网关) 路由、agent-runtime 设置或 Gateway(网关) 管理的提供商状态，同时保持模型输入为原始状态时，请使用 `model run --gateway`Gateway(网关)Gateway(网关)。当您需要完整的代理上下文、工具、记忆和会话记录时，请使用 `openclaw agent` 或聊天界面。
-- `model auth login`、`model auth logout` 和 `model auth status` 管理已保存的提供商身份验证状态。
+- `model run --prompt` 必须包含非空白文本；在调用本地提供商或 Gateway(网关) 之前，空提示会被拒绝。
+- 当提供商未返回文本输出时，本地 `model run` 会以非零状态退出，因此不可达的本地提供商和空的补全不会看起来像是成功的探测。
+- 当您需要测试 Gateway(网关) 路由、代理运行时设置或 Gateway(网关) 管理的提供商状态，同时保持模型输入原始状态时，请使用 `model run --gateway`。当您需要完整的代理上下文、工具、内存和会话记录时，请使用 `openclaw agent` 或聊天界面。
+- `model auth login`、`model auth logout` 和 `model auth status` 管理已保存的提供商认证状态。
 
 ## 图像
 
@@ -199,11 +199,11 @@ openclaw infer image describe --file ./photo.jpg --model ollama/qwen2.5vl:7b --p
 
 注意事项：
 
-- 当从现有输入文件开始时，请使用 `image edit`。
-- 对于支持参考图像编辑上的几何提示的提供商/模型，请结合 `image edit` 使用 `--size`、`--aspect-ratio` 或 `--resolution`。
-- 结合 `--model openai/gpt-image-1.5`OpenAI 使用 `--output-format png --background transparent` 以获得透明背景的 OpenAI PNG 输出；`--openai-background`OpenAI 仍然可用作 OpenAI 特定的别名。未声明背景支持的提供商将该提示报告为被忽略的覆盖。
-- 使用 `image providers --json` 来验证哪些捆绑的图像提供商是可发现、已配置、已选中的，以及每个提供商公开了哪些生成/编辑功能。
-- 使用 `image generate --model <provider/model> --json`CLI 作为针对图像生成更改的最狭窄的实时 CLI 冒烟测试。示例：
+- 从现有输入文件开始时，请使用 `image edit`。
+- 对于在参考图像编辑上支持几何提示的提供商/模型，请将 `--size`、`--aspect-ratio` 或 `--resolution` 与 `image edit` 结合使用。
+- 将 `--output-format png --background transparent` 与 `--model openai/gpt-image-1.5` 结合使用，以获得透明背景的 OpenAI PNG 输出；`--openai-background` 仍可作为 OpenAI 专用的别名使用。未声明支持背景的提供商将该提示报告为被忽略的覆盖项。
+- 使用 `image providers --json` 来验证哪些捆绑的图像提供商是可发现、已配置、已选中的，以及每个提供商暴露了哪些生成/编辑功能。
+- 将 `image generate --model <provider/model> --json` 作为用于图像生成更改的最窄范围实时 CLI 冒烟测试。例如：
 
   ```bash
   openclaw infer image providers --json
@@ -214,11 +214,11 @@ openclaw infer image describe --file ./photo.jpg --model ollama/qwen2.5vl:7b --p
     --json
   ```
 
-  JSON 响应报告 `ok`、`provider`、`model`、`attempts` 和写入的输出路径。当设置了 `--output` 时，最终扩展名可能会遵循提供商返回的 MIME 类型。
+  JSON 响应报告 `ok`、`provider`、`model`、`attempts` 以及写入的输出路径。当设置了 `--output` 时，最终扩展名可能会遵循提供商返回的 MIME 类型。
 
-- 对于 `image describe` 和 `image describe-many`，请使用 `--prompt` 向视觉模型提供特定于任务的指令，例如 OCR、比较、UI 检查或简明字幕。
+- 对于 `image describe` 和 `image describe-many`，请使用 `--prompt` 为视觉模型提供特定于任务的指令，例如 OCR、比较、UI 检查或简明字幕生成。
 - 对于缓慢的本地视觉模型或冷启动的 Ollama，请使用 `--timeout-ms`。
-- 对于 `image describe`，`--model` 必须是具备图像功能的 `<provider/model>`。
+- 对于 `image describe`，`--model` 必须是具备图像处理能力的 `<provider/model>`。
 - 对于本地 Ollama 视觉模型，请先拉取模型，并将 `OLLAMA_API_KEY` 设置为任意占位符值，例如 `ollama-local`。请参阅 [Ollama](/zh/providers/ollama#vision-and-image-description)。
 
 ## 音频
@@ -234,7 +234,7 @@ openclaw infer audio transcribe --file ./memo.m4a --model openai/whisper-1 --jso
 注意：
 
 - `audio transcribe` 用于文件转录，而非实时会话管理。
-- `--model` 必须是 `<provider/model>`。
+- `--model` 必须为 `<provider/model>`。
 
 ## TTS
 
@@ -249,8 +249,8 @@ openclaw infer tts status --json
 
 注意：
 
-- `tts status` 默认为网关，因为它反映的是网关管理的 TTS 状态。
-- 使用 `tts providers`、`tts voices` 和 `tts set-provider` 来检查和配置 TTS 行为。
+- `tts status` 默认为 gateway，因为它反映由网关管理的 TTS 状态。
+- 使用 `tts providers`、`tts voices` 和 `tts set-provider` 检查和配置 TTS 行为。
 
 ## 视频
 
@@ -265,8 +265,8 @@ openclaw infer video describe --file ./clip.mp4 --model openai/gpt-5.4-mini --js
 
 注意：
 
-- `video generate` 接受 `--size`、`--aspect-ratio`、`--resolution`、`--duration`、`--audio`、`--watermark` 和 `--timeout-ms` 并将它们转发给视频生成运行时。
-- 对于 `video describe`，`--model` 必须是 `<provider/model>`。
+- `video generate` 接受 `--size`、`--aspect-ratio`、`--resolution`、`--duration`、`--audio`、`--watermark` 和 `--timeout-ms` 并将其转发到视频生成运行时。
+- 对于 `video describe`，`--model` 必须为 `<provider/model>`。
 
 ## Web
 
@@ -285,7 +285,7 @@ openclaw infer web providers --json
 
 ## 嵌入
 
-使用 `embedding` 创建向量以及检查嵌入提供商。
+使用 `embedding` 进行向量创建和嵌入提供商检查。
 
 ```bash
 openclaw infer embedding create --text "friendly lobster" --json
@@ -320,7 +320,9 @@ Infer 命令在共享的信封结构下规范化 JSON 输出：
 - `outputs`
 - `error`
 
-对于生成媒体命令，`outputs` 包含由 OpenClaw 写入的文件。请使用该数组中的 `path`、`mimeType`、`size` 以及任何特定于媒体的尺寸来进行自动化，而不是解析人类可读的标准输出。
+对于生成的媒体命令，`outputs` 包含由 OpenClaw 写入的文件。请使用
+该数组中的 `path`、`mimeType`、`size` 以及任何特定于媒体的维度
+进行自动化，而不是解析人类可读的标准输出。
 
 ## 常见陷阱
 

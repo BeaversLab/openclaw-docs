@@ -70,7 +70,7 @@ title: "Niveles de pensamiento"
   4. Configuración por modelo: `agents.defaults.models["<provider>/<model>"].params.fastMode`
   5. Alternativa: `off`
 - Para `openai/*`, el modo rápido se asigna al procesamiento con prioridad de OpenAI enviando `service_tier=priority` en las solicitudes de Responses compatibles.
-- Para `openai-codex/*`, el modo rápido envía la misma opción `service_tier=priority` en las respuestas de Codex. OpenClaw mantiene un solo botón `/fast` compartido en ambas rutas de autenticación.
+- Para los modelos `openai/*` con respaldo de Codex, el modo rápido envía el mismo indicador `service_tier=priority` en las respuestas de Codex. OpenClaw mantiene un único interruptor `/fast` compartido en ambas rutas de autenticación.
 - Para las solicitudes `anthropic/*` públicas directas, incluido el tráfico autenticado con OAuth enviado a `api.anthropic.com`, el modo rápido se asigna a los niveles de servicio de Anthropic: `/fast on` establece `service_tier=auto`, `/fast off` establece `service_tier=standard_only`.
 - Para `minimax/*` en la ruta compatible con Anthropic, `/fast on` (o `params.fastMode: true`) reescribe `MiniMax-M2.7` a `MiniMax-M2.7-highspeed`.
 - Los parámetros de modelo `serviceTier` / `service_tier` explícitos de Anthropic anulan el valor predeterminado del modo rápido cuando ambos están establecidos. OpenClaw aún omite la inyección de nivel de servicio de Anthropic para URLs base de proxy que no son de Anthropic.

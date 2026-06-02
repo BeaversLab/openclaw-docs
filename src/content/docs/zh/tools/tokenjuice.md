@@ -1,36 +1,37 @@
 ---
-summary: "使用可选的内置插件压缩嘈杂的 exec 和 bash 工具结果"
+summary: "使用可选的 Tokenjuice 插件压缩嘈杂的 exec 和 bash 工具结果"
 title: "Tokenjuice"
 read_when:
   - You want shorter `exec` or `bash` tool results in OpenClaw
-  - You want to enable the bundled tokenjuice plugin
+  - You want to install or enable the Tokenjuice plugin
   - You need to understand what tokenjuice changes and what it leaves raw
 ---
 
-`tokenjuice` 是一个可选的内置插件，用于在命令运行后压缩嘈杂的 `exec` 和 `bash`
-工具结果。
+`tokenjuice` 是一个可选的外部插件，用于在命令运行后压缩嘈杂的 `exec` 和 `bash` 工具结果。
 
-它更改返回的 `tool_result`，而不是命令本身。Tokenjuice 不会
-重写 shell 输入、重新运行命令或更改退出代码。
+它改变返回的 `tool_result`，而不是命令本身。Tokenjuice 不会重写 shell 输入、重新运行命令或更改退出代码。
 
 目前这适用于 Codex 应用服务器框架中的 OpenClaw 嵌入式运行和 OpenClaw 动态工具。Tokenjuice 挂钩 OpenClaw 的工具结果中间件，并在输出返回到活动框架会话之前对其进行修剪。
 
 ## 启用插件
 
-快速路径：
+安装一次：
+
+```bash
+openclaw plugins install clawhub:@openclaw/tokenjuice
+```
+
+然后启用它：
 
 ```bash
 openclaw config set plugins.entries.tokenjuice.enabled true
 ```
 
-等效项：
+等效于：
 
 ```bash
 openclaw plugins enable tokenjuice
 ```
-
-OpenClaw 已随附该插件。没有单独的 `plugins install`
-或 `tokenjuice install openclaw` 步骤。
 
 如果您更喜欢直接编辑配置：
 

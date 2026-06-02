@@ -206,7 +206,7 @@ Les alias courants tels que `js`, `ts`, `bash`, `md`, `yml`, `c++`, `dockerfile`
 Installez le plugin Diff Viewer Language Pack pour mettre en surbrillance d'autres langues :
 
 ```bash
-openclaw plugins install diffs-language-pack
+openclaw plugins install clawhub:@openclaw/diffs-language-pack
 ```
 
 Avec le pack de langues disponible, OpenClaw l'utilise automatiquement pour les langues figurant hors de la liste par défaut. Sans celui-ci, ces fichiers restent lisibles en texte brut.

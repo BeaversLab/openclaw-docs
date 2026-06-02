@@ -12,7 +12,7 @@ Registra el tiempo de ejecución del agente de GitHub Copilot.
 ## Distribución
 
 - Paquete: `@openclaw/copilot`
-- Ruta de instalación: incluido en OpenClaw
+- Ruta de instalación: npm; ClawHub: `clawhub:@openclaw/copilot`
 
 ## Superficie
 

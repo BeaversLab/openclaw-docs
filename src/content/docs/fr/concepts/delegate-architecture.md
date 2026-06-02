@@ -16,7 +16,7 @@ Un **délégué** est un agent OpenClaw qui :
 - Possède sa **propre identité** (adresse e-mail, nom d'affichage, calendrier).
 - Agit **au nom de** un ou plusieurs humains - ne prétend jamais être eux.
 - Fonctionne sous **autorisations explicites** accordées par le fournisseur d'identité de l'organisation.
-- Suit les **[ordres permanents](/fr/automation/standing-orders)** - règles définies dans le `AGENTS.md` de l'agent qui spécifient ce qu'il peut faire de manière autonome par rapport à ce qui nécessite une approbation humaine (voir [Cron Jobs](/fr/automation/cron-jobs) pour l'exécution planifiée).
+- Suit les **[standing orders](/fr/automation/standing-orders)** - règles définies dans le `AGENTS.md` de l'agent qui spécifient ce qu'il peut faire de manière autonome par rapport à ce qui nécessite une approbation humaine (voir [Cron Jobs](/fr/automation/cron-jobs) pour l'exécution planifiée).
 
 Le modèle de délégué correspond directement au fonctionnement des assistants de direction : ils ont leurs propres identifiants, envoient des courriels « de la part de » de leur principal et suivent une portée d'autorité définie.
 
@@ -68,7 +68,7 @@ Le délégué opère de manière **autonome** selon un calendrier, exécutant de
 - Publication automatique sur les réseaux sociaux via des files de contenu approuvé.
 - Tri de la boîte de réception avec catégorisation automatique et marquage.
 
-Ce niveau combine les autorisations du Niveau 2 avec les [Tâches planifiées (Cron Jobs)](/fr/automation/cron-jobs) et les [Ordres permanents (Standing Orders)](/fr/automation/standing-orders).
+Ce niveau combine les autorisations du niveau 2 avec les [Cron Jobs](/fr/automation/cron-jobs) et les [Standing Orders](/fr/automation/standing-orders).
 
 <Warning>Le Niveau 3 nécessite une configuration minutieuse des blocs stricts : actions que l'agent ne doit jamais entreprendre quelle que soit l'instruction. Complétez les conditions préalables ci-dessous avant d'accorder des autorisations au fournisseur d'identité.</Warning>
 
@@ -123,7 +123,7 @@ Voir [Sandboxing](/fr/gateway/sandboxing) et [Multi-Agent Sandbox & Tools](/fr/t
 
 Configurez la journalisation avant que le délégué ne traite des données réelles :
 
-- Historique des exécutions Cron : `~/.openclaw/cron/runs/<jobId>.jsonl`
+- Historique d'exécution Cron : base de données d'état SQLite partagée OpenClaw
 - Transcriptions de session : `~/.openclaw/agents/delegate/sessions`
 - Journaux d'audit du fournisseur d'identité (Exchange, Google Workspace)
 
@@ -171,7 +171,7 @@ Set-Mailbox -Identity "principal@[organization].org" `
 
 **Accès en lecture** (Graph API avec autorisations d'application) :
 
-Inscrivez une application Azure AD avec les autorisations d'application `Mail.Read` et `Calendars.Read`. **Avant d'utiliser l'application**, délimitez l'accès avec une [stratégie d'accès aux applications](https://learn.microsoft.com/graph/auth-limit-mailbox-access) pour restreindre l'application aux seules boîtes aux lettres du délégué et du mandant :
+Enregistrez une application Azure AD avec les autorisations d'application `Mail.Read` et `Calendars.Read`. **Avant d'utiliser l'application**, délimitez l'accès avec une [stratégie d'accès aux applications](https://learn.microsoft.com/graph/auth-limit-mailbox-access) pour restreindre l'application uniquement aux boîtes aux lettres du délégué et du mandant :
 
 ```powershell
 New-ApplicationAccessPolicy `
@@ -180,7 +180,7 @@ New-ApplicationAccessPolicy `
   -AccessRight RestrictAccess
 ```
 
-<Warning>Sans stratégie d'accès aux applications, l'autorisation d'application `Mail.Read` accorde l'accès à **toutes les boîtes aux lettres du client**. Créez toujours la stratégie d'accès avant que l'application ne lise des courriers. Testez en confirmant que l'application renvoie `403` pour les boîtes aux lettres en dehors du groupe de sécurité.</Warning>
+<Warning>Sans stratégie d'accès aux applications, l'autorisation d'application `Mail.Read` accorde l'accès à **toutes les boîtes aux lettres du client**. Créez toujours la stratégie d'accès avant que l'application ne lise aucun courrier. Testez en confirmant que l'application renvoie `403` pour les boîtes aux lettres en dehors du groupe de sécurité.</Warning>
 
 #### Google Workspace
 
@@ -244,7 +244,7 @@ Copiez ou créez des profils d'authentification pour le `agentDir` du délégué
 ~/.openclaw/agents/delegate/agent/auth-profiles.json
 ```
 
-Ne partagez jamais le `agentDir` de l'agent principal avec le délégué. Consultez [Multi-Agent Routing](/fr/concepts/multi-agent) pour plus de détails sur l'isolement de l'authentification.
+Ne partagez jamais le `agentDir` de l'agent principal avec le délégué. Consultez [Multi-Agent Routing](/fr/concepts/multi-agent) pour les détails sur l'isolement de l'authentification.
 
 ## Exemple : assistant organisationnel
 
@@ -280,9 +280,9 @@ Une configuration complète de délégué pour un assistant organisationnel gér
 }
 ```
 
-Le `AGENTS.md` du délégué définit son autorité autonome - ce qu'il peut faire sans demander, ce qui nécessite une approbation et ce qui est interdit. Les [Cron Jobs](/fr/automation/cron-jobs) pilotent son emploi du temps quotidien.
+Le `AGENTS.md` du délégué définit son autorité autonome — ce qu'il peut faire sans demander, ce qui nécessite une approbation et ce qui est interdit. Les [Cron Jobs](/fr/automation/cron-jobs) pilotent son planning quotidien.
 
-Si vous accordez `sessions_history`, rappelez-vous qu'il s'agit d'une vue de rappel limitée et filtrée par sécurité. OpenClaw masque le texte de type identifiant/jeton, tronque le contenu long, supprime les balises de réflexion / l'échafaudage `<relevant-memories>` / les payloads XML d'appels d'outil en texte brut (y compris `<tool_call>...</tool_call>`, `<function_call>...</function_call>`, `<tool_calls>...</tool_calls>`, `<function_calls>...</function_calls>` et les blocs d'appels d'outil tronqués) / l'échafaudage d'appels d'outil rétrogradé / les jetons de contrôle de modèle ASCII/pleine largeur divulgués / les XML d'appels d'outil MiniMax malformés du rappel de l'assistant, et peut remplacer les lignes trop volumineuses par `[sessions_history omitted: message too large]` au lieu de renvoyer un vidage brut de la transcription.
+Si vous accordez `sessions_history`, rappelez-vous qu'il s'agit d'une vue de rappel délimitée et filtrée pour la sécurité. OpenClaw masque le texte de type identifiant/jeton, tronque le contenu long, supprime les balises de réflexion / l'échafaudage `<relevant-memories>` / les payloads XML d'appel d'outil en texte brut (y compris `<tool_call>...</tool_call>`, `<function_call>...</function_call>`, `<tool_calls>...</tool_calls>`, `<function_calls>...</function_calls>` et les blocs d'appel d'outil tronqués) / l'échafaudage d'appel d'outil rétrogradé / les jetons de contrôle de modèle ASCII/full-width divulgués / le XML d'appel d'outil MiniMax malformé issu du rappel de l'assistant, et peut remplacer les lignes trop volumineuses par `[sessions_history omitted: message too large]` au lieu de renvoyer une vidange brute de la transcription.
 
 ## Modèle de mise à l'échelle
 
@@ -299,6 +299,6 @@ Plusieurs organisations peuvent partager un serveur Gateway en utilisant le rout
 
 ## Connexes
 
-- [Environnement d'exécution de l'agent](/fr/concepts/agent)
+- [Agent runtime](/fr/concepts/agent)
 - [Sous-agents](/fr/tools/subagents)
 - [Routage multi-agent](/fr/concepts/multi-agent)

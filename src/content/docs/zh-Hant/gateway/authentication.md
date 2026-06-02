@@ -179,8 +179,8 @@ requests`, `ThrottlingException`, `concurrency limit reached` 或
 提供者，請使用 `openclaw models auth login --provider <id> --profile-id <profileId>`。
 
 ```bash
-openclaw models auth login --provider openai-codex --profile-id openai-codex:ritsuko
-openclaw models auth login --provider openai-codex --profile-id openai-codex:lain
+openclaw models auth login --provider openai --profile-id openai:ritsuko
+openclaw models auth login --provider openai --profile-id openai:lain
 ```
 
 這是在同一個 Agent 中區分同一提供者的多個 OAuth 登入的最簡單方法。
