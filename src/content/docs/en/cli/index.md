@@ -35,7 +35,7 @@ Use the setup commands by intent:
 | Pairing and channels | [`pairing`](/en/cli/pairing) · [`qr`](/en/cli/qr) · [`channels`](/en/cli/channels)                                                                                                                                                                 |
 | Security and plugins | [`security`](/en/cli/security) · [`secrets`](/en/cli/secrets) · [`skills`](/en/cli/skills) · [`plugins`](/en/cli/plugins) · [`proxy`](/en/cli/proxy)                                                                                                     |
 | Legacy aliases       | [`daemon`](/en/cli/daemon) (gateway service) · [`clawbot`](/en/cli/clawbot) (namespace)                                                                                                                                                         |
-| Plugins (optional)   | [`path`](/en/cli/path) · [`policy`](/en/cli/policy) · [`voicecall`](/en/cli/voicecall) (if installed)                                                                                                                                              |
+| Plugins (optional)   | [`path`](/en/cli/path) · [`policy`](/en/cli/policy) · [`voicecall`](/en/cli/voicecall) · [`workboard`](/en/cli/workboard) (if installed)                                                                                                              |
 
 ## Global flags
 
@@ -124,6 +124,11 @@ openclaw [--dev] [--profile <name>] <command>
     disable
     doctor
     marketplace list
+  workboard
+    list
+    create
+    show
+    dispatch
   memory
     status
     index
@@ -368,7 +373,8 @@ openclaw [--dev] [--profile <name>] <command>
   terminal (alias: tui --local)
 ```
 
-Plugins can add additional top-level commands (for example `openclaw voicecall`).
+Plugins can add additional top-level commands, such as
+[`openclaw workboard`](/en/cli/workboard) or `openclaw voicecall`.
 
 </Accordion>
 
