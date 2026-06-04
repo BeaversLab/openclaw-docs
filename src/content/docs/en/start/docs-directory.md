@@ -51,7 +51,7 @@ For a complete map of the docs, see [Docs hubs](/en/start/hubs).
 - [macOS app](/en/platforms/macos)
 - [iOS app](/en/platforms/ios)
 - [Android app](/en/platforms/android)
-- [Windows (WSL2)](/en/platforms/windows)
+- [Windows Hub](/en/platforms/windows)
 - [Linux app](/en/platforms/linux)
 
 ## Operations and safety
