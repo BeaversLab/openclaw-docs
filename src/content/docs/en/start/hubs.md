@@ -135,7 +135,7 @@ Use these hubs to discover every page, including deep dives and reference docs t
 - [macOS](/en/platforms/macos)
 - [iOS](/en/platforms/ios)
 - [Android](/en/platforms/android)
-- [Windows (WSL2)](/en/platforms/windows)
+- [Windows Hub](/en/platforms/windows)
 - [Linux](/en/platforms/linux)
 - [Web surfaces](/en/web)
 

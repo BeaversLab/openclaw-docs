@@ -17,8 +17,8 @@ and a working chat session.
 
 <Tip>
 Check your Node version with `node --version`.
-**Windows users:** both native Windows and WSL2 are supported. WSL2 is more
-stable and recommended for the full experience. See [Windows](/en/platforms/windows).
+**Windows users:** the native Windows Hub app is the easiest desktop path. The
+PowerShell installer and WSL2 Gateway paths are also supported. See [Windows](/en/platforms/windows).
 Need to install Node? See [Node setup](/en/install/node).
 </Tip>
 
