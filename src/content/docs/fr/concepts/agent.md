@@ -16,9 +16,9 @@ OpenClaw utilise un répertoire unique d'espace de travail de l'agent (OpenClaw`
 
 Recommandé : utilisez `openclaw setup` pour créer `~/.openclaw/openclaw.json` s'il est manquant et initialiser les fichiers de l'espace de travail.
 
-Guide complet de la disposition et de la sauvegarde de l'espace de travail : [Espace de travail de l'agent](/fr/concepts/agent-workspace)
+Plan complet de l'espace de travail + guide de sauvegarde : [Espace de travail de l'agent](/fr/concepts/agent-workspace)
 
-Si `agents.defaults.sandbox` est activé, les sessions non principales peuvent remplacer ceci par des espaces de travail par session sous `agents.defaults.sandbox.workspaceRoot`Gateway (voir [Configuration du Gateway](/fr/gateway/configuration)).
+Si `agents.defaults.sandbox` est activé, les sessions non principales peuvent remplacer cela par des espaces de travail par session sous `agents.defaults.sandbox.workspaceRoot` (voir [configuration Gateway](/fr/gateway/configuration)).
 
 ## Fichiers d'amorçage (injectés)
 
@@ -39,7 +39,9 @@ Si un fichier est manquant, OpenClaw injecte une seule ligne de marqueur "fichie
 
 `BOOTSTRAP.md`OpenClaw est créé uniquement pour un **espace de travail tout nouveau** (aucun autre fichier d'amorçage présent). Tant qu'il est en attente, OpenClaw le conserve dans le contexte du projet et ajoute des instructions d'amorçage du système prompt pour le rituel initial au lieu de le copier dans le message utilisateur. Si vous le supprimez après avoir terminé le rituel, il ne doit pas être recréé lors des redémarrages ultérieurs.
 
-Pour désactiver entièrement la création des fichiers d'amorçage (pour les espaces de travail pré-ensemencés), définissez :
+Après qu'un espace de travail a été observé, OpenClaw conserve également un marqueur d'attestation du répertoire d'état pour le chemin de l'espace de travail. Si un espace de travail récemment attesté disparaît ou est effacé, le démarrage refuse de réamorcer silencieusement `BOOTSTRAP.md` ; restaurez l'espace de travail ou utilisez une réinitialisation complète à bord pour que l'espace de travail et le marqueur soient effacés ensemble.
+
+Pour désactiver entièrement la création de fichiers d'amorçage (pour les espaces de travail pré-amorcés), définissez :
 
 ```json5
 { agents: { defaults: { skipBootstrap: true } } }
@@ -47,30 +49,30 @@ Pour désactiver entièrement la création des fichiers d'amorçage (pour les es
 
 ## Outils intégrés
 
-Les outils principaux (read/exec/edit/write et les outils système associés) sont toujours disponibles, sous réserve de la stratégie d'outils. `apply_patch` est optionnel et limité par `tools.exec.applyPatch`. `TOOLS.md` ne contrôle **pas** les outils existants ; il s'agit de directives pour la manière dont _vous_ souhaitez qu'ils soient utilisés.
+Les outils de base (read/exec/edit/write et les outils système associés) sont toujours disponibles, sous réserve de la stratégie d'outil. `apply_patch` est facultatif et conditionné par `tools.exec.applyPatch`. `TOOLS.md` ne contrôle **pas** quels outils existent ; c'est une indication sur la façon dont _vous_ voulez qu'ils soient utilisés.
 
-## Compétences
+## Skills
 
-OpenClaw charge les compétences depuis ces emplacements (du plus prioritaire au moins prioritaire) :
+OpenClaw charge les skills à partir de ces emplacements (du plus prioritaire au moins prioritaire) :
 
 - Espace de travail : `<workspace>/skills`
-- Compétences de l'agent de projet : `<workspace>/.agents/skills`
-- Compétences de l'agent personnel : `~/.agents/skills`
+- Skills de l'agent de projet : `<workspace>/.agents/skills`
+- Skills de l'agent personnel : `~/.agents/skills`
 - Géré/local : `~/.openclaw/skills`
-- Groupés (fournis avec l'installation)
-- Dossiers de compétences supplémentaires : `skills.load.extraDirs`
+- Bundled (fourni avec l'installation)
+- Dossiers de skills supplémentaires : `skills.load.extraDirs`
 
-Les racines de compétences peuvent contenir des dossiers groupés tels que `<workspace>/skills/personal/foo/SKILL.md` ; la compétence est toujours exposée par son nom de frontmatter plat, par exemple `foo`.
+Les racines de skills peuvent contenir des dossiers groupés tels que `<workspace>/skills/personal/foo/SKILL.md` ; le skill est toujours exposé par son nom d'en-tête plat, par exemple `foo`.
 
-Les compétences peuvent être conditionnées par config/env (voir `skills`Gateway dans [Configuration du Gateway](/fr/gateway/configuration)).
+Les skills peuvent être conditionnés par la configuration/l'environnement (voir `skills` dans [configuration Gateway](/fr/gateway/configuration)).
 
-## Limites du Runtime
+## Limites du runtime
 
-Le runtime d'agent intégré appartient à OpenClaw : la découverte de modèle, le câblage d'outils, l'assemblage de prompts, la gestion des sessions et la livraison de canaux partagent une surface de runtime intégrée.
+Le runtime de l'agent intégré est détenu par OpenClaw : la découverte de modèle, le câblage d'outil, l'assemblage de prompt, la gestion de session et la livraison de canal partagent une surface de runtime intégrée.
 
 ## Sessions
 
-Les transcriptions de session sont stockées au format JSONL à :
+Les transcriptions de session sont stockées sous forme de JSONL à :
 
 - `~/.openclaw/agents/<agentId>/sessions/<SessionId>.jsonl`
 
@@ -79,20 +81,26 @@ Les dossiers de session hérités d'autres outils ne sont pas lus.
 
 ## Pilotage pendant le streaming
 
-Les prompts entrants qui arrivent en cours d'exécution sont dirigés vers l'exécution en cours par défaut. La direction est délivrée **après que le tour de l'assistant actuel a fini d'exécuter ses appels d'outils**, avant le prochain appel LLM, et ne saute plus les appels d'outils restants du message de l'assistant actuel.
+Les invites entrantes qui arrivent en cours d'exécution sont dirigées vers l'exécution en cours par défaut.
+Le pilotage est effectué **une fois que le tour de l'assistant actuel a terminé d'exécuter ses
+appels d'outils**, avant le prochain appel LLM, et ne saute plus les appels d'outils restants
+du message de l'assistant actuel.
 
-`/queue steer` est le comportement d'exécution active par défaut. `/queue followup` et `/queue collect` font attendre les messages pour un tour ultérieur au lieu de diriger. `/queue interrupt` interrompt l'exécution active à la place. Voir [File d'attente](/fr/concepts/queue) et [File d'attente de direction](/fr/concepts/queue-steering) pour le comportement de file et de limite.
+`/queue steer` est le comportement par défaut pour l'exécution active. `/queue followup` et
+`/queue collect` font attendre les messages pour un tour ultérieur au lieu de piloter.
+`/queue interrupt` interrompt l'exécution active à la place. Voir [Queue](/fr/concepts/queue)
+et [Steering queue](/fr/concepts/queue-steering) pour le comportement de la file et des limites.
 
-Le Block streaming envoie les blocs de l'assistant terminés dès qu'ils sont finis ; il est
+Le Block streaming envoie les blocs d'assistant terminés dès qu'ils sont prêts ; il est
 **désactivé par défaut** (`agents.defaults.blockStreamingDefault: "off"`).
 Ajustez la limite via `agents.defaults.blockStreamingBreak` (`text_end` vs `message_end` ; par défaut text_end).
 Contrôlez le découpage souple des blocs avec `agents.defaults.blockStreamingChunk` (par défaut
-800-1200 caractères ; préfère les sauts de paragraphe, puis les sauts de ligne ; les phrases en dernier).
+800-1200 caractères ; préfère les sauts de paragraphe, puis les nouvelles lignes ; les phrases en dernier).
 Fusionnez les fragments diffusés avec `agents.defaults.blockStreamingCoalesce` pour réduire
-les spams en une seule ligne (fusion basée sur l'inactivité avant l'envoi). Les canaux non-Telegram nécessitent
-un `*.blockStreaming: true` explicite pour activer les réponses par bloc.
-Les résumés détaillés des outils sont émis au début de l'outil (sans débounce) ; l'interface de contrôle
-diffuse la sortie des outils via les événements de l'agent lorsque disponible.
+le spam sur une seule ligne (fusion basée sur l'inactivité avant l'envoi). Les canaux non-Telegram nécessitent
+un `*.blockStreaming: true` explicite pour activer les réponses par blocs.
+Des résumés d'outils verbeux sont émis au début de l'outil (sans debounce) ; l'interface de contrôle
+diffuse la sortie de l'outil via les événements de l'agent lorsqu'ils sont disponibles.
 Plus de détails : [Streaming + chunking](/fr/concepts/streaming).
 
 ## Références de modèle
@@ -101,7 +109,7 @@ Les références de modèle dans la configuration (par exemple `agents.defaults.
 
 - Utilisez `provider/model` lors de la configuration des modèles.
 - Si l'ID du modèle contient lui-même `/` (style OpenRouter), incluez le préfixe du fournisseur (exemple : `openrouter/moonshotai/kimi-k2`).
-- Si vous omettez le fournisseur, OpenClaw essaie d'abord un alias, puis une correspondance unique de fournisseur configuré pour cet ID de modèle exact, et ne revient ensuite qu'au fournisseur par défaut configuré. Si ce fournisseur n'expose plus le modèle par défaut configuré, OpenClaw revient au premier fournisseur/modèle configuré au lieu d'afficher un ancien fournisseur par défaut supprimé.
+- Si vous omettez le fournisseur, OpenClaw tente d'abord un alias, puis une correspondance unique de fournisseur configuré pour cet identifiant de modèle exact, et ne revient ensuite qu'au fournisseur par défaut configuré. Si ce fournisseur n'expose plus le modèle par défaut configuré, OpenClaw revient au premier fournisseur/modèle configuré au lieu d'afficher un ancien modèle par défaut d'un fournisseur supprimé.
 
 ## Configuration (minimale)
 
@@ -112,10 +120,10 @@ Au minimum, définissez :
 
 ---
 
-_Suivant : [Group Chats](/fr/channels/group-messages)_ 🦞
+_Suite : [Groupes de discussion](/fr/channels/group-messages)_ 🦞
 
 ## Connexes
 
 - [Espace de travail de l'agent](/fr/concepts/agent-workspace)
 - [Routage multi-agent](/fr/concepts/multi-agent)
-- [Gestion de session](/fr/concepts/session)
+- [Gestion des sessions](/fr/concepts/session)

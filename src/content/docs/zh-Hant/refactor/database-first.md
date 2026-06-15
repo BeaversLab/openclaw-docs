@@ -216,7 +216,7 @@ read_when:
 - 執行時期儲存從生成的 Kysely `DB` 介面推導所選和插入的列類型，而不是手動遮蔽 SQLite 列形狀。原始 SQL 僅限於架構應用、 pragmas 和僅用於遷移的 DDL。
 - SQLite 架構已折疊至 `user_version = 1`，因為此資料庫佈局尚未發布。執行時期開啟器僅建立目前的架構；檔案至資料庫的匯入仍保留在 doctor 程式碼中，且分支本地的資料庫升級輔助程式已被刪除。
 - 在擁有權邊界為規範的地方會強制執行關聯式擁有權：來源遷移列從 `migration_runs` 級聯，任務傳遞狀態從 `task_runs` 級聯，以及文字紀錄識別列從文字紀錄事件級聯。
-- 當前共享表格包括 `agent_databases`、
+- 目前共享表格包括 `agent_databases`、
   `auth_profile_stores`、`auth_profile_state`、
   `plugin_state_entries`、`plugin_blob_entries`、`media_blobs`、
   `skill_uploads`、`capture_sessions`、`capture_events`、`capture_blobs`、
@@ -224,605 +224,581 @@ read_when:
   `delivery_queue_entries`、`model_capability_cache`、
   `workspace_setup_state`、`native_hook_relay_bridges`、
   `current_conversation_bindings`、`plugin_binding_approvals`、
-  `tui_last_sessions`、`task_runs`、`task_delivery_state`、`flow_runs`、
+  `tui_last_sessions`、`acp_sessions`、`acp_replay_sessions`、
+  `acp_replay_events`、`task_runs`、`task_delivery_state`、`flow_runs`、
   `subagent_runs`、`migration_runs` 和 `backup_runs`。
-- 任意外掛擁有的狀態不會獲得主機擁有的類型表格。已安裝的外掛使用 `plugin_state_entries` 來儲存版本化的 JSON 載荷，並使用 `plugin_blob_entries` 來儲存位元組，並透過命名空間/金鑰擁有權、TTL 清理、備份和外掛遷移記錄進行管理。當主機擁有查詢合約時，主機擁有的外掛編排狀態仍可具有類型表格，例如 `plugin_binding_approvals`。
-- 外掛遷移是對外掛擁有命名空間的資料遷移，而非主機架構遷移。外掛可以透過遷移提供者遷移其自身的版本化狀態/ blob 條目，而主機會在正常的遷移帳本中記錄來源/執行狀態。除非主機本身要接管新的跨外掛合約，否則安裝新外掛不需要變更 `openclaw-state-schema.sql`。
+- 任意外掛程式擁有的狀態不會獲得主機擁有的類型化表格。已安裝
+  的外掛程式使用 `plugin_state_entries` 來存放版本控制的 JSON 載荷，並使用
+  `plugin_blob_entries` 來存放位元組，包含命名空間/鍵擁有權、TTL 清理、
+  備份和外掛程式遷移記錄。當主機擁有查詢合約時，主機擁有的外掛程式協調狀態仍然
+  可以擁有類型化表格，例如 `plugin_binding_approvals`。
+- 外掛程式遷移是對外掛程式擁有命名空間的資料遷移，而非主機
+  架構遷移。外掛程式可以透過遷移提供者遷移自己的版本控制狀態/blob
+  條目，而主機會在一般遷移帳本中記錄來源/執行狀態。除非主機本身
+  正在接管新的跨外掛程式合約，否則新外掛程式安裝不需要變更
+  `openclaw-state-schema.sql`。
 - `src/state/openclaw-agent-db.ts` 開啟
-  `agents/<agentId>/agent/openclaw-agent.sqlite`，在全域 DB 中註冊資料庫，並擁有代理程式本機的 session、transcript、VFS、artifact、cache
-  和 memory-index 表格。共享執行時期探索現在會讀取產生的型別安全
-  `agent_databases` 註冊表，而不是在每個呼叫點
-  重新實作該查詢。
-- 全域和每個代理程式的資料庫會記錄一個包含資料庫角色、
-  schema 版本、時間戳記以及代理程式資料庫之代理程式 ID 的 `schema_meta` 資料列。由於此 SQLite schema 尚未發布，佈局目前
-  仍維持在 `user_version = 1`。
-- 個別代理的會話身分現在具備以 `session_id` 為鍵值的正規 `sessions` 根資料表，並包含 `session_key`、`session_scope`、`account_id`、`primary_conversation_id`、時間戳記、顯示欄位、模型中繼資料、駁束 ID 以及父項/衍生連結作為可查詢欄位。`session_routes` 是從 `session_key` 到當前 `session_id` 的唯一作用中路徑索引，因此路徑鍵可以移至全新的持久化會話，而無需讓熱讀取在重複的 `sessions.session_key` 資料列之間選擇。舊的 `session_entries.entry_json` 相容性酬載透過外來鍵掛載於持久化 `session_id` 根上；它不再是會話在綱要層級的唯一呈現方式。
-- 每個 Agent 的外部對話身分也是關聯式的：
+  `agents/<agentId>/agent/openclaw-agent.sqlite`，在全域
+  DB 中註冊資料庫，並擁有代理程式本機的 session、transcript、VFS、artifact、cache
+  和 memory-index 資料表。共享的 runtime 探索現在讀取生成的型別化
+  `agent_databases` 註冊表，而不是在每個呼叫
+  站點重新實作該查詢。
+- 全域和每個代理程式的資料庫會記錄一個 `schema_meta` 資料列，其中包含資料庫角色、
+  schema 版本、時間戳記，以及代理程式資料庫的代理程式 ID。佈局仍然保持
+  在 `user_version = 1`，因為這個 SQLite schema 尚未發布。
+- 每個代理程式的 session 身份現在具有一個標準的 `sessions` 根資料表，以
+  `session_id` 為鍵值，並具有 `session_key`、`session_scope`、`account_id`、
+  `primary_conversation_id`、時間戳記、顯示欄位、model 中繼資料、
+  harness ID 以及 parent/spawn 連結作為可查詢欄位。`session_routes`
+  是從 `session_key` 到目前
+  `session_id` 的唯一有效路由索引，因此路由鍵可以移動到新的持久 session，而
+  不會讓熱讀取在重複的 `sessions.session_key` 資料列之間選擇。舊的
+  `session_entries.entry_json` 相容性酬載透過外鍵掛在
+  持久的 `session_id` 根上；它不再是 session
+  唯一的 schema 層級表示法。
+- 每個代理的外部對話身分也是關聯式的：
   `conversations` 儲存正規化的提供者/帳戶/對話身分，而
-  `session_conversations` 將一個 OpenClaw 工作階段連結到一個或多個外部
-  對話。這涵蓋了共享主控 DM 工作階段，在此類工作階段中，多個對等方可以
-  有意地對應到同一個工作階段，而無須在 `session_key` 中虛報。SQLite 也會
-  對自然提供者身分執行唯一性約束，因此相同的
-  channel/account/kind/peer/thread 元組無法在不同的對話 ID 之間分叉。
-  共享主控直接對等方是透過 `participant` 角色連結的，因此一個
-  OpenClaw 工作階段可以代表多個外部 DM 對等方，而無須將
-  舊的對等方降級為模糊的相關資料列。`sessions.primary_conversation_id` 仍然
-  指向當前類型的傳遞目標。封閉式路由/狀態資料列
-  是透過 SQLite `CHECK` 約束來執行的，而不僅僅依賴
+  `session_conversations` 將一個 OpenClaw 會話連結到一或多個外部
+  對話。這涵蓋了共享主 DM 會話，其中多個對等端可以
+  故意映射到同一個會話，而無需在 `session_key` 中造假。SQLite 也會
+  強制執行自然提供者身分的唯一性，因此相同的
+  channel/account/kind/peer/thread 元組無法跨對話 id 分叉。
+  共享主直接對等端以 `participant` 角色連結，因此一個
+  OpenClaw 會話可以代表多個外部 DM 對等端，而無需將
+  舊的對等端降級為模糊的相關資料列。`sessions.primary_conversation_id` 仍然
+  指向當前的類型化遞送目標。封閉的路由/狀態資料行
+  是由 SQLite `CHECK` 約束強制執行，而不僅僅依賴
   TypeScript 聯集。
-  執行時期工作階段投影會在套用類型工作階段/對話
-  資料列之前，從 `session_entries.entry_json` 中清除相容性路由陰影，
-  因此過時的 JSON 負載無法復活傳遞目標。
-  子 Agent 公告路由同樣需要類型的 SQLite 傳遞上下文；
+  執行時期會話投影會在應用類型化會話/對話
+  資行之前，從 `session_entries.entry_json` 清除相容性路由陰影，因此過時的 JSON
+  承載無法復甦遞送目標。
+  子代理通知路由同樣需要類型化的 SQLite 遞送上下文；
   它不再回退到相容性 `SessionEntry` 路由欄位。
-  閘道 `chat.send` 明確傳遞繼承會讀取類型的 SQLite
-  傳遞上下文，而不是 `origin`/`last*` 相容性欄位。
-  `tools.effective` 同樣從類型
-  SQLite 傳遞/路由資料列衍生提供者/帳戶/執行緒上下文，而不是過時的 `last*` 工作階段項目陰影。
-  系統事件提示上下文會從類型傳遞欄位重建 channel/to/account/thread 欄位，
+  閘道 `chat.send` 明確遞送繼承讀取類型化的 SQLite
+  遞送上下文，而不是 `origin`/`last*` 相容性欄位。
+  `tools.effective` 同樣從類型化的
+  SQLite 遞送/路由資料列衍生 provider/account/thread 上下文，而不是過時的 `last*` 會話項目陰影。
+  系統事件提示上下文從類型化遞送欄位重建 channel/to/account/thread 欄位，
   而不是 `origin` 陰影。
-  共用的 `deliveryContextFromSession` 輔助程式和工作階段對對話
-  對應器現在會完全忽略 `SessionEntry.origin`；只有類型傳遞欄位
+  共享的 `deliveryContextFromSession` 輔助程式和會話到對話
+  映射器現在完全忽略 `SessionEntry.origin`；只有類型化遞送欄位
   和關聯式對話資料列可以建立熱路由身分。
-  執行時期工作階段項目正規化會在持久化或
-  投影 `entry_json` 之前去除 `origin`，並且傳入中繼資料會寫入類型 channel/chat
-  欄位以及關聯式對話資料列，而不是建立新的來源
+  執行時期會話項目正規化會在持久化或
+  投射 `entry_json` 之前剝離 `origin`，並且輸入元資料會寫入類型化的 channel/chat
+  欄位加上關聯式對話資料列，而不是建立新的來源
   陰影。
-- Transcript 事件、transcript 快照和軌跡執行時事件現在引用標準的每個代理 `sessions` 根，並在刪除 session 時級聯。Transcript 身份/冪等行繼續從確切的 transcript 事件行級聯。
-- Memory-core 索引現在使用明確的 agent-database 表
-  `memory_index_meta`、`memory_index_sources`、`memory_index_chunks` 和
-  `memory_embedding_cache`；可選的 FTS/vector 側索引使用相同的
-  `memory_index_*` 前綴，而不是通用的 `meta`、`files`、`chunks` 或
-  `chunks_vec` 表。`memory_index_sources` 以
-  `(source_kind, source_key)` 為鍵並攜帶可選的 `session_id` 所有權，因此
-  當刪除會話時，從會話衍生的來源和區塊會級聯刪除。快取的
-  區塊嵌入儲存為 Float32 SQLite BLOB，而不是 JSON 文字陣列。
-  這些表是衍生/搜尋快取，而不是正規的逐字稿儲存；它們
-  可以從 `sessions`、`transcript_events` 和記憶體
-  工作區檔案中刪除並重建。
-- Subagent 執行恢復狀態現在位於具有索引子項、請求者和控制器會話金鑰的類型化共享 `subagent_runs` 資料列中。舊的 `subagents/runs.json` 檔案僅作為 doctor 遷移輸入。
-- 目前的對話綁定位於以正規化對話 ID 為金鑰的類型化共享 `current_conversation_bindings` 資料列中，包含目標 agent/session 欄位、對話類型、狀態、有效期限和元資料，這些資料作為關聯式欄位儲存，而非重複的不透明綁定記錄。持久綁定金鑰包含正規化對話類型，因此 direct/group/channel 參考不會衝突，且 SQLite 會拒絕無效的綁定類型/狀態值。舊的 `bindings/current-conversations.json` 檔案僅作為 doctor 遷移輸入。
-- 傳遞佇列恢復現在將類型化的佇列欄位（包括 channel、target、account、session、retry、error、platform-send 和 recovery state）疊加在重播 JSON 上。`entry_json` 保留重播負載、掛鉤和格式化負載，但類型化欄位對於熱佇列路由/狀態具有最終決定權。
-- TUI 上次會話還原指標現在位於以雜湊 TUI 連線/會話範圍為鍵的類型化共用 `tui_last_sessions` 資料列中。舊的 TUI JSON 檔案僅作為 doctor 遷移的輸入。
-- 預設 TTS 偏好設定現在位於在 `speech-core` 外掛程式下索引鍵的共用外掛程式狀態 SQLite 資料列中。舊的 `settings/tts.json` 檔案僅作為 doctor 遷移的輸入；執行時期不再讀取或寫入 TTS 偏好設定 JSON 檔案，且舊版路徑解析器位於 doctor 遷移模組中。
-- 秘密目標元數據現在談論的是存儲，而不是假設每個憑證目標都是一個配置檔案。`openclaw.json` 仍然是配置存儲；auth-profile 目標使用類型化的 SQLite `auth_profile_stores` 行，其中提供者形狀的憑證以 JSON 負載的形式保存。
-- 秘密稽核不再掃描已棄用的每個代理程式 `auth.json` 檔案。Doctor 負責警告、匯入和刪除該舊版檔案。
-- 舊版 auth profile 路徑輔助程式現在位於 doctor 舊版程式碼中。核心 auth profile 路徑輔助程式公開 SQLite auth-store 身分和顯示位置，而不是 `auth-profiles.json` 或 `auth-state.json` 執行時路徑。
-- Subagent 執行恢復與 OpenRouter 模型功能快取執行時模組
-  現在將 SQLite 快照讀取器/寫入器與僅限 doctor 的舊版 JSON
-  匯入輔助程式分開。OpenRouter 功能使用 `model_capability_cache` 下的型別化通用
-  `provider_id = "openrouter"` 列，而不是
-  一個不透明的快取 blob 或供應商特定的主機表格。Subagent 執行
-  `taskName` 儲存在型別化的 `subagent_runs.task_name` 欄位中；
-  `payload_json` 副本是重播/除錯資料，而非熱顯示或
-  查閱欄位的來源。
-- `src/agents/filesystem/virtual-agent-fs.sqlite.ts` 在 agent 資料庫 `vfs_entries` 資料表上實作 SQLite VFS。目錄讀取、遞迴匯出、刪除和重新命名使用已索引的 `(namespace, path)` 前綴範圍，而不是掃描整個命名空間或依賴 `LIKE` 路徑匹配。
-- `src/agents/runtime-worker.entry.ts` 為 worker 建立每次執行的 SQLite VFS、工具成果、執行成果和作用域快取儲存。
-- 工作區啟動完成標記現在存在於以解析的工作區路徑為鍵的型別共用 `workspace_setup_state` 列中，而不是 `.openclaw/workspace-state.json` 中；執行時期不再讀取或重寫舊版的工作區標記，而協助 API 不再僅為了推導儲存身分而傳遞假的 `.openclaw/setup-state` 路徑。
-- Exec 批准現在存在於類型化的共享 SQLite `exec_approvals_config`
-  單例行中。Doctor 匯入舊版 `~/.openclaw/exec-approvals.json`；
-  執行時寫入不再建立、重寫或將該檔案回報為其作用中
-  儲存位置。macOS 伴隨程式會讀寫相同的
-  `state/openclaw.sqlite` 表格列；它在磁碟上僅保留 Unix 提示 socket，
-  因為那是 IPC，而非持久的執行時狀態。
-- 裝置身分、裝置驗證和引導執行時模組現在將其 SQLite 快照讀取器/寫入器與僅供 Doctor 使用的舊版 JSON 匯入輔助程式分開。裝置身分使用類型化的 `device_identities` 資料列，而裝置驗證權杖使用類型化的 `device_auth_tokens` 資料列。裝置驗證寫入會依據裝置/角色來協調資料列，而不是截斷權杖資料表，且執行時不再透過舊的整體儲存介面卡路由單一權杖更新。舊版 version-1 JSON 載荷僅作為 Doctor 匯入/匯出結構存在。
-- GitHub Copilot 權杖交換快取使用 `github-copilot/token-cache/default` 下的共享 SQLite plugin-state 資料表。這是提供者擁有的快取狀態，因此它刻意不新增主機架構資料表。
-- 共享的 Swift 運行時 (`OpenClawKit`) 針對設備身分和設備授權使用相同的 `state/openclaw.sqlite` 資料列。macOS 應用程式輔助程式匯入共享的 SQLite 輔助程式，而不是擁有第二個 JSON 或 SQLite 路徑。一個剩餘的舊版 `identity/device.json` 會阻擋身分建立，直到 doctor 將其匯入 SQLite 為止，這與 TypeScript 和 Android 啟動閘門相符。
-- Android 設備身分使用與 TypeScript 相同的金鑰素材，儲存在具類型的 `state/openclaw.sqlite#table/device_identities` 資料列中。它從不讀取或寫入 `openclaw/identity/device.json`；一個剩餘的舊版檔案會阻擋啟動，直到 doctor 將其匯入 SQLite 為止。
-- Android 快取的裝置驗證權杖也使用類型化的 `state/openclaw.sqlite#table/device_auth_tokens` 資料列，並與 TypeScript 和 Swift 共用相同的 version-1 權杖語意。Runtime 不再讀取 `SecurePrefs` `gateway.deviceToken*` 相容性金鑰；這些僅屬於遷移/doctor 邏輯。
-- Android 通知的最近套件歷史記錄使用類型化的 `android_notification_recent_packages` 資料列。Runtime 不再遷移或讀取舊的 SharedPreferences CSV 金鑰。
-- 當舊版 `identity/device.json` 存在、SQLite 身份資料列無效，或 SQLite 身份存放區無法開啟時，裝置身分建立會以封閉式失敗處理。Doctor 會先匯入並移除該檔案，因此 runtime 啟動無法在遷移前無聲地輪換配對身分。
-- 裝置身分選擇是一個 SQLite 列鍵，而不是 JSON 檔案定位器。測試和閘道輔助函數會傳遞明確的身分鍵；只有 doctor 遷移和故障關閉啟動閘道知道已退役的 `identity/device.json` 檔名。
-- 會話重設相容性現在存在於 doctor 設定遷移中：`session.idleMinutes` 已移至 `session.reset.idleMinutes`，`session.resetByType.dm` 已移至 `session.resetByType.direct`，並且執行時重設政策僅讀取標準重設鍵。
-- 舊版設定相容性現已位於 `src/commands/doctor/` 下。一般的 `readConfigFileSnapshot()` 驗證不會匯入 doctor 舊版偵測器或標註舊版問題；`runDoctorConfigPreflight()` 會為 doctor 修復/報告新增這些問題。doctor 設定流程會匯入 `src/commands/doctor/legacy-config.ts`，而舊的 OAuth profile-id 修復則位於 `src/commands/doctor/legacy/oauth-profile-ids.ts` 下。
-- 非 doctor 指令不會自動執行舊版設定修復。例如，`openclaw update --channel` 現在會在遇到無效的舊版設定時失敗，並要求使用者執行 doctor，而不是靜默地匯入 doctor 遷移程式碼。
-- Web push、APNs、Voice Wake、更新檢查和設定狀態檢查現在對於訂閱、VAPID 金鑰、節點註冊、觸發器資料列、路由資料列、更新通知狀態和設定狀態條目，使用類型化的共享 SQLite 資料表，而不是整個不透明的 JSON blob。Web push 和 APNs 的快照寫入現在透過主鍵協調訂閱/註冊，而不是清空其資料表；設定狀態檢查則透過設定路徑執行相同操作。其執行時模組將 SQLite 快照讀取器/寫入器與僅限 doctor 的舊版 JSON 匯入輔助程式分開。
-- Node-host 設定現在使用共享 SQLite 資料庫中的類型化單例資料列；doctor 會在正常執行時使用之前匯入舊的 `node.json` 檔案。
-- Device/node 配對、channel 配對、channel 允許清單以及 bootstrap 狀態
-  現在使用具類型的 SQLite 資料列，而非整個不透明的 JSON blob。外掛程式綁定
-  批准以及 cron 工作狀態遵循相同的分割方式：執行時模組公開
-  SQLite 支援的操作與中性快照輔助程式，而配對/bootstrap
-  加上外掛程式綁定批准的快照寫入則透過主鍵協調資料列
-  而非截斷資料表，同時 doctor 透過
-  `src/commands/doctor/legacy/*` 模組匯入/移除舊的 JSON 檔案。
-- 已安裝的外掛程式記錄現在位於 SQLite 已安裝外掛程式索引中。
-  執行時設定讀寫不再遷移或保留舊的
-  `plugins.installs` authored-config 資料；doctor 會在一般執行時使用前
-  將該遺留設定形狀匯入 SQLite。
-- QQBot 憑證恢復快照現在位於 SQLite 外掛程式狀態下的 `qqbot/credential-backups` 中。Runtime 不再寫入 `qqbot/data/credential-backup*.json`；doctor 會與其他 QQBot 狀態輸入一起匯入並移除那些舊版備份檔案。
-- Gateway 重載規劃會比較內部 `installedPluginIndex.installRecords.*` diff 命名空間下的 SQLite 已安裝外掛程式索引快照。Runtime 重載決策不再將這些資料列包裝在假的 `plugins.installs` config 物件中。
-- Matrix 命名帳號憑證升級不再於 Runtime 讀取期間發生。當可以解析單一/預設 Matrix 帳號時，Doctor 負責處理舊的頂層 `credentials/matrix/credentials.json` 重新命名。
-- Core 配對和 cron 運行時模組不再匯出舊版 JSON 路徑建構器。Doctor 擁有的舊版模組僅為匯入測試和遷移建構 `pending.json`、`paired.json`、`bootstrap.json` 和 `cron/jobs.json` 來源路徑。舊版 cron job-shape 正規化和 cron run-log 匯入位於 `src/commands/doctor/legacy/cron*.ts` 之下。
-- `src/commands/doctor/legacy/runtime-state.ts` 從 doctor 將舊版 JSON 狀態檔案（包括 node host 配置）匯入 SQLite。新的舊版檔案匯入器保留在 `src/commands/doctor/legacy/` 之下。
-- `src/commands/doctor/state-migrations.ts` 將舊版 `sessions.json` 和
-  `*.jsonl` 轉錄直接匯入 SQLite 並移除成功的來源。它
-  不再透過 `agents/<agentId>/sessions/*.jsonl` 暫存根層舊版轉錄
-  或在匯入前建立規範的 JSONL 目標。
-- 狀態完整性 doctor 檢查不再掃描舊版 session 目錄或
-  提供刪除孤兒 JSONL 的選項。舊版轉錄檔案僅作為遷移輸入，
-  且遷移步驟負責匯入及來源移除。
-- 舊版 sandbox registry 匯入位於
-  `src/commands/doctor/legacy/sandbox-registry.ts` 之下；使用中的 sandbox registry
-  讀寫仍然僅限 SQLite。
-- 舊版 session 轉錄健康狀態/匯入修復位於
-  `src/commands/doctor/legacy/session-transcript-health.ts` 之下；runtime command
-  模組不再包含 JSONL 轉錄解析或使用中分支修復程式碼。
+- 轉錄事件、轉錄快照和軌跡執行時事件現在引用規範的每個代理 `sessions` 根，並在會話刪除時級聯。轉錄身份/冪等行繼續從確切的轉錄事件行級聯。
+- 記憶核心索引現在使用顯式的代理數據庫表 `memory_index_meta`、`memory_index_sources`、`memory_index_chunks` 和 `memory_embedding_cache`；可選的 FTS/向量側索引使用相同的 `memory_index_*` 前綴，而不是通用的 `meta`、`files`、`chunks` 或 `chunks_vec` 表。`memory_index_sources` 以 `(source_kind, source_key)` 為鍵並帶有可選的 `session_id` 所有權，因此當會話被刪除時，源自會話的源和塊會級聯刪除。緩存的塊嵌入存儲為 Float32 SQLite BLOB，而不是 JSON 文本數組。這些表是派生/搜索緩存，而不是規範的轉錄存儲；它們可以被刪除並從 `sessions`、`transcript_events` 和記憶工作區文件重建。
+- 子代理運行恢復狀態現在位於類型化的共享 `subagent_runs` 行中，並帶有索引的子代理、請求者和控制器會話鍵。舊的 `subagents/runs.json` 文件僅作為醫生遷移輸入。
+- 當前對話綁定現在位於類型化的共享 `current_conversation_bindings` 行中，以規範化的對話 ID 為鍵，目標代理/會話列、對話類型、狀態、過期時間和元數據存儲為關系列，而不是重複的不透明綁定記錄。持久綁定鍵包括規範化的對話類型，因此直接/群組/頻道引用不會衝突，並且 SQLite 拒絕無效的綁定類型/狀態值。舊的 `bindings/current-conversations.json` 文件僅作為醫生遷移輸入。
+- Delivery queue recovery 現在會將 channel、target、
+  account、session、retry、error、platform-send 和 recovery state 的類型化佇列欄位
+  覆蓋在 replay JSON 上。`entry_json` 保留了 replay payloads、hooks 和 formatting
+  payload，但類型化欄位是熱佇列路由/狀態的依據。
+- TUI last-session restore 指標現在位於以 TUI 連線/會話範圍雜湊為鍵值的類型化 shared
+  `tui_last_sessions` 資料列中。
+  舊的 TUI JSON 檔案僅作為 doctor 遷移的輸入。
+- 預設 TTS 偏好設定現在位於以 `speech-core`
+  外掛為鍵值的 shared plugin-state SQLite 資料列中。舊的 `settings/tts.json` 檔案僅作為 doctor 遷移
+  的輸入；執行時環境不再讀取或寫入 TTS 偏好設定 JSON 檔案，且
+  舊版路徑解析器位於 doctor 遷移模組中。
+- Secret target 中繼資料現在談論的是 stores，而不是假設每個
+  憑證 target 都是一個設定檔。`openclaw.json` 仍是 config store；
+  auth-profile targets 使用類型化的 SQLite `auth_profile_stores` 資料列，並將
+  provider-shaped credentials 保留為 JSON payloads。
+- Secret 審計不再掃描已停用的個別 agent `auth.json` 檔案。Doctor 負責
+  警告、匯入和移除該舊版檔案。
+- 舊版 auth profile 路徑輔助程式現在位於 doctor legacy code 中。核心 auth
+  profile 路徑輔助程式公開的是 SQLite auth-store 身份和顯示位置，
+  而非 `auth-profiles.json` 或 `auth-state.json` 執行時路徑。
+- Subagent run recovery 和 OpenRouter 模型功能快取執行時模組
+  現在將 SQLite 快照讀取器/寫入器與僅供 doctor 使用的舊版 JSON
+  匯入輔助程式分開。OpenRouter 功能使用 `provider_id = "openrouter"` 下的類型化通用
+  `model_capability_cache` 資料列，而不是
+  一個不透明的快取 blob 或特定於提供商的主機表格。Subagent run
+  `taskName` 儲存在類型化的 `subagent_runs.task_name` 欄位中；
+  `payload_json` 副本是重播/偵錯資料，不是熱顯示或
+  查詢欄位的來源。
+- `src/agents/filesystem/virtual-agent-fs.sqlite.ts` 在代理資料庫 `vfs_entries` 表上實作了 SQLite VFS。目錄讀取、遞迴匯出、刪除和重新命名使用索引的 `(namespace, path)` 前綴範圍，而不是掃描整個命名空間或依賴 `LIKE` 路徑匹配。
+- `src/agents/runtime-worker.entry.ts` 為工作程序建立每次執行的 SQLite VFS、工具產出、執行產出和範圍快取儲存。
+- 工作區啟動完成標記現在位於以已解析工作區路徑為鍵的類型化共用 `workspace_setup_state` 列中，而不是 `.openclaw/workspace-state.json`；執行時不再讀取或重寫舊版工作區標記，且輔助 API 不再僅為了推導儲存身份而傳遞虛假的 `.openclaw/setup-state` 路徑。
+- 執行核准現在位於類型化共用 SQLite `exec_approvals_config` 單例列中。Doctor 匯入舊版 `~/.openclaw/exec-approvals.json`；執行時寫入不再建立、重寫或將該檔案報告為其作用中的儲存位置。macOS 伴隨應用程式讀取和寫入相同的 `state/openclaw.sqlite` 表列；它僅在磁碟上保留 Unix 提示通訊端，因為那是 IPC，而非持久執行時狀態。
+- 裝置身份、裝置驗證和啟動執行時模組現在將其 SQLite 快照讀取器/寫入器與僅供 Doctor 使用的舊版 JSON 匯入輔助程式分開。裝置身份使用類型化的 `device_identities` 列，裝置驗證權杖使用類型化的 `device_auth_tokens` 列。裝置驗證寫入根據裝置/角色協調列，而不是截斷權杖表，且執行時不再透過舊的整個儲存介面卡路由單一權杖更新。舊版 version-1 JSON 載荷僅作為 Doctor 匯入/匯出形狀存在。
+- GitHub Copilot 權杖交換快取使用 `github-copilot/token-cache/default` 下的共用 SQLite 外掛狀態表。這是提供者擁有的快取狀態，因此它有意不新增主機結構描述表。
+- GitHub Copilot 壓縮不再寫入 `openclaw-compaction-*.json` 工作區側車檔案。線束為追蹤的 SDK 會話呼叫 SDK 歷史壓縮 RPC，而 OpenClaw 將持久的會話/逐字稿狀態保留在 SQLite 中，而不是相容性標記檔案。
+- 共用的 Swift 執行時期（`OpenClawKit`）對於裝置身分與裝置驗證使用相同的
+  `state/openclaw.sqlite` 資料列。macOS app
+  協助程式匯入共用的 SQLite 協助程式，而不擁有第二個 JSON 或
+  SQLite 路徑。一個遺留的舊版 `identity/device.json` 會阻擋身分的建立，
+  直到 doctor 將其匯入 SQLite 為止，這與 TypeScript 和 Android
+  的啟動閘門一致。
+- Android 裝置身分使用與 TypeScript 相容的相同金鑰素材，
+  儲存在具型別的 `state/openclaw.sqlite#table/device_identities` 資料列中。它
+  永不讀取或寫入 `openclaw/identity/device.json`；一個遺留的舊版檔案會
+  阻擋啟動，直到 doctor 將其匯入 SQLite 為止。
+- Android 快取的裝置驗證權杖也使用具型別的
+  `state/openclaw.sqlite#table/device_auth_tokens` 資料列，並與 TypeScript 和 Swift 共用相同的
+  version-1 權杖語意。執行時期不再讀取 `SecurePrefs`
+  `gateway.deviceToken*` 相容性金鑰；這些僅屬於遷移/doctor
+  邏輯。
+- Android 通知的 recent-package 歷史記錄使用具型別的
+  `android_notification_recent_packages` 資料列。執行時期不再遷移或
+  讀取舊的 SharedPreferences CSV 金鑰。
+- 當存在舊版 `identity/device.json`、
+  SQLite 身分資料列無效，或無法開啟 SQLite 身分
+  存儲時，裝置身分建立會失敗封閉。Doctor 會先匯入並移除該檔案，因此執行時期
+  啟動無法在遷移前靜默輪換配對身分。
+- 裝置身分選擇是一個 SQLite 資料列金鑰，而不是 JSON 檔案定位器。測試
+  和閘道協助程式會傳遞明確的身分金鑰；只有 doctor 遷移和
+  失敗封閉的啟動閘門知道已退役的 `identity/device.json` 檔名。
+- 工作階段重設相容性現在位於 doctor 設定遷移中：
+  `session.idleMinutes` 被移至 `session.reset.idleMinutes`，
+  `session.resetByType.dm` 被移至 `session.resetByType.direct`，而
+  執行時期重設政策僅讀取正式的重設金鑰。
+- 舊版配置相容性現在位於 `src/commands/doctor/` 下。正常的 `readConfigFileSnapshot()` 驗證不會匯入 doctor 舊版偵測器或標註舊版問題；`runDoctorConfigPreflight()` 會為 doctor 修復/報告新增這些問題。doctor 配置流程會匯入 `src/commands/doctor/legacy-config.ts`，而舊的 OAuth profile-id 修復則位於 `src/commands/doctor/legacy/oauth-profile-ids.ts` 下。
+- 非 doctor 指令不會自動執行舊版配置修復。例如，`openclaw update --channel` 現在會在遇到無效的舊版配置時失敗，並要求使用者執行 doctor，而不是靜默地匯入 doctor 遷移程式碼。
+- Web 推送、APNs、Voice Wake、更新檢查和配置健康狀態現在對訂閱、VAPID 金鑰、節點註冊、觸發器資料列、路由資料列、更新通知狀態和配置健康狀態條目使用類型化的共享 SQLite 表，而不是使用整個不透明的 JSON Blob。Web 推送和 APNs 快照寫入現在透過主鍵協調訂閱/註冊，而不是清除它們的表；配置健康狀態則透過配置路徑執行相同操作。它們的執行時模組將 SQLite 快照讀取器/寫入器與僅限 doctor 的舊版 JSON 匯入輔助程式分開。
+- 節點主機配置現在在共享 SQLite 資料庫中使用類型化的單例資料列；doctor 在正常執行時使用之前會匯入舊的 `node.json` 檔案。
+- 裝置/節點配對、通道配對、通道允許列表和引導狀態現在使用類型化的 SQLite 資料列，而不是整個不透明的 JSON Blob。外掛綁定核准和 cron 任務狀態遵循相同的拆分：執行時模組公開 SQLite 支援的操作和中性的快照輔助程式，而配對/引導以及外掛綁定核准快照寫入透過主鍵協調資料列而不是截斷表，同時 doctor 透過 `src/commands/doctor/legacy/*` 模組匯入/移除舊的 JSON 檔案。
+- 已安裝的外掛記錄現在位於 SQLite 已安裝外插件引中。執行時配置讀取/寫入不再遷移或保留舊的 `plugins.installs` authored-config 資料；doctor 會在正常執行時使用之前將該舊版配置形狀匯入 SQLite。
+- QQBot 憑證復原快照現已位於 SQLite 外掛狀態中的 `qqbot/credential-backups` 下。Runtime 不再寫入 `qqbot/data/credential-backup*.json`；doctor 會匯入並將這些舊版備份檔案與其他 QQBot 狀態輸入一併移除。
+- Gateway 重新載入計劃會在內部的 `installedPluginIndex.installRecords.*` diff 命名空間下比較 SQLite 已安裝外掛索引快照。Runtime 重新載入決策不再將這些資料列包裝在假的 `plugins.installs` 設定物件中。
+- Matrix 具名帳號憑證升級不再於 Runtime 讀取期間發生。當可以解析單一/預設 Matrix 帳號時，Doctor 負責處理舊的頂層 `credentials/matrix/credentials.json` 重新命名。
+- Core pairing 和 cron Runtime 模組不再匯出舊版 JSON 路徑建構器。Doctor 擁有的舊版模組會建構 `pending.json`、`paired.json`、`bootstrap.json` 和 `cron/jobs.json` 來源路徑，僅用於匯入測試和遷移。舊版 cron job-shape 正規化和 cron 執行紀錄匯入位於 `src/commands/doctor/legacy/cron*.ts` 下。
+- `src/commands/doctor/legacy/runtime-state.ts` 會從 doctor 將舊版 JSON 狀態檔案（包括節點主機設定）匯入 SQLite。新的舊版檔案匯入器仍位於 `src/commands/doctor/legacy/` 下。
+- `src/commands/doctor/state-migrations.ts` 會將舊版 `sessions.json` 和 `*.jsonl` 逐字稿直接匯入 SQLite 並移除成功的來源。它不再透過 `agents/<agentId>/sessions/*.jsonl` 暫存根層級舊版逐字稿，也不在匯入前建立標準 JSONL 目標。
+- 狀態完整性 doctor 檢查不再掃描舊版 session 目錄或提供刪除孤立 JSONL 的選項。舊版逐字稿檔案僅作為遷移輸入，且遷移步驟負責匯入及來源移除。
+- 舊版 sandbox registry 匯入位於 `src/commands/doctor/legacy/sandbox-registry.ts` 下；使用中的 sandbox registry 讀寫維持僅限 SQLite。
+- 舊版 session 逐字稿健康狀況/匯入修復位於 `src/commands/doctor/legacy/session-transcript-health.ts` 下；Runtime 指令模組不再包含 JSONL 逐字稿解析或作用中分支修復程式碼。
 
-合併/刪除重點摘要：
+已完成的整合/刪除重點：
 
-- 外掛狀態現在使用共享的 `state/openclaw.sqlite` 資料庫。舊的
-  分支本地的 `plugin-state/state.sqlite` 附屬匯入器已被移除，因為
-  該 SQLite 版面從未發布過。探測/測試輔助程式回報共享的
-  `databasePath`，而不是公開外掛狀態專屬的 SQLite 路徑。
-- Task 和 Task Flow 執行時期資料表现在位於共享的
-  `state/openclaw.sqlite` 資料庫中，而不是 `tasks/runs.sqlite` 和
-  `tasks/flows/registry.sqlite`；舊的附屬匯入器已被移除，
-  原因同樣是該版面從未發布。
-- `src/config/sessions/store.ts` 不再需要 `storePath` 來取得輸入
-  中繼資料、路由更新或更新時間讀取。指令持久化、CLI
-  會話清理、子代理程式深度、授權覆寫和文字記錄會話
-  身份使用 agent/session row API。寫入會作為 SQLite 列修補
-  應用，並搭配樂觀衝突重試。
-- Session 目標解析現在公開各代理程式的資料庫目標，而非舊版
-  `sessions.json` 路徑。共用閘道、ACP 中繼資料、doctor 路由修復和
-  `openclaw sessions` 會列舉 `agent_databases` 加上已設定的代理程式。
-- 閘道會話路由現在使用 `resolveGatewaySessionDatabaseTarget`；
-  傳回的目標攜帶 `databasePath` 和候選 SQLite 列鍵，
-  而非舊版會話存放區檔案路徑。
-- 通道 session 執行時型別現在公開 `{agentId, sessionKey}` 用於
-  updated-at 讀取、輸入中繼資料和 last-route 更新。舊的
-  `saveSessionStore(storePath, store)` 相容性型別已移除。
-- 外掛執行時、擴充 API 和 `config/sessions` barrel 層現在引導
-  外掛程式碼至 SQLite 支援的 session row helpers。根函式庫相容性
-  匯出 (`loadSessionStore`、`saveSessionStore`、`resolveStorePath`) 保留為
-  現有使用者的已棄用 shims。舊的
-  `resolveLegacySessionStorePath` helper 已移除；舊版 `sessions.json` 路徑
-  建構現在僅限於遷移和測試 fixtures。
-- `src/config/sessions/session-entries.sqlite.ts` 現在將標準會話條目儲存在 per-agent 資料庫中，並支援行級的讀取/upsert/delete 修補。Runtime upsert/patch/delete 不再掃描大小寫變體或修剪舊版別名金鑰；doctor 擁有標準化的責任。獨立的 JSON 匯入輔助程式已移除，且遷移會合併 upsert較新的列，而不是取代整個會話資料表。公開的 read/list/load 輔助程式從類型的 `sessions` 和 `conversations` 列中投射熱會話中繼資料；`entry_json` 是一個相容性/除錯影子，可能會過時或無效，而不會失去類型的會話身分或傳遞上下文。
-- `src/config/sessions/delivery-info.ts` 現在會從針對各個代理程式設定型別的 `sessions` + `conversations` + `session_conversations` 資料列中解析傳遞情境。
-  它不再從 `session_entries.entry_json` 重建執行時期的傳遞身分；缺少設定型別的對話資料列屬於 doctor
-  遷移/修復問題，而非執行時期的後備方案。
-- 已儲存的工作階段重置決策現在會優先使用設定型別的 `sessions.session_scope`、
-  `sessions.chat_type` 和 `sessions.channel` 中繼資料。`sessionKey` 剖析
-  僅保留用於命令目標上明確的執行緒/主題後綴；群組與直接重置的分類不再來自鍵的形狀。
-- 會話列表/狀態顯示分類現在使用類型化的聊天元資料和
-  閘道會話種類。它不再將 `session_key` 內的 `:group:` 或 `:channel:` 子字串
-  視為永久的群組/直接真值。
-- 靜默回覆策略選擇現在使用明確的對話類型或介面
-  元資料。它不再從 `session_key` 子字串
-  推測直接/群組策略。
-- 會話顯示模型解析現在接受來自 SQLite
-  會話資料庫目標的代理程式 ID，而不是從 `session_key` 中將其分割出來。
-- Agent-to-agent announce target hydration now uses typed `sessions.list`
-  `deliveryContext` only. It no longer recovers channel/account/thread routing
-  from legacy `origin`, mirrored `last*` fields, or `session_key` shape.
-- `sessions_send` thread-target rejection now reads typed SQLite routing
-  metadata. It no longer rejects or accepts targets by parsing thread suffixes
-  out of the target key.
-- Group-scoped tool policy validation now reads typed SQLite conversation
-  routing for the current or spawned session. It no longer trusts group/channel
-  identity by decoding `sessionKey`; caller-provided group ids are dropped when
-  no typed session row vouches for them.
-- 通道模型覆寫匹配現在使用顯式的群組和父級對話元數據。它不再從 `parentSessionKey` 解碼父級對話 ID。
-- 存儲的模型覆寫繼承現在需要來自類型化會話上下文的顯式父級會話金鑰。它不再從 `sessionKey` 中的 `:thread:` 或 `:topic:` 後綴推導父級覆寫。
-- 舊的會話線程資訊包裝器和已加載插件線程解析器已不復存在；沒有運行時代碼導入 `config/sessions/thread-info`。
-- 通道對話助手不再公開完整會話金鑰解析橋接器。核心仍然通過 `resolveSessionConversation(...)` 規範化提供者擁有的原始對話 ID，但它不會從 `sessionKey` 重建路由事實。
-- 完成交付、發送原則和任務維護不再從 `session_key` 形狀推斷聊天類型。舊的聊天類型金鑰解析器已被刪除；這些路徑需要類型化的會話元資料、類型化的交付上下文或明確的交付目標詞彙。
-- 會話列表/狀態、診斷、核准帳戶綁定、TUI 心跳過濾和使用摘要不再從 `SessionEntry.origin` 挖掘提供者/帳戶/執行緒/顯示路由。唯一剩餘的執行時 `origin` 讀取是非會話概念或當前輪次的交付物件。
-- 核准請求的原生會話查找現在讀取類型化的每代理會話路由行。它不再從 `sessionKey` 解析頻道/群組/執行緒會話身分；缺少類型化元資料是遷移/修復問題。
-- Gateway session changed/chat/session 事件負載不再回顧
-  `SessionEntry.origin` 或 `last*` 路由陰影；客戶端接收類型化的
-  `channel`、`chatType` 和 `deliveryContext`。
-- Heartbeat 傳遞解析現在可以直接接收類型化的 SQLite
-  `deliveryContext`，且 heartbeat 運行時傳遞每個代理程式
-  的會話傳遞列，而不是依賴當前路由的相容性 `session_entries`
-  陰影。
-- Cron isolated-agent 傳遞目標解析也會在回退到
-  相容性條目負載之前，從類型化的每個代理程式會話傳遞列中補充其當前
-  路由。
-- Subagent 公告來源解析現在會將類型化的請求者會話傳遞上下文透過 `loadRequesterSessionEntry` 傳遞，並且優先使用該資料行而非相容性 `last*`/`deliveryContext` 陰影。
-- 傳入會詮中繼資料更新現在會先針對每個代理程式的類型化傳遞資料行進行合併；舊的 `SessionEntry` 傳遞欄位僅作為當沒有類型化對話資料行存在時的後備選項。
-- 重新啟動/更新傳遞提取現在讓類型化的 SQLite 傳遞 `threadId` 優先於從 `sessionKey` 解析的主題/執行緒片段；解析僅是舊版執行緒形狀鍵的後備方案。
-- Hook 代理程式上下文頻道 ID 現在優先使用類型化的 SQLite 對話身分，其次是明確的訊息中繼資料。它們不再從 `sessionKey` 解析提供者/群組/頻道片段。
-- Gateway `chat.send` external-route 繼承現在會讀取具類型的 SQLite 會話路由元數據，而不是從 `sessionKey` 片段推斷 channel/direct/group 範圍。Channel-scoped 會話僅在具類型會話的 channel 和聊天類型與儲存的交付上下文相符時才繼承；shared-main 會話則保持其更嚴格的 CLI/no-client-metadata 規則。
-- Restart-sentinel 喚醒和延續路由現在會在將心跳喚醒或 routed agent-turn 延續排入佇列之前，讀取具類型的 SQLite 交付/路由行。它不再從 session-entry JSON shadow 重建交付上下文。
-- Gateway `tools.effective` 上下文解析現在會從 SQLite 讀取針對 provider、account、target、thread 和 reply-mode 輸入的型別化 delivery/routing 資料列。它不再從過時的 `session_entries.entry_json` origin shadows 恢復那些熱路由欄位。
-- 即時語音諮詢路由現在會從針對每個代理程式的型別化 SQLite session 資料列解析 parent/call delivery。在選擇嵌入式代理程式訊息路由時，它不再回退到相容性 `SessionEntry.deliveryContext` shadows。
-- ACP 產生心跳中繼器和母串流路由現在會從型別化 SQLite session 資料列讀取 parent delivery。它們不再從相容性 session-entry shadows 重建 parent delivery 上下文。
-- 現在，工作階段傳遞路由的保留會遵循類型化的聊天元資料和持續化的傳遞欄位。它不再從 `sessionKey` 提取通道提示、直接/主要標記或執行緒形狀；只有當 SQLite 已經為該工作階段儲存了類型化/持續化的傳遞身分時，內部網路聊天路由才會繼承外部目標。
-- 一般工作階段傳遞提取現在僅讀取確切的類型化 SQLite 工作階段傳遞列。它不再解析執行緒/主題後綴，也不會從執行緒形狀的鍵退回到基礎工作階段鍵。
-- 回覆分派、重啟哨兵恢復以及即時語音查詢路由現在會使用確切的類型化 SQLite 工作階段/對話列進行執行緒路由。它們不再透過解析執行緒形狀的工作階段鍵來恢復執行緒 ID 或基礎工作階段傳遞上下文。
-- 嵌入式 PI 歷史記錄限制現在針對 provider、聊天類型和對端身分，使用類型化的 SQLite 會話路由投影（`sessions` + primary `conversations`）。它不再從 `sessionKey` 中解析 provider、DM、group 或 thread 的結構。
-- Cron 工具交付推斷現在使用顯式交付或僅使用當前的類型化交付語境。它不再從 `agentSessionKey` 解碼 channel、peer、account 或 thread 目標。
-- 運行時會話行不再攜帶舊的 `lastProvider` 路由別名。輔助函數和測試使用類型化的 `lastChannel` 和 `deliveryContext` 欄位；doctor 遷移是唯一應該翻譯舊路由別名或持久化 `origin` 影子的地方。
-- Transcript events、VFS 資料列與工具 artifact 資料列現在會寫入每個 Agent 的資料庫。未發布的全域 transcript-file 對照表已移除；doctor 改為在持久化的遷移資料列中記錄舊版來源路徑。
-- 執行時期的 transcript 查詢不再掃描 JSONL 位元組位移或探查舊版 transcript 檔案。Gateway 的 chat/media/history 路徑會從 SQLite 讀取 transcript 資料列；session JSONL 現在僅作為 doctor 的舊版輸入，而非執行時期狀態或匯出格式。
-- Transcript 的父代與分支關係使用 SQLite transcript 標頭中的結構化 `parentTranscriptScope: {agentId, sessionId}` 元資料，而非類似路徑的 `agent-db:...transcript_events...` 定位字串。
-- 轉錄管理器合約不再暴露隱式的持久化 `create(cwd)` 或 `continueRecent(cwd)` 建構函式。持久化轉錄管理器會透過明確的 `{agentId, sessionId}` 作用域開啟；僅記憶體內管理器在測試和純轉錄轉換中保持無作用域。
-- 執行時期轉錄存放區 API 解析 SQLite 作用域，而非檔案系統路徑。舊的 `resolve...ForPath` 協助程式和未使用的 `transcriptPath` 寫入選項已從執行時期呼叫端移除。
-- 執行時期階段作業解析現在使用 `{agentId, sessionId}`，且不得為外部邊界導出 `sqlite-transcript://<agent>/<session>` 字串。舊有的絕對 JSONL 路徑僅作為 doctor 遷移的輸入。
-- Native hook relay direct-bridge 記錄現在位於以 relay id 為鍵的類型化共用 `native_hook_relay_bridges` 列中。Runtime 不再為這些短暫的 bridge 記錄寫入 `/tmp` JSON 註冊表或不透明的通用記錄。
-- `runEmbeddedPiAgent(...)` 不再具有 transcript-locator 參數。
-  準備好的 worker 描述符也省略了 transcript locators。Runtime session
-  狀態和佇列中的後續執行攜帶 `{agentId, sessionId}` 而不是
-  衍生的 transcript handles。
-- 嵌入式壓縮現在從 `agentId` 和 `sessionId` 取得 SQLite 範圍。
-  壓縮掛鉤、context-engine 呼叫、CLI 委派和協定回覆
-  不得接收衍生的 `sqlite-transcript://...` 控制代碼。匯出/除錯程式碼
-  可以從資料列具體化明確的使用者產出，但它不提供
-  通用的 session JSONL 匯出路徑，也不將檔案名稱回饋至執行時
-  身份。
-- `/export-session` 從 SQLite 讀取逐字稿資料列，並僅寫入請求的
-  獨立 HTML 檢視。內建檢視器不再從這些資料列重建或
-  下載 session JSONL。
-- Context-engine 委派不再解析逐字稿定位器來恢復
-  代理程式身分。準備好的執行時內容將解析的 `agentId`
-  帶入內建壓縮介面卡。
-- Transcript 重寫與即時工具結果截斷現在透過 `{agentId, sessionId}` 讀取並持久化 transcript 狀態，並且不會為 transcript-update 事件載荷推導暫時的定位器。
-- transcript-state 輔助介面不再具有基於定位器的 `readTranscriptState`、`replaceTranscriptStateEvents` 或 `persistTranscriptStateMutation` 變體。執行階段呼叫者必須使用 `{agentId, sessionId}` API。Doctor import 透過明確的檔案路徑讀取舊版檔案並寫入 SQLite 資料列；它不會遷移定位器字串。
-- 執行階段 session-manager 契約不再公開 `open(locator)`、
-  `forkFrom(locator)` 或 `setTranscriptLocator(...)`。持久化 session
-  管理器僅透過 `{agentId, sessionId}` 開啟；清單/分叉輔助函式存在於
-  以列為導向的 session 和 checkpoint API 中，而非 transcript manager
-  外觀。
-- Gateway transcript reader API 為優先範圍。它們接收
-  `{agentId, sessionId}`，且不接受位置 transcript 定位器，以免
-  意外成為執行階段識別。主動 transcript 定位器解析
-  已消失；舊版來源路徑僅由 doctor 匯入程式碼讀取。
-- Transcript 更新事件也是優先範圍。`emitSessionTranscriptUpdate`
-  不再接受裸露定位器字串，且監聽器透過
-  `{agentId, sessionId}` 路由，而不解析控制代碼。
-- Gateway session-message broadcast 從 agent/session 範圍解析 session keys，而不是從 transcript locator。舊的 transcript-locator-to-session key resolver/cache 已經消失。
-- Gateway session-history SSE 根據 agent/session 範圍過濾即時更新。它不再將 transcript locator 候選項、realpaths 或檔案形式的 transcript identities 規範化，來決定串流是否應該接收更新。
-- Session lifecycle hooks 不再在 `session_end` 上衍生或暴露 transcript locators。Hook 消費者會取得 `sessionId`、`sessionKey`、next-session ids 和 agent context；transcript 檔案不是 lifecycle contract 的一部分。
-- Reset hooks 不再衍生或公開文字紀錄定位器。`before_reset` payload 攜帶恢復的 SQLite 訊息以及重置原因，而會話身份保留在 hook context 中。
-- Agent harness reset 不再接受文字紀錄定位器。Reset dispatch 的範圍由 `sessionId`/`sessionKey` 加上原因決定。
-- Agent extension session types 不再公開 `transcriptLocator`；extensions 應該使用 session context 和 runtime APIs，而不是試圖獲取基於檔案形式的文字紀錄身份。
-- Plugin compaction hooks 不再公開文字紀錄定位器。Hook context 已經攜帶會話身份，而文字紀錄讀取必須透過 SQLite 具有範圍感知的 APIs，而不是基於檔案形式的 handles。
-- `before_agent_finalize` hooks 不再公開 `transcriptPath`，包括
-  原生 hook 中繼承載。最終處理 hooks 僅使用 session context。
-- Gateway 重置回應不再在傳回的項目上合成文字紀錄定位器。重置會建立 SQLite 文字紀錄列，傳回乾淨的
-  session 項目，並將文字紀錄存取留給具範圍感知能力的讀取器。
-- 內嵌執行和壓縮結果不再顯示用於 session 結算的文字紀錄定位器。自動壓縮僅更新作用中的 `sessionId`、
-  壓縮計數器和 token 中繼資料。
-- 內嵌嘗試結果不再傳回 `transcriptLocatorUsed`，且
-  context-engine `compact()` 結果不再傳回文字紀錄定位器。
-  Runtime 重試迴圈僅接受後續的 `sessionId`。
-- Delivery-mirror 副本附加結果不再返回副本定位器。呼叫者獲得附加的 `messageId`；副本更新信號使用 SQLite 範圍。
-- 父會話分支輔助函式僅返回分支的 `sessionId`。子代理準備階段將子代理/會話範圍傳遞給引擎。
-- CLI 執行器參數和歷史記錄重新植入不再接受副本定位器。CLI 歷史記錄讀取根據 `{agentId, sessionId}` 和會話金鑰上下文解析 SQLite 副本範圍。
-- CLI 和嵌入式執行器測試裝置現在透過會話 ID 植入和讀取 SQLite 副本行，而不是假設活動會話是 `*.jsonl` 檔案或透過執行時參數傳遞 `sqlite-transcript://...` 字串。
-- Session tool-result guard events 即使記憶體管理程式沒有衍生的定位器，也會從已知的 Session 範圍發出。其測試不再偽造使用中 `/tmp/*.jsonl` transcript 檔案。
-- BTW 和 compaction-checkpoint helper 現在會根據 SQLite 範圍讀取和分叉 transcript 資料列。Checkpoint 中繼資料現在僅儲存 session ID 和 leaf/entry ID；衍生的定位器不再寫入到 checkpoint 載荷中。
-- Gateway transcript-key 查詢在協定邊界使用 SQLite transcript 範圍，並且不再對 transcript 檔名進行 realpath 或 stat 操作。
-- Automatic compaction transcript 旋轉會直接透過 SQLite transcript 存儲寫入後繼的 transcript 資料列。Session 資料列僅保留後繼的 session 身分，而不是持久的 JSONL 路徑或持久的定位器。
-- 內嵌的 context-engine 壓縮使用具名的 SQLite 轉錄輪替輔助程式。輪替測試不再建構 JSONL 後繼路徑，也不會將使用中會話建模為檔案。
-- 受控的傳出圖像保留機制根據 SQLite 轉錄統計資料來鍵入其轉錄訊息快取，而非使用檔案系統 stat 呼叫。
-- 執行階段會話鎖定與獨立的舊版 `.jsonl.lock` doctor 通道已被移除。
-- Microsoft Teams 執行階段 barrel 與公開 plugin SDK 不再重新匯出舊的檔案鎖定輔助程式；永續 plugin 狀態路徑已由 SQLite 支援。
-- 會話年齡/計數修剪與明確的會話清理已被移除。Doctor 擁有舊版匯入功能；過時會話會被明確重設或刪除。
-- Doctor 完整性檢查不再將舊版 JSONL 檔案計為 SQLite 工作階段列的有效有效
-  逐字稿。有效逐字稿的健康狀態僅適用於 SQLite；
-  舊版 JSONL 檔案會被回報為遷移/孤立清理輸入。
-- Doctor 不再將 `agents/<agent>/sessions/` 視為必要的執行階段
-  狀態。它僅在該目錄已存在時進行掃描，作為舊版匯入
-  或孤立清理輸入。
-- Gateway `sessions.resolve`、工作階段修補/重置/壓縮路徑、子代理
-  程式產生、快速中止、ACP 元資料、心跳隔離的工作階段以及 TUI
-  修補，不再作為正常執行階段工作的副作用來遷移或修剪舊版工作階段金鑰。
-- CLI 指令階段作業 (session) 解析現在會返回擁有的 `agentId` 而非
-  `storePath`，並且在正常的
-  `--to` 或 `--session-id` 解析期間，不再複製舊版主要階段作業 (main-session) 資料列。舊版主要資料列正規化 (canonicalization) 僅屬於 doctor。
-- 執行時期子代理程式深度解析不再讀取 `sessions.json` 或 JSON5
-  階段作業儲存。它透過代理程式 ID 讀取 SQLite `session_entries`，而舊版
-  深度/階段作業中繼資料只能透過 doctor 匯入路徑進入。
-- 驗證設定檔階段作業覆寫透過直接 `{agentId, sessionKey}`
-  資料列更新來持久化，而不是延遲載入檔案狀階段作業儲存執行時期。
-- 自動回覆詳細閘門和會話更新輔助程式現在會依據會話身分讀取/更新 SQLite
-  會話資料列，且在接觸已保存的資料列狀態前不再需要舊版儲存路徑。
-- 指令執行會詮中繼資料輔助程式現在使用以條目為導向的名稱和模組
-  路徑；舊的 `session-store` 指令輔助介面已被移除。
-- 啟動標頭植入和手動壓縮邊界強化現在會直接
-  變更 SQLite 轉錄資料列。執行階段呼叫者傳遞會話身分，而非
-  可寫入的 `.jsonl` 路徑。
-- 無聲會話輪替重播會透過
-  `{agentId, sessionId}` 從 SQLite 轉錄資料列複製最近的使用者/助理回合。它不再接受
-  來源或目標轉錄定位器。
-- 新的執行階段會話列不再儲存逐字稿定位器。呼叫者直接使用 `{agentId, sessionId}`；匯出/除錯指令可以在具體化列時選擇輸出檔案名稱。
-- 啟動新的持續化逐字稿會話現在總是透過範圍開啟 SQLite 列。會話管理員不再重用先前的檔案時代逐字稿路徑或定位器作為新會話的身分識別。
-- 持續化的逐字稿會話使用明確的 `openTranscriptSessionManagerForSession({agentId, sessionId})` API。舊的靜態 `SessionManager.create/openForSession/list/forkFromSession` 外觀已移除，因此測試和執行階段程式碼不會意外重建檔案時代的會話發現機制。
-- 外掛程式執行階段不再公開 `api.runtime.agent.session.resolveTranscriptLocatorPath`；外掛程式碼使用 SQLite 列輔助程式和範圍值。
-- 公開的 `session-store-runtime` SDK 介面現在僅匯出會話列
-  和逐字稿列輔助函式。原始的 SQLite 資料庫開啟/路徑以及關閉/重置
-  輔助函式位於專注的 `sqlite-runtime` SDK 介面中，因此外掛測試不再
-  引入已棄用的廣泛測試桶來進行資料庫清理。
+- 外掛狀態現在使用共享的 `state/openclaw.sqlite` 資料庫。舊的分支本機 `plugin-state/state.sqlite` sidecar 匯入器已被移除，因為該 SQLite 版面配置從未發布。探測/測試輔助工具現在回報共享的 `databasePath`，而不是公開特定於外掛狀態的 SQLite 路徑。
+- Task 和 Task Flow 執行時表格現在位於共享的 `state/openclaw.sqlite` 資料庫中，而不是 `tasks/runs.sqlite` 和 `tasks/flows/registry.sqlite`；舊的 sidecar 匯入器已被移除，原因同樣是因為該版本配置從未發布。
+- `src/config/sessions/store.ts` 不再需要 `storePath` 來處理傳入中繼資料、路由更新或讀取 updated-at。命令持久化、CLI 會話清理、子代理程式深度、授權覆寫和文字記錄會話身分識別均使用代理程式/會話列 API。寫入操作會以樂觀衝突重試的方式作為 SQLite 列修補套用。
+- 會話目標解析現在公開每個代理程式的資料庫目標，而非舊有的 `sessions.json` 路徑。共用閘道、ACP 中繼資料、doctor 路由修復和 `openclaw sessions` 會列舉 `agent_databases` 以及已設定的代理程式。
+- 閘道會話路由現在使用 `resolveGatewaySessionDatabaseTarget`；傳回的目標攜帶 `databasePath` 和候選 SQLite 列鍵，而非舊有的會話存放區檔案路徑。
+- 通道會話執行時類型現在公開 `{agentId, sessionKey}` 以進行 updated-at 讀取、傳入中繼資料和最後路由更新。舊的 `saveSessionStore(storePath, store)` 相容性類型已不復存在。
+- 外掛執行時、擴充 API 和 `config/sessions` barrel 表面現在會將外掛程式碼引導至 SQLite 支援的會話列輔助程式。根函式庫相容性匯出 (`loadSessionStore`, `saveSessionStore`, `resolveStorePath`) 作為已棄用的填充程式保留給現有取用者。舊的 `resolveLegacySessionStorePath` 輔助程式已不復存在；舊有的 `sessions.json` 路徑建構現在僅限於遷移和測試裝置。
+- `src/config/sessions/session-entries.sqlite.ts` 現在將標準會話條目儲存在個別代理的資料庫中，並具有層級讀取/更新/刪除修補支援。執行時期的更新/修補/刪除不再掃描大小寫變體或修剪舊版別名金鑰；doctor 擁有標準化權限。獨立的 JSON 匯入輔助程式已移除，遷移時會合併更新較新的資料列，而不是取代整個會話表格。公開的讀取/列表/載入輔助程式會從類型化的 `sessions` 和 `conversations` 資料列投影熱會話元資料；`entry_json` 是一個相容性/除錯影子，可能會過時或無效，而不會失去類型化的會話身分或傳遞內容。
+- `src/config/sessions/delivery-info.ts` 現在從類型化的個別代理 `sessions` + `conversations` + `session_conversations` 資料列解析傳遞內容。它不再從 `session_entries.entry_json` 重建執行時期的傳遞身分；缺少類型化的對話資料列是 doctor 遷移/修復問題，而非執行時期的後備方案。
+- 已儲存會話的重設決策現在優先使用類型化的 `sessions.session_scope`、`sessions.chat_type` 和 `sessions.channel` 元資料。`sessionKey` 解析僅保留用於指令目標上明確的執行緒/主題後綴；群組與直接重設的分類不再來自金鑰形狀。
+- 會話列表/狀態顯示分類現在使用類型化的聊天元資料和閘道會話類型。它不再將 `session_key` 內的 `:group:` 或 `:channel:` 子字串視為持久的群組/直接事實。
+- 靜默回覆策略選擇現在使用明確的對話類型或介面元資料。它不再從 `session_key` 子字串推斷直接/群組策略。
+- 會話顯示模型解析現在接受來自 SQLite 會話資料庫目標的代理 ID，而不是從 `session_key` 中將其分割出來。
+- Agent-to-agent announce target hydration 現在僅使用類型化的 `sessions.list`
+  `deliveryContext`。它不再從舊版 `origin`、鏡像的 `last*` 欄位或 `session_key` 形狀中還原 channel/account/thread 路由。
+- `sessions_send` thread-target 拒絕現在讀取類型化的 SQLite 路由
+  元資料。它不再透過從目標鍵中解析 thread 後綴
+  來拒絕或接受目標。
+- Group-scoped tool policy 驗證現在會為目前或產生的 session 讀取類型化的 SQLite 對話
+  路由。它不再透過解碼 `sessionKey` 來信任 group/channel
+  身份；當沒有類型化的 session 資料行為其擔保時，呼叫者提供的 group id 會被捨棄。
+- Channel model override 匹配現在會使用明確的 group 和 parent
+  對話元資料。它不再從 `parentSessionKey` 解碼 parent 對話 id。
+- Stored model override 繼承現在需要來自類型化 session 語境的明確 parent session key。
+  它不再從 `sessionKey` 中的 `:thread:` 或 `:topic:` 後綴衍生 parent 覆寫。
+- 舊的 session thread-info 包裝器和 loaded-plugin thread 解析器已經消失；
+  沒有執行時代碼匯入 `config/sessions/thread-info`。
+- Channel 對話助手不再公開 full-session-key 解析
+  橋樑。Core 仍然透過 `resolveSessionConversation(...)` 正規化提供者擁有的原始對話 id，
+  但它不會從 `sessionKey` 重建路由事實。
+- Completion delivery、send policy 和 task 維護不再從 `session_key` 形狀衍生 chat
+  類型。舊的 chat-type key 解析器已被刪除；
+  這些路徑需要類型化的 session 元資料、類型化的 delivery 語境，或
+  明確的 delivery 目標詞彙。
+- Session list/status、診斷、approval account 綁定、TUI heartbeat
+  過濾和使用摘要不再從 `SessionEntry.origin` 挖掘
+  provider/account/thread/display 路由。唯一剩餘的執行時期
+  `origin` 讀取是非 session 概念或目前回合的 delivery 物件。
+- 審批請求的原生對話查詢現在讀取類型化的每代理會話路由行。它不再從 `sessionKey` 解析通道/群組/執行緒對話身分；缺少類型化中繼資料是一個遷移/修復問題。
+- 閘道會話變更/聊天/會話事件酬載不再回顯 `SessionEntry.origin` 或 `last*` 路由陰影；用戶端接收類型化的 `channel`、`chatType` 和 `deliveryContext`。
+- 心跳傳遞解析現在可以直接接收類型化的 SQLite `deliveryContext`，並且心跳執行時會傳遞每代理會話傳遞行，而不是依賴當前路由的相容性 `session_entries` 陰影。
+- Cron 隔離代理傳遞目標解析也會在回退到相容性項目酬載之前，從類型化的每代理會話傳遞行填充其當前路由。
+- 子代理公告來源解析現在透過 `loadRequesterSessionEntry` 傳遞類型化的請求者會話傳遞上下文，並且優先使用該行，而不是相容性 `last*`/`deliveryContext` 陰影。
+- 輸入會話中繼資料更新現在會先針對類型化的每代理傳遞行進行合併；舊的 `SessionEntry` 傳遞欄位僅在不存在類型化對話行時作為回退方案。
+- 重新啟動/更新傳遞提取現在讓類型化的 SQLite 傳遞 `threadId` 優先於從 `sessionKey` 解析的主題/執行緒片段；解析僅是傳統執行緒形狀金鑰的回退方案。
+- Hook 代理上下文頻道 ID 現在優先使用類型化的 SQLite 對話身分，然後是明確的訊息中繼資料。它們不再從 `sessionKey` 解析提供者/群組/頻道片段。
+- Gateway `chat.send` 外部路由繼承現在讀取類型化的 SQLite 會話
+  路由元數據，而不是從 `sessionKey` 片段推斷
+  頻道/直接/群組範圍。僅當類型化會話頻道和聊天類型與
+  儲存的遞送內容相符時，頻道範圍的會話才會繼承；
+  shared-main 會話保持其更嚴格的 CLI/no-client-metadata 規則。
+- 重啟哨兵喚醒和續傳路由現在在將心跳喚醒或路由
+  的代理人輪次續傳加入佇列之前，會讀取類型化的 SQLite
+  遞送/路由資料列。它不再從會話項目 JSON 映射
+  重建遞送內容。
+- Gateway `tools.effective` 內容解析現在會讀取類型化的 SQLite
+  遞送/路由資料列，以取得提供者、帳戶、目標、執行緒和回覆模式
+  輸入。它不再從過時的 `session_entries.entry_json` 來源映射
+  中恢復這些熱路由欄位。
+- 即時語音諮詢路由現在會從類型化的每個代理人 SQLite
+  會話資料列解析父項/呼叫遞送。在選擇嵌入式代理人
+  訊息路由時，它不再退回到相容性 `SessionEntry.deliveryContext` 映射。
+- ACP 生成心跳中繼和父資料流路由現在會從類型化的 SQLite
+  會話資料列讀取父項遞送。它們不再從相容性會話項目映射
+  重建父項遞送內容。
+- 會話遞送路由保留現在遵循類型化的聊天元數據和
+  持久化的遞送欄位。它不再從 `sessionKey` 提取頻道提示、
+  直接/主標記或執行緒形狀；內部網路聊天路由僅當 SQLite
+  已經擁有該會話的類型化/持久化遞送身分時，才會繼承外部目標。
+- 一般會話遞送提取現在僅讀取確切的類型化 SQLite
+  會話遞送資料列。它不再解析執行緒/主題後綴，或
+  從執行緒形狀的金鑰退回到基礎會話金鑰。
+- 回覆分派、重啟哨兵恢復和即時語音諮詢路由
+  現在使用確切的類型化 SQLite 會話/對話資料列進行執行緒路由。
+  它們不再通過解析執行緒形狀的會話金鑰來恢復執行緒 ID
+  或基礎會話遞送內容。
+- 嵌入式 PI 歷史限制現在針對提供者、聊天類型和對等身份使用類型化的 SQLite 會話路由投影（`sessions` + 主鍵 `conversations`）。它不再從 `sessionKey` 中解析提供者、DM、群組或執行緒形狀。
+- Cron 工具傳遞推斷現在使用明確傳遞或僅使用當前類型化傳遞上下文。它不再從 `agentSessionKey` 解碼頻道、對等端、帳戶或執行緒目標。
+- 執行時期會話行不再攜帶舊的 `lastProvider` 路由別名。輔助函式和測試使用類型化的 `lastChannel` 和 `deliveryContext` 欄位；doctor 遷移是唯一應轉換較舊路由別名或持久化 `origin` 陰影的地方。
+- 逐字稿事件、VFS 行和工具成品行現在寫入 per-agent 資料庫。未發布的全局逐字稿檔案映射表已消失；doctor 改為在持久化遷移行中記錄舊版來源路徑。
+- 執行時期逐字稿查找不再掃描 JSONL 位元組偏移量或探查舊版逐字稿檔案。Gateway 聊天/媒體/歷史路徑從 SQLite 讀取逐字稿行；會話 JSONL 現在僅是舊版 doctor 輸入，而不是執行時期狀態或匯出格式。
+- 逐字稿父級和分支關係使用 SQLite 逐字稿標頭中的結構化 `parentTranscriptScope: {agentId, sessionId}` 元數據，而不是類似路徑的 `agent-db:...transcript_events...` 定位器字串。
+- 逐字稿管理器契約不再公開隱式持久化 `create(cwd)` 或 `continueRecent(cwd)` 建構函式。持久化逐字稿管理器使用明確的 `{agentId, sessionId}` 範圍開啟；僅記憶體內管理器在測試和純逐字稿轉換中保持無範圍。
+- 執行時期逐字稿儲存 API 解析 SQLite 範圍，而非檔案系統路徑。舊的 `resolve...ForPath` 輔助函式和未使用的 `transcriptPath` 寫入選項已從執行時期呼叫者中移除。
+- 執行時期會話解析現在使用 `{agentId, sessionId}`，且不得為外部邊界衍生 `sqlite-transcript://<agent>/<session>` 字串。舊版絕對 JSONL 路徑僅作為 doctor 遷移輸入。
+- Native hook relay direct-bridge 記錄現存在於以 relay id 為鍵的型別共用 `native_hook_relay_bridges` 資料列中。Runtime 不再為這些短暫的 bridge 記錄寫入 `/tmp` JSON 註冊表或不明的一般記錄。
+- `runEmbeddedPiAgent(...)` 不再具有 transcript-locator 參數。準備好的 worker 描述符也省略了 transcript 定位器。Runtime 工作階段狀態和佇列中的後續執行改為攜帶 `{agentId, sessionId}`，而非衍生的 transcript 控制代碼。
+- Embedded compaction 現在從 `agentId` 和 `sessionId` 取得 SQLite 範圍。Compaction hooks、context-engine 呼叫、CLI 委派和協定回覆不得接收衍生的 `sqlite-transcript://...` 控制代碼。Export/debug 程式碼可以從資料列具體化明確的使用者產出成果，但不提供通用的工作階段 JSONL 匯出路徑或將檔案名稱回傳給 runtime 身份。
+- `/export-session` 從 SQLite 讀取 transcript 資料列，並僅寫入請求的獨立 HTML 檢視。嵌入式檢視器不再從這些資料列重建或下載工作階段 JSONL。
+- Context-engine 委派不再解析 transcript 定位器來還原 agent 身份。準備好的 runtime 語境將解析出的 `agentId` 帶入內建的 compaction 配接器。
+- Transcript 重寫和即時 tool-result 截斷現在透過 `{agentId, sessionId}` 讀取並持久化 transcript 狀態，且不會為 transcript-update 事件承載衍生暫時的定位器。
+- Transcript-state 輔助介面不再具有基於定位器的 `readTranscriptState`、`replaceTranscriptStateEvents` 或 `persistTranscriptStateMutation` 變體。Runtime 呼叫者必須使用 `{agentId, sessionId}` API。Doctor import 會透過明確的檔案路徑讀取舊版檔案並寫入 SQLite 資料列；它不會遷移定位器字串。
+- Runtime session-manager 契約不再公開 `open(locator)`、`forkFrom(locator)` 或 `setTranscriptLocator(...)`。持久化的 session manager 僅透過 `{agentId, sessionId}` 開啟；list/fork 輔助函式位於以行為導向的 session 和 checkpoint API 上，而非 transcript manager 外觀。
+- Gateway transcript reader API 以範圍優先。它們接受 `{agentId, sessionId}`，並不接受可能意外成為 runtime identity 的位置性 transcript 定位器。主動的 transcript 定位器解析已消失；舊版來源路徑僅由 doctor import 程式碼讀取。
+- Transcript 更新事件也以範圍優先。`emitSessionTranscriptUpdate` 不再接受純定位器字串，且監聽器透過 `{agentId, sessionId}` 進行路由，而無須解析處理代碼。
+- Gateway session-message 廣播從 agent/session 範圍解析 session 金鑰，而非從 transcript 定位器。舊的 transcript-locator-to-session 金鑰解析器/快取已消失。
+- Gateway session-history SSE 依據 agent/session 範圍篩選即時更新。它不再正規化 transcript 定位器候選、realpaths 或檔案形式的 transcript 身份來決定串流是否應接收更新。
+- Session 生命週期掛鉤不再在 `session_end` 上衍生或公開 transcript 定位器。掛鉤消費者取得 `sessionId`、`sessionKey`、next-session id 和 agent 上下文；transcript 檔案不是生命週期契約的一部分。
+- 重置掛鉤也不再衍生或公開 transcript 定位器。`before_reset` 載荷攜帶恢復的 SQLite 訊息以及重置原因，而 session 身份則保留在掛鉤上下文中。
+- Agent harness 重置不再接受 transcript 定位器。重置分派由 `sessionId`/`sessionKey` 加上原因作為範圍。
+- Agent 擴充功能 session 類型不再公開 `transcriptLocator`；擴充功能應使用 session 上下文和 runtime API，而非取得檔案形式的 transcript 身份。
+- 外掛壓縮掛鉤不再公開文字紀錄定位器。掛鉤上下文已經攜帶會話身份，且文字紀錄讀取必須透過 SQLite 感知作用域的 API，而不是檔案形狀的控制代碼。
+- `before_agent_finalize` 掛鉤不再公開 `transcriptPath`，包括原生掛鉤中繼酬載。最終處理掛鉤僅使用會話上下文。
+- 閘道重設回應不再在傳回的項目上合成文字紀錄定位器。重設會建立 SQLite 文字紀錄資料列，傳回乾淨的會話項目，並將文字紀錄存取權留給感知作用域的讀取器。
+- 嵌入式執行和壓縮結果不再為會話計算顯示文字紀錄定位器。自動壓縮僅更新作用中的 `sessionId`、壓縮計數器和權杖中繼資料。
+- 嵌入式嘗試結果不再傳回 `transcriptLocatorUsed`，且 context-engine `compact()` 結果不再傳回文字紀錄定位器。執行時期重試迴圈僅接受後繼 `sessionId`。
+- 傳遞鏡像文字紀錄附加結果不再傳回文字紀錄定位器。呼叫者會取得附加的 `messageId`；文字紀錄更新訊號使用 SQLite 作用域。
+- 父會話分支輔助函式僅傳回分支的 `sessionId`。子代理程式準備會將子代理程式/會話作用域傳遞給引擎。
+- CLI 執行器參數和歷史重新植入不再接受文字紀錄定位器。CLI 歷史讀取會從 `{agentId, sessionId}` 和會話金鑰上下文解析 SQLite 文字紀錄作用域。
+- CLI 和嵌入式執行器測試裝置現在依會話 ID 植入和讀取 SQLite 文字紀錄資料列，而不是假設作用中的會話是 `*.jsonl` 檔案，或是透過執行時期參數傳遞 `sqlite-transcript://...` 字串。
+- 會話工具結果防護事件從已知的會話作用域發出，即使記憶體內管理員沒有衍生的定位器。其測試不再偽造作用中的 `/tmp/*.jsonl` 文字紀錄檔案。
+- BTW 和壓縮檢查點輔助函式現在透過 SQLite 作用域讀取和分支文字紀錄資料列。檢查點中繼資料現在僅儲存會話 ID 和 leaf/entry ID；衍生的定位器不再寫入檢查點酬載中。
+- Gateway transcript-key 查詢在協定邊界使用 SQLite transcript 範圍，且不再對 transcript 檔案名稱進行 realpath 或 stat。
+- 自動壓縮的 transcript 輪換會直接透過 SQLite transcript 存儲寫入後繼 transcript 列。Session 列僅保留後繼 session 的身分識別，而不是持久的 JSONL 路徑或持久化的定位器。
+- 嵌入式 context-engine 壓縮使用 SQLite 命名的 transcript 輪換輔助程式。輪換測試不再建構 JSONL 後繼路徑，也不會將作用中的 session 模型化為檔案。
+- 受控的傳出圖像保留機制會根據 SQLite transcript 統計資料來設定其 transcript-message 快取的鍵，而不是使用檔案系統的 stat 呼叫。
+- Runtime session 鎖定和獨立的舊版 `.jsonl.lock` doctor 通道已被移除。
+- Microsoft Teams runtime barrel 和公開外掛 SDK 不再重新匯出舊的檔案鎖定輔助程式；持久的外掛狀態路徑由 SQLite 支援。
+- Session 年齡/計數修剪和明確的 session 清理已被移除。Doctor 擁有舊版匯入功能；過時的 session 會被明確重置或刪除。
+- Doctor 完整性檢查不再將舊版 JSONL 檔案計為 SQLite session 列的有效作用中 transcript。作用中 transcript 的健全性僅限於 SQLite；舊版 JSONL 檔案會被回報為遷移/孤立清理的輸入。
+- Doctor 不再將 `agents/<agent>/sessions/` 視為所需的 runtime 狀態。它僅在該目錄已存在時才進行掃描，作為舊版匯入或孤立清理的輸入。
+- Gateway `sessions.resolve`、session 修補/重置/壓縮路徑、子代理程式生成、快速中止、ACP 中繼資料、心跳隔離 session 和 TUI 修補不再作為正常 runtime 工作的副作用來遷移或修剪舊版 session 鍵。
+- CLI 命令 session 解析現在會返回擁有的 `agentId` 而非 `storePath`，並且不再在正常的 `--to` 或 `--session-id` 解析期間複製舊版主 session 列。舊版主列的正規化僅屬於 doctor 的職責。
+- Runtime subagent depth resolution no longer reads `sessions.json` or JSON5
+  session stores. It reads SQLite `session_entries` by agent id, and legacy
+  depth/session metadata can only enter through the doctor import path.
+- Auth profile session overrides persist through direct `{agentId, sessionKey}`
+  row upserts instead of lazy-loading a file-shaped session-store runtime.
+- Auto-reply verbose gating and session update helpers now read/upsert SQLite
+  session rows by session identity and no longer require a legacy store path
+  before touching persisted row state.
+- Command-run session metadata helpers now use entry-oriented names and module
+  paths; the old `session-store` command helper surface has been removed.
+- Bootstrap header seeding and manual compaction boundary hardening now mutate
+  SQLite transcript rows directly. Runtime callers pass session identity, not
+  writable `.jsonl` paths.
+- Silent session-rotation replay copies recent user/assistant turns by
+  `{agentId, sessionId}` from SQLite transcript rows. It no longer accepts
+  source or target transcript locators.
+- Fresh runtime session rows no longer store transcript locators. Callers use
+  `{agentId, sessionId}` directly; export/debug commands can choose output file
+  names when they materialize rows.
+- Starting a new persisted transcript session now always opens SQLite rows by
+  scope. The session manager no longer reuses a previous file-era transcript
+  path or locator as the identity for the new session.
+- Persisted transcript sessions use the explicit
+  `openTranscriptSessionManagerForSession({agentId, sessionId})` API. The old
+  static `SessionManager.create/openForSession/list/forkFromSession` facades are
+  gone so tests and runtime code cannot accidentally recreate file-era session
+  discovery.
+- Plugin runtime no longer exposes `api.runtime.agent.session.resolveTranscriptLocatorPath`;
+  plugin code uses SQLite row helpers and scope values.
+- The public `session-store-runtime` SDK surface now only exports session row
+  and transcript row helpers. Raw SQLite database open/path and close/reset
+  helpers live in the focused `sqlite-runtime` SDK surface, so plugin tests no
+  longer pull the deprecated broad testing barrel for database cleanup.
 - 舊版 `.jsonl` 軌跡/檢查點檔名分類器現在位於
-  doctor 舊版會話檔案模組中。核心會話驗證不再匯入
-  檔案成品輔助函式來決定正常的 SQLite 會話 ID。
-- 主動記憶體阻塞性子代理執行使用 SQLite 逐字稿列，而不是
-  在外掛狀態下建立臨時或持久的 `session.jsonl` 檔案。舊的
+  doctor legacy session-file 模組中。核心會話驗證不再匯入
+  file-artifact 輔助工具來決定正常的 SQLite 會話 ID。
+- 主動記憶體阻斷子代理執行現在會使用 SQLite 記錄列，而不是
+  在插件狀態下建立暫存或持續存在的 `session.jsonl` 檔案。舊的
   `transcriptDir` 選項已被移除。
-- 一次性 slug 生成和 Crestodian 規劃器運行使用 SQLite 轉錄行
-  而不是建立暫時的 `session.jsonl` 檔案。
-- `llm-task` 助手運行和隱藏承諾提取也使用 SQLite
-  轉錄行，因此這些僅限模型的助手會話不再建立
-  暫時的 JSON/JSONL 轉錄檔案。
-- `TranscriptSessionManager` 現在只是一個開啟的 SQLite 轉錄範圍。
-  執行時程式碼使用 `openTranscriptSessionManagerForSession({agentId,
-sessionId})` 開啟它；建立、分支、繼續、列出和派生流程位於其
-  擁有的 SQLite 行助手中，而不是靜態管理器外觀。
-  Doctor/import/debug 程式碼在執行時會話管理器之外處理明確的舊版來源檔案。
+- 一次性 slug 生成和 Crestodian 規劃器執行會使用 SQLite 記錄列，
+  而不是建立暫存的 `session.jsonl` 檔案。
+- `llm-task` 輔助執行和隱藏承諾提取也會使用 SQLite
+  記錄列，因此這些僅模型的輔助會話不再會建立
+  暫時的 JSON/JSONL 記錄檔案。
+- `TranscriptSessionManager` 現在只是一個已開啟的 SQLite 記錄範圍。
+  執行時代碼使用 `openTranscriptSessionManagerForSession({agentId,
+sessionId})` 來開啟它；建立、分支、繼續、列出和分支流程現在位於
+  其所屬的 SQLite 列輔助工具中，而不是靜態管理器外觀。
+  Doctor/import/debug 代碼在執行階段會話管理器之外處理顯式的舊版來源檔案。
 - 過時的 `SessionManager.newSession()` 和
-  `SessionManager.createBranchedSession()` Facade 方法已被移除。新的
-  session 和 transcript 子代由其擁有的 SQLite
-  workflow 建立，而不是將已開啟的 manager 變異為不同的持久化 session。
-- 父 transcript fork 決策和 fork 建立不再接受
+  `SessionManager.createBranchedSession()` 外觀方法已被移除。新的
+  會話和記錄後代是由其所屬的 SQLite 工作流程所建立，而不是將已開啟的管理器
+  變異為不同的持續性會話。
+- 父記錄分支決策和分支建立不再接受
   `storePath` 或 `sessionsDir`；它們使用 `{agentId, sessionId}` SQLite
-  transcript 範圍，而非保留的檔案系統路徑元資料。
-- Memory-host 不再匯出無操作的 session-directory transcript
-  分類輔助函式；transcript 篩選現在會在條目建構期間從 SQLite 列
+  記錄範圍，而不是保留的檔案系統路徑元資料。
+- Memory-host 不再匯出空操作會話目錄記錄
+  分類輔助工具；記錄篩選現在會在條目建構期間從 SQLite 列
   元資料衍生。
-- Memory-host 和 QMD 會話匯出測試使用 SQLite 轉錄範圍。舊的 `agents/<agentId>/sessions/*.jsonl` 路徑僅在測試刻意驗證 doctor/import/export 相容性時保持涵蓋。
-- QA-lab 原始會話檢查現在透過閘道使用 `sessions.list` 而非讀取 `agents/qa/sessions/sessions.json`；MSteams 回饋會直接附加至 SQLite 轉錄，而不會偽造 JSONL 路徑。
-- 共用的入站通道輪次現在攜帶 `{agentId, sessionKey}` 而非舊有的 `storePath`。LINE、WhatsApp、Slack、Discord、Telegram、Matrix、Signal、iMessage、BlueBubbles、Feishu、Google Chat、IRC、Nextcloud Talk、Zalo、Zalo Personal、QA Channel、Microsoft Teams、Mattermost、Synology Chat、Tlon、Twitch 和 QQBot 記錄路徑現在會讀取 updated-at 元資料，並透過 SQLite 身份記錄入站會話資料列。
-- Transcript 定位器持久性已從活動會話行中移除。
-  `resolveSessionTranscriptTarget` 會傳回 `agentId`、`sessionId` 和可選的
-  主題中繼資料；doctor 是唯一匯入舊版 transcript 檔案
-  名稱的程式碼。
-- Runtime transcript 標頭始於 SQLite 版本 `1`。舊的 JSONL V1/V2/V3
-  形狀升級僅存在於 doctor 匯入中，並在儲存列之前將匯入的標頭正規化為
-  目前的 SQLite transcript 版本。
-- Database-first guard 現在會封鎖 `SessionManager.listAll` 和
-  `SessionManager.forkFromSession`；會話列出以及 fork/restore 工作流程
-  必須繼續使用 row/scoped SQLite APIs。
-- Guard 也會在 doctor/import 程式碼之外封鎖舊版 transcript JSONL 解析/active-branch 修復輔助
-  名稱，因此 runtime 無法長出第二條舊版
-  transcript 遷移路徑。
-- 嵌入式 PI 執行會拒絕傳入的 transcr ipt 控制代碼。它們在 worker 啟動前使用 SQLite `{agentId, sessionId}` 身份，並在嘗試接觸 transcr ipt 狀態之前再次使用。過時的 `/tmp/*.jsonl` 輸入無法選取執行階段寫入目標。
-- Cache trace、Anthropic payload、raw stream 和診斷時間軸記錄現在會寫入至類型化的 SQLite `diagnostic_events` 資料列。Gateway 穩定性套件現在會寫入至類型化的 SQLite `diagnostic_stability_bundles` 資料列。舊的 `diagnostics.cacheTrace.filePath`、`OPENCLAW_CACHE_TRACE_FILE`、`OPENCLAW_ANTHROPIC_PAYLOAD_LOG_FILE` 和 `OPENCLAW_DIAGNOSTICS_TIMELINE_PATH` JSONL 覆寫路徑已被移除，且一般的穩定性擷取不再寫入 `logs/stability/*.json` 檔案。
-- Cron 持久化現在會協調 SQLite `cron_jobs` 資料列，而不是在每次儲存時刪除/重新插入整個作業資料表。Plugin 目標回寫會直接更新符合的 cron 資料列，並將執行時期 cron 狀態保持在同一個狀態資料庫交易中。
-- Cron 執行時期呼叫者現在使用穩定的 SQLite cron 存儲金鑰。舊版 `cron.store` 路徑僅作為 doctor 匯入輸入；正式環境的 gateway、任務維護、狀態、執行日誌 和 Telegram 目標回寫路徑使用 `resolveCronStoreKey`，並且不再對金鑰進行路徑標準化。Cron 狀態現在回報 `storeKey`，而不是舊的檔案形式 `storePath` 欄位。
-- Cron 執行時載入和排程不再正規化舊版持久化的作業
-  形狀，例如 `jobId`、`schedule.cron`、數值 `atMs`、字串布林值，或
-  遺失的 `sessionTarget`。Doctor 舊版匯入會在
-  列插入 SQLite 之前負責這些修復。
-- ACP spawn 不再解析或持久化文字紀錄 JSONL 檔案路徑。Spawn
-  和 thread-bind 設定會直接持久化 SQLite session 列，並將
-  session id 作為保留的文字紀錄識別。
-- ACP session 元資料 API 現在透過 `agentId` 讀取/列出/更新 SQLite 列，並
-  且不再將 `storePath` 作為 ACP session 項目契約的一部分公開。
-- Session 使用量計算與 Gateway 使用量聚合現在僅透過 `{agentId, sessionId}` 解析文字紀錄 (transcripts)。成本/使用量快取與已發現的 Session 摘要不再合成或傳回文字紀錄定位字串。
-- Gateway 聊天附加、中止部分持久化 (abort-partial persistence)、`/sessions.send` 以及網路聊天媒體文字紀錄寫入，現在透過 SQLite 文字紀錄範圍直接附加。Gateway 文字紀錄注入輔助程式不再接受 `transcriptLocator` 參數。
-- SQLite 文字紀錄探索現在僅列出文字紀錄範圍與統計資料：`{agentId, sessionId, updatedAt, eventCount}`。已廢棄的 `listSqliteSessionTranscriptLocators` 相容性輔助程式與逐列 `locator` 欄位已被移除。
-- Transcript repair runtime 現在僅公開
-  `repairTranscriptSessionStateIfNeeded({agentId, sessionId})`。舊的
-  基於 locator 的修復輔助程式已刪除；doctor/debug 程式碼會讀取明確的
-  原始檔案路徑，且永不遷移 locator 字串。
-- ACP replay ledger runtime 現在將每個工作階段的重播列儲存在共享的
-  SQLite 狀態資料庫中，而不是 `acp/event-ledger.json`；doctor 會匯入並
-  移除舊版檔案。
-- Gateway transcript reader 輔助程式現在位於
-  `src/gateway/session-transcript-readers.ts`，而不是舊的
-  `session-utils.fs` 模組名稱。後備重試歷史檢查是根據
-  SQLite transcript 內容命名，而不是舊的 file-helper 介面。
-- Gateway injected-chat 和 compaction 輔助程式現在透過內部輔助 API 傳遞 SQLite transcript 範圍，
-  而不是將數值命名為 transcript 路徑或
-  原始檔案。
-- 啟動延續偵測現在透過 `hasCompletedBootstrapTranscriptTurn` 檢查 SQLite 轉錄資料行；它不再公開檔案狀的輔助程式名稱。
-- Embedded-runner 測試現在會使用 SQLite 轉錄身分識別，且開啟新的轉錄管理員一律需要明確的 `sessionId`。
-- 記憶體索引輔助程式現在端到端使用 SQLite 轉錄術語：主機匯出 `listSessionTranscriptScopesForAgent` 和 `sessionTranscriptKeyForScope`，目標同步佇列 `sessionTranscripts`，公開的 session-search 命中會公開不透明的 `transcript:<agent>:<session>` 路徑，且內部 DB 來源金鑰是 `session:<session>` 於 `source_kind='sessions'` 之下，而非假的檔案路徑。
-- 通用插件 SDK 的持久化去重輔助程式不再公開以檔案為形式的選項。呼叫端提供 SQLite 範圍鍵，而持久的去重資料列則存在於共享的插件狀態中。
-- Microsoft Teams SSO 和委派的 OAuth 權杖已從鎖定的 JSON 檔案移至 SQLite 插件狀態。Doctor 匯入 `msteams-sso-tokens.json` 和 `msteams-delegated.json`，從載荷重建標準的 SSO 權杖鍵，並移除來源檔案。
-- Matrix 同步快取狀態已從 `bot-storage.json` 移至 SQLite 插件狀態。Doctor 匯入舊版的原始或封裝同步載荷並移除來源檔案。現有的 Matrix 和 QA Matrix 用戶端會傳遞 SQLite 同步儲存區根目錄，而不是偽造的 `sync-store.json` 或 `bot-storage.json` 路徑。
-- Matrix legacy crypto migration status moved from
-  `legacy-crypto-migration.json` to SQLite plugin state. Doctor imports the
-  old status file; Matrix SDK IndexedDB snapshots moved from
-  `crypto-idb-snapshot.json` to SQLite plugin blobs. Matrix recovery keys and
-  credentials are SQLite plugin-state rows; their old JSON files are doctor
-  migration inputs only.
-- Memory Wiki activity logs now use SQLite plugin state instead of
-  `.openclaw-wiki/log.jsonl`. The Memory Wiki migration provider imports old
-  JSONL logs; wiki markdown and user vault content stay file-backed as
-  workspace content.
-- Memory Wiki no longer creates `.openclaw-wiki/state.json` or the unused
-  `.openclaw-wiki/locks` directory. The migration provider removes those retired
-  plugin metadata files if an older vault still has them.
-- Crestodian 稽核項目現在使用核心 SQLite 外掛程式狀態，而不是 `audit/crestodian.jsonl`。Doctor 會匯入舊版 JSONL 稽核日誌，並在成功匯入後將其移除。
-- 組態寫入/觀察稽核項目現在使用核心 SQLite 外掛程式狀態，而不是 `logs/config-audit.jsonl`。Doctor 會匯入舊版 JSONL 稽核日誌，並在成功匯入後將其移除。
-- macOS 伴隨程式在編輯 `openclaw.json` 時，不再寫入應用程式本地的 `logs/config-audit.jsonl` 或 `logs/config-health.json` 附屬檔案。組態檔案保持以檔案為基礎，還原快照仍位於組態檔案旁邊，而持久的組態稽核/健康狀態屬於 Gateway SQLite 存儲。
-- Crestodian 救援待審核項目現在使用核心 SQLite 外掛程式狀態，而不是 `crestodian/rescue-pending/*.json`。Doctor 會匯入舊版待審核檔案，並在成功匯入後將其移除。
-- Phone Control 臨時 arming 狀態現在使用 SQLite plugin state 而非 `plugins/phone-control/armed.json`。Doctor 會將 legacy armed-state 檔案匯入 `phone-control/arm-state` namespace 並移除該檔案。
-- Doctor 不再就地修復 JSONL transcripts 或建立備份 JSONL 檔案。它會將 active branch 匯入 SQLite 並移除 legacy 來源。
-- Session-memory hook transcript lookup 使用 `{agentId, sessionId}` 僅限 scope 的 SQLite 讀取。其 helper 不再接受或推導 transcript locators、legacy 檔案讀取或檔案重寫選項。
-- Codex app-server conversation bindings 現在透過 OpenClaw session key 或明確的 `{agentId, sessionId}` scope 來鍵結 SQLite plugin state。它們絕不能保留 transcript-path fallback bindings。
-- Codex app-server 的鏡像歷史讀取僅使用 SQLite 的紀錄範圍；它們絕不能從紀錄檔路徑中恢復身分。
-- 角色排序和壓縮重設路徑不再取消連結舊的紀錄檔；重設僅會旋轉 SQLite 會話列和紀錄身分。
-- Gateway 重設和檢查點回應會傳回乾淨的會話列以及會話 ID。它們不再為客戶端合成 SQLite 紀錄定位器。
-- Memory-core dreaming 不再透過探查遺失的 JSONL 檔案來修剪會話列。Subagent 清理作業會透過會話執行階段 API 進行，而不是檔案系統存在性檢查。其紀錄擷取測試會直接植入 SQLite 列，而不是建立 `agents/<id>/sessions` 設定或定位器預留位置。
-- 記憶體逐字稿索引可能會將 `transcript:<agentId>:<sessionId>` 作為引用/讀取輔助工具的虛擬搜尋命中路徑公開。持久化索引來源是關聯式的（`source_kind='sessions'`、`source_key='session:<sessionId>'`、`session_id=<sessionId>`），因此該值不是運行時逐字稿定位器，不是檔案系統路徑，並且絕不能傳回會話運行時 API。
-- Gateway doctor memory status 從 SQLite plugin-state 列讀取短期回憶和階段訊號計數，而不是 `memory/.dreams/*.json`；CLI 和 doctor 輸出現在將該存儲標記為 SQLite 存儲，而不是路徑。
-- Memory-core 執行時期、CLI 狀態、Gateway doctor 方法以及 plugin SDK
-  外觀不再稽核或封存舊版 `.dreams/session-corpus` 檔案。
-  這些檔案僅作為遷移輸入；doctor 會將其匯入 SQLite 並
-  在驗證後刪除來源。現有工作階段攝取證據列
-  現在使用虛擬 SQLite 路徑 `memory/session-ingestion/<day>.txt`；執行時期
-  絕不寫入或衍生 `.dreams/session-corpus` 中的狀態。
-- Memory-core 公用產物會將 SQLite 主機事件公開為虛擬 JSON
-  產物 `memory/events/memory-host-events.json`；它們不再重複使用
-  舊版 `.dreams/events.jsonl` 來源路徑。
-- Sandbox 容器/瀏覽器註冊表现在使用共享的 `sandbox_registry_entries` SQLite 表，其中包含具有類型的 session、image、timestamp、backend/config 和 browser port 列。Doctor 導入舊版單一式和分片的 JSON 註冊表文件，並移除成功的來源。運行時讀取使用類型化的行列作為事實來源；`entry_json` 僅是重放/調試副本。
-- Commitments 现在使用類型化的共享 `commitments` 表，而不是整個存儲的 JSON blob。快照保存通過 commitment id 進行 upsert，並且僅刪除缺失的行，而不是清除並重新插入該表。運行時從類型化的 scope、delivery-window、status、attempt 和 text 列加載 commitments；`record_json` 僅是重放/調試副本。Doctor 導入舊版 `commitments.json` 並在成功導入後將其移除。
-- Cron 工作定義、排程狀態和執行歷史不再擁有執行時 JSON 寫入器或讀取器。執行時使用帶有類型化排程、負載、交付、失敗警示、工作階段、狀態和執行時狀態欄位的 `cron_jobs` 資料列，加上針對狀態、診斷摘要、交付狀態/錯誤、工作階段/執行、模型和權杖總計的類型化 `cron_run_logs` 中繼資料。`job_json` 僅作為重播/除錯副本；`state_json` 保留尚未具有熱查詢欄位的巢狀執行時診斷，同時執行時會從類型化欄位重新填充熱狀態欄位。Doctor 匯入舊版 `jobs.json`、`jobs-state.json` 和 `runs/*.jsonl` 檔案並移除已匯入的來源。外掛目標回寫會更新相符的 `cron_jobs` 資料列，而不是載入並替換整個 cron 存儲區。
-- 如果 doctor 無法在不取代明確傳遞目標的情況下安全地轉換舊版 `notify: true` webhook 後備機制，它會記錄一個警告並保留舊版來源，而不是發布有損失的 SQLite 資料列。
-- 輸出和工作階段傳遞佇列現在會將佇列狀態、項目類型、工作階段金鑰、頻道、目標、帳戶 ID、重試次數、上次嘗試/錯誤、復原狀態和平臺發送標記作為共享 `delivery_queue_entries` 表格中的型別欄位進行儲存。執行時期復原會從這些型別欄位讀取熱門欄位，而重試/復原變更會直接更新這些欄位，而不需要重寫重播 JSON。完整的 JSON 載荷僅保留作為訊息主體和其他冷重播資料的重播/除錯 blob。
-- 受管的輸出圖像記錄現在使用類型化的共享
-  `managed_outgoing_image_records` 列，而媒體位元組仍儲存在
-  `media_blobs` 中。JSON 記錄僅作為重播/調試副本保留。
-- Discord 模型選擇器偏好設定、指令部署雜湊和執行緒綁定
-  現在使用共享 SQLite 外掛程式狀態。其舊版 JSON 匯入計畫位於
-  Discord 外掛程式設定/修復程式遷移介面中，而非核心遷移程式碼。
-- 外掛程式舊版匯入偵測器使用以 doctor 命名的模組，例如
-  `doctor-legacy-state.ts` 或 `doctor-state-imports.ts`；正常管道執行時
-  模組不得匯入舊版 JSON 偵測器。
-- BlueBubbles 追蹤游標和輸入去重標記現在使用共享 SQLite
-  外掛程式狀態。其舊版 JSON 匯入計畫位於 BlueBubbles 外掛程式
-  設定/修復程式遷移介面中，而非核心遷移程式碼。
-- Telegram 更新偏移量、貼紙快取列、已傳送訊息快取列、主題名稱快取列以及執行緒繫結現在使用共用的 SQLite 外掛程式狀態。其舊版 JSON 匯入計畫位於 Telegram 外掛程式的 setup/doctor 遷移介面中，而非核心遷移程式碼中。
-- iMessage 追趕游標、回覆短 ID 對應以及已傳送回聲去重列現在使用共用的 SQLite 外掛程式狀態。舊的 `imessage/catchup/*.json`、`imessage/reply-cache.jsonl` 和 `imessage/sent-echoes.jsonl` 檔案僅作為 doctor 輸入。
-- Feishu 訊息去重列現在使用共用的 SQLite 外掛程式狀態，而非 `feishu/dedup/*.json` 檔案。其舊版 JSON 匯入計畫位於 Feishu 外掛程式的 setup/doctor 遷移介面中，而非核心遷移程式碼中。
-- Microsoft Teams 的對話、投票、待上傳緩衝區和回饋學習現在使用共享的 SQLite 外掛程式狀態/BLOB 資料表。待上傳路徑使用 `plugin_blob_entries`，因此媒體緩衝區會以 SQLite BLOB 形式儲存，而不是 base64 JSON。執行階段輔助程式名稱現在使用 SQLite/狀態命名，而不是 `*-fs` 檔案存放區命名，而且舊的 `storePath` 填充層已從這些存放區中移除。其舊版 JSON 匯入計畫位於 Microsoft Teams 外掛程式設定/醫生遷移介面中。
-- Zalo 託管輸出媒體現在使用共享 SQLite `plugin_blob_entries`
-  取代 `openclaw-zalo-outbound-media` JSON/bin 臨時側車檔案。
-- Diffs 檢視器 HTML 和中繼資料現在使用共享的 SQLite `plugin_blob_entries`
-  代替 `meta.json`/`viewer.html` 暫存檔案。渲染的 PNG/PDF 輸出保留
-  為暫存具體化，因為通道傳遞仍然需要檔案路徑。
-- Canvas 管理的文件現在使用共享的 SQLite `plugin_blob_entries` 代替
-  預設的 `state/canvas/documents` 目錄。Canvas 主機直接提供這些
-  blob；僅針對明確的 `host.root`
-  運算子內容或當下游媒體讀取器需要路徑時的暫時具體化建立本機檔案。
-- 檔案傳輸稽核決定現在使用共享 SQLite `plugin_state_entries`
-  代替無限制的 `audit/file-transfer.jsonl` 執行時期日誌。Doctor
-  會將舊版 JSONL 稽核檔案匯入至外掛程式狀態，並在乾淨匯入後移除來源。
-- ACPX 程序租約和閘道執行個體身分現在使用共享的 SQLite 外掛
-  狀態。Doctor 將傳統的 `gateway-instance-id` 檔案匯入到外掛狀態中
-  並移除來源。
-- ACPX 產生的包裝腳本和隔離的 Codex 目錄是 OpenClaw 暫存根目錄下的臨時
-  具體化，而非持久的 OpenClaw 狀態。持久的 ACPX 執行時期紀錄是 SQLite 租約和 gateway-instance 資料列；
-  舊的 ACPX `stateDir` 配置介面已被移除，因為不再有執行時期狀態寫入
-  該處。
-- Gateway 媒體附件現在使用共享的 `media_blobs` SQLite 表作為
-  標準位元組存儲。返回給通道和沙盒
-  相容性表面的本地路徑是資料庫行的臨時具體化，而不是
-  持久化媒體存儲。執行時媒體允許列表不再包含遺留的
-  `$OPENCLAW_STATE_DIR/media` 或 config-dir `media` 根目錄；這些目錄
-  僅是 doctor 匯入來源。
-- Shell 自動完成不再寫入 `$OPENCLAW_STATE_DIR/completions/*` 快取
-  檔案。Install、doctor、update 和 release smoke 路徑使用生成的
-  自動完成輸出或 profile sourcing，而不是持久的自動完成快取
-  檔案。
-- Gateway skill-upload 暫存現在使用共享的 `skill_uploads` 資料列。上傳
-  中繼資料、等冪性金鑰和封存位元組儲存在 SQLite 中；安裝程式
-  只在安裝執行期間收到一個暫時的具體化封存路徑。
-- Subagent 內聯附件不再在工作區 `.openclaw/attachments/*` 下具體化。產生路徑會準備 SQLite VFS 種子項目，
-  內聯執行會將這些項目播種到每個 agent 的執行時期暫存命名空間，
-  而磁碟支援的工具會將該 SQLite 暫存覆蓋在附件路徑上。舊的
-  subagent-run attachment-dir 註冊表欄位和清理掛鉤已經移除。
-- CLI 映像檔補水不再維護穩定的 `openclaw-cli-images` 快取
-  檔案。外部 CLI 後端仍然會收到檔案路徑，但這些路徑
-  是每次執行的暫時具體化並會進行清理。
-- 快取追蹤診斷、Anthropic 載荷診斷、原始模型串流診斷、診斷時間軸事件以及 Gateway 穩定性套件現在會寫入 SQLite 列，而不是 `logs/*.jsonl` 或 `logs/stability/*.json` 檔案。執行時期路徑覆寫旗標和環境變數已被移除；匯出/除錯指令可以明確地從資料庫列具體化檔案。
-- macOS 伴隨應用程式不再有滾動式 `diagnostics.jsonl` 寫入器。應用程式日誌會進入統一記錄，而持續性 Gateway 診斷則保持 SQLite 支援。
-- macOS port-guardian 記錄清單現在使用類型的共享 SQLite `macos_port_guardian_records` 列，而不是 Application Support JSON 檔案或不透明的單例 blob。
-- Gateway 單例鎖現在使用 `state_leases``gateway_locks` 範圍下的類型共享 SQLite `state_leases` 列，而不是 temp-dir 鎖定檔案。Fly 和 OAuth 疑難排解文件現在指向 SQLite 租用/認證重新整理鎖，而不是過期的檔案鎖清理。
-- Gateway 重新啟動哨兵狀態現在使用類型共享 SQLite `gateway_restart_sentinel` 列，而不是 `restart-sentinel.json`；執行時從類型欄位讀取哨兵類型、狀態、路由、訊息、接續和統計資料。`payload_json` 僅是重放/調試副本。執行時程式碼直接清除 SQLite 列，不再負責檔案清理管道。
-- Gateway 重啟意圖和監督器切接狀態現在使用類型化的共享
-  SQLite `gateway_restart_intent` 和 `gateway_restart_handoff` 資料列，而不是
+- Memory-host 和 QMD 會話匯出測試使用 SQLite 記錄範圍。舊的
+  `agents/<agentId>/sessions/*.jsonl` 路徑僅在測試有意證明
+  doctor/import/export 相容性時才會被涵蓋。
+- QA-lab 原始會話檢查現在透過閘道使用 `sessions.list`
+  而不是讀取 `agents/qa/sessions/sessions.json`；MSteams 回饋
+  會直接附加到 SQLite 轉錄，而不會偽造 JSONL 路徑。
+- 共用的輸入通道輪次現在攜帶 `{agentId, sessionKey}` 而非
+  舊有的 `storePath`。LINE、WhatsApp、Slack、Discord、Telegram、Matrix、Signal、
+  iMessage、BlueBubbles、Feishu、Google Chat、IRC、Nextcloud Talk、Zalo、
+  Zalo Personal、QA Channel、Microsoft Teams、Mattermost、Synology Chat、Tlon、
+  Twitch 和 QQBot 的記錄路徑現在會讀取 updated-at 元資料，並透過 SQLite 身份
+  記錄輸入會話資料列。
+- 轉錄定位器持續性已從作用中的會話資料列中移除。
+  `resolveSessionTranscriptTarget` 會傳回 `agentId`、`sessionId` 和選用的
+  主題元資料；doctor 是唯一匯入舊版轉錄檔案名稱的程式碼。
+- 執行時期轉錄標頭從 SQLite 版本 `1` 開始。舊的 JSONL V1/V2/V3
+  形狀升級僅存在於 doctor 匯入中，並會在儲存資料列之前將匯入的標頭正規化為
+  目前的 SQLite 轉錄版本。
+- 資料庫優先守衛現在禁止 `SessionManager.listAll` 和
+  `SessionManager.forkFromSession`；會話列出和 fork/restore 工作流程
+  必須保持在資料列/範圍 SQLite API 上。
+- 該守衛也禁止在 doctor/import 程式碼之外使用舊版轉錄 JSONL 剖析/active-branch 修復協助程式
+  名稱，因此執行時期無法長出第二條舊版轉錄移轉路徑。
+- 嵌入式 PI 執行會拒絕傳入的轉錄控制代碼。它們會在啟動 worker 之前以及嘗試
+  觸碰轉錄狀態之前使用 SQLite `{agentId, sessionId}` 身份。過時的 `/tmp/*.jsonl` 輸入無法選取
+  執行時期寫入目標。
+- 快取追蹤、Anthropic 載荷、原始串流和診斷時間軸記錄現在寫入類型化的 SQLite `diagnostic_events` 資料列。Gateway 穩定性套組現在寫入類型化的 SQLite `diagnostic_stability_bundles` 資料列。舊的 `diagnostics.cacheTrace.filePath`、`OPENCLAW_CACHE_TRACE_FILE`、`OPENCLAW_ANTHROPIC_PAYLOAD_LOG_FILE` 和 `OPENCLAW_DIAGNOSTICS_TIMELINE_PATH` JSONL 覆蓋路徑已被移除，且正常的穩定性擷取不再寫入 `logs/stability/*.json` 檔案。
+- Cron 持久性現在協調 SQLite `cron_jobs` 資料列，而不是在每次儲存時刪除/重新插入整個工作資料表。外掛目標回寫會直接更新相符的 cron 資料列，並將運行時 cron 狀態保持在同一個狀態資料庫交易中。
+- Cron 運行時呼叫者現在使用穩定的 SQLite cron 存儲金鑰。舊的 `cron.store` 路徑僅作為 doctor 匯入輸入；生產環境 gateway、工作維護、狀態、執行紀錄和 Telegram 目標回寫路徑使用 `resolveCronStoreKey`，且不再對金鑰進行路徑正規化。Cron 狀態現在回報 `storeKey`，而不是舊的檔案形態 `storePath` 欄位。
+- Cron 運行時載入和排程不再正規化舊的持久化工作形態，例如 `jobId`、`schedule.cron`、數字 `atMs`、字串布林值或遺失的 `sessionTarget`。Doctor 舊版匯入會在資料列插入 SQLite 之前負責這些修復工作。
+- ACP spawn 不再解析或持久化逐字稿 JSONL 檔案路徑。Spawn 和執行緒綁定設定會直接持久化 SQLite 工作階段資料列，並將工作階段 id 作為保留的逐字稿識別碼。
+- ACP 工作階段中繼資料 API 現在透過 `agentId` 讀取/列出/更新 SQLite 資料列，且不再將 `storePath` 作為 ACP 工作階段項目合約的一部分公開。
+- 工作階段使用量計算和 gateway 使用量彙總現在僅透過 `{agentId, sessionId}` 解析逐字稿。成本/使用量快取和已發現工作階段摘要不再合成或回傳逐字稿定位器字串。
+- Gateway 聊天附加、中止部分持久化、`/sessions.send` 以及網路聊天媒體文字記錄寫入現在直接透過 SQLite 文字記錄範圍進行附加。Gateway 文字記錄注入輔助程式不再接受 `transcriptLocator` 參數。
+- SQLite 文字記錄探索現在僅列出文字記錄範圍和統計資料：`{agentId, sessionId, updatedAt, eventCount}`。已淘汰的 `listSqliteSessionTranscriptLocators` 相容性輔助程式和逐行 `locator` 欄位已被移除。
+- 文字記錄修復執行階段現在僅公開 `repairTranscriptSessionStateIfNeeded({agentId, sessionId})`。舊的基於定位器 (locator-based) 的修復輔助程式已被刪除；doctor/debug 程式碼會讀取明確的原始檔案路徑，且永不遷移定位器字串。
+- ACP 重播帳本執行階段現在會將每個工作階段的重播資料列儲存在共享 SQLite 狀態資料庫中，而不是 `acp/event-ledger.json`；doctor 會匯入並移除舊版檔案。
+- Gateway 文字記錄讀取器輔助程式現在位於 `src/gateway/session-transcript-readers.ts`，而不是舊的 `session-utils.fs` 模組名稱。後援重試歷史記錄檢查現在是以 SQLite 文字記錄內容命名，而不是舊的檔案輔助程式介面。
+- Gateway 注入聊天和壓縮輔助程式現在透過內部輔助程式 API 傳遞 SQLite 文字記錄範圍，而不是將值命名為文字記錄路徑或原始檔案。
+- 啟動程序延續偵測現在透過 `hasCompletedBootstrapTranscriptTurn` 檢查 SQLite 文字記錄資料列；它不再公開檔案形狀的輔助程式名稱。
+- Embedded-runner 測試現在會使用 SQLite 文字記錄身分識別，且開啟新的文字記錄管理員一律需要明確的 `sessionId`。
+- 記憶體索引輔助程式現在全程使用 SQLite 文字記錄術語：主機匯出 `listSessionTranscriptScopesForAgent` 和 `sessionTranscriptKeyForScope`，目標同步佇列 `sessionTranscripts`，公開的工作階段搜尋命中會公開不透明的 `transcript:<agent>:<session>` 路徑，且內部 DB 來源金鑰是 `session:<session>` 位於 `source_kind='sessions'` 之下，而不是偽造的檔案路徑。
+- 通用插件 SDK 持久性去重輔助程式不再公開檔案形狀的選項。呼叫者提供 SQLite 範圍金鑰，且持久性去重資料列位於共享插件狀態中。
+- Microsoft Teams SSO 和委派的 OAuth 權杖已從鎖定的 JSON 檔案移至
+  SQLite 外掛程式狀態。Doctor 會匯入 `msteams-sso-tokens.json` 和
+  `msteams-delegated.json`，從酬載重建標準 SSO 權杖金鑰，
+  並移除來源檔案。
+- Matrix 同步快取狀態已從 `bot-storage.json` 移至
+  SQLite 外掛程式狀態。Doctor 會匯入舊的原始或包裝同步酬載並移除
+  來源檔案。使用中的 Matrix 和 QA Matrix 用戶端會傳遞 SQLite 同步儲存區根
+  目錄，而不是偽造的 `sync-store.json` 或 `bot-storage.json` 路徑。
+- Matrix 舊版加密移轉狀態已從
+  `legacy-crypto-migration.json` 移至 SQLite 外掛程式狀態。Doctor 會匯入
+  舊的狀態檔案；Matrix SDK IndexedDB 快照已從
+  `crypto-idb-snapshot.json` 移至 SQLite 外掛程式 Blob。Matrix 復原金鑰和
+  認證是 SQLite 外掛程式狀態資料列；其舊的 JSON 檔案僅為 Doctor
+  移轉輸入來源。
+- Memory Wiki 活動日誌現在使用 SQLite 外掛程式狀態，而非
+  `.openclaw-wiki/log.jsonl`。Memory Wiki 移轉提供者會匯入舊的
+  JSONL 日誌；Wiki markdown 和使用者 vault 內容保持檔案支援作為
+  工作區內容。
+- Memory Wiki 不再建立 `.openclaw-wiki/state.json` 或未使用的
+  `.openclaw-wiki/locks` 目錄。如果較舊的 vault 仍有這些已淘汰的
+  外掛程式中繼資料檔案，移轉提供者會將其移除。
+- Crestodian 稽核項目現在使用核心 SQLite 外掛程式狀態，而非
+  `audit/crestodian.jsonl`。Doctor 會匯入舊版 JSONL 稽核日誌並
+  在成功匯入後將其移除。
+- 設定寫入/觀察稽核項目現在使用核心 SQLite 外掛程式狀態，而非
+  `logs/config-audit.jsonl`。Doctor 會匯入舊版 JSONL 稽核日誌並
+  在成功匯入後將其移除。
+- macOS 伴隨程式在編輯 `openclaw.json` 時，不再寫入應用程式本機 `logs/config-audit.jsonl` 或
+  `logs/config-health.json` 副檔名檔案。設定
+  檔案保持檔案支援，復原快照保留在設定檔旁邊，
+  而持久的設定稽核/健康狀態屬於 Gateway SQLite 儲存區。
+- Crestodian 救援待批准项現在改用核心 SQLite 插件狀態，而非 `crestodian/rescue-pending/*.json`。Doctor 會匯入舊版的待批准檔案，並在成功匯入後將其移除。
+- Phone Control 暫時布防狀態現在使用 SQLite 插件狀態，而非 `plugins/phone-control/armed.json`。Doctor 會將舊版布防狀態檔案匯入到 `phone-control/arm-state` 命名空間並移除該檔案。
+- Doctor 不再就地修復 JSONL 轉錄或建立備份 JSONL 檔案。它會將使用中的分支匯入 SQLite 並移除舊版來源。
+- Session-memory hook 轉錄查詢使用 `{agentId, sessionId}` 僅限範圍的 SQLite 讀取。其輔助函式不再接受或推導轉錄定位器、舊版檔案讀取或檔案重寫選項。
+- Codex app-server 對話綁定現在透過 OpenClaw 工作階段金鑰或明確的 `{agentId, sessionId}` 範圍來設定 SQLite 插件狀態的索引鍵。它們不得保留轉錄路徑的後備綁定。
+- Codex app-server 鏡像歷史記錄讀取僅使用 SQLite 轉錄範圍；它們不得從轉錄檔案路徑恢復身分。
+- 角色排序和壓縮重設路徑不再取消連結舊的轉錄檔案；重設僅會輪替 SQLite 工作階段列和轉錄身分。
+- Gateway 重設和檢查點回應會傳回乾淨的工作階段列和工作階段 ID。它們不再為用戶端合成 SQLite 轉錄定位器。
+- Memory-core dreaming 不再透過探測遺失的 JSONL 檔案來修剪工作階段列。子代理清理會透過工作階段執行時期 API，而非檔案系統存在性檢查來進行。其轉錄擷取測試會直接植入 SQLite 列，而非建立 `agents/<id>/sessions` 固定裝置或定位器預留位置。
+- 記憶體轉錄索引可能會將 `transcript:<agentId>:<sessionId>` 暴露為引用/讀取輔助函式的虛擬搜尋命中路徑。持久索引來源是關聯式的 (`source_kind='sessions'`、`source_key='session:<sessionId>'`、`session_id=<sessionId>`)，因此該值不是執行時期轉錄定位器，不是檔案系統路徑，且絕不能傳回工作階段執行時期 API。
+- Gateway doctor 記憶體狀態從 SQLite plugin-state 列讀取短期回憶和階段訊號計數，而非 `memory/.dreams/*.json`；CLI 和 doctor 輸出現將該儲存空間標記為 SQLite 存儲，而非路徑。
+- Memory-core 執行時、CLI 狀態、Gateway doctor 方法和 plugin SDK 外觀不再稽核或封存舊版 `.dreams/session-corpus` 檔案。這些檔案僅作為遷移輸入；doctor 會將其匯入 SQLite 並在驗證後刪除來源。現用 session-ingestion 證據列現使用虛擬 SQLite 路徑 `memory/session-ingestion/<day>.txt`；執行時絕不寫入或從 `.dreams/session-corpus` 衍生狀態。
+- Memory-core 公用神器將 SQLite 主機事件公開為虛擬 JSON 神器 `memory/events/memory-host-events.json`；它們不再重複使用舊版 `.dreams/events.jsonl` 來源路徑。
+- Sandbox 容器/瀏覽器登錄檔現使用共用的 `sandbox_registry_entries` SQLite 表，其中包含類型化的 session、image、timestamp、backend/config 和 browser port 欄位。Doctor 會匯入舊版單體和分片 JSON 登錄檔，並移除成功的來源。執行時讀取使用類型化的列欄位作為事實來源；`entry_json` 僅為重放/偵錯副本。
+- Commitments 現使用類型化的共用 `commitments` 表，而非整個儲存區的 JSON blob。快照保存會透過 commitment id 進行 upsert，並僅刪除遺失的列，而非清除並重新插入該表。執行時從類型化的 scope、delivery-window、status、attempt 和 text 欄位載入 commitments；`record_json` 僅為重放/偵錯副本。Doctor 會匯入舊版 `commitments.json` 並在成功匯入後將其移除。
+- Cron job 定義、排程狀態和執行歷史不再具有執行時期 JSON 寫入器或讀取器。執行時期使用帶有類型排程、payload、遞送、失敗警報、session、狀態和執行時期狀態欄位的 `cron_jobs` 列，加上用於狀態、診斷摘要、遞送狀態/錯誤、session/執行、模型和 token 總計的類型 `cron_run_logs` 元數據。`job_json` 僅是重播/調試副本；`state_json` 保留尚未具有熱查詢欄位的巢狀執行時期診斷，而執行時期會從類型欄位重新補充熱狀態欄位。Doctor 匯入舊版的 `jobs.json`、`jobs-state.json` 和 `runs/*.jsonl` 檔案並移除已匯入的來源。外掛目標回寫會更新匹配的 `cron_jobs` 列，而不是載入並取代整個 cron store。
+- Doctor 和 Gateway 啟動會在排程器執行之前，將舊版 `notify: true` webhook 回退轉換為明確的 SQLite 遞送。已向聊天宣佈的工作會保留該遞送方式並接收 webhook `completionDestination`；沒有 `cron.webhook` 的工作會被回報以進行手動修復。
+- 輸出和 session 遞送佇列現在會將佇列狀態、項目種類、session 金鑰、通道、目標、帳戶 ID、重試次數、上次嘗試/錯誤、復原狀態和平台傳送標記，以類型欄位的形式儲存在共用的 `delivery_queue_entries` 資料表中。執行時期復原會從這些類型欄位讀取熱欄位，而重試/復原變更會直接更新這些欄位，而不需要重寫重播 JSON。完整的 JSON payload 僅保留為訊息本文和其他冷重播資料的重播/調試 blob。
+- 受管理的輸出圖片記錄現在使用類型的共用 `managed_outgoing_image_records` 列，而媒體位元組仍儲存在 `media_blobs` 中。JSON 記錄僅作為重播/調試副本保留。
+- Discord 模型選擇器偏好設定、指令部署雜湊和執行緒綁定現在使用共用的 SQLite 外掛狀態。其舊版 JSON 匯入計畫位於 Discord 外掛設定/Doctor 遷移介面中，而不是在核心遷移程式碼中。
+- 外掛程式的舊版匯入偵測器使用以 doctor 命名的模組，例如 `doctor-legacy-state.ts` 或 `doctor-state-imports.ts`；正常的通道執行時模組絕不得匯入舊版 JSON 偵測器。
+- BlueBubbles 的追趕游標與 inbound 去重標記現在使用共享的 SQLite 外掛程式狀態。其舊版 JSON 匯入計畫位於 BlueBubbles 外掛程式的設定/doctor 遷移介面中，而非核心遷移程式碼中。
+- Telegram 的更新偏移量、貼圖快取列、已傳送訊息快取列、主題名稱快取列以及執行緒綁定現在使用共享的 SQLite 外掛程式狀態。其舊版 JSON 匯入計畫位於 Telegram 外掛程式的設定/doctor 遷移介面中，而非核心遷移程式碼中。
+- iMessage 的追趕游標、回覆短 ID 對應以及已傳送回顯去重列現在使用共享的 SQLite 外掛程式狀態。舊的 `imessage/catchup/*.json`、`imessage/reply-cache.jsonl` 和 `imessage/sent-echoes.jsonl` 檔案僅作為 doctor 的輸入。
+- Feishu 訊息去重列現在使用共享的 SQLite 外掛程式狀態，以取代 `feishu/dedup/*.json` 檔案。其舊版 JSON 匯入計畫位於 Feishu 外掛程式的設定/doctor 遷移介面中，而非核心遷移程式碼中。
+- Microsoft Teams 的對話、投票、待上傳緩衝區以及意見回饋學習資料現在使用共享的 SQLite 外掛程式狀態/blob 資料表。待上傳路徑使用 `plugin_blob_entries`，因此媒體緩衝區會以 SQLite BLOB 形式儲存，而非 base64 JSON。執行時輔助程式名稱現在使用 SQLite/狀態命名法，而非 `*-fs` 檔案存放區命名法，且舊的 `storePath` 填充層已從這些存放區中移除。其舊版 JSON 匯入計畫位於 Microsoft Teams 外掛程式的設定/doctor 遷移介面中。
+- Zalo 託管的出站媒体现在使用共享的 SQLite `plugin_blob_entries`，以取代 `openclaw-zalo-outbound-media` JSON/bin 臨時側車檔案。
+- Diffs 檢視器的 HTML 與中繼資料現在使用共享的 SQLite `plugin_blob_entries`，以取代 `meta.json`/`viewer.html` 臨時檔案。渲染的 PNG/PDF 輸出仍維持為臨時具體化內容，因為通道傳遞仍然需要檔案路徑。
+- Canvas 管理的文件現在改用共享的 SQLite `plugin_blob_entries`，而不是預設的 `state/canvas/documents` 目錄。Canvas 主機會直接提供這些 blob；只有在需要明確的 `host.root` 運算子內容，或是當下游媒體讀取器需要路徑進行臨時具體化時，才會建立本機檔案。
+- 檔案傳輸稽核決定現在使用共享的 SQLite `plugin_state_entries`，而不是無限制的 `audit/file-transfer.jsonl` 執行時期日誌。Doctor 會將舊版 JSONL 稽核檔案匯入至外掛程式狀態，並在乾淨匯入後移除來源。
+- ACPX 程序租約與閘道執行個體身分識別現在使用共享的 SQLite 外掛程式狀態。Doctor 會將舊版 `gateway-instance-id` 檔案匯入至外掛程式狀態並移除來源。
+- ACPX 產生的包裝程式指令碼與隔離的 Codex home 是 OpenClaw 暫存根目錄下的臨時具體化內容，並非持久的 OpenClaw 狀態。持久的 ACPX 執行時期記錄是 SQLite 租約與閘道執行個體資料列；舊的 ACPX `stateDir` 設定介面已被移除，因為不再有執行時期狀態寫入該處。
+- 閘道媒體附件現在使用共享的 `media_blobs` SQLite 資料表作為標準位元組存放區。傳回至通道和沙箱相容介面的本機路徑是資料庫資料列的臨時具體化內容，而非持久的媒體存放區。執行時期媒體允許清單不再包含舊版 `$OPENCLAW_STATE_DIR/media` 或設定目錄 `media` 根目錄；這些目錄僅為 doctor 匯入來源。
+- Shell 自動完成不再寫入 `$OPENCLAW_STATE_DIR/completions/*` 快取檔案。安裝、doctor、更新和發行版本測試路徑使用產生的自動完成輸出或設定檔載入，而非持久的自動完成快取檔案。
+- 閘道技術上傳暫存現在使用共享的 `skill_uploads` 資料列。上傳中繼資料、冪等金鑰和封存位元組儲存在 SQLite 中；安裝程式僅在安裝執行期間接收一個臨時具體化的封存路徑。
+- 子代理內聯附件不再在工作區 `.openclaw/attachments/*` 下具體化。產生路徑會準備 SQLite VFS 種子條目，
+  內聯運行會將這些條目植入每個代理運行時暫存命名空間，而磁碟支援的工具會將
+  該 SQLite 暫存覆蓋在附件路徑上。舊的子代理運行附件目錄登錄檔欄位和清理掛鉤已移除。
+- CLI 映像組態不再維護穩定的 `openclaw-cli-images` 快取
+  檔案。外部 CLI 後端仍會接收檔案路徑，但這些路徑是
+  每次運行的暫時具體化結果，並會被清理。
+- 快取追蹤診斷、Anthropic 承載診斷、原始模型串流
+  診斷、診斷時間軸事件和 Gateway 穩定性套件現在
+  寫入 SQLite 列，而不是 `logs/*.jsonl` 或
+  `logs/stability/*.json` 檔案。
+  運行時路徑覆寫標誌和環境變數已被移除；匯出/除錯
+  指令可以從資料庫列中明確具體化檔案。
+- macOS 伴隨應用程式不再有滾動式 `diagnostics.jsonl` 寫入器。應用程式
+  記錄會進入統一記錄，而持久的 Gateway 診斷則保持 SQLite 支援。
+- macOS port-guardian 記錄清單現在使用類型化的共享 SQLite
+  `macos_port_guardian_records` 列，而不是 Application Support JSON 檔案
+  或不透明的單例二進位大型物件。
+- Gateway 單例鎖現在使用類型化的共享 SQLite `state_leases` 列，位於
+  `gateway_locks` 範圍下，而不是暫存目錄鎖定檔案。Fly 和 OAuth
+  疑難排解文件現在指向 SQLite 租用/授權重新整理鎖，而不是
+  過期的檔案鎖清理。
+- Gateway 重啟哨兵狀態現在使用類型化的共享 SQLite
+  `gateway_restart_sentinel` 列，而不是 `restart-sentinel.json`；運行時
+  從類型化欄位讀取哨兵種類、狀態、路由、訊息、接續和統計資料。
+  `payload_json` 僅是重播/除錯副本。運行時程式碼直接清除
+  SQLite 列，不再攜帶檔案清理管道。
+- Gateway 重啟意圖和監督者移交狀態現在使用類型化的共享
+  SQLite `gateway_restart_intent` 和 `gateway_restart_handoff` 列，而不是
   `gateway-restart-intent.json` 和
-  `gateway-supervisor-restart-handoff.json` sidecars。
-- Gateway 單例協調現在使用 `gateway_locks` 下的類型化 `state_leases` 資料列，而不是寫入 `gateway.<hash>.lock` 檔案。租約資料列包含鎖的擁有者、到期時間、心跳和除酬酬載；SQLite 擁有原子的獲取/釋放邊界。已淘汰的檔案鎖目錄選項已移除；測試直接使用 SQLite 資料列身分。
-- 舊的未被參照的 cron 使用報告輔助程式（用於掃描 `cron/runs/*.jsonl`
-  檔案）已被刪除。Cron 執行歷史報告應讀取類型化的
-  `cron_run_logs` SQLite 資料列。
-- 主會話重啟恢復現在透過 SQLite `agent_databases` 註冊表探索候選代理程式，而不是掃描 `agents/*/sessions` 目錄。
-- Gemini 會話損毀恢復現在僅刪除 SQLite 會話資料列；它不再需要遺留的 `storePath` 閘道，也不會嘗試解除連結衍生的逐字稿 JSONL 路徑。
-- 路徑覆寫處理現在將字面的 `undefined`/`null` 環境值視為未設定，以防止在測試或 Shell 交接期間意外產生存放庫根目錄的 `undefined/state/*.sqlite` 資料庫。
-- Config health fingerprints now use typed shared SQLite `config_health_entries`
-  rows instead of `logs/config-health.json`, keeping the normal config file as
-  the only non-credential configuration document. The macOS companion keeps only
-  process-local health state and does not recreate the old JSON sidecar.
-- Auth profile runtime no longer imports or writes credential JSON files. The
-  canonical credential store is SQLite; `auth-profiles.json`, per-agent
-  `auth.json`, and shared `credentials/oauth.json` are doctor migration inputs
-  that are removed after import.
-- Auth profile save/state tests now assert typed SQLite auth tables directly
-  and only use legacy auth-profile filenames for doctor migration inputs.
-- `openclaw secrets apply` 僅會清理設定檔、環境檔以及 SQLite
-  auth-profile store。它不再包含編輯舊版 per-agent `auth.json` 的相容性邏輯；
-  doctor 擁有匯入和刪除該檔案的權責。
-- Hermes secret migration 會規劃並將匯入的 API-key profile 直接套用
+  `gateway-supervisor-restart-handoff.json` 側車。
+- Gateway 單例協調現在改用 `state_leases` 下的具型別 `gateway_locks` 列，而不是寫入 `gateway.<hash>.lock` 檔案。租約列擁有鎖擁有者、過期時間、心跳和除酬酬載；SQLite 則擁有原子獲取/釋放邊界。已退休的檔案鎖目錄選項已消失；測試直接使用 SQLite 列識別。
+- 舊的未引用 cron 使用報告輔助程式已刪除，該程式用於掃描 `cron/runs/*.jsonl` 檔案。Cron 執行歷史報告應讀取具型別 `cron_run_logs` SQLite 列。
+- 主會話重啟恢復現在透過 SQLite `agent_databases` 註冊表來探索候選代理程式，而不是掃描 `agents/*/sessions` 目錄。
+- Gemini 會話損毀恢復現在僅刪除 SQLite 會話列；它不再需要舊版 `storePath` 閘道或嘗試取消連結衍生的逐字稿 JSONL 路徑。
+- 路徑覆寫處理現在將字面 `undefined`/`null` 環境值視為未設定，以防止在測試或 shell 交接期間意外產生 repo-root `undefined/state/*.sqlite` 資料庫。
+- Config 健康指紋現在使用具型別共享 SQLite `config_health_entries` 列，而非 `logs/config-health.json`，將一般 config 檔案保持為唯一的非憑證配置文件。macOS 伴隨程式僅保留程序本機健康狀態，且不會重建舊的 JSON 附屬檔案。
+- Auth profile 執行時期不再匯入或寫入憑證 JSON 檔案。標準憑證存放區是 SQLite；`auth-profiles.json`、各代理程式 `auth.json` 和共享 `credentials/oauth.json` 是 doctor 遷移輸入，會在匯入後移除。
+- Auth profile 儲存/狀態測試現在直接斷言具型別 SQLite auth 表，並僅將舊版 auth-profile 檔名用於 doctor 遷移輸入。
+- `openclaw secrets apply` 僅清除 config 檔案、env 檔案和 SQLite auth-profile 存放區。它不再包含編輯已退休各代理程式 `auth.json` 的相容性邏輯；doctor 負責匯入和刪除該檔案。
+- Hermes secret migration plans 將匯入的 API-key profile 直接應用
   到 SQLite auth-profile store 中。它不再寫入或驗證
   `auth-profiles.json` 作為中繼目標。
-- 使用者面向的驗證文件現在描述的是
+- 使用者面向的 auth 文件現在描述
   `state/openclaw.sqlite#table/auth_profile_stores/<agentDir>`，而不是
-  告訴使用者去檢查或複製 `auth-profiles.json`；舊版的 OAuth/auth JSON
+  告訴使用者檢查或複製 `auth-profiles.json`；舊版的 OAuth/auth JSON
   名稱僅作為 doctor-import 輸入保留在文件中。
-- 核心狀態路徑輔助函式不再暴露已退役的 `credentials/oauth.json`
-  檔案。舊版檔名僅限於 doctor auth import 路徑內部使用。
-- 安裝、安全性、入門、模型驗證和 SecretRef 文件現在描述
-  SQLite auth-profile 資料列和整體狀態備份/遷移，而非
-  每個代理程式的 auth-profile JSON 檔案。
-- PI 模型探索現在會將標準憑證傳遞到記憶體中的
-  `pi-coding-agent` 驗證儲存空間。它不再於探索期間建立、清理或寫入
-  每個代理程式的 `auth.json`。
-- Voice Wake 觸發器和路由設定現在使用類型化的共用 SQLite 資料表
-  代替 `settings/voicewake.json`、`settings/voicewake-routing.json` 或
-  不透明的通用資料列；doctor 會匯入舊版 JSON 檔案並在成功遷移後將其移除。
-- Update-check 狀態現在使用類型化的共用 `update_check_state` 資料列，而非
-  `update-check.json` 或不透明的通用 blob；doctor 會匯入
-  舊版 JSON 檔案並在成功遷移後將其移除。
-- Config 健康狀態現在使用類型化的共享 `config_health_entries` 列，而不是 `logs/config-health.json` 或不透明的通用 blob；doctor 會匯入舊版 JSON 檔案並在成功遷移後將其移除。
-- 外掛程式對話綁定核准現在使用類型化的 `plugin_binding_approvals` 列，而不是不透明的共享 SQLite 狀態或 `plugin-binding-approvals.json`；舊版檔案是 doctor 遷移的輸入。
-- 通用目前對話綁定現在儲存類型化的 `current_conversation_bindings` 列，而不是覆寫 `bindings/current-conversations.json`；doctor 會匯入舊版 JSON 檔案並在成功遷移後將其移除。
-- Memory Wiki 匯入來源同步分帳現 在每個 vault/source 金鑰儲存一個 SQLite plugin-state 列，而不是覆寫 `.openclaw-wiki/source-sync.json`；遷移提供者會匯入並移除舊版 JSON 分帳。
-- Memory Wiki ChatGPT 匯入執行記錄現在每個 vault/run id 儲存一列 SQLite plugin-state，而不是寫入 `.openclaw-wiki/import-runs/*.json`。回滾快照在匯入執行快照歸檔移動到 blob 儲存之前，仍保持為明確的 vault 檔案。
-- Memory Wiki 編譯摘要現在儲存 SQLite plugin blob 列，而不是寫入 `.openclaw-wiki/cache/agent-digest.json` 和 `.openclaw-wiki/cache/claims.jsonl`。遷移提供者會匯入舊的快取檔案，並在快取目錄變空時將其移除。
-- ClawHub 技能安裝追蹤現在會為每個工作區/技能儲存一個 SQLite 外掛狀態資料列，而不是在執行時間寫入或讀取 `.clawhub/lock.json` 和 `.clawhub/origin.json` 附屬檔案。執行時間程式碼使用已追蹤的安裝狀態物件，而不是檔案形式的鎖定檔案/來源抽象。Doctor 會從設定的代理程式工作區匯入舊版附屬檔案，並在乾淨的匯入後將其移除。
-- 已安裝的外掛索引現在會讀取和寫入類型化的共享 SQLite `installed_plugin_index` 單例資料列，而不是 `plugins/installs.json`；舊版 JSON 檔案僅作為 doctor 遷移輸入，並在匯入後被移除。
-- 舊版 `plugins/installs.json` 路徑輔助函式現在位於 doctor 舊版程式碼中。執行時間外掛索引模組僅公開 SQLite 支援的持久性選項，而非 JSON 檔案路徑。
-- Gateway 重啟哨兵、重啟意圖和監督器移交狀態現在使用類型化的共享 SQLite 行（`gateway_restart_sentinel`、`gateway_restart_intent` 和 `gateway_restart_handoff`）代替通用的不透明 blob。運行時重啟程式碼沒有基於檔案的哨兵/意圖/移交契約。
-- Matrix 同步快取、儲存元資料、執行緒綁定、入站去重標記、啟動驗證冷卻狀態、SDK IndexedDB 加密快照、憑證和恢復金鑰現在使用共享 SQLite 外掛程式狀態/blob 表。運行時路徑結構不再公開 `storage-meta.json` 元資料路徑；該檔名僅作為舊版遷移輸入。其舊版 JSON 匯入計畫存在於 Matrix 外掛程式設定/醫生遷移介面中。
-- Matrix 啟動時不再掃描、報告或完成舊版 Matrix 檔案狀態。Matrix 檔案檢測、舊版加密快照建立、房間金鑰還原遷移狀態、匯入及來源移除現在皆由 doctor 擁有。
-- Matrix 執行時遷移 barrels 已被移除。舊版狀態/加密檢測與變更輔助程式現在改由 Matrix doctor 直接匯入，不再作為執行時 API 介面的一部分。
-- Matrix 遷移快照重複使用標記現已存在於 SQLite 外掛狀態中，而非 `matrix/migration-snapshot.json`；doctor 仍可重複使用相同的已驗證遷移前存檔，而無需撰寫側車狀態檔案。
-- Nostr bus 游標與個人資料發佈狀態現在使用共享的 SQLite 外掛狀態。其舊版 JSON 匯入計畫位於 Nostr 外掛設定/doctor 遷移介面中。
-- Active Memory 會話切換現在使用共享的 SQLite 外掛狀態，而不是
-  `session-toggles.json`；重新開啟記憶功能時會刪除該列，而不是
-  重寫 JSON 物件。
-- Skill Workshop 提案和審查計數器現在使用共享的 SQLite 外掛狀態，而不是每個工作區的 `skill-workshop/<workspace>.json` 存儲。每個
-  提案是 `skill-workshop/proposals` 下的一個獨立列，而審查
-  計數器是 `skill-workshop/reviews` 下的一個獨立列。
-- Skill Workshop 審查者子代理運作現在使用運行時會話文字紀錄解析器，而不是建立 `skill-workshop/<sessionId>.json` 旁載會話路徑。
-- ACPX 程序租約現在使用 `acpx/process-leases` 下的共享 SQLite 外掛程式狀態，而不是全檔案 `process-leases.json` 登錄檔。
-  每個租約都作為獨立的行儲存，在不需執行時期 JSON 重寫路徑的情況下保留了啟動時的過期程序清理。
-- ACPX 包裝程式指令碼和隔離的 Codex 主目錄是在 OpenClaw 暫存根目錄中生成的。它們會根據需要重新建立，並不是備份或遷移的輸入。
-- Subagent 執行登錄檔的持久化使用類型化的共享 `subagent_runs` 行。
-  舊的 `subagents/runs.json` 路徑現在只是 doctor 遷移的輸入，並且執行時期輔助函式名稱不再將狀態層描述為磁碟支援。
-  執行時期測試不再建立無效或空的 `runs.json` 來證明登錄檔行為；它們直接植入/讀取 SQLite 行。
-- 備份在歸檔之前會暫存狀態目錄，複製非資料庫檔案，使用 `VACUUM INTO` 對 `*.sqlite` 資料庫進行快照，省略即時的 WAL/SHM 側車檔案，在歸檔清單中記錄快照元數據，並在 SQLite 中隨歸檔清單記錄已完成的備份執行。`openclaw backup
+- Core state-path helpers 不再公開已停用的 `credentials/oauth.json`
+  檔案。舊版檔名僅限於 doctor auth import 路徑內部。
+- Install、security、onboarding、model-auth 和 SecretRef 文件現在描述
+  SQLite auth-profile rows 和全狀態備份/遷移，而不是
+  逐 agent 的 auth-profile JSON 檔案。
+- PI model discovery 現在會將規格憑證傳遞到記憶體中的
+  `pi-coding-agent` auth storage。在 discovery 期間，它不再建立、清理或寫入
+  逐 agent 的 `auth.json`。
+- Voice Wake 觸發器和路由設定現在改用型別化的共享 SQLite tables，
+  而不是 `settings/voicewake.json`、`settings/voicewake-routing.json` 或
+  不透明的泛型 rows；doctor 會匯入舊版 JSON 檔案並在成功遷移後將其移除。
+- Update-check state 現在使用型別化的共享 `update_check_state` row，
+  而不是 `update-check.json` 或不透明的泛型 blob；doctor
+  會匯入舊版 JSON 檔案並在成功遷移後將其移除。
+- Config health state 現在使用型別化的共享 `config_health_entries` rows，
+  而不是 `logs/config-health.json` 或不透明的泛型 blob；doctor
+  會匯入舊版 JSON 檔案並在成功遷移後將其移除。
+- Plugin conversation binding approvals 現在使用型別化的
+  `plugin_binding_approvals` rows，而不是不透明的共享 SQLite state 或
+  `plugin-binding-approvals.json`；舊版檔案是 doctor migration 的輸入來源。
+- 泛型的 current-conversation bindings 現在會儲存型別化的
+  `current_conversation_bindings` rows，而不是重寫
+  `bindings/current-conversations.json`；doctor 會匯入舊版 JSON 檔案並
+  在成功遷移後將其移除。
+- Memory Wiki 匯入來源同步帳本現在會為每個 vault/source 金鑰儲存一個 SQLite 外掛狀態資料列，而不是覆寫 `.openclaw-wiki/source-sync.json`；遷移提供者會匯入並移除舊版的 JSON 帳本。
+- Memory Wiki ChatGPT 匯入執行記錄現在會為每個 vault/run id 儲存一個 SQLite 外掛狀態資料列，而不是寫入 `.openclaw-wiki/import-runs/*.json`。回溯快照仍維持為明確的 vault 檔案，直到匯入執行快照歸檔被移至 blob 儲存。
+- Memory Wiki 編譯摘要現在會儲存 SQLite 外掛 blob 資料列，而不是寫入 `.openclaw-wiki/cache/agent-digest.json` 和 `.openclaw-wiki/cache/claims.jsonl`。遷移提供者會匯入舊的快取檔案，並在快取目錄變空時將其移除。
+- ClawHub 技能安裝追蹤現在會為每個 workspace/skill 儲存一個 SQLite 外掛狀態資料列，而不是在執行時寫入或讀取 `.clawhub/lock.json` 和 `.clawhub/origin.json` 副檔案。執行時程式碼使用已追蹤安裝的狀態物件，而不是檔案形狀的鎖定檔案/來源抽象。Doctor 會從設定的代理程式工作區匯入舊版副檔案，並在乾淨的匯入後將其移除。
+- 已安裝的外掛索引現在會讀寫類型化的共享 SQLite `installed_plugin_index` 單例資料列，而不是 `plugins/installs.json`；舊版 JSON 檔案僅作為 doctor 遷移輸入，並在匯入後被移除。
+- 舊版 `plugins/installs.json` 路徑輔助程式現在位於 doctor 舊版程式碼中。執行時外掛索引模組僅公開 SQLite 支援的持久性選項，而非 JSON 檔案路徑。
+- Gateway 重新啟動哨兵、重新啟動意圖和監督器交接狀態現在使用類型化的共享 SQLite 資料列（`gateway_restart_sentinel`、`gateway_restart_intent` 和 `gateway_restart_handoff`），而不是通用的不透明 blob。執行時重新啟動程式碼沒有檔案形狀的哨兵/意圖/交接合約。
+- Matrix 同步快取、儲存中繼資料、執行緒繫結、輸入去重標記、啟動驗證冷卻狀態、SDK IndexedDB 加密快照、憑證和復原金鑰現在使用共用的 SQLite 外掛程式 state/blob 資料表。Runtime path 結構不再公開 `storage-meta.json` metadata 路徑；該檔名僅作為舊版遷移的輸入。其舊版 JSON 匯入計畫位於 Matrix 外掛程式設定/doctor 遷移介面中。
+- Matrix 啟動不再掃描、回報或完成舊版 Matrix 檔案狀態。Matrix 檔案偵測、舊版加密快照建立、房間金鑰復原遷移狀態、匯入和來源移除均由 doctor 管理。
+- 已移除 Matrix runtime 遷移 barrels。舊版狀態/加密偵測和輔助修改工具現在直接由 Matrix doctor 匯入，而非 runtime API 介面的一部分。
+- Matrix 遷移快照重複使用標記現位於 SQLite 外掛程式狀態中，而非 `matrix/migration-snapshot.json`；doctor 仍可重複使用相同的已驗證遷移前存檔，而無需寫入 sidecar 狀態檔案。
+- Nostr bus 游標和個人資料發佈狀態現在使用共用的 SQLite 外掛程式狀態。其舊版 JSON 匯入計畫位於 Nostr 外掛程式設定/doctor 遷移介面中。
+- Active Memory 會話切換現在使用共用的 SQLite 外掛程式狀態，而非 `session-toggles.json`；重新啟用記憶功能會刪除該列，而非重寫 JSON 物件。
+- Skill Workshop 提案和審查計數器現在使用共用的 SQLite 外掛程式狀態，而非各工作區的 `skill-workshop/<workspace>.json` stores。每個提案是 `skill-workshop/proposals` 下的一個獨立列，而審查計數器是 `skill-workshop/reviews` 下的一個獨立列。
+- Skill Workshop 審查者子代理程式執行現在使用 runtime 會話文字記錄解析器，而非建立 `skill-workshop/<sessionId>.json` sidecar 會話路徑。
+- ACPX 程序租約現在使用 `acpx/process-leases` 下的共用 SQLite 外掛程式狀態，而非全檔案的 `process-leases.json` registry。每個租約儲存為其獨立列，保留啟動時的陳舊程序清理功能，無需 runtime JSON 重寫路徑。
+- ACPX 包裝腳本和獨立的 Codex home 是在 OpenClaw 臨時根目錄中生成的。它們會根據需要重新建立，並非備份或遷移的輸入來源。
+- 子代理執行登錄表的持久化使用類型化的共享 `subagent_runs` 資料列。舊的 `subagents/runs.json` 路徑現在僅作為 doctor 遷移的輸入，而且執行時期輔助程式名稱不再將狀態層描述為以磁碟為支援的儲存。執行時期測試不再建立無效或空的 `runs.json` 固定裝置來證明登錄表行為；它們會直接植入/讀取 SQLite 資料列。
+- 備份在封存前會暫存狀態目錄，複製非資料庫檔案，使用 `VACUUM INTO` 對 `*.sqlite` 資料庫進行快照，省略作用中的 WAL/SHM 側車檔案，在封存清單中記錄快照元資料，並在 SQLite 中使用封存清單記錄已完成的備份執行。`openclaw backup
 create` validates the written archive by default; `--no-verify` 是明確的快速路徑。
-- `openclaw backup restore` 在解壓縮之前驗證歸檔，重複使用驗證器的正規化清單，並將已驗證的清單資產還原到其記錄的來源路徑。它需要 `--yes` 才能進行寫入，並支援 `--dry-run` 作為還原計畫。
-- 舊的備份易變路徑過濾器已被刪除。備份不再需要針對舊版會話或 cron JSON/JSONL 檔案的 live-tar 跳過清單，因為 SQLite 快照會在建立封存之前進行預存。
-- 單純的設定與入門工作區準備作業不再建立 `agents/<agentId>/sessions/` 目錄。它們僅建立 config/workspace；SQLite 會話列和逐字稿列會視需要在個別代理程式的資料庫中建立。
-- 安全性權限修復現在以全域和個別代理程式的 SQLite 資料庫以及 WAL/SHM 副檔案為目標，而不是 `sessions.json` 和逐字稿 JSONL 檔案。
-- 沙箱登錄執行階段名稱現在直接描述 SQLite 登錄種類，而不是透過現用存放區傳遞舊版 JSON 登錄術語。
-- `openclaw reset --scope config+creds+sessions` 會移除每個代理程式的
-  `openclaw-agent.sqlite` 資料庫以及 WAL/SHM 副檔名，而不僅是舊版
-  `sessions/` 目錄。
-- Gateway 彙總 session 輔助程式現在使用以條目為導向的名稱：
-  `loadCombinedSessionEntriesForGateway` 會回傳 `{ databasePath, entries }`。
-  舊的 combined-store 命名已從執行階段呼叫端中移除。
-- Docker MCP 通道植入現在會將主要 session 資料列和逐字稿
-  事件寫入每個代理程式的 SQLite 資料庫，而不是建立
-  `sessions.json` 和 JSONL 逐字稿。
+- `openclaw backup restore` 在解壓縮前驗證封存，重複使用驗證器的正規化清單，並將經過驗證的清單資產還原至其記錄的來源路徑。它需要 `--yes` 進行寫入，並支援 `--dry-run` 作為還原計劃。
+- 舊的備份動態路徑過濾器已被刪除。由於 SQLite 快照是在建立封存之前進行暫存，因此備份不再需要針對舊版會話或 cron JSON/JSONL 檔案的即時 tar 跳過清單。
+- 標準設定和入門工作區準備不再建立 `agents/<agentId>/sessions/` 目錄。它們只建立 config/workspace；SQLite 會話資料列和逐字稿資料列會在每個代理的資料庫中按需建立。
+- 安全性權限修復現在以全域和每個代理的 SQLite 資料庫以及 WAL/SHM 側車檔案為目標，而不是 `sessions.json` 和逐字稿 JSONL 檔案。
+- 沙箱登錄表執行時期名稱現在直接描述 SQLite 登錄表類型，而不是透過作用中的儲存空間傳遞舊版的 JSON 登錄表術語。
+- `openclaw reset --scope config+creds+sessions` 會移除每個代理的 `openclaw-agent.sqlite` 資料庫以及 WAL/SHM 側車檔案，而不僅僅是舊版的 `sessions/` 目錄。
+- Gateway aggregate session helpers 現在使用以項目為導向的名稱：
+  `loadCombinedSessionEntriesForGateway` 會傳回 `{ databasePath, entries }`。
+  舊的 combined-store 命名已從 runtime 呼叫端中移除。
+- Docker MCP 頻道植入 現在會將主會話列 和
+  轉錄事件 寫入每個 Agent 的 SQLite 資料庫，而不是建立
+  `sessions.json` 和 JSONL 轉錄檔。
 - 內建的 session-memory hook 現在透過 `{agentId, sessionId}` 從
-  SQLite 解析先前的 session 內容。它不再掃描、儲存或合成
-  逐字稿路徑或 `workspace/sessions` 目錄。
-- 內建的 command-logger hook 現在會將命令稽核行寫入共用的 SQLite `command_log_entries` 資料表，而不是附加到 `logs/commands.log`。
-- 通道配對允許清單現在僅在執行階段和 Plugin SDK 中公開以 SQLite 為後端的讀寫輔助程式。舊的 `*-allowFrom.json` 路徑解析器和檔案讀取器僅存在於 doctor legacy import 程式碼下。
-- `migration_runs` 記錄 legacy-state 遷移的執行情況，包括狀態、時間戳記和 JSON 報告。
-- `migration_sources` 記錄每個匯入的 legacy 檔案來源，包括雜湊、大小、記錄數、目標資料表、執行 ID、狀態和來源移除狀態。
+  SQLite 解析先前會語境。它不再掃描、儲存或合成
+  轉錄路徑或 `workspace/sessions` 目錄。
+- 內建的 command-logger hook 現在會將指令稽核 列寫入共用的
+  SQLite `command_log_entries` 資料表，而不是附加
+  `logs/commands.log`。
+- 頻道配對允許清單 現在在 runtime 和
+  插件 SDK 中僅公開基於 SQLite 的讀寫輔助程式。舊的 `*-allowFrom.json` 路徑解析器
+  和檔案讀取器僅存在於 doctor 舊版匯入程式碼下。
+- `migration_runs` 記錄舊版狀態遷移的執行，包含狀態、
+  時間戳記和 JSON 報告。
+- `migration_sources` 記錄每個匯入的舊版檔案來源，包含雜湊、大小、
+  記錄計數、目標資料表、執行 ID、狀態和來源移除狀態。
 - `backup_runs` 記錄備份封存路徑、狀態和 JSON 清單。
-- 全域架構不保留未使用的 `agents` 註冊表（registry）資料表。代理程式資料庫探索是正規的 `agent_databases` 註冊表，直到執行時期擁有真正的代理程式記錄擁有者。
-- 產生的型錄設定會以代理程式目錄作為鍵值，儲存在具型別的全域 SQLite `agent_model_catalogs` 列中。執行時期呼叫者使用 `ensureOpenClawModelCatalog`；執行時期程式碼中沒有 `models.json` 相容性 API。實作會寫入 SQLite，而嵌入式 PI 註冊表會從儲存的酬載進行填充，且不會建立 `models.json` 檔案。
-- QMD 會話逐字稿 Markdown 匯出和 `memory.qmd.sessions` 設定已被移除。沒有 QMD 逐字稿集合，沒有 `qmd/sessions*` 執行時期路徑，也沒有以檔案為基礎的會話記憶體橋接器。
-- Memory-core runtime 從 `openclaw/plugin-sdk/memory-core-host-engine-session-transcripts` 匯入 SQLite transcript 索引輔助程式，而不是從 QMD SDK 子路徑。QMD 子路徑僅為了外部呼叫者保留相容性重新匯出，直到主要的 SDK 清理作業將其移除為止。
-- QMD 自己的 `index.sqlite` 現在是由主要的 SQLite `plugin_blob_entries` 表支援的暫存 runtime 實作。Runtime 不再建立持久的 `~/.openclaw/agents/<agentId>/qmd` 側車檔案。
-- 選用的 `memory-lancedb` 外掛程式不再將 `~/.openclaw/memory/lancedb` 建立為隱含的 OpenClaw 管理儲存庫。它是一個外部 LanceDB 後端，並且保持停用狀態，直到操作員設定明確的 `dbPath` 為止。
-- `check:database-first-legacy-stores` 會阻擋新的執行時原始碼將遺留的儲存名稱與寫入式檔案系統 API 配對使用。它也會阻擋重新引入轉錄橋接合約的執行時原始碼，例如 `transcriptLocator`、`sqlite-transcript://...`、`sessionFile` 或 `storePath`，並掃描測試程式碼中是否有這些橋接合約名稱。它也禁止 `SessionManager.open(...)` 和舊的靜態 SessionManager 外觀，以便執行時和測試無法在不知不覺中重新建立檔案支援的會話開啟器或檔案時代會話探索。它也禁止來自匯出 UI 的舊會話 JSONL 下載器 hook/class。它也禁止側車形狀的 plugin-state/task SQLite 輔助程式名稱；測試應斷言 `databasePath` 和共用的 `state/openclaw.sqlite` 位置，而不是假裝這些功能擁有各自的 SQLite 檔案。它也禁止執行時原始碼中的舊通用記憶體索引 SQL 資料表名稱（`meta`、`files`、`chunks`、`chunks_vec`、`chunks_fts`、`embedding_cache`），以便代理程式資料庫保持其明確的 `memory_index_*` 結構描述。它也禁止嵌入 TEXT 結構描述和嵌入 JSON 陣列寫入，以便向量保持為緊湊的 SQLite BLOB。遷移、doctor、匯入和明確的非會話匯出程式碼仍然允許。此防護現也涵蓋執行時 `cache/*.json` 儲存、通用 `thread-bindings.json` 側車、cron 狀態/執行記錄 JSON、設定健康狀況 JSON、重新啟動和鎖定側車、Voice Wake 設定、外掛程式繫結核准、已安裝外掛程式索引 JSON、檔案傳輸稽核 JSONL、記憶 Wiki 活動記錄、舊的捆綁 `command-logger` 文字記錄，以及 pi-mono 原始串流 JSONL 診斷旋鈕。它也禁止舊的根層級 doctor 遺留模組名稱，以便相容性程式碼保持在 `src/commands/doctor/` 下。Android 除錯處理常式也使用 logcat/記憶體輸出，而不是暫存 `camera_debug.log` 或 `debug_logs.txt` 快取檔案。
+- 全域結構 不保留未使用的 `agents` 註冊 資料表。Agent
+  資料庫探索是正規的 `agent_databases` 註冊表，直到 runtime
+  擁有真正的 Agent 記錄擁有者。
+- 產生的模型目錄設定 儲存在以 Agent 目錄為索引鍵的類型化全域 SQLite
+  `agent_model_catalogs` 列中。Runtime 呼叫端使用
+  `ensureOpenClawModelCatalog`；runtime 程式碼中沒有
+  `models.json` 相容性 API。實作會寫入 SQLite，而嵌入式 PI 註冊表是
+  從該儲存的有效負載填補，而不會建立 `models.json` 檔案。
+- QMD 會語轉錄 Markdown 匯出和 `memory.qmd.sessions` 設定已
+  被移除。沒有 QMD 轉錄集合，沒有 `qmd/sessions*` runtime
+  路徑，也沒有基於檔案的會語記憶橋接器。
+- Memory-core runtime 從 `openclaw/plugin-sdk/memory-core-host-engine-session-transcripts` 匯入 SQLite 逐字稿索引輔助程式，而非來自 QMD SDK 子路徑。QMD 子路徑僅為了外部呼叫者保留相容性重新匯出，直到進行主要的 SDK 清除作業時將其移除。
+- QMD 自己的 `index.sqlite` 現在是由主要 SQLite `plugin_blob_entries` 資料表支援的暫存運行時具體化。Runtime 不再建立持久的 `~/.openclaw/agents/<agentId>/qmd` 副檔案。
+- 選用的 `memory-lancedb` 外掛程式不再將 `~/.openclaw/memory/lancedb` 建立為隱含的 OpenClaw 管理儲存庫。它是一個外部 LanceDB 後端，並在操作員設定明確的 `dbPath` 之前保持停用狀態。
+- `check:database-first-legacy-stores` 會阻擋將遺留儲存名稱與寫入式檔案系統 API 配對的新執行時期原始碼。它也會阻擋重新引入轉錄橋接合約（如 `transcriptLocator`、`sqlite-transcript://...`、`sessionFile` 或 `storePath`）的執行時期原始碼，並掃描測試中的這些橋接合約名稱。它也會禁止 `SessionManager.open(...)` 和舊的靜態 SessionManager 外觀，以便執行時期和測試無法無聲無息地重新建立檔案支援的會話開啟器或檔案時代的會話探索。它也會禁止匯出 UI 中的舊會話 JSONL 下載器 hook/class。它也會禁止側車形狀的外掛狀態/任務 SQLite 輔助名稱；測試應斷言 `databasePath` 和共用的 `state/openclaw.sqlite` 位置，而不是假設這些功能擁有獨立的 SQLite 檔案。它也會禁止執行時期原始碼中的舊通用記憶體索引 SQL 表名稱（`meta`、`files`、`chunks`、`chunks_vec`、`chunks_fts`、`embedding_cache`），以便代理資料庫保持其明確的 `memory_index_*` 結構描述。它也會禁止嵌入 TEXT 結構描述和嵌入 JSON 陣列寫入，以便向量保持緊湊的 SQLite BLOB。遷移、doctor、匯入和明確的非會話匯出程式碼仍然允許。防護現在也涵蓋執行時期 `cache/*.json` 儲存、通用 `thread-bindings.json` 側車、cron 狀態/執行記錄 JSON、設定健康 JSON、重新啟動和鎖定側車、語音喚醒設定、外掛繫結核准、已安裝外掛索引 JSON、檔案傳輸稽核 JSONL、記憶體 Wiki 活動記錄、舊的捆綁 `command-logger` 文字記錄，以及 pi-mono 原始串流 JSONL 診斷旋鈕。它也會禁止舊的根層級 doctor 遺留模組名稱，以便相容性程式碼保留在 `src/commands/doctor/` 下。Android 調試處理程式也使用 logcat/記憶體輸出，而不是暫存 `camera_debug.log` 或 `debug_logs.txt` 快取檔案。
 
-## 目標架構形狀
+## 目標結構描述形狀
 
-保持架構明確。主機擁有的執行階段狀態使用型別化資料表。外掛擁有的不透明狀態使用 `plugin_state_entries` / `plugin_blob_entries`；沒有通用的主機 `kv` 資料表。
+保持 schema 明確。Host 擁有的執行時期狀態使用型別化資料表。Plugin 擁有的不透明狀態使用 `plugin_state_entries` / `plugin_blob_entries`；沒有通用的 host `kv` 資料表。
 
 全域資料庫：
 
@@ -895,496 +871,503 @@ memory_embedding_cache(provider, model, provider_key, hash, embedding, dims, upd
 cache_entries(scope, key, value_json, blob, expires_at, updated_at)
 ```
 
-未來的搜尋可以新增 FTS 資料表，而無需變更標準事件資料表：
+未來的搜尋可以新增 FTS 資料表，而無需更動規範事件資料表：
 
 ```text
 transcript_events_fts(session_id, seq, text)
 vfs_entries_fts(namespace, path, text)
 ```
 
-大值應使用 `blob` 欄位，而非 JSON 字串編碼。請保留
-`value_json` 給必須能以純 SQLite 工具檢查的小型結構化資料。
+大型數值應使用 `blob` 欄位，而非 JSON 字串編碼。對於必須能以純 SQLite 工具檢視的小型結構化資料，請保留 `value_json`。
 
-`agent_databases` 是此分支的標準註冊表。在存在真正的代理程式記錄擁有者之前，請勿新增
-`agents` 資料表；代理程式設定保留在
-`openclaw.json` 中。
+`agent_databases` 是此分支的規範登錄檔。在存在真正的 agent-record 擁有者之前，請勿新增 `agents` 資料表；agent 設定維持在 `openclaw.json`。
 
-## Doctor 遷移形式
+## Doctor 遷移形狀
 
-Doctor 應該呼叫一個明確的遷移步驟，該步驟是可報告的且可以安全地重新執行：
+Doctor 應呼叫一個明確的遷移步驟，該步驟可報告且可安全重新執行：
 
 ```bash
 openclaw doctor --fix
 ```
 
-`openclaw doctor --fix` 在一般的配置預檢之後呼叫狀態遷移實作，並在匯入之前建立經過驗證的備份。執行時啟動和 `openclaw migrate` 不得匯入舊版的 OpenClaw 狀態檔案。
+`openclaw doctor --fix` 在一般設定預檢之後叫用狀態遷移實作，並在匯入前建立已驗證的備份。執行時期啟動和 `openclaw migrate` 不得匯入舊版 OpenClaw 狀態檔案。
 
 遷移屬性：
 
-- 一次遷移通掃描所有舊版檔案來源並在變更任何內容之前生成計畫。
-- Doctor 在匯入舊版檔案之前會建立一個已驗證的遷移前備份封存檔。
-- 匯入作業具冪等性，並根據來源路徑、mtime、大小、雜湊值和目標資料表進行索引鍵處理。
-- 來源檔案處理成功後，會在目標資料庫認可後被移除或封存。
-- 匯入失敗會保留來源不變，並在 `migration_runs` 中記錄警告。
-- 執行時程式碼僅在遷移存在時讀取 SQLite。
-- 不需要降級/匯出至執行時檔案的路徑。
+- 一次遷移流程會發現所有舊版檔案來源，並在變更任何內容前產生計畫。
+- Doctor 會在匯入舊版檔案前，建立已驗證的遷移前備份封存檔。
+- 匯入具等冪性，並依來源路徑、mtime、大小、雜湊與目標資料表做為索引鍵。
+- 來源檔案成功後會在目標資料庫提交後被移除或封存。
+- 匯入失敗時會保持來源不變，並在 `migration_runs` 中記錄警告。
+- 執行時期程式碼僅在遷移存在後讀取 SQLite。
+- 不需要降級/匯出為執行時期檔案的路徑。
 
 ## 遷移清單
 
 將這些移至全域資料庫：
 
-- Task registry 執行時寫入現在使用共享資料庫；未發佈的
-  `tasks/runs.sqlite` 側邊車匯入器已被刪除。Snapshot 儲存會透過 task
-  id 進行 upsert，並僅刪除遺失的 task/delivery 資料列。
-- Task Flow 執行階段寫入現在會使用共享資料庫；未發佈的
-  `tasks/flows/registry.sqlite` sidecar 匯入器已刪除。Snapshot 儲存
-  會依 flow id 進行 upsert，並僅刪除遺失的 flow 資料列。
-- Plugin state 執行階段寫入現在會使用共享資料庫；未發佈的
-  `plugin-state/state.sqlite` sidecar 匯入器已刪除。
-- 內建記憶體搜尋不再預設為 `memory/<agentId>.sqlite`；其
-  索引表位於所屬的 agent 資料庫中，且明確的
-  `memorySearch.store.path` 附屬選項已改由 doctor 設定
-  遷移處理。
-- 內建記憶體重新索引僅會重置 agent 資料庫中由記憶體擁有的資料表。
-  它不得取代整個 SQLite 檔案，因為同一個資料庫擁有
-  工作階段、逐字稿、VFS 列、成品和執行時期快取。
-- 將沙箱容器/瀏覽器註冊表從單體和分片的 JSON 中分離出來。執行時寫入現在使用共享資料庫；舊版 JSON 匯入予以保留。
-- Cron 任務定義、排程狀態和執行記錄現在使用共享 SQLite；doctor 會匯入/移除舊版 `jobs.json`、`jobs-state.json` 和 `cron/runs/*.jsonl` 檔案
-- 裝置身分/驗證、推播、更新檢查、承諾、OpenRouter 模型快取、已安裝的外掛索引，以及 app-server 繫結
-- 裝置/節點配對與啟動記錄現在使用具類型的 SQLite 資料表
-- 裝置配對通知訂閱者與已傳遞請求標記現在使用共享的 SQLite plugin-state 資料表，而非 `device-pair-notify.json`。
-- Voice-call 通話記錄現在改用共享的 SQLite plugin-state 資料表，位於
-  `voice-call` / `calls` 命名空間下，而非 `calls.jsonl`；plugin CLI
-  會追蹤並彙總以 SQLite 為後備的通話歷史。
-- QQBot gateway 會話、已知使用者記錄和 ref-index 引用快取現在使用
-  SQLite plugin state 於 `qqbot` 命名空間 (`sessions`、 `known-users`、
-  `ref-index`)，而非 `session-*.json`、 `known-users.json` 和
-  `ref-index.jsonl`；QQBot doctor/setup 遷移會匯入並移除
-  舊版檔案。
-- Discord 模型選擇器偏好設定、指令部署雜湊值以及執行緒綁定
-  現在使用 SQLite 外掛程式狀態於 `discord` 命名空間下
-  (`model-picker-preferences`, `command-deploy-hashes`, `thread-bindings`)
-  取代 `model-picker-preferences.json`、`command-deploy-cache.json` 及
+- Task registry 執行時期寫入現在使用共享資料庫；未發貨的 `tasks/runs.sqlite` sidecar 匯入器已刪除。Snapshot 儲存依 task id 進行 upsert，並僅刪除遺失的 task/delivery 資料列。
+- Task Flow 執行時期寫入現在使用共享資料庫；未發貨的 `tasks/flows/registry.sqlite` sidecar 匯入器已刪除。Snapshot 儲存依 flow id 進行 upsert，並僅刪除遺失的 flow 資料列。
+- 插件狀態執行時寫入現在使用共享資料庫；未發佈的 `plugin-state/state.sqlite` sidecar 匯入器已被刪除。
+- 內建記憶體搜尋不再預設為 `memory/<agentId>.sqlite`；其索引表位於所屬的代理程式資料庫中，且顯式的 `memorySearch.store.path` sidecar opt-in 已退役至 doctor 設定遷移。
+- 內建記憶體重建索引僅重設代理程式資料庫中記憶體擁有的表。它不得替換整個 SQLite 檔案，因為同一資料庫擁有會話、文字記錄、VFS 資料列、工件和執行時快取。
+- 沙箱容器/瀏覽器登錄檔來自單一和分片的 JSON。執行時寫入現在使用共享資料庫；保留舊版 JSON 匯入。
+- Cron 工作定義、排程狀態和執行歷史現在使用共享 SQLite；doctor 匯入/移除舊版 `jobs.json`、`jobs-state.json` 和 `cron/runs/*.jsonl` 檔案。
+- 裝置身分/驗證、推送、更新檢查、承諾、OpenRouter 模型快取、已安裝插件索引和應用程式伺服器綁定
+- 裝置/節點配對和引導記錄現在使用具型別的 SQLite 表。
+- 裝置配對通知訂閱者和已傳送請求標記現在使用共享 SQLite plugin-state 表，而不是 `device-pair-notify.json`。
+- 語音通話記錄現在使用共享 SQLite plugin-state 表，位於 `voice-call` / `calls` 命名空間下，而不是 `calls.jsonl`；插件 CLI 追蹤並摘要支援 SQLite 的通話記錄。
+- QQBot 閘道會話、已知使用者記錄和 ref-index 引用快取現在使用 SQLite plugin state，位於 `qqbot` 命名空間 (`sessions`、`known-users`、`ref-index`) 下，而不是 `session-*.json`、`known-users.json` 和 `ref-index.jsonl`；QQBot doctor/setup 遷移會匯入並移除舊版檔案。
+- Discord 模型選擇器偏好設定、指令部署雜湊值，以及執行緒綁定
+  現在使用 SQLite 外掛程式狀態於 `discord` 命名空間
+  （`model-picker-preferences`、`command-deploy-hashes`、`thread-bindings`）
+  取代 `model-picker-preferences.json`、`command-deploy-cache.json` 和
   `thread-bindings.json`；Discord doctor/setup 遷移會匯入並
   移除舊版檔案。
-- BlueBubbles 追蹤游標及入站去重標記現在使用 SQLite 外掛程式
-  狀態於 `bluebubbles` 命名空間下 (`catchup-cursors`, `inbound-dedupe`)
-  取代 `bluebubbles/catchup/*.json` 及
+- BlueBubbles 追蹤游標和入站去重標記現在使用 SQLite 外掛程式
+  狀態於 `bluebubbles` 命名空間（`catchup-cursors`、`inbound-dedupe`）
+  取代 `bluebubbles/catchup/*.json` 和
   `bluebubbles/inbound-dedupe/*.json`；BlueBubbles doctor/setup 遷移
   會匯入並移除舊版檔案。
-- Telegram 更新偏移量、貼圖快取項目、回覆鏈訊息快取項目、已傳送訊息快取項目、主題名稱快取項目以及執行緒綁定現在使用 `telegram` 命名空間下的 SQLite 外掛程式狀態 (`update-offsets`, `sticker-cache`, `message-cache`, `sent-messages`, `topic-names`, `thread-bindings`)，取代 `update-offset-*.json`、`sticker-cache.json`、`*.telegram-messages.json`、`*.telegram-sent-messages.json`、`*.telegram-topic-names.json` 和 `thread-bindings-*.json`；Telegram doctor/setup 遷移會匯入並移除舊版檔案。
-- iMessage 追趕游標、回覆 short-id 對應以及 sent-echo 去重資料行
-  現在使用 `imessage` 命名空間（`catchup-cursors`、
-  `reply-cache`、 `sent-echoes`）下的 SQLite 外掛程式狀態，而非 `imessage/catchup/*.json`、
+- Telegram 更新偏移量、貼圖快取項目、回覆鏈訊息快取
+  項目、已傳送訊息快取項目、主題名稱快取項目，以及執行緒
+  綁定現在使用 SQLite 外掛程式狀態於 `telegram` 命名空間
+  （`update-offsets`、`sticker-cache`、`message-cache`、`sent-messages`、
+  `topic-names`、`thread-bindings`）取代 `update-offset-*.json`、
+  `sticker-cache.json`、`*.telegram-messages.json`、
+  `*.telegram-sent-messages.json`、`*.telegram-topic-names.json` 和
+  `thread-bindings-*.json`；Telegram doctor/setup 遷移會匯入並
+  移除舊版檔案。
+- iMessage 追蹤游標、回覆短 ID 對應，以及已傳送回聲去重列
+  現在使用 SQLite 外掛程式狀態於 `imessage` 命名空間（`catchup-cursors`、
+  `reply-cache`、`sent-echoes`）取代 `imessage/catchup/*.json`、
   `imessage/reply-cache.jsonl` 和 `imessage/sent-echoes.jsonl`；iMessage
   doctor/setup 遷移會匯入並移除舊版檔案。
-- Microsoft Teams 對話、投票、委派權杖、待上傳項目以及
-  反饋學習現在使用 SQLite 外掛程式狀態/BLOB 命名空間
+- Microsoft Teams 對話、投票、委派權杖、待上傳內容以及
+  反饋學習資料現在使用 SQLite 外掛狀態/blob 命名空間
   (`conversations`, `polls`, `delegated-tokens`, `pending-uploads`,
-  `feedback-learnings`)，而非 `msteams-conversations.json`,
+  `feedback-learnings`) 取代 `msteams-conversations.json`,
   `msteams-polls.json`, `msteams-delegated.json`,
   `msteams-pending-uploads.json` 和 `*.learnings.json`；Microsoft Teams
-  doctor/setup 遷移會匯入並移除這些舊版檔案。
-- Matrix 同步快取、儲存元資料、執行緒綁定、入站去重標記、啟動驗證冷卻狀態、憑證、復原金鑰以及 SDK IndexedDB 加密快照現在使用 `matrix` 下的 SQLite 外掛程式 state/blob 命名空間 (`sync-store`, `storage-meta`, `thread-bindings`, `inbound-dedupe`, `startup-verification`, `credentials`, `recovery-key`, `idb-snapshots`)，而不是 `bot-storage.json`, `storage-meta.json`, `thread-bindings.json`, `inbound-dedupe.json`, `startup-verification.json`, `credentials.json`, `recovery-key.json` 和 `crypto-idb-snapshot.json`；Matrix doctor/setup 遷移會從帳戶範圍的 Matrix 儲存根目錄匯入並移除那些舊版檔案。
-- Nostr 匯流排游標和個人資料發佈狀態現在使用 SQLite 外掛程式狀態於 `nostr` 命名空間 (`bus-state`, `profile-state`) 下，而非 `bus-state-*.json` 和 `profile-state-*.json`；Nostr doctor/setuptools 遷移會匯入並移除舊版檔案。
-- Active Memory 會話切換現在使用 SQLite 外掛程式狀態於 `active-memory/session-toggles` 下，而非 `session-toggles.json`。
-- Skill Workshop 提案佇列和審查計數器現在使用 SQLite 外掛程式狀態於 `skill-workshop/proposals` 和 `skill-workshop/reviews` 下，而非每個工作區的 `skill-workshop/<workspace>.json` 檔案。
-- 出站傳遞和會話傳遞佇列現在使用不同的佇列名稱 (`outbound-delivery`, `session-delivery`) 共用全域 SQLite
-  `delivery_queue_entries` 表，而非持久化的
-  `delivery-queue/*.json`、`delivery-queue/failed/*.json` 和
-  `session-delivery-queue/*.json` 檔案。doctor legacy-state 步驟會匯入
-  待處理和失敗的資料列、移除過時的已傳遞標記，並在匯入後刪除舊的
-  JSON 檔案。熱路由和重試欄位是類型化欄位；JSON 載荷僅保留用於重放/偵錯。
-- ACPX 程序租約現在使用 `acpx/process-leases` 下的 SQLite 外掛程式狀態
-  取代 `process-leases.json`。
-- 備份與遷移執行中繼資料
+  doctor/setup 遷移會匯入並移除舊版檔案。
+- Matrix 同步快取、儲存中繼資料、執行緒綁定、輸入去重標記、
+  啟動驗證冷卻狀態、憑證、復原金鑰和 SDK
+  IndexedDB 加密快照現在使用 SQLite 外掛狀態/blob 命名空間於
+  `matrix` (`sync-store`, `storage-meta`, `thread-bindings`, `inbound-dedupe`,
+  `startup-verification`, `credentials`, `recovery-key`, `idb-snapshots`)
+  取代 `bot-storage.json`、`storage-meta.json`、`thread-bindings.json`、
+  `inbound-dedupe.json`、`startup-verification.json`、`credentials.json`、
+  `recovery-key.json` 和 `crypto-idb-snapshot.json`；Matrix doctor/setup
+  遷移會從帳戶範圍的 Matrix 儲存根目錄匯入並移除這些舊版檔案。
+- Nostr bus 游標和個人檔案發佈狀態現在使用 SQLite 外掛狀態於
+  `nostr` 命名空間 (`bus-state`, `profile-state`) 取代
+  `bus-state-*.json` 和 `profile-state-*.json`；Nostr doctor/setup
+  遷移會匯入並移除舊版檔案。
+- Active Memory 工作階段切換現在使用 SQLite 外掛狀態於
+  `active-memory/session-toggles` 取代 `session-toggles.json`。
+- 技能工作坊提案佇列和審核計數器現在改用 `skill-workshop/proposals` 和 `skill-workshop/reviews` 下的 SQLite 外掛程式狀態，而不再使用每個工作區的 `skill-workshop/<workspace>.json` 檔案。
+- 外送傳遞和會話傳遞佇列現在使用獨立的佇列名稱 (`outbound-delivery`, `session-delivery`) 共用全域 SQLite `delivery_queue_entries` 資料表，而不再使用持久的 `delivery-queue/*.json`, `delivery-queue/failed/*.json`, 和 `session-delivery-queue/*.json` 檔案。doctor legacy-state 步驟會匯入待處理和失敗的列，移除陳舊的已傳遞標記，並在匯入後刪除舊的 JSON 檔案。熱路由和重試欄位是具類型的欄位；JSON 承載僅保留用於重放/除錯。
+- ACPX 程序租約現在改用 `acpx/process-leases` 下的 SQLite 外掛程式狀態，而不再使用 `process-leases.json`。
+- 備份和遷移執行中繼資料
 
 將這些移至代理程式資料庫：
 
-- Agent 會話根目錄和相容性形成的會話條目 payload。已完成
-  執行時期寫入：熱會話元資料可在 `sessions` 中查詢，而
-  舊版形成的完整 `SessionEntry` payload 仍保留在 `session_entries` 中。
-- Agent 轉錄事件。已完成執行時期寫入。
-- 壓縮檢查點和轉錄快照。已完成執行時期寫入：
-  檢查點轉錄副本是 SQLite 轉錄行，檢查點
-  元資料則記錄在 `transcript_snapshots` 中。Gateway 檢查點輔助程式
-  現在將這些值命名為轉錄快照，而非來源檔案。
-- Agent VFS scratch/workspace 命名空間。已完成執行時期 VFS 寫入。
-- 子代理附加 payload。已完成執行時期寫入：它們是 SQLite VFS
-  種子條目，從非永久性工作區檔案。
-- 工具產出。已完成執行時期寫入。
-- 執行產出成果。已透過每個代理程式 (per-agent) 的
-  `run_artifacts` 資料表完成工作執行階段寫入。
-- 代理程式本機執行階段快取。已透過每個代理程式 (per-agent) 的 `cache_entries` 資料表完成工作執行階段範圍快取寫入。
-  閘道範圍的模型快取保留在全域資料庫中，除非它們變成代理程式特定。
-- ACP 父級串流日誌。已為執行階段寫入完成。
-- ACP 重播帳本會話。已透過 `acp_replay_sessions` 和 `acp_replay_events` 完成執行階段寫入；
-  舊版 `acp/event-ledger.json` 僅保留作為診斷工具 的輸入。
-- 非明確匯出檔案時的 Trajectory 附屬檔案。針對執行時寫入已完成：trajectory capture 寫入 agent-database `trajectory_runtime_events` 資料列，並將執行範圍的構件鏡像至 SQLite。舊版附屬檔案僅作為 doctor 匯入輸入；匯出可以具體化全新的 JSONL support-bundle 輸出，但不會在執行時讀取或遷移舊的 trajectory/transcript 附屬檔案。執行時 trajectory capture 會公開 SQLite 範圍；JSONL 路徑輔助程式僅限於匯出/除錯支援，不會從執行時模組重新匯出。Embedded-runner trajectory 中繼資料記錄 `{agentId, sessionId, sessionKey}` 身份，而非持久化 transcript 定位器。
+- 代理程式會話根目錄和相容性形狀的會話項目承載。針對執行階段寫入已完成：熱會話中繼資料可在 `sessions` 中查詢，而舊形狀的完整 `SessionEntry` 承載則保留在 `session_entries` 中。
+- 代理程式逐字稿事件。針對執行階段寫入已完成。
+- 壓縮檢查點和逐字稿快照。針對執行階段寫入已完成：檢查點逐字稿副本是 SQLite 逐字稿列，且檢查點中繼資料記錄在 `transcript_snapshots` 中。閘道檢查點協助程式現將這些值命名為逐字稿快照，而非來源檔案。
+- 代理程式 VFS 暫存/工作區命名空間。針對執行階段 VFS 寫入已完成。
+- 子代理程式附件承載。針對執行階段寫入已完成：它們是 SQLite VFS 種子項目，而非持久的工作區檔案。
+- 工具成品。針對執行階段寫入已完成。
+- 執行成品。針對工作者執行階段寫入已透過個別代理程式的 `run_artifacts` 資料表完成。
+- 代理程式本機執行階段快取。針對工作者執行階段範圍快取寫入已透過個別代理程式的 `cache_entries` 資料表完成。閘道範圍的模型快取保留在全域資料庫中，除非它們變成特定於代理程式。
+- ACP 父資料流記錄。針對執行階段寫入已完成。
+- ACP 重放分類帳會話。已透過
+  `acp_replay_sessions` 和 `acp_replay_events` 完成執行階段寫入；舊版 `acp/event-ledger.json`
+  僅作為 doctor 輸入保留。
+- ACP 會話元數據。已透過 `acp_sessions` 完成執行階段寫入；舊版
+  `entry.acp` 區塊在 `sessions.json` 中僅作為 doctor 遷移輸入。
+- 當軌跡側車不是明確的匯出檔案時。已為執行階段
+  寫入完成：軌跡捕獲寫入 agent-database `trajectory_runtime_events`
+  列並將執行範圍的產出映照到 SQLite。舊版側車僅作為 doctor
+  匯入輸入；匯出可以在執行階段實作全新的 JSONL 支援套件輸出
+  但不會讀取或遷移舊的軌跡/文字記錄側車。
+  執行階段軌跡捕獲公開 SQLite 範圍；JSONL 路徑輔助程式
+  被隔離在匯出/除錯支援中，且不會從執行階段模組重新匯出。
+  嵌入式執行器軌跡元數據記錄 `{agentId, sessionId, sessionKey}`
+  身份，而不是持久化文字記錄定位器。
 
-暫時保留這些檔案支援的項目：
+暫時將這些保留為檔案支援：
 
 - `openclaw.json`
 - 提供者或 CLI 憑證檔案
-- plugin/package 清單
-- 選取磁碟模式時的使用者工作區和 Git 儲存庫
-- 供操作員追蹤的日誌，除非特定的日誌介面已被移動
+- 插件/套件清單
+- 選擇磁碟模式時的使用者工作區和 Git 儲存庫
+- 供操作員追蹤的日誌，除非移動了特定的日誌表面
 
 ## 遷移計劃
 
 ### 階段 0：凍結邊界
 
-在移動更多資料列之前，明確確定持久狀態邊界：
+在移動更多列之前，使持久狀態邊界變得明確：
 
 - 在全域資料庫中新增一個 `migration_runs` 資料表。
-  已完成：用於遺留狀態遷移執行報告。
-- 新增一個由 doctor 擁有的狀態遷移服務，用於檔案到資料庫的匯入。
-  已完成：`openclaw doctor --fix` 使用了遺留狀態遷移實作。
-- 使 `plan` 變成唯讀，並讓 `apply` 建立備份、匯入、驗證，
+  已完成舊版狀態遷移執行報告。
+- 新增單一 doctor 擁有的狀態遷移服務，用於從檔案匯入到資料庫。
+  已完成：`openclaw doctor --fix` 使用舊版狀態遷移實作。
+- 使 `plan` 成為唯讀，並讓 `apply` 建立備份、匯入、驗證，
   然後刪除或隔離舊檔案。
-  已完成：doctor 會建立已驗證的遷移前備份，將備份路徑傳遞給
-  `migration_runs`，並重複使用匯入器/移除路徑。
-- 新增靜態禁令，使新的執行時程式碼無法寫入舊版狀態檔案，同時遷移程式碼和測試仍可植入/讀取它們。
-  對目前已遷移的舊版存儲已完成此操作；防護機制也會掃描巢狀測試中是否有禁止的執行時 transcript 定位器合約。
+  已完成：doctor 建立經過驗證的遷移前備份，將備份路徑
+  傳遞給 `migration_runs`，並重複使用匯入器/移除路徑。
+- 新增靜態禁令，使新的執行時代碼無法寫入舊版狀態檔案，同時遷移代碼和測試仍可植入/讀取它們。
+  目前已針對已遷移的舊版存儲完成；該防護機制也會掃描巢狀測試中是否包含被禁止的執行時轉錄定位器約定。
 
 ### 階段 1：完成全域控制平面
 
 將共享協調狀態保留在 `state/openclaw.sqlite` 中：
 
-- 代理程式及代理程式資料庫註冊表
-- 任務和任務流程帳本
-- 外掛程式狀態
-- 沙盒容器/瀏覽器註冊表
-- Cron/排程器執行歷史
-- 配對、裝置、推送、更新檢查、TUI、OpenRouter/模型快取，以及其他
+- 代理程式與代理程式資料庫註冊表
+- 任務和任務流程分類帳
+- 外掛狀態
+- 沙箱容器/瀏覽器註冊表
+- Cron/排程器執行記錄
+- 配對、裝置、推播、更新檢查、TUI、OpenRouter/模型快取，以及其他
   小型閘道範圍的執行時狀態
 - 備份與遷移元數據
-- Gateway 媒體附件位元組。運行時寫入已完成；直接檔案路徑是為了與通道發送器和沙盒暫存區相容而產生的暫時具體化。運行時允許清單接受 SQLite 具體化路徑，而非舊版狀態/配置媒體根目錄。Doctor 會將舊版媒體檔案匯入 `media_blobs`，並在成功寫入資料列後移除來源檔案。
-- 除錯代理捕捉會話、事件和 payload blob。已完成：在共享狀態 DB 中即時捕捉，並透過共享狀態 DB 啟動、架構、WAL 和忙碌逾時設定開啟。沒有除錯代理運行時 sidecar DB 覆寫、blob 目錄或僅限代理捕捉生成的架構/codegen 目標。
+- 閘道媒體附件位元組。執行時寫入已完成；直接檔案路徑
+  是為了與頻道發送者和沙箱暫存相容的暫時具體化。執行時允許清單接受 SQLite 具體化路徑，而非舊版
+  狀態/配置媒體根目錄。Doctor 會將舊版媒體檔案匯入
+  `media_blobs` 並在成功寫入資料列後移除原始檔案。
+- 偵錯代理擷取階段、事件和有效載荷 Blob。已完成：擷取動態存在
+  於共享狀態 DB 中，並透過共享狀態 DB 引導程序、架構、
+  WAL 和忙碌逾時設定開啟。沒有偵錯代理執行時 sidecar DB
+  覆寫、Blob 目錄或僅代理擷取生成的架構/程式碼生成
+  目標。
 
-此階段還會從這些子系統中刪除重複的 sidecar 開啟器、權限輔助程式、WAL 設定、檔系統修剪和相容性寫入器。
+此階段也會從這些子系統中刪除重複的 sidecar 開啟器、權限輔助程式、WAL
+設定、檔系統修剪和相容性寫入器。
 
-### 階段 2：引入個別代理資料庫
+### 階段 2：引進每個代理程式的資料庫
 
-為每個代理程式建立一個資料庫，並從全域資料庫註冊它：
+為每個代理程式建立一個資料庫並從全域 DB 註冊它：
 
 ```text
 ~/.openclaw/state/openclaw.sqlite
 ~/.openclaw/agents/<agentId>/agent/openclaw-agent.sqlite
 ```
 
-全域 `agent_databases` 列儲存路徑、架構版本、最後查看
-時間戳記以及基本的大小/完整性元資料。執行時代碼會向註冊表請求
-代理程式資料庫，而不是直接推導檔案路徑。
+全域 `agent_databases` 資列儲存路徑、架構版本、最後看見的
+時間戳記以及基本大小/完整性元數據。執行時代碼向註冊表詢問
+代理程式 DB，而不是直接推導檔案路徑。
 
-代理程式資料庫擁有：
+代理程式 DB 擁有：
 
-- `sessions` 作為標準的工作階段根目錄，`session_entries` 作為
-  附加至該根目錄的相容性裝酬載表，以及
-  `session_routes` 作為唯一的活動 `session_key` 查詢
-- `conversations` 和 `session_conversations` 作為附加至工作階段的
-  標準化提供者路由識別身分
+- `sessions` 作為正式的階段根目錄，並以 `session_entries` 作為附加至該根目錄的
+  相容性外形有效載荷資料表，以及
+  `session_routes` 作為唯一的活動 `session_key` 查找
+- `conversations` 和 `session_conversations` 作為附加至階段的
+  正規化提供者路由身分
 - `transcript_events`
-- 文字記錄快照和壓縮檢查點。已完成執行時寫入。
+- transcript snapshots and compaction checkpoints. Done for runtime writes.
 - `vfs_entries`
-- `tool_artifacts` 和運行產出
-- 代理端本地的 runtime/cache 資料列。已針對 worker 範圍快取完成。
-- ACP 父串流事件
-- 當軌跡 runtime 事件不是明確的匯出產出時
+- `tool_artifacts` and run artifacts
+- agent-local runtime/cache rows. Done for worker scoped caches.
+- ACP parent stream events
+- trajectory runtime events when they are not explicit export artifacts
 
-### 階段 3：置換會話存放區 (Session Store) API
+### Phase 3: Replace Session Store APIs
 
-Runtime 已完成。檔案狀的會話存放區介面並非有效的
-runtime 契約：
+Done for runtime. The file-shaped session store surface is not an active
+runtime contract:
 
-- Runtime 不再呼叫 `loadSessionStore(storePath)` 或將 `storePath` 視為
-  會話身分。
-- Runtime 的資料列操作包含 `getSessionEntry`、`upsertSessionEntry`、
-  `patchSessionEntry`、`deleteSessionEntry` 和 `listSessionEntries`。
-- 全存放區重寫輔助程式、檔案寫入器、佇列測試、別名修剪和
-  舊版金鑰刪除參數已從 runtime 中移除。
-- 已棄用的根套件相容性匯出仍會將標準 `sessions.json` 路徑調整為 SQLite 列 API。
-- `sessions.json` 解析僅保留在 doctor 遷移/匯入程式碼和 doctor 測試中。
-- 執行時期生命週期後備讀取會讀取 SQLite 轉錄標頭，而非 JSONL 首行。
+- Runtime no longer calls `loadSessionStore(storePath)` or treats `storePath` as
+  session identity.
+- Runtime row operations are `getSessionEntry`, `upsertSessionEntry`,
+  `patchSessionEntry`, `deleteSessionEntry`, and `listSessionEntries`.
+- Whole-store rewrite helpers, file writers, queue tests, alias pruning, and
+  legacy-key deletion parameters are gone from runtime.
+- Deprecated root-package compatibility exports still adapt canonical
+  `sessions.json` paths onto the SQLite row APIs.
+- `sessions.json` parsing remains only in doctor migration/import code and
+  doctor tests.
+- Runtime lifecycle fallback reads SQLite transcript headers, not JSONL first
+  lines.
 
-請繼續刪除任何重新引入檔案鎖定參數、修剪/截斷作為檔案維護的術語、儲存路徑識別碼，或唯一斷言為 JSON 持久化的測試。
+Keep deleting anything that reintroduces file-lock parameters,
+pruning/truncation-as-file-maintenance vocabulary, store-path identity, or tests
+whose only assertion is JSON persistence.
 
-### 階段 4：移動轉錄、ACP 串流、軌跡與 VFS
+### Phase 4: Move Transcripts, ACP Streams, Trajectories, And VFS
 
-讓每個代理程式資料串流都原生資料庫化：
+Make every agent data stream database-native:
 
-- Transcript 附加寫入會經過一個 SQLite 事務，該事務確保
-  session 標頭，檢查 message 幾等性，選擇父尾，插入
-  到 `transcript_events`，並在
-  `transcript_event_identities` 中記錄可查詢的身分元數據。這對於直接的 transcript message 附加和
-  正常持久化的 `TranscriptSessionManager` 附加均已完成；明確的分支
-  操作保留其明確的父級選擇，並且仍然寫入 SQLite 列
-  而不衍生任何文件定位器。
-- ACP 父串流日誌變成列，而不是 `.acp-stream.jsonl` 文件。已完成。
-- ACP spawn 設定不再持久化 transcript JSONL 路徑。已完成。
-- Runtime trajectory capture 直接寫入事件列/產物。明確的
-  support/export 指令仍可產生 support-bundle JSONL 產物作為
-  匯出格式，但 session 匯出不會重建 session JSONL。已完成。
+- Transcript append writes go through one SQLite transaction that ensures the
+  session header, checks message idempotency, selects the parent tail, inserts
+  into `transcript_events`, and records queryable identity metadata in
+  `transcript_event_identities`. Done for direct transcript message appends and
+  normal persisted `TranscriptSessionManager` appends; explicit branch
+  operations keep their explicit parent choice and still write SQLite rows
+  without deriving any file locator.
+- ACP parent stream logs become rows, not `.acp-stream.jsonl` files. Done.
+- ACP spawn setup no longer persists transcript JSONL paths. Done.
+- Runtime trajectory capture 將事件資料列/構件直接寫入。明確的
+  support/export 指令仍可產生 support-bundle JSONL 構件作為
+  匯出格式，但 session 匯出不會重新建立 session JSONL。已完成。
 - 設定為磁碟模式時，磁碟工作區會保留在磁碟上。
-- VFS 暫存區和實驗性的僅 VFS 工作區模式會使用代理程式資料庫。
+- VFS 暫存區和實驗性僅 VFS 工作區模式使用 agent DB。
 
-此遷移會匯入舊的 JSONL 檔案一次，在 `migration_runs` 中記錄計數/雜湊值，並在完整性檢查後移除已匯入的檔案。
+遷移作業僅匯入舊的 JSONL 檔案一次，在
+`migration_runs` 中記錄計數/雜湊值，並在完整性檢查後移除已匯入的檔案。
 
-### 階段 5：備份、還原、清理與驗證
+### 階段 5：備份、還原、壓縮與驗證
 
-備份仍維持為一個封存檔案：
+備份保持為一個壓縮檔：
 
-- 對每個全域和代理程式資料庫設置檢查點。
-- 使用 SQLite 備份語意或 `VACUUM INTO` 為每個資料庫建立快照。
-- 將壓縮後的資料庫快照、設定、外部憑證和要求的工作區匯出進行封存。
+- 對每個全域和 agent 資料庫進行檢查點設定。
+- 使用 SQLite 備份語意或 `VACUUM INTO` 對每個 DB 進行快照。
+- 封存壓縮後的 DB 快照、設定、外部認證以及請求的
+  工作區匯出內容。
 - 省略原始即時 `*.sqlite-wal` 和 `*.sqlite-shm` 檔案。
-- 透過開啟每個資料庫快照並執行 `PRAGMA integrity_check` 來驗證。
-  `openclaw backup create` 預設會執行此歸檔驗證；
-  `--no-verify` 僅略過寫入後的歸檔程序，而非略過快照
+- 透過開啟每個 DB 快照並執行 `PRAGMA integrity_check` 來驗證。
+  `openclaw backup create` 預設會執行此封存驗證；
+  `--no-verify` 僅跳過寫入後的封存傳遞，而不跳過快照
   建立的完整性檢查。
-- 還原會將快照複製回其目標路徑。此分支會將未出貨的 SQLite 版面重置為 `user_version = 1`；未來出貨的結構變更可以在需要時新增明確的遷移。
+- 還原作業會將快照複製回其目標路徑。此分支將
+  未發布的 SQLite 佈局重設為 `user_version = 1`；未來發布的 schema 變更
+  可以在需要時新增明確的遷移。
 
-### 階段 6：Worker 執行時期
+### 階段 6：Worker 執行階段
 
-在資料庫分割落地的同時，將 Worker 模式保持為實驗性：
+在資料庫分割落地期間，讓 worker 模式保持實驗性質：
 
-- Workers 會接收 agent id、run id、filesystem mode 和 DB registry identity。
-- 每個 Worker 開啟自己的 SQLite 連線。
-- Parent 保留 channel delivery、approvals、config 和 cancellation authority。
-- 從每個執行中的 run 一個 worker 開始；只有在生命週期和 DB
-  連線擁有權穩定後，才加入 pooling。
+- Workers 會接收 agent id、run id、檔案系統模式和 DB 註冊表身分識別。
+- 每個 worker 會開啟自己的 SQLite 連線。
+- 父程序保留通道遞送、核准、設定和取消授權。
+- 從每次作用中的執行各使用一個 worker 開始；僅在生命週期和 DB
+  連線擁有權穩定後才新增共用池。
 
 ### 階段 7：刪除舊世界
 
-針對執行時期會話管理已完成。舊世界僅允許作為明確的 doctor 輸入或支援/匯出輸出：
+執行階段 session 管理已完成。舊世界僅允許作為明確的
+doctor 輸入或 support/export 輸出：
 
-- 無執行時期 `sessions.json`、transcript JSONL、sandbox registry JSON、task sidecar SQLite 或 plugin-state sidecar SQLite 寫入。
-- 無 JSON/會話檔案修剪、檔案 transcript 截斷、會話檔案鎖定或鎖形狀的會話測試。
-- 無旨在保持舊會話檔案為最新狀態的執行時期相容性匯出。
-- 明確的支援匯出仍為使用者要求的封存/具體化格式，且不得將檔案名稱回饋至執行時期身分。
+- 沒有執行階段 `sessions.json`、transcript JSONL、sandbox registry JSON、task
+  sidecar SQLite 或 plugin-state sidecar SQLite 寫入。
+- 沒有 JSON/session 檔案修剪、檔案 transcript 截斷、session 檔案鎖定，
+  或鎖定狀的 session 測試。
+- 沒有運行時兼容性匯出，其目的是保持舊的會話檔案為最新狀態。
+- 明確的支援匯出保留使用者要求的存檔/具體化格式，且不得將檔案名稱反饋回運行時身份。
 
 ## 備份與還原
 
-備份應為單一封存檔案，但資料庫捕獲應為 SQLite 原生格式：
+備份應該是一個存檔檔案，但資料庫捕獲應該是 SQLite 原生的：
 
-1. 停止長時間執行的寫入活動或進入短暫的備份屏障。
-2. 針對每個全域和 agent 資料庫，執行檢查點。
-3. 使用 SQLite 備份語義或 `VACUUM INTO` 對每個資料庫建立快照，並存入
-   暫時備份目錄。
-4. 將壓縮後的資料庫快照、設定檔、憑證目錄、
-   選定的工作區，以及一份清單進行封存。
-5. 透過開啟每個包含的 SQLite 快照並執行
-   `PRAGMA integrity_check` 來驗證封存檔。
-   `openclaw backup create` 預設會執行此動作；`--no-verify` 僅用於
-   故意跳過寫入後封存通過的情況。
+1. 停止長時間執行的寫入活動或進入一個短暫的備份屏障。
+2. 對每個全域資料庫和代理資料庫執行檢查點。
+3. 使用 SQLite 備份語義或 `VACUUM INTO` 將每個資料庫快照到臨時備份目錄中。
+4. 將壓縮後的資料庫快照、設定檔、憑證目錄、選定的工作區以及清單歸檔。
+5. 透過開啟每個包含的 SQLite 快照並執行 `PRAGMA integrity_check` 來驗證存檔。
+   `openclaw backup create` 預設會執行此操作；`--no-verify` 僅用於故意跳過寫入後存檔傳遞的情況。
 
-不要依賴原始即時的 `*.sqlite`、`*.sqlite-wal` 和 `*.sqlite-shm` 副本作為
-主要備份格式。封存清單應記錄資料庫角色、
-代理程式 ID、綱要版本、來源路徑、快照路徑、位元組大小和完整性
-狀態。
+不要依賴原始的即時 `*.sqlite`、`*.sqlite-wal` 和 `*.sqlite-shm` 副本作為主要備份格式。存檔清單應記錄資料庫角色、代理 ID、架構版本、來源路徑、快照路徑、位元組大小和完整性狀態。
 
-Restore 應該從存檔快照重建全域資料庫和代理資料庫檔案。由於 SQLite 版面配置尚未發布，此重構僅保留 version-1 綱要以及 doctor 檔案轉資料庫匯入。Restore 指令會先驗證存檔，然後從驗證後的解載內容中替換每個資產清單項目。
+還原應從存檔快照重建全域資料庫和代理資料庫檔案。由於 SQLite 佈局尚未發布，此重構僅保留 version-1 架構以及 doctor 檔案到資料庫的匯入。還原命令首先驗證存檔，然後從驗證後的提取載入中替換每個清單資產。
 
-## Runtime 重構計畫
+## 運行時重構計畫
 
-1. 新增資料庫 registry API。
-   - 解析全域 DB 和各代理 DB 的路徑。
-   - 將未發布的綱要保持在 `user_version = 1`；直到已發布的綱要有需要時，再新增綱要遷移執行程式碼。
-   - 新增測試、備份和 doctor 使用的 close/checkpoint/integrity 輔助函式。
+1. 新增資料庫註冊表 API。
+   - 解析全域資料庫和每個代理資料庫的路徑。
+   - 將未發布的架構保留在 `user_version = 1`；在已發布的架構需要之前，不要新增架構遷移執行器程式碼。
+   - 新增由測試、備份和 doctor 使用的關閉/檢查點/完整性輔助程式。
 
-2. 合併 sidecar SQLite 儲存庫。
-   - 將插件狀態表格移至全域資料庫。Runtime 寫入已完成；未發布的舊版 sidecar 匯入器已刪除。
-   - 將任務註冊表移至全域資料庫。執行階段寫入已完成；未交付的舊版側車匯入器已刪除。
-   - 將任務流程表移至全域資料庫。執行階段寫入已完成；未交付的舊版側車匯入器已刪除。
-   - 將內建記憶體搜尋表移至各個代理程式資料庫中。已完成；透過 doctor 設定遷移，現在已移除明確的自訂 `memorySearch.store.path`。完整的重新索引僅針對記憶體表就地執行；舊的整個檔案交換路徑和側車索引交換輔助程式已刪除。
-   - 從那些子系統中刪除重複的資料庫開啟器、WAL 設定、權限輔助程式和關閉路徑。
+2. 合併附屬 SQLite 儲存。
+   - 將外掛程式狀態表移至全域資料庫。運行時寫入已完成；未發布的舊版附屬匯入器已刪除。
+   - 將任務註冊表表移至全域資料庫。運行時寫入已完成；未發布的舊版附屬匯入器已刪除。
+   - 將任務流程表移至全局資料庫。運行時寫入已完成；未發布的舊版 sidecar 匯入器已刪除。
+   - 將內建記憶體搜尋表移至每個代理程式資料庫。已完成；顯式自訂 `memorySearch.store.path` 現已由 doctor 配置遷移移除。完整重新索引就地針對記憶體表執行；舊的整檔交換路徑和 sidecar 索引交換輔助程式已刪除。
+   - 從這些子系統中刪除重複的資料庫開啟器、WAL 設定、權限輔助程式和關閉路徑。
 
-3. 將代理程式擁有的表移至各個代理程式的資料庫中。
-   - 透過全域資料庫註冊表按需建立代理程式 DB。已完成。
-   - 將執行階段工作階段條目、逐字稿事件、VFS 列和工具成品移至代理程式 DB。已完成。
-   - 不要遷移分支本地的共用資料庫會話條目、逐字稿事件、VFS 資料列或工具人工製品；該佈局從未發布。在 doctor 中僅保留舊版檔案到資料庫的匯入功能。
+3. 將代理程式擁有的表移至每個代理程式的資料庫中。
+   - 通過全局資料庫註冊表按需建立代理程式 DB。已完成。
+   - 將運行時會話條目、文字記錄事件、VFS 行和工具產物移至代理程式 DB。已完成。
+   - 不要遷移分支本地共享 DB 會話條目、文字記錄事件、VFS 行或工具產物；該佈局從未發布。僅在 doctor 中保留舊版檔案到資料庫的匯入。
 
-4. 取代會話儲存 API。
-   - 移除 `storePath` 作為執行時身分。對執行時已完成並由 `check:database-first-legacy-stores` 守護：session 元數據、路由更新、指令持久化、CLI session 清理、飛書推理預覽、文字紀錄狀態持久化、子代理深度、身分驗證設定檔 session 覆寫、父分叉邏輯和 QA 實驗室檢查現在從 canonical agent/session keys 解析資料庫。Gateway/TUI/UI/macOS session 列表回應現在公開 `databasePath` 而非舊版的 `path`；macOS 偵錯介面將 per-agent 資料庫顯示為唯讀狀態，而不是寫入 `session.store` 設定。`/status`、聊天驅動的軌跡匯出和 CLI 相依性代理不再傳播舊版儲存路徑；文字紀錄使用後備讀取會依據 agent/session 身分讀取 SQLite。執行時和橋接測試不再公開 `storePath`；doctor/migration 輸入擁有該舊版欄位名稱。Gateway 合併 session 載入不再有針對非樣板 `session.store` 值的特殊執行時分支；它會聚合 per-agent SQLite 列。舊版 session-lock doctor 通道及其 `.jsonl.lock` 清理協助程式已被移除；SQLite 現在是 session 併發邊界。熱門執行時呼叫站點使用面向列的協助程式名稱，例如 `resolveSessionRowEntry`；舊的 `resolveSessionStoreEntry` 相容性別名已從執行時和外掛 SDK 匯出中移除。
+4. 替換會話存儲 API。
+   - 移除 `storePath` 作為執行時身分。對執行時已完成並由 `check:database-first-legacy-stores` 守護：會話元資料、路由更新、命令持久化、CLI 會話清理、飛書推理預覽、逐字稿狀態持久化、子代理深度、授權配置檔會話覆寫、父分支邏輯和 QA 實驗室檢查現在從正準代理/會話鍵解析資料庫。Gateway/TUI/UI/macOS 會話列表回應現在公開 `databasePath` 而非舊有的 `path`；macOS 偵錯介面顯示每個代理的資料庫為唯讀狀態，而非寫入 `session.store` 配置。`/status`、聊天驅動的軌跡匯出和 CLI 依賴代理不再傳播舊有的儲存路徑；逐字稿使用後備讀取會根據代理/會份身分讀取 SQLite。執行時和橋接測試不再公開 `storePath`；doctor/migration 輸入擁有該舊有欄位名稱。Gateway 組合會話載入不再對非範本化的 `session.store` 值擁有特殊的執行時分支；它聚合每個代理的 SQLite 列。舊有的會話鎖 doctor 通道及其 `.jsonl.lock` 清理助手已被移除；SQLite 現在是會話並發邊界。熱門執行時呼叫站點使用列導向的助手名稱，例如 `resolveSessionRowEntry`；舊的 `resolveSessionStoreEntry` 相容性別名已從執行時和外掛 SDK 匯出中移除。
 
-- 使用 `{ agentId, sessionKey }` 列操作。
-  已完成：`getSessionEntry`、`upsertSessionEntry`、`deleteSessionEntry`、
-  `patchSessionEntry` 和 `listSessionEntries` 是以 SQLite 為優先的 API，不
-  需要會話儲存路徑。狀態摘要、本地代理狀態、健全狀況，
-  以及 `openclaw sessions` 列出指令現在會直接讀取各代理的列，
-  並顯示各代理的 SQLite 資料庫路徑，而非 `sessions.json` 路徑。
-- 將整個儲存的刪除/插入替換為 `upsertSessionEntry`、
-  `deleteSessionEntry`、`listSessionEntries` 和 SQL 清理查詢。
-  執行時已完成：熱路徑現在使用列 API 和衝突重試的列修補；
-  其餘的整個儲存匯入/取代輔助程式僅限於遷移匯入
-  程式碼和 SQLite 後端測試。
-  - 刪除 `store-writer.ts` 和 writer-queue 測試。完成。
-  - 從 session row upserts/patches 中刪除 runtime legacy-key pruning 和 alias-delete 參數。完成。
+- 使用 `{ agentId, sessionKey }` 列操作。已完成：`getSessionEntry`、`upsertSessionEntry`、`deleteSessionEntry`、`patchSessionEntry` 和 `listSessionEntries` 是 SQLite 優先的 API，不需要會話儲存路徑。狀態摘要、本機代理狀態、健康狀況和 `openclaw sessions` 列出命令現在直接讀取每個代理的列，並顯示每個代理的 SQLite 資料庫路徑，而非 `sessions.json` 路徑。
+- 使用 `upsertSessionEntry`、
+  `deleteSessionEntry`、`listSessionEntries` 和 SQL 清理查詢取代全存儲刪除/插入。
+  運行時已完成：熱路徑現在使用行 API 和衝突重試的行補丁；
+  剩餘的全存儲導入/取代輔助函數僅限於遷移導入
+  代碼和 SQLite 後端測試。
+  - 刪除 `store-writer.ts` 和寫入器佇列測試。已完成。
+  - 從會話
+    行 upsert/patch 中刪除運行時舊版金鑰修剪和別名刪除參數。已完成。
 
-5. 刪除 runtime JSON registry 行為。
-   - 使 sandbox registry 讀寫僅限於 SQLite。完成。
-   - 僅從遷移步驟匯入 monolithic 和 sharded JSON。完成。
-   - 移除 sharded registry 鎖定和 JSON 寫入。完成。
+5. 刪除運行時 JSON 註冊表行為。
+   - 使沙箱註冊表讀寫僅使用 SQLite。已完成。
+   - 僅從遷移步驟導入整體和分片 JSON。已完成。
+   - 移除分片註冊表鎖和 JSON 寫入。已完成。
 
-- 如果形狀保持為熱路徑操作狀態，則保留一個類型化的 registry 表，而不是將 registry 行儲存為通用不透明 JSON。完成。
+- 如果形狀保持熱路徑操作狀態，則保留一個類型化註冊表，而不是將註冊表行存儲為通用
+  不透明 JSON。已完成。
 
-6. 刪除 file-lock-shaped session 變異。
-   - 已完成 runtime lock 創建和 runtime lock API。
-   - 獨立的 legacy `.jsonl.lock` doctor 清理通道已被移除。
-   - `session.writeLock` 是經由 doctor 遷移的 legacy 配置，而不是類型化的 runtime 設置。
-   - State integrity 不再有單獨的孤兒轉錄文件修剪路徑；doctor 遷移會在一個地方匯入/移除舊版 JSONL 來源。
-   - Gateway 單例協調使用 `state_leases` 下的類型化 SQLite `gateway_locks` 行，並且不再暴露檔案鎖定目錄縫隙。
-   - 通用外掛 SDK 去重持久化不再使用檔案鎖定或 JSON 檔案；它寫入共享的 SQLite 外掛狀態行。已完成。
-   - QMD 嵌入式協調使用 SQLite 狀態租約而不是 `qmd/embed.lock`。已完成。
+6. 刪除檔案鎖形狀的會話變異。
+   - 已完成運行時鎖建立和運行時鎖 API。
+   - 獨立的舊版 `.jsonl.lock` doctor 清理通道已被移除。
+   - `session.writeLock` 是 doctor 遷移的舊版配置，而不是類型化運行時
+     設置。
+   - 狀態完整性不再有單獨的孤立轉錄檔案修剪
+     路徑；doctor 遷移在一個地方導入/移除舊版 JSONL 源。
+   - 網關單例協調使用 `gateway_locks` 下的類型化 SQLite `state_leases` 行，並且不再公開檔案鎖目錄接縫。
+   - 通用插件 SDK 去重持久化不再使用檔案鎖或 JSON
+     檔案；它寫入共享的 SQLite 插件狀態行。已完成。
+   - QMD 嵌入協調使用 SQLite 狀態租約代替
+     `qmd/embed.lock`。已完成。
 
-7. 讓 Worker 具備資料庫感知能力。
-   - Worker 開啟它們自己的 SQLite 連線。
-   - 父程序擁有交付、通道回呼 和配置。
-   - Worker 接收代理 ID、執行 ID、檔案系統模式和 DB 註冊表身分，而不是即時控制代碼。
-   - `vfs-only` 保持實驗性狀態，並使用代理資料庫作為其儲存根目錄。
-   - 首先每個活躍運行保持一個 worker。連線池可以等到資料庫連線生命週期和取消行為變得無趣再說。
+7. 使工作程序具有資料庫感知能力。
+   - 工作程序開啟自己的 SQLite 連線。
+   - 父程序擁有傳遞、通道回調和配置。
+   - 工作程序接收代理 ID、運行 ID、檔案系統模式和 DB 註冊表
+     身份，而不是即時句柄。
+   - `vfs-only` 保持實驗狀態，並使用代理資料庫作為其存儲
+     根目錄。
+   - 首先保持每個活躍運行一個工作程序。池化可以等到 DB 連線
+     生命週期和取消行為變得無趣時再進行。
 
 8. 備份整合。
-   - 教導備份透過 SQLite 備份或 `VACUUM INTO` 來對全域和 agent 資料庫進行快照。已完成針對狀態資產下發現的 `*.sqlite` 檔案。
-   - 為 SQLite 完整性和 schema 版本新增備份驗證。已完成針對備份建立和預設封存驗證完整性檢查。
-   - 在 SQLite 中記錄備份執行元資料。已透過共享的 `backup_runs` 表格完成，包含封存路徑、狀態和清單 JSON。
-   - 新增從已驗證封存快照還原的功能。已完成：`openclaw backup restore` 在解壓縮前進行驗證，使用驗證器的正規化清單，支援 `--dry-run`，並且在替換記錄的來源路徑前需要 `--yes`。
-   - 僅在請求時包含 VFS/工作區匯出；請勿將 session 內部結構匯出為 JSON 或 JSONL。
+   - 教導備份程式透過 SQLite 備份或
+     `VACUUM INTO` 來對全域和代理資料庫進行快照。已針對狀態資產下發現的 `*.sqlite` 檔案完成。
+   - 新增 SQLite 完整性與架構版本的備份驗證。已針對
+     備份建立與預設封存驗證完整性檢查完成。
+   - 在 SQLite 中記錄備份執行中繼資料。透過共用的 `backup_runs`
+     資料表完成，包含封存路徑、狀態與清單 JSON。
+   - 新增從已驗證的封存快照還原的功能。已完成：`openclaw backup
+restore` 在解壓縮前會進行驗證，使用驗證器的正規化
+     清單，支援 `--dry-run`，並且在替換
+     記錄的來源路徑前需要 `--yes`。
+   - 僅在要求時包含 VFS/工作區匯出；請勿將 session
+     內部匯出為 JSON 或 JSONL。
 
-9. 刪除過時的測試和程式碼。已針對已知的 runtime session 介面完成。
+9. 刪除過時的測試與程式碼。已針對已知的執行時段 session 介面完成。
 
-- 移除斷言執行時建立 `sessions.json` 或逐字稿
-  JSONL 檔案的測試。已針對核心 session store、chat、gateway 逐字稿事件、
-  preview、lifecycle、command session-entry 更新、auto-reply reset/trace，以及
-  memory-core dreaming fixtures、approval target routing、session transcript
-  repair、security permission repair、trajectory export 和 session export 完成。
-  Active-memory transcript 測試現今斷言 SQLite 範圍，並不會建立暫時性或
-  持續性的 JSONL 檔案。
-  舊的 heartbeat transcript-pruning 回歸測試已移除，因為
-  runtime 不再截斷 JSONL transcripts。
-  Agent session-list 工具測試不再將舊版 `sessions.json` 路徑
-  模型化為 gateway 回應形狀；app/UI/macOS 測試使用 `databasePath`。
-  `/status` transcript-usage 測試現在直接植入 SQLite transcript 列
-  而非寫入 JSONL 檔案。
-  Gateway session lifecycle 測試現在使用 SQLite transcript 植入輔助程式
-  直接進行；舊的單行 session-file fixture 形狀已從 reset
-  與 delete 涵蓋範圍中移除。
+- 移除斷言執行時建立 `sessions.json` 或文字紀錄
+  JSONL 檔案的測試。核心會話儲存庫、聊天、閘道文字紀錄事件、
+  預覽、生命週期、指令會話條目更新、自動回覆重設/追蹤以及
+  記憶核心 dreaming fixtures、核准目標路由、會話文字紀錄
+  修復、安全權限修復、軌跡匯出和會話匯出均已完成。
+  Active-memory 文字紀錄測試現在斷言 SQLite 範圍，且不會建立臨時或
+  持續化的 JSONL 檔案。
+  舊的心跳文字紀錄修剪回歸測試已被移除，因為
+  執行時不再截斷 JSONL 文字紀錄。
+  代理程式會話清單工具測試不再將舊版 `sessions.json` 路徑
+  模型為閘道回應形狀；app/UI/macOS 測試使用 `databasePath`。
+  `/status` 文字紀錄使用測試現在直接植入 SQLite 文字紀錄資料列
+  而不是寫入 JSONL 檔案。
+  閘道會話生命週期測試現在直接使用 SQLite 文字紀錄植入協助程式；
+  舊的單行會話檔案 fixture 形狀已從重設
+  和刪除覆蓋範圍中消失。
   `sessions.delete` 不再傳回檔案時代的 `archived: []` 欄位；刪除
-  僅回報列變異結果。舊的 `deleteTranscript` 選項也
-  不復存在：刪除 session 會移除正規 `sessions` 根目錄，並讓
-  SQLite 串聯刪除 session 擁有的 transcript、snapshot 與 trajectory 列，因此沒有
-  呼叫者能遺留 transcript orphans 或忘記清理分支。
-  Context-engine trajectory 擷取測試現在從獨立的
-  agent 資料庫讀取 `trajectory_runtime_events`
-  列，而非讀取
+  僅回報資料列變異結果。舊的 `deleteTranscript` 選項也
+  不復存在：刪除會話會移除正規 `sessions` 根目錄並讓
+  SQLite 級聯會話擁有的文字紀錄、快照和軌跡資料列，因此沒有
+  呼叫者能遺留文字紀錄孤兒或遺忘清理分支。
+  Context-engine 軌跡擷取測試現在從獨立的代理程式資料庫讀取 `trajectory_runtime_events`
+  資列，而不是讀取
   `session.trajectory.jsonl`。
-  Docker MCP 頻道植入腳本現在直接植入 SQLite 列。直接的
+  Docker MCP 通道植入指令碼現在直接植入 SQLite 資列。直接的
   `sessions.json` 寫入僅限於 doctor fixtures。
-  Tool Search Gateway E2E 從 SQLite transcript 列讀取 tool-call 證據
-  而非掃描 `agents/<agentId>/sessions/*.jsonl` 檔案。
-  Memory-core host 事件與 session-corpus scratch 列現在位於共用的
-  SQLite plugin-state 中；`events.jsonl` 與 `session-corpus/*.txt` 僅作為
-  舊版 doctor 遷移輸入。有效的列使用 `memory/session-ingestion/`
+  工具搜尋閘道 E2E 從 SQLite 文字紀錄資料列讀取工具呼叫證據
+  而不是掃描 `agents/<agentId>/sessions/*.jsonl` 檔案。
+  Memory-core 主機事件和會話語料庫暫存資料列現在位於共享的
+  SQLite 插件狀態中；`events.jsonl` 和 `session-corpus/*.txt` 僅為
+  舊版 doctor 遷移輸入。作用中的資料列使用 `memory/session-ingestion/`
   虛擬路徑，而非 `.dreams/session-corpus`。舊的 memory-core dreaming
-  修復模組及其 CLI/Gateway 測試已移除，因為 runtime 不再
-  擁有該語料庫的檔案封存修復。Memory-core
-  bridge/public-artifact 測試不再公開 `.dreams/events.jsonl`；它們
-  使用 SQLite 支援的虛擬 JSON artifact 名稱。
-  Public SDK/Codex 測試文件現在敘述 SQLite session 狀態而非 session
+  修復模組及其 CLI/Gateway 測試已被移除，因為執行時
+  不再擁有該語料庫的檔案存檔修復功能。Memory-core
+  橋接/公用成品測試不再公開 `.dreams/events.jsonl`；
+  它們使用 SQLite 支援的虛擬 JSON 成品名稱。
+  公用 SDK/Codex 測試文件現在說明 SQLite 會話狀態而非會話
   檔案，且 channel-turn 範例不再公開 `storePath` 引數。
-  Matrix sync 狀態現在使用 SQLite plugin-state store 直接。Active
-  client/runtime 契約傳遞帳戶儲存根目錄，而非 `bot-storage.json`
-  路徑，且 doctor 會在刪除來源前將舊版 `bot-storage.json` 匯入 SQLite。QA Matrix restart/destructive 情境現在直接變更 SQLite sync
-  列，而非建立或刪除假的 `bot-storage.json` 檔案，且
-  E2EE 基底傳遞 sync-store 根目錄而非假的
+  Matrix 同步狀態現在直接使用 SQLite 插件狀態儲存庫。作用中的
+  用戶端/執行時合約傳遞帳戶儲存根目錄，而非 `bot-storage.json`
+  路徑，且 doctor 會在刪除來源前將舊版 `bot-storage.json` 匯入 SQLite。
+  QA Matrix 重新啟動/破壞性情境現在直接變更 SQLite 同步
+  資列，而不是建立或刪除虛假的 `bot-storage.json` 檔案，且
+  E2EE 基底傳遞同步儲存根目錄，而非虛假的
   `sync-store.json` 路徑。
-  Matrix storage-root 選擇不再根據舊版 sync/thread JSON
-  檔案評分根目錄；它使用持久根目錄元資料與真實的加密狀態。
-  Runtime SQLite session 後端測試套件不再偽造
+  Matrix 儲存根目錄選取不再根據舊版同步/執行緒 JSON
+  檔案評分根目錄；它使用持久根目錄中繼資料加上真實加密狀態。
+  執行時 SQLite 會話後端測試套件不再偽造
   `sessions.json`；舊版來源 fixtures 現在位於匯入它們的 doctor
   測試中。
-  Gateway session 測試不再公開 `createSessionStoreDir` 輔助程式或
-  未使用的暫時 session-store 路徑設定；fixture 目錄為明確指定，直接
-  列設定使用 SQLite session-row 命名。
-  僅限 Doctor 的 JSON5 session-store 解析器涵蓋範圍已從 infra 測試移出
-  並移入 doctor 遷移測試，因此 runtime 測試套件不再擁有舊版
-  session-file 解析。
-  Microsoft Teams runtime SSO/pending-upload 測試不再攜帶 JSON sidecar
-  fixtures 或解析器；舊版 SSO token 解析僅存在於 plugin
-  遷移模組中。Telegram 測試不再植入假的 `/tmp/*.json` store
-  路徑；它們直接重設 SQLite 支援的訊息快取。泛型
-  OpenClaw test-state 輔助程式不再公開舊版 `auth-profiles.json`
-  寫入器；doctor auth 遷移測試在本機擁有該 fixture。
-  TUI last-session 指標、exec approvals、active-memory
-  切換、Matrix dedupe/startup 驗證、Memory Wiki 來源同步、
-  current-conversation 繫結、onboarding auth 與 Hermes secret 匯入的 Runtime 測試，不再
+  閘道會話測試不再公開 `createSessionStoreDir` 協助程式或
+  未使用的臨時會話儲存路徑設定；fixture 目錄為明確指定，且直接
+  資列設定使用 SQLite 會話資料列命名。
+  僅限 Doctor 的 JSON5 會話儲存解析器覆蓋範圍已從基礎設施測試移出
+  並移至 doctor 遷移測試，因此執行時測試套件不再擁有舊版
+  會話檔案解析。
+  Microsoft Teams 執行時 SSO/待傳送上傳測試不再攜帶 JSON sidecar
+  fixtures 或解析器；舊版 SSO 權杖解析僅存在於插件
+  遷移模組中。Telegram 測試不再植入虛假的 `/tmp/*.json` 儲存
+  路徑；它們直接重設 SQLite 支援的訊息快取。通用
+  OpenClaw 測試狀態協助程式不再公開舊版 `auth-profiles.json`
+  寫入器；doctor 認證遷移測試在該處本機擁有該 fixture。
+  TUI 上次會話指標、執行核准、active-memory
+  切換、Matrix 重複刪除/啟動驗證、Memory Wiki 來源同步、
+  目前對話繫結、入門認證和 Hermes 秘密匯入的執行時測試不再
   製造舊的 sidecar 檔案或斷言舊檔名不存在。它們
-  透過 SQLite 列與公開 store API 證明行為；doctor/migration
-  測試是唯一舊版來源檔名所屬之處。
-  設備/節點配對、channel allowFrom、restart 意圖、
-  restart handoff、session 傳遞佇列項目、設定健全性、iMessage
-  快取、cron 工作、PI transcript 標頭、subagent 登錄與受管理
-  圖像附件的 Runtime 測試，也不再僅為了證明
-  它們被忽略或不存在而建立已淘汰的 JSON/JSONL 檔案。
-  PI 溢位恢復不再擁有 SessionManager 重寫/截斷
-  後備方案：tool-result 截斷與 context-engine transcript 重寫會變更
-  SQLite transcript 列，然後從資料庫重新整理有效的 prompt 狀態。
-  持久化的 SessionManager 訊息附加委派給原子的 SQLite
-  transcript 附加輔助程式以進行父項選擇與等冪性。一般的
-  元資料/自訂項目附加也會在 SQLite 內選取目前的父項，因此
-  停滯的 manager 執行個體不會復活 pre-SQLite parent-chain 競爭條件。
-  針對 mid-turn prechecks 與 `sessions_yield` 的合成 PI 尾部清理現在
-  直接修剪 SQLite transcript 狀態；舊的 SessionManager 尾部移除
-  橋接器及其測試已刪除。
-  壓縮檢查點擷取也僅從 SQLite 快照；呼叫者不再
-  傳遞即時 SessionManager 作為替代逐字稿來源。
-- 保留僅為遷移而植入舊版檔案的測試。
-- 針對活躍的執行時介面，JSON 檔案證明已被 SQL 資料列證明取代。
+  透過 SQLite 資列和公用儲存 API 證明行為；doctor/遷移
+  測試是舊版來源檔名所屬的唯一位置。
+  裝置/節點配對、通道 allowFrom、重新啟動意圖、
+  重新啟動移交、會話傳遞佇列項目、設定健全狀況、iMessage
+  快取、 cron 排程工作、PI 文字紀錄標頭、子代理程式登錄檔和受管理
+  影像附件的執行時測試也不再建立已淘汰的 JSON/JSONL 檔案，僅為了證明
+  它們被忽略或不存在。
+  PI 溢位恢復不再具有 SessionManager 重寫/截斷
+  退路：工具結果截斷和 context-engine 文字紀錄重寫會變更
+  SQLite 文字紀錄資料列，然後從資料庫重新整理作用中的提示狀態。
+  持續化的 SessionManager 訊息附加委派給原子 SQLite
+  文字紀錄附加協助程式，以進行父項選取和等冪性。一般的
+  中繼資料/自訂項目附加也會在 SQLite 內選取目前父項，因此
+  停滯的管理員執行個體不會復活前 SQLite 的父項鏈競爭條件。
+  用於輪次中期前檢查和 `sessions_yield` 的合成 PI 尾部清理現在
+  直接修剪 SQLite 文字紀錄狀態；舊的 SessionManager 尾部移除
+  橋接及其測試已被刪除。
+  壓縮檢查點擷取也僅從 SQLite 擷取快照；呼叫者不再
+  將作用中的 SessionManager 作為替代文字紀錄來源傳遞。
+- 僅保留用於遷移的播種舊版文件的測試。
+- JSON 檔案證明已被 SQL 行證明取代，用於活躍的運行時表面。
 
-- 新增對執行時寫入舊版 session/cache JSON 路徑的靜態封鎖。
-  已對 repo guard 完成此項。
+- 對舊版 session/cache JSON 路徑的運行時寫入新增靜態封鎖。已針對 repo guard 完成。
 
-10. 使遷移報告可供稽核。
-    - 在 SQLite 中記錄遷移執行，包含開始/結束時間戳記、來源
-      路徑、來源雜湊、計數、警告及備份路徑。
-      完成：legacy-state 遷移執行現在會持續保存 `migration_runs`
-      報告，其中包含來源路徑/表格清單、來源檔案 SHA-256、大小、
-      記錄計數、警告及備份路徑。
-      完成：legacy-state 遷移執行也會持續保存 `migration_sources`
-      資料列，以便進行來源層級稽核及未來的跳過/回填決策。
-    - 讓套用具等冪性。在部分匯入後重新執行應該要麼跳過已匯入的來源，要麼透過穩定金鑰進行合併。
-      完成：session 索引、transcripts、傳送佇列、外掛狀態、task
-      分類帳，以及 agent 擁有的全域 SQLite 列現在透過穩定金鑰或
-      upsert/replace 語意匯入，因此重新執行會進行合併而不會重複持久化
-      列。
-    - 匯入失敗必須將原始來源檔案保留在原處。
-      完成：失敗的 transcript 匯入現在會將原始 JSONL 來源保留在其
-      偵測到的路徑，並且 `migration_sources` 將來源記錄為
-      `warning`，並附帶 `removed_source=0` 以供下一次 doctor 執行使用。
+10. 使遷移報表可被稽核。
+    - 在 SQLite 中記錄遷移運行，包含開始/結束時間戳記、來源路徑、來源雜湊、計數、警告和備份路徑。完成：legacy-state 遷移執行現在會持續儲存 `migration_runs` 報表，其中包含來源路徑/表格清單、來源檔案 SHA-256、大小、記錄計數、警告和備份路徑。完成：legacy-state 遷移執行也會持續儲存 `migration_sources` 行，用於來源層級的稽核以及未來的跳過/回填決策。
+    - 使套用具冪等性。部分匯入後重新執行應該跳過已匯入的來源或透過穩定金鑰合併。完成：session 索引、逐字稿、傳遞佇列、外掛狀態、任務分類帳和代理擁有的全域 SQLite 行透過穩定金鑰或 upsert/replace 語意匯入，因此重新執行會合併而不會複製持久性行。
+    - 匯入失敗必須將原始來源檔案保留在原處。完成：失敗的逐字稿匯入現在會將原始 JSONL 來源保留在其偵測到的路徑，並且 `migration_sources` 會將來源記錄為 `warning` 並附帶 `removed_source=0` 以供下一次 doctor 運行使用。
 
 ## 效能規則
 
-- 每個執行緒/程序一個連線是可以的；不要在 worker 之間共用 handles。
-- 使用 WAL、`foreign_keys=ON`、30 秒的忙碌逾時，以及短 `BEGIN IMMEDIATE`
-  寫入交易。
-- 讓寫入事務輔助函式保持同步，除非/直到異步事務 API 加入明確的互斥鎖/背壓語意。
-- 保持父級交付寫入短小且具有事務性。
-- 避免重寫整個存儲；請使用層級級的 upsert/delete。
-- 在遷移熱代碼之前，為 list-by-agent、list-by-session、updated-at、run id 和過期路徑添加索引。
-- 將大型成品、媒體和向量存儲為 BLOB 或分塊的 BLOB 行，而非 base64 或數值陣列 JSON。
-- 保持不透明的插件狀態條目短小且範圍受限。
-- 新增用於 TTL/過期的 SQL 清理，而非檔案系統修剪。
-  已針對資料庫擁有的執行時存儲完成：媒體、插件狀態、插件 blob、
-  永久重複刪除和代理快取均透過 SQLite 行過期。剩餘的
-  檔案系統清理僅限於臨時具現化或明確的
+- 每個執行緒/程序一個連線是可以的；請不要跨工作程式共用控制代碼。
+- 使用 WAL、`foreign_keys=ON`、30 秒忙碌逾時和短 `BEGIN IMMEDIATE` 寫入交易。
+- 保持寫入交易輔助程式同步，除非/直到非同步交易 API 新增明確的 mutex/背壓語意。
+- 保持父項傳遞寫入為小型且交易式。
+- 避免全店重寫；使用行層級 upsert/delete。
+- 在移動熱程式碼之前，先新增 list-by-agent、list-by-session、updated-at、run id 和 expiration 路徑的索引。
+- 將大型成品、媒體和向量儲存為 BLOB 或分塊 BLOB 行，而非 base64 或數值陣列 JSON。
+- 保持不透明的外掛狀態項目小型且範圍受限。
+- 新增用於 TTL/過期時間的 SQL 清理作業，以取代檔案系統修剪。
+  對於資料庫擁有的執行時期儲存空間已經完成：媒體、外掛狀態、外掛 blob、
+  持續性去重以及代理快取都會透過 SQLite 列到期。剩餘的
+  檔案系統清理僅限於暫時具象化或明確的
   移除指令。
 
-## 靜態禁止
+## 靜態禁令
 
-新增一個程式庫檢查，使對舊版狀態路徑的新執行時寫入失敗：
+新增一個檢查程式庫的機制，若對舊版狀態路徑進行新的執行時期寫入則會失敗：
 
 - `sessions.json`
-- `*.trajectory.jsonl` 具體化的 support-bundle 輸出除外
+- `*.trajectory.jsonl` 除外，包括具象化的支援套件輸出
 - `.acp-stream.jsonl`
 - `acp/event-ledger.json`
 - `cache/*.json` 執行時期快取檔案
@@ -1415,15 +1398,15 @@ Restore 應該從存檔快照重建全域資料庫和代理資料庫檔案。由
 - `process-leases.json`
 - `gateway-instance-id`
 - `session-toggles.json`
-- Memory-core `.dreams/events.jsonl`
-- Memory-core `.dreams/session-corpus/`
-- Memory-core `.dreams/daily-ingestion.json`
-- Memory-core `.dreams/session-ingestion.json`
-- Memory-core `.dreams/short-term-recall.json`
-- Memory-core `.dreams/phase-signals.json`
-- Memory-core `.dreams/short-term-promotion.lock`
-- Skill Workshop `skill-workshop/<workspace>.json`
-- Skill Workshop `skill-workshop/skill-workshop-review-*.json`
+- 記憶核心 `.dreams/events.jsonl`
+- 記憶核心 `.dreams/session-corpus/`
+- 記憶核心 `.dreams/daily-ingestion.json`
+- 記憶核心 `.dreams/session-ingestion.json`
+- 記憶核心 `.dreams/short-term-recall.json`
+- 記憶核心 `.dreams/phase-signals.json`
+- 記憶核心 `.dreams/short-term-promotion.lock`
+- 技能工作坊 `skill-workshop/<workspace>.json`
+- 技能工作坊 `skill-workshop/skill-workshop-review-*.json`
 - Nostr `bus-state-*.json`
 - Nostr `profile-state-*.json`
 - `calls.jsonl`
@@ -1456,10 +1439,10 @@ Restore 應該從存檔快照重建全域資料庫和代理資料庫檔案。由
 - Matrix `crypto-idb-snapshot.json`
 - Discord `model-picker-preferences.json`
 - Discord `command-deploy-cache.json`
-- 沙盒註冊表分片 JSON 檔案
-- 原生 hook relay `/tmp` 橋接 JSON 檔案
+- sandbox registry shard JSON 檔案
+- native hook relay `/tmp` bridge JSON 檔案
 - `plugin-state/state.sqlite`
-- 臨時 `openclaw-state.sqlite` 執行時 sidecar
+- ad-hoc `openclaw-state.sqlite` runtime sidecars
 - `tasks/runs.sqlite`
 - `tasks/flows/registry.sqlite`
 - `bindings/current-conversations.json`
@@ -1479,7 +1462,7 @@ Restore 應該從存檔快照重建全域資料庫和代理資料庫檔案。由
 - `audit/crestodian.jsonl`
 - `crestodian/rescue-pending/*.json`
 - `plugins/phone-control/armed.json`
-- 記憶維基 `.openclaw-wiki/log.jsonl`
+- Memory Wiki `.openclaw-wiki/log.jsonl`
 - 記憶維基 `.openclaw-wiki/state.json`
 - 記憶維基 `.openclaw-wiki/locks/`
 - 記憶維基 `.openclaw-wiki/source-sync.json`
@@ -1488,25 +1471,31 @@ Restore 應該從存檔快照重建全域資料庫和代理資料庫檔案。由
 - 記憶維基 `.openclaw-wiki/cache/claims.jsonl`
 - ClawHub `.clawhub/lock.json`
 - ClawHub `.clawhub/origin.json`
-- Browser profile decoration `.openclaw-profile-decorated`
+- 瀏覽器設定檔裝飾 `.openclaw-profile-decorated`
 - `SessionManager.open(...)` 檔案支援的會話開啟器
 - `SessionManager.listAll(...)` 和 `TranscriptSessionManager.listAll(...)`
-  文字記錄列表外觀
+  逐字稿清單外觀
 - `SessionManager.forkFromSession(...)` 和
-  `TranscriptSessionManager.forkFromSession(...)` 文字記錄分支外觀
+  `TranscriptSessionManager.forkFromSession(...)` 逐字稿分支外觀
 - `SessionManager.newSession(...)` 和 `TranscriptSessionManager.newSession(...)`
   可變會話替換外觀
 - `SessionManager.createBranchedSession(...)` 和
   `TranscriptSessionManager.createBranchedSession(...)` 分支會話外觀
 
-該禁令應允許測試建立舊版 fixture，並允許遷移程式碼讀取/匯入/移除舊版檔案來源。未發布的 SQLite 側車檔案仍維持禁令，且不獲得 doctor 匯入許可。
+此禁令應允許測試建立舊版固定裝置，並允許遷移程式碼
+讀取/匯入/移除舊版檔案來源。未發貨的 SQLite 副檔名仍維持禁用
+狀態，且不獲得 doctor 匯入許可。
 
 ## 完成標準
 
-- 執行階段資料與快取寫入應導向全域或代理的 SQLite 資料庫。
-- Runtime 不再寫入工作階段索引、transcript JSONL、sandbox registry JSON、task sidecar SQLite 或 plugin-state sidecar SQLite。未交付的 task 和 plugin-state sidecar SQLite 匯入器已被刪除。
+- 執行階段資料與快取寫入會進入全域或代理 SQLite 資料庫。
+- 執行階段不再寫入會話索引、逐字稿 JSONL、沙盒登錄檔
+  JSON、任務副檔名 SQLite 或外掛狀態副檔名 SQLite。未發貨的任務
+  與外掛狀態副檔名 SQLite 匯入器將被刪除。
 - 舊版檔案匯入僅限 doctor 使用。
-- 備份會產生一個包含精簡 SQLite 快照和完整性證明的封存檔。
-- Agent workers 可以使用磁碟、VFS scratch 或實驗性的 VFS-only 儲存來執行。
-- Config 和明確的 credential 檔案仍是唯一預期的持久化非資料庫控制檔案。
-- Repo 檢查可防止重新引入舊版的 runtime 檔案存放區。
+- 備份會產生一個包含精簡 SQLite 快照與完整性證明的封存檔。
+- 代理工作程式可使用磁碟、VFS 暫存區或實驗性純 VFS
+  儲存來執行。
+- 設定與明確的憑證檔案仍為唯一預期的持久化
+  非資料庫控制檔案。
+- Repo 檢查會防止重新引入舊版執行階段檔案儲存。

@@ -8,9 +8,9 @@ title: "遷移"
 
 # `openclaw migrate`
 
-透過外掛擁有的遷移提供者，從其他代理系統匯入狀態。內建的提供者涵蓋 Codex CLI 狀態、[Claude](/zh-Hant/install/migrating-claude) 和 [Hermes](/zh-Hant/install/migrating-hermes)；第三方外掛可以註冊額外的提供者。
+透過外掛程式擁有的移轉提供者，從另一個代理程式系統匯入狀態。隨附的提供者涵蓋 Codex CLI 狀態、[Claude](/zh-Hant/install/migrating-claude) 和 [Hermes](/zh-Hant/install/migrating-hermes)；第三方外掛程式可以註冊額外的提供者。
 
-<Tip>如需面向使用者的逐步指南，請參閱[從 Claude 遷移](/zh-Hant/install/migrating-claude)和[從 Hermes 遷移](/zh-Hant/install/migrating-hermes)。[遷移中心](/zh-Hant/install/migrating)列出了所有路徑。</Tip>
+<Tip>如需使用者導向逐步說明，請參閱 [從 Claude 移轉](/zh-Hant/install/migrating-claude) 和 [從 Hermes 移轉](/zh-Hant/install/migrating-hermes)。[移轉中心](/zh-Hant/install/migrating) 列出了所有路徑。</Tip>
 
 ## 指令
 
@@ -100,7 +100,7 @@ openclaw onboard --import-from hermes --import-source ~/.hermes
 
 內建的 Claude 提供者預設會在 `~/.claude` 偵測 Claude Code 狀態。使用 `--from <path>` 來匯入特定的 Claude Code 家目錄或專案根目錄。
 
-<Tip>如需使用者導覽，請參閱[從 Claude 遷移](/zh-Hant/install/migrating-claude)。</Tip>
+<Tip>如需使用者導向逐步說明，請參閱 [從 Claude 移轉](/zh-Hant/install/migrating-claude)。</Tip>
 
 ### Claude 匯入的內容
 
@@ -189,9 +189,18 @@ Codex `config.toml`、原生 `hooks/hooks.json`、非經策展的市集、非來
 其明確設定項目會以停用狀態寫入，直到您重新授權並
 啟用它們。其他安裝失敗則為項目範圍的 `error` 結果。
 
-如果在規劃期間無法取得 Codex 應用程式伺服器外掛程式清單，遷移
-會改為使用快取的組合建議項目，而不是讓整個
-遷移失敗。
+原生 Codex 外掛程式設定也接受第一方 `openai-bundled` 和
+`openai-primary-runtime` 市集身分識別，但移轉不會從來源狀態自動探索或安裝它們。
+
+OpenAI 端的應用程式/外掛程式可用性仍來自已登入的 Codex
+帳戶和工作區應用程式控制。請參閱
+[在您的 ChatGPT 方案中使用 Codex](https://help.openai.com/en/articles/11369540-using-codex-with-your-chatgpt-plan)
+以取得 OpenAI 的帳戶和工作區控制概覽，然後使用
+[原生 Codex 外掛程式](/zh-Hant/plugins/codex-native-plugins#manual-first-party-marketplace-entries)
+進行手動第一方市集項目輸入。
+
+如果在規劃期間無法取得 Codex 應用程式伺服器外掛程式清單，移轉
+會改為回退到快取的套件建議項目，而不是讓整個移轉失敗。
 
 ## Hermes 提供者
 
@@ -200,15 +209,15 @@ Codex `config.toml`、原生 `hooks/hooks.json`、非經策展的市集、非來
 ### Hermes 匯入的內容
 
 - 來自 `config.yaml` 的預設模型設定。
-- 來自 `providers` 和 `custom_providers` 的已設定模型提供者和自訂 OpenAI 相容端點。
+- 來自 `providers` 和 `custom_providers` 的設定模型提供者和自訂 OpenAI 相容端點。
 - 來自 `mcp_servers` 或 `mcp.servers` 的 MCP 伺服器定義。
 - `SOUL.md` 和 `AGENTS.md` 到 OpenClaw 代理程式工作區。
-- `memories/MEMORY.md` 和 `memories/USER.md` 被附加到工作區記憶檔案。
-- OpenClaw 檔案記憶體的記憶體配置預設值，以及外部記憶體提供者（例如 Honcho）的封存或手動審查項目。
+- `memories/MEMORY.md` 和 `memories/USER.md` 附加到工作區記憶體檔案。
+- OpenClaw 檔案記憶體的記憶體設定預設值，以及 Honcho 等外部記憶體提供者的封存或手動審查項目。
 - 在 `skills/<name>/` 下包含 `SKILL.md` 檔案的 Skills。
-- 來自 `skills.config` 的個別 Skill 設定值。
-- 當接受互動式憑證遷移時，或設定 `--include-secrets` 時，來自 OpenCode `auth.json` 的 OpenCode OpenAI OAuth 憑證。Hermes `auth.json` OAuth 條目是針對手動 OpenAI 重新驗證或 doctor 修復回報的舊版狀態。
-- 來自 Hermes `.env` 和 OpenCode `auth.json` 的支援 API 金鑰和令牌，當接受互動式憑證移轉時，或是當設定 `--include-secrets` 時。
+- 來自 `skills.config` 的每個 Skill 設定值。
+- 來自 OpenCode `auth.json` 的 OpenCode OpenAI OAuth 憑證，當接受互動式憑證遷移時，或當設定了 `--include-secrets` 時。Hermes `auth.json` OAuth 項目是針對手動 OpenAI 重新驗證或醫生修復回報的舊版狀態。
+- 來自 Hermes `.env` 和 OpenCode `auth.json` 的支援 API 金鑰與權杖，當接受互動式憑證遷移時，或當設定了 `--include-secrets` 時。
 
 ### 支援的 `.env` 金鑰
 
@@ -255,9 +264,9 @@ Codex `config.toml`、原生 `hooks/hooks.json`、非經策展的市集、非來
 - `ZAI_API_KEY`
 - `Z_AI_API_KEY`
 
-### 僅供存檔的狀態
+### 僅歸檔狀態
 
-OpenClaw 無法安全解讀的 Hermes 狀態會被複製到遷移報告中供人工審查，但不會載入到即時的 OpenClaw 設定或認證中。這保留了不透明或不安全的狀態，而不假裝 OpenClaw 可以自動執行或信任它：
+OpenClaw 無法安全解讀的 Hermes 狀態會被複製到遷移報告中供人工審查，但不會載入到即時的 OpenClaw 設定或憑證中。這可以保留不透明或不安全的狀態，而不假裝 OpenClaw 可以自動執行或信任它：
 
 - `plugins/`
 - `sessions/`
@@ -266,7 +275,7 @@ OpenClaw 無法安全解讀的 Hermes 狀態會被複製到遷移報告中供人
 - `mcp-tokens/`
 - `state.db`
 
-### 套用之後
+### 套用後
 
 ```bash
 openclaw doctor
@@ -284,20 +293,20 @@ openclaw doctor
 }
 ```
 
-在執行時，外掛程式會呼叫 `api.registerMigrationProvider(...)`。提供者會實作 `detect`、`plan` 和 `apply`。核心擁有 CLI 協調、備份策略、提示、輸出和衝突預檢。核心將審查後的計畫傳遞給 `apply(ctx, plan)`，且提供者僅當為了相容性而缺少該引數時才能重建計畫。
+在執行時，外掛程式會呼叫 `api.registerMigrationProvider(...)`。提供者會實作 `detect`、`plan` 和 `apply`。核心負責 CLI 協調、備份原則、提示、JSON 輸出和衝突預檢。核心會將審查過的計畫傳遞給 `apply(ctx, plan)`，而提供者僅在為了相容性而缺少該引數時才能重建計畫。
 
-提供者外掛程式可以使用 `openclaw/plugin-sdk/migration` 來建構項目和摘要計數，以及使用 `openclaw/plugin-sdk/migration-runtime` 來進行具衝突感知的檔案複製、僅供存檔的報告複製、快取的設定執行時期包裝函式，以及遷移報告。
+提供者外掛程式可以使用 `openclaw/plugin-sdk/migration` 來建構項目和摘要計數，以及使用 `openclaw/plugin-sdk/migration-runtime` 來進行具備衝突感知的檔案複製、僅歸檔報告複製、快取設定執行時包裝器和遷移報告。
 
-## 上架整合
+## Onboarding 整合
 
-當提供者偵測到已知來源時，上架流程可以提供遷移。`openclaw onboard --flow import` 和 `openclaw setup --wizard --import-from hermes` 都使用相同的外掛程式遷移提供者，並且在套用之前仍會顯示預覽。
+當提供者偵測到已知來源時，Onboarding 可以提供遷移。`openclaw onboard --flow import` 和 `openclaw setup --wizard --import-from hermes` 都使用相同的外掛程式遷移提供者，並且在套用前仍會顯示預覽。
 
-<Note>上架匯入需要全新的 OpenClaw 設定。如果您已經有本機狀態，請先重設設定、認證、會話和工作區。備份加覆寫或合併匯入功能僅針對現有設定開放。</Note>
+<Note>Onboarding 匯入需要全新的 OpenClaw 設定。如果您已有本機狀態，請先重設設定、憑證、工作階段和工作區。針對現有設定，「備份後覆寫」或「合併」匯入功能受到功能閘控限制。</Note>
 
 ## 相關
 
-- [從 Hermes 遷移](/zh-Hant/install/migrating-hermes)：面向使用者的逐步指南。
-- [從 Claude 遷移](/zh-Hant/install/migrating-claude)：面向使用者的逐步指南。
+- [從 Hermes 遷移](/zh-Hant/install/migrating-hermes)：使用者導覽。
+- [從 Claude 遷移](/zh-Hant/install/migrating-claude)：使用者導覽。
 - [遷移](/zh-Hant/install/migrating)：將 OpenClaw 移動到新機器。
 - [Doctor](/zh-Hant/gateway/doctor)：套用遷移後的健康檢查。
-- [插件](/zh-Hant/tools/plugin)：外掛程式安裝和註冊。
+- [外掛程式](/zh-Hant/tools/plugin)：外掛程式安裝與註冊。

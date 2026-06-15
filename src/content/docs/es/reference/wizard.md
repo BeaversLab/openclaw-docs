@@ -28,30 +28,30 @@ Para obtener una descripción general de alto nivel, consulte [Onboarding (CLI)]
       - Restablecimiento completo (también elimina el espacio de trabajo)
 
   </Step>
-  <Step title="Modelo/Auth">
-    - **Clave de API de Anthropic**: usa `ANTHROPIC_API_KEY` si está presente o solicita una clave, luego la guarda para uso del demonio.
-    - **Clave de API de Anthropic**: opción preferida de asistente de Anthropic en onboarding/configure.
-    - **Token de configuración de Anthropic**: aún disponible en onboarding/configure, aunque OpenClaw ahora prefiere reutilizar la CLI de Claude cuando está disponible.
+  <Step title="Model/Auth">
+    - **Clave de API de Anthropic**: usa `ANTHROPIC_API_KEY` si está presente o solicita una clave, luego la guarda para uso del daemon.
+    - **Clave de API de Anthropic**: opción preferida de asistente Anthropic en onboarding/configure.
+    - **Token de configuración de Anthropic**: aún disponible en onboarding/configure, aunque OpenClaw ahora prefiere el reuso de Claude CLI cuando está disponible.
     - **Suscripción a OpenAI Code (Codex) (OAuth)**: flujo del navegador; pegue el `code#state`.
-      - Establece `agents.defaults.model` en `openai/gpt-5.5` a través del tiempo de ejecución de Codex cuando el modelo no está configurado o ya es de la familia OpenAI.
-    - **Suscripción a OpenAI Code (Codex) (emparejamiento de dispositivos)**: flujo de emparejamiento del navegador con un código de dispositivo de corta duración.
-      - Establece `agents.defaults.model` en `openai/gpt-5.5` a través del tiempo de ejecución de Codex cuando el modelo no está configurado o ya es de la familia OpenAI.
+      - Establece `agents.defaults.model` en `openai/gpt-5.5` a través del runtime de Codex cuando el modelo no está establecido o ya es de la familia OpenAI.
+    - **Suscripción a OpenAI Code (Codex) (emparejamiento de dispositivo)**: flujo de emparejamiento del navegador con un código de dispositivo de corta duración.
+      - Establece `agents.defaults.model` en `openai/gpt-5.5` a través del runtime de Codex cuando el modelo no está establecido o ya es de la familia OpenAI.
     - **Clave de API de OpenAI**: usa `OPENAI_API_KEY` si está presente o solicita una clave, luego la almacena en perfiles de autenticación.
-      - Establece `agents.defaults.model` en `openai/gpt-5.5` cuando el modelo no está configurado, es `openai/*`, o referencias de modelo de Codex heredadas.
-    - **xAI (Grok) OAuth / Clave de API**: inicia sesión con xAI OAuth cuando se elige, o solicita `XAI_API_KEY` en la ruta de clave de API, y configura xAI como proveedor de modelos.
-    - **OpenCode**: solicita `OPENCODE_API_KEY` (o `OPENCODE_ZEN_API_KEY`, consígalo en https://opencode.ai/auth) y le permite elegir el catálogo Zen o Go.
-    - **Ollama**: ofrece primero **Nube + Local**, **Solo nube** o **Solo local**. `Cloud only` solicita `OLLAMA_API_KEY` y usa `https://ollama.com`; los modos respaldados por el host solicitan la URL base de Ollama, descubren los modelos disponibles y extraen automáticamente el modelo local seleccionado cuando sea necesario; `Cloud + Local` también verifica si ese host de Ollama ha iniciado sesión para el acceso a la nube.
+      - Establece `agents.defaults.model` en `openai/gpt-5.5` cuando el modelo no está establecido, `openai/*`, o referencias de modelo Codex heredadas.
+    - **xAI (Grok) OAuth / Clave de API**: inicia sesión con xAI OAuth cuando se elige, o solicita `XAI_API_KEY` en la ruta de clave de API, y configura xAI como proveedor de modelo.
+    - **OpenCode**: solicita `OPENCODE_API_KEY` (o `OPENCODE_ZEN_API_KEY`, obténgalo en https://opencode.ai/auth) y le permite elegir el catálogo Zen o Go.
+    - **Ollama**: ofrece **Cloud + Local**, **Solo Cloud** o **Solo Local** primero. `Cloud only` solicita `OLLAMA_API_KEY` y usa `https://ollama.com`; los modos respaldados por el host solicitan la URL base de Ollama, descubren los modelos disponibles y extraen automáticamente el modelo local seleccionado cuando es necesario; `Cloud + Local` también verifica si ese host de Ollama ha iniciado sesión para el acceso en la nube.
     - Más detalles: [Ollama](/es/providers/ollama)
-    - **Clave de API**: almacena la clave para usted.
-    - **Vercel AI Gateway (proxy multimodelo)**: solicita `AI_GATEWAY_API_KEY`.
+    - **Clave de API**: almacena la clave por usted.
+    - **Vercel AI Gateway (proxy multi-modelo)**: solicita `AI_GATEWAY_API_KEY`.
     - Más detalles: [Vercel AI Gateway](/es/providers/vercel-ai-gateway)
-    - **Cloudflare AI Gateway**: solicita el ID de cuenta, el ID de puerta de enlace y `CLOUDFLARE_AI_GATEWAY_API_KEY`.
+    - **Cloudflare AI Gateway**: solicita Account ID, Gateway ID y `CLOUDFLARE_AI_GATEWAY_API_KEY`.
     - Más detalles: [Cloudflare AI Gateway](/es/providers/cloudflare-ai-gateway)
-    - **MiniMax**: la configuración se escribe automáticamente; el valor predeterminado alojado es `MiniMax-M2.7`.
-      La configuración con clave de API usa `minimax/...`, y la configuración de OAuth usa
+    - **MiniMax**: la configuración se escribe automáticamente; el predeterminado alojado es `MiniMax-M3`.
+      La configuración con clave de API usa `minimax/...`, y la configuración OAuth usa
       `minimax-portal/...`.
     - Más detalles: [MiniMax](/es/providers/minimax)
-    - **StepFun**: la configuración se escribe automáticamente para StepFun estándar o Step Plan en puntos finales de China o globales.
+    - **StepFun**: la configuración se escribe automáticamente para StepFun estándar o Step Plan en endpoints de China o globales.
     - El estándar actualmente incluye `step-3.5-flash`, y Step Plan también incluye `step-3.5-flash-2603`.
     - Más detalles: [StepFun](/es/providers/stepfun)
     - **Synthetic (compatible con Anthropic)**: solicita `SYNTHETIC_API_KEY`.
@@ -59,16 +59,17 @@ Para obtener una descripción general de alto nivel, consulte [Onboarding (CLI)]
     - **Moonshot (Kimi K2)**: la configuración se escribe automáticamente.
     - **Kimi Coding**: la configuración se escribe automáticamente.
     - Más detalles: [Moonshot AI (Kimi + Kimi Coding)](/es/providers/moonshot)
-    - **Omitir**: no se ha configurado autenticación todavía.
-    - Elija un modelo predeterminado de las opciones detectadas (o ingrese proveedor/modelo manualmente). Para obtener la mejor calidad y un menor riesgo de inyección de avisos, elija el modelo de última generación más potente disponible en su pila de proveedores.
-    - El proceso de incorporación ejecuta una verificación del modelo y advierte si el modelo configurado es desconocido o falta la autenticación.
-    - El modo de almacenamiento de clave de API predeterminado es valores de perfil de autenticación en texto plano. Use `--secret-input-mode ref` para almacenar referencias respaldadas por env en su lugar (por ejemplo `keyRef: { source: "env", provider: "default", id: "OPENAI_API_KEY" }`).
-    - Los perfiles de autenticación residen en `~/.openclaw/agents/<agentId>/agent/auth-profiles.json` (claves de API + OAuth). `~/.openclaw/credentials/oauth.json` es de importación heredada solamente.
+    - **Skip**: sin autenticación configurada aún.
+    - Elija un modelo predeterminado de las opciones detectadas (o ingrese proveedor/modelo manualmente). Para la mejor calidad y un menor riesgo de inyección de prompts, elija el modelo de última generación más fuerte disponible en su pila de proveedores.
+    - Onboarding ejecuta una verificación de modelo y advierte si el modelo configurado es desconocido o falta autenticación.
+    - El modo de almacenamiento de clave de API usa valores de perfil de autenticación en texto plano por defecto. Use `--secret-input-mode ref` para almacenar referencias respaldadas por variables de entorno en su lugar (por ejemplo `keyRef: { source: "env", provider: "default", id: "OPENAI_API_KEY" }`).
+    - Los perfiles de autenticación residen en `~/.openclaw/agents/<agentId>/agent/auth-profiles.json` (claves de API + OAuth). `~/.openclaw/credentials/oauth.json` es una importación heredada solamente.
     - Más detalles: [/concepts/oauth](/es/concepts/oauth)
     <Note>
     Consejo para headless/servidor: complete OAuth en una máquina con un navegador, luego copie
     el `auth-profiles.json` de ese agente (por ejemplo
-    `~/.openclaw/agents/<agentId>/agent/auth-profiles.json`, o la ruta `$OPENCLAW_STATE_DIR/...` coincidente) al host de puerta de enlace. `credentials/oauth.json`
+    `~/.openclaw/agents/<agentId>/agent/auth-profiles.json`, o la ruta `$OPENCLAW_STATE_DIR/...` coincidente)
+    al host de la puerta de enlace. `credentials/oauth.json`
     es solo una fuente de importación heredada.
     </Note>
   </Step>

@@ -209,14 +209,16 @@ Installez le plugin Diff Viewer Language Pack pour mettre en surbrillance d'autr
 openclaw plugins install clawhub:@openclaw/diffs-language-pack
 ```
 
-Avec le pack de langues disponible, OpenClaw l'utilise automatiquement pour les langues figurant hors de la liste par défaut. Sans celui-ci, ces fichiers restent lisibles en texte brut.
+Avec le pack de langage disponible, OpenClaw peut mettre en surbrillance beaucoup plus de langues. Si le pack n'est pas installé, les fichiers en dehors de la liste par défaut s'affichent toujours sous forme de texte brut lisible. Des exemples incluent Astro, Vue, Svelte, MDX, GraphQL, Terraform/HCL, Nix, Clojure, Elixir, Haskell, OCaml, Scala, Zig, Solidity, Verilog/VHDL, Fortran, MATLAB, LaTeX, Mermaid, Sass/Less/SCSS, Nginx, Apache, CSV, dotenv, INI, et les fichiers diff.
+
+Voir le [plugin Diffs Language Pack](/fr/plugins/reference/diffs-language-pack) pour plus de détails et [Shiki languages](https://shiki.style/languages) pour le catalogue des langues et alias en amont de Shiki.
 
 ## Contrat des détails de sortie
 
 L'outil renvoie des métadonnées structurées sous `details`.
 
 <AccordionGroup>
-  <Accordion title="Champs de la visionneuse">
+  <Accordion title="Viewer fields">
     Champs partagés pour les modes qui créent une visionneuse :
 
     - `artifactId`
@@ -230,13 +232,13 @@ L'outil renvoie des métadonnées structurées sous `details`.
     - `context` (`agentId`, `sessionId`, `messageChannel`, `agentAccountId` si disponible)
 
   </Accordion>
-  <Accordion title="Champs de fichier">
-    Champs de fichier lorsqu'un PNG ou un PDF est rendu :
+  <Accordion title="File fields">
+    Champs de fichier lors du rendu PNG ou PDF :
 
     - `artifactId`
     - `expiresAt`
     - `filePath`
-    - `path` (même valeur que `filePath`, pour la compatibilité avec l'outil de message)
+    - `path` (même valeur que `filePath`, pour la compatibilité avec les outils de message)
     - `fileBytes`
     - `fileFormat`
     - `fileQuality`
@@ -245,7 +247,7 @@ L'outil renvoie des métadonnées structurées sous `details`.
 
   </Accordion>
   <Accordion title="Alias de compatibilité">
-    Également renvoyés pour les appelants existants :
+    Également renvoyé pour les appelants existants :
 
     - `format` (même valeur que `fileFormat`)
     - `imagePath` (même valeur que `filePath`)
@@ -257,25 +259,25 @@ L'outil renvoie des métadonnées structurées sous `details`.
   </Accordion>
 </AccordionGroup>
 
-Résumé du comportement des modes :
+Résumé du comportement du mode :
 
-| Mode     | Ce qui est renvoyé                                                                                                                                                 |
-| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `"view"` | Champs de la visionneuse uniquement.                                                                                                                               |
-| `"file"` | Champs de fichier uniquement, aucun artefact de visionneuse.                                                                                                       |
-| `"both"` | Champs de la visionneuse plus champs de fichier. Si le rendu du fichier échoue, la visionneuse est tout de même renvoyée avec l'alias `fileError` et `imageError`. |
+| Mode     | Ce qui est renvoyé                                                                                                                                            |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `"view"` | Champs de la visionneuse uniquement.                                                                                                                          |
+| `"file"` | Champs de fichier uniquement, aucun artefact de visionneuse.                                                                                                  |
+| `"both"` | Champs de la visionneuse plus champs de fichier. Si le rendu du fichier échoue, la visionneuse renvoie tout de même avec l'alias `fileError` et `imageError`. |
 
 ## Sections inchangées réduites
 
 - La visionneuse peut afficher des lignes comme `N unmodified lines`.
-- Les contrôles de développement sur ces lignes sont conditionnels et ne sont pas garantis pour chaque type d'entrée.
-- Les contrôles de développement apparaissent lorsque le diff rendu contient des données de contexte extensibles, ce qui est typique pour les entrées avant et après.
-- Pour de nombreuses entrées de correctifs unifiés, les corps de contexte omis ne sont pas disponibles dans les blocs de correctifs analysés, la ligne peut donc apparaître sans contrôles de développement. Ce comportement est attendu.
+- Les contrôles d'extension sur ces lignes sont conditionnels et ne sont pas garantis pour chaque type d'entrée.
+- Les contrôles d'extension apparaissent lorsque le diff rendu contient des données de contexte extensibles, ce qui est typique pour les entrées avant et après.
+- Pour de nombreuses entrées de correctif unifié, les corps de contexte omis ne sont pas disponibles dans les blocs de correctif analysés, la ligne peut donc apparaître sans contrôles d'extension. Ce comportement est attendu.
 - `expandUnchanged` s'applique uniquement lorsqu'un contexte extensible existe.
 
 ## Valeurs par défaut du plugin
 
-Définissez les valeurs par défaut pour l'ensemble du plugin dans `~/.openclaw/openclaw.json` :
+Définir les valeurs par défaut à l'échelle du plugin dans `~/.openclaw/openclaw.json` :
 
 ```json5
 {
@@ -326,12 +328,12 @@ Valeurs par défaut prises en charge :
 - `mode`
 - `ttlSeconds`
 
-Les paramètres explicites de l'outil remplacent ces valeurs par défaut.
+Les paramètres explicites du tool remplacent ces valeurs par défaut.
 
-### Configuration de l'URL de la visionneuse persistante
+### Configuration de l'URL persistante du visualiseur
 
 <ParamField path="viewerBaseUrl" type="string">
-  Fallback appartenant au plugin pour les liens de visionneuse renvoyés lorsqu'un appel d'outil ne transmet pas `baseUrl`. Doit être `http` ou `https`, sans requête/hachage.
+  Fallback appartenant au plugin pour les liens du visualiseur renvoyés lorsqu'un appel de tool ne passe pas `baseUrl`. Doit être `http` ou `https`, sans requête/hachage.
 </ParamField>
 
 ```json5
@@ -349,10 +351,10 @@ Les paramètres explicites de l'outil remplacent ces valeurs par défaut.
 }
 ```
 
-## Configuration de la sécurité
+## Configuration de sécurité
 
 <ParamField path="security.allowRemoteViewer" type="boolean" default="false">
-  `false` : les demandes non locales vers les routes de la visionneuse sont refusées. `true` : les visionneuses distantes sont autorisées si le chemin tokenisé est valide.
+  `false` : les requêtes non-boucle locale vers les routes du visualiseur sont refusées. `true` : les visualiseurs distants sont autorisés si le chemin tokenisé est valide.
 </ParamField>
 
 ```json5
@@ -374,55 +376,55 @@ Les paramètres explicites de l'outil remplacent ces valeurs par défaut.
 
 ## Cycle de vie et stockage des artefacts
 
-- Les artefacts sont stockés dans le sous-dossier temp : `$TMPDIR/openclaw-diffs`.
-- Les métadonnées de l'artefact de la visionneuse contiennent :
+- Les artefacts sont stockés dans le sous-dossier temporaire : `$TMPDIR/openclaw-diffs`.
+- Les métadonnées de l'artefact du visualiseur contiennent :
   - ID d'artefact aléatoire (20 caractères hexadécimaux)
-  - jeton aléatoire (48 caractères hexadécimaux)
+  - Jeton aléatoire (48 caractères hexadécimaux)
   - `createdAt` et `expiresAt`
   - chemin `viewer.html` stocké
-- La valeur TTL par défaut de l'artefact est de 30 minutes lorsqu'elle n'est pas spécifiée.
-- La durée de vie (TTL) maximale acceptée pour la visionneuse est de 6 heures.
+- La durée de vie (TTL) par défaut de l'artefact est de 30 minutes si non spécifiée.
+- La durée de vie maximale acceptée pour le visualiseur est de 6 heures.
 - Le nettoyage s'exécute de manière opportuniste après la création de l'artefact.
 - Les artefacts expirés sont supprimés.
-- Le nettoyage de secours supprime les dossiers périmés de plus de 24 heures lorsque les métadonnées sont manquantes.
+- Le nettoyage de secours supprime les dossiers obsolètes de plus de 24 heures lorsque les métadonnées sont manquantes.
 
-## URL de la visionneuse et comportement réseau
+## URL du visualiseur et comportement réseau
 
-Route de la visionneuse :
+Route du visualiseur :
 
 - `/plugins/diffs/view/{artifactId}/{token}`
 
-Ressources de la visionneuse :
+Ressources du visualiseur :
 
 - `/plugins/diffs/assets/viewer.js`
 - `/plugins/diffs/assets/viewer-runtime.js`
-- `/plugins/diffs-language-pack/assets/viewer.js` lorsque le diff utilise une langue du pack de langues Diff Viewer
+- `/plugins/diffs-language-pack/assets/viewer.js` lorsque le diff utilise une langue du pack de langues du visualiseur de diff
 
-Le document de la visionneuse résout ces ressources par rapport à l'URL de la visionneuse, donc un préfixe de chemin `baseUrl` facultatif est également préservé pour les deux demandes de ressources.
+Le document du visualiseur résout ces ressources par rapport à l'URL du visualiseur, un préfixe de chemin `baseUrl` facultatif est donc préservé pour les deux requêtes de ressources.
 
 Comportement de construction de l'URL :
 
-- Si l'appel d'outil `baseUrl` est fourni, il est utilisé après une validation stricte.
-- Sinon, si le plugin `viewerBaseUrl` est configuré, il est utilisé.
-- Sans aucune de ces substitutions, l'URL de la visionneuse par défaut est le bouclage `127.0.0.1`.
+- Si le `baseUrl` de l'appel de tool est fourni, il est utilisé après validation stricte.
+- Sinon, si le `viewerBaseUrl` du plugin est configuré, il est utilisé.
+- Sans aucune de ces substitutions, l'URL du visualiseur par défaut est la boucle locale `127.0.0.1`.
 - Si le mode de liaison de la passerelle est `custom` et que `gateway.customBindHost` est défini, cet hôte est utilisé.
 
 Règles `baseUrl` :
 
 - Doit être `http://` ou `https://`.
 - La requête et le hachage sont rejetés.
-- L'origine plus un chemin de base facultatif sont autorisés.
+- L'origine plus un chemin de base facultatif est autorisé.
 
 ## Modèle de sécurité
 
 <AccordionGroup>
   <Accordion title="Durcissement de la visionneuse">
-    - Bouclage uniquement par défaut.
+    - Boucle locale uniquement par défaut.
     - Chemins de la visionneuse tokenisés avec une validation stricte de l'ID et du jeton.
     - CSP de réponse de la visionneuse :
       - `default-src 'none'`
-      - scripts et ressources uniquement depuis self
-      - aucune connexion sortante `connect-src`
+      - scripts et ressources provenant uniquement de self
+      - aucune `connect-src` sortante
     - Limitation des échecs à distance lorsque l'accès à distance est activé :
       - 40 échecs par 60 secondes
       - verrouillage de 60 secondes (`429 Too Many Requests`)
@@ -430,21 +432,21 @@ Règles `baseUrl` :
   </Accordion>
   <Accordion title="Durcissement du rendu des fichiers">
     - Le routage des demandes du navigateur de capture d'écran est refusé par défaut.
-    - Seules les ressources de visionneuse locales de `http://127.0.0.1/plugins/diffs/assets/*` sont autorisées.
+    - Seules les ressources de visionneuse locale provenant de `http://127.0.0.1/plugins/diffs/assets/*` sont autorisées.
     - Les demandes réseau externes sont bloquées.
 
   </Accordion>
 </AccordionGroup>
 
-## Configuration requise du navigateur pour le mode fichier
+## Exigences du navigateur pour le mode fichier
 
 `mode: "file"` et `mode: "both"` nécessitent un navigateur compatible Chromium.
 
 Ordre de résolution :
 
 <Steps>
-  <Step title="Config">
-    `browser.executablePath`OpenClaw dans la configuration OpenClaw.
+  <Step title="Configuration">
+    `browser.executablePath` dans la configuration OpenClaw.
   </Step>
   <Step title="Variables d'environnement">
     - `OPENCLAW_BROWSER_EXECUTABLE_PATH`
@@ -452,8 +454,8 @@ Ordre de résolution :
     - `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH`
 
   </Step>
-  <Step title="Plateforme de secours">
-    Secours pour la découverte de commande/chemin de la plateforme.
+  <Step title="Repli de la plateforme">
+    Repli de découverte de commande/chemin de la plateforme.
   </Step>
 </Steps>
 
@@ -469,22 +471,22 @@ Corrigez en installant Chrome, Chromium, Edge ou Brave, ou en définissant l'une
   <Accordion title="Erreurs de validation des entrées">
     - `Provide patch or both before and after text.` — incluez à la fois `before` et `after`, ou fournissez `patch`.
     - `Provide either patch or before/after input, not both.` — ne mélangez pas les modes d'entrée.
-    - `Invalid baseUrl: ...` — utilisez l'origine `http(s)` avec un chemin optionnel, sans requête/hash.
-    - `{field} exceeds maximum size (...)` — réduisez la taille du payload.
-    - Rejet de correctif volumineux — réduisez le nombre de fichiers de correctif ou le nombre total de lignes.
+    - `Invalid baseUrl: ...` — utilisez une origine `http(s)` avec un chemin optionnel, sans requête/hachage.
+    - `{field} exceeds maximum size (...)` — réduisez la taille de la charge utile.
+    - Large patch rejection — réduisez le nombre de fichiers de correctif ou le nombre total de lignes.
 
   </Accordion>
   <Accordion title="Accessibilité de la visionneuse">
-    - L'URL de la visionneuse résout `127.0.0.1` par défaut.
+    - L'URL de la visionneuse résout vers `127.0.0.1` par défaut.
     - Pour les scénarios d'accès à distance, soit :
       - définissez le `viewerBaseUrl` du plugin, ou
-      - passez `baseUrl` par appel d'outil, ou
+      - passez `baseUrl` par appel de tool, ou
       - utilisez `gateway.bind=custom` et `gateway.customBindHost`
     - Si `gateway.trustedProxies`Tailscale inclut une boucle locale pour un proxy sur le même hôte (par exemple Tailscale Serve), les requêtes brutes de visionneuse en boucle locale sans en-têtes IP client transférés échouent de manière sécurisée par conception.
     - Pour cette topologie de proxy :
-      - préférez `mode: "file"` ou `mode: "both"` lorsque vous avez seulement besoin d'une pièce jointe, ou
+      - préférez `mode: "file"` ou `mode: "both"` lorsque vous avez uniquement besoin d'une pièce jointe, ou
       - activez intentionnellement `security.allowRemoteViewer` et définissez le `viewerBaseUrl` du plugin ou passez un `baseUrl` proxy/public lorsque vous avez besoin d'une URL de visionneuse partageable
-    - Activez `security.allowRemoteViewer` uniquement lorsque vous envisagez un accès externe à la visionneuse.
+    - N'activez `security.allowRemoteViewer` que lorsque vous prévoyez un accès externe à la visionneuse.
 
   </Accordion>
   <Accordion title="La ligne des lignes non modifiées n'a pas de bouton d'extension">
@@ -498,19 +500,19 @@ Corrigez en installant Chrome, Chromium, Edge ou Brave, ou en définissant l'une
   </Accordion>
 </AccordionGroup>
 
-## Directives opérationnelles
+## Conseils opérationnels
 
 - Préférez `mode: "view"` pour les révisions interactives locales dans le canvas.
-- Préférez `mode: "file"` pour les canaux de chat sortants nécessitant une pièce jointe.
-- Gardez `allowRemoteViewer` désactivé, sauf si votre déploiement nécessite des URL de visionneuse distantes.
-- Définissez un `ttlSeconds` court et explicite pour les différences sensibles.
-- Évitez d'envoyer des secrets dans l'entrée de différence lorsqu'il n'est pas nécessaire.
-- Si votre canal compresse agressivement les images (par exemple Telegram ou WhatsApp), préférez la sortie PDF (TelegramWhatsApp`fileFormat: "pdf"`).
+- Préférez `mode: "file"` pour les canaux de chat sortants qui nécessitent une pièce jointe.
+- Gardez `allowRemoteViewer` désactivé sauf si votre déploiement nécessite des URL de visionneuse distante.
+- Définissez des `ttlSeconds` explicites et courtes pour les diffs sensibles.
+- Évitez d'envoyer des secrets dans l'entrée du diff lorsque ce n'est pas nécessaire.
+- Si votre canal compresse agressivement les images (par exemple Telegram ou WhatsApp), préférez la sortie PDF (`fileFormat: "pdf"`).
 
-<Note>Moteur de rendu de différences propulsé par [Diffs](https://diffs.com).</Note>
+<Note>Moteur de rendu de diff propulsé par [Diffs](https://diffs.com).</Note>
 
 ## Connexes
 
 - [Navigateur](/fr/tools/browser)
 - [Plugins](/fr/tools/plugin)
-- [Tools overview](/fr/tools)
+- [Aperçu des outils](/fr/tools)

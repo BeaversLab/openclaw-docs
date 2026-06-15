@@ -78,7 +78,7 @@ Estos son los archivos estándar que OpenClaw espera dentro del espacio de traba
 </AccordionGroup>
 
 <Note>
-  Si falta algún archivo de arranque, OpenClaw inyecta un marcador de "archivo faltante" en la sesión y continúa. Los archivos de arranque grandes se truncarán al inyectarse; ajuste los límites con `agents.defaults.bootstrapMaxChars` (predeterminado: 12000) y `agents.defaults.bootstrapTotalMaxChars` (predeterminado: 60000). `openclaw setup` puede recrear los valores predeterminados que faltan sin
+  Si falta algún archivo de arranque, OpenClaw inyecta un marcador de "archivo faltante" en la sesión y continúa. Los archivos de arranque grandes se truncan al inyectarse; ajuste los límites con `agents.defaults.bootstrapMaxChars` (predeterminado: 20000) y `agents.defaults.bootstrapTotalMaxChars` (predeterminado: 60000). `openclaw setup` puede recrear los valores predeterminados faltantes sin
   sobrescribir los archivos existentes.
 </Note>
 

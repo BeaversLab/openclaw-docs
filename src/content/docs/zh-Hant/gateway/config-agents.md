@@ -101,11 +101,11 @@ title: "Configuration — agents"
 
 ### `agents.defaults.bootstrapMaxChars`
 
-每個工作區啟動檔案在截斷前的最大字元數。預設值：`12000`。
+每個工作區引導文件在截斷前的最大字元數。預設值：`20000`。
 
 ```json5
 {
-  agents: { defaults: { bootstrapMaxChars: 12000 } },
+  agents: { defaults: { bootstrapMaxChars: 20000 } },
 }
 ```
 
@@ -135,7 +135,7 @@ title: "Configuration — agents"
   agents: {
     defaults: {
       contextInjection: "continuation-skip",
-      bootstrapMaxChars: 12000,
+      bootstrapMaxChars: 20000,
       bootstrapTotalMaxChars: 60000,
     },
     list: [

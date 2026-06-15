@@ -7,10 +7,9 @@ read_when:
 title: "节点"
 ---
 
-**Node** 是一种配套设备（macOS/iOS/Android/无头），它通过 `role: "node"` 连接到 Gateway(网关) **WebSocket**（与操作员端口相同），并通过 `node.invoke` 暴露命令界面（例如 `canvas.*`、`camera.*`、`device.*`、`notifications.*`、`system.*`）。协议详情：[Gateway(网关) protocol](/zh/gateway/protocol)。
+**节点**是一个配套设备（macOS/iOS/Android/headless），通过 `role: "node"` 连接到 Gateway(网关) **WebSocket**（与操作员使用相同的端口），并通过 `node.invoke` 暴露命令界面（例如 `canvas.*`、`camera.*`、`device.*`、`notifications.*`、`system.*`）。协议详情：[Gateway(网关) protocol](/zh/gateway/protocol)。
 
-传统传输方式：[Bridge protocol](/zh/gateway/bridge-protocol) (TCP JSONL;
-对于当前的节点仅作历史参考)。
+传统传输方式：[Bridge protocol](/zh/gateway/bridge-protocol)（TCP JSONL；仅对当前节点具有历史意义）。
 
 macOS 也可以运行在 **节点模式** 下：菜单栏应用程序连接到 Gateway(网关) 的
 WS 服务器，并将其本地画布/相机命令作为节点暴露（因此
@@ -167,7 +166,7 @@ openclaw config set tools.exec.node "<id-or-name>"
 
 相关内容：
 
-- [Node host CLI](/zh/cli/node)
+- [节点主机 CLI](/zh/cli/node)
 - [Exec 工具](/zh/tools/exec)
 - [Exec 审批](/zh/tools/exec-approvals)
 
@@ -322,6 +321,7 @@ openclaw nodes invoke --node <idOrNameOrIp> --command sms.send --params '{"to":"
 可用系列：
 
 - `device.status`、`device.info`、`device.permissions`、`device.health`
+- 当在 Android 设置中启用“已安装应用共享”时，`device.apps`
 - `notifications.list`、`notifications.actions`
 - `photos.latest`
 - `contacts.search`、`contacts.add`
@@ -330,22 +330,24 @@ openclaw nodes invoke --node <idOrNameOrIp> --command sms.send --params '{"to":"
 - `sms.search`
 - `motion.activity`、`motion.pedometer`
 
-示例调用：
+调用示例：
 
 ```bash
 openclaw nodes invoke --node <idOrNameOrIp> --command device.status --params '{}'
+openclaw nodes invoke --node <idOrNameOrIp> --command device.apps --params '{"limit":10}'
 openclaw nodes invoke --node <idOrNameOrIp> --command notifications.list --params '{}'
 openclaw nodes invoke --node <idOrNameOrIp> --command photos.latest --params '{"limit":1}'
 ```
 
-注：
+注意事项：
 
-- 动作命令受可用传感器能力的限制。
+- `device.apps` 是可选加入的，默认返回启动器可见的应用。
+- 运动命令取决于可用传感器的功能。
 
 ## 系统命令（节点主机 / mac 节点）
 
-macOS 节点公开 macOS`system.run`、`system.notify` 和 `system.execApprovals.get/set`。
-无头节点主机公开 `system.run`、`system.which` 和 `system.execApprovals.get/set`。
+macOS 节点暴露 `system.run`、`system.notify` 和 `system.execApprovals.get/set`。
+无头节点主机暴露 `system.run`、`system.which` 和 `system.execApprovals.get/set`。
 
 示例：
 
@@ -354,36 +356,34 @@ openclaw nodes notify --node <idOrNameOrIp> --title "Ping" --body "Gateway ready
 openclaw nodes invoke --node <idOrNameOrIp> --command system.which --params '{"name":"git"}'
 ```
 
-注：
+注意事项：
 
-- `system.run` 在有效负载中返回 stdout/stderr/退出代码。
-- Shell 执行现在通过 `exec` 工具并使用 `host=node` 进行；`nodes`RPC 仍然是用于显式节点命令的直接 RPC 接口。
-- `nodes invoke` 不公开 `system.run` 或 `system.run.prepare`；这些仅保留在 exec 路径上。
-- exec 路径在批准之前会准备一个规范的 `systemRunPlan`。一旦批准被授予，网关将转发该存储的计划，而不是任何后续调用者编辑的 command/cwd/会话 字段。
-- `system.notify`macOS 遵守 macOS 应用程序上的通知权限状态。
-- 无法识别的节点 `platform` / `deviceFamily` 元数据使用保守的默认允许列表，其中排除了 `system.run` 和 `system.which`。如果您有意针对未知平台使用这些命令，请通过 `gateway.nodes.allowCommands` 显式添加它们。
+- `system.run` 在有效载荷中返回 stdout/stderr/退出代码。
+- Shell 执行现在通过带有 `host=node` 的 `exec` 工具进行；`nodes`RPC 仍然是用于显式节点命令的直接 RPC 接口。
+- `nodes invoke` 不暴露 `system.run` 或 `system.run.prepare`；这些仅保留在 exec 路径上。
+- exec 路径在批准之前会准备一个规范的 `systemRunPlan`。一旦获得批准，网关将转发该存储的计划，而不是任何后续调用者编辑的 command/cwd/会话 字段。
+- `system.notify`macOS 遵守 macOS 应用上的通知权限状态。
+- 无法识别的节点 `platform` / `deviceFamily` 元数据使用保守的默认允许列表，该列表排除 `system.run` 和 `system.which`。如果您有意为未知平台需要这些命令，请通过 `gateway.nodes.allowCommands` 显式添加它们。
 - `system.run` 支持 `--cwd`、`--env KEY=VAL`、`--command-timeout` 和 `--needs-screen-recording`。
-- 对于 shell 包装器（`bash|sh|zsh ... -c/-lc`），请求范围的 `--env` 值被缩减为显式允许列表（`TERM`、`LANG`、`LC_*`、`COLORTERM`、`NO_COLOR`、`FORCE_COLOR`）。
-- 在允许列表模式下，对于“始终允许”的决定，已知的分发包装器（`env`、`nice`、`nohup`、`stdbuf`、`timeout`）将保留内部可执行文件路径，而不是包装器路径。如果解包不安全，则不会自动保留任何允许列表条目。
-- 在处于允许列表模式的 Windows 节点主机上，通过 `cmd.exe /c` 运行的 shell 包装器需要批准（仅凭允许列表条目不会自动允许包装器形式）。
+- 对于 shell 包装器（`bash|sh|zsh ... -c/-lc`），请求范围的 `--env` 值被简化为显式的允许列表（`TERM`、`LANG`、`LC_*`、`COLORTERM`、`NO_COLOR`、`FORCE_COLOR`）。
+- 对于允许列表模式下的“始终允许”决策，已知的分发包装器（`env`、`nice`、`nohup`、`stdbuf`、`timeout`）会持久化内部可执行文件路径，而不是包装器路径。如果解包不安全，则不会自动持久化允许列表条目。
+- 在允许列表模式下的 Windows 节点主机上，通过 Windows`cmd.exe /c` 运行的 shell 包装器需要批准（仅凭允许列表条目不会自动允许包装器形式）。
 - `system.notify` 支持 `--priority <passive|active|timeSensitive>` 和 `--delivery <system|overlay|auto>`。
-- 节点主机会忽略 `PATH` 覆盖设置，并移除危险的启动/Shell 键（`DYLD_*`、`LD_*`、`NODE_OPTIONS`、`NODE_REDIRECT_WARNINGS`、`NODE_REPL_EXTERNAL_MODULE`、`NODE_REPL_HISTORY`、`NODE_V8_COVERAGE`、`PYTHON*`、`PERL*`、`RUBYOPT`、`SHELLOPTS`、`PS4`）。如果您需要额外的 PATH 条目，请配置节点主机服务环境（或将工具安装在标准位置），而不是通过 `--env` 传递 `PATH`。
-- 在 macOS 节点模式下，macOS`system.run`macOS 受 macOS 应用程序中的执行批准限制（设置 → 执行批准）。
-  Ask/allowlist/full 的行为与无头节点主机相同；被拒绝的提示将返回 `SYSTEM_RUN_DENIED`。
+- 节点主机忽略 `PATH` 覆盖设置，并移除危险的启动/Shell 键（`DYLD_*`、`LD_*`、`NODE_OPTIONS`、`NODE_REDIRECT_WARNINGS`、`NODE_REPL_EXTERNAL_MODULE`、`NODE_REPL_HISTORY`、`NODE_V8_COVERAGE`、`PYTHON*`、`PERL*`、`RUBYOPT`、`SHELLOPTS`、`PS4`）。如果您需要额外的 PATH 条目，请配置节点主机服务环境（或将工具安装在标准位置），而不是通过 `--env` 传递 `PATH`。
+- 在 macOS 节点模式下，`system.run` 受 macOS 应用程序中的执行批准（Settings → Exec approvals）限制。Ask/allowlist/full 的行为与无头节点主机相同；被拒绝的提示返回 `SYSTEM_RUN_DENIED`。
 - 在无头节点主机上，`system.run` 受执行批准（`~/.openclaw/exec-approvals.json`）限制。
 
 ## Exec 节点绑定
 
-当有多个节点可用时，您可以将 exec 绑定到特定节点。
-这会为 `exec host=node` 设置默认节点（并且可以针对每个代理进行覆盖）。
+当有多个节点可用时，您可以将 exec 绑定到特定节点。这设置了 `exec host=node` 的默认节点（并且可以针对每个代理进行覆盖）。
 
-全局默认：
+全局默认值：
 
 ```bash
 openclaw config set tools.exec.node "node-id-or-name"
 ```
 
-每个代理的覆盖：
+每代理覆盖：
 
 ```bash
 openclaw config get agents.list
@@ -399,13 +399,11 @@ openclaw config unset 'agents.list[0].tools.exec.node'
 
 ## 权限映射
 
-节点可以在 `node.list` / `node.describe` 中包含一个 `permissions` 映射，以权限名称为键（例如 `screenRecording`、`accessibility`），值为布尔值（`true` = 已授予）。
+节点可以在 `node.list` / `node.describe` 中包含 `permissions` 映射，以权限名称为键（例如 `screenRecording`、`accessibility`），值为布尔值（`true` = 已授予）。
 
 ## 无头节点主机（跨平台）
 
-OpenClaw 可以运行一个连接到 Gateway
-WebSocket 并暴露 OpenClawGateway(网关)`system.run` / `system.which`LinuxWindows 的**无头节点主机**（无 UI）。这对于 Linux/Windows
-或在服务器旁运行最小节点非常有用。
+OpenClaw 可以运行一个**无头节点主机**（无 UI），它连接到 Gateway(网关) WebSocket 并暴露 `system.run` / `system.which`。这在 Linux/Windows 上或与服务器一起运行最小化节点时非常有用。
 
 启动它：
 
@@ -415,14 +413,16 @@ openclaw node run --host <gateway-host> --port 18789
 
 注意：
 
-- 仍然需要配对（Gateway(网关) 将显示设备配对提示）。
+- 仍然需要进行配对（Gateway(网关) 将显示设备配对提示）。
 - 节点主机将其节点 ID、令牌、显示名称和网关连接信息存储在 `~/.openclaw/node.json` 中。
-- 执行批准通过 `~/.openclaw/exec-approvals.json`
-  在本地强制执行（请参阅 [Exec approvals](/zh/tools/exec-approvals)）。
-- 在 macOS 上，无头节点主机默认在本地执行 macOS`system.run`。设置 `OPENCLAW_NODE_EXEC_HOST=app` 以通过配套应用程序执行主机路由 `system.run`；添加 `OPENCLAW_NODE_EXEC_FALLBACK=0` 以要求应用程序主机，并在其不可用时失败关闭。
-- 当 Gateway WS 使用 TLS 时，添加 `--tls` / `--tls-fingerprint`Gateway(网关)。
+- 执行批准通过 `~/.openclaw/exec-approvals.json` 在本地强制执行
+  （参见 [执行批准](/zh/tools/exec-approvals)）。
+- 在 macOS 上，无头节点主机默认在本地执行 macOS`system.run`。设置
+  `OPENCLAW_NODE_EXEC_HOST=app` 以通过配套应用执行主机路由 `system.run`；添加
+  `OPENCLAW_NODE_EXEC_FALLBACK=0` 以要求应用主机，并在其不可用时以失败关闭。
+- 当 Gateway(网关) WS 使用 TLS 时，添加 `--tls` / `--tls-fingerprint`Gateway(网关)。
 
 ## Mac 节点模式
 
-- macOS 菜单栏应用程序作为节点连接到 Gateway WS 服务器（因此 macOSGateway(网关)`openclaw nodes …` 可以针对此 Mac 运行）。
-- 在远程模式下，应用程序为 Gateway 端口打开 SSH 隧道并连接到 Gateway(网关)`localhost`。
+- macOS 菜单栏应用作为节点连接到 Gateway(网关) WS 服务器（因此 macOSGateway(网关)`openclaw nodes …` 可针对此 Mac 运行）。
+- 在远程模式下，应用为 Gateway(网关) 端口打开 SSH 隧道并连接到 Gateway(网关)`localhost`。

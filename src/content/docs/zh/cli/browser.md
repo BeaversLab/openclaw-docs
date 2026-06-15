@@ -13,7 +13,7 @@ title: "Browser"
 
 相关内容：
 
-- 浏览器工具 + API：[浏览器工具](API/en/tools/browser)
+- 浏览器工具 + API：[Browser 工具](API/en/tools/browser)
 
 ## 通用标志
 
@@ -48,7 +48,7 @@ openclaw browser --browser-profile openclaw tabs
 openclaw browser --browser-profile openclaw open https://example.com
 ```
 
-详细指南：[浏览器故障排除](/zh/tools/browser#cdp-startup-failure-vs-navigation-ssrf-block)
+详细指南：[Browser 故障排除](/zh/tools/browser#cdp-startup-failure-vs-navigation-ssrf-block)
 
 ## 生命周期
 
@@ -87,7 +87,7 @@ openclaw browser --browser-profile openclaw reset-profile
 显式的根 `browser` 块，例如 `browser.enabled=true` 或
 `browser.profiles.<name>`，也会在限制性插件允许列表下激活捆绑的浏览器插件。
 
-相关：[浏览器工具](/zh/tools/browser#missing-browser-command-or-tool)
+相关：[Browser 工具](/zh/tools/browser#missing-browser-command-or-tool)
 
 ## 配置文件
 
@@ -124,13 +124,17 @@ openclaw browser focus docs
 openclaw browser close t1
 ```
 
-`tabs` 首先返回 `suggestedTargetId`，然后是稳定的 `tabId`（如 `t1`）、
+`tabs` 首先返回 `suggestedTargetId`，然后是稳定的 `tabId`，如 `t1`、
 可选的标签以及原始 `targetId`。代理应将
-`suggestedTargetId` 传回 `focus`、`close`、快照和操作。您可以使用
-`open --label`、`tab new --label` 或 `tab label` 分配标签；标签、
-tab id、原始目标 id 和唯一目标 id 前缀均被接受。
-当 Chromium 在导航或表单提交期间替换底层原始目标时，OpenClaw 会在能够证明匹配的情况下，将稳定的 `tabId`/标签 附加到替换标签上。
-原始目标 id 保持不稳定；首选
+`suggestedTargetId` 传回 `focus`、`close`、快照和操作中。您可以使用
+`open --label`、`tab new --label` 或 `tab label` 分配标签；
+标签、标签 ID、原始目标 ID 和唯一目标 ID 前缀均可被接受。
+为了兼容性，请求字段仍命名为 `targetId`，但它接受
+这些标签引用。请将原始目标 ID 视为诊断句柄，而非持久的
+代理记忆。
+当 Chromium 在导航或表单提交期间替换底层的原始目标时，
+只要能证明匹配，OpenClaw 会将稳定的 `tabId`/标签
+附加到替换后的标签上。原始目标 ID 仍然易变；请首选
 `suggestedTargetId`。
 
 ## 快照 / 截图 / 操作
@@ -157,9 +161,10 @@ openclaw browser screenshot --labels
   或 `--element` 组合使用。
 - `existing-session` / `user` 配置文件支持页面截图和来自快照输出的 `--ref`
   截图，但不支持 CSS `--element` 截图。
-- `--labels` 将当前快照引用叠加在截图上。
+- `--labels` 将当前的快照引用叠加在截图上。
 - `snapshot --urls` 将发现的链接目标附加到 AI 快照中，以便
-  代理可以选择直接导航目标，而不仅仅是根据链接文本进行猜测。
+  代理可以选择直接的导航目标，而不仅仅是从链接
+  文本中进行猜测。
 
 导航/点击/输入（基于引用的 UI 自动化）：
 
@@ -179,9 +184,10 @@ openclaw browser evaluate --fn '(el) => el.textContent' --ref <ref>
 openclaw browser evaluate --timeout-ms 30000 --fn 'async () => { await window.ready; return true; }'
 ```
 
-当页面端函数可能需要比默认评估超时更长的时间时，请使用 `evaluate --timeout-ms <ms>`。
+当页面端函数可能需要的时间
+长于默认评估超时时间时，请使用 `evaluate --timeout-ms <ms>`。
 
-当 OpenClaw 能够证明替换标签页时，操作响应会在操作触发的页面替换后返回当前的原始 `targetId`OpenClaw。脚本仍应存储并传递 `suggestedTargetId`/标签以便进行长期运行的工作流。
+当 OpenClaw 能够证明替换标签页时，操作响应会在操作触发的页面替换后返回当前原始的 `targetId`OpenClaw。脚本仍应存储并传递 `suggestedTargetId`/标签，以用于长期工作流。
 
 文件 + 对话框辅助工具：
 
@@ -194,18 +200,8 @@ openclaw browser dialog --accept
 openclaw browser dialog --dismiss --dialog-id d1
 ```
 
-托管的 Chrome 配置文件会将普通的点击触发的下载保存到 OpenClaw
-下载目录（默认为 OpenClaw`/tmp/openclaw/downloads`，或配置的临时
-根目录）。当代理需要等待
-特定文件并返回其路径时，请使用 `waitfordownload` 或 `download`OpenClawOpenClaw；这些显式的等待程序拥有下一次下载。
-上传接受来自 OpenClaw 临时上传根目录和 OpenClaw 托管
-入站媒体的文件，包括 `media://inbound/<id>` 和沙盒相对
-`media/inbound/<id>` 引用。嵌套的媒体引用、遍历和任意
-本地路径仍然被拒绝。
-当某个操作打开模态对话框时，操作响应将返回
-`blockedByDialog` 和 `browserState.dialogs.pending`；传递 `--dialog-id`OpenClaw 以
-直接回答它。在 OpenClaw 之外处理的对话框将显示在
-`browserState.dialogs.recent` 下。
+托管的 Chrome 配置文件会将普通点击触发的下载保存到 OpenClaw 下载目录中（默认为 OpenClaw`/tmp/openclaw/downloads`，或配置的临时根目录）。当代理需要等待特定文件并返回其路径时，请使用 `waitfordownload` 或 `download`OpenClawOpenClaw；这些显式的等待器拥有下一个下载。上传接受来自 OpenClaw 临时上传根目录和 OpenClaw 托管的入站媒体的文件，包括 `media://inbound/<id>` 和沙箱相对 `media/inbound/<id>` 引用。嵌套的媒体引用、遍历和任意本地路径仍将被拒绝。
+当操作打开模态对话框时，操作响应返回带有 `browserState.dialogs.pending` 的 `blockedByDialog`；传递 `--dialog-id`OpenClaw 以直接回答它。在 OpenClaw 外部处理的对话框显示在 `browserState.dialogs.recent` 下。
 
 ## 状态和存储
 
@@ -264,8 +260,7 @@ openclaw browser --browser-profile chrome-live tabs
 当前现有会话的限制：
 
 - 快照驱动的操作使用引用，而不是 CSS 选择器
-- 当调用方省略 `timeoutMs` 时，`browser.actionTimeoutMs` 默认将支持的 `act` 请求限制为 60000 毫秒；
-  每次调用的 `timeoutMs` 仍然优先。
+- 当调用者省略 `timeoutMs` 时，`browser.actionTimeoutMs` 默认将支持的 `act` 请求设置为 60000 毫秒；每次调用指定的 `timeoutMs` 仍然优先。
 - `click` 仅支持左键单击
 - `type` 不支持 `slowly=true`
 - `press` 不支持 `delayMs`
@@ -275,8 +270,8 @@ openclaw browser --browser-profile chrome-live tabs
 - 不支持 `wait --load networkidle`
 - 文件上传需要 `--ref` / `--input-ref`，不支持 CSS
   `--element`，并且目前一次只支持一个文件
-- 对话框钩子不支持 `--timeout`
-- 屏幕截图支持页面捕获和 `--ref`，但不支持 CSS `--element`
+- 对话框挂钩不支持 `--timeout`
+- 截图支持页面捕获和 `--ref`，但不支持 CSS `--element`
 - `responsebody`、下载拦截、PDF 导出和批量操作仍然
   需要托管浏览器或原始 CDP 配置文件
 
@@ -284,9 +279,9 @@ openclaw browser --browser-profile chrome-live tabs
 
 如果 Gateway(网关) 与浏览器运行在不同的机器上，请在安装了 Chrome/Brave/Edge/Chromium 的机器上运行 **node host**。Gateway(网关) 将把浏览器操作代理到该节点（不需要单独的浏览器控制服务器）。
 
-如果连接了多个节点，请使用 `gateway.nodes.browser.mode` 控制自动路由，并使用 `gateway.nodes.browser.node` 固定特定节点。
+使用 `gateway.nodes.browser.mode` 来控制自动路由，并在连接了多个节点时使用 `gateway.nodes.browser.node` 固定特定节点。
 
-安全 + 远程设置：[浏览器工具](/zh/tools/browser)、[远程访问](/zh/gateway/remoteTailscale)、[Tailscale](/zh/gateway/tailscale)、[安全](/zh/gateway/security)
+安全性 + 远程设置：[Browser 工具](/zh/tools/browser)、[远程访问](/zh/gateway/remoteTailscale)、[Tailscale](/zh/gateway/tailscale)、[安全性](/zh/gateway/security)
 
 ## 相关
 

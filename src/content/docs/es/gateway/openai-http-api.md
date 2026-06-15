@@ -83,8 +83,8 @@ Consulte [Seguridad](/es/gateway/security) y [Acceso remoto](/es/gateway/remote)
 Use `/v1/chat/completions` cuando esté integrando herramientas o un backend confiable del lado de la aplicación con una puerta de enlace existente y pueda mantener de forma segura las credenciales del operador de la puerta de enlace.
 
 - Prefiera esto a agregar un canal integrado nuevo cuando su integración sea simplemente otra superficie de operador/cliente para la misma puerta de enlace.
-- Para clientes móviles nativos que se conectan directamente a una puerta de enlace remota, prefiera [WebChat](/es/web/webchat) o el [Protocolo de puerta de enlace](/es/gateway/protocol) e implemente el flujo de arranque de dispositivo emparejado/token de dispositivo para que el dispositivo no necesite un token/contraseña HTTP compartido.
-- En su lugar, cree un complemento de canal cuando esté integrando una red de mensajería externa con sus propios usuarios, salas, entrega de webhook o transporte saliente. Consulte [Creación de complementos](/es/plugins/building-plugins).
+- Para clientes móviles nativos que se conectan directamente a una puerta de enlace remota, se prefiere [WebChat](/es/web/webchat) o el [Protocolo de puerta de enlace](/es/gateway/protocol) e implementar el flujo de inicio de dispositivo emparejado/token de dispositivo para que el dispositivo no necesite un token/contraseña HTTP compartido.
+- Cree un complemento de canal en su lugar cuando esté integrando una red de mensajería externa con sus propios usuarios, salas, entrega de webhooks o transporte de salida. Consulte [Creación de complementos](/es/plugins/building-plugins).
 
 ## Contrato de modelo centrado en agentes
 
@@ -212,35 +212,35 @@ Establezca `stream: true` para recibir Server-Sent Events (SSE):
 ### Campos de solicitud admitidos
 
 - `tools`: matriz de `{ "type": "function", "function": { ... } }`
-- `tool_choice`: `"auto"`, `"none"`
+- `tool_choice`: `"auto"`, `"none"`, `"required"` o `{ "type": "function", "function": { "name": "..." } }`
 - `messages[*].role: "tool"` turnos de seguimiento
-- `messages[*].tool_call_id` para vincular los resultados de las herramientas a una llamada de herramienta anterior
-- `max_completion_tokens`: número; límite por llamada para el total de tokens de finalización (tokens de razonamiento incluidos). Nombre de campo actual de OpenAI Chat Completions; preferido cuando se envían tanto `max_completion_tokens` como `max_tokens`.
+- `messages[*].tool_call_id` para vincular los resultados de la herramienta a una llamada de herramienta anterior
+- `max_completion_tokens`: número; límite por llamada para el total de tokens de finalización (tokens de razonamiento incluidos). Nombre de campo actual de OpenAI Chat Completions; se prefiere cuando se envían tanto `max_completion_tokens` como `max_tokens`.
 - `max_tokens`: número; alias heredado aceptado para compatibilidad con versiones anteriores. Se ignora cuando `max_completion_tokens` también está presente.
-- `temperature`: número; temperatura de muestreo de mejor esfuerzo enviada al proveedor upstream a través del canal agent stream-param.
-- `top_p`: número; muestreo de núcleo (nucleus sampling) de mejor esfuerzo enviado al proveedor upstream a través del canal agent stream-param.
-- `frequency_penalty`: número; penalización de frecuencia de mejor esfuerzo reenviada al proveedor ascendente a través del canal de parámetros de flujo del agente. Rango validado: -2.0 a 2.0. Devuelve `400 invalid_request_error` para valores fuera de rango.
-- `presence_penalty`: número; penalización de presencia de mejor esfuerzo reenviada al proveedor ascendente a través del canal de parámetros de flujo del agente. Rango validado: -2.0 a 2.0. Devuelve `400 invalid_request_error` para valores fuera de rango.
-- `seed`: número (entero); semilla de mejor esfuerzo reenviada al proveedor ascendente a través del canal de parámetros de flujo del agente. Devuelve `400 invalid_request_error` para valores no enteros.
-- `stop`: cadena o matriz de hasta 4 cadenas; secuencias de parada mejor esfuerzo reenviadas al proveedor ascendente a través del canal de parámetros de flujo del agente. Devuelve `400 invalid_request_error` para más de 4 secuencias o entradas no cadenas/vacías.
+- `temperature`: número; temperatura de muestreo con mejor esfuerzo reenviada al proveedor ascendente a través del canal de parámetros de flujo del agente.
+- `top_p`: número; muestreo de núcleo con mejor esfuerzo reenviado al proveedor ascendente a través del canal de parámetros de flujo del agente.
+- `frequency_penalty`: número; penalización de frecuencia con mejor esfuerzo reenviada al proveedor ascendente a través del canal de parámetros de flujo del agente. Rango validado: -2.0 a 2.0. Devuelve `400 invalid_request_error` para valores fuera de rango.
+- `presence_penalty`: número; penalización de presencia con mejor esfuerzo reenviada al proveedor ascendente a través del canal de parámetros de flujo del agente. Rango validado: -2.0 a 2.0. Devuelve `400 invalid_request_error` para valores fuera de rango.
+- `seed`: número (entero); semilla con el mejor esfuerzo enviada al proveedor de origen a través del canal de parámetros de flujo del agente. Devuelve `400 invalid_request_error` para valores no enteros.
+- `stop`: cadena o matriz de hasta 4 cadenas; secuencias de parada con el mejor esfuerzo enviadas al proveedor de origen a través del canal de parámetros de flujo del agente. Devuelve `400 invalid_request_error` si hay más de 4 secuencias o entradas que no son cadenas o están vacías.
 
-Cuando se establece cualquiera de los campos de límite de tokens, el valor se reenvía al proveedor ascendente a través del canal de parámetros de flujo del agente. El nombre real del campo cableado enviado al proveedor ascendente lo elige el transporte del proveedor: `max_completion_tokens` para endpoints de la familia OpenAI y `max_tokens` para proveedores que solo aceptan el nombre heredado (como Mistral y Chutes). Los campos de muestreo (`temperature`, `top_p`, `frequency_penalty`, `presence_penalty`, `seed`) siguen el mismo canal de parámetros de flujo; el backend de Respuestas de Codex basado en ChatGPT los elimina en el servidor ya que utiliza un muestreo fijo. `stop` también usa el canal de parámetros de flujo y se asigna al campo de detención del transporte (`stop` para backends de Chat Completions, `stop_sequences` para Anthropic); la API de Respuestas de OpenAI no tiene parámetro de detención, por lo que `stop` no se aplica en modelos basados en Respuestas.
+Cuando se establece cualquier campo de límite de tokens, el valor se reenvía al proveedor de origen a través del canal de parámetros de flujo del agente. El nombre real del campo de cable enviado al proveedor de origen lo elige el transporte del proveedor: `max_completion_tokens` para los puntos de conexión de la familia OpenAI, y `max_tokens` para los proveedores que solo aceptan el nombre heredado (como Mistral y Chutes). Los campos de muestreo (`temperature`, `top_p`, `frequency_penalty`, `presence_penalty`, `seed`) siguen el mismo canal de parámetros de flujo; el backend de respuestas de Codex basado en ChatGPT los elimina en el servidor ya que utiliza un muestreo fijo. `stop` también utiliza el canal de parámetros de flujo y se asigna al campo de parada del transporte (`stop` para los backends de Chat Completions, `stop_sequences` para Anthropic); la API de OpenAI Responses no tiene un parámetro de parada, por lo que `stop` no se aplica en los modelos respaldados por Responses.
 
 ### Variantes no compatibles
 
-El endpoint devuelve `400 invalid_request_error` para variantes de herramientas no compatibles, incluyendo:
+El punto de conexión devuelve `400 invalid_request_error` para variantes de herramientas no compatibles, incluyendo:
 
-- `tools` que no sea matriz
+- `tools` que no es una matriz
 - entradas de herramientas que no son funciones
 - falta `tool.function.name`
 - variantes `tool_choice` como `allowed_tools` y `custom`
-- `tool_choice: "required"` (aún no se aplica en tiempo de ejecución; se admitirá una vez que se implemente la aplicación estricta)
-- `tool_choice: { "type": "function", "function": { "name": "..." } }` (el mismo motivo que `required`)
-- valores `tool_choice.function.name` que no coinciden con el `tools` proporcionado
+- valores `tool_choice.function.name` que no coinciden con `tools` proporcionado
 
-### Forma de la respuesta de herramienta sin transmisión (Non-streaming)
+Para `tool_choice: "required"` y `tool_choice` con función fijada, el endpoint reduce el conjunto de herramientas de función del cliente expuesto, instruye al tiempo de ejecución para que llame a una herramienta del cliente antes de responder y devuelve un error si la respuesta del agente no incluye una llamada estructurada coincidente a la herramienta del cliente. Este contrato se aplica a la lista `tools` HTTP proporcionada por el llamador, no a cada herramienta interna del agente de OpenClaw.
 
-Cuando el agente decide llamar a herramientas, la respuesta utiliza:
+### Forma de respuesta de herramienta sin transmisión
+
+Cuando el agente decide llamar a las herramientas, la respuesta utiliza:
 
 - `choices[0].finish_reason = "tool_calls"`
 - entradas `choices[0].message.tool_calls[]` con:
@@ -251,11 +251,11 @@ Cuando el agente decide llamar a herramientas, la respuesta utiliza:
 
 El comentario del asistente antes de la llamada a la herramienta se devuelve en `choices[0].message.content` (posiblemente vacío).
 
-### Forma de la respuesta de herramienta con transmisión (Streaming)
+### Forma de respuesta de herramienta con transmisión
 
 Cuando `stream: true`, las llamadas a herramientas se emiten como fragmentos SSE incrementales:
 
-- delta inicial del rol del asistente
+- delta inicial de rol de asistente
 - deltas opcionales de comentarios del asistente
 - uno o más fragmentos `delta.tool_calls` que llevan la identidad de la herramienta y fragmentos de argumentos
 - fragmento final con `finish_reason: "tool_calls"`
@@ -263,7 +263,7 @@ Cuando `stream: true`, las llamadas a herramientas se emiten como fragmentos SSE
 
 Si `stream_options.include_usage=true`, se emite un fragmento de uso final antes de `[DONE]`.
 
-### Bucle de seguimiento de herramientas (Tool follow-up)
+### Bucle de seguimiento de herramientas
 
 Después de recibir `tool_calls`, el cliente debe ejecutar la(s) función(es) solicitada(s) y enviar una solicitud de seguimiento que incluya:
 
@@ -274,11 +274,11 @@ Esto permite que la ejecución del agente de puerta de enlace continúe con el m
 
 ## Configuración rápida de Open WebUI
 
-Para una conexión básica con Open WebUI:
+Para una conexión básica de Open WebUI:
 
 - URL base: `http://127.0.0.1:18789/v1`
 - URL base de Docker en macOS: `http://host.docker.internal:18789/v1`
-- Clave API: su token de portador (bearer token) de Gateway
+- Clave de API: su token de portador de Gateway
 - Modelo: `openclaw/default`
 
 Comportamiento esperado:
@@ -311,7 +311,7 @@ curl -sS http://127.0.0.1:18789/v1/chat/completions \
   }'
 ```
 
-Reutilice el mismo valor de `user` en llamadas posteriores para esa conversación para continuar la misma sesión del agente.
+Reutilice el mismo valor `user` en llamadas posteriores para esa conversación para continuar la misma sesión del agente.
 
 Sin transmisión (Non-streaming):
 
@@ -353,7 +353,7 @@ curl -sS http://127.0.0.1:18789/v1/models/openclaw%2Fdefault \
   -H 'Authorization: Bearer YOUR_TOKEN'
 ```
 
-Crear incrustaciones:
+Crear incrustaciones (embeddings):
 
 ```bash
 curl -sS http://127.0.0.1:18789/v1/embeddings \
@@ -368,8 +368,8 @@ curl -sS http://127.0.0.1:18789/v1/embeddings \
 
 Notas:
 
-- `/v1/models` devuelve los destinos de los agentes de OpenClaw, no catálogos de proveedores brutos.
-- `openclaw/default` siempre está presente, por lo que un id estable funciona en diferentes entornos.
+- `/v1/models` devuelve objetivos de agente de OpenClaw, no catálogos de proveedores sin procesar.
+- `openclaw/default` siempre está presente, por lo que un ID estable funciona en todos los entornos.
 - Las anulaciones del proveedor/modelo de backend pertenecen a `x-openclaw-model`, no al campo de OpenAI `model`.
 - `/v1/embeddings` admite `input` como una cadena o una matriz de cadenas.
 

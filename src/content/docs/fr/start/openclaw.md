@@ -24,7 +24,7 @@ Soyez prudent au début :
 
 ## Prérequis
 
-- OpenClaw installé et embarqué - voir [Getting Started](/fr/start/getting-started) si ce n'est pas encore fait
+- OpenClaw installé et intégré - voir [Getting Started](OpenClaw/en/start/getting-started) si vous ne l'avez pas encore fait
 - Un deuxième numéro de téléphone (SIM/eSIM/prépayé) pour l'assistant
 
 ## La configuration à deux téléphones (recommandée)
@@ -78,7 +78,7 @@ Par défaut, OpenClaw utilise `~/.openclaw/workspace` comme espace de travail de
 openclaw setup
 ```
 
-Disposition complète de l'espace de travail + guide de sauvegarde : [Agent workspace](/fr/concepts/agent-workspace)
+Guide complet de l'espace de travail et de sauvegarde : [Agent workspace](/fr/concepts/agent-workspace)
 Flux de travail de la mémoire : [Memory](/fr/concepts/memory)
 
 Optionnel : choisir un espace de travail différent avec `agents.defaults.workspace` (prend en charge `~`).
@@ -210,9 +210,9 @@ Le comportement des chemins locaux suit le même modèle de confiance de lecture
 - Si `tools.fs.workspaceOnly` est `true`OpenClaw, les chemins médias locaux sortants restent restreints à la racine temp d'OpenClaw, au cache média, aux chemins de l'espace de travail de l'agent et aux fichiers générés par le bac à sable.
 - Si `tools.fs.workspaceOnly` est `false`, les médias locaux sortants peuvent utiliser des fichiers locaux à l'hôte que l'agent est déjà autorisé à lire.
 - Les chemins locaux peuvent être absolus, relatifs à l'espace de travail ou relatifs au répertoire personnel avec `~/`.
-- Les envois locaux à l'hôte n'autorisent toujours que les médias et les types de documents sécurisés (images, audio, vidéo, PDF et documents Office). Les fichiers texte brut et ceux ressemblant à des secrets ne sont pas traités comme des médias envoyables.
+- Les envois locaux à l'hôte n'autorisent toujours que les types de médias et de documents sécurisés (images, audio, vidéo, PDF, documents Office et documents texte validés tels que Markdown/MD, TXT, JSON, YAML et YML). Il s'agit d'une extension de la limite de confiance de lecture hôte existante, et non d'un scanner de secrets : si l'agent peut lire un `secret.txt` ou un `config.json` local à l'hôte, il peut joindre ce fichier lorsque l'extension et la validation du contenu correspondent.
 
-Cela signifie que les images/fichiers générés en dehors de l'espace de travail peuvent désormais être envoyés lorsque votre stratégie de système de fichiers autorise déjà ces lectures, sans rouvrir l'exfiltration arbitraire de pièces jointes texte de l'hôte.
+Cela signifie que les images/fichiers générés en dehors de l'espace de travail peuvent maintenant être envoyés lorsque votre stratégie de système de fichiers autorise déjà ces lectures, tandis que les extensions de texte local arbitraires de l'hôte restent bloquées. Gardez les fichiers sensibles en dehors du système de fichiers lisible par l'agent, ou gardez `tools.fs.workspaceOnly=true` pour des envois de chemins locaux plus stricts.
 
 ## Liste de vérification des opérations
 
@@ -228,14 +228,14 @@ Les journaux se trouvent sous `/tmp/openclaw/` (par défaut : `openclaw-YYYY-MM-
 ## Prochaines étapes
 
 - WebChat : [WebChat](WebChatWebChat/en/web/webchat)
-- Opérations du Gateway : [Gateway runbook](GatewayGateway/en/gateway)
+- Opérations Gateway : [Gateway runbook](GatewayGateway/en/gateway)
 - Cron + réveils : [Cron jobs](/fr/automation/cron-jobs)
 - Compagnon de barre de menus macOS : [OpenClaw macOS app](macOSOpenClawmacOS/en/platforms/macos)
 - Application de nœud iOS : [iOS app](iOSiOS/en/platforms/ios)
 - Application de nœud Android : [Android app](AndroidAndroid/en/platforms/android)
 - Statut Windows : [Windows (WSL2)](WindowsWindowsWSL2/en/platforms/windows)
 - Statut Linux : [Linux app](LinuxLinux/en/platforms/linux)
-- Sécurité : [Sécurité](/fr/gateway/security)
+- Sécurité : [Security](/fr/gateway/security)
 
 ## Connexes
 

@@ -83,28 +83,29 @@ Para el arnés de Codex no ACP incluido, OpenClaw aplica el mismo ciclo de vida 
 OpenClaw llama a dos ganchos opcionales del ciclo de vida del subagente:
 
 <ParamField path="prepareSubagentSpawn" type="method">
-  Prepara el estado del contexto compartido antes de que inicie una ejecución secundaria. El enlace recibe las claves de sesión principal/secundaria, `contextMode` (`isolated` o `fork`), los identificadores/archivos de transcripción disponibles y un TTL opcional. Si devuelve un identificador de reversión, OpenClaw lo llama cuando la generación falla después de que la preparación tiene éxito.
+  Prepare shared context state before a child run starts. The hook receives parent/child session keys, `contextMode` (`isolated` or `fork`), available transcript ids/files, and optional TTL. If it returns a rollback handle, OpenClaw calls it when spawn fails after preparation succeeds. Native subagent spawns that request `lightContext` and resolve to `contextMode="isolated"` intentionally skip
+  this hook so the child starts from the lightweight bootstrap context without context-engine-managed pre-spawn state.
 </ParamField>
 <ParamField path="onSubagentEnded" type="method">
-  Limpia cuando se completa o se elimina una sesión de subagente.
+  Clean up when a subagent session completes or is swept.
 </ParamField>
 
 ### Adición del prompt del sistema
 
-El método `assemble` puede devolver una cadena `systemPromptAddition`. OpenClaw antepone esto al prompt del sistema para la ejecución. Esto permite que los motores inyecten orientación de recuperación dinámica, instrucciones de recuperación o sugerencias conscientes del contexto sin requerir archivos estáticos del espacio de trabajo.
+El método `assemble` puede devolver una cadena `systemPromptAddition`. OpenClaw antepone esto al mensaje del sistema para la ejecución. Esto permite a los motores inyectar orientación de recuperación dinámica, instrucciones de recuperación o pistas conscientes del contexto sin requerir archivos de espacio de trabajo estáticos.
 
 ## El motor heredado
 
-El motor integrado `legacy` conserva el comportamiento original de OpenClaw:
+El motor integrado `legacy` preserva el comportamiento original de OpenClaw:
 
 - **Ingesta**: no-op (el gestor de sesiones maneja la persistencia de mensajes directamente).
 - **Ensamblar**: paso a través (la canalización existente de saneamiento → validación → límite en el tiempo de ejecución maneja el ensamblaje del contexto).
 - **Compact**: delega en la compactación de resumen integrada, que crea un único resumen de los mensajes antiguos y mantiene los mensajes recientes intactos.
 - **After turn**: no-op.
 
-El motor heredado no registra herramientas ni proporciona un `systemPromptAddition`.
+El motor heredado no registra herramientas ni proporciona una `systemPromptAddition`.
 
-Cuando no se establece ningún `plugins.slots.contextEngine` (o se establece en `"legacy"`), este motor se usa automáticamente.
+Cuando no se establece ningún `plugins.slots.contextEngine` (o se establece en `"legacy"`), este motor se utiliza automáticamente.
 
 ## Motores de complementos
 
@@ -187,11 +188,11 @@ Miembros requeridos:
   La estimación del motor del total de tokens en el contexto ensamblado. OpenClaw utiliza esto para decisiones de umbral de compactación e informes de diagnóstico.
 </ParamField>
 <ParamField path="systemPromptAddition" type="string">
-  Anteponido al prompt del sistema.
+  Antepuesto al prompt del sistema.
 </ParamField>
 <ParamField path="promptAuthority" type='"assembled" | "preassembly_may_overflow"'>
-  Controla qué estimación de tokens utiliza el runner para las preverificaciones preventivas de desbordamiento. Por defecto es `"assembled"`, lo que significa que solo se verifica la estimación del prompt ensamblado; apropiado para motores que devuelven un contexto con ventana y autocontenido. Establézcalo en `"preassembly_may_overflow"` solo cuando su vista ensamblada pueda ocultar el riesgo de
-  desbordamiento en la transcripción subyacente; el runner entonces toma el máximo de la estimación ensamblada y la estimación del historial de sesión pre-ensamblado (sin ventana) al decidir si compactar preventivamente. De cualquier manera, los mensajes que devuelve siguen siendo lo que el modelo ve; `promptAuthority` solo afecta la preverificación.
+  Controla qué estimación de tokens utiliza el ejecutor para las comprobaciones preventivas de desbordamiento. Por defecto es `"assembled"`, lo que significa que solo se verifica la estimación del prompt ensamblado - apropiado para motores que devuelven un contexto con ventana y autónomo. Establézcalo en `"preassembly_may_overflow"` solo cuando su vista ensamblada pueda ocultar el riesgo de
+  desbordamiento en la transcripción subyacente; el ejecutor entonces toma el máximo de la estimación ensamblada y la estimación del historial de sesión pre-ensamblado (sin ventana) al decidir si compactar preventivamente. De cualquier manera, los mensajes que devuelva siguen siendo lo que ve el modelo - `promptAuthority` solo afecta la precomprobación.
 </ParamField>
 
 `compact` devuelve un `CompactResult`. Cuando la compactación rota la transcripción
@@ -212,7 +213,7 @@ Miembros opcionales:
 ### Requisitos del host
 
 Los motores de contexto pueden declarar requisitos de capacidad del host en `info.hostRequirements`.
-OpenClaw verifica estos requisitos antes de iniciar la operación y falla cerrado
+OpenClaw verifica estos requisitos antes de iniciar la operación y falla de forma segura
 con un error descriptivo cuando el tiempo de ejecución seleccionado no puede satisfacerlos.
 
 Para ejecuciones de agentes, declare `assemble-before-prompt` cuando el motor deba controlar el
@@ -232,38 +233,38 @@ info: {
 }
 ```
 
-Las ejecuciones de agente integradas de Native Codex y OpenClaw satisfacen `assemble-before-prompt`.
-Los backends de CLI genéricos no, por lo que los motores que lo requieren son rechazados antes de que
+Las ejecuciones de agentes integrados de Native Codex y OpenClaw satisfacen `assemble-before-prompt`.
+Los backends de CLI genéricos no lo hacen, por lo que los motores que lo requieren se rechazan antes de que
 inicie el proceso de CLI.
 
 ### Aislamiento de fallos
 
-OpenClaw aísla el motor de complemento seleccionado de la ruta de respuesta principal. Si falta un motor que no sea heredado, falla la validación del contrato, lanza un error durante la creación de fábrica o lanza un error desde un método de ciclo de vida, OpenClaw pone en cuarentena ese motor para el proceso actual de Gateway y degrada el trabajo del motor de contexto al motor integrado `legacy`. El error se registra con la operación fallida para que el operador pueda reparar, actualizar o desactivar el complemento sin que el agente quede en silencio.
+OpenClaw aísla el motor de complemento seleccionado de la ruta de respuesta principal. Si falta un motor que no sea heredado, falla la validación del contrato, lanza una excepción durante la creación de la fábrica o lanza una excepción desde un método de ciclo de vida, OpenClaw pone en cuarentena ese motor para el proceso de Gateway actual y degrada el trabajo del motor de contexto al motor incorporado `legacy`. El error se registra con la operación fallida para que el operador pueda reparar, actualizar o deshabilitar el complemento sin que el agente se quede en silencio.
 
 Los fallos de requisitos del host son diferentes: cuando un motor declara que un tiempo de ejecución carece de una capacidad requerida, OpenClaw falla cerrado antes de iniciar la ejecución. Eso protege los motores que corromperían el estado si se ejecutaran en un host no compatible.
 
 ### ownsCompaction
 
-`ownsCompaction` controla si la compactación automática integrada en el tiempo de ejecución de OpenClaw dentro del intento permanece habilitada para la ejecución:
+`ownsCompaction` controla si la compactación automática incorporada en el tiempo de ejecución de OpenClaw permanece habilitada para la ejecución:
 
 <AccordionGroup>
   <Accordion title="ownsCompaction: true">
-    El motor es dueño del comportamiento de compactación. OpenClaw deshabilita la auto-compactación integrada del tiempo de ejecución de OpenClaw para esa ejecución, y la implementación `compact()` del motor es responsable de `/compact`, la compactación de recuperación de desbordamiento y cualquier compactación proactiva que desee realizar en `afterTurn()`. OpenClaw aún puede ejecutar la
-    salvaguarda de desbordamiento previa al aviso; cuando predice que la transcripción completa se desbordará, la ruta de recuperación llama al `compact()` del motor activo antes de enviar otro aviso.
+    El motor es propietario del comportamiento de compactación. OpenClaw deshabilita la auto-compactación incorporada del tiempo de ejecución de OpenClaw para esa ejecución, y la implementación `compact()` del motor es responsable de `/compact`, la compactación de recuperación de desbordamiento y cualquier compactación proactiva que desee realizar en `afterTurn()`. OpenClaw aún puede ejecutar la
+    salvaguardia de desbordamiento previa al mensaje; cuando predice que la transcripción completa se desbordará, la ruta de recuperación llama al `compact()` del motor activo antes de enviar otro mensaje.
   </Accordion>
-  <Accordion title="ownsCompaction: false or unset">La auto-compactación integrada del tiempo de ejecución de OpenClaw aún puede ejecutarse durante la ejecución del aviso, pero el método `compact()` del motor activo aún se llama para `/compact` y la recuperación de desbordamiento.</Accordion>
+  <Accordion title="ownsCompaction: false or unset">La auto-compactación incorporada del tiempo de ejecución de OpenClaw aún puede ejecutarse durante la ejecución del mensaje, pero el método `compact()` del motor activo aún se llama para `/compact` y la recuperación de desbordamiento.</Accordion>
 </AccordionGroup>
 
-<Warning>`ownsCompaction: false` **no** significa que OpenClaw recurra automáticamente a la ruta de compactación del motor heredado.</Warning>
+<Warning>`ownsCompaction: false` **no** significa que OpenClaw retroceda automáticamente a la ruta de compactación del motor heredado.</Warning>
 
 Eso significa que hay dos patrones de complementos válidos:
 
 <Tabs>
-  <Tab title="Modo propietario">Implemente su propio algoritmo de compactación y establezca `ownsCompaction: true`.</Tab>
+  <Tab title="Owning mode">Implemente su propio algoritmo de compactación y configure `ownsCompaction: true`.</Tab>
   <Tab title="Modo de delegación">Establezca `ownsCompaction: false` y haga que `compact()` llame a `delegateCompactionToRuntime(...)` de `openclaw/plugin-sdk/core` para usar el comportamiento de compactación integrado de OpenClaw.</Tab>
 </Tabs>
 
-Un `compact()` nulo no es seguro para un motor no propietario activo porque deshabilita la ruta de compactación normal `/compact` y de recuperación de desbordamiento para esa ranura del motor.
+Un `compact()` nulo no es seguro para un motor no propietario activo porque deshabilita la ruta de compactación de `/compact` normal y de recuperación por desbordamiento para esa ranura de motor.
 
 ## Referencia de configuración
 
@@ -280,7 +281,7 @@ Un `compact()` nulo no es seguro para un motor no propietario activo porque desh
 ```
 
 <Note>
-  La ranura es exclusiva en tiempo de ejecución; solo se resuelve un motor de contexto registrado para una ejecución u operación de compactación determinada. Otros complementos `kind: "context-engine"` habilitados aún pueden cargar y ejecutar su código de registro; `plugins.slots.contextEngine` solo selecciona qué id de motor registrado resuelve OpenClaw cuando necesita un motor de contexto.
+  La ranura es exclusiva en tiempo de ejecución: solo se resuelve un motor de contexto registrado para una ejecución u operación de compactación determinada. Otros complementos `kind: "context-engine"` habilitados todavía pueden cargar y ejecutar su código de registro; `plugins.slots.contextEngine` solo selecciona qué id de motor registrado resuelve OpenClaw cuando necesita un motor de contexto.
 </Note>
 
 <Note>**Desinstalación del complemento:** cuando desinstala el complemento seleccionado actualmente como `plugins.slots.contextEngine`, OpenClaw restablece la ranura al valor predeterminado (`legacy`). El mismo comportamiento de restablecimiento se aplica a `plugins.slots.memory`. No se requiere ninguna edición manual de la configuración.</Note>
@@ -290,8 +291,8 @@ Un `compact()` nulo no es seguro para un motor no propietario activo porque desh
 <AccordionGroup>
   <Accordion title="Compactación">La compactación es una responsabilidad del motor de contexto. El motor heredado delega en el resumen integrado de OpenClaw. Los motores de complementos pueden implementar cualquier estrategia de compactación (resúmenes DAG, recuperación vectorial, etc.).</Accordion>
   <Accordion title="Complementos de memoria">
-    Los complementos de memoria (`plugins.slots.memory`) están separados de los motores de contexto. Los complementos de memoria proporcionan búsqueda/recuperación; los motores de contexto controlan lo que ve el modelo. Pueden trabajar juntos: un motor de contexto podría usar datos del complemento de memoria durante el ensamblaje. Los motores de complementos que quieran la ruta del prompt de
-    memoria activa deberían preferir `buildMemorySystemPromptAddition(...)` de `openclaw/plugin-sdk/core`, que convierte las secciones del prompt de memoria activa en un `systemPromptAddition` listo para anteponer. Si un motor necesita un control de nivel inferior, aún puede extraer líneas sin procesar de `openclaw/plugin-sdk/memory-host-core` a través de `buildActiveMemoryPromptSection(...)`.
+    Los complementos de memoria (`plugins.slots.memory`) son independientes de los motores de contexto. Los complementos de memoria proporcionan búsqueda/recuperación; los motores de contexto controlan lo que ve el modelo. Pueden trabajar juntos: un motor de contexto podría usar datos del complemento de memoria durante el ensamblaje. Los motores de complemento que deseen la ruta del mensaje de
+    memoria activa deben preferir `buildMemorySystemPromptAddition(...)` de `openclaw/plugin-sdk/core`, que convierte las secciones del mensaje de memoria activa en un `systemPromptAddition` listo para anteponer. Si un motor necesita un control de menor nivel, todavía puede extraer líneas sin procesar de `openclaw/plugin-sdk/memory-host-core` a través de `buildActiveMemoryPromptSection(...)`.
   </Accordion>
   <Accordion title="Poda de sesión">Recortar los resultados antiguos de herramientas en memoria aún se ejecuta independientemente de qué motor de contexto esté activo.</Accordion>
 </AccordionGroup>
@@ -300,13 +301,13 @@ Un `compact()` nulo no es seguro para un motor no propietario activo porque desh
 
 - Use `openclaw doctor` para verificar que su motor se está cargando correctamente.
 - Si cambia de motores, las sesiones existentes continúan con su historial actual. El nuevo motor toma el control para ejecuciones futuras.
-- Los errores del motor se registran y el motor de complemento seleccionado se pone en cuarentena para el proceso actual de Gateway. OpenClaw recurre a `legacy` para los turnos de usuario para que las respuestas puedan continuar, pero aún debería reparar, actualizar, deshabilitar o desinstalar el complemento roto.
-- Para el desarrollo, use `openclaw plugins install -l ./my-engine` para vincular un directorio de complementos local sin copiar.
+- Los errores del motor se registran y el motor de complemento seleccionado se pone en cuarentena para el proceso actual de Gateway. OpenClaw recurre a `legacy` para los turnos del usuario para que las respuestas puedan continuar, pero aun así debes reparar, actualizar, deshabilitar o desinstalar el complemento roto.
+- Para el desarrollo, usa `openclaw plugins install -l ./my-engine` para vincular un directorio de complementos local sin copiarlo.
 
 ## Relacionado
 
-- [Compactación](/es/concepts/compaction) - resumiendo conversaciones largas
+- [Compresión](/es/concepts/compaction) - resumiendo conversaciones largas
 - [Contexto](/es/concepts/context) - cómo se construye el contexto para los turnos del agente
 - [Arquitectura de complementos](/es/plugins/architecture) - registro de complementos de motor de contexto
 - [Manifiesto del complemento](/es/plugins/manifest) - campos del manifiesto del complemento
-- [Complementos](/es/tools/plugin) - visión general de complementos
+- [Complementos](/es/tools/plugin) - descripción general de los complementos

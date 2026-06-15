@@ -122,7 +122,7 @@ De manera predeterminada, OpenClaw inyecta un conjunto fijo de archivos del espa
 - `HEARTBEAT.md`
 - `BOOTSTRAP.md` (solo en la primera ejecución)
 
-Los archivos grandes se truncan por archivo usando `agents.defaults.bootstrapMaxChars` (por defecto `12000` caracteres). OpenClaw también impone un límite máximo de inyección de arranque total entre archivos con `agents.defaults.bootstrapTotalMaxChars` (por defecto `60000` caracteres). `/context` muestra los tamaños **brutos frente a los inyectados** y si se produjo un truncamiento.
+Los archivos grandes se truncan por archivo usando `agents.defaults.bootstrapMaxChars` (por defecto `20000` caracteres). OpenClaw también impone un límite total de inyección de bootstrap entre archivos con `agents.defaults.bootstrapTotalMaxChars` (por defecto `60000` caracteres). `/context` muestra los tamaños **sin procesar frente a los inyectados** y si se produjo un truncamiento.
 
 Cuando se produce una truncación, el tiempo de ejecución puede inyectar un bloque de advertencia en el prompt bajo el Contexto del Proyecto. Configure esto con `agents.defaults.bootstrapPromptTruncationWarning` (`off`, `once`, `always`; por defecto `always`).
 

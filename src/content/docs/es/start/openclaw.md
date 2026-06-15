@@ -24,7 +24,7 @@ Empieza con precaución:
 
 ## Requisitos previos
 
-- OpenClaw instalado e integrado - consulte [Introducción](/es/start/getting-started) si aún no ha hecho esto
+- OpenClaw instalado y configurado - consulta [Cómo empezar](/es/start/getting-started) si aún no lo has hecho
 - Un segundo número de teléfono (SIM/eSIM/prepago) para el asistente
 
 ## La configuración de dos teléfonos (recomendada)
@@ -78,7 +78,7 @@ De forma predeterminada, OpenClaw usa `~/.openclaw/workspace` como espacio de tr
 openclaw setup
 ```
 
-Diseño completo del espacio de trabajo + guía de respaldo: [Espacio de trabajo del agente](/es/concepts/agent-workspace)
+Guía completa del diseño del espacio de trabajo y copias de seguridad: [Espacio de trabajo del agente](/es/concepts/agent-workspace)
 Flujo de trabajo de memoria: [Memoria](/es/concepts/memory)
 
 Opcional: elija un espacio de trabajo diferente con `agents.defaults.workspace` (soporta `~`).
@@ -210,9 +210,9 @@ El comportamiento de la ruta local sigue el mismo modelo de confianza de lectura
 - Si `tools.fs.workspaceOnly` es `true`, las rutas locales de medios salientes se mantienen restringidas a la raíz temporal de OpenClaw, la caché de medios, las rutas del espacio de trabajo del agente y los archivos generados por el sandbox.
 - Si `tools.fs.workspaceOnly` es `false`, los medios locales salientes pueden usar archivos locales del host que el agente ya tiene permiso para leer.
 - Las rutas locales pueden ser absolutas, relativas al espacio de trabajo o relativas al directorio de inicio con `~/`.
-- Los envíos locales al host todavía solo permiten tipos de medios y documentos seguros (imágenes, audio, video, PDF y documentos de Office). Los archivos de texto plano y similares a secretos no se tratan como medios enviables.
+- Los envíos locales al host todavía solo permiten tipos de medios y documentos seguros (imágenes, audio, video, PDF, documentos de Office y documentos de texto validados como Markdown/MD, TXT, JSON, YAML y YML). Esto es una extensión del límite de confianza de lectura del host existente, no un escáner de secretos: si el agente puede leer un archivo `secret.txt` o `config.json` local del host, puede adjuntar ese archivo cuando la extensión y la validación de contenido coincidan.
 
-Eso significa que las imágenes/archivos generados fuera del espacio de trabajo ahora se pueden enviar cuando su política de fs ya permite esas lecturas, sin volver a abrir la exfiltración arbitraria de archivos de texto del host.
+Esto significa que las imágenes/archivos generados fuera del espacio de trabajo ahora se pueden enviar cuando tu política de fs ya permite esas lecturas, mientras que las extensiones de texto locales arbitrarias del host siguen bloqueadas. Mantén los archivos confidenciales fuera del sistema de archivos legible por el agente, o mantén `tools.fs.workspaceOnly=true` para envíos de rutas locales más estrictos.
 
 ## Lista de verificación de operaciones
 
@@ -223,22 +223,22 @@ openclaw status --deep   # asks the gateway for a live health probe with channel
 openclaw health --json   # gateway health snapshot (WS; default can return a fresh cached snapshot)
 ```
 
-Los registros se encuentran en `/tmp/openclaw/` (predeterminado: `openclaw-YYYY-MM-DD.log`).
+Los registros residen en `/tmp/openclaw/` (predeterminado: `openclaw-YYYY-MM-DD.log`).
 
 ## Próximos pasos
 
 - WebChat: [WebChat](/es/web/webchat)
-- Operaciones de Gateway: [Manual de operaciones de Gateway](/es/gateway)
+- Operaciones de la puerta de enlace: [Manual de la puerta de enlace](/es/gateway)
 - Cron + despertares: [Trabajos Cron](/es/automation/cron-jobs)
 - Compañero de la barra de menús de macOS: [Aplicación OpenClaw para macOS](/es/platforms/macos)
 - Aplicación de nodo iOS: [Aplicación iOS](/es/platforms/ios)
 - Aplicación de nodo Android: [Aplicación Android](/es/platforms/android)
 - Estado de Windows: [Windows (WSL2)](/es/platforms/windows)
-- Estado de Linux: [Aplicación Linux](/es/platforms/linux)
+- Estado de Linux: [aplicación de Linux](/es/platforms/linux)
 - Seguridad: [Seguridad](/es/gateway/security)
 
 ## Relacionado
 
-- [Para comenzar](/es/start/getting-started)
+- [Introducción](/es/start/getting-started)
 - [Configuración](/es/start/setup)
 - [Descripción general de canales](/es/channels)

@@ -184,7 +184,7 @@ Cron `--model` 是一个**作业主选项**，而不是聊天会话 `/model` 覆
 
 ## 迁移旧作业
 
-<Note>如果您拥有来自当前交付和存储格式之前的 cron 作业，请运行 `openclaw doctor --fix`。Doctor 会规范化旧的 cron 字段（`jobId`、`schedule.cron`，包括旧的 `threadId` 在内的顶级交付字段，payload `provider` 交付别名），并在配置了 `cron.webhook` 时，将简单的 `notify: true` webhook 回退作业迁移为显式 webhook 交付。</Note>
+<Note>如果您有在当前交付和存储格式之前的 cron 作业，请运行 `openclaw doctor --fix`。Doctor 会规范化旧的 cron 字段（`jobId`、`schedule.cron`、包括旧的 `threadId` 在内的顶层交付字段、payload `provider` 交付别名），并将 `notify: true` webhook 回退作业从 `cron.webhook` 迁移到显式 webhook 交付。已经向聊天宣布的作业将保留该交付方式，并获得一个完成 webhook 目的地。</Note>
 
 ## 常见编辑
 

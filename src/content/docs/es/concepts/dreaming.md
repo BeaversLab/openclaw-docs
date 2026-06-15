@@ -103,23 +103,21 @@ La clasificación profunda utiliza seis señales base ponderadas más el refuerz
 
 Los aciertos de las fases Ligera y REM añaden un pequeño impulso de decadencia por recencia de `memory/.dreams/phase-signals.json`.
 
-## Cobertura del informe de prueba simulada de QA
+Los resultados de las pruebas de sombra (shadow-trial) pueden superponerse a esa puntuación base como una señal de revisión antes de cualquier escritura duradera. Una prueba útil otorga al candidato un pequeño aumento limitado, una prueba neutra mantiene su aplazamiento y una prueba dañina lo marca como rechazado para ese pase de puntuación. Esta señal sigue siendo solo de informe: puede cambiar el orden de los candidatos o los metadatos de revisión, pero no escribe en `MEMORY.md` ni promueve al candidato por sí sola.
 
-QA Lab incluye un escenario de solo informe para explorar cómo una futura
-prueba simulada de "dreaming" podría revisar una memoria candidata antes de su promoción. El escenario pide
-a un agente que compare una respuesta base con una respuesta que puede usar la memoria
-candidata, y luego que escriba un informe local con un veredicto, una razón y marcas de riesgo.
+## Cobertura del informe de la prueba de sombra de QA
 
-Esta cobertura está limitada intencionalmente a QA. Verifica que el artefacto del informe
-se mantenga separado de `MEMORY.md` y que el agente no afirme que el candidato
-fue promocionado. No añade comportamiento de prueba de sombra de producción ni cambia el
-motor de promoción de fase profunda.
+QA Lab incluye un escenario solo de informe para explorar cómo una futura prueba de sombra de "dreaming" podría revisar una memoria candidata antes de la promoción. El escenario solicita a un agente que compare una respuesta base con una respuesta que puede usar la memoria candidata, y luego escriba un informe local con un veredicto, una razón y banderas de riesgo.
+
+Esta cobertura tiene un alcance intencionalmente limitado a QA. Verifica que el artefacto del informe permanezca separado de `MEMORY.md` y que el agente no afirme que el candidato fue promovido. No añade comportamiento de prueba de sombra en producción ni cambia el motor de promoción de fase profunda.
+
+El ejecutor de pruebas de sombra `memory-core` mantiene ese mismo contrato de solo informe para las rutas de código que necesitan un artefacto estable. Acepta el candidato, el mensaje de prueba, el resultado base, el resultado del candidato, el veredicto, la razón, las banderas de riesgo y las referencias de evidencia, y luego escribe un informe con `promotion action: report-only`. Los veredictos útiles se asignan a una recomendación `promote`, los veredictos neutrales a `defer` y los veredictos dañinos a `reject`; ninguna de esas recomendaciones escribe en `MEMORY.md` ni aplica la promoción de fase profunda.
 
 ## Programación
 
-Cuando está habilitado, `memory-core` gestiona automáticamente un trabajo cron para un barrido completo de dreaming. Cada barrido ejecuta las fases en orden: light → REM → deep.
+Cuando está habilitado, `memory-core` gestiona automáticamente un trabajo cron para un barrido completo de "dreaming". Cada barrido ejecuta las fases en orden: ligera → REM → profunda.
 
-El barrido incluye el espacio de trabajo de tiempo de ejecución principal y cualquier espacio de trabajo de agente configurado, deduplicado por ruta, por lo que la expansión del espacio de trabajo del subagente no excluye el `DREAMS.md` ni el estado de memoria del agente principal.
+El barrido incluye el espacio de trabajo de ejecución principal y cualquier espacio de trabajo de agente configurado, deduplicado por ruta, por lo que la expansión del espacio de trabajo del subagente no excluye el `DREAMS.md` y el estado de memoria del agente principal.
 
 Comportamiento de cadencia predeterminado:
 
@@ -131,7 +129,7 @@ Comportamiento de cadencia predeterminado:
 ## Inicio rápido
 
 <Tabs>
-  <Tab title="Habilitar dreaming">
+  <Tab title="Activar soñar">
     ```json
     {
       "plugins": {
@@ -169,7 +167,7 @@ Comportamiento de cadencia predeterminado:
   </Tab>
 </Tabs>
 
-## Comando de barra
+## Comando de barra diagonal
 
 ```
 /dreaming status
@@ -181,7 +179,7 @@ Comportamiento de cadencia predeterminado:
 ## Flujo de trabajo de CLI
 
 <Tabs>
-  <Tab title="Promotion preview / apply">
+  <Tab title="Vista previa / aplicación de promoción">
     ```bash
     openclaw memory promote
     openclaw memory promote --apply
@@ -189,11 +187,11 @@ Comportamiento de cadencia predeterminado:
     openclaw memory status --deep
     ```
 
-    Manual `memory promote` usa umbrales de fase profunda por defecto a menos que se anulen con indicadores de CLI.
+    El `memory promote` manual utiliza umbrales de fase profunda de forma predeterminada a menos que se anule con indicadores de CLI.
 
   </Tab>
   <Tab title="Explicar promoción">
-    Explique por qué una candidata específica se promocionaría o no:
+    Explique por qué un candidato específico promovería o no:
 
     ```bash
     openclaw memory promote-explain "router vlan"
@@ -202,7 +200,7 @@ Comportamiento de cadencia predeterminado:
 
   </Tab>
   <Tab title="Vista previa del arnés REM">
-    Vista previa de reflexiones REM, verdades de candidatos y salida de promoción profunda sin escribir nada:
+    Vista previa de reflexiones REM, verdades candidatas y salida de promoción profunda sin escribir nada:
 
     ```bash
     openclaw memory rem-harness
@@ -214,43 +212,43 @@ Comportamiento de cadencia predeterminado:
 
 ## Valores predeterminados clave
 
-Todos los ajustes se encuentran bajo `plugins.entries.memory-core.config.dreaming`.
+Todas las configuraciones se encuentran en `plugins.entries.memory-core.config.dreaming`.
 
 <ParamField path="enabled" type="boolean" default="false">
-  Habilitar o deshabilitar el barrido de soñando (dreaming).
+  Activa o desactiva el barrido de soñar.
 </ParamField>
 <ParamField path="frequency" type="string" default="0 3 * * *">
-  Cadencia de Cron para el barrido completo de soñando.
+  Cadencia de Cron para el barrido completo de soñar.
 </ParamField>
 <ParamField path="model" type="string">
-  Anulación opcional del modelo del subagente Dream Diary. Utilice un valor canónico `provider/model` cuando también establezca una lista de permitidos (allowlist) del subagente `allowedModels`.
+  Anulación opcional del modelo del subagente Dream Diary. Utilice un valor canónico de `provider/model` cuando también configure una lista de permitidos del subagente `allowedModels`.
 </ParamField>
 <ParamField path="phases.deep.maxPromotedSnippetTokens" type="number" default="160">
-  Recuento máximo estimado de tokens mantenidos de cada fragmento de recuperación a corto plazo promovido a `MEMORY.md`. El origen de la clasificación permanece visible.
+  Recuento máximo estimado de tokens mantenido de cada fragmento de recuerdo a corto plazo promovido a `MEMORY.md`. El origen de la clasificación permanece visible.
 </ParamField>
 
-<Warning>`dreaming.model` requiere `plugins.entries.memory-core.subagent.allowModelOverride: true`. Para restringirlo, también establezca `plugins.entries.memory-core.subagent.allowedModels`. Los errores de confianza o de lista de permitidos permanecen visibles en lugar de volver a fallar silenciosamente; el reintento solo cubre errores de modelo no disponible.</Warning>
+<Warning>`dreaming.model` requiere `plugins.entries.memory-core.subagent.allowModelOverride: true`. Para restringirlo, también configure `plugins.entries.memory-core.subagent.allowedModels`. Los fallos de confianza o de lista de permitidos permanecen visibles en lugar de volver silenciosamente a un valor alternativo; el reintento solo cubre errores de modelo no disponible.</Warning>
 
-<Note>La mayoría de las políticas de fase, umbrales y comportamientos de almacenamiento son detalles de implementación interna. Consulte [Referencia de configuración de memoria](/es/reference/memory-config#dreaming) para la lista completa de claves.</Note>
+<Note>La mayoría de las políticas de fase, umbrales y comportamientos de almacenamiento son detalles internos de implementación. Consulte [Referencia de configuración de memoria](/es/reference/memory-config#dreaming) para obtener la lista completa de claves.</Note>
 
-## Interfaz de usuario de Dreams (Dreams UI)
+## Interfaz de usuario de Dreams
 
-Cuando está habilitado, la pestaña **Dreams** del Gateway muestra:
+Cuando está habilitado, la pestaña **Dreams** de Gateway muestra:
 
-- estado actual de habilitación del sueño (dreaming)
-- estado a nivel de fase y presencia del barrido administrado
-- recuentos a corto plazo, grounded (anclado), de señal y promocionados hoy
+- estado actual de habilitación de dreaming
+- estado a nivel de fase y presencia de barrido gestionado
+- recuentos de corto plazo, con base, señal y promovidos hoy
 - momento de la próxima ejecución programada
-- un carril (lane) de Escena (Scene) anclado (grounded) distinto para entradas de reproducción histórica preparadas
-- un lector de Dream Diary ampliable respaldado por `doctor.memory.dreamDiary`
+- un carril de Escena (Scene) distinto con base para entradas de repetición histórica preparadas
+- un lector del Diario de Sueños (Dream Diary) ampliable respaldado por `doctor.memory.dreamDiary`
 
-## El proceso de sueño nunca se ejecuta: el estado muestra bloqueado
+## Dreaming nunca se ejecuta: el estado muestra bloqueado
 
-Si `openclaw memory status` reporta `Dreaming status: blocked`, el cron administrado existe pero el latido del agente predeterminado no se está ejecutando. Verifique que el latido esté habilitado para el agente predeterminado y que su objetivo no sea `none`, luego ejecute `openclaw memory status --deep` nuevamente después del siguiente intervalo de latido.
+Si `openclaw memory status` informa `Dreaming status: blocked`, el cron gestionado existe, pero el latido del agente predeterminado no se está activando. Verifique que el latido esté habilitado para el agente predeterminado y que su objetivo no sea `none`, luego ejecute `openclaw memory status --deep` nuevamente después del siguiente intervalo de latido.
 
 ## Relacionado
 
 - [Memoria](/es/concepts/memory)
-- [CLI de memoria](/es/cli/memory)
+- [CLI de Memoria](/es/cli/memory)
 - [Referencia de configuración de memoria](/es/reference/memory-config)
 - [Búsqueda de memoria](/es/concepts/memory-search)

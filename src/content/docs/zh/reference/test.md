@@ -18,8 +18,8 @@ title: "测试"
 - `pnpm test:changed`：廉价的智能变更测试运行。它运行直接测试编辑、兄弟 `*.test.ts` 文件、显式源映射和本地导入图的精确目标。除非映射到精确测试，否则会跳过广泛/配置/包的更改。
 - `OPENCLAW_TEST_CHANGED_BROAD=1 pnpm test:changed`：显式的广泛变更测试运行。当测试工具/配置/包编辑应回退到 Vitest 的更广泛的变更测试行为时，请使用它。
 - `pnpm changed:lanes`：显示由针对 `origin/main` 的差异触发的架构车道。
-- `pnpm check:changed`：针对 `origin/main` 的差异运行智能变更检查门控。它会为受影响的架构通道运行类型检查、lint 和 guard 命令，但不会运行 Vitest 测试。使用 `pnpm test:changed` 或显式的 `pnpm test <target>` 进行测试验证。
-- Codex worktrees 和链接/稀疏检出：除非已验证 pnpm 不会协调依赖关系，否则避免直接在本地运行 `pnpm test*`、`pnpm check*` 和 `pnpm crabbox:run`。对于微小的显式文件验证，请使用 `node scripts/run-vitest.mjs <path-or-filter>`；对于变更门控或广泛验证，请使用 `node scripts/crabbox-wrapper.mjs run --provider blacksmith-testbox ... --shell -- "pnpm check:changed"`，以便 pnpm 在 Testbox 内部运行。
+- `pnpm check:changed`：在 CI 环境外默认委托给 Crabbox/Testbox，然后在远程子容器中运行针对 `origin/main` 差异的智能变更检查门控。它会为受影响的架构通道运行类型检查、lint 和 guard 命令，但不运行 Vitest 测试。请使用 `pnpm test:changed` 或显式的 `pnpm test <target>` 进行测试证明。
+- Codex 工作树和链接/稀疏检出：避免直接进行本地 `pnpm test*`、`pnpm check*` 和 `pnpm crabbox:run`，除非您已确认 pnpm 不会协调依赖项。对于微小的显式文件证明，请使用 `node scripts/run-vitest.mjs <path-or-filter>`；对于变更门控或广泛证明，请使用 `node scripts/crabbox-wrapper.mjs run --provider blacksmith-testbox ... -- env OPENCLAW_CHECK_CHANGED_REMOTE_CHILD=1 OPENCLAW_CHANGED_LANES_RAW_SYNC=1 corepack pnpm check:changed`，以便 pnpm 在 Testbox 内部运行。
 - `OPENCLAW_HEAVY_CHECK_LOCK_SCOPE=worktree <local-heavy-check command>`：将重度检查的序列化保留在当前 worktree 内，而不是 Git 公共目录中，适用于诸如 `pnpm check:changed` 和定向 `pnpm test ...` 之类的命令。仅当您有意在链接的 worktree 之间运行独立检查时，才在高容量的本地主机上使用它。
 - `pnpm test`：通过作用域 Vitest 通道路由显式文件/目录目标。无目标运行是全套件验证：它们使用固定的分片组，扩展到叶配置以进行本地并行执行，并在开始前打印预期的本地分片分布。扩展组总是扩展到每个扩展的分片配置，而不是一个巨大的根项目进程。
 - 测试包装器运行以简短的 `[test] passed|failed|skipped ... in ...` 摘要结束。Vitest 自身的持续时间行保持为每个分片的详细信息。

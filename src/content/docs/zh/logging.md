@@ -82,7 +82,8 @@ openclaw doctor
 
 ### Control UI (Web)
 
-控制 UI 的 **Logs** 选项卡使用 `logs.tail` 跟踪同一文件。请参阅 [Control UI](/zh/web/control-ui) 了解如何打开它。
+控制 UI 的 **Logs（日志）** 选项卡使用 `logs.tail` 跟踪同一文件。
+有关如何打开它的信息，请参阅 [控制 UI](/zh/web/control-ui)。
 
 ### 仅限频道的日志
 
@@ -207,8 +208,8 @@ Gateway HTTP 请求和 Gateway WebSocket 帧会建立一个内部请求追踪范
 模型调用诊断记录有界的请求/响应测量数据，而不捕获原始提示或响应内容：
 
 - `requestPayloadBytes`：最终模型请求负载的 UTF-8 字节大小
-- `responseStreamBytes`：流式模型响应事件的 UTF-8 字节大小
-- `timeToFirstByteMs`：第一个流式响应事件之前的经过时间
+- `responseStreamBytes`：流式模型响应事件的 UTF-8 字节大小，不包括增量事件上累积的 `partial` 快照
+- `timeToFirstByteMs`：首次流式响应事件之前的经过时间
 - `durationMs`：模型调用的总持续时间
 
 当启用诊断导出时，这些字段可用于诊断快照、模型调用插件挂钩以及 OTEL 模型调用跨度/指标。
@@ -217,7 +218,7 @@ Gateway HTTP 请求和 Gateway WebSocket 帧会建立一个内部请求追踪范
 
 `logging.consoleStyle`：
 
-- `pretty`：人性化、带颜色、带时间戳。
+- `pretty`：人性化、彩色，带有时间戳。
 - `compact`：更紧凑的输出（适用于长会话）。
 - `json`：每行 JSON（适用于日志处理器）。
 
@@ -225,14 +226,17 @@ Gateway HTTP 请求和 Gateway WebSocket 帧会建立一个内部请求追踪范
 
 OpenClaw 可以在敏感信息进入控制台输出、文件日志、OTLP 日志记录、持久化的会话记录文本或控制 UI 工具事件负载（工具启动参数、部分/最终结果负载、派生执行输出和补丁摘要）之前对其进行编辑：
 
-- `logging.redactSensitive`：`off` | `tools`（默认值：`tools`）
-- `logging.redactPatterns`：用于覆盖默认集合的正则表达式字符串列表。自定义模式在 Control UI 工具负载的内置默认值之上应用，因此添加模式绝不会削弱默认值已捕获值的编辑。
+- `logging.redactSensitive`： `off` | `tools`（默认值： `tools`）
+- `logging.redactPatterns`：用于覆盖默认集的 regex 字符串列表。自定义模式在控制 UI 工具负载的内置默认值之上应用，因此添加模式绝不会削弱已被默认值捕获的值的编辑。
 
 文件日志和会话记录保持 JSONL 格式，但在将行或消息写入磁盘之前，匹配的密钥值会被掩码。编辑是尽力而为的：它适用于包含文本的消息内容和日志字符串，而非每个标识符或二进制负载字段。
 
 内置默认值涵盖常见的 API 凭据和支付凭证字段名称，例如卡号、CVC/CVV、共享支付令牌和支付凭证，当它们作为 JSON 字段、URL 参数、CLI 标志或赋值出现时。
 
-`logging.redactSensitive: "off"`OpenClaw 仅禁用此常规日志/记录策略。OpenClaw 仍会对可显示给 UI 客户端、支持包、诊断观察器、审批提示或代理工具的安全边界负载进行编辑。示例包括 Control UI 工具调用事件、`sessions_history`Gateway(网关) 输出、诊断支持导出、提供商错误观察、exec 审批命令显示以及 Gateway WebSocket 协议日志。自定义 `logging.redactPatterns` 仍可针对这些界面添加项目特定的模式。
+`logging.redactSensitive: "off"` 仅禁用此常规日志/转录策略。
+OpenClaw 仍然编辑可显示给 UI 客户端、支持包、诊断观察器、批准提示或代理工具的安全边界负载。示例包括控制 UI 工具调用事件、`sessions_history` 输出、
+诊断支持导出、提供商错误观察、执行批准命令显示以及 Gateway(网关) WebSocket 协议日志。自定义 `logging.redactPatterns`
+仍可在此类表面上添加项目特定的模式。
 
 ## 诊断和 OpenTelemetry
 
@@ -240,8 +244,16 @@ OpenClaw 可以在敏感信息进入控制台输出、文件日志、OTLP 日志
 
 两个相邻的层面：
 
-- **OpenTelemetry 导出** — 通过 OTLP/HTTP 将指标、追踪和日志发送到任何兼容 OpenTelemetry 的收集器或后端（如 Grafana、Datadog、Honeycomb、New Relic、Tempo 等）。完整配置、信号目录、指标/跨度名称、环境变量和隐私模型位于专门页面：[OpenTelemetry export](/zh/gateway/opentelemetry)。
-- **诊断标志** — 针对性的调试日志标志，用于将额外的日志路由到 `logging.file` 而无需提升 `logging.level`。标志不区分大小写并支持通配符（`telegram.*`、`*`）。在 `diagnostics.flags` 下配置或通过 `OPENCLAW_DIAGNOSTICS=...` 环境变量覆盖进行配置。完整指南：[Diagnostics flags](/zh/diagnostics/flags)。
+- **OpenTelemetry 导出** — 通过 OTLP/HTTP 将指标、跟踪和日志发送到
+  任何兼容 OpenTelemetry 的收集器或后端（Grafana、Datadog、
+  Honeycomb、New Relic、Tempo 等）。完整配置、信号目录、
+  指标/范围名称、环境变量和隐私模型位于专用页面：
+  [OpenTelemetry 导出](/zh/gateway/opentelemetry)。
+- **Diagnostics flags（诊断标志）** — 针对性的调试日志标志，用于将额外的日志路由到
+  `logging.file` 而不提高 `logging.level`。标志不区分大小写
+  并支持通配符（`telegram.*`、`*`）。在 `diagnostics.flags` 下配置
+  或通过 `OPENCLAW_DIAGNOSTICS=...` 环境变量覆盖进行配置。完整指南：
+  [Diagnostics flags](/zh/diagnostics/flags)。
 
 要在没有 OTLP 导出的情况下为插件或自定义接收器启用诊断事件：
 
@@ -251,11 +263,11 @@ OpenClaw 可以在敏感信息进入控制台输出、文件日志、OTLP 日志
 }
 ```
 
-如需通过 OTLP 导出到收集器，请参阅 [OpenTelemetry export](/zh/gateway/opentelemetry)。
+有关将 OTLP 导出到收集器，请参阅 [OpenTelemetry export](/zh/gateway/opentelemetry)。
 
 ## 故障排除提示
 
-- **无法连接到 Gateway(网关)？** 请先运行 Gateway(网关)`openclaw doctor`。
+- **Gateway(网关) 无法访问？** 首先运行 Gateway(网关)`openclaw doctor`。
 - **日志为空？** 请检查 Gateway(网关) 是否正在运行并正在写入 Gateway(网关)`logging.file` 中的文件路径。
 - **需要更多详细信息？** 将 `logging.level` 设置为 `debug` 或 `trace` 并重试。
 
@@ -264,4 +276,4 @@ OpenClaw 可以在敏感信息进入控制台输出、文件日志、OTLP 日志
 - [OpenTelemetry export](/zh/gateway/opentelemetry) — OTLP/HTTP 导出、指标/跨度目录、隐私模型
 - [Diagnostics flags](/zh/diagnostics/flags) — 针对性的调试日志标志
 - [Gateway(网关) logging internals](<Gateway(网关)/en/gateway/logging>) — WS 日志样式、子系统前缀和控制台捕获
-- [配置参考](/zh/gateway/configuration-reference#diagnostics) — 完整的 `diagnostics.*` 字段参考
+- [Configuration reference](/zh/gateway/configuration-reference#diagnostics) — 完整的 `diagnostics.*` 字段参考

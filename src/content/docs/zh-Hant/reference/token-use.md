@@ -16,7 +16,7 @@ OpenClaw 會在每次執行時組裝自己的系統提示詞。它包含：
 - 技能列表（僅限元資料；指令會透過 `read` 按需載入）。
   原生 Codex 回合會將緊湊的技能區塊作為回合範圍的協作開發者指令接收；其他框架則在一般提示表面接收它。它受 `skills.limits.maxSkillsPromptChars` 限制，並可透過 `agents.list[].skillsLimits.maxSkillsPromptChars` 進行每個代理的選擇性覆寫。
 - 自我更新指令
-- 工作區 + 引導檔案（`AGENTS.md`、`SOUL.md`、`TOOLS.md`、`IDENTITY.md`、`USER.md`、`HEARTBEAT.md`、`BOOTSTRAP.md` 當它們是新的時，加上 `MEMORY.md` 當它們存在時）。原生 Codex 回合不會在記憶工具可用於該工作區時，從設定的代理工作區貼上原始 `MEMORY.md`；它們會在回合範圍的協作開發者指令中包含一個小型記憶指標，並按需使用記憶工具。如果工具被停用、記憶搜尋不可用，或目前工作區與代理記憶工作區不同，`MEMORY.md` 會使用一般限制的回合內容路徑。小寫根 `memory.md` 不會被注入；當與 `MEMORY.md` 配對時，它是 `openclaw doctor --fix` 的舊版修復輸入。大型注入的檔案會被 `agents.defaults.bootstrapMaxChars` 截斷（預設值：12000），且總引導注入會受到 `agents.defaults.bootstrapTotalMaxChars` 上限（預設值：60000）。`memory/*.md` 每日檔案不是一般引導提示的一部分；它們在普通回合中透過記憶工具保持按需使用，但重置/啟動模型執行可以在第一個回合前面加上包含近期每日記憶的一次性啟動內容區塊。純聊天 `/new` 和 `/reset` 指令會被確認而不會呼叫模型。啟動前奏由 `agents.defaults.startupContext` 控制。壓縮後的 AGENTS.md 摘要是分開的，並需要明確的 `agents.defaults.compaction.postCompactionSections` 選擇加入。
+- 工作區 + 引導檔案（`AGENTS.md`、`SOUL.md`、`TOOLS.md`、`IDENTITY.md`、`USER.md`、`HEARTBEAT.md`、`BOOTSTRAP.md` 當新建時，加上 `MEMORY.md` 當存在時）。原生 Codex 回合不會從配置的代理工作區貼上原始 `MEMORY.md`，前提是該工作區有記憶工具可用；它們會在回合範圍的協作開發者指令中包含一個小型記憶指標，並按需使用記憶工具。如果工具停用、記憶搜尋不可用，或活動工作區與代理記憶工作區不同，`MEMORY.md` 會使用正常的有限回合上下文路徑。小寫根目錄 `memory.md` 不會被注入；它是 `openclaw doctor --fix` 搭配 `MEMORY.md` 時的舊版修復輸入。大型注入檔案會被 `agents.defaults.bootstrapMaxChars` 截斷（預設值：20000），且總引導注入受到 `agents.defaults.bootstrapTotalMaxChars` 上限（預設值：60000）。`memory/*.md` 每日檔案不是正常引導提示的一部分；它們在普通回合中透過記憶工具保持按需使用，但重置/啟動模型執行可以在第一個回合前置加上包含近期每日記憶的一次性啟動上下文區塊。純聊天 `/new` 和 `/reset` 指令會被確認而不呼叫模型。啟動前奏由 `agents.defaults.startupContext` 控制。壓縮後的 AGENTS.md 摘要是分開的，且需要明確 `agents.defaults.compaction.postCompactionSections` 啟用。
 - 時間 (UTC + 使用者時區)
 - 回覆標籤 + 心跳行為
 - 執行時期中繼資料 (主機/作業系統/模型/思考)

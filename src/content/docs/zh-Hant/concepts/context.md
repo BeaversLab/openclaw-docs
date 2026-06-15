@@ -122,7 +122,7 @@ Top tools (schema size):
 - `HEARTBEAT.md`
 - `BOOTSTRAP.md`（僅首次執行）
 
-大型檔案會使用 `agents.defaults.bootstrapMaxChars` 逐檔截斷（預設 `12000` 個字元）。OpenClaw 也會使用 `agents.defaults.bootstrapTotalMaxChars` 對所有檔案的總啟動注入設定上限（預設 `60000` 個字元）。`/context` 會顯示**原始與注入**的大小以及是否發生截斷。
+大型檔案會使用 `agents.defaults.bootstrapMaxChars` 逐檔截斷（預設 `20000` 個字元）。OpenClaw 也會針對所有檔案執行總 bootstrap 注入上限，使用 `agents.defaults.bootstrapTotalMaxChars`（預設 `60000` 個字元）。`/context` 會顯示 **原始大小 vs 注入大小** 以及是否發生截斷。
 
 當發生截斷時，執行時可以在專案上下文下插入一個提示內警告區塊。透過 `agents.defaults.bootstrapPromptTruncationWarning` 進行設定（`off`、`once`、`always`；預設 `always`）。
 

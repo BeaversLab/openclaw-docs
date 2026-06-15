@@ -241,9 +241,8 @@ Notes :
 
 ## Relation Utilisation de l'ordinateur
 
-L'application iOS est une surface de nœud mobile, pas un backend d'Utilisation de l'ordinateur Codex. Codex
-Computer Use et `cua-driver mcp` contrôlent un bureau macOS local via des outils MCP ;
-l'application iOS expose les capacités de l'iPhone via les commandes de nœud OpenClaw
+L'application iOS est une surface de nœud mobile, et non un backend Codex Computer Use. Codex
+Computer Use et `cua-driver mcp` contrôlent un bureau macOS local via des outils MCP ; l'application iOS expose les capacités de l'iPhone et de l'iPad via des commandes de nœud OpenClaw
 telles que `canvas.*`, `camera.*`, `screen.*`, `location.*` et `talk.*`.
 
 Les agents peuvent toujours utiliser l'application iOS via OpenClaw en invoquant des commandes de nœud, mais ces appels passent par le protocole de nœud Gateway et suivent les limites de premier plan/arrière-plan d'iOS. Utilisez [Codex Computer Use](iOSOpenClawiOS/en/plugins/codex-computer-useiOS) pour le contrôle de bureau local et cette page pour les capacités du nœud iOS.

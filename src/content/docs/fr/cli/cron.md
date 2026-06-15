@@ -185,8 +185,8 @@ La rétention et l'élagage sont contrôlés dans la configuration :
 ## Migration des anciens travaux
 
 <Note>
-  Si vous disposez de tâches cron antérieures au format actuel de livraison et de stockage, exécutez `openclaw doctor --fix`. Doctor normalise les champs cron hérités (`jobId`, `schedule.cron`, champs de livraison de premier niveau y compris l'hérité `threadId`, alias de livraison `provider` du payload) et migre les simples tâches de secours `notify: true` de webhook vers une livraison webhook
-  explicite lorsque `cron.webhook` est configuré.
+  Si vous disposez de tâches cron antérieures au format de livraison et de stockage actuel, exécutez `openclaw doctor --fix`. Doctor normalise les champs cron hérités (`jobId`, `schedule.cron`, champs de livraison de premier niveau y compris l'ancien `threadId`, alias de livraison payload `provider`) et migre les tâches de repli webhook `notify: true` de `cron.webhook` vers une livraison webhook
+  explicite. Les tâches qui annoncent déjà à un chat conservent cette livraison et obtiennent une destination webhook de complétion.
 </Note>
 
 ## Modifications courantes

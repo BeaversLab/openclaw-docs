@@ -1,70 +1,75 @@
 ---
-summary: "使用 SKILL.md 建置並測試自訂工作區技能"
 title: "建立技能"
+sidebarTitle: "建立技能"
+summary: "為您的 OpenClaw 代理程式建置、測試及發布自訂 SKILL.md 工作區技能。"
 read_when:
-  - You are creating a new custom skill in your workspace
+  - You are creating a new custom skill
   - You need a quick starter workflow for SKILL.md-based skills
+  - You want to use Skill Workshop to propose a skill for agent review
 ---
 
-技能會教導代理程式如何以及何時使用工具。每個技能都是一個目錄，其中包含一個帶有 YAML 前置資料和 markdown 指令的 `SKILL.md` 檔案。
-
-有關技能如何載入和優先順序的詳細資訊，請參閱 [Skills](/zh-Hant/tools/skills)。
+技能會教導代理程式如何以及何時使用工具。每個技能都是一個目錄，其中包含一個帶有 YAML frontmatter 和 markdown 指令的 `SKILL.md` 檔案。
+OpenClaw 會依照定義的[優先順序](/zh-Hant/tools/skills#loading-order)從多個根目錄載入技能。
 
 ## 建立您的第一個技能
 
 <Steps>
   <Step title="建立技能目錄">
-    技能位於您的工作區中。建立一個新資料夾：
+    技能位於您工作區的 `skills/` 資料夾中。請為您的
+    新技能建立一個目錄：
 
     ```bash
     mkdir -p ~/.openclaw/workspace/skills/hello-world
     ```
 
-    當您的技能庫增長時，您可以將技能分組在子資料夾中：
+    您可以將技能組織在子資料夾中以方便管理 — 技能仍然由
+    `SKILL.md` frontmatter 命名，而非資料夾路徑：
 
     ```bash
     mkdir -p ~/.openclaw/workspace/skills/personal/hello-world
+    # skill name is still "hello-world", invoked as /hello-world
     ```
-
-    群組資料夾僅用於組織用途。技能仍然由 `SKILL.md` 前置資料命名，因此 `name: hello-world` 被調用為 `/hello-world`。
 
   </Step>
 
   <Step title="撰寫 SKILL.md">
-    在該目錄中建立 `SKILL.md`。前置資料定義元資料，而 markdown 主體包含給代理程式的指令。
+    在目錄中建立 `SKILL.md`。Frontmatter 定義中繼資料；
+    本文則提供代理程式指令。
 
     ```markdown
     ---
     name: hello-world
-    description: A simple skill that says hello.
+    description: A simple skill that prints a greeting.
     ---
 
-    # Hello World Skill
+    # Hello World
 
-    When the user asks for a greeting, use the `echo` tool to say
-    "Hello from your custom skill!".
+    When the user asks for a greeting, use the `exec` tool to run:
+
+    ```bash
+    echo "Hello from your custom skill!"
+    ```
     ```
 
-    對於技能 `name`，請使用連字號命名法（hyphen-case），包含小寫字母、數字和連字號。請保持葉資料夾名稱與前置資料 `name` 一致。
+    命名規則：
+    - `name` 使用小寫字母、數字和連字號。
+    - 保持目錄名稱和 frontmatter `name` 一致。
+    - `description` 會顯示給代理程式並在斜線指令探索中顯示 —
+      請將其保持在單行且不超過 160 個字元。
 
   </Step>
 
-  <Step title="新增工具 (選用)">
-    您可以在前置資料中定義自訂工具架構，或指示代理程式使用現有的系統工具（例如 `exec` 或 `browser`）。技能也可以與其記錄的工具一起在插件內部發布。
-
-  </Step>
-
-  <Step title="載入技能">
-    驗證技能已載入：
-
+  <Step title="驗證技能已載入">
     ```bash
     openclaw skills list
     ```
 
-    OpenClaw 會監看技能根目錄下的嵌套 `SKILL.md` 檔案。如果監看器已停用，或者您正在繼續現有的會話，請啟動一個新會話，以便模型接收更新的技能清單：
+    OpenClaw 預設會監看技能根目錄下的 `SKILL.md` 檔案。如果
+    監看功能已停用，或者您正在繼續現有的工作階段，請開啟一個新的
+    工作階段，以便代理程式接收更新的清單：
 
     ```bash
-    # From chat
+    # From chat — archive current session and start fresh
     /new
 
     # Or restart the gateway
@@ -73,112 +78,184 @@ read_when:
 
   </Step>
 
-  <Step title="Test it">
-    傳送一則應觸發該技能的訊息：
+  <Step title="測試它">
+    發送一條應該觸發該技能的訊息：
 
     ```bash
     openclaw agent --message "give me a greeting"
     ```
 
-    或者直接與代理對話並詢問問候語。
+    或者開啟一個聊天並直接詢問代理。使用 `/skill hello-world` 透過名稱明確調用它。
 
   </Step>
 </Steps>
 
-## 套用前先提案
+## SKILL.md 參考
 
-對於代理生成的程序，請使用 Skill Workshop 提案，而不要直接撰寫 `SKILL.md`：
+### 必填欄位
+
+| 欄位          | 描述                                   |
+| ------------- | -------------------------------------- |
+| `name`        | 使用小寫字母、數字和連字號的唯一識別碼 |
+| `description` | 顯示給代理並在發現輸出中顯示的單行描述 |
+
+### 可選的前置資料鍵
+
+| 欄位                       | 預設值  | 描述                                                       |
+| -------------------------- | ------- | ---------------------------------------------------------- |
+| `user-invocable`           | `true`  | 將技能公開為使用者斜線指令                                 |
+| `disable-model-invocation` | `false` | 將技能排除在代理的系統提示詞之外（仍可透過 `/skill` 執行） |
+| `command-dispatch`         | —       | 設定為 `tool` 以將斜線指令直接路由到工具，繞過模型         |
+| `command-tool`             | —       | 當設定 `command-dispatch: tool` 時要調用的工具名稱         |
+| `command-arg-mode`         | `raw`   | 對於工具分發，將原始參數字串轉發給工具                     |
+| `homepage`                 | —       | 在 macOS 技能 UI 中顯示為「網站」的 URL                    |
+
+關於閘道欄位（`requires.bins`、`requires.env` 等），請參閱
+[Skills — Gating](/zh-Hant/tools/skills#gating)。
+
+### 使用 `{baseDir}`
+
+在技能主體中使用 `{baseDir}` 來引用技能目錄內的檔案，而無需硬編碼路徑：
+
+```markdown
+Run the helper script at `{baseDir}/scripts/run.sh`.
+```
+
+## 新增條件啟用
+
+為您的技能設定閘道，使其僅在依賴項可用時才載入：
+
+```markdown
+---
+name: gemini-search
+description: Search using Gemini CLI.
+metadata: { "openclaw": { "requires": { "bins": ["gemini"] }, "primaryEnv": "GEMINI_API_KEY" } }
+---
+```
+
+<AccordionGroup>
+  <Accordion title="閘道選項">
+    | 金鑰 | 描述 |
+    | --- | --- |
+    | `requires.bins` | 所有二進位檔案必須存在於 `PATH` |
+    | `requires.anyBins` | 至少一個二進位檔案必須存在於 `PATH` |
+    | `requires.env` | 每個環境變數必須存在於程序或設定中 |
+    | `requires.config` | 每個 `openclaw.json` 路徑必須為真值 |
+    | `os` | 平台過濾器：`["darwin"]`、`["linux"]`、`["win32"]` |
+    | `always` | 設定 `true` 以跳過所有閘道並始終包含該技能 |
+
+    完整參考：[Skills — Gating](/zh-Hant/tools/skills#gating)。
+
+  </Accordion>
+  <Accordion title="環境與 API 金鑰">
+    將 API 金鑰連接到 `openclaw.json` 中的技能條目：
+
+    ```json5
+    {
+      skills: {
+        entries: {
+          "gemini-search": {
+            enabled: true,
+            apiKey: { source: "env", provider: "default", id: "GEMINI_API_KEY" },
+          },
+        },
+      },
+    }
+    ```
+
+    金鑰僅針對該代理輪次注入到主機程序中。
+    它不會到達沙箱 — 請參閱
+    [sandboxed env vars](/zh-Hant/tools/skills-config#sandboxed-skills-and-env-vars)。
+
+  </Accordion>
+</AccordionGroup>
+
+## 透過 Skill Workshop 提議
+
+對於由代理草擬的技能，或者當您希望在技能上線前由操作員進行審查時，
+請使用 [Skill Workshop](/zh-Hant/tools/skill-workshop) 提案，而不是直接撰寫
+`SKILL.md`。
 
 ```bash
+# Propose a brand-new skill
 openclaw skills workshop propose-create \
   --name "hello-world" \
-  --description "A simple skill that says hello." \
+  --description "A simple skill that prints a greeting." \
   --proposal ./PROPOSAL.md
+
+# Propose an update to an existing skill
+openclaw skills workshop propose-update hello-world \
+  --proposal ./PROPOSAL.md \
+  --description "Updated greeting skill"
 ```
 
-當提案也包含支援檔案時，請使用 `--proposal-dir`：
+當提案包含支援檔案時，請使用 `--proposal-dir`：
 
 ```bash
 openclaw skills workshop propose-create \
   --name "hello-world" \
-  --description "A simple skill that says hello." \
-  --proposal-dir ./hello-world-proposal
+  --description "A simple skill that prints a greeting." \
+  --proposal-dir ./hello-world-proposal/
 ```
 
-草稿會儲存在
-`<OPENCLAW_STATE_DIR>/skill-workshop/proposals/<proposal-id>/PROPOSAL.md` 之下，
-並在操作員審查並套用之前保持非啟用狀態。預設的狀態
-目錄是 `~/.openclaw`。提案目錄必須包含 `PROPOSAL.md`。
-支援檔案可以包含在 `assets/`、`examples/`、`references/`、
-`scripts/` 或 `templates/` 中；OpenClaw 會將它們與提案一起儲存並掃描：
+目錄必須包含 `PROPOSAL.md`。支援檔案可以放在 `assets/`、
+`examples/`、`references/`、`scripts/` 或 `templates/` 中。
+
+審查之後：
 
 ```bash
 openclaw skills workshop inspect <proposal-id>
-openclaw skills workshop revise <proposal-id> --proposal ./PROPOSAL.md
 openclaw skills workshop apply <proposal-id>
 ```
 
-套用時，OpenClaw 會將最終的 `SKILL.md` 寫入工作區 `skills/`
-根目錄，將已核准的支援檔案寫在其旁邊，並移除僅限提案的
-frontmatter，例如 `status: proposal`、提案 `version` 和提案
-`date`。
+請參閱 [Skill Workshop](/zh-Hant/tools/skill-workshop) 以了解完整的提案生命週期。
 
-## 技能元數據參考
+## 發佈到 ClawHub
 
-YAML frontmatter 支援這些欄位：
+<Steps>
+  <Step title="確保您的 SKILL.md 已完成">
+    確保 `name`、`description` 以及任何 `metadata.openclaw` 閘道欄位
+    已設定。如果您有專案頁面，請新增 `homepage` URL。
+  </Step>
+  <Step title="安裝 ClawHub 技能">
+    ClawHub 技能記錄了目前的發布指令形式以及必要的
+    元資料：
 
-| 欄位                                | 必要 | 說明                                     |
-| ----------------------------------- | ---- | ---------------------------------------- |
-| `name`                              | 是   | 使用小寫字母、數字和連字元的唯一識別碼   |
-| `description`                       | 是   | 顯示給代理的單行說明                     |
-| `metadata.openclaw.os`              | 否   | OS 篩選器 (`["darwin"]`、`["linux"]` 等) |
-| `metadata.openclaw.requires.bins`   | 否   | PATH 上必要的二進位檔案                  |
-| `metadata.openclaw.requires.config` | 否   | 必要的設定金鑰                           |
+    ```bash
+    openclaw skills install clawhub-publish
+    ```
 
-## 進階功能
+  </Step>
+  <Step title="發布">
+    ```bash
+    clawhub publish
+    ```
 
-一旦基本技能運作正常，這些欄位有助於使其可靠且可移植：
+    請參閱 [ClawHub — Publishing](/zh-Hant/clawhub/publishing) 以了解完整流程。
 
-- **條件式啟用** — 使用 `requires.bins`、`requires.env` 或
-  `requires.config` 僅在必要的相依性可用時載入技能。請參閱 [Skills reference: gating](/zh-Hant/tools/skills#gating)。
-- **環境和 API 金鑰連線** — 使用 `skills.entries.<name>.env` 和
-  `skills.entries.<name>.apiKey` 為技能執行注入主機端環境。請參閱 [技能參考：配置連線](/zh-Hant/tools/skills#config-wiring)。
-- **調用控制** — 設定 `user-invocable: false` 以隱藏斜線指令，
-  或設定 `disable-model-invocation: true` 以將指令式技能排除在模型
-  提示詞之外。請參閱 [技能參考：frontmatter](/zh-Hant/tools/skills#frontmatter)。
-- **直接指令派發** — 當斜線指令應直接呼叫工具而不是透過模型路由時，請使用 `command-dispatch: tool` 搭配
-  `command-tool`。
-- **可攜路徑** — 在 `SKILL.md` 中引用技能目錄內的腳本
-  或資產時，請使用 `{baseDir}`。
-- **發布** — 準備發布技能時，請使用 ClawHub 技能。
-  它會記錄目前的 `clawhub publish` 指令格式和必要的
-  中繼資料。
+  </Step>
+</Steps>
 
 ## 最佳實踐
 
-- **保持簡潔** — 指示模型做*什麼*，而不是如何成為 AI
-- **安全第一** — 如果您的技能使用 `exec`，請確保提示詞不允許來自不受信任輸入的任意指令注入
-- **本機測試** — 在分享之前，使用 `openclaw agent --message "..."` 進行測試
-- **使用 ClawHub** — 在 [ClawHub](https://clawhub.ai) 瀏覽並貢獻技能
-
-## 技能存放位置
-
-| 位置                            | 優先順序 | 範圍                 |
-| ------------------------------- | -------- | -------------------- |
-| `\<workspace\>/skills/`         | 最高     | 個別代理程式         |
-| `\<workspace\>/.agents/skills/` | 高       | 每個工作區代理程式   |
-| `~/.agents/skills/`             | 中       | 共享代理程式設定檔   |
-| `~/.openclaw/skills/`           | 中       | 共享（所有代理程式） |
-| 內建（隨 OpenClaw 附帶）        | 低       | 全域                 |
-| `skills.load.extraDirs`         | 最低     | 自訂共享資料夾       |
-
-每個技能根目錄可以包含直接的技能資料夾，例如
-`skills/hello-world/SKILL.md` 或分組的資料夾，例如
-`skills/personal/hello-world/SKILL.md`。
+<Tip>- **簡明扼要** — 指示模型做*什麼*，而不是如何成為一個 AI。 - **安全第一** — 如果您的技能使用 `exec`，請確保提示不允許 來自不受信任輸入的任意指令注入。 - **本地測試** — 在分享之前使用 `openclaw agent --message "..."`。 - **使用 ClawHub** — 在從頭開始構建之前，先在 [clawhub.ai](https://clawhub.ai) 瀏覽社群技能。</Tip>
 
 ## 相關
 
-- [技能參考](/zh-Hant/tools/skills) — 載入、優先順序和閘道規則
-- [技能配置](/zh-Hant/tools/skills-config) — `skills.*` 配置架構
-- [ClawHub](/zh-Hant/clawhub) — 公共技能註冊表
-- [建構外掛程式](/zh-Hant/plugins/building-plugins) — 外掛程式可以附帶技能
+<CardGroup cols={2}>
+  <Card title="技能參考" href="/zh-Hant/tools/skills" icon="puzzle-piece">
+    載入順序、閘道、允許清單以及 SKILL.md 格式。
+  </Card>
+  <Card title="Skill Workshop" href="/zh-Hant/tools/skill-workshop" icon="flask">
+    代理起草技能的提案佇列。
+  </Card>
+  <Card title="技能設定" href="/zh-Hant/tools/skills-config" icon="gear">
+    完整的 `skills.*` 設定架構。
+  </Card>
+  <Card title="ClawHub" href="/zh-Hant/clawhub" icon="cloud">
+    在公開註冊表中瀏覽和發布技能。
+  </Card>
+  <Card title="建構外掛程式" href="/zh-Hant/plugins/building-plugins" icon="plug">
+    外掛程式可以隨附其文件記載的工具一併發布技能。
+  </Card>
+</CardGroup>

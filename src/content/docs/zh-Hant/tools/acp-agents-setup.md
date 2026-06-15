@@ -11,7 +11,7 @@ title: "ACP 代理程式 — 設定"
 
 下列章節涵蓋 acpx harness 設定、MCP 橋接器的外掛程式設定，以及權限設定。
 
-僅在您設定 ACP/acpx 路由時使用此頁面。如需原生 Codex app-server 執行時配置，請使用 [Codex harness](/zh-Hant/plugins/codex-harness)。如需 OpenAI API 金鑰或 Codex OAuth 模型提供者配置，請使用 [OpenAI](/zh-Hant/providers/openai)。
+僅在設定 ACP/acpx 路由時使用此頁面。如需原生 Codex 應用程式伺服器 (app-server) 執行時設定，請使用 [Codex harness](/zh-Hant/plugins/codex-harness)。如需 OpenAI API 金鑰或 Codex OAuth 模型提供者 (model-provider) 設定，請使用 [OpenAI](/zh-Hant/providers/openai)。
 
 Codex 有兩個 OpenClaw 路由：
 
@@ -254,7 +254,8 @@ openclaw config set plugins.entries.acpx.config.openClawToolsMcpBridge true
 openclaw config set plugins.entries.acpx.config.timeoutSeconds 180
 ```
 
-執行階段輪次會使用 OpenClaw 代理程式/執行逾時設定，包括 `/acp timeout` 和 `sessions_spawn.timeoutSeconds`。變更此值後請重新啟動閘道。
+執行時回合使用 OpenClaw agent/run 逾時設定，包括 `/acp timeout`。
+`sessions_spawn` 不接受單次呼叫逾時覆寫。變更此值後請重新啟動閘道。
 
 ### 健康探測代理程式設定
 
@@ -272,45 +273,48 @@ ACP 會話以非互動方式運行 — 沒有 TTY 來批准或拒絕檔案寫入
 
 這些 ACPX harness 權限與 OpenClaw 執行批准分開，也與 CLI 後端供應商旁路標誌（如 Claude CLI `--permission-mode bypassPermissions`）分開。ACPX `approve-all` 是 ACP 會話的 harness 層級緊急開關。
 
+關於 OpenClaw `tools.exec.mode`、Codex Guardian 核准，以及 ACPX harness 權限的廣泛比較，請參閱
+[Permission modes](/zh-Hant/tools/permission-modes)。
+
 ### `permissionMode`
 
-控制 harness 代理程式可以在無需提示的情況下執行哪些操作。
+控制 harness 代理程式可在無提示的情況下執行的操作。
 
 | 值              | 行為                                 |
 | --------------- | ------------------------------------ |
-| `approve-all`   | 自動批准所有檔案寫入和 Shell 指令。  |
-| `approve-reads` | 僅自動批准讀取；寫入和執行需要提示。 |
+| `approve-all`   | 自動核准所有檔案寫入和 shell 指令。  |
+| `approve-reads` | 僅自動核准讀取；寫入和執行需要提示。 |
 | `deny-all`      | 拒絕所有權限提示。                   |
 
 ### `nonInteractivePermissions`
 
-控制當顯示權限提示但沒有可用的互動式 TTY 時發生的情況（這對於 ACP 會程式來說總是如此）。
+控制當應顯示權限提示但無互動式 TTY 可用時的處理方式（ACP 會話始終屬於此情況）。
 
-| 值     | 行為                                              |
-| ------ | ------------------------------------------------- |
-| `fail` | 使用 `AcpRuntimeError` 中止會程式。**（預設值）** |
-| `deny` | 靜默拒絕權限並繼續（優雅降級）。                  |
+| 值     | 行為                                        |
+| ------ | ------------------------------------------- |
+| `fail` | 以 `AcpRuntimeError` 中止會話。**(預設值)** |
+| `deny` | 靜默拒絕權限並繼續 (優雅降級)。             |
 
-### 配置
+### 設定
 
-透過外掛程式配置設定：
+透過外掛程式設定進行設定：
 
 ```bash
 openclaw config set plugins.entries.acpx.config.permissionMode approve-all
 openclaw config set plugins.entries.acpx.config.nonInteractivePermissions fail
 ```
 
-變更這些值後重新啟動閘道。
+變更這些值後請重新啟動閘道。
 
 <Warning>
-OpenClaw 預設為 `permissionMode=approve-reads` 和 `nonInteractivePermissions=fail`。在非互動式 ACP 會程式中，任何觸發權限提示的寫入或執行操作都可能失敗並顯示 `AcpRuntimeError: Permission prompt unavailable in non-interactive mode`。
+OpenClaw 預設為 `permissionMode=approve-reads` 和 `nonInteractivePermissions=fail`。在非互動式 ACP 會話中，任何觸發權限提示的寫入或執行操作都可能以 `AcpRuntimeError: Permission prompt unavailable in non-interactive mode` 失敗。
 
-如果您需要限制權限，請將 `nonInteractivePermissions` 設定為 `deny`，以便會程式優雅降級而不是當機。
+如果您需要限制權限，請將 `nonInteractivePermissions` 設定為 `deny`，以便會話優雅降級而非當機。
 
 </Warning>
 
 ## 相關
 
-- [ACP agents](/zh-Hant/tools/acp-agents) — 概述、操作員手冊、概念
+- [ACP agents](/zh-Hant/tools/acp-agents) — 概覽、操作員手冊、概念
 - [Sub-agents](/zh-Hant/tools/subagents)
 - [Multi-agent routing](/zh-Hant/concepts/multi-agent)

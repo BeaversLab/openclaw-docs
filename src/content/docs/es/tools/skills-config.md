@@ -1,13 +1,15 @@
 ---
-summary: "Esquema y ejemplos de configuración de habilidades"
-read_when:
-  - Adding or modifying skills config
-  - Adjusting bundled allowlist or install behavior
 title: "Configuración de habilidades"
+sidebarTitle: "Configuración de habilidades"
+summary: "Referencia completa del esquema de configuración skills.*, listas de permitidos de agentes, configuración del taller y manejo de variables de entorno del sandbox."
+read_when:
+  - Configuring skill loading, install, or gating behavior
+  - Setting per-agent skill visibility
+  - Adjusting Skill Workshop limits or approval policy
 ---
 
-La mayor parte de la configuración del cargador/instalador de habilidades vive en `skills` en
-`~/.openclaw/openclaw.json`. La visibilidad de habilidades específicas del agente vive en
+La mayor parte de la configuración de habilidades reside en `skills` en
+`~/.openclaw/openclaw.json`. La visibilidad específica del agente reside en
 `agents.defaults.skills` y `agents.list[].skills`.
 
 ```json5
@@ -15,31 +17,27 @@ La mayor parte de la configuración del cargador/instalador de habilidades vive 
   skills: {
     allowBundled: ["gemini", "peekaboo"],
     load: {
-      extraDirs: ["~/Projects/agent-scripts/skills", "~/Projects/oss/some-skill-pack/skills"],
+      extraDirs: ["~/Projects/agent-scripts/skills"],
       allowSymlinkTargets: ["~/Projects/manager/skills"],
       watch: true,
       watchDebounceMs: 250,
     },
     install: {
       preferBrew: true,
-      nodeManager: "npm", // npm | pnpm | yarn | bun (Gateway runtime still Node; bun not recommended)
+      nodeManager: "npm",
       allowUploadedArchives: false,
     },
     workshop: {
-      autonomous: {
-        enabled: false,
-      },
-      approvalPolicy: "pending", // pending | auto
+      autonomous: { enabled: false },
+      approvalPolicy: "pending",
       maxPending: 50,
       maxSkillBytes: 40000,
     },
     entries: {
       "image-lab": {
         enabled: true,
-        apiKey: { source: "env", provider: "default", id: "GEMINI_API_KEY" }, // or plaintext string
-        env: {
-          GEMINI_API_KEY: "GEMINI_KEY_HERE",
-        },
+        apiKey: { source: "env", provider: "default", id: "GEMINI_API_KEY" },
+        env: { GEMINI_API_KEY: "GEMINI_KEY_HERE" },
       },
       peekaboo: { enabled: true },
       sag: { enabled: false },
@@ -48,75 +46,121 @@ La mayor parte de la configuración del cargador/instalador de habilidades vive 
 }
 ```
 
-Para la generación/edición de imágenes integrada, se prefiere `agents.defaults.imageGenerationModel`
-más la herramienta central `image_generate`. `skills.entries.*` es solo para flujos de trabajo de habilidades
-customizados o de terceros.
+<Note>Para la generación de imágenes integrada, use `agents.defaults.imageGenerationModel` junto con la herramienta central `image_generate` en lugar de `skills.entries`. Las entradas de habilidades son solo para flujos de trabajo de habilidades personalizados o de terceros.</Note>
 
-Si selecciona un proveedor/modelo de imagen específico, también configure la clave de
-autenticación/API de ese proveedor. Ejemplos típicos: `GEMINI_API_KEY` o `GOOGLE_API_KEY` para
-`google/*`, `OPENAI_API_KEY` para `openai/*`, y `FAL_KEY` para `fal/*`.
+## Cargando (`skills.load`)
 
-Ejemplos:
+<ParamField path="skills.load.extraDirs" type="string[]">
+  Directorios de habilidades adicionales para escanear, con la menor prioridad (después de las habilidades agrupadas y de los complementos). Las rutas se expanden con compatibilidad con `~`.
+</ParamField>
 
-- Configuración nativa estilo Nano Banana Pro: `agents.defaults.imageGenerationModel.primary: "google/gemini-3-pro-image-preview"`
-- Configuración nativa de fal: `agents.defaults.imageGenerationModel.primary: "fal/fal-ai/flux/dev"`
+<ParamField path="skills.load.allowSymlinkTargets" type="string[]">
+  Directorios de destino reales de confianza a los que las carpetas de habilidades con enlaces simbólicos pueden resolver,
+  incluso cuando el enlace simbólico reside fuera de la raíz configurada. Use esto para
+  diseños intencionales de repositorios hermanos como
+  `<workspace>/skills/manager -> ~/Projects/manager/skills`. Mantenga esta lista
+  reducida — no apunte a raíces amplias como `~` o `~/Projects`.
+</ParamField>
 
-## Listas de permitidos de habilidades del agente
+<ParamField path="skills.load.watch" type="boolean" default="true">
+  Vigila las carpetas de habilidades y actualiza la instantánea de habilidades cuando los archivos `SKILL.md` cambian. Cubre archivos anidados bajo raíces de habilidades agrupadas.
+</ParamField>
 
-Use la configuración del agente cuando desee las mismas raíces de habilidades de máquina/espacio de trabajo, pero un
-conjunto de habilidades visible diferente para cada agente.
+<ParamField path="skills.load.watchDebounceMs" type="number" default="250">
+  Ventana de rebote para los eventos del observador de habilidades en milisegundos.
+</ParamField>
+
+## Instalación (`skills.install`)
+
+<ParamField path="skills.install.preferBrew" type="boolean" default="true">
+  Prefiere los instaladores de Homebrew cuando `brew` esté disponible.
+</ParamField>
+
+<ParamField path="skills.install.nodeManager" type='"npm" | "pnpm" | "yarn" | "bun"' default='"npm"'>
+  Preferencia del administrador de paquetes de Node para la instalación de habilidades. Esto solo afecta las instalaciones de habilidades — el tiempo de ejecución de Gateway aún debería usar Node (no se recomienda Bun para WhatsApp/Telegram). Use `openclaw setup --node-manager` para npm, pnpm o bun; configure `"yarn"` manualmente para instalaciones de habilidades respaldadas por Yarn.
+</ParamField>
+
+<ParamField path="skills.install.allowUploadedArchives" type="boolean" default="false">
+  Permitir que los clientes de Gateway `operator.admin` de confianza instalen archivos zip privados preparados a través de `skills.upload.*`. Las instalaciones normales de ClawHub no necesitan esta configuración.
+</ParamField>
+
+## Lista de permitidos de habilidades agrupadas
+
+<ParamField path="skills.allowBundled" type="string[]">
+  Lista de permitidos opcional solo para habilidades **agrupadas**. Cuando se establece, solo las habilidades agrupadas de la lista son elegibles. Las habilidades gestionadas, de nivel de agente y del espacio de trabajo no se ven afectadas.
+</ParamField>
+
+## Entradas por habilidad (`skills.entries`)
+
+Las claves bajo `entries` coinciden con el `name` de la habilidad de manera predeterminada. Si una habilidad define `metadata.openclaw.skillKey`, use esa clave en su lugar. Ponga entre comillas los nombres con guiones (JSON5 permite claves entre comillas).
+
+<ParamField path="skills.entries.<key>.enabled" type="boolean">
+  `false` deshabilita la habilidad incluso cuando está agrupada o instalada. La habilidad agrupada `coding-agent` es opcional — configúrela en `true` y asegúrese de que uno de `claude`, `codex`, `opencode` u otra CLI compatible esté instalada y autenticada.
+</ParamField>
+
+<ParamField path="skills.entries.<key>.apiKey" type='string | { source, provider, id }'>
+  Campo de conveniencia para habilidades que declaran `metadata.openclaw.primaryEnv`.
+  Soporta una cadena de texto sin formato o una SecretRef: `{ source: "env", provider: "default", id: "VAR_NAME" }`.
+</ParamField>
+
+<ParamField path="skills.entries.<key>.env" type="Record<string, string>">
+  Variables de entorno inyectadas para la ejecución del agente. Solo se inyectan cuando la variable aún no está establecida en el proceso.
+</ParamField>
+
+<ParamField path="skills.entries.<key>.config" type="object">
+  Bolsa opcional para campos de configuración personalizados por habilidad.
+</ParamField>
+
+## Listas de permitidos de agentes (`agents`)
+
+Use la configuración del agente cuando desee las mismas raíces de habilidad de máquina/espacio de trabajo pero un conjunto de habilidades visible diferente para cada agente.
 
 ```json5
 {
   agents: {
     defaults: {
-      skills: ["github", "weather"],
+      skills: ["github", "weather"], // shared baseline
     },
     list: [
-      { id: "writer" }, // inherits defaults -> github, weather
-      { id: "docs", skills: ["docs-search"] }, // replaces defaults
+      { id: "writer" }, // inherits github, weather
+      { id: "docs", skills: ["docs-search"] }, // replaces defaults entirely
       { id: "locked-down", skills: [] }, // no skills
     ],
   },
 }
 ```
 
-Reglas:
+<ParamField path="agents.defaults.skills" type="string[]">
+  Lista de permitidos base compartida heredada por los agentes que omiten `agents.list[].skills`. Omita por completo para dejar las habilidades sin restricciones de forma predeterminada.
+</ParamField>
 
-- `agents.defaults.skills`: lista de permitidos (allowlist) base compartida para los agentes que omiten
-  `agents.list[].skills`.
-- Omita `agents.defaults.skills` para dejar las habilidades sin restricciones de forma predeterminada.
-- `agents.list[].skills`: conjunto final de habilidades explícito para ese agente; no se fusiona
-  con los valores predeterminados.
-- `agents.list[].skills: []`: no expone ninguna habilidad para ese agente.
+<ParamField path="agents.list[].skills" type="string[]">
+  Conjunto final de habilidades explícito para ese agente. Las listas explícitas **reemplazan** los valores predeterminados heredados; no se fusionan. Establézcalo en `[]` para no exponer habilidades para ese agente.
+</ParamField>
 
-## Campos
+## Taller (`skills.workshop`)
 
-- Las raíces de habilidades integradas siempre incluyen `~/.openclaw/skills`, `~/.agents/skills`,
-  `<workspace>/.agents/skills`, y `<workspace>/skills`.
-- `allowBundled`: lista de permitidos (allowlist) opcional solo para habilidades **incluidas** (bundled). Cuando se establece, solo
-  las habilidades incluidas en la lista son elegibles (las habilidades administradas, de agente y del espacio de trabajo no se ven afectadas).
-- `load.extraDirs`: directorios de habilidades adicionales para escanear (menor precedencia).
-- `load.allowSymlinkTargets`: directorios de destino reales de confianza en los que las carpetas de habilidades de workspace, project-agent o extra-dir con enlaces simbólicos pueden resolverse incluso cuando el enlace simbólico se encuentra fuera de esa raíz de destino. Use esto para diseños intencionales de repositorios hermanos, como `<workspace>/skills/manager -> ~/Projects/manager/skills`. Las raíces administradas `~/.openclaw/skills` y personales `~/.agents/skills` pueden seguir los enlaces simbólicos de directorios de habilidades de gestores de habilidades locales de manera predeterminada, pero cada `SKILL.md` todavía tiene que resolverse dentro de su propio directorio de habilidades.
-- `load.watch`: vigila las carpetas de habilidades y actualiza la instantánea de habilidades (predeterminado: true).
-- `load.watchDebounceMs`: tiempo de rebote para los eventos del observador de habilidades en milisegundos (predeterminado: 250).
-- `install.preferBrew`: prefiere instaladores brew cuando estén disponibles (predeterminado: true).
-- `install.nodeManager`: preferencia del instalador de node (`npm` | `pnpm` | `yarn` | `bun`, predeterminado: npm). Esto solo afecta las **instalaciones de habilidades**; el tiempo de ejecución de Gateway aún debe ser Node (no se recomienda Bun para WhatsApp/Telegram).
-  - `openclaw setup --node-manager` es más estrecho y actualmente acepta `npm`, `pnpm` o `bun`. Configure `skills.install.nodeManager: "yarn"` manualmente si desea instalaciones de habilidades respaldadas por Yarn.
-- `install.allowUploadedArchives`: permite a los clientes de Gateway de `operator.admin` de confianza instalar archivos zip privados preparados a través de `skills.upload.*` (predeterminado: false). Esto solo habilita la ruta del archivo cargado; las instalaciones normales de ClawHub no lo requieren.
-- `workshop.autonomous.enabled`: permite a los agentes crear propuestas pendientes del Taller de habilidades (Skill Workshop) a partir de señales de conversación duraderas tras turnos exitosos (predeterminado: false). La creación de habilidades indicada por el usuario todavía pasa por el Taller de habilidades.
-- `workshop.approvalPolicy`: política del ciclo de vida de la propuesta. `pending` requiere aprobación antes de las acciones de aplicar/rechazar/cuarentena iniciadas por el agente; `auto` permite esas acciones sin aprobación.
-- `workshop.maxPending`: máximo de propuestas pendientes/en cuarentena retenidas por espacio de trabajo (predeterminado: 50).
-- `workshop.maxSkillBytes`: tamaño máximo del cuerpo de la propuesta generado en bytes (predeterminado: 40000). Las descripciones de las propuestas también tienen un límite estricto de 160 bytes porque se pueden mostrar en el descubrimiento de habilidades y en listados de propuestas.
-- `entries.<skillKey>`: anulaciones por habilidad.
-- `agents.defaults.skills`: lista de permitidos (allowlist) de habilidades predeterminada opcional heredada por los agentes que omiten `agents.list[].skills`.
-- `agents.list[].skills`: lista de permitidos (allowlist) final de habilidades opcional por agente; las listas explícitas reemplazan los valores predeterminados heredados en lugar de fusionarse.
+<ParamField path="skills.workshop.autonomous.enabled" type="boolean" default="false">
+  Cuando es `true`, los agentes pueden crear propuestas pendientes a partir de señales de conversación duraderas después de turnos exitosos. La creación de habilidades solicitada por el usuario siempre pasa por el Taller de habilidades independientemente de esta configuración.
+</ParamField>
 
-## Repositorios hermanos enlazados simbólicamente
+<ParamField path="skills.workshop.approvalPolicy" type='"pending" | "auto"' default='"pending"'>
+  `pending` requiere la aprobación del operador antes de aplicar, rechazar o poner en cuarentena iniciado por el agente. `auto` permite esas acciones sin aprobación.
+</ParamField>
 
-De forma predeterminada, las raíces de habilidades del espacio de trabajo, agente de proyecto, directorio adicional y agrupadas son límites de contención. Si una carpeta de habilidades en `<workspace>/skills` es un enlace simbólico que se resuelve fuera de `<workspace>/skills`, OpenClaw lo omite y registra `Skipping escaped skill path outside its configured root`.
+<ParamField path="skills.workshop.maxPending" type="number" default="50">
+  Máximo de propuestas pendientes y en cuarentena retenidas por espacio de trabajo.
+</ParamField>
 
-Mantenga el diseño de enlaces simbólicos y permita solo la raíz de destino de confianza:
+<ParamField path="skills.workshop.maxSkillBytes" type="number" default="40000">
+  Tamaño máximo del cuerpo de la propuesta en bytes. Las descripciones de las propuestas tienen un límite estricto de 160 bytes porque aparecen en los resultados de descubrimiento y listado.
+</ParamField>
+
+## Raíces de habilidades con enlaces simbólicos
+
+De forma predeterminada, las raíces de habilidades del espacio de trabajo, agente de proyecto, directorio adicional y agrupadas son límites de contención. Se omite una carpeta de habilidad con enlaces simbólicos bajo `<workspace>/skills` que se resuelve fuera de la raíz con un mensaje de registro.
+
+Para permitir un diseño intencional de enlaces simbólicos, declare el objetivo de confianza:
 
 ```json5
 {
@@ -129,52 +173,68 @@ Mantenga el diseño de enlaces simbólicos y permita solo la raíz de destino de
 }
 ```
 
-Con esta configuración, un enlace simbólico como `<workspace>/skills/manager -> ~/Projects/manager/skills` se acepta después de la resolución de realpath. `extraDirs` también escanea el repositorio hermano directamente, mientras que `allowSymlinkTargets` conserva la ruta del enlace simbólico para los diseños de habilidades de espacio de trabajo existentes. Los directorios administrados `~/.openclaw/skills` y personales `~/.agents/skills` ya aceptan enlaces simbólicos de directorios de habilidades porque esas raíces son superficies locales del administrador de habilidades propiedad del usuario; la contención `SKILL.md` por habilidad todavía se aplica. Mantenga las entradas de destino estrechas; no apunte a raíces amplias como `~` o `~/Projects` a menos que cada árbol de habilidades bajo esa raíz sea de confianza.
+Con esta configuración, `<workspace>/skills/manager -> ~/Projects/manager/skills` se
+acepta después de la resolución de realpath. `extraDirs` escanea directamente el repositorio hermano;
+`allowSymlinkTargets` conserva la ruta del enlace simbólico para diseños existentes.
 
-Campos por habilidad:
+Los directorios gestionados `~/.openclaw/skills` y personales `~/.agents/skills`
+ya aceptan enlaces simbólicos a directorios de habilidades (el confinamiento `SKILL.md` por habilidad todavía
+se aplica).
 
-- `enabled`: establezca `false` para desactivar una habilidad incluso si está incluida/instalada.
-- `env`: variables de entorno inyectadas para la ejecución del agente (solo si no están establecidas).
-- `apiKey`: comodidad opcional para habilidades que declaran una variable de entorno principal.
-  Admite cadena de texto sin formato u objeto SecretRef (`{ source, provider, id }`).
-
-## Notas
-
-- Las claves bajo `entries` se asignan al nombre de la habilidad de forma predeterminada. Si una habilidad define
-  `metadata.openclaw.skillKey`, use esa clave en su lugar.
-- La precedencia de carga es `<workspace>/skills` → `<workspace>/.agents/skills` →
-  `~/.agents/skills` → `~/.openclaw/skills` → habilidades incluidas →
-  `skills.load.extraDirs`.
-- Los cambios en las habilidades se detectan en el siguiente turno del agente cuando el observador está habilitado.
-
-### Habilidades en sandbox y variables de entorno
-
-Cuando una sesión está **en sandbox**, los procesos de las habilidades se ejecutan dentro del backend de sandbox configurado. El sandbox **no** hereda el `process.env` del host.
+## Habilidades en sandbox y variables de entorno
 
 <Warning>
-  El `env` global y `skills.entries.<skill>.env`/`apiKey` se aplican solo a ejecuciones en el **host**. Dentro de un sandbox no tienen efecto, por lo que una habilidad que depende de `GEMINI_API_KEY` fallará con `apiKey not configured` a menos que se proporcione la variable al sandbox por separado.
+  `skills.entries.<skill>.env` y `apiKey` se aplican solo a ejecuciones en el **host**. Dentro
+de un sandbox no tienen ningún efecto; una habilidad que depende de `GEMINI_API_KEY` fallará
+con `apiKey not configured` a menos que se proporcione la variable al sandbox
+por separado.
 </Warning>
 
-Use una de:
+Pase secretos a un sandbox de Docker con:
 
-- `agents.defaults.sandbox.docker.env` para el backend de Docker (o `agents.list[].sandbox.docker.env` por agente).
-- Incorpore el entorno en su imagen de sandbox personalizada o entorno de sandbox remoto.
+```json5
+{
+  agents: {
+    defaults: {
+      sandbox: {
+        docker: {
+          env: { GEMINI_API_KEY: "your-key-here" },
+        },
+      },
+    },
+  },
+}
+```
 
-Para los sandboxes de Docker, los valores `sandbox.docker.env` configurados se convierten en variables de entorno explícitas del contenedor. Los usuarios con acceso al demonio de Docker pueden inspeccionarlos a través de los metadatos de Docker, por lo que debe usar un archivo secreto montado, una imagen personalizada u otra ruta de entrega cuando esta exposición no sea aceptable.
+<Note>Los usuarios con acceso al demonio de Docker pueden inspeccionar los valores de `sandbox.docker.env` a través de los metadatos de Docker. Use un archivo secreto montado, una imagen personalizada u otra ruta de entrega cuando esa exposición no sea aceptable.</Note>
+
+## Recordatorio del orden de carga
+
+```text
+workspace/skills      (highest)
+workspace/.agents/skills
+~/.agents/skills
+~/.openclaw/skills
+bundled skills
+skills.load.extraDirs (lowest)
+```
+
+Los cambios en las habilidades y la configuración entran en vigor en la próxima nueva sesión cuando el
+observador está habilitado, o en el próximo turno del agente cuando el observador detecta un cambio.
 
 ## Relacionado
 
 <CardGroup cols={2}>
-  <Card title="Habilidades" href="/es/tools/skills" icon="puzzle-piece">
-    Qué son las habilidades y cómo se cargan.
+  <Card title="Referencia de habilidades" href="/es/tools/skills" icon="puzzle-piece">
+    Qué son las habilidades, el orden de carga, la regulación y el formato SKILL.md.
   </Card>
   <Card title="Creación de habilidades" href="/es/tools/creating-skills" icon="hammer">
-    Creación de paquetes de habilidades personalizados.
+    Creación de habilidades personalizadas para el espacio de trabajo.
+  </Card>
+  <Card title="Taller de habilidades" href="/es/tools/skill-workshop" icon="flask">
+    Cola de propuestas para habilidades redactadas por el agente.
   </Card>
   <Card title="Comandos de barra" href="/es/tools/slash-commands" icon="terminal">
-    Catálogo de comandos nativos y directivas de chat.
-  </Card>
-  <Card title="Referencia de configuración" href="/es/gateway/configuration-reference" icon="gear">
-    Esquema completo de `skills` y `agents.skills`.
+    Catálogo nativo de comandos de barra y directivas de chat.
   </Card>
 </CardGroup>

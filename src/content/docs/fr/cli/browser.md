@@ -48,7 +48,7 @@ openclaw browser --browser-profile openclaw tabs
 openclaw browser --browser-profile openclaw open https://example.com
 ```
 
-Instructions détaillées : [Dépannage du navigateur](/fr/tools/browser#cdp-startup-failure-vs-navigation-ssrf-block)
+Guide détaillé : [Dépannage du navigateur](/fr/tools/browser#cdp-startup-failure-vs-navigation-ssrf-block)
 
 ## Cycle de vie
 
@@ -100,7 +100,7 @@ Un bloc racine explicite `browser`, par exemple `browser.enabled=true` ou
 `browser.profiles.<name>`, active également le plugin de navigateur intégré sous une
 liste d'autorisation de plugins restrictive.
 
-Connexes : [Outil de navigateur](/fr/tools/browser#missing-browser-command-or-tool)
+Connexe : [Outil de navigateur](/fr/tools/browser#missing-browser-command-or-tool)
 
 ## Profils
 
@@ -137,14 +137,17 @@ openclaw browser focus docs
 openclaw browser close t1
 ```
 
-`tabs` renvoie d'abord `suggestedTargetId`, puis le `tabId` stable tel que `t1`,
-l'étiquette facultative et le `targetId` brut. Les agents doivent renvoyer
+`tabs` renvoie d'abord `suggestedTargetId`, puis l'`tabId` stable tel que `t1`,
+l'étiquette facultative et l'`targetId` brut. Les agents doivent renvoyer
 `suggestedTargetId` dans `focus`, `close`, les instantanés et les actions. Vous pouvez
 attribuer une étiquette avec `open --label`, `tab new --label` ou `tab label` ; les étiquettes,
-les id d'onglet, les id de cible bruts et les préfixes d'id de cible uniques sont tous acceptés.
+les ID d'onglet, les ID de cible bruts et les préfixes uniques d'ID de cible sont tous acceptés.
+Le champ de la requête est toujours nommé `targetId` pour compatibilité, mais il accepte
+ces références d'onglet. Traitez les ID de cible bruts comme des handles de diagnostic, et non comme une
+mémoire durable de l'agent.
 Lorsque Chromium remplace la cible brute sous-jacente lors d'une navigation ou de l'envoi
-d'un formulaire, OpenClaw maintient le `tabId`/l'étiquette stable attaché à l'onglet de remplacement
-lorsqu'il peut prouver la correspondance. Les id de cible bruts restent volatils ; préférez
+d'un formulaire, OpenClaw conserve l'`tabId`/l'étiquette stable attachée à l'onglet de remplacement
+lorsqu'il peut prouver la correspondance. Les ID de cible bruts restent volatils ; privilégiez
 `suggestedTargetId`.
 
 ## Instantané / capture d'écran / actions
@@ -167,12 +170,14 @@ openclaw browser screenshot --labels
 
 Notes :
 
-- `--full-page` est réservé aux captures de pages uniquement ; il ne peut pas être combiné avec `--ref`
+- `--full-page` est uniquement pour les captures de page ; il ne peut pas être combiné avec `--ref`
   ou `--element`.
 - Les profils `existing-session` / `user` prennent en charge les captures d'écran de page et les captures d'écran `--ref`
-  à partir de la sortie d'instantané, mais pas les captures d'écran CSS `--element`.
+  à partir de la sortie de l'instantané, mais pas les captures d'écran CSS `--element`.
 - `--labels` superpose les références d'instantané actuelles sur la capture d'écran.
-- `snapshot --urls` ajoute les destinations de liens découvertes aux snapshots d'IA pour que les agents puissent choisir des cibles de navigation directes au lieu de deviner à partir du seul texte du lien.
+- `snapshot --urls` ajoute les destinations de lien découvertes aux instantanés IA afin que
+  les agents puissent choisir des cibles de navigation directes au lieu de deviner à partir du seul texte
+  du lien.
 
 Navigation/clic/saisie (automatisation de l'interface utilisateur basée sur des références) :
 
@@ -192,9 +197,13 @@ openclaw browser evaluate --fn '(el) => el.textContent' --ref <ref>
 openclaw browser evaluate --timeout-ms 30000 --fn 'async () => { await window.ready; return true; }'
 ```
 
-Utilisez `evaluate --timeout-ms <ms>` lorsque la fonction côté page peut avoir besoin de plus de temps que le délai d'évaluation par défaut.
+Utilisez `evaluate --timeout-ms <ms>` lorsque la fonction côté page peut avoir besoin de plus de temps
+que le délai d'évaluation par défaut.
 
-Les réponses aux actions renvoient l'`targetId` brut actuel après le remplacement de la page déclenché par l'action lorsque OpenClaw peut prouver l'onglet de remplacement. Les scripts doivent toujours stocker et transmettre les `suggestedTargetId`/étiquettes pour les workflows de longue durée.
+Les réponses aux actions renvoient l'`targetId` brut actuel après le
+remplacement de page déclenché par l'action lorsque OpenClaw peut prouver
+l'onglet de remplacement. Les scripts doivent toujours stocker et transmettre les
+`suggestedTargetId`/labels pour les workflows de longue durée.
 
 Assistants pour les fichiers + boîtes de dialogue :
 
@@ -207,8 +216,20 @@ openclaw browser dialog --accept
 openclaw browser dialog --dismiss --dialog-id d1
 ```
 
-Les profils Chrome gérés enregistrent les téléchargements déclenchés par un clic ordinaire dans le répertoire de téléchargements OpenClaw (`/tmp/openclaw/downloads` par défaut, ou la racine temporaire configurée). Utilisez `waitfordownload` ou `download` lorsque l'agent doit attendre un fichier spécifique et retourner son chemin ; ces attentes explicites possèdent le prochain téléchargement. Les téléchargements acceptent les fichiers de la racine des téléchargements temporaires OpenClaw et des médias entrants gérés par OpenClaw, y compris les références `media://inbound/<id>` et `media/inbound/<id>` relatives au bac à sable. Les références de médias imbriquées, le parcours et les chemins locaux arbitraires restent rejetés.
-Lorsqu'une action ouvre une boîte de dialogue modale, la réponse de l'action renvoie `blockedByDialog` avec `browserState.dialogs.pending` ; passez `--dialog-id` pour y répondre directement. Les boîtes de dialogue gérées en dehors de OpenClaw apparaissent sous `browserState.dialogs.recent`.
+Les profils Chrome gérés enregistrent les téléchargements déclenchés par un clic
+ordinaire dans le répertoire de téléchargements de OpenClaw (`/tmp/openclaw/downloads` par
+défaut, ou la racine temporaire configurée). Utilisez `waitfordownload` ou `download`
+lorsque l'agent doit attendre un fichier spécifique et renvoyer son chemin ; ces
+attentes explicites possèdent le prochain téléchargement. Les téléchargements
+acceptent les fichiers de la racine de téléchargements temporaire de
+OpenClaw et les médias entrants gérés par OpenClaw, y compris les
+références `media://inbound/<id>` et `media/inbound/<id>` relatives au bac à sable. Les
+références de médias imbriquées, le traversail et les chemins locaux arbitraires
+restent rejetés.
+Lorsqu'une action ouvre une boîte de dialogue modale, la réponse de l'action
+renvoie `blockedByDialog` avec `browserState.dialogs.pending` ; transmettez `--dialog-id` pour y
+répondre directement. Les boîtes de dialogue gérées en dehors de
+OpenClaw apparaissent sous `browserState.dialogs.recent`.
 
 ## État et stockage
 
@@ -253,7 +274,7 @@ openclaw browser trace stop --out trace.zip
 
 ## Chrome existant via MCP
 
-Utilisez le profil intégré `user` ou créez votre propre profil `existing-session` :
+Utilisez le profil intégré `user`, ou créez votre propre profil `existing-session` :
 
 ```bash
 openclaw browser --browser-profile user tabs
@@ -267,15 +288,19 @@ Ce chemin est uniquement pour l'hôte. Pour Docker, les serveurs sans interface 
 Limites actuelles de la session existante :
 
 - les actions basées sur des instantanés utilisent des références, pas des sélecteurs CSS
-- `browser.actionTimeoutMs` définit par défaut les requêtes `act` prises en charge à 60000 ms lorsque les appelants omettent `timeoutMs` ; le `timeoutMs` par appel l'emporte toujours.
-- `click` est uniquement un clic gauche
+- `browser.actionTimeoutMs` définit par défaut les demandes `act` prises en
+  charge à 60000 ms lorsque les appelants omettent `timeoutMs` ;
+  le `timeoutMs` par appel l'emporte toujours.
+- `click` est un clic gauche uniquement
 - `type` ne prend pas en charge `slowly=true`
 - `press` ne prend pas en charge `delayMs`
-- `hover`, `scrollintoview`, `drag`, `select`, `fill` et `evaluate` rejettent les substitutions de délai d'attente par appel
+- `hover`, `scrollintoview`, `drag`, `select`,
+  `fill` et `evaluate` rejettent les remplacements de
+  délai d'expiration par appel
 - `select` prend en charge une seule valeur
 - `wait --load networkidle` n'est pas pris en charge
 - les téléchargements de fichiers nécessitent `--ref` / `--input-ref`, ne prennent pas en charge le CSS `--element`, et prennent actuellement en charge un seul fichier à la fois
-- les hooks de boîte de dialogue ne prennent pas en charge `--timeout`
+- les hooks de dialogue ne prennent pas en charge `--timeout`
 - les captures d'écran prennent en charge les captures de page et `--ref`, mais pas le CSS `--element`
 - `responsebody`, l'interception des téléchargements, l'exportation PDF et les actions par lots nécessitent toujours un navigateur géré ou un profil CDP brut
 
@@ -285,9 +310,9 @@ Si le Gateway s'exécute sur une machine différente de celle du navigateur, ex�
 
 Utilisez `gateway.nodes.browser.mode` pour contrôler le routage automatique et `gateway.nodes.browser.node` pour épingler un nœud spécifique si plusieurs sont connectés.
 
-Sécurité + configuration à distance : [Outil de navigateur](/fr/tools/browser), [Accès distant](/fr/gateway/remote), [Tailscale](/fr/gateway/tailscale), [Sécurité](/fr/gateway/security)
+Sécurité + configuration à distance : [Outil navigateur](/fr/tools/browser), [Accès à distance](/fr/gateway/remoteTailscale), [Tailscale](/fr/gateway/tailscale), [Sécurité](/fr/gateway/security)
 
 ## Connexes
 
-- [Référence CLI](/fr/cli)
+- [Référence CLI](CLI/en/cli)
 - [Navigateur](/fr/tools/browser)

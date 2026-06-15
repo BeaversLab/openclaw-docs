@@ -373,75 +373,69 @@ Dans `tools.exec.mode: "auto"`, OpenClaw ne préserve pas les anciennes substitu
 préréglage `plugins.entries.codex.config.appServer.mode: "guardian"` hérité fonctionne toujours,
 mais `tools.exec.mode: "auto"` est la surface normalisée OpenClaw.
 
-Pour chaque champ app-server, l'ordre d'authentification, l'isolation de l'environnement, la découverte et le comportement de délai d'attente, consultez la [référence Codex harness](/fr/plugins/codex-harness-reference).
+Pour la comparaison au niveau du mode avec les approbations d'exécution de l'hôte et les autorisations ACPX, consultez [Modes de permission](/fr/tools/permission-modes).
+
+Pour chaque champ de l'application serveur, l'ordre d'authentification, l'isolation de l'environnement, la découverte et le comportement de délai d'expiration, consultez [Référence du harnais Codex](/fr/plugins/codex-harness-reference).
 
 ## Commandes et diagnostics
 
-Le plugin inclus enregistre `/codex` en tant que commande slash sur n'importe quel channel qui
-prend en charge les commandes texte OpenClaw.
+Le plugin inclus enregistre `/codex` en tant que commande slash sur n'importe quel channel prenant en charge les commandes texte OpenClaw.
 
 Formes courantes :
 
-- `/codex status` vérifie la connectivité app-server, les modèles, le compte, les limites de taux,
-  les serveurs MCP et les compétences.
-- `/codex models` liste les modèles app-server Codex actifs.
-- `/codex threads [filter]` liste les threads app-server Codex récents.
-- `/codex resume <thread-id>` attache la session OpenClaw actuelle à un
-  thread Codex existant.
-- `/codex compact` demande au Codex app-server de compacter le thread attaché.
-- `/codex review` lance la révision native Codex pour le thread attaché.
-- `/codex diagnostics [note]` demande avant d'envoyer des commentaires Codex pour le
-  thread attaché.
-- `/codex account` affiche l'état du compte et des limites de taux.
-- `/codex mcp` liste l'état du serveur MCP Codex app-server.
-- `/codex skills` liste les compétences Codex app-server.
+- `/codex status` vérifie la connectivité de l'application serveur, les modèles, le compte, les limites de débit, les serveurs MCP et les compétences.
+- `/codex models` liste les modèles de l'application serveur Codex actifs.
+- `/codex threads [filter]` liste les fils de discussion récents de l'application serveur Codex.
+- `/codex resume <thread-id>` attache la session OpenClaw actuelle à un fil de discussion Codex existant.
+- `/codex compact` demande à l'application serveur Codex de compacter le fil de discussion attaché.
+- `/codex review` lance la révision native Codex pour le fil de discussion attaché.
+- `/codex diagnostics [note]` demande avant d'envoyer les commentaires Codex pour le fil de discussion attaché.
+- `/codex account` affiche l'état du compte et des limites de débit.
+- `/codex mcp` liste l'état du serveur MCP de l'application serveur Codex.
+- `/codex skills` liste les compétences de l'application serveur Codex.
 
-Pour la plupart des rapports de support, commencez par `/diagnostics [note]` dans la conversation
-où le bogue s'est produit. Cela crée un rapport de diagnostic Gateway et, pour les sessions
-Codex harness, demande l'approbation pour envoyer le bundle de commentaires Codex pertinent.
-Voir [Diagnostics export](/fr/gateway/diagnostics) pour le modèle de confidentialité et le comportement
-de conversation de groupe.
+Pour la plupart des rapports de support, commencez par `/diagnostics [note]` dans la conversation où le bug s'est produit. Cela crée un rapport de diagnostics Gateway et, pour les sessions de harnais Codex, demande une approbation pour envoyer le bundle de commentaires Codex pertinent. Consultez [Exportation des diagnostics](/fr/gateway/diagnostics) pour le modèle de confidentialité et le comportement des conversations de groupe.
 
-Utilisez `/codex diagnostics [note]` uniquement lorsque vous souhaitez spécifiquement le téléchargement
-de commentaires Codex pour le fil de discussion actuellement attaché sans le bundle complet de
-diagnostic Gateway.
+Utilisez `/codex diagnostics [note]` uniquement lorsque vous voulez spécifiquement le téléchargement des commentaires Codex pour le fil de discussion actuellement attaché sans le bundle de diagnostics complet Gateway.
 
-### Inspecter les discussions Codex localement
+### Inspecter les fils de discussion Codex localement
 
-Le moyen le plus rapide d'inspecter une mauvaise exécution Codex est souvent d'ouvrir directement la discussion native Codex :
+Le moyen le plus rapide d'inspecter une mauvaise exécution Codex est souvent d'ouvrir directement le fil de discussion natif Codex :
 
 ```bash
 codex resume <thread-id>
 ```
 
-Obtenez l'identifiant du fil de discussion à partir de la réponse `/diagnostics` terminée, `/codex binding`, ou
-`/codex threads [filter]`.
+Obtenez l'identifiant du fil de discussion à partir de la réponse terminée `/diagnostics`, `/codex binding`, ou `/codex threads [filter]`.
 
-Pour les mécanismes de téléchargement et les limites de diagnostic au niveau de l'exécution, voir
+Pour les mécanismes de téléchargement et les limites de diagnostics au niveau de l'exécution, consultez
 [Codex harness runtime](/fr/plugins/codex-harness-runtime#codex-feedback-upload).
 
 L'authentification est sélectionnée dans cet ordre :
 
-1. Profils d'authentification OpenAI commandés pour l'agent, de préférence sous
+1. Profils d'authentification OpenAI ordonnés pour l'agent, de préférence sous
    `auth.order.openai`. Exécutez `openclaw doctor --fix` pour migrer les anciens
    identifiants de profil d'authentification Codex hérités et l'ordre d'authentification Codex hérité.
-2. Le compte existant de l'application serveur dans le domicile Codex de cet agent.
+2. Le compte existant du serveur d'application dans le domicile Codex de cet agent.
 3. Uniquement pour les lancements locaux de serveur d'application stdio, `CODEX_API_KEY`, puis
    `OPENAI_API_KEY`, lorsqu'aucun compte de serveur d'application n'est présent et que l'authentification OpenAI est
    toujours requise.
 
 Lorsque OpenClaw détecte un profil d'authentification Codex de type abonnement ChatGPT, il supprime
 `CODEX_API_KEY` et `OPENAI_API_KEY` du processus enfant Codex généré. Cela
-maintient les clés Gateway de niveau API disponibles pour les incorporations ou les modèles OpenAI
-directs sans faire facturer accidentellement les tours natifs du serveur d'application Codex via l'API.
-Les profils explicites de clés API de Codex et le repli de clé d'environnement stdio local utilisent la connexion
-au serveur d'application au lieu de l'environnement de processus enfant hérité. Les connexions de serveur
-d'application WebSocket ne reçoivent pas le repli de clé Gateway d'environnement API ; utilisez un profil d'authentification explicite ou le
-compte propre du serveur d'application distant.
+garantit que les clés Gateway de niveau API restent disponibles pour les embeddings ou les modèles OpenAI directs
+sans faire facturer accidentellement les tours natifs du serveur d'application Codex via l'API.
+Les profils explicites de clé API Codex et la solution de repli de clé d'environnement stdio locale utilisent la connexion
+au serveur d'application au lieu de l'environnement du processus enfant hérité. Les connexions WebSocket au serveur d'application
+ne reçoivent pas la solution de repli de clé Gateway de l'environnement API ; utilisez un profil d'authentification explicite ou le
+propre compte du serveur d'application distant.
 
-Si un profil d'abonnement atteint une limite d'utilisation de Codex, OpenClaw enregistre l'heure de réinitialisation lorsque Codex en signale une et tente le prochain profil d'authentification ordonné pour la même exécution Codex. Une fois l'heure de réinitialisation passée, le profil d'abonnement redevient éligible sans changer le `openai/gpt-*` modèle sélectionné ou le runtime Codex.
+Si un profil d'abonnement atteint une limite d'utilisation Codex, OpenClaw enregistre l'heure de
+réinitialisation lorsque Codex en signale une et essaie le profil d'authentification ordonné suivant pour la même
+exécution Codex. Une fois l'heure de réinitialisation passée, le profil d'abonnement redevient éligible
+sans modifier le modèle `openai/gpt-*` sélectionné ni l'exécution Codex.
 
-Pour les lancements locaux d'application-serveur stdio, OpenClaw définit `CODEX_HOME` sur un répertoire par agent afin que la configuration Codex, les fichiers d'authentification/de compte, le cache/données des plugins et l'état du thread natif ne lisent ou n'écrivent pas le `~/.codex` personnel de l'opérateur par défaut. OpenClaw préserve le processus normal `HOME` ; les sous-processus exécutés par Codex peuvent toujours trouver la configuration et les jetons du répertoire personnel de l'utilisateur, et Codex peut découvrir des entrées `$HOME/.agents/skills` et `$HOME/.agents/plugins/marketplace.json` partagées.
+Pour les lancements locaux de serveur d'application stdio, OpenClaw définit `CODEX_HOME` sur un répertoire par agent afin que la configuration Codex, les fichiers d'authentification/de compte, le cache/les données des plugins et l'état du thread natif ne lisent ni n'écrivent le `~/.codex` personnel de l'opérateur par défaut. OpenClaw préserve le `HOME` de processus normal ; les sous-processus exécutés par Codex peuvent toujours trouver la configuration et les jetons du répertoire personnel de l'utilisateur, et Codex peut découvrir des entrées `$HOME/.agents/skills` et `$HOME/.agents/plugins/marketplace.json` partagées.
 
 Si un déploiement a besoin d'un isolement d'environnement supplémentaire, ajoutez ces variables à `appServer.clearEnv` :
 
@@ -462,58 +456,84 @@ Si un déploiement a besoin d'un isolement d'environnement supplémentaire, ajou
 }
 ```
 
-`appServer.clearEnv` n'affecte que le processus enfant de l'application-serveur Codex généré. OpenClaw supprime `CODEX_HOME` et `HOME` de cette liste lors de la normalisation du lancement local : `CODEX_HOME` reste par agent, et `HOME` reste hérité afin que les sous-processus puissent utiliser l'état normal du répertoire personnel de l'utilisateur.
+`appServer.clearEnv` n'affecte que le processus enfant du serveur d'application Codex généré. OpenClaw supprime `CODEX_HOME` et `HOME` de cette liste lors de la normalisation du lancement local : `CODEX_HOME` reste par agent, et `HOME` reste hérité afin que les sous-processus puissent utiliser l'état normal du répertoire personnel de l'utilisateur.
 
-Les outils dynamiques Codex sont chargés par défaut dans `searchable`OpenClaw. OpenClaw n'expose pas d'outils dynamiques qui dupliquent les opérations de l'espace de travail natives de Codex : `read`, `write`, `edit`, `apply_patch`, `exec`, `process`, et `update_plan`OpenClaw. La plupart des autres outils d'intégration OpenClaw tels que la messagerie, les médias, cron, le navigateur, les nœuds, la passerelle, `heartbeat_respond`, et `web_search` sont disponibles via la recherche d'outils Codex sous l'espace de noms `openclaw`, ce qui permet de réduire la taille du contexte initial du modèle.
-Les réponses source `sessions_yield` et celles utilisant uniquement l'outil de messagerie restent directes car il s'agit de contrats de contrôle de tour. `sessions_spawn` reste consultable afin que l'interface de sous-agent native de Codex, `spawn_agent`OpenClaw, reste la surface principale, tandis que la délégation explicite à OpenClaw ou ACP est toujours disponible via l'espace de noms de l'outil dynamique `openclaw`. Les instructions de collaboration de heartbeat demandent à Codex de rechercher `heartbeat_respond` avant de terminer un tour de heartbeat lorsque l'outil n'est pas déjà chargé.
+Les outils dynamiques Codex sont chargés par défaut via `searchable`. OpenClaw n'expose pas d'outils dynamiques qui dupliquent les opérations de l'espace de travail natif de Codex : `read`, `write`, `edit`, `apply_patch`, `exec`, `process` et `update_plan`. La plupart des autres outils d'intégration OpenClaw tels que la messagerie, les médias, cron, le navigateur, les nœuds, la passerelle, `heartbeat_respond` et `web_search` sont disponibles via la recherche d'outils Codex sous l'espace de noms `openclaw`, ce qui permet de garder le contexte du model initial plus petit.
+Les réponses source `sessions_yield` et celles utilisant uniquement l'outil de message restent directes car il s'agit de contrats de contrôle de tour. `sessions_spawn` reste recherchable afin que le `spawn_agent` natif de Codex reste la surface principale du sous-agent Codex, tandis que la délégation explicite à OpenClaw ou à l'ACP est toujours disponible via l'espace de noms de l'outil dynamique `openclaw`. Les instructions de collaboration Heartbeat indiquent à Codex de rechercher `heartbeat_respond` avant de terminer un tour de battement de cœur (heartbeat) lorsque l'outil n'est pas déjà chargé.
 
-Ne définissez `codexDynamicToolsLoading: "direct"` que lors de la connexion à un serveur d'application Codex personnalisé qui ne peut pas rechercher les outils dynamiques différés ou lors du débogage de la charge utile complète de l'outil.
+Définissez `codexDynamicToolsLoading: "direct"` uniquement lorsque vous vous connectez à un serveur d'application Codex personnalisé qui ne peut pas rechercher les outils dynamiques différés ou lors du débogage de la charge utile complète de l'outil.
 
 Champs de plugin Codex de premier niveau pris en charge :
 
-| Champ                      | Par défaut     | Signification                                                                                                                 |
-| -------------------------- | -------------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| `codexDynamicToolsLoading` | `"searchable"` | Utilisez `"direct"`OpenClaw pour placer les outils dynamiques OpenClaw directement dans le contexte initial de l'outil Codex. |
-| `codexDynamicToolsExclude` | `[]`           | Noms d'outils dynamiques OpenClaw supplémentaires à omettre des tours du serveur d'application Codex.                         |
-| `codexPlugins`             | désactivé      | Prise en charge native des plugins/applications Codex pour les plugins sélectionnés installés par la source et migrés.        |
+| Champ                      | Par défaut     | Signification                                                                                                         |
+| -------------------------- | -------------- | --------------------------------------------------------------------------------------------------------------------- |
+| `codexDynamicToolsLoading` | `"searchable"` | Utilisez `"direct"` pour placer les outils dynamiques OpenClaw directement dans le contexte de l'outil Codex initial. |
+| `codexDynamicToolsExclude` | `[]`           | Noms d'outils dynamiques supplémentaires OpenClaw à omettre des tours du serveur d'application Codex.                 |
+| `codexPlugins`             | désactivé      | Prise en charge native des plugins/applications Codex pour les plugins Codex first-party configurés.                  |
 
 Champs `appServer` pris en charge :
 
-| Champ                                         | Par défaut                                                    | Signification                                                                                                                                                                                                                                                                                                                                                                                            |
-| --------------------------------------------- | ------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `transport`                                   | `"stdio"`                                                     | `"stdio"` lance Codex ; `"websocket"` se connecte à `url`.                                                                                                                                                                                                                                                                                                                                               |
-| `command`                                     | binaire Codex géré                                            | Exécutable pour le transport stdio. Laisser non défini pour utiliser le binaire géré ; ne le définir que pour une substitution explicite.                                                                                                                                                                                                                                                                |
-| `args`                                        | `["app-server", "--listen", "stdio://"]`                      | Arguments pour le transport stdio.                                                                                                                                                                                                                                                                                                                                                                       |
-| `url`                                         | non défini                                                    | URL du serveur d'application WebSocket.                                                                                                                                                                                                                                                                                                                                                                  |
-| `authToken`                                   | non défini                                                    | Jeton Bearer pour le transport WebSocket.                                                                                                                                                                                                                                                                                                                                                                |
-| `headers`                                     | `{}`                                                          | En-têtes WebSocket supplémentaires.                                                                                                                                                                                                                                                                                                                                                                      |
-| `clearEnv`                                    | `[]`                                                          | Noms de variables d'environnement supplémentaires supprimés du processus app-server stdio généré après qu'OpenClaw a construit son environnement hérité. OpenClaw conserve les variables `CODEX_HOME` par agent et les variables `HOME` héritées pour les lancements locaux.                                                                                                                             |
-| `codeModeOnly`                                | `false`                                                       | Optez pour la surface de tool en mode code uniquement de Codex. Les outils dynamiques OpenClaw restent enregistrés avec Codex afin que les appels `tools.*` imbriqués reviennent via le pont `item/tool/call` de l'app-server.                                                                                                                                                                           |
-| `requestTimeoutMs`                            | `60000`                                                       | Délai d'expiration pour les appels au plan de contrôle du serveur d'application.                                                                                                                                                                                                                                                                                                                         |
-| `turnCompletionIdleTimeoutMs`                 | `60000`                                                       | Fenêtre de silence après que Codex a accepté un tour ou après une requête app-server limitée à un tour, tandis qu'OpenClaw attend `turn/completed`.                                                                                                                                                                                                                                                      |
-| `postToolRawAssistantCompletionIdleTimeoutMs` | `300000`                                                      | Garde de fin d'inactivité et de progression utilisé après un transfert de tool, une fin de tool native, ou une progression brute de l'assistant après tool, tandis qu'OpenClaw attend `turn/completed`. Utilisez ceci pour les charges de travail de confiance ou lourdes où la synthèse post-tool peut légitimement rester silencieuse plus longtemps que le budget de libération final de l'assistant. |
-| `mode`                                        | `"yolo"` sauf si les exigences Codex locales interdisent YOLO | Préréglage pour l'exécution YOLO ou examinée par un gardien. Les exigences stdio locales qui omettent `danger-full-access`, l'approbation `never`, ou le réviseur `user` font du gardien implicite le gardien par défaut.                                                                                                                                                                                |
-| `approvalPolicy`                              | `"never"` ou une politique d'approbation de gardien autorisée | Politique d'approbation Codex native envoyée au démarrage/reprise/tour du fil. Les valeurs par défaut du gardien préfèrent `"on-request"` lorsque cela est autorisé.                                                                                                                                                                                                                                     |
-| `sandbox`                                     | `"danger-full-access"` ou un bac à sable de gardien autorisé  | Mode de bac à sable natif Codex envoyé au démarrage/reprise du thread. Les valeurs par défaut du gardien préfèrent `"workspace-write"` si autorisé, sinon `"read-only"`. Lorsqu'un bac à sable OpenClaw est actif, les tours `danger-full-access` utilisent `workspace-write` Codex avec un accès réseau dérivé du paramètre de sortie du bac à sable OpenClaw.                                          |
-| `approvalsReviewer`                           | `"user"` ou un examinateur gardien autorisé                   | Utilisez `"auto_review"` pour permettre à Codex de réviser les invites d'approbation natives si autorisé, sinon `guardian_subagent` ou `user`. `guardian_subagent` reste un alias hérité.                                                                                                                                                                                                                |
-| `serviceTier`                                 | non défini                                                    | Niveau de service optionnel du serveur d'application Codex. `"priority"` active le routage en mode rapide, `"flex"` demande un traitement flexible, `null` efface la substitution, et l'ancien `"fast"` est accepté comme `"priority"`.                                                                                                                                                                  |
-| `experimental.sandboxExecServer`              | `false`                                                       | Option d'aperçu qui enregistre un environnement Codex pris en charge par un bac à sable OpenClaw avec le serveur d'application Codex 0.132.0 ou plus récent, afin que l'exécution native Codex puisse s'exécuter dans le bac à sable OpenClaw actif.                                                                                                                                                     |
+| Champ                                         | Par défaut                                                    | Signification                                                                                                                                                                                                                                                                                                                                                                                                 |
+| --------------------------------------------- | ------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `transport`                                   | `"stdio"`                                                     | `"stdio"` lance Codex ; `"websocket"` se connecte à `url`.                                                                                                                                                                                                                                                                                                                                                    |
+| `command`                                     | binaire Codex géré                                            | Exécutable pour le transport stdio. Laisser non défini pour utiliser le binaire géré ; ne le définir que pour un remplacement explicite.                                                                                                                                                                                                                                                                      |
+| `args`                                        | `["app-server", "--listen", "stdio://"]`                      | Arguments pour le transport stdio.                                                                                                                                                                                                                                                                                                                                                                            |
+| `url`                                         | non défini                                                    | URL du serveur d'application WebSocket.                                                                                                                                                                                                                                                                                                                                                                       |
+| `authToken`                                   | non défini                                                    | Jeton Bearer pour le transport WebSocket.                                                                                                                                                                                                                                                                                                                                                                     |
+| `headers`                                     | `{}`                                                          | En-têtes WebSocket supplémentaires.                                                                                                                                                                                                                                                                                                                                                                           |
+| `clearEnv`                                    | `[]`                                                          | Noms de variables d'environnement supplémentaires supprimés du processus de serveur d'application stdio généré après qu'OpenClaw a construit son environnement hérité. OpenClaw conserve OpenClawOpenClaw`CODEX_HOME` par agent et `HOME` hérités pour les lancements locaux.                                                                                                                                 |
+| `codeModeOnly`                                | `false`                                                       | Optez pour la surface tool en mode code uniquement de Codex. Les outils dynamiques OpenClaw restent enregistrés avec Codex afin que les appels imbriqués OpenClaw`tools.*` reviennent via le pont `item/tool/call` du serveur d'application.                                                                                                                                                                  |
+| `requestTimeoutMs`                            | `60000`                                                       | Délai d'attente pour les appels au plan de contrôle du serveur d'application.                                                                                                                                                                                                                                                                                                                                 |
+| `turnCompletionIdleTimeoutMs`                 | `60000`                                                       | Fenêtre de silence après que Codex accepte un tour ou après une demande de serveur d'application limitée à un tour, pendant qu'OpenClaw attend OpenClaw`turn/completed`.                                                                                                                                                                                                                                      |
+| `postToolRawAssistantCompletionIdleTimeoutMs` | `300000`                                                      | Garde d'inactivité et de progression utilisée après un transfert d'outil, une fin d'outil natif, ou une progression brute de l'assistant post-outil, pendant qu'OpenClaw attend OpenClaw`turn/completed`. Utilisez ceci pour les charges de travail de confiance ou lourdes où la synthèse post-outil peut légitimement rester silencieuse plus longtemps que le budget de libération final de l'assistant.   |
+| `mode`                                        | `"yolo"` sauf si les exigences Codex locales interdisent YOLO | Préréglage pour l'exécution YOLO ou révisée par le gardien. Les exigences stdio locales qui omettent `danger-full-access`, l'approbation `never` ou le réviseur `user` définissent le gardien par défaut implicite.                                                                                                                                                                                           |
+| `approvalPolicy`                              | `"never"` ou une stratégie d'approbation de gardien autorisée | Stratégie d'approbation native Codex envoyée au démarrage/à la reprise/au tour du fil de discussion. Les valeurs par défaut du gardien préfèrent `"on-request"` lorsqu'il est autorisé.                                                                                                                                                                                                                       |
+| `sandbox`                                     | `"danger-full-access"` ou un bac à sable de gardien autorisé  | Mode de bac à sable natif Codex envoyé au démarrage/à la reprise du fil de discussion. Les valeurs par défaut du gardien préfèrent `"workspace-write"` lorsqu'il est autorisé, sinon `"read-only"`OpenClaw. Lorsqu'un bac à sable OpenClaw est actif, les tours `danger-full-access` utilisent le `workspace-write`OpenClaw Codex avec un accès réseau dérivé du paramètre de sortie du bac à sable OpenClaw. |
+| `approvalsReviewer`                           | `"user"` ou un réviseur de gardien autorisé                   | Utilisez `"auto_review"` pour laisser Codex réviser les invites d'approbation natives lorsqu'il est autorisé, sinon `guardian_subagent` ou `user`. `guardian_subagent` reste un alias hérité.                                                                                                                                                                                                                 |
+| `serviceTier`                                 | unset                                                         | Niveau de service d'application Codex optionnel. `"priority"` active le routage en mode rapide, `"flex"` demande un traitement flexible, `null` efface la substitution, et l'ancien `"fast"` est accepté comme `"priority"`.                                                                                                                                                                                  |
+| `experimental.sandboxExecServer`              | `false`                                                       | Aperçu d'option d'adhésion qui enregistre un environnement Codex pris en charge par un bac à sable OpenClaw avec le serveur d'application Codex 0.132.0 ou plus récent, afin que l'exécution native Codex puisse s'exécuter à l'intérieur du bac à sable OpenClaw actif.                                                                                                                                      |
 
-Les appels de tool dynamiques appartenant à OpenClaw sont limités indépendamment de
-`appServer.requestTimeoutMs` : les requêtes `item/tool/call` de Codex utilisent un chien de garde OpenClaw de 90 secondes
-par défaut. Un argument `timeoutMs` positif par appel étend
-ou raccourcit ce budget de tool spécifique. Le tool `image_generate` utilise
-`agents.defaults.imageGenerationModel.timeoutMs` lorsque l'appel de tool ne fournit
-pas son propre délai d'expiration, ou un délai par défaut de 120 secondes pour la génération d'images sinon.
-Le tool de compréhension multimédia `image` utilise
-`tools.media.image.timeoutSeconds` ou son délai média par défaut de 60 secondes. Les budgets de tools
-dynamiques sont plafonnés à 600000 ms. En cas de dépassement de délai, OpenClaw abandonne le signal du tool
-lorsque cela est pris en charge et renvoie une réponse de tool dynamique échouée à Codex pour que le tour
-puisse continuer au lieu de laisser la session en `processing`.
+Les appels d'outil dynamiques détenus par OpenClaw sont bornés indépendamment de `appServer.requestTimeoutMs` : les requêtes Codex `item/tool/call` utilisent par défaut un chien de garde OpenClaw de 90 secondes. Un argument `timeoutMs` positif par appel étend ou raccourcit ce budget d'outil spécifique. L'outil `image_generate` utilise `agents.defaults.imageGenerationModel.timeoutMs` lorsque l'appel d'outil ne fournit pas son propre délai d'expiration, ou un défaut de 120 secondes pour la génération d'images sinon. L'outil de compréhension des médias `image` utilise `tools.media.image.timeoutSeconds` ou son défaut média de 60 secondes. Les budgets d'outils dynamiques sont plafonnés à 600000 ms. En cas de dépassement du délai, OpenClaw abandonne le signal de l'outil lorsque cela est pris en charge et renvoie une réponse d'outil dynamique échouée à Codex afin que le tour puisse continuer au lieu de laisser la session dans `processing`.
 
-Une fois que Codex accepte un tour, et après qu'OpenClaw a répondu à une requête app-server limitée au tour, le harnais s'attend à ce que Codex réalise des progrès sur le tour en cours et finisse éventuellement le tour natif avec OpenClaw`turn/completed`. Si l'app-server reste silencieux pendant `appServer.turnCompletionIdleTimeoutMs`OpenClawOpenClawOpenClaw, OpenClaw interrompt de son mieux le tour Codex, enregistre un dépassement de délai de diagnostic et libère le volet de session OpenClaw afin que les messages de discussion suivants ne soient pas mis en file derrière un tour natif obsolète. La plupart des notifications non terminales pour le même tour désactivent ce chien de garde court car Codex a prouvé que le tour est toujours actif. Les transferts de tool utilisent un budget d'inactivité post-tool plus long : après qu'OpenClaw a renvoyé une réponse `item/tool/call`, après que les éléments de tool natifs tels que `commandExecution` sont terminés, après les achèvements `custom_tool_call_output` bruts, et après les progrès bruts de l'assistant post-tool. Le garde utilise `appServer.postToolRawAssistantCompletionIdleTimeoutMs` lorsqu'il est configuré, et par défaut cinq minutes sinon. Ce même budget post-tool prolonge également le chien de garde de progrès pour la fenêtre de synthèse silencieuse avant que Codex n'émette le prochain événement du tour en cours. Les notifications globales de l'app-server, telles que les mises à jour de limite de débit, ne réinitialisent pas les progrès d'inactivité du tour. Les achèvements de raisonnement, les achèvements `agentMessage` de commentaires, et les progrès bruts de raisonnement ou d'assistant pré-tool peuvent être suivis d'une réponse finale automatique, ils utilisent donc le garde de réponse post-progrès au lieu de libérer immédiatement le volet de session. Seuls les éléments `agentMessage` terminés finaux/non-commentaires et les achèvements bruts d'assistant pré-tool arment la libération de la sortie de l'assistant : si Codex devient ensuite silencieux sans `turn/completed`OpenClawOpenClaw, OpenClaw interrompt de son mieux le tour natif et libère le volet de session. Les échecs stdio de l'app-server sécurisés pour la relecture, y compris les dépassements de délai d'inactivité d'achèvement de tour sans assistant, tool, élément actif ou effet secondaire, sont réessayés une fois lors d'une nouvelle tentative d'app-server. Les dépassements de délai non sécurisés mettent toujours fin au client app-server bloqué et libèrent le volet de session OpenClaw. Ils effacent également la liaison de thread native obsolète et présentent un message de dépassement de délai récupérable pour le jugement de l'utilisateur ou du mainteneur au lieu d'être rejoués automatiquement. Les diagnostics de dépassement de délai incluent la dernière méthode de notification de l'app-server et, pour les éléments de réponse brute de l'assistant, le type d'élément, le rôle, l'identifiant et un aperçu borné du texte de l'assistant.
+Après que Codex a accepté un tour, et après qu'OpenClaw a répondu à une requête
+app-server limitée au tour, le harnais s'attend à ce que Codex réalise des progrès
+pour le tour en cours et termine éventuellement le tour natif avec
+OpenClaw`turn/completed`. Si l'app-server reste silencieux pendant
+`appServer.turnCompletionIdleTimeoutMs`OpenClawOpenClawOpenClaw, OpenClaw interrompt au mieux le tour Codex,
+enregistre un timeout de diagnostic, et libère la voie de session d'OpenClaw
+afin que les messages de chat suivants ne soient pas mis en file derrière un
+tour natif obsolète. La plupart des notifications non terminales pour le même
+tour désactivent ce chien de garde court car Codex a prouvé que le tour est
+encore en vie. Les transferts d'outils utilisent un budget d'inactivité
+post-tool plus long : après qu'OpenClaw a renvoyé une réponse `item/tool/call`,
+après que les éléments d'outils natifs tels que `commandExecution` sont terminés,
+après les complétions brutes `custom_tool_call_output`, et après la progression brute
+de l'assistant post-tool. Le garde utilise `appServer.postToolRawAssistantCompletionIdleTimeoutMs` lorsqu'il
+est configuré et sinon par défaut à cinq minutes. Ce même budget post-tool
+étend également le chien de garde de progression pour la fenêtre de synthèse
+silencieuse avant que Codex n'émette le prochain événement du tour en cours. Les
+notifications globales de l'app-server, telles que les mises à jour de limite de
+taux, ne réinitialisent pas la progression d'inactivité du tour. Les complétions
+de raisonnement, les complétions de commentaire `agentMessage`,
+et la progression brute de raisonnement ou d'assistant pré-tool peuvent être
+suivies d'une réponse finale automatique, elles utilisent donc le garde de
+réponse post-progression au lieu de libérer immédiatement la voie de session.
+Seuls les éléments `agentMessage` terminés finaux/non-commentaires et
+les complétions brutes d'assistant pré-tool arment la libération de la sortie de
+l'assistant : si Codex se tait ensuite sans `turn/completed`OpenClawOpenClaw, OpenClaw
+interrompt au mieux le tour natif et libère la voie de session. Les échecs de
+l'app-server stdio sécurisés pour relecture, y compris les timeouts d'inactivité
+de fin de tour sans assistant, outil, élément actif ou effet secondaire,
+sont réessayés une fois lors d'une nouvelle tentative d'app-server. Les timeouts
+non sécurisés retirent toujours le client app-server bloqué et libèrent la voie
+de session OpenClaw. Ils effacent également la liaison de thread native
+obsolète et présentent un message de timeout récupérable pour le jugement de
+l'utilisateur ou du mainteneur au lieu d'être rejoués automatiquement. Les
+diagnostics de timeout incluent la dernière méthode de notification de
+l'app-server et, pour les éléments de réponse brute de l'assistant, le type
+d'élément, le rôle, l'identifiant et un aperçu borné du texte de l'assistant.
 
-Les redéfinitions d'environnement restent disponibles pour les tests locaux :
+Les remplacements d'environnement restent disponibles pour les tests locaux :
 
 - `OPENCLAW_CODEX_APP_SERVER_BIN`
 - `OPENCLAW_CODEX_APP_SERVER_ARGS`
@@ -525,23 +545,23 @@ Les redéfinitions d'environnement restent disponibles pour les tests locaux :
 `appServer.command` n'est pas défini.
 
 `OPENCLAW_CODEX_APP_SERVER_GUARDIAN=1` a été supprimé. Utilisez plutôt
-`plugins.entries.codex.config.appServer.mode: "guardian"` ou
+`plugins.entries.codex.config.appServer.mode: "guardian"`, ou
 `OPENCLAW_CODEX_APP_SERVER_MODE=guardian` pour des tests locaux ponctuels. La configuration est
 préférée pour les déploiements reproductibles car elle conserve le comportement du plugin dans le
 même fichier révisé que le reste de la configuration du harnais Codex.
 
 ## Plugins natifs Codex
 
-La prise en charge native des plugins Codex utilise les propres fonctionnalités d'application et de plugin
-du serveur d'application Codex dans le même thread Codex que le tour de harnais OpenClaw. OpenClaw
+La prise en charge des plugins natifs Codex utilise les propres capacités d'application et de plugin
+du serveur d'application Codex dans le même fil Codex que le tour de harnais OpenClaw. OpenClaw
 ne traduit pas les plugins Codex en outils dynamiques OpenClaw
 synthétiques `codex_plugin_*`.
 
-`codexPlugins` n'affecte que les sessions qui sélectionnent le harnais Codex natif. Il
-n'a aucun effet sur les exécutions de harnais intégrées, les exécutions de provider normales OpenAI, les liaisons de conversation
-ACP ou autres harnais.
+`codexPlugins` n'affecte que les sessions qui sélectionnent le harnais natif Codex. Il
+n'a aucun effet sur les exécutions de harnais intégrées, les exécutions de provider OpenAI normales, les liaisons
+de conversation ACP ou autres harnais.
 
-Config minimale migrée :
+Configuration migrée minimale :
 
 ```json5
 {
@@ -568,49 +588,66 @@ Config minimale migrée :
 }
 ```
 
-La configuration de l'application de thread est calculée lorsque OpenClaw établit une session de harnais Codex
-ou remplace une liaison de thread Codex obsolète. Elle n'est pas recalculée à chaque tour.
-Après avoir modifié `codexPlugins`, utilisez `/new`, `/reset` ou redémarrez la passerelle pour que
-les futures sessions de harnais Codex commencent avec l'ensemble d'applications mis à jour.
+La configuration de l'application de fil est calculée lorsque OpenClaw établit une session de harnais Codex
+ou remplace une liaison de fil Codex obsolète. Elle n'est pas recalculée à chaque tour.
+Après avoir modifié `codexPlugins`, utilisez `/new`, `/reset`, ou redémarrez la passerelle pour
+que les futures sessions de harnais Codex commencent avec l'ensemble d'applications mis à jour.
 
-Pour l'éligibilité à la migration, l'inventaire des applications, la politique d'action destructrice,
+Pour l'éligibilité à la migration, l'inventaire des applications, la politique d'action destructive,
 les sollicitations et les diagnostics de plugins natifs, consultez
-[Plugins Codex natifs](/fr/plugins/codex-native-plugins).
+[Plugins natifs Codex](/fr/plugins/codex-native-plugins).
+
+L'accès aux applications et plugins côté OpenAI est contrôlé par le compte Codex connecté
+et, pour les espaces de travail Business et Enterprise/Edu, par les contrôles d'application de l'espace de travail. Voir
+[Utiliser Codex avec votre plan ChatGPT](https://help.openai.com/en/articles/11369540-using-codex-with-your-chatgpt-plan)
+pour un aperçu du compte et du contrôle de l'espace de travail chez OpenAI.
 
 ## Utilisation de l'ordinateur
 
-L'utilisation de l'ordinateur est traitée dans son propre guide de configuration :
-[Utilisation de l'ordinateur Codex](/fr/plugins/codex-computer-use).
+Computer Use est traité dans son propre guide d'installation :
+[Codex Computer Use](/fr/plugins/codex-computer-use).
 
-La version courte : OpenClaw ne fournit pas l'application de contrôle du bureau ni n'exécute
-les actions du bureau lui-même. Il prépare le serveur d'application Codex, vérifie que le
-serveur MCP `computer-use` est disponible, puis laisse Codex posséder les appels d'outil MCP
-natifs lors des tours en mode Codex.
+En résumé : OpenClaw ne fournit pas l'application de contrôle du bureau ni n'exécute
+les actions du bureau lui-même. Il prépare Codex app-server, vérifie que le
+serveur MCP `computer-use` est disponible, puis laisse Codex gérer les appels d'outils MCP natifs
+pendant les tours en mode Codex.
 
-## Limites d'exécution
+## Limites de l'exécution
 
-Le harnais Codex modifie uniquement l'exécuteur de l'agent intégré de bas niveau.
+Le harnais Codex ne modifie que l'exécuteur de l'agent intégré de bas niveau.
 
 - Les outils dynamiques OpenClaw sont pris en charge. Codex demande à OpenClaw d'exécuter ces
-  outils, donc OpenClaw reste dans le chemin d'exécution.
-- Les outils shell, patch, MCP et d'application natifs de Codex sont détenus par Codex.
-  OpenClaw peut observer ou bloquer des événements natifs sélectionnés via le relais pris en charge,
-  mais il ne réécrit pas les arguments des outils natifs.
-- Codex est propriétaire de la compaction native. OpenClaw conserve un miroir de transcription pour l'historique du channel, la recherche, OpenClaw`/new`, `/reset`OpenClaw et les futurs changements de model ou de harnais, mais il ne remplace pas la compaction Codex par un résumé OpenClaw ou context-engine.
+  outils, de sorte que OpenClaw reste dans le chemin d'exécution.
+- Les outils natifs Codex shell, patch, MCP et d'application native sont possédés par Codex.
+  OpenClaw peut observer ou bloquer des événements natifs sélectionnés via le relais
+  pris en charge, mais il ne réécrit pas les arguments des outils natifs.
+- Codex possède la compaction native. OpenClaw conserve un miroir de transcription pour l'historique du canal,
+  la recherche, `/new`, `/reset`, et les futurs changements de modèle ou de harnais, mais
+  il ne remplace pas la compaction Codex par un résumé OpenClaw ou context-engine.
 - La génération de médias, la compréhension des médias, le TTS, les approbations et la sortie de l'outil de messagerie
   continuent via les paramètres de fournisseur/modèle OpenClaw correspondants.
-- `tool_result_persist`OpenClaw s'applique aux résultats de l'outil de transcription détenus par OpenClaw, et non aux enregistrements de résultats d'outil natifs Codex.
+- `tool_result_persist` s'applique aux résultats des outils de transcription possédés par OpenClaw, et non
+  aux enregistrements de résultats d'outils natifs Codex.
 
-Pour les couches de hook, les surfaces V1 prises en charge, la gestion native des autorisations, l'orientation de la file d'attente, les mécanismes de téléchargement des commentaires Codex et les détails de la compaction, consultez [Codex harness runtime](/fr/plugins/codex-harness-runtime).
+Pour les couches de hook, les surfaces V1 prises en charge, la gestion des permissions natives, le pilotage
+de la file d'attente, les mécanismes de téléchargement des commentaires Codex et les détails de la compaction, voir
+[Codex harness runtime](/fr/plugins/codex-harness-runtime).
 
 ## Dépannage
 
-**Codex n'apparaît pas comme un provider `/model` normal :** c'est prévu pour les nouvelles configurations. Sélectionnez un model `openai/gpt-*`, activez `plugins.entries.codex.enabled` et vérifiez si `plugins.allow` exclut `codex`.
+**Codex n'apparaît pas comme un fournisseur `/model` normal :** c'est attendu pour
+les nouvelles configurations. Sélectionnez un modèle `openai/gpt-*`, activez
+`plugins.entries.codex.enabled`, et vérifiez si `plugins.allow` exclut
+`codex`.
 
-**OpenClaw utilise le harnais intégré au lieu de Codex :** assurez-vous que la référence du model est OpenClaw`openai/gpt-*`OpenAI sur le provider OpenAI officiel et que le plugin Codex est installé et activé. Si vous avez besoin d'une preuve stricte pendant les tests, définissez le provider ou le model sur `agentRuntime.id: "codex"`OpenClaw. Un runtime Codex forcé échoue au lieu de revenir à OpenClaw.
+**OpenClaw utilise le harnais intégré au lieu de Codex :** assurez-vous que la référence du modèle est
+OpenClaw`openai/gpt-*`OpenAI sur le fournisseur OpenAI officiel et que le plugin Codex est
+installé et activé. Si vous avez besoin d'une preuve stricte lors des tests, définissez le fournisseur ou
+le modèle `agentRuntime.id: "codex"`OpenClaw. Un runtime Codex forcé échoue au lieu de
+décaler sur OpenClaw.
 
-**Le runtime Codex OpenAI revient au chemin de la clé API :** collectez un extrait de passerelle expurgé
-qui montre le modèle, le runtime, le fournisseur sélectionné et l'échec.
+**Le runtime OpenAI Codex revient au chemin de la clé d'API :** collectez un extrait de
+passerelle expurgé montrant le modèle, le runtime, le fournisseur sélectionné et l'échec.
 Demandez aux collaborateurs concernés d'exécuter cette commande en lecture seule sur leur hôte OpenClaw :
 
 ```bash
@@ -633,56 +670,64 @@ Demandez aux collaborateurs concernés d'exécuter cette commande en lecture seu
   | tail -200
 ```
 
-Les extraits utiles incluent généralement `openai/gpt-5.5` ou `openai/gpt-5.4`, `Runtime: OpenAI Codex`, `agentRuntime.id` ou `harnessRuntime`, `candidateProvider: "openai"`, et un résultat `401`, `Incorrect API key` ou `No API key`OpenAIOAuthOpenAIAPI. Une exécution corrigée doit afficher le chemin OAuth OpenAI au lieu d'un échec de clé API OpenAI simple.
+Les extraits utiles incluent généralement `openai/gpt-5.5` ou `openai/gpt-5.4`,
+`Runtime: OpenAI Codex`, `agentRuntime.id` ou `harnessRuntime`,
+`candidateProvider: "openai"`, et un résultat `401`, `Incorrect API key`, ou
+`No API key`OpenAIOAuthOpenAIAPI. Une exécution corrigée doit afficher le chemin OAuth
+OpenAI au lieu d'un échec de clé d'API OpenAI simple.
 
-**La configuration des références de model Codex héritées persiste :** exécutez `openclaw doctor --fix`. Le docteur réécrit les références de model héritées en `openai/*`, supprime les épinglages de session et de runtime d'agent entier obsolètes, et préserve les remplacements de profil d'authentification existants.
+**La configuration des références de modèle Codex héritées persiste :** exécutez `openclaw doctor --fix`.
+Doctor réécrit les références de modèle héritées en `openai/*`, supprime les épinglages (pins) de session obsolètes et
+de runtime d'agent complet, et préserve les remplacements de profil d'authentification existants.
 
-**L'app-serveur est rejeté :** utilisez l'app-serveur Codex `0.125.0` ou une version plus récente.
+**L'app-server est rejeté :** utilisez l'app-server Codex `0.125.0` ou plus récent.
 Les préversions de même version ou les versions avec suffixe de build telles que
-`0.125.0-alpha.2` ou `0.125.0+custom` sont rejetées car OpenClaw teste le
-plancher du protocole stable `0.125.0`.
+`0.125.0-alpha.2` ou `0.125.0+custom`OpenClaw sont rejetées car OpenClaw teste le
+plancher (floor) du protocole stable `0.125.0`.
 
-**`/codex status` ne peut pas se connecter :** vérifiez que le plugin fourni `codex` est
+**`/codex status` ne peut pas se connecter :** vérifiez que le plugin `codex` groupé est
 activé, que `plugins.allow` l'inclut lorsqu'une liste d'autorisation est configurée, et
-que tout `appServer.command`, `url`, `authToken` ou en-têtes personnalisés sont valides.
+que tout `appServer.command`, `url`, `authToken` personnalisé ou en-têtes sont valides.
 
-**La découverte de modèles est lente :** dimuez
-`plugins.entries.codex.config.discovery.timeoutMs` ou désactivez la découverte. Voir
+**La découverte de modèles est lente :** diminuez
+`plugins.entries.codex.config.discovery.timeoutMs` ou désactivez la découverte. Consultez
 [Référence du harnais Codex](/fr/plugins/codex-harness-reference#model-discovery).
 
 **Le transport WebSocket échoue immédiatement :** vérifiez `appServer.url`, `authToken`,
-les en-têtes, et que l'app-serveur distant parle la même version du protocole de l'app-serveur Codex.
+les en-têtes, et que le serveur d'application distant parle la même version du
+protocole du serveur d'application Codex.
 
-**Les outils de shell natif ou de patch sont bloqués avec `Native hook relay unavailable` :**
-le thread Codex essaie toujours d'utiliser un id de relais de hook natif que OpenClaw n'a
-plus enregistré. Il s'agit d'un problème de transport de hook natif Codex, et non d'un échec de
-backend ACP, de fournisseur, GitHub, ou de commande shell. Démarrez une nouvelle session dans
-le chat affecté avec `/new` ou `/reset`, puis réessayez une commande inoffensive. Si cela
-fonctionne une fois mais que l'appel d'outil natif suivant échoue à nouveau, considérez `/new` comme une
-solution temporaire uniquement : copiez le prompt dans une nouvelle session après avoir redémarré l'app-serveur Codex
-ou le OpenClaw Gateway afin que les anciens threads soient supprimés et que les
-enregistrements de hooks natifs soient recréés.
+**Les outils de shell natif ou de correctif sont bloqués avec `Native hook relay unavailable` :**
+le thread Codex essaie toujours d'utiliser un ID de relais de hook natif qu'OpenClaw
+n'a plus enregistré. Il s'agit d'un problème de transport de hook natif Codex, et non d'une défaillance
+du backend ACP, du provider, de GitHub ou de la commande shell. Démarrez une session fraîche
+dans le chat affecté avec `/new` ou `/reset`, puis réessayez une commande inoffensive. Si cela
+fonctionne une fois mais que l'appel d'outil natif suivant échoue à nouveau, considérez `/new` comme une solution
+transitoire uniquement : copiez l'invite dans une session fraîche après avoir redémarré le serveur d'application Codex
+ou la OpenClaw Gateway afin que les anciens threads soient abandonnés et que les enregistrements
+de hooks natifs soient recréés.
 
-**Un modèle non-Codex utilise le harnais intégré :** c'est expected sauf si la stratégie d'exécution
-du fournisseur ou du modèle l'achemine vers un autre harnais. Les références de fournisseur non-OpenAI
-restent sur leur chemin de fournisseur normal en mode `auto`.
+**Un modèle non-Codex utilise le harnais intégré :** c'est attendu à moins que
+la stratégie d'exécution du provider ou du modèle ne l'achemine vers un autre harnais. Les références de provider
+non-OpenAI brutes restent sur leur chemin de provider normal en mode `auto`.
 
 **Computer Use est installé mais les outils ne s'exécutent pas :** vérifiez
-`/codex computer-use status` à partir d'une nouvelle session. Si un outil signale
-`Native hook relay unavailable`, utilisez la récupération du relais de hook natif ci-dessus. Voir
-[Codex Computer Use](/fr/plugins/codex-computer-use#troubleshooting).
+`/codex computer-use status` depuis une session fraîche. Si un outil signale
+`Native hook relay unavailable`, utilisez la récupération du relais de hook natif ci-dessus. Consultez
+[Computer Use Codex](/fr/plugins/codex-computer-use#troubleshooting).
 
 ## Connexes
 
 - [Référence du harnais Codex](/fr/plugins/codex-harness-reference)
 - [Runtime du harnais Codex](/fr/plugins/codex-harness-runtime)
-- [Plugins natifs Codex](/fr/plugins/codex-native-plugins)
-- [Codex Computer Use](/fr/plugins/codex-computer-use)
+- [Plugins Codex natifs](/fr/plugins/codex-native-plugins)
+- [Computer Use Codex](/fr/plugins/codex-computer-use)
 - [Runtimes d'agent](/fr/concepts/agent-runtimes)
 - [Providers de modèles](/fr/concepts/model-providers)
 - [Provider OpenAI](/fr/providers/openai)
-- [Plugins de harnais d'agent](/fr/plugins/sdk-agent-harness)
-- [Hooks de plugin](/fr/plugins/hooks)
+- [Aide Codex OpenAI](https://help.openai.com/en/collections/14937394-codex)
+- [Plug-ins de harnais d'agent](/fr/plugins/sdk-agent-harness)
+- [Crochets de plug-in](/fr/plugins/hooks)
 - [Export des diagnostics](/fr/gateway/diagnostics)
 - [Statut](/fr/cli/status)
 - [Tests](/fr/help/testing-live#live-codex-app-server-harness-smoke)

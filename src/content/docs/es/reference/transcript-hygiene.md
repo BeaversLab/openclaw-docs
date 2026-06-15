@@ -116,77 +116,72 @@ antiguos persistidos que solo tienen metadatos de procedencia.
 
 - Los bloques de pensamiento/razonamiento históricos del asistente se eliminan antes de la reproducción para que los servidores compatibles con OpenAI locales y de estilo proxy no reciban campos de razonamiento de turnos anteriores como `reasoning` o `reasoning_content`.
 - Las continuaciones de llamadas a herramientas del mismo turno mantienen el bloque de razonamiento del asistente adjunto a la llamada a herramienta hasta que se haya reproducido el resultado de la herramienta.
-- Las excepciones propiedad del proveedor pueden optar por no participar cuando su protocolo de cable requiera
-  metadatos de razonamiento reproducidos.
+- Las entradas de modelos personalizados/autoalojados con `reasoning: true` conservan los metadatos de razonamiento reproducidos.
+- Las excepciones propiedad del proveedor pueden optar por no participar cuando su protocolo de cable requiere metadatos de razonamiento reproducidos.
 
 **Google (Generative AI / Gemini CLI / Antigravity)**
 
-- Saneamiento del ID de llamada a herramienta: solo alfanumérico estricto.
+- Saneamiento del id de llamada a herramienta: solo alfanumérico estricto.
 - Reparación del emparejamiento de resultados de herramientas y resultados de herramientas sintéticos.
 - Validación de turnos (alternancia de turnos estilo Gemini).
-- Corrección del orden de turnos de Google (antepone un pequeño arranque de usuario si el historial comienza con el asistente).
+- Corrección del orden de turnos de Google (anteceder un pequeño arranque de usuario si el historial comienza con el asistente).
 - Antigravity Claude: normalizar firmas de pensamiento; descartar bloques de pensamiento sin firmar.
 
 **Anthropic / Minimax (compatible con Anthropic)**
 
 - Reparación del emparejamiento de resultados de herramientas y resultados de herramientas sintéticos.
-- Validación de turnos (fusionar turnos consecutivos del usuario para satisfacer una alternancia estricta).
-- Los turnos de relleno previo del asistente finales se eliminan de las cargas útiles
-  salientes de Anthropic Messages cuando el pensamiento está habilitado, incluyendo las rutas de Cloudflare AI Gateway.
-- Los bloques de pensamiento con firmas de repetición faltantes, vacías o en blanco se eliminan
-  antes de la conversión del proveedor. Si eso vacía un turno del asistente, OpenClaw mantiene
-  la forma del turno con texto de razonamiento omitido no vacío.
-- Los turnos de asistente más antiguos solo de pensamiento que deben eliminarse se reemplazan con
-  texto de razonamiento omitido no vacío para que los adaptadores del proveedor no eliminen el turno
-  de repetición.
+- Validación de turnos (fusionar turnos de usuario consecutivos para satisfacer la alternancia estricta).
+- Los turnos de relleno previos del asistente finales se eliminan de las cargas útiles de Messages de Anthropic salientes cuando el pensamiento está habilitado, incluidas las rutas de Cloudflare AI Gateway.
+- Los bloques de pensamiento con firmas de repetición faltantes, vacías o en blanco se eliminan antes de la conversión del proveedor. Si eso vacía un turno de asistente, OpenClaw mantiene la forma del turno con texto de razonamiento omitido no vacío.
+- Los turnos de asistente anteriores de solo pensamiento que deben eliminarse se reemplazan con texto de razonamiento omitido no vacío para que los adaptadores del proveedor no eliminen el turno de repetición.
 
-**Amazon Bedrock (API de conversación)**
+**Amazon Bedrock (API de Converse)**
 
-- Los turnos de error de flujo del asistente vacíos se reparan a un bloque de texto de reserva no vacío antes de la reproducción. Bedrock Converse rechaza los mensajes del asistente con `content: []`, por lo que los turnos del asistente persistidos con `stopReason: "error"` y contenido vacío también se reparan en el disco antes de la carga.
-- Los turnos de asistente con errores de transmisión que contienen solo bloques de texto en blanco se eliminan
-  de la copia de repetición en memoria en lugar de repetir un bloque en blanco no válido.
-- Los bloques de pensamiento de Claude con firmas de repetición faltantes, vacías o en blanco se
-  eliminan antes de la repetición de Converse. Si eso vacía un turno de asistente, OpenClaw
+- Los turnos de error de flujo del asistente vacíos se reparan con un bloque de texto de respaldo no vacío antes de la repetición. Bedrock Converse rechaza los mensajes del asistente con `content: []`, por lo que los turnos de asistente persistidos con `stopReason: "error"` y contenido vacío también se reparan en el disco antes de la carga.
+- Los turnos de error de flujo del asistente que contienen solo bloques de texto en blanco se eliminan
+  del la copia de reproducción en memoria en lugar de reproducir un bloque en blanco no válido.
+- Los bloques de pensamiento de Claude con firmas de reproducción faltantes, vacías o en blanco se
+  eliminan antes de la reproducción de Converse. Si eso vacía un turno del asistente, OpenClaw
   mantiene la forma del turno con texto de razonamiento omitido no vacío.
-- Los turnos de asistente de solo pensamiento antiguos que deben eliminarse se reemplazan por
-  texto de razonamiento omitido no vacío para que la repetición de Converse mantenga una forma de turno estricta.
-- La repetición filtra los turnos de asistente inyectados por el espejo de entrega de OpenClaw y la puerta de enlace.
-- La sanitización de imágenes se aplica a través de la regla global.
+- Los turnos de asistente más antiguos que son solo de pensamiento y que deben eliminarse se reemplazan con
+  texto de razonamiento omitido no vacío para que la reproducción de Converse mantenga una forma estricta del turno.
+- La reproducción filtra los turnos del asistente inyectados por el reflejo de entrega de OpenClaw y la puerta de enlace.
+- La limpieza de imágenes se aplica a través de la regla global.
 
 **Mistral (incluida la detección basada en el ID del modelo)**
 
-- Sanitización del ID de la llamada a herramienta: strict9 (alfanumérico de longitud 9).
+- Limpieza del ID de llamada de herramienta: strict9 (alfanumérico de longitud 9).
 
 **OpenRouter Gemini**
 
-- Limpieza de firma de pensamiento: eliminar valores `thought_signature` que no sean base64 (mantener base64).
+- Limpieza de la firma de pensamiento: eliminar los valores `thought_signature` que no sean base64 (mantener base64).
 
 **OpenRouter Anthropic**
 
-- Los turnos de relleno previo del asistente finales se eliminan de las cargas útiles del modelo Anthropic compatible con OpenAI de OpenRouter verificadas cuando el razonamiento está activado, coincidiendo con el comportamiento de repetición directo de Anthropic y Anthropic en Cloudflare.
+- Los turnos de relleno previo del asistente finales se eliminan de las cargas útiles del modelo Anthropic compatibles con OpenAI verificadas de OpenRouter cuando el razonamiento está habilitado, coincidiendo con el comportamiento de repetición directa de Anthropic y Anthropic de Cloudflare.
 
 **Todo lo demás**
 
-- Solo sanitización de imágenes.
+- Solo saneamiento de imágenes.
 
 ---
 
-## Comportamiento histórico (antes del 22/01/2026)
+## Comportamiento histórico (antes del 22.1.2026)
 
-Antes del lanzamiento de 2026.1.22, OpenClaw aplicaba múltiples capas de higiene de transcripciones:
+Antes del lanzamiento 2026.1.22, OpenClaw aplicaba múltiples capas de higiene de transcripciones:
 
-- Una **extensión de sanitización de transcripciones** se ejecutaba en cada construcción de contexto y podía:
+- Una **extensión de saneamiento de transcripciones** se ejecutaba en cada construcción de contexto y podía:
   - Reparar el emparejamiento de uso/resultado de herramientas.
-  - Saneamiento de ids de llamadas a herramientas (incluido un modo no estricto que preservaba `_`/`-`).
-- El ejecutor también realizaba una sanitización específica del proveedor, lo que duplicaba el trabajo.
+  - Saneamiento de identificadores de llamadas a herramientas (incluyendo un modo no estricto que conservaba `_`/`-`).
+- El ejecutor también realizaba un saneamiento específico del proveedor, lo que duplicaba el trabajo.
 - Ocurrieron mutaciones adicionales fuera de la política del proveedor, incluyendo:
-  - Eliminación de etiquetas `<final>` del texto del asistente antes de la persistencia.
-  - Eliminar turnos de error de asistente vacíos.
-  - Recortar el contenido del asistente después de las llamadas a herramientas.
+  - Eliminar las etiquetas `<final>` del texto del asistente antes de la persistencia.
+  - Eliminando los turnos de error del asistente vacíos.
+  - Recortando el contenido del asistente después de las llamadas a herramientas.
 
-Esta complejidad provocó regresiones entre proveedores (notablemente el emparejamiento `openai-responses`
+Esta complejidad causó regresiones entre proveedores (notablemente el emparejamiento `openai-responses`
 `call_id|fc_id`). La limpieza del 22 de enero de 2026 eliminó la extensión, centralizó
-la lógica en el ejecutor e hizo que OpenAI fuera de **no tocar** más allá de la sanitización de imágenes.
+la lógica en el ejecutor y dejó a OpenAI **sin tocar** más allá de la sanitización de imágenes.
 
 ## Relacionado
 

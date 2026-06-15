@@ -76,7 +76,7 @@ sidebarTitle: "Agent 的工作区"
   </Accordion>
 </AccordionGroup>
 
-<Note>如果缺少任何引导文件，OpenClaw 会向会话中注入一个“缺失文件”标记并继续。注入大型引导文件时会被截断；可以使用 OpenClaw`agents.defaults.bootstrapMaxChars`（默认：12000）和 `agents.defaults.bootstrapTotalMaxChars`（默认：60000）调整限制。`openclaw setup` 可以重新创建缺失的默认文件，而不会覆盖现有文件。</Note>
+<Note>如果任何引导文件丢失，OpenClaw 会在会话中注入一个“文件丢失”标记并继续运行。注入大型引导文件时会被截断；可以使用 `agents.defaults.bootstrapMaxChars`（默认值：20000）和 `agents.defaults.bootstrapTotalMaxChars`（默认值：60000）调整限制。`openclaw setup` 可以重新创建丢失的默认文件，而不会覆盖现有文件。</Note>
 
 ## 工作区中不存在的内容
 

@@ -55,7 +55,7 @@ La misma superficie de compatibilidad también incluye:
 - `POST /v1/embeddings`
 - `POST /v1/chat/completions`
 
-Para la explicación canónica de cómo encajan los modelos objetivo de agente, `openclaw/default`, el paso a través de embeddings y las anulaciones del modelo de backend, consulte [OpenAI Chat Completions](/es/gateway/openai-http-api#agent-first-model-contract) y [Lista de modelos y enrutamiento de agentes](/es/gateway/openai-http-api#model-list-and-agent-routing).
+Para la explicación canónica de cómo encajan los modelos objetivo de agente, `openclaw/default`, el paso de embeddings y las anulaciones del modelo backend, consulte [OpenAI Chat Completions](/es/gateway/openai-http-api#agent-first-model-contract) y [Model list and agent routing](/es/gateway/openai-http-api#model-list-and-agent-routing).
 
 ## Comportamiento de la sesión
 
@@ -70,11 +70,11 @@ La solicitud sigue la API de OpenResponses con entrada basada en elementos. Sopo
 - `input`: cadena o matriz de objetos de elementos.
 - `instructions`: fusionado en el mensaje del sistema.
 - `tools`: definiciones de herramientas de cliente (herramientas de función).
-- `tool_choice`: filtrar o requerir herramientas de cliente.
+- `tool_choice`: `"auto"`, `"none"`, `"required"` o `{ "type": "function", "name": "..." }` para filtrar o requerir herramientas del cliente.
 - `stream`: habilita el streaming SSE.
 - `max_output_tokens`: límite de salida de mejor esfuerzo (dependiente del proveedor).
-- `temperature`: temperatura de muestreo de mejor esfuerzo reenviada al proveedor. Ignorado por el backend de Codex Responses basado en ChatGPT, que utiliza un muestreo fijo en el servidor.
-- `top_p`: muestreo de núcleo de mejor esfuerzo reenviado al proveedor. La misma advertencia de Codex Responses que `temperature`.
+- `temperature`: temperatura de muestreo de mejor esfuerzo enviada al proveedor. Ignorado por el backend Codex Responses basado en ChatGPT, que utiliza muestreo fijo en el servidor.
+- `top_p`: muestreo de núcleo de mejor esfuerzo enviado al proveedor. La misma advertencia de Codex Responses que `temperature`.
 - `user`: enrutamiento de sesión estable.
 
 Aceptado pero **actualmente ignorado**:
@@ -87,7 +87,7 @@ Aceptado pero **actualmente ignorado**:
 
 Compatible:
 
-- `previous_response_id`: OpenClaw reutiliza la sesión de respuesta anterior cuando la solicitud permanece dentro del mismo alcance de agente/usuario/sesión solicitada.
+- `previous_response_id`: OpenClaw reutiliza la sesión de respuesta anterior cuando la solicitud permanece dentro del mismo ámbito de agente/usuario/sesión solicitada.
 
 ## Elementos (entrada)
 
@@ -117,10 +117,12 @@ Se aceptan por compatibilidad con el esquema pero se ignoran al construir el men
 
 ## Herramientas (herramientas de funciones del lado del cliente)
 
-Proporcione herramientas con `tools: [{ type: "function", function: { name, description?, parameters? } }]`.
+Proporcione herramientas con `tools: [{ type: "function", name, description?, parameters? }]`.
 
 Si el agente decide llamar a una herramienta, la respuesta devuelve un elemento de salida `function_call`.
 A continuación, envía una solicitud de seguimiento con `function_call_output` para continuar el turno.
+
+Para `tool_choice: "required"` y `tool_choice` fijadas a funciones, el punto de conexión reduce el conjunto de herramientas de función del cliente expuestas, instruye al tiempo de ejecución para que llame a una herramienta del cliente antes de responder y rechaza el turno si no incluye una llamada de herramienta del cliente estructurada coincidente. Este contrato se aplica a la lista HTTP `tools` proporcionada por el llamador, no a todas las herramientas internas del agente OpenClaw. Las solicitudes sin transmisión devuelven `502` con un `api_error`; las solicitudes con transmisión emiten un evento `response.failed`. Esto coincide con el contrato `/v1/chat/completions`.
 
 ## Imágenes (`input_image`)
 
@@ -138,7 +140,7 @@ Tamaño máximo (actualmente): 10MB.
 
 ## Archivos (`input_file`)
 
-Admite fuentes base64 o URL:
+Soporta fuentes base64 o URL:
 
 ```json
 {
@@ -159,37 +161,33 @@ Tamaño máximo (actualmente): 5MB.
 
 Comportamiento actual:
 
-- El contenido del archivo se decodifica y añade al **mensaje del sistema**, no al mensaje del usuario,
+- El contenido del archivo se decodifica y se añade al **system prompt**, no al mensaje de usuario,
   por lo que permanece efímero (no se guarda en el historial de la sesión).
-- El texto del archivo decodificado se envuelve como **contenido externo que no es de confianza** antes de añadirse,
-  por lo que los bytes del archivo se tratan como datos, no como instrucciones de confianza.
+- El texto decodificado del archivo se envuelve como **contenido externo no confiable** antes de añadirse,
+  por lo que los bytes del archivo se tratan como datos, no como instrucciones confiables.
 - El bloque inyectado utiliza marcadores de límite explícitos como
   `<<<EXTERNAL_UNTRUSTED_CONTENT id="...">>>` /
   `<<<END_EXTERNAL_UNTRUSTED_CONTENT id="...">>>` e incluye una
   línea de metadatos `Source: External`.
-- Esta ruta de entrada de archivo omite intencionalmente el largo banner `SECURITY NOTICE:` para
+- Esta ruta de entrada de archivos omite intencionalmente el banner largo `SECURITY NOTICE:` para
   preservar el presupuesto del prompt; los marcadores de límite y los metadatos siguen en su lugar.
-- Los PDF se analizan primero para obtener texto. Si se encuentra poco texto, las primeras páginas se
-  convierten en imágenes rasterizadas y se pasan al modelo, y el bloque de archivo inyectado utiliza
-  el marcador de posición `[PDF content rendered to images]`.
+- Los PDF se analizan para obtener texto primero. Si se encuentra poco texto, las primeras páginas se rasterizan en imágenes y se pasan al modelo, y el bloque de archivo inyectado utiliza el marcador de posición `[PDF content rendered to images]`.
 
-El análisis de PDF es proporcionado por el complemento `document-extract` incluido, que utiliza
-`clawpdf` y su tiempo de ejecución WebAssembly de PDFium empaquetado para la extracción de texto y
-el renderizado de páginas.
+El análisis de PDF lo proporciona el complemento incluido `document-extract`, que utiliza `clawpdf` y su tiempo de ejecución PDFium WebAssembly empaquetado para la extracción de texto y el renderizado de páginas.
 
 Valores predeterminados de obtención de URL:
 
 - `files.allowUrl`: `true`
 - `images.allowUrl`: `true`
-- `maxUrlParts`: `8` (partes totales de `input_file` + `input_image` basadas en URL por solicitud)
+- `maxUrlParts`: `8` (total de partes `input_file` + `input_image` basadas en URL por solicitud)
 - Las solicitudes están protegidas (resolución DNS, bloqueo de IP privada, límites de redirección, tiempos de espera).
-- Se admiten listas de permitidos (allowlists) de nombre de host opcionales por tipo de entrada (`files.urlAllowlist`, `images.urlAllowlist`).
+- Se admiten listas de permitidos (allowlists) de nombres de host opcionales por tipo de entrada (`files.urlAllowlist`, `images.urlAllowlist`).
   - Host exacto: `"cdn.example.com"`
-  - Subdominios comodín: `"*.assets.example.com"` (no coincide con el apex)
-  - Las listas de permitidos vacías u omitidas significan que no hay restricción de lista de permitidos de nombre de host.
-- Para desactivar completamente las obtenciones basadas en URL, establezca `files.allowUrl: false` y/o `images.allowUrl: false`.
+  - Subdominios comodín: `"*.assets.example.com"` (no coincide con el vértice)
+  - Las listas de permitidos vacías u omitidas significan que no hay restricción de lista de permitidos de nombres de host.
+- Para deshabilitar por completo las obtenciones basadas en URL, establezca `files.allowUrl: false` y/o `images.allowUrl: false`.
 
-## Límites de archivo + imagen (config)
+## Límites de archivo + imagen (configuración)
 
 Los valores predeterminados se pueden ajustar en `gateway.http.endpoints.responses`:
 
@@ -245,14 +243,14 @@ Valores predeterminados cuando se omiten:
 - `images.maxBytes`: 10MB
 - `images.maxRedirects`: 3
 - `images.timeoutMs`: 10s
-- Se aceptan fuentes `input_image` HEIC/HEIF cuando hay un convertidor del sistema disponible y se normalizan a JPEG antes de la entrega al proveedor. Los convertidores compatibles son macOS `sips`, ImageMagick, GraphicsMagick o ffmpeg.
+- Las fuentes `input_image` HEIC/HEIF se aceptan cuando hay un convertidor del sistema disponible y se normalizan a JPEG antes de la entrega al proveedor. Los convertidores compatibles son macOS `sips`, ImageMagick, GraphicsMagick o ffmpeg.
 
 Nota de seguridad:
 
-- Las listas de permitidos de URL se aplican antes de la obtención y en los saltos de redirección.
-- Permitir un nombre de host no evita el bloqueo de IP privada/interna.
-- Para gateways expuestos a Internet, aplique controles de salida de red además de las protecciones a nivel de aplicación.
-  Consulte [Seguridad](/es/gateway/security).
+- Las listas de permitidos de URL se hacen cumplir antes de la obtención y en los saltos de redirección.
+- Permitir un nombre de host no omite el bloqueo de IPs privadas/internas.
+- Para gateways expuestos a internet, aplique controles de salida de red además de las protecciones a nivel de aplicación.
+  Vea [Seguridad](/es/gateway/security).
 
 ## Transmisión (SSE)
 
@@ -260,7 +258,7 @@ Establezca `stream: true` para recibir eventos enviados por el servidor (SSE):
 
 - `Content-Type: text/event-stream`
 - Cada línea de evento es `event: <type>` y `data: <json>`
-- La secuencia termina con `data: [DONE]`
+- El flujo termina con `data: [DONE]`
 
 Tipos de eventos emitidos actualmente:
 
@@ -277,9 +275,9 @@ Tipos de eventos emitidos actualmente:
 
 ## Uso
 
-`usage` se rellena cuando el proveedor subyacente informa los recuentos de tokens.
+`usage` se completa cuando el proveedor subyacente informa los recuentos de tokens.
 OpenClaw normaliza los alias comunes de estilo OpenAI antes de que esos contadores alcancen
-las superficies de estado/sesión posteriores, incluyendo `input_tokens` / `output_tokens`
+las superficies de estado/sesión descendentes, incluyendo `input_tokens` / `output_tokens`
 y `prompt_tokens` / `completion_tokens`.
 
 ## Errores
@@ -311,7 +309,7 @@ curl -sS http://127.0.0.1:18789/v1/responses \
   }'
 ```
 
-Transmisión:
+Con transmisión:
 
 ```bash
 curl -N http://127.0.0.1:18789/v1/responses \

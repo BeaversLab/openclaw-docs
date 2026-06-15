@@ -74,7 +74,7 @@ sidebarTitle: "Agent workspace"
   <Accordion title="canvas/ - Canvas UI 檔案（可選）">用於節點顯示的 Canvas UI 檔案（例如 `canvas/index.html`）。</Accordion>
 </AccordionGroup>
 
-<Note>如果缺少任何啟動檔案，OpenClaw 會在會話中注入「缺少檔案」標記並繼續。大型啟動檔案在注入時會被截斷；可使用 `agents.defaults.bootstrapMaxChars`（預設值：12000）和 `agents.defaults.bootstrapTotalMaxChars`（預設值：60000）調整限制。`openclaw setup` 可以重新建立缺少的預設檔案，而不會覆蓋現有檔案。</Note>
+<Note>如果任何啟動檔案遺失，OpenClaw 會將「遺失檔案」標記插入會話並繼續執行。大型啟動檔案在插入時會被截斷；您可以透過 `agents.defaults.bootstrapMaxChars`（預設值：20000）和 `agents.defaults.bootstrapTotalMaxChars`（預設值：60000）調整限制。`openclaw setup` 可以在不覆蓋現有檔案的情況下重新建立遺失的預設檔案。</Note>
 
 ## 什麼不在工作區內
 

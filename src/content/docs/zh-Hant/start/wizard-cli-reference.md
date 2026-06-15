@@ -176,7 +176,7 @@ sidebarTitle: "CLI 參考"
     更多詳情：[Cloudflare AI Gateway](/zh-Hant/providers/cloudflare-ai-gateway)。
   </Accordion>
   <Accordion title="MiniMax">
-    設定會自動寫入。託管預設值為 `MiniMax-M2.7`；API 金鑰設定使用
+    配置會自動寫入。託管預設為 `MiniMax-M3`；API 金鑰設定使用
     `minimax/...`，而 OAuth 設定使用 `minimax-portal/...`。
     更多詳情：[MiniMax](/zh-Hant/providers/minimax)。
   </Accordion>
@@ -201,19 +201,19 @@ sidebarTitle: "CLI 參考"
     更多詳情：[Moonshot AI (Kimi + Kimi Coding)](/zh-Hant/providers/moonshot)。
   </Accordion>
   <Accordion title="Custom provider">
-    適用於 OpenAI 相容和 Anthropic 相容的端點。
+    適用於與 OpenAI 相容和與 Anthropic 相容的端點。
 
-    互動式入門支援與其他供應商 API 金鑰流程相同的 API 金鑰儲存選項：
+    互動式入職支援與其他提供者 API 金鑰流程相同的 API 金鑰儲存選項：
     - **立即貼上 API 金鑰** (純文字)
-    - **使用秘密參照** (環境變數參照或已設定的供應商參照，並包含預檢驗證)
+    - **使用祕密參照** (環境變數參照或已設定的提供者參照，並包含預檢驗證)
 
-    非互動式旗標：
+    非互動式標誌：
     - `--auth-choice custom-api-key`
     - `--custom-base-url`
     - `--custom-model-id`
-    - `--custom-api-key` (選用；若未提供則回退至 `CUSTOM_API_KEY`)
+    - `--custom-api-key` (選用；退回至 `CUSTOM_API_KEY`)
     - `--custom-provider-id` (選用)
-    - `--custom-compatibility <openai|anthropic>` (選用；預設為 `openai`)
+    - `--custom-compatibility <openai|openai-responses|anthropic>` (選用；預設 `openai`)
     - `--custom-image-input` / `--custom-text-input` (選用；覆寫推斷的模型輸入能力)
 
   </Accordion>

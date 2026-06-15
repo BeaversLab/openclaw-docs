@@ -73,6 +73,8 @@ title: "SecretRef 憑證範圍"
 - `channels.slack.accounts.*.appToken`
 - `channels.slack.accounts.*.userToken`
 - `channels.slack.accounts.*.signingSecret`
+- `channels.sms.authToken`
+- `channels.sms.accounts.*.authToken`
 - `channels.discord.token`
 - `channels.discord.pluralkit.token`
 - `channels.discord.voice.tts.providers.*.apiKey`
@@ -106,30 +108,30 @@ title: "SecretRef 憑證範圍"
 - `channels.zalo.webhookSecret`
 - `channels.zalo.accounts.*.botToken`
 - `channels.zalo.accounts.*.webhookSecret`
-- 透過同層級 `serviceAccountRef` 的 `channels.googlechat.serviceAccount`（相容性例外）
-- 透過同層級 `serviceAccountRef` 的 `channels.googlechat.accounts.*.serviceAccount`（相容性例外）
+- `channels.googlechat.serviceAccount` 透過同層級 `serviceAccountRef` （相容性例外）
+- `channels.googlechat.accounts.*.serviceAccount` 透過同層級 `serviceAccountRef` （相容性例外）
 
 ### `auth-profiles.json` 目標 (`secrets configure` + `secrets apply` + `secrets audit`)
 
-- `profiles.*.keyRef` (`type: "api_key"`; 當 `auth.profiles.<id>.mode = "oauth"` 時不支援)
-- `profiles.*.tokenRef` (`type: "token"`; 當 `auth.profiles.<id>.mode = "oauth"` 時不支援)
+- `profiles.*.keyRef` (`type: "api_key"`；當 `auth.profiles.<id>.mode = "oauth"` 時不支援)
+- `profiles.*.tokenRef` (`type: "token"`；當 `auth.profiles.<id>.mode = "oauth"` 時不支援)
 
 [//]: # "secretref-supported-list-end"
 
 備註：
 
-- Auth-profile 計劃目標需要 `agentId`。
-- 計劃條目目標 `profiles.*.key` / `profiles.*.token` 並寫入同級 refs (`keyRef` / `tokenRef`)。
-- Auth-profile refs 包含在執行時期解析和稽核覆蓋範圍內。
+- Auth-profile 計畫目標需要 `agentId`。
+- 計畫條目以 `profiles.*.key` / `profiles.*.token` 為目標並寫入同層級參照 (`keyRef` / `tokenRef`)。
+- Auth-profile 參照包含在執行階段解析和稽核覆蓋範圍內。
 - 在 `openclaw.json` 中，SecretRefs 必須使用結構化物件，例如 `{"source":"env","provider":"default","id":"DISCORD_BOT_TOKEN"}`。舊版 `secretref-env:<ENV_VAR>` 標記字串會在 SecretRef 憑證路徑上被拒絕；請執行 `openclaw doctor --fix` 以遷移有效的標記。
-- OAuth 策略防護：`auth.profiles.<id>.mode = "oauth"` 無法與該設定檔的 SecretRef 輸入結合。當違反此策略時，啟動/重新載入和 auth-profile 解析會快速失敗。
-- 對於由 SecretRef 管理的模型提供者，產生的 `agents/*/agent/models.json` 條目會為 `apiKey`/header 介面保存非機密標記（非已解析的機密值）。
-- 標記持久化是以來源為權威：OpenClaw 從作用中的來源設定快照（解析前）寫入標記，而不是從已解析的執行時期機密值寫入。
+- OAuth 策略防護：`auth.profiles.<id>.mode = "oauth"` 不能與該設定檔的 SecretRef 輸入結合使用。當違反此策略時，啟動/重新載入和 auth-profile 解析會快速失敗。
+- 對於 SecretRef 管理的模型提供者，產生的 `agents/*/agent/models.json` 項目會保存非秘密標記（而非已解析的秘密值），用於 `apiKey`/標頭層。
+- 標記持久性是以來源為授權依據：OpenClaw 會從有效的來源配置快照（解析前）寫入標記，而不是從已解析的執行時期秘密值寫入。
 - 對於網路搜尋：
-  - 在明確提供者模式（已設定 `tools.web.search.provider`）中，只有選定的提供者金鑰是作用中的。
-  - 在自動模式（未設定 `tools.web.search.provider`）中，只有第一個依優先順序解析的提供者金鑰是作用中的。
-  - 在自動模式下，非選定的提供者 refs 在被選定之前會被視為非作用中。
-  - 舊版 `tools.web.search.*` 提供者路徑在相容視窗期間仍可解析，但標準的 SecretRef 介面是 `plugins.entries.<plugin>.config.webSearch.*`。
+  - 在明確提供者模式（已設定 `tools.web.search.provider`）下，只有選定的提供者金鑰是啟用的。
+  - 在自動模式（未設定 `tools.web.search.provider`）下，只有第一個依優先順序解析的提供者金鑰是啟用的。
+  - 在自動模式下，未選取的提供者參照在被選取之前會被視為非啟用狀態。
+  - 舊版 `tools.web.search.*` 提供者路徑在相容性期間仍會解析，但標準的 SecretRef 層是 `plugins.entries.<plugin>.config.webSearch.*`。
 
 ## 不支援的憑證
 
@@ -149,11 +151,11 @@ title: "SecretRef 憑證範圍"
 
 [//]: # "secretref-unsupported-list-end"
 
-基本原理：
+理由：
 
-- 這些憑證屬於由系統產生、輪換、攜帶工作階段，或具有 OAuth 持久性的類別，不適合唯讀的外部 SecretRef 解析。
+- 這些憑證屬於已鑄造、輪換、承載會話或 OAuth 持久類別，不適合唯讀的外部 SecretRef 解析。
 
 ## 相關
 
-- [機密管理](/zh-Hant/gateway/secrets)
-- [驗證憑證語意](/zh-Hant/auth-credential-semantics)
+- [Secrets 管理](/zh-Hant/gateway/secrets)
+- [Auth 憑證語意](/zh-Hant/auth-credential-semantics)

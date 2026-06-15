@@ -16,7 +16,7 @@ acme-cli/acme-large
 
 Utilisez un backend CLI lorsque l'intégration en amont est déjà exposée en tant que commande locale, lorsque le CLI gère l'état de connexion locale, ou lorsque le CLI constitue un repli utile si les providers d'API sont indisponibles.
 
-<Info>Si le service en amont expose une API de modèle HTTP normale, écrivez plutôt un [provider plugin](/fr/plugins/sdk-provider-plugins). Si le runtime en amont gère des sessions d'agent complètes, des événements d'outil, une compaction ou l'état des tâches en arrière-plan, utilisez un [agent harness](/fr/plugins/sdk-agent-harness).</Info>
+<Info>Si le service en amont expose une API de modèle HTTP normale, écrivez un [provider plugin](/fr/plugins/sdk-provider-plugins) à la place. Si le runtime en amont gère des sessions d'agent complètes, des événements d'outil, la compaction, ou l'état des tâches en arrière-plan, utilisez un [agent harness](/fr/plugins/sdk-agent-harness).</Info>
 
 ## Ce que possède le plugin
 
@@ -59,7 +59,9 @@ Le manifeste contient les métadonnées de découverte. Il n'exécute pas le CLI
     }
     ```
 
-    Les packages publiés doivent inclure les fichiers d'exécution JavaScript construits. Si votre point d'entrée source est `./src/index.ts`, ajoutez `openclaw.runtimeExtensions` qui pointe vers le fichier JavaScript construit. Voir [Points d'entrée](/fr/plugins/sdk-entrypoints).
+    Les packages publiés doivent inclure les fichiers d'exécution JavaScript construits. Si votre point
+    d'entrée source est `./src/index.ts`, ajoutez `openclaw.runtimeExtensions` qui pointe vers
+    le fichier JavaScript construit. Voir [Entry points](/fr/plugins/sdk-entrypoints).
 
   </Step>
 
@@ -190,13 +192,31 @@ uniquement pour les comportements appartenant vraiment au backend.
 | `authEpochMode`                    | Décider comment les changements d'auth invalident les sessions stockées CLI |
 | `nativeToolMode`                   | Déclarer si le CLI possède des outils natifs toujours actifs                |
 | `bundleMcp` / `bundleMcpMode`      | Activer le pont d'outil MCP de boucle de retour OpenClaw                    |
+| `ownsNativeCompaction`             | Le backend gère sa propre compaction - OpenClaw s'en remet                  |
 
-Gardez ces hooks sous la propriété du provider. N'ajoutez pas de branches spécifiques au CLI dans le cœur lorsqu'un
+Gardez ces hooks gérés par le provider. N'ajoutez pas de branches spécifiques au CLI dans le cœur lorsqu'un
 hook de backend peut exprimer le comportement.
+
+### `ownsNativeCompaction` : désactivation de la compaction OpenClaw
+
+Si votre backend exécute un agent qui compacte sa **propre** transcription, définissez
+`ownsNativeCompaction: true` pour que le résumé de sécurité de OpenClaw ne soit jamais exécuté sur ses
+sessions - le cycle de vie de la compaction CLI renvoie une opération vide et le tour se poursuit. `claude-cli`
+déclare cette propriété car Claude Code compacte en interne sans endpoint de harnais. Les sessions de harnais natif
+telles que Codex continuent de router vers leur endpoint de compaction de harnais.
+
+**Ne la déclarez que si toutes les conditions suivantes sont remplies**, sinon une session différée dépassant le budget peut
+rester dépassée / devenir obsolète (OpenClaw ne la sauve plus) :
+
+- le backend compacte ou limite de manière fiable sa propre transcription lorsqu'il approche sa fenêtre ;
+- il persiste une session repriseable pour que l'état compacté survive aux tours
+  (ex. `--resume` / `--session-id`) ;
+- ce n'est pas une session de compaction de harnais natif - les sessions `agentHarnessId` correspondantes
+  routent vers le endpoint de harnais à la place.
 
 ## Pont d'outil MCP
 
-Les backends CLI ne reçoivent pas les outils OpenClaw par défaut. Si la CLI peut consommer une configuration MCP, optez explicitement pour :
+Les backends CLI ne reçoivent pas les outils OpenClaw par défaut. Si la CLI peut consommer une configuration MCP, optez explicitement pour cette option :
 
 ```typescript
 return {
@@ -213,14 +233,14 @@ return {
 
 Les modes de pont pris en charge sont :
 
-| Mode                     | Utilisation                                                                     |
-| ------------------------ | ------------------------------------------------------------------------------- |
-| `claude-config-file`     | CLIs qui acceptent un fichier de configuration MCP                              |
-| `codex-config-overrides` | CLIs qui acceptent des redéfinitions de configuration sur argv                  |
-| `gemini-system-settings` | CLIs qui lisent les paramètres MCP depuis leur répertoire de paramètres système |
+| Mode                     | Utilisation                                                                          |
+| ------------------------ | ------------------------------------------------------------------------------------ |
+| `claude-config-file`     | CLIs qui acceptent un fichier de configuration MCP                                   |
+| `codex-config-overrides` | CLIs qui acceptent des surcharges de configuration sur argv                          |
+| `gemini-system-settings` | CLIs qui lisent les paramètres MCP à partir de leur répertoire de paramètres système |
 
-N'activez le pont que lorsque la CLI peut réellement le consommer. Si la CLI possède sa propre couche d'outils intégrée qui ne peut pas être désactivée, définissez `nativeToolMode:
-"always-on"` pour qu'OpenClaw puisse échouer de manière fermée lorsqu'un appelant n'exige aucun outil natif.
+N'activez le pont que lorsque la CLI peut réellement l'utiliser. Si la CLI possède sa propre couche d'outils intégrée qui ne peut pas être désactivée, définissez `nativeToolMode:
+"always-on"` afin qu'OpenClaw puisse échouer de manière fermée lorsqu'un appelant exige aucun outil natif.
 
 ## Configuration utilisateur
 
@@ -248,35 +268,38 @@ Les utilisateurs peuvent remplacer toute valeur par défaut du backend :
 }
 ```
 
-Documentez la redéfinition minimale dont les utilisateurs sont susceptibles d'avoir besoin. Habituellement, il ne s'agit que de
+Documentez la redéfinition minimale dont les utilisateurs sont susceptibles d'avoir besoin. En général, il ne s'agit que de
 `command` lorsque le binaire est en dehors de `PATH`.
 
 ## Vérification
 
-Pour les plugins groupés, ajoutez un test ciblé autour du générateur et de l'inscription du configuration, puis exécutez la voie de test ciblée du plugin :
+Pour les plugins groupés, ajoutez un test ciblé autour du générateur et de l'enregistrement de la configuration,
+puis exécutez la voie de test ciblée du plugin :
 
 ```bash
 pnpm test extensions/acme-cli
 ```
 
-Pour les plugins locaux ou installés, vérifiez la découverte et une exécution réelle de model :
+Pour les plugins locaux ou installés, vérifiez la découverte et une exécution réelle de modèle :
 
 ```bash
 openclaw plugins inspect acme-cli --runtime --json
 openclaw agent --message "reply exactly: backend ok" --model acme-cli/acme-large
 ```
 
-Si le backend prend en charge les images ou MCP, ajoutez un test de fumée en direct qui prouve ces chemins avec la CLI réelle. Ne vous fiez pas à l'inspection statique pour le prompt, l'image, MCP, ou le comportement de reprise de session.
+Si le backend prend en charge les images ou MCP, ajoutez un test de fumée en direct qui prouve ces chemins
+avec la vraie CLI. Ne vous fiez pas à l'inspection statique pour le prompt, l'image, MCP ou
+le comportement de reprise de session.
 
 ## Liste de contrôle
 
-<Check>`package.json` a `openclaw.extensions` et des entrées d'exécution construites pour les packages publiés</Check>
-<Check>`openclaw.plugin.json` déclare `cliBackends` et `activation.onStartup` intentionnels</Check>
-<Check>`setup.cliBackends` est présent lorsque la configuration/découverte de model doit voir le backend à froid</Check>
+<Check>`package.json` contient `openclaw.extensions` et des entrées d'exécution construites pour les packages publiés</Check>
+<Check>`openclaw.plugin.json` déclare `cliBackends` et des `activation.onStartup` intentionnels</Check>
+<Check>`setup.cliBackends` est présent lorsque la configuration/découverte de modèle doit voir le backend à froid</Check>
 <Check>`api.registerCliBackend(...)` utilise le même identifiant de backend que le manifeste</Check>
-<Check>Les redéfinitions utilisateur sous `agents.defaults.cliBackends.<id>`CLICLI l'emportent toujours</Check>
-<Check>Les paramètres de session, de prompt système, d'image et d'analyseur de sortie correspondent au contrat réel de la CLI</Check>
-<Check>Les tests ciblés et au moins un test de fumée en live de CLI prouvent le chemin du backend</Check>
+<Check>Les redéfinitions utilisateur sous `agents.defaults.cliBackends.<id>`CLICLI priment toujours</Check>
+<Check>Les paramètres de session, de système de prompt, d'image et d'analyseur de sortie correspondent au contrat réel de la CLI</Check>
+<Check>Les tests ciblés et au moins un test de fumée de CLI en direct prouvent le chemin du backend</Check>
 
 ## Connexes
 

@@ -7,9 +7,9 @@ read_when:
 title: "API de control del navegador"
 ---
 
-Para la configuración, solución de problemas y puesta a punto, consulte [Browser](/es/tools/browser).
-Esta página es la referencia para la API HTTP de control local, la `openclaw browser`
-CLI y los patrones de script (snapshots, refs, waits, debug flows).
+Para la configuración, solución de problemas y puesta en marcha, consulte [Navegador](/es/tools/browser).
+Esta página es la referencia de la API HTTP de control local, la `openclaw browser`
+CLI y los patrones de secuencias de comandos (snapshots, refs, waits, debug flows).
 
 ## API de control (opcional)
 
@@ -34,22 +34,27 @@ un inicio headless de un solo tiro para perfiles administrados localmente sin ca
 configuración del navegador persistente; los perfiles de solo conexión, CDP remoto y sesión existente rechazan
 esa anulación porque OpenClaw no inicia esos procesos del navegador.
 
-Si se configura la autenticación de la puerta de enlace con secreto compartido, las rutas HTTP del navegador también requieren autenticación:
+Para los endpoints de pestañas, `targetId` es el nombre del campo de compatibilidad. Se prefiere pasar
+`suggestedTargetId` de `GET /tabs` o `POST /tabs/open`; las etiquetas y los identificadores `tabId`
+tales como `t1` también se aceptan. Los ids de destino CDP sin procesar y los prefijos únicos de
+id de destino sin procesar todavía funcionan, pero son identificadores de diagnóstico volátiles.
+
+Si se configura la autenticación de puerta de enlace de secreto compartido, las rutas HTTP del navegador también requieren autenticación:
 
 - `Authorization: Bearer <gateway token>`
-- `x-openclaw-password: <gateway password>` o autenticación HTTP Basic con esa contraseña
+- `x-openclaw-password: <gateway password>` o autenticación básica HTTP con esa contraseña
 
 Notas:
 
-- Esta API de navegador de bucle local (loopback) independiente **no** consume encabezados de identidad
-  de proxy confiable (trusted-proxy) ni de Tailscale Serve.
-- Si `gateway.auth.mode` es `none` o `trusted-proxy`, estas rutas de
-  navegador de bucle local no heredan esos modos que portan identidad; manténgalas solo de bucle local.
+- Esta API de navegador de bucle invertido independiente **no** consume encabezados de identidad de proxy confiable o
+  Tailscale Serve.
+- Si `gateway.auth.mode` es `none` o `trusted-proxy`, estas rutas de navegador
+  de bucle invertido no heredan esos modos portadores de identidad; manténgalos solo de bucle invertido.
 
-### Contrato de error de `/act`
+### Contrato de error `/act`
 
 `POST /act` utiliza una respuesta de error estructurada para la validación a nivel de ruta y
-fallos de política:
+fallas de política:
 
 ```json
 { "error": "<message>", "code": "ACT_*" }
@@ -61,10 +66,10 @@ Valores actuales de `code`:
 - `ACT_INVALID_REQUEST` (HTTP 400): la carga útil de la acción falló la normalización o validación.
 - `ACT_SELECTOR_UNSUPPORTED` (HTTP 400): `selector` se usó con un tipo de acción no admitido.
 - `ACT_EVALUATE_DISABLED` (HTTP 403): `evaluate` (o `wait --fn`) está deshabilitado por la configuración.
-- `ACT_TARGET_ID_MISMATCH` (HTTP 403): `targetId` de nivel superior o por lotes entra en conflicto con el objetivo de la solicitud.
-- `ACT_EXISTING_SESSION_UNSUPPORTED` (HTTP 501): la acción no es compatible con perfiles de sesión existente.
+- `ACT_TARGET_ID_MISMATCH` (HTTP 403): `targetId` de nivel superior o por lotes entra en conflicto con el destino de la solicitud.
+- `ACT_EXISTING_SESSION_UNSUPPORTED` (HTTP 501): la acción no es compatible con los perfiles de sesión existente.
 
-Otros fallos de tiempo de ejecución aún pueden devolver `{ "error": "<message>" }` sin un
+Otras fallas de tiempo de ejecución aún pueden devolver `{ "error": "<message>" }` sin un
 campo `code`.
 
 ### Requisito de Playwright
@@ -73,44 +78,44 @@ Algunas funciones (navegar/actuar/snapshot de IA/snapshot de rol, capturas de pa
 PDF) requieren Playwright. Si Playwright no está instalado, esos endpoints devuelven
 un error 501 claro.
 
-Lo que todavía funciona sin Playwright:
+Lo que aún funciona sin Playwright:
 
-- Snapshots de ARIA
-- Instantáneas de accesibilidad de estilo de función (`--interactive`, `--compact`,
+- Snapshots ARIA
+- Snapshots de accesibilidad de estilo Role (`--interactive`, `--compact`,
   `--depth`, `--efficient`) cuando hay un WebSocket CDP por pestaña disponible. Esto es
-  una alternativa para la inspección y el descubrimiento de referencias; Playwright sigue siendo el motor de
-  acción principal.
+  una alternativa para la inspección y el descubrimiento de referencias; Playwright sigue siendo el motor
+  de acción principal.
 - Capturas de pantalla de página para el navegador gestionado `openclaw` cuando hay un WebSocket CDP
   por pestaña disponible
-- Capturas de pantalla de página para perfiles `existing-session` / Chrome MCP
-- `existing-session` capturas de pantalla basadas en referencias (`--ref`) desde la salida de la instantánea
+- Capturas de pantalla de página para `existing-session` / perfiles Chrome MCP
+- Capturas de pantalla basadas en referencias `existing-session` (`--ref`) desde la salida del snapshot
 
 Lo que todavía necesita Playwright:
 
 - `navigate`
 - `act`
-- Instantáneas de IA que dependen del formato de instantánea de IA nativo de Playwright
+- Snapshots de IA que dependen del formato nativo de snapshot de IA de Playwright
 - Capturas de pantalla de elementos con selector CSS (`--element`)
-- Exportación de PDF completa del navegador
+- exportación completa de PDF del navegador
 
 Las capturas de pantalla de elementos también rechazan `--full-page`; la ruta devuelve `fullPage is
 not supported for element screenshots`.
 
-Si ve `Playwright is not available in this gateway build`, al Gateway
-empaquetado le falta la dependencia principal del tiempo de ejecución del navegador. Reinstale o actualice
+Si ve `Playwright is not available in this gateway build`, al Gateway empaquetado
+le falta la dependencia principal del tiempo de ejecución del navegador. Reinstale o actualice
 OpenClaw y luego reinicie el gateway. Para Docker, también instale los binarios
 del navegador Chromium como se muestra a continuación.
 
 #### Instalación de Playwright en Docker
 
-Si su Gateway se ejecuta en Docker, evite `npx playwright` (conflictos de anulaciones de npm).
-Para imágenes personalizadas, incorpore Chromium en la imagen:
+Si su Gateway se ejecuta en Docker, evite `npx playwright` (conflictos de anulación de npm).
+Para imágenes personalizadas, incorpore Chromium a la imagen:
 
 ```bash
 OPENCLAW_INSTALL_BROWSER=1 ./scripts/docker/setup.sh
 ```
 
-Para una imagen existente, instálela a través de la CLI incluida en su lugar:
+Para una imagen existente, instálelo a través de la CLI incluida:
 
 ```bash
 docker compose run --rm openclaw-cli \
@@ -119,20 +124,20 @@ docker compose run --rm openclaw-cli \
 
 Para persistir las descargas del navegador, establezca `PLAYWRIGHT_BROWSERS_PATH` (por ejemplo,
 `/home/node/.cache/ms-playwright`) y asegúrese de que `/home/node` se persista a través de
-`OPENCLAW_HOME_VOLUME` o un montaje de vinculación (bind mount). OpenClaw detecta automáticamente el
+`OPENCLAW_HOME_VOLUME` o un montaje de enlace (bind mount). OpenClaw detecta automáticamente el
 Chromium persistido en Linux. Consulte [Docker](/es/install/docker).
 
 ## Cómo funciona (interno)
 
-Un pequeño servidor de control de bucle de retorno (loopback) acepta solicitudes HTTP y se conecta a navegadores basados en Chromium a través de CDP. Las acciones avanzadas (clic/escribir/snapshot/PDF) pasan por Playwright sobre CDP; cuando falta Playwright, solo están disponibles las operaciones que no son de Playwright. El agente ve una interfaz estable mientras los navegadores y perfiles locales/remotos se intercambian libremente en segundo plano.
+Un pequeño servidor de control de bucle de retorno acepta solicitudes HTTP y se conecta a navegadores basados en Chromium a través de CDP. Las acciones avanzadas (clic/escribir/instantánea/PDF) se realizan a través de Playwright sobre CDP; cuando falta Playwright, solo están disponibles las operaciones que no son de Playwright. El agente ve una interfaz estable mientras los navegadores y perfiles locales/remotos se intercambian libremente debajo.
 
-## Referencia rápida de la CLI
+## Referencia rápida de CLI
 
 Todos los comandos aceptan `--browser-profile <name>` para apuntar a un perfil específico y `--json` para una salida legible por máquina.
 
 <AccordionGroup>
 
-<Accordion title="Lo básico: estado, pestañas, abrir/enfocar/cerrar">
+<Accordion title="Conceptos básicos: estado, pestañas, abrir/enfocar/cerrar">
 
 ```bash
 openclaw browser status
@@ -231,28 +236,28 @@ openclaw browser set device "iPhone 14"
 
 Notas:
 
-- `upload` y `dialog` son llamadas de **preparación**; ejecútelas antes del clic/presión que activa el selector/cuadro de diálogo. Si una acción abre un modal, la respuesta de la acción incluye `blockedByDialog` y `browserState.dialogs.pending`; pase ese `dialogId` para responder directamente. Los cuadros de diálogo manejados fuera de OpenClaw aparecen bajo `browserState.dialogs.recent`.
-- `click`/`type`/etc. requieren un `ref` de `snapshot` (`12` numérico, referencia de rol `e12`, o referencia de ARIA accionable `ax12`). Los selectores CSS no son compatibles intencionalmente para las acciones. Use `click-coords` cuando la posición visible de la ventana gráfica sea el único objetivo confiable.
-- Las rutas de descarga y seguimiento están limitadas a las raíces temporales de OpenClaw: `/tmp/openclaw{,/downloads}` (valor alternativo: `${os.tmpdir()}/openclaw/...`).
-- `upload` acepta archivos de la raíz de carga temporal de OpenClaw y
-  medios de entrada gestionados por OpenClaw. Los medios de entrada gestionados se pueden referenciar como
-  `media://inbound/<id>`, relativos al sandbox `media/inbound/<id>` o una ruta resuelta
-  dentro del directorio de medios de entrada gestionados. Las referencias a medios anidados,
-  el recorrido, los enlaces simbólicos, los enlaces duros y las rutas locales arbitrarias siguen siendo rechazados.
-- `upload` también puede establecer entradas de archivos directamente a través de `--input-ref` o `--element`.
+- `upload` y `dialog` son llamadas de **preparación**; ejecútelas antes del clic/presión que activa el selector/cuadro de diálogo. Si una acción abre un modal, la respuesta de la acción incluye `blockedByDialog` y `browserState.dialogs.pending`; pase ese `dialogId` para responder directamente. Los cuadros de diálogo manejados fuera de OpenClaw aparecen en `browserState.dialogs.recent`.
+- `click`/`type`/etc requieren un `ref` de `snapshot` (numérico `12`, referencia de rol `e12` o referencia ARIA accionable `ax12`). Los selectores CSS no son compatibles intencionalmente con las acciones. Use `click-coords` cuando la posición visible del puerto de visualización sea el único objetivo confiable.
+- Las rutas de descarga y rastreo están restringidas a las raíces temporales de OpenClaw: `/tmp/openclaw{,/downloads}` (alternativa: `${os.tmpdir()}/openclaw/...`).
+- `upload` acepta archivos del directorio raíz de carga temporal de OpenClaw y
+  medios de entrada administrados por OpenClaw. Los medios de entrada administrados se pueden referenciar como
+  `media://inbound/<id>`, relativo al sandbox `media/inbound/<id>` o una ruta resuelta
+  dentro del directorio de medios de entrada administrados. Las referencias de medios anidadas,
+  el recorrido, los enlaces simbólicos, los enlaces físicos y las rutas locales arbitrarias todavía se rechazan.
+- `upload` también puede establecer entradas de archivo directamente a través de `--input-ref` o `--element`.
 
-Los ids y las etiquetas de las pestañas estables sobreviven al reemplazo del destino sin procesar (raw-target) de Chromium cuando OpenClaw
-puede probar la pestaña de reemplazo, como la misma URL o una sola pestaña antigua convirtiéndose en
-una sola pestaña nueva después del envío del formulario. Los ids de destino sin procesar siguen siendo volátiles; prefiera
+Los ids y etiquetas de pestaña estables sobreviven al reemplazo de destino sin procesar de Chromium cuando OpenClaw
+puede probar la pestaña de reemplazo, como la misma URL o una sola pestaña antigua que se convierte en una
+sola pestaña nueva después del envío del formulario. Los ids de destino sin procesar todavía son volátiles; prefiera
 `suggestedTargetId` de `tabs` en los scripts.
 
-Marcas de instantánea (snapshot flags) de un vistazo:
+Marcas de instantánea a un vistazo:
 
 - `--format ai` (predeterminado con Playwright): instantánea de IA con referencias numéricas (`aria-ref="<n>"`).
-- `--format aria`: árbol de accesibilidad con referencias `axN`. Cuando Playwright está disponible, OpenClaw vincula las referencias con ids del DOM del backend a la página en vivo para que las acciones de seguimiento puedan usarlas; de lo contrario, trate la salida como solo de inspección.
-- `--efficient` (o `--mode efficient`): preajuste de instantánea de rol compacta. Establezca `browser.snapshotDefaults.mode: "efficient"` para hacer esto el predeterminado (consulte [Configuración de Gateway](/es/gateway/configuration-reference#browser)).
+- `--format aria`: árbol de accesibilidad con referencias `axN`. Cuando Playwright está disponible, OpenClaw vincula referencias con ids de DOM del backend a la página en vivo para que las acciones de seguimiento puedan usarlas; de lo contrario, trate la salida solo para inspección.
+- `--efficient` (o `--mode efficient`): configuración preestablecida de instantánea de rol compacta. Establezca `browser.snapshotDefaults.mode: "efficient"` para hacer esto el predeterminado (consulte [Configuración de Gateway](/es/gateway/configuration-reference#browser)).
 - `--interactive`, `--compact`, `--depth`, `--selector` fuerzan una instantánea de rol con referencias `ref=e12`. `--frame "<iframe>"` limita las instantáneas de rol a un iframe.
-- `--labels` añade una captura de pantalla solo del viewport con etiquetas de referencia superpuestas e imprime la ruta guardada.
+- `--labels` agrega una captura de pantalla solo del viewport con etiquetas de referencia superpuestas e imprime la ruta guardada.
 - `--urls` añade los destinos de enlace descubiertos a las instantáneas de IA.
 
 ## Instantáneas y referencias
@@ -264,37 +269,37 @@ OpenClaw admite dos estilos de "instantánea":
   - Acciones: `openclaw browser click 12`, `openclaw browser type 23 "hello"`.
   - Internamente, la referencia se resuelve mediante `aria-ref` de Playwright.
 
-- **Instantánea de rol (referencias de rol como `e12`)**: `openclaw browser snapshot --interactive` (o `--compact`, `--depth`, `--selector`, `--frame`)
-  - Salida: una lista/árbol basado en roles con `[ref=e12]` (y `[nth=1]` opcional).
+- **Role snapshot (referencias de rol como `e12`)**: `openclaw browser snapshot --interactive` (o `--compact`, `--depth`, `--selector`, `--frame`)
+  - Resultado: una lista/árbol basado en roles con `[ref=e12]` (y `[nth=1]` opcional).
   - Acciones: `openclaw browser click e12`, `openclaw browser highlight e12`.
-  - Internamente, la referencia se resuelve mediante `getByRole(...)` (además de `nth()` para duplicados).
+  - Internamente, la referencia se resuelve mediante `getByRole(...)` (más `nth()` para duplicados).
   - Añada `--labels` para incluir una captura de pantalla del viewport con etiquetas `e12` superpuestas.
   - Añada `--urls` cuando el texto del enlace sea ambiguo y el agente necesite objetivos de navegación concretos.
 
-- **Instantánea ARIA (referencias ARIA como `ax12`)**: `openclaw browser snapshot --format aria`
-  - Salida: el árbol de accesibilidad como nodos estructurados.
-  - Acciones: `openclaw browser click ax12` funciona cuando la ruta de la instantánea puede vincular la referencia a través de los IDs del DOM de Playwright y del backend de Chrome.
-- Si Playwright no está disponible, las instantáneas ARIA aún pueden ser útiles para la inspección, pero es posible que las referencias no sean accionables. Tome una nueva instantánea con `--format ai` o `--interactive` cuando necesite referencias de acción.
-- Prueba de Docker para la ruta de retorno de raw-CDP: `pnpm test:docker:browser-cdp-snapshot` inicia Chromium con CDP, ejecuta `browser doctor --deep` y verifica que las instantáneas de roles incluyan URL de enlaces, elementos en los que se puede hacer clic promovidos por el cursor y metadatos de iframe.
+- **ARIA snapshot (referencias ARIA como `ax12`)**: `openclaw browser snapshot --format aria`
+  - Resultado: el árbol de accesibilidad como nodos estructurados.
+  - Acciones: `openclaw browser click ax12` funciona cuando la ruta de la instantánea puede vincular la referencia a través de los IDs del DOM de Playwright y el backend de Chrome.
+- Si Playwright no está disponible, las instantáneas ARIA todavía pueden ser útiles para la inspección, pero las referencias pueden no ser accionables. Vuelva a tomar una instantánea con `--format ai` o `--interactive` cuando necesite referencias de acción.
+- Prueba Docker para la ruta de respaldo raw-CDP: `pnpm test:docker:browser-cdp-snapshot` inicia Chromium con CDP, ejecuta `browser doctor --deep` y verifica que las instantáneas de rol incluyan URL de enlaces, elementos en los que se puede hacer clic promovidos por el cursor y metadatos de iframes.
 
 Comportamiento de las referencias:
 
 - Las referencias **no son estables entre navegaciones**; si algo falla, vuelva a ejecutar `snapshot` y use una referencia nueva.
-- `/act` devuelve el `targetId` raw actual después del reemplazo activado por la acción cuando puede probar la pestaña de reemplazo. Siga usando identificadores/etiquetas de pestaña estables para comandos de seguimiento.
-- Si la instantánea de roles se tomó con `--frame`, las referencias de roles están limitadas a ese iframe hasta la siguiente instantánea de roles.
+- `/act` devuelve el `targetId` crudo actual después del reemplazo provocado por la acción cuando puede probar la pestaña de reemplazo. Siga usando ids/etiquetas de pestaña estables para comandos de seguimiento.
+- Si la instantánea de rol se tomó con `--frame`, las referencias de rol están limitadas a ese iframe hasta la siguiente instantánea de rol.
 - Las referencias `axN` desconocidas o obsoletas fallan rápidamente en lugar de recurrir al selector `aria-ref` de Playwright. Ejecute una instantánea nueva en la misma pestaña cuando eso suceda.
 
 ## Mejoras de espera
 
 Puede esperar algo más que solo tiempo/texto:
 
-- Espere a la URL (los comodines son compatibles con Playwright):
+- Esperar a la URL (se admiten globos admitidos por Playwright):
   - `openclaw browser wait --url "**/dash"`
-- Espere el estado de carga:
+- Esperar el estado de carga:
   - `openclaw browser wait --load networkidle`
-- Espere un predicado de JS:
+- Esperar un predicado de JS:
   - `openclaw browser wait --fn "window.ready===true"`
-- Espere a que un selector sea visible:
+- Esperar a que un selector sea visible:
   - `openclaw browser wait "#main"`
 
 Estos se pueden combinar:
@@ -312,19 +317,19 @@ openclaw browser wait "#main" \
 Cuando falla una acción (p. ej., "no visible", "violación del modo estricto", "cubierto"):
 
 1. `openclaw browser snapshot --interactive`
-2. Use `click <ref>` / `type <ref>` (se prefieren las referencias de roles en el modo interactivo)
-3. Si aún falla: `openclaw browser highlight <ref>` para ver qué está enfocando Playwright
-4. Si la página se comporta de manera extraña:
+2. Use `click <ref>` / `type <ref>` (se prefieren las referencias de rol en modo interactivo)
+3. Si aún falla: `openclaw browser highlight <ref>` para ver qué está apuntando Playwright
+4. Si la página se comporta de forma extraña:
    - `openclaw browser errors --clear`
    - `openclaw browser requests --filter api --clear`
-5. Para una depuración profunda: grabe un seguimiento:
+5. Para una depuración profunda: grabe un rastro:
    - `openclaw browser trace start`
-   - reproduzca el problema
+   - reproducir el problema
    - `openclaw browser trace stop` (imprime `TRACE:<path>`)
 
 ## Salida JSON
 
-`--json` es para secuencias de comandos y herramientas estructuradas.
+`--json` es para herramientas estructuradas y de secuencias de comandos.
 
 Ejemplos:
 
@@ -335,9 +340,9 @@ openclaw browser requests --filter api --json
 openclaw browser cookies --json
 ```
 
-Las instantáneas de roles en JSON incluyen `refs` además de un pequeño bloque `stats` (líneas/caracteres/refs/interactivo) para que las herramientas puedan razonar sobre el tamaño y la densidad del payload.
+Las instantáneas de rol en JSON incluyen `refs` más un pequeño bloque `stats` (líneas/caracteres/refs/interactivo) para que las herramientas puedan razonar sobre el tamaño y la densidad de la carga útil.
 
-## Controles de estado y entorno
+## Perillas de estado y entorno
 
 Estos son útiles para flujos de trabajo de "hacer que el sitio se comporte como X":
 
@@ -350,20 +355,20 @@ Estos son útiles para flujos de trabajo de "hacer que el sitio se comporte como
 - Medios: `set media dark|light|no-preference|none`
 - Zona horaria / configuración regional: `set timezone ...`, `set locale ...`
 - Dispositivo / ventana gráfica:
-  - `set device "iPhone 14"` (preajustes de dispositivo de Playwright)
+  - `set device "iPhone 14"` (preajustes de dispositivos de Playwright)
   - `set viewport 1280 720`
 
 ## Seguridad y privacidad
 
-- El perfil del navegador openclaw puede contener sesiones iniciadas; trátelo como información sensible.
+- El perfil de navegador openclaw puede contener sesiones iniciadas; trátelo como información sensible.
 - `browser act kind=evaluate` / `openclaw browser evaluate` y `wait --fn`
-  ejecutan JavaScript arbitrario en el contexto de la página. La inyección de prompts puede
-  controlar esto. Desactívelo con `browser.evaluateEnabled=false` si no lo necesita.
+  ejecutan JavaScript arbitrario en el contexto de la página. La inyección de indicaciones puede controlar
+  esto. Desactívelo con `browser.evaluateEnabled=false` si no lo necesita.
 - Use `openclaw browser evaluate --timeout-ms <ms>` cuando la función del lado de la página
   pueda necesitar más tiempo que el tiempo de espera de evaluación predeterminado.
-- Para notas sobre inicios de sesión y anti-bots (X/Twitter, etc.), consulte [Inicio de sesión en el navegador + publicaciones en X/Twitter](/es/tools/browser-login).
-- Mantenga el host Gateway/nodo privado (solo loopback o tailnet).
-- Los puntos de conexión CDP remotos son potentes; protéjalos mediante túneles.
+- Para notas sobre inicios de sesión y antibots (X/Twitter, etc.), consulte [Inicio de sesión del navegador + publicaciones en X/Twitter](/es/tools/browser-login).
+- Mantenga el host del Gateway/nodo privado (solo loopback o tailnet).
+- Los puntos finales CDP remotos son potentes; protéjalos y use túneles para ellos.
 
 Ejemplo en modo estricto (bloquear destinos privados/internos de forma predeterminada):
 
@@ -382,6 +387,6 @@ Ejemplo en modo estricto (bloquear destinos privados/internos de forma predeterm
 ## Relacionado
 
 - [Navegador](/es/tools/browser) - descripción general, configuración, perfiles, seguridad
-- [Inicio de sesión en el navegador](/es/tools/browser-login) - iniciar sesión en sitios
+- [Inicio de sesión del navegador](/es/tools/browser-login) - iniciar sesión en sitios
 - [Solución de problemas del navegador en Linux](/es/tools/browser-linux-troubleshooting)
 - [Solución de problemas del navegador en WSL2](/es/tools/browser-wsl2-windows-remote-cdp-troubleshooting)

@@ -7,11 +7,11 @@ read_when:
 title: "Agents ACP — configuration"
 ---
 
-Pour la vue d'ensemble, le guide de l'opérateur et les concepts, voir [ACP agents](/fr/tools/acp-agents).
+Pour la vue d'ensemble, le guide de l'opérateur et les concepts, consultez [ACP agents](/fr/tools/acp-agents).
 
 Les sections ci-dessous couvrent la configuration du harnais acpx, la configuration des plugins pour les ponts MCP et la configuration des autorisations.
 
-Utilisez cette page uniquement lorsque vous configurez le routage ACP/acpx. Pour la configuration d'exécution native du serveur d'application Codex, utilisez [Codex harness](/fr/plugins/codex-harnessOpenAIAPI). Pour les clés API OAuth ou la configuration du fournisseur de modèles OpenAI Codex, utilisez [OpenAI](/fr/providers/openai).
+Utilisez cette page uniquement lorsque vous configurez la route ACP/acpx. Pour la configuration d'exécution du serveur d'application natif Codex, utilisez [Codex harness](/fr/plugins/codex-harnessOpenAIAPI). Pour les clés d'API OAuth ou la configuration du fournisseur de modèle OpenAI Codex OpenAI, utilisez [OpenAI](/fr/providers/openai).
 
 Codex possède deux routes OpenClaw :
 
@@ -257,7 +257,8 @@ Le plugin `acpx` accorde par défaut 120 secondes aux opérations de démarrage 
 openclaw config set plugins.entries.acpx.config.timeoutSeconds 180
 ```
 
-Les tours d'exécution utilisent les délais d'expiration d'agent/d'exécution OpenClaw, y compris `/acp timeout` et `sessions_spawn.timeoutSeconds`. Redémarrez la passerelle après avoir modifié cette valeur.
+Les tours d'exécution utilisent les délais d'attente d'agent/exécution OpenClaw, y compris `/acp timeout`.
+`sessions_spawn` n'accepte pas les remplacements de délai d'attente par appel. Redémarrez la passerelle après avoir modifié cette valeur.
 
 ### Configuration de l'agent de sonde de santé
 
@@ -275,23 +276,25 @@ Les sessions ACP s'exécutent de manière non interactive — il n'y a pas de TT
 
 Ces permissions de harnais ACPX sont distinctes des approbations d'exécution OpenClaw et distinctes des indicateurs de contournement du fournisseur backend CLI tels que `--permission-mode bypassPermissions` du CLI Claude. `approve-all` ACPX est le commutateur de rupture de verre (break-glass) au niveau du harnais pour les sessions ACP.
 
+Pour la comparaison plus large entre le `tools.exec.mode` OpenClaw, les approbations Codex Guardian et les permissions du harnais ACPX, consultez [Permission modes](/fr/tools/permission-modes).
+
 ### `permissionMode`
 
-Contrôle les opérations que l'agent de harnais peut effectuer sans invite.
+Contrôle les opérations que l'agent du harnais peut effectuer sans invite.
 
 | Valeur          | Comportement                                                                                                 |
 | --------------- | ------------------------------------------------------------------------------------------------------------ |
 | `approve-all`   | Approuver automatiquement toutes les écritures de fichiers et les commandes shell.                           |
-| `approve-reads` | Approuver automatiquement les lectures uniquement ; les écritures et les exécutions nécessitent des invites. |
-| `deny-all`      | Refuser toutes les invites de permission.                                                                    |
+| `approve-reads` | Approuver automatiquement uniquement les lectures ; les écritures et les exécutions nécessitent des invites. |
+| `deny-all`      | Refuser toutes les invites d'autorisation.                                                                   |
 
 ### `nonInteractivePermissions`
 
-Contrôle ce qui se passe lorsqu'une invite de permission devrait être affichée mais qu'aucun TTY interactif n'est disponible (ce qui est toujours le cas pour les sessions ACP).
+Contrôle ce qui se passe lorsqu'une invite d'autorisation devrait être affichée mais qu'aucun TTY interactif n'est disponible (ce qui est toujours le cas pour les sessions ACP).
 
 | Valeur | Comportement                                                                |
 | ------ | --------------------------------------------------------------------------- |
-| `fail` | Interrompre la session avec `AcpRuntimeError`. **(par défaut)**             |
+| `fail` | Avorter la session avec `AcpRuntimeError`. **(par défaut)**                 |
 | `deny` | Refuser silencieusement la permission et continuer (dégradation gracieuse). |
 
 ### Configuration
@@ -306,9 +309,9 @@ openclaw config set plugins.entries.acpx.config.nonInteractivePermissions fail
 Redémarrez la passerelle après avoir modifié ces valeurs.
 
 <Warning>
-OpenClaw est configuré par défaut sur OpenClaw`permissionMode=approve-reads` et `nonInteractivePermissions=fail`. Dans les sessions ACP non interactives, toute écriture ou exécution déclenchant une invite d'autorisation peut échouer avec `AcpRuntimeError: Permission prompt unavailable in non-interactive mode`.
+OpenClaw utilise par défaut OpenClaw`permissionMode=approve-reads` et `nonInteractivePermissions=fail`. Dans les sessions ACP non interactives, toute écriture ou exécution déclenchant une invite d'autorisation peut échouer avec `AcpRuntimeError: Permission prompt unavailable in non-interactive mode`.
 
-Si vous devez restreindre les autorisations, définissez `nonInteractivePermissions` sur `deny` afin que les sessions se dégradent progressivement au lieu de planter.
+Si vous devez restreindre les autorisations, définissez `nonInteractivePermissions` sur `deny` afin que les sessions se dégradent gracieusement au lieu de planter.
 
 </Warning>
 

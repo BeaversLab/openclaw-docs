@@ -177,8 +177,8 @@ Lo que configura:
     Más detalles: [Cloudflare AI Gateway](/es/providers/cloudflare-ai-gateway).
   </Accordion>
   <Accordion title="MiniMax">
-    La configuración se escribe automáticamente. El alojamiento predeterminado es `MiniMax-M2.7`; la configuración con clave de API utiliza
-    `minimax/...` y la configuración OAuth utiliza `minimax-portal/...`.
+    La configuración se escribe automáticamente. El valor predeterminado alojado es `MiniMax-M3`; la configuración de la clave API usa
+    `minimax/...`, y la configuración de OAuth usa `minimax-portal/...`.
     Más detalles: [MiniMax](/es/providers/minimax).
   </Accordion>
   <Accordion title="StepFun">
@@ -201,20 +201,20 @@ Lo que configura:
     Las configuraciones de Moonshot (Kimi K2) y Kimi Coding se escriben automáticamente.
     Más detalles: [Moonshot AI (Kimi + Kimi Coding)](/es/providers/moonshot).
   </Accordion>
-  <Accordion title="Custom provider">
-    Funciona con endpoints compatibles con OpenAI y Anthropic.
+  <Accordion title="Proveedor personalizado">
+    Funciona con puntos de conexión compatibles con OpenAI y Anthropic.
 
-    La incorporación interactiva admite las mismas opciones de almacenamiento de claves API que otros flujos de claves API de proveedores:
-    - **Pegar clave API ahora** (texto plano)
-    - **Usar referencia secreta** (ref de env o ref de proveedor configurado, con validación previa al vuelo)
+    La integración interactiva admite las mismas opciones de almacenamiento de claves API que otros flujos de claves API de proveedores:
+    - **Pegar clave API ahora** (texto sin formato)
+    - **Usar referencia secreta** (referencia de entorno o referencia de proveedor configurada, con validación previa al vuelo)
 
-    Marcas no interactivas:
+    Indicadores no interactivos:
     - `--auth-choice custom-api-key`
     - `--custom-base-url`
     - `--custom-model-id`
-    - `--custom-api-key` (opcional; recurre a `CUSTOM_API_KEY`)
+    - `--custom-api-key` (opcional; vuelve a `CUSTOM_API_KEY`)
     - `--custom-provider-id` (opcional)
-    - `--custom-compatibility <openai|anthropic>` (opcional; predeterminado `openai`)
+    - `--custom-compatibility <openai|openai-responses|anthropic>` (opcional; valor predeterminado `openai`)
     - `--custom-image-input` / `--custom-text-input` (opcional; anula la capacidad de entrada del modelo inferida)
 
   </Accordion>

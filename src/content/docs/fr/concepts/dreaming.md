@@ -103,20 +103,21 @@ Le classement profond utilise six signaux de base pondérés plus le renforcemen
 
 Les correspondances (hits) des phases Light et REM ajoutent un petit boost déclinant en fonction de la récence à partir de `memory/.dreams/phase-signals.json`.
 
-## Couverture du rapport d'essai parallèle QA
+Les résultats des essais fantômes peuvent être superposés à ce score de base en tant que signal de révision avant toute écriture durable. Un essai utile accorde une petite augmentation délimitée au candidat, un essai neutre le laisse différé, et un essai nuisible le marque comme rejeté pour cette passe de notation. Ce signal est toujours de type rapport uniquement : il peut modifier l'ordre des candidats ou les métadonnées de révision, mais il n'écrit pas dans `MEMORY.md` ni ne promeut le candidat par lui-même.
 
-QA Lab comprend un scénario de rapport uniquement pour explorer comment un futur essai parallèle de rêve pourrait examiner une mémoire candidate avant sa promotion. Le scénario demande à un agent de comparer une réponse de base avec une réponse pouvant utiliser la mémoire candidate, puis de rédiger un rapport local avec un verdict, une raison et des indicateurs de risque.
+## Couverture du rapport d'essai fantôme QA
 
-Cette couverture est volontairement limitée à la QA. Elle vérifie que l'artefact de rapport
-reste séparé de `MEMORY.md` et que l'agent ne prétend pas que le candidat
-a été promu. Elle n'ajoute pas de comportement de production d'essai fantôme (shadow-trial) ni ne modifie le
-moteur de promotion de phase profonde.
+Le Lab QA inclut un scénario de rapport uniquement pour explorer la manière dont un futur essai fantôme de rêverie pourrait réviser une mémoire candidate avant sa promotion. Le scénario demande à un agent de comparer une réponse de base avec une réponse qui peut utiliser la mémoire candidate, puis de rédiger un rapport local avec un verdict, une raison et des indicateurs de risque.
+
+Cette couverture est volontairement limitée au QA. Elle vérifie que l'artefact de rapport reste séparé de `MEMORY.md` et que l'agent ne prétend pas que le candidat a été promu. Elle n'ajoute pas de comportement d'essai fantôme en production ni ne modifie le moteur de promotion de phase profonde.
+
+Le lanceur d'essai fantôme `memory-core` conserve ce même contrat de rapport uniquement pour les chemins de code qui nécessitent un artefact stable. Il accepte le candidat, le prompt d'essai, le résultat de base, le résultat du candidat, le verdict, la raison, les indicateurs de risque et les références de preuve, puis écrit un rapport avec `promotion action: report-only`. Les verdicts utiles correspondent à une recommandation `promote`, les verdicts neutres à `defer`, et les verdicts nuisibles à `reject` ; aucune de ces recommandations n'écrit dans `MEMORY.md` ni n'applique la promotion de phase profonde.
 
 ## Planification
 
-Lorsqu'il est activé, `memory-core` gère automatiquement une tâche cron pour un balayage complet de dreaming. Chaque balayage exécute les phases dans l'ordre : light → REM → deep.
+Lorsqu'il est activé, `memory-core` gère automatiquement une tâche cron pour un balayage de rêverie complet. Chaque balayage exécute les phases dans l'ordre : light → REM → deep.
 
-Le balayage inclut l'espace de travail d'exécution principal et tous les espaces de travail d'agents configurés, dédupliqués par chemin, afin que l'éventail (fan-out) des espaces de travail des sous-agents n'exclue pas le `DREAMS.md` et l'état de la mémoire de l'agent principal.
+Le balayage inclut l'espace de travail d'exécution principal et tous les espaces de travail d'agents configurés, dédupliqués par chemin, afin que l'éclatement (fan-out) de l'espace de travail des sous-agents n'exclue pas le `DREAMS.md` et l'état de la mémoire de l'agent principal.
 
 Comportement de cadence par défaut :
 
@@ -175,10 +176,10 @@ Comportement de cadence par défaut :
 /dreaming help
 ```
 
-## Workflow CLI
+## Flux de travail CLI
 
 <Tabs>
-  <Tab title="Promotion preview / apply">
+  <Tab title="Aperçu / Application de la promotion">
     ```bash
     openclaw memory promote
     openclaw memory promote --apply
@@ -186,11 +187,11 @@ Comportement de cadence par défaut :
     openclaw memory status --deep
     ```
 
-    Le `memory promote` manuel utilise par défaut les seuils de phase profonde, sauf s'ils sont remplacés par des drapeaux CLI.
+    Le `memory promote` manuel utilise par défaut les seuils de phase profonde, sauf s'ils sont remplacés par des indicateurs CLI.
 
   </Tab>
   <Tab title="Expliquer la promotion">
-    Expliquer pourquoi une candidate spécifique serait ou ne serait pas promue :
+    Expliquez pourquoi un candidat spécifique serait ou ne serait pas promu :
 
     ```bash
     openclaw memory promote-explain "router vlan"
@@ -199,7 +200,7 @@ Comportement de cadence par défaut :
 
   </Tab>
   <Tab title="Aperçu du harnais REM">
-    Aperçu des réflexions REM, des vérités candidates et de la sortie de promotion profonde sans rien écrire :
+    Prévisualisez les réflexions REM, les vérités candidates et la sortie de promotion profonde sans rien écrire :
 
     ```bash
     openclaw memory rem-harness
@@ -220,34 +221,34 @@ Tous les paramètres se trouvent sous `plugins.entries.memory-core.config.dreami
   Cadence Cron pour le balayage complet de rêve.
 </ParamField>
 <ParamField path="model" type="string">
-  Remplacement facultatif du modèle du sous-agent Dream Diary. Utilisez une valeur `provider/model` canonique lors de la définition d'une liste d'autorisation de sous-agent `allowedModels`.
+  Remplacement facultatif du modèle de sous-agent Dream Diary. Utilisez une valeur canonique `provider/model` lors de la définition d'une liste d'autorisation de sous-agent `allowedModels`.
 </ParamField>
 <ParamField path="phases.deep.maxPromotedSnippetTokens" type="number" default="160">
-  Nombre maximum estimé de jetons conservés de chaque extrait de rappel à court terme promu dans `MEMORY.md`. La provenance du classement reste visible.
+  Nombre maximal estimé de jetons conservés de chaque extrait de rappel à court terme promu dans `MEMORY.md`. La provenance du classement reste visible.
 </ParamField>
 
 <Warning>`dreaming.model` nécessite `plugins.entries.memory-core.subagent.allowModelOverride: true`. Pour le restreindre, définissez également `plugins.entries.memory-core.subagent.allowedModels`. Les échecs de confiance ou de liste d'autorisation restent visibles au lieu de revenir silencieusement ; la nouvelle tentative couvre uniquement les erreurs de modèle indisponible.</Warning>
 
-<Note>La plupart des politiques de phase, des seuils et des comportements de stockage sont des détails d'implémentation internes. Consultez [Référence de configuration de la mémoire](/fr/reference/memory-config#dreaming) pour la liste complète des clés.</Note>
+<Note>La plupart des stratégies de phase, des seuils et des comportements de stockage sont des détails d'implémentation internes. Consultez la [Référence de configuration de la mémoire](/fr/reference/memory-config#dreaming) pour la liste complète des clés.</Note>
 
-## Interface utilisateur des rêves
+## Interface des rêves
 
-Lorsqu'elle est activée, l'onglet **Dreams** du Gateway affiche :
+Lorsqu'il est activé, l'onglet **Dreams** du Gateway affiche :
 
-- l'état actuel d'activation du rêve
-- le statut au niveau de la phase et la présence du balayage géré
-- les comptes à court terme, ancrés, de signaux et promus aujourd'hui
-- le calendrier de la prochaine exécution planifiée
-- une voie Scene ancrée distincte pour les entrées de relecture historique mises en scène
-- un lecteur Dream Diary extensible soutenu par `doctor.memory.dreamDiary`
+- état actif actuel du rêve
+- statut au niveau de la phase et présence de balayage géré
+- nombre d'éléments à court terme, ancrés, de signal et promus aujourd'hui
+- prochaine exécution planifiée
+- une voie distincte et ancrée de Scène pour les entrées de rejeu historique mises en scène
+- un lecteur de Journal de Rêves extensible soutenu par `doctor.memory.dreamDiary`
 
-## Le rêve ne s'exécute jamais : le statut indique bloqué
+## Le rêve ne s'exécute jamais : l'état indique bloqué
 
-Si `openclaw memory status` signale `Dreaming status: blocked`, la cron gérée existe mais le heartbeat de l'agent par défaut ne se déclenche pas. Vérifiez que le heartbeat est activé pour l'agent par défaut et que sa cible n'est pas `none`, puis exécutez `openclaw memory status --deep` à nouveau après l'intervalle de heartbeat suivant.
+Si `openclaw memory status` signale `Dreaming status: blocked`, la cron gérée existe mais le battement de cœur de l'agent par défaut ne se déclenche pas. Vérifiez que le battement de cœur est activé pour l'agent par défaut et que sa cible n'est pas `none`, puis réexécutez `openclaw memory status --deep` après l'intervalle de battement de cœur suivant.
 
 ## Connexes
 
 - [Mémoire](/fr/concepts/memory)
-- [Mémoire CLI](/fr/cli/memory)
+- [CLI CLI de mémoire](/fr/cli/memory)
 - [Référence de configuration de la mémoire](/fr/reference/memory-config)
-- [Recherche de mémoire](/fr/concepts/memory-search)
+- [Recherche dans la mémoire](/fr/concepts/memory-search)

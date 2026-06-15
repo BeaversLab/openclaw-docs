@@ -18,8 +18,8 @@ title: "測試"
 - `pnpm test:changed`：低成本智慧變更測試執行。它從直接的測試編輯、同層級 `*.test.ts` 檔案、明確的原始碼對應以及本地匯入圖執行精確目標。除非廣泛/設定/套件的變更能對應到精確測試，否則將跳過這些變更。
 - `OPENCLAW_TEST_CHANGED_BROAD=1 pnpm test:changed`：明確的廣泛變更測試執行。當測試框架/設定/套件編輯應回退至 Vitest 更廣泛的變更測試行為時，請使用此指令。
 - `pnpm changed:lanes`：顯示與 `origin/main` 比對差異所觸發的架構軌道。
-- `pnpm check:changed`：針對與 `origin/main` 的差異執行智慧變更檢查閘門。它會對受影響的架構軌道執行 typecheck、lint 和 guard 指令，但不會執行 Vitest 測試。請使用 `pnpm test:changed` 或明確的 `pnpm test <target>` 進行測試證明。
-- Codex worktrees 和連結/稀疏檢出 (linked/sparse checkouts)：除非您已驗證 pnpm 不會協調相依性，否則請避免直接的本地 `pnpm test*`、`pnpm check*` 和 `pnpm crabbox:run`。對於微小的明確檔案驗證，請使用 `node scripts/run-vitest.mjs <path-or-filter>`；對於變更的閘道或廣泛驗證，請使用 `node scripts/crabbox-wrapper.mjs run --provider blacksmith-testbox ... --shell -- "pnpm check:changed"`，以便 pnpm 在 Testbox 內部執行。
+- `pnpm check:changed`: 在 CI 外部預設委派給 Crabbox/Testbox，然後在遠端子內部對 `origin/main` 的差異執行智慧變更檢查閘道。它會對受影響的架構通道執行 typecheck、lint 和 guard 指令，但不會執行 Vitest 測試。請使用 `pnpm test:changed` 或明確的 `pnpm test <target>` 進行測試驗證。
+- Codex worktrees 和連結/稀疏結帳：避免直接在本機執行 `pnpm test*`、`pnpm check*` 和 `pnpm crabbox:run`，除非您已確認 pnpm 不會調解相依性。對於微小的明確檔案驗證，請使用 `node scripts/run-vitest.mjs <path-or-filter>`；對於變更閘道或廣泛驗證，請使用 `node scripts/crabbox-wrapper.mjs run --provider blacksmith-testbox ... -- env OPENCLAW_CHECK_CHANGED_REMOTE_CHILD=1 OPENCLAW_CHANGED_LANES_RAW_SYNC=1 corepack pnpm check:changed`，以便 pnpm 在 Testbox 內執行。
 - `OPENCLAW_HEAVY_CHECK_LOCK_SCOPE=worktree <local-heavy-check command>`：將繁重檢查的序列化保持在當前 worktree 內部，而不是 Git 公用目錄中，針對諸如 `pnpm check:changed` 和目標 `pnpm test ...` 等指令。僅當您在連結的 worktree 之間故意執行獨立檢查時，才在高容量的本地主機上使用它。
 - `pnpm test`：將明確的檔案/目錄目標透過範圍限定的 Vitest 通道進行路由。非目標執行是完整套件驗證：它們使用固定的分片群組，擴展為葉配置以進行本地並行執行，並在開始前列印預期的本地分片扇出。擴充功能群組始終擴展為個別擴充功能的分片配置，而不是一個巨大的根專案程序。
 - 測試包裝程式執行以簡短的 `[test] passed|failed|skipped ... in ...` 摘要結束。Vitest 自己的持續時間行保持為分片細節。

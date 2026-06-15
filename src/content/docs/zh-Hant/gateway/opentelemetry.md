@@ -7,10 +7,7 @@ read_when:
   - You need the exact metric names, span names, or attribute shapes to build dashboards or alerts
 ---
 
-OpenClaw 透過官方 `diagnostics-otel` 外掛程式匯出診斷資訊
-使用 **OTLP/HTTP (protobuf)**。任何接受 OTLP/HTTP 的收集器或後端
-皆無需更改程式碼即可運作。若要了解本機檔案記錄及其讀取方式，請參閱
-[Logging](/zh-Hant/logging)。
+OpenClaw 透過官方 `diagnostics-otel` 外掛程式匯出診斷資訊，使用 **OTLP/HTTP (protobuf)**。任何接受 OTLP/HTTP 的收集器或後端皆可無需修改程式碼直接運作。如需瞭解本機檔案紀錄及其讀取方式，請參閱 [Logging](/zh-Hant/logging)。
 
 ## 運作方式
 
@@ -168,71 +165,63 @@ openclaw plugins enable diagnostics-otel
 - `gen_ai.client.operation.duration` (histogram, 秒, GenAI semantic-conventions metric, attrs: `gen_ai.provider.name`, `gen_ai.operation.name`, `gen_ai.request.model`, 選填 `error.type`)
 - `openclaw.model_call.duration_ms` (histogram, attrs: `openclaw.provider`, `openclaw.model`, `openclaw.api`, `openclaw.transport`, 另外針對已分類錯誤還有 `openclaw.errorCategory` 和 `openclaw.failureKind`)
 - `openclaw.model_call.request_bytes` (histogram, 最終模型請求承載的 UTF-8 位元組大小；不包含原始承載內容)
-- `openclaw.model_call.response_bytes` (histogram, 串流模型回應事件的 UTF-8 位元組大小；不包含原始回應內容)
-- `openclaw.model_call.time_to_first_byte_ms` (histogram, 第一個串流回應事件之前的經過時間)
-- `openclaw.model.failover` (counter, attrs: `openclaw.provider`, `openclaw.model`, `openclaw.failover.to_provider`, `openclaw.failover.to_model`, `openclaw.failover.reason`, `openclaw.failover.suspended`, `openclaw.lane`)
-- `openclaw.skill.used` (counter, attrs: `openclaw.skill.name`, `openclaw.skill.source`, `openclaw.skill.activation`, 選填 `openclaw.agent`, 選填 `openclaw.toolName`)
+- `openclaw.model_call.response_bytes` (histogram，串流模型回應事件的 UTF-8 位元組大小，不包括增量事件上累積的 `partial` 快照；無原始回應內容)
+- `openclaw.model_call.time_to_first_byte_ms` (histogram，第一個串流回應事件之前的經過時間)
+- `openclaw.model.failover` (counter，attrs：`openclaw.provider`、`openclaw.model`、`openclaw.failover.to_provider`、`openclaw.failover.to_model`、`openclaw.failover.reason`、`openclaw.failover.suspended`、`openclaw.lane`)
+- `openclaw.skill.used` (counter, attrs: `openclaw.skill.name`, `openclaw.skill.source`, `openclaw.skill.activation`, optional `openclaw.agent`, optional `openclaw.toolName`)
 
 ### 訊息流
 
 - `openclaw.webhook.received` (counter, attrs: `openclaw.channel`, `openclaw.webhook`)
 - `openclaw.webhook.error` (counter, attrs: `openclaw.channel`, `openclaw.webhook`)
 - `openclaw.webhook.duration_ms` (histogram, attrs: `openclaw.channel`, `openclaw.webhook`)
-- `openclaw.message.queued` (計數器，attrs: `openclaw.channel`, `openclaw.source`)
-- `openclaw.message.received` (計數器，attrs: `openclaw.channel`, `openclaw.source`)
-- `openclaw.message.dispatch.started` (計數器，attrs: `openclaw.channel`, `openclaw.source`)
-- `openclaw.message.dispatch.completed` (計數器，attrs: `openclaw.channel`, `openclaw.outcome`, `openclaw.reason`, `openclaw.source`)
-- `openclaw.message.dispatch.duration_ms` (直方圖，attrs: `openclaw.channel`, `openclaw.outcome`, `openclaw.reason`, `openclaw.source`)
-- `openclaw.message.processed` (計數器，attrs: `openclaw.channel`, `openclaw.outcome`)
-- `openclaw.message.duration_ms` (直方圖，attrs: `openclaw.channel`, `openclaw.outcome`)
-- `openclaw.message.delivery.started` (計數器，attrs: `openclaw.channel`, `openclaw.delivery.kind`)
-- `openclaw.message.delivery.duration_ms` (直方圖，attrs: `openclaw.channel`, `openclaw.delivery.kind`, `openclaw.outcome`, `openclaw.errorCategory`)
+- `openclaw.message.queued` (counter, attrs: `openclaw.channel`, `openclaw.source`)
+- `openclaw.message.received` (counter, attrs: `openclaw.channel`, `openclaw.source`)
+- `openclaw.message.dispatch.started` (counter, attrs: `openclaw.channel`, `openclaw.source`)
+- `openclaw.message.dispatch.completed` (counter, attrs: `openclaw.channel`, `openclaw.outcome`, `openclaw.reason`, `openclaw.source`)
+- `openclaw.message.dispatch.duration_ms` (histogram, attrs: `openclaw.channel`, `openclaw.outcome`, `openclaw.reason`, `openclaw.source`)
+- `openclaw.message.processed` (counter, attrs: `openclaw.channel`, `openclaw.outcome`)
+- `openclaw.message.duration_ms` (histogram, attrs: `openclaw.channel`, `openclaw.outcome`)
+- `openclaw.message.delivery.started` (counter, attrs: `openclaw.channel`, `openclaw.delivery.kind`)
+- `openclaw.message.delivery.duration_ms` (直方圖, attrs: `openclaw.channel`, `openclaw.delivery.kind`, `openclaw.outcome`, `openclaw.errorCategory`)
 
 ### 通話
 
-- `openclaw.talk.event` (計數器，attrs: `openclaw.talk.event_type`, `openclaw.talk.mode`, `openclaw.talk.transport`, `openclaw.talk.brain`, `openclaw.talk.provider`)
-- `openclaw.talk.event.duration_ms` (直方圖，attrs: 與 `openclaw.talk.event` 相同；當 Talk 事件回報持續時間時發出)
-- `openclaw.talk.audio.bytes` (直方圖，attrs: 與 `openclaw.talk.event` 相同；針對回報位元組長度的 Talk 音訊幀事件發出)
+- `openclaw.talk.event` (計數器, attrs: `openclaw.talk.event_type`, `openclaw.talk.mode`, `openclaw.talk.transport`, `openclaw.talk.brain`, `openclaw.talk.provider`)
+- `openclaw.talk.event.duration_ms` (直方圖, attrs: 與 `openclaw.talk.event` 相同; 當 Talk 事件報告持續時間時發出)
+- `openclaw.talk.audio.bytes` (直方圖, attrs: 與 `openclaw.talk.event` 相同; 針對報告位元組長度的 Talk 音訊幀事件發出)
 
 ### 佇列與工作階段
 
-- `openclaw.queue.lane.enqueue` (計數器，attrs: `openclaw.lane`)
-- `openclaw.queue.lane.dequeue` (計數器，attrs: `openclaw.lane`)
-- `openclaw.queue.depth` (直方圖，attrs: `openclaw.lane` 或 `openclaw.channel=heartbeat`)
-- `openclaw.queue.wait_ms`（直方圖，屬性：`openclaw.lane`）
-- `openclaw.session.state`（計數器，屬性：`openclaw.state`，`openclaw.reason`）
-- `openclaw.session.stuck`（計數器，屬性：`openclaw.state`；針對可恢復的過期會話計算發出）
-- `openclaw.session.stuck_age_ms`（直方圖，屬性：`openclaw.state`；針對可恢復的過期會話計算發出）
-- `openclaw.session.turn.created`（計數器，屬性：`openclaw.agent`，`openclaw.channel`，`openclaw.trigger`）
-- `openclaw.session.recovery.requested`（計數器，屬性：`openclaw.state`，`openclaw.action`，`openclaw.active_work_kind`，`openclaw.reason`）
+- `openclaw.queue.lane.enqueue` (計數器, attrs: `openclaw.lane`)
+- `openclaw.queue.lane.dequeue` (計數器，屬性：`openclaw.lane`)
+- `openclaw.queue.depth` (直方圖，屬性：`openclaw.lane` 或 `openclaw.channel=heartbeat`)
+- `openclaw.queue.wait_ms` (直方圖，屬性：`openclaw.lane`)
+- `openclaw.session.state` (計數器，屬性：`openclaw.state`, `openclaw.reason`)
+- `openclaw.session.stuck` (計數器，屬性：`openclaw.state`；針對可復原過期會話計算發出)
+- `openclaw.session.stuck_age_ms` (直方圖，屬性：`openclaw.state`；針對可復原過期會話計算發出)
+- `openclaw.session.turn.created` (counter, attrs: `openclaw.agent`, `openclaw.channel`, `openclaw.trigger`)
+- `openclaw.session.recovery.requested` (counter, attrs: `openclaw.state`, `openclaw.action`, `openclaw.active_work_kind`, `openclaw.reason`)
 - `openclaw.session.recovery.completed` (counter, attrs: `openclaw.state`, `openclaw.action`, `openclaw.status`, `openclaw.active_work_kind`, `openclaw.reason`)
-- `openclaw.session.recovery.age_ms` (histogram, attrs: same as the matching recovery counter)
+- `openclaw.session.recovery.age_ms` (histogram, attrs: 與對應的恢復計數器相同)
 - `openclaw.run.attempt` (counter, attrs: `openclaw.attempt`)
 
 ### Session liveness telemetry
 
-`diagnostics.stuckSessionWarnMs` is the no-progress age threshold for session
-liveness diagnostics. A `processing` session does not age toward this threshold
-while OpenClaw observes reply, tool, status, block, or ACP runtime progress.
-Typing keepalives are not counted as progress, so a silent model or harness can
-still be detected.
+`diagnostics.stuckSessionWarnMs` 是會話活躍性診斷的無進行時間臨界值。當 OpenClaw 觀察到回覆、工具、狀態、區塊或 ACP 執行時期的進展時，`processing` 會話不會朝此臨界值增長。輸入活躍訊號不算作進展，因此仍可偵測到無回應的模型或綁具。
 
 OpenClaw classifies sessions by the work it can still observe:
 
-- `session.long_running`：作用中的嵌入式工作、模型呼叫或工具呼叫
-  仍在持續推進中。
-- `session.stalled`：存在作用中的工作，但作用中的執行尚未回報
-  近期的進度。停滯的嵌入式執行起初會維持僅觀測，然後在 `diagnostics.stuckSessionAbortMs` 無進度後中止排空，以便通道後排隊的輪次恢復。若未設定，中止臨界值會預設為
-  較安全的延長視窗，即至少 5 分鐘且為 3 倍的
-  `diagnostics.stuckSessionWarnMs`。
-- `session.stuck`：沒有進行中工作的過期會話記帳，或具有過期的無擁有者模型/工具活動的閒置佇列會話。這會在恢復門通過後立即釋放受影響的會話通道。
+- `session.long_running`：主動嵌入式工作、模型呼叫或工具呼叫仍在進行中。
+- `session.stalled`：存在主動工作，但主動執行未回報近期進展。停滯的嵌入式執行起初會保持僅觀察模式，然後在 `diagnostics.stuckSessionAbortMs` 無進展後中止排空，以便通道後排隊的輪次可以恢復。若未設定，中止臨界值預設為至少 5 分鐘和 3 倍 `diagnostics.stuckSessionWarnMs` 的較安全擴充視窗。
+- `session.stuck`：無主動工作的過時會話簿記，或具有過時無主擁有者模型/工具活動的閒置佇列會話。這會在恢復閘道通過後立即釋放受影響的會話通道。
 
-恢復會發出結構化的 `session.recovery.requested` 和
-`session.recovery.completed` 事件。診斷會話狀態僅在變更恢復結果（`aborted` 或 `released`）之後，且僅當相同的處理代次仍為當前代次時，才會被標記為閒置。
+恢復會發出結構化的 `session.recovery.requested` 和 `session.recovery.completed` 事件。僅在變異恢復結果 (`aborted` 或 `released`) 之後，且僅當相同的處理世代仍為當前時，診斷會話狀態才會標記為閒置。
 
 只有 `session.stuck` 會發出 `openclaw.session.stuck` 計數器、
 `openclaw.session.stuck_age_ms` 直方圖和 `openclaw.session.stuck`
-跨度。當會話保持不變時，重複的 `session.stuck` 診斷會退避，因此儀表板應對持續增加的情況發出警示，而不是對每次心跳滴答發出警示。關於配置選項和預設值，請參閱
+範圍 (span)。當 session 保持不變時，重複的 `session.stuck` 診斷會退避，因此儀表板應針對持續增加而非每一次
+心跳跳動發出警示。關於配置選項和預設值，請參閱
 [Configuration reference](/zh-Hant/gateway/configuration-reference#diagnostics)。
 
 存活度警告也會發出：
@@ -241,53 +230,53 @@ OpenClaw classifies sessions by the work it can still observe:
 - `openclaw.liveness.event_loop_delay_p99_ms` (histogram, attrs: `openclaw.liveness.reason`)
 - `openclaw.liveness.event_loop_delay_max_ms` (histogram, attrs: `openclaw.liveness.reason`)
 - `openclaw.liveness.event_loop_utilization` (histogram, attrs: `openclaw.liveness.reason`)
-- `openclaw.liveness.cpu_core_ratio` (histogram, attrs: `openclaw.liveness.reason`)
+- `openclaw.liveness.cpu_core_ratio` (直方圖，屬性：`openclaw.liveness.reason`)
 
 ### Harness 生命週期
 
-- `openclaw.harness.duration_ms` (histogram, attrs: `openclaw.harness.id`, `openclaw.harness.plugin`, `openclaw.outcome`, `openclaw.harness.phase` on errors)
+- `openclaw.harness.duration_ms` (直方圖，屬性：`openclaw.harness.id`、`openclaw.harness.plugin`、`openclaw.outcome`，錯誤時包含 `openclaw.harness.phase`)
 
 ### 工具執行
 
-- `openclaw.tool.execution.duration_ms` (histogram, attrs: `gen_ai.tool.name`, `openclaw.toolName`, `openclaw.tool.source`, `openclaw.tool.owner`, `openclaw.tool.params.kind`, plus `openclaw.errorCategory` on errors)
-- `openclaw.tool.execution.blocked` (counter, attrs: `gen_ai.tool.name`, `openclaw.toolName`, `openclaw.tool.source`, `openclaw.tool.owner`, `openclaw.tool.params.kind`, `openclaw.deniedReason`)
+- `openclaw.tool.execution.duration_ms` (直方圖，屬性：`gen_ai.tool.name`、`openclaw.toolName`、`openclaw.tool.source`、`openclaw.tool.owner`、`openclaw.tool.params.kind`，錯誤時額外包含 `openclaw.errorCategory`)
+- `openclaw.tool.execution.blocked` (計數器，屬性：`gen_ai.tool.name`、`openclaw.toolName`、`openclaw.tool.source`、`openclaw.tool.owner`、`openclaw.tool.params.kind`、`openclaw.deniedReason`)
 
 ### Exec
 
-- `openclaw.exec.duration_ms` (histogram, attrs: `openclaw.exec.target`, `openclaw.exec.mode`, `openclaw.outcome`, `openclaw.failureKind`)
+- `openclaw.exec.duration_ms`（直方圖，屬性：`openclaw.exec.target`、`openclaw.exec.mode`、`openclaw.outcome`、`openclaw.failureKind`）
 
 ### Diagnostics internals (memory and tool loop)
 
-- `openclaw.payload.large` (counter, attrs: `openclaw.payload.surface`, `openclaw.payload.action`, `openclaw.channel`, `openclaw.plugin`, `openclaw.reason`)
-- `openclaw.payload.large_bytes` (histogram, attrs: same as `openclaw.payload.large`)
-- `openclaw.memory.heap_used_bytes` (histogram, attrs: `openclaw.memory.kind`)
-- `openclaw.memory.rss_bytes` (histogram)
-- `openclaw.memory.pressure` (counter, attrs: `openclaw.memory.level`)
-- `openclaw.tool.loop.iterations` (counter, attrs: `openclaw.toolName`, `openclaw.outcome`)
-- `openclaw.tool.loop.duration_ms` (histogram, attrs: `openclaw.toolName`, `openclaw.outcome`)
+- `openclaw.payload.large`（計數器，屬性：`openclaw.payload.surface`、`openclaw.payload.action`、`openclaw.channel`、`openclaw.plugin`、`openclaw.reason`）
+- `openclaw.payload.large_bytes`（直方圖，屬性：與 `openclaw.payload.large` 相同）
+- `openclaw.memory.heap_used_bytes`（直方圖，屬性：`openclaw.memory.kind`）
+- `openclaw.memory.rss_bytes`（直方圖）
+- `openclaw.memory.pressure`（計數器，屬性：`openclaw.memory.level`）
+- `openclaw.tool.loop.iterations`（計數器，屬性：`openclaw.toolName`、`openclaw.outcome`）
+- `openclaw.tool.loop.duration_ms` (直方圖, attrs: `openclaw.toolName`, `openclaw.outcome`)
 
 ## Exported spans
 
 - `openclaw.model.usage`
   - `openclaw.channel`, `openclaw.provider`, `openclaw.model`
   - `openclaw.tokens.*` (input/output/cache_read/cache_write/total)
-  - `gen_ai.system` by default, or `gen_ai.provider.name` when the latest GenAI semantic conventions are opted in
+  - 預設為 `gen_ai.system`，或在選擇加入最新的 GenAI 語義慣例時為 `gen_ai.provider.name`
   - `gen_ai.request.model`, `gen_ai.operation.name`, `gen_ai.usage.*`
 - `openclaw.run`
   - `openclaw.outcome`, `openclaw.channel`, `openclaw.provider`, `openclaw.model`, `openclaw.errorCategory`
 - `openclaw.model.call`
-  - `gen_ai.system` by default, or `gen_ai.provider.name` when the latest GenAI semantic conventions are opted in
-  - `gen_ai.request.model`, `gen_ai.operation.name`, `openclaw.provider`, `openclaw.model`, `openclaw.api`, `openclaw.transport`
-  - `openclaw.errorCategory` 和錯誤時的選用 `openclaw.failureKind`
-  - `openclaw.model_call.request_bytes`, `openclaw.model_call.response_bytes`, `openclaw.model_call.time_to_first_byte_ms`
-  - `openclaw.provider.request_id_hash`（上游提供者請求 ID 的基於 SHA 的受限雜湊值；不匯出原始 ID）
-  - 啟用 `OTEL_SEMCONV_STABILITY_OPT_IN=gen_ai_latest_experimental` 後，模型呼叫範圍會使用最新的 GenAI 推斷範圍名稱 `{gen_ai.operation.name} {gen_ai.request.model}` 和 `CLIENT` 範圍種類，而非 `openclaw.model.call`。
+  - 預設為 `gen_ai.system`，當選擇加入最新的 GenAI 語義約定時則為 `gen_ai.provider.name`
+  - `gen_ai.request.model`、`gen_ai.operation.name`、`openclaw.provider`、`openclaw.model`、`openclaw.api`、`openclaw.transport`
+  - `openclaw.errorCategory` 以及錯誤時的選用 `openclaw.failureKind`
+  - `openclaw.model_call.request_bytes`、`openclaw.model_call.response_bytes`、`openclaw.model_call.time_to_first_byte_ms`
+  - `openclaw.provider.request_id_hash` (上游供應商請求 ID 的有界 SHA 雜湊；不匯出原始 ID)
+  - 使用 `OTEL_SEMCONV_STABILITY_OPT_IN=gen_ai_latest_experimental` 時，模型呼叫範圍會使用最新的 GenAI 推斷範圍名稱 `{gen_ai.operation.name} {gen_ai.request.model}` 和 `CLIENT` 範圍類型，而非 `openclaw.model.call`。
 - `openclaw.harness.run`
-  - `openclaw.harness.id`, `openclaw.harness.plugin`, `openclaw.outcome`, `openclaw.provider`, `openclaw.model`, `openclaw.channel`
-  - 完成時：`openclaw.harness.result_classification`, `openclaw.harness.yield_detected`, `openclaw.harness.items.started`, `openclaw.harness.items.completed`, `openclaw.harness.items.active`
-  - 錯誤時：`openclaw.harness.phase`, `openclaw.errorCategory`, 選用 `openclaw.harness.cleanup_failed`
+  - `openclaw.harness.id`、`openclaw.harness.plugin`、`openclaw.outcome`、`openclaw.provider`、`openclaw.model`、`openclaw.channel`
+  - 完成時：`openclaw.harness.result_classification`、`openclaw.harness.yield_detected`、`openclaw.harness.items.started`、`openclaw.harness.items.completed`、`openclaw.harness.items.active`
+  - 發生錯誤時：`openclaw.harness.phase`、`openclaw.errorCategory`、選用的 `openclaw.harness.cleanup_failed`
 - `openclaw.tool.execution`
-  - `gen_ai.tool.name`, `openclaw.toolName`, `openclaw.errorCategory`, `openclaw.tool.params.*`
+  - `gen_ai.tool.name`、`openclaw.toolName`、`openclaw.errorCategory`、`openclaw.tool.params.*`
 - `openclaw.exec`
   - `openclaw.exec.target`, `openclaw.exec.mode`, `openclaw.outcome`, `openclaw.failureKind`, `openclaw.exec.command_length`, `openclaw.exec.exit_code`, `openclaw.exec.timed_out`
 - `openclaw.webhook.processed`
@@ -297,17 +286,17 @@ OpenClaw classifies sessions by the work it can still observe:
 - `openclaw.message.processed`
   - `openclaw.channel`, `openclaw.outcome`, `openclaw.reason`
 - `openclaw.message.delivery`
-  - `openclaw.channel`、`openclaw.delivery.kind`、`openclaw.outcome`、`openclaw.errorCategory`、`openclaw.delivery.result_count`
+  - `openclaw.channel`, `openclaw.delivery.kind`, `openclaw.outcome`, `openclaw.errorCategory`, `openclaw.delivery.result_count`
 - `openclaw.session.stuck`
   - `openclaw.state`、`openclaw.ageMs`、`openclaw.queueDepth`
 - `openclaw.context.assembled`
-  - `openclaw.prompt.size`、`openclaw.history.size`、`openclaw.context.tokens`、`openclaw.errorCategory`（無提示、歷史、回應或 session-key 內容）
+  - `openclaw.prompt.size`、`openclaw.history.size`、`openclaw.context.tokens`、`openclaw.errorCategory`（無 prompt、history、response 或 session-key 內容）
 - `openclaw.tool.loop`
-  - `openclaw.toolName`、`openclaw.outcome`、`openclaw.iterations`、`openclaw.errorCategory`（無迴圈訊息、參數或工具輸出）
+  - `openclaw.toolName`、`openclaw.outcome`、`openclaw.iterations`、`openclaw.errorCategory`（無 loop messages、params 或 tool output）
 - `openclaw.memory.pressure`
-  - `openclaw.memory.level`、`openclaw.memory.heap_used_bytes`、`openclaw.memory.rss_bytes`
+  - `openclaw.memory.level`, `openclaw.memory.heap_used_bytes`, `openclaw.memory.rss_bytes`
 
-當明確啟用內容擷取時，模型和工具範圍也可以包含針對您選擇加入的特定內容類別的有限且經過編校的 `openclaw.content.*` 屬性。
+當明確啟用內容捕獲時，模型和工具追蹤段也可以包含針對您選擇的特定內容類別的、經過編修且有限的 `openclaw.content.*` 屬性。
 
 ## 診斷事件目錄
 
@@ -315,10 +304,7 @@ OpenClaw classifies sessions by the work it can still observe:
 
 **模型使用情況**
 
-- `model.usage` - token、成本、持續時間、上下文、提供者/模型/通道、
-  session ID。`usage` 是用於成本和遙測的提供者/回合計數；
-  `context.used` 是目前的提示/上下文快照，當涉及快取輸入或工具迴圈呼叫時，可能會低於
-  提供者 `usage.total`。
+- `model.usage` - tokens、cost、duration、context、provider/model/channel、session id。`usage` 是針對成本和遙測的 provider/turn 會計計算；`context.used` 是目前的 prompt/context 快照，當涉及快取輸入或工具迴圈呼叫時，可能會低於 provider `usage.total`。
 
 **訊息流**
 
@@ -337,20 +323,20 @@ OpenClaw classifies sessions by the work it can still observe:
 
 - `harness.run.started` / `harness.run.completed` / `harness.run.error` -
   agent harness 的每次執行生命週期。包含 `harnessId`、選用的
-  `pluginId`、provider/model/channel 以及執行 ID。完成時會新增
+  `pluginId`、provider/model/channel 和 run id。完成時會新增
   `durationMs`、`outcome`、選用的 `resultClassification`、`yieldDetected`
   和 `itemLifecycle` 計數。錯誤會新增 `phase`
-  (`prepare`/`start`/`send`/`resolve`/`cleanup`)、`errorCategory` 以及
+  (`prepare`/`start`/`send`/`resolve`/`cleanup`)、`errorCategory` 和
   選用的 `cleanupFailed`。
 
 **Exec**
 
-- `exec.process.completed` - 最終結果、持續時間、目標、模式、結束代碼
-  以及失敗種類。不包含指令文字和工作目錄。
+- `exec.process.completed` - 最終結果、持續時間、目標、模式、結束
+  代碼和失敗類型。不包含指令文本和工作目錄。
 
 ## 不使用匯出器
 
-您可以在不執行 `diagnostics-otel` 的情況下，讓診斷事件可供外掛或自訂接收端使用：
+您可以在不執行 `diagnostics-otel` 的情況下，讓診斷事件可供外掛程式或自訂接收器使用：
 
 ```json5
 {
@@ -358,9 +344,9 @@ OpenClaw classifies sessions by the work it can still observe:
 }
 ```
 
-若要取得不引發 `logging.level` 的目標除錯輸出，請使用診斷
-旗標。旗標不區分大小寫並支援萬用字元 (例如 `telegram.*` 或
-`*`)：
+若要取得目標調試輸出而不引發 `logging.level`，請使用診斷
+旗標。旗標不區分大小寫，並支援通配符（例如 `telegram.*` 或
+`*`）：
 
 ```json5
 {
@@ -374,8 +360,8 @@ OpenClaw classifies sessions by the work it can still observe:
 OPENCLAW_DIAGNOSTICS=telegram.http,telegram.payload openclaw gateway
 ```
 
-旗標輸出會送到標準記錄檔 (`logging.file`)，且仍會
-被 `logging.redactSensitive` 編輯。完整指南：
+旗標輸出會進入標準日誌檔案（`logging.file`），並且仍
+會被 `logging.redactSensitive` 編輯。完整指南：
 [診斷旗標](/zh-Hant/diagnostics/flags)。
 
 ## 停用
@@ -386,13 +372,13 @@ OPENCLAW_DIAGNOSTICS=telegram.http,telegram.payload openclaw gateway
 }
 ```
 
-您也可以將 `diagnostics-otel` 從 `plugins.allow` 中移除，或是執行
+您也可以將 `diagnostics-otel` 從 `plugins.allow` 中排除，或執行
 `openclaw plugins disable diagnostics-otel`。
 
 ## 相關
 
-- [記錄](/zh-Hant/logging) - 檔案記錄、主控台輸出、CLI 追蹤以及控制 UI 記錄分頁
-- [Gateway 記錄內部機制](/zh-Hant/gateway/logging) - WS 記錄樣式、子系統前綴以及主控台擷取
-- [診斷旗標](/zh-Hant/diagnostics/flags) - 目標除錯記錄旗標
+- [日誌記錄](/zh-Hant/logging) - 檔案日誌、主控台輸出、CLI 追蹤，以及控制 UI 日誌分頁
+- [Gateway 日誌記錄內部機制](/zh-Hant/gateway/logging) - WS 日誌樣式、子系統前綴和主控台擷取
+- [診斷旗標](/zh-Hant/diagnostics/flags) - 目標調試日誌旗標
 - [診斷匯出](/zh-Hant/gateway/diagnostics) - 操作員支援套件工具（與 OTEL 匯出分開）
 - [組態參考](/zh-Hant/gateway/configuration-reference#diagnostics) - 完整的 `diagnostics.*` 欄位參考

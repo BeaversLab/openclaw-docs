@@ -9,7 +9,7 @@ title: "Aplicación de Android"
 
 <Note>
   La aplicación oficial de Android está disponible en [Google Play](https://play.google.com/store/apps/details?id=ai.openclaw.app&hl=en_IN). Es un nodo complementario y requiere un OpenClaw Gateway en ejecución. El código fuente también está disponible en el [repositorio de OpenClaw](https://github.com/openclaw/openclaw) bajo `apps/android`; consulte
-  [apps/android/README.md](https://github.com/openclaw/openclaw/blob/main/apps/android/README.md) para las instrucciones de compilación.
+  [apps/android/README.md](https://github.com/openclaw/openclaw/blob/main/apps/android/README.md) para obtener instrucciones de compilación.
 </Note>
 
 ## Instantánea de soporte
@@ -17,12 +17,12 @@ title: "Aplicación de Android"
 - Rol: aplicación de nodo complementario (Android no aloja el Gateway).
 - Se requiere Gateway: sí (ejecútelo en macOS, Linux o Windows a través de WSL2).
 - Instalación: [Google Play](https://play.google.com/store/apps/details?id=ai.openclaw.app&hl=en_IN) para la aplicación, [Introducción](/es/start/getting-started) para el Gateway y luego [Emparejamiento](/es/channels/pairing).
-- Gateway: [Manual](/es/gateway) + [Configuración](/es/gateway/configuration).
-  - Protocolos: [Protocolo de Gateway](/es/gateway/protocol) (nodos + plano de control).
+- Gateway: [Manual de procedimientos](/es/gateway) + [Configuración](/es/gateway/configuration).
+  - Protocolos: [Protocolo del Gateway](/es/gateway/protocol) (nodos + plano de control).
 
 ## Control del sistema
 
-El control del sistema (launchd/systemd) se encuentra en el host del Gateway. Consulte [Gateway](/es/gateway).
+El control del sistema (launchd/systemd) reside en el host del Gateway. Consulte [Gateway](/es/gateway).
 
 ## Manual de conexión
 
@@ -203,9 +203,10 @@ Consulte [Nodo de cámara](/es/nodes/camera) para conocer los parámetros y los 
 - De forma predeterminada, Android Talk usa el reconocimiento de voz nativo, el chat de la puerta de enlace y `talk.speak` a través del proveedor Talk de la puerta de enlace configurada. El TTS del sistema local se usa solo cuando `talk.speak` no está disponible.
 - Android Talk usa el relé de puerta de enlace en tiempo real solo cuando `talk.realtime.mode` es `realtime` y `talk.realtime.transport` es `gateway-relay`.
 - La activación por voz permanece deshabilitada en la experiencia de usuario/tiempo de ejecución de Android.
-- Familias de comandos adicionales de Android (la disponibilidad depende del dispositivo + permisos):
+- Familias de comandos adicionales de Android (la disponibilidad depende del dispositivo, los permisos y la configuración del usuario):
   - `device.status`, `device.info`, `device.permissions`, `device.health`
-  - `notifications.list`, `notifications.actions` (ver [Reenvío de notificaciones](#notification-forwarding) a continuación)
+  - `device.apps` solo cuando **Configuración > Capacidades del teléfono > Aplicaciones instaladas** está habilitado; enumera las aplicaciones visibles en el lanzador de forma predeterminada.
+  - `notifications.list`, `notifications.actions` (consulte [Reenvío de notificaciones](#notification-forwarding) a continuación)
   - `photos.latest`
   - `contacts.search`, `contacts.add`
   - `calendar.events`, `calendar.add`
@@ -215,29 +216,29 @@ Consulte [Nodo de cámara](/es/nodes/camera) para conocer los parámetros y los 
 
 ## Puntos de entrada del asistente
 
-Android admite el inicio de OpenClaw desde el disparador del asistente del sistema (Google
-Assistant). Cuando está configurado, mantener presionado el botón de inicio o decir "Hey Google, pregúntale a
+Android admite iniciar OpenClaw desde el activador del asistente del sistema (Google
+Assistant). Cuando está configurado, mantener presionado el botón de inicio o decir "Ok Google, pregunta a
 OpenClaw..." abre la aplicación y pasa el mensaje al compositor de chat.
 
-Esto utiliza los metadatos de **App Actions** de Android declarados en el manifiesto de la aplicación. No se necesita ninguna configuración adicional en el lado de la puerta de enlace; la intención del asistente se maneja completamente por la aplicación de Android y se reenvía como un mensaje de chat normal.
+Esto utiliza los metadatos de **App Actions** de Android declarados en el manifiesto de la aplicación. No se necesita ninguna configuración adicional en el lado de la puerta de enlace -- el intent del asistente se maneja completamente por la aplicación de Android y se reenvía como un mensaje de chat normal.
 
-<Note>La disponibilidad de las App Actions depende del dispositivo, la versión de Google Play Services y si el usuario ha establecido OpenClaw como la aplicación de asistente predeterminada.</Note>
+<Note>La disponibilidad de las App Actions depende del dispositivo, la versión de Google Play Services y de si el usuario ha establecido OpenClaw como la aplicación de asistente predeterminada.</Note>
 
 ## Reenvío de notificaciones
 
-Android puede reenviar las notificaciones del dispositivo a la puerta de enlace como eventos. Varios controles le permiten limitar qué notificaciones se reenvían y cuándo.
+Android puede reenviar las notificaciones del dispositivo a la puerta de enlace como eventos. Varios controles le permiten definir el alcance de qué notificaciones se reenvían y cuándo.
 
 | Clave                            | Tipo           | Descripción                                                                                                                  |
 | -------------------------------- | -------------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| `notifications.allowPackages`    | string[]       | Reenviar solo las notificaciones de estos nombres de paquete. Si se establece, se ignoran todos los demás paquetes.          |
+| `notifications.allowPackages`    | string[]       | Solo reenviar notificaciones de estos nombres de paquete. Si se establece, todos los demás paquetes se ignoran.              |
 | `notifications.denyPackages`     | string[]       | Nunca reenviar notificaciones de estos nombres de paquete. Se aplica después de `allowPackages`.                             |
-| `notifications.quietHours.start` | cadena (HH:mm) | Inicio de la ventana de horas silenciosas (hora local del dispositivo). Las notificaciones se suprimen durante esta ventana. |
-| `notifications.quietHours.end`   | cadena (HH:mm) | Fin de la ventana de horas silenciosas.                                                                                      |
-| `notifications.rateLimit`        | número         | Máximo de notificaciones reenviadas por paquete por minuto. Las notificaciones excesivas se descartan.                       |
+| `notifications.quietHours.start` | string (HH:mm) | Inicio de la ventana de horas silenciosas (hora local del dispositivo). Las notificaciones se suprimen durante esta ventana. |
+| `notifications.quietHours.end`   | string (HH:mm) | Fin de la ventana de horas silenciosas.                                                                                      |
+| `notifications.rateLimit`        | number         | Máximo de notificaciones reenviadas por paquete por minuto. Las notificaciones excesivas se descartan.                       |
 
 El selector de notificaciones también utiliza un comportamiento más seguro para los eventos de notificación reenviados, evitando el reenvío accidental de notificaciones confidenciales del sistema.
 
-Configuración de ejemplo:
+Ejemplo de configuración:
 
 ```json5
 {
@@ -259,4 +260,4 @@ Configuración de ejemplo:
 
 - [app de iOS](/es/platforms/ios)
 - [Nodos](/es/nodes)
-- [Solución de problemas del nodo Android](/es/nodes/troubleshooting)
+- [Solución de problemas del nodo de Android](/es/nodes/troubleshooting)

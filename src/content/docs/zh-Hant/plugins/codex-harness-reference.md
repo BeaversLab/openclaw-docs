@@ -36,14 +36,14 @@ read_when:
 
 支援的頂層欄位：
 
-| 欄位                       | 預設值                    | 含義                                                                                                                           |
-| -------------------------- | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| `discovery`                | enabled                   | Codex 應用伺服器 `model/list` 的模型探索設定。                                                                                 |
-| `appServer`                | 託管 stdio 應用程式伺服器 | 傳輸、指令、驗證、審批、沙盒和逾時設定。                                                                                       |
-| `codexDynamicToolsLoading` | `"searchable"`            | 使用 `"direct"` 將 OpenClaw 動態工具直接放入初始 Codex 工具環境中。                                                            |
-| `codexDynamicToolsExclude` | `[]`                      | 要從 Codex 應用程式伺服器輪次中省略的其他 OpenClaw 動態工具名稱。                                                              |
-| `codexPlugins`             | disabled                  | 對已遷移的來源安裝策展插件的 Native Codex 插件/應用程式支援。請參閱 [Native Codex plugins](/zh-Hant/plugins/codex-native-plugins)。 |
-| `computerUse`              | disabled                  | Codex Computer Use 設定。請參閱 [Codex Computer Use](/zh-Hant/plugins/codex-computer-use)。                                         |
+| 欄位                       | 預設值                    | 含義                                                                                                                                 |
+| -------------------------- | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| `discovery`                | enabled                   | Codex 應用伺服器 `model/list` 的模型探索設定。                                                                                       |
+| `appServer`                | 託管 stdio 應用程式伺服器 | 傳輸、指令、驗證、審批、沙盒和逾時設定。                                                                                             |
+| `codexDynamicToolsLoading` | `"searchable"`            | 使用 `"direct"` 將 OpenClaw 動態工具直接放入初始 Codex 工具環境中。                                                                  |
+| `codexDynamicToolsExclude` | `[]`                      | 要從 Codex 應用程式伺服器輪次中省略的其他 OpenClaw 動態工具名稱。                                                                    |
+| `codexPlugins`             | disabled                  | 對已設定的第一方 Codex 外掛程式的原生 Codex 外掛程式/應用程式支援。請參閱 [Native Codex plugins](/zh-Hant/plugins/codex-native-plugins)。 |
+| `computerUse`              | disabled                  | Codex Computer Use 設定。請參閱 [Codex Computer Use](/zh-Hant/plugins/codex-computer-use)。                                               |
 
 ## 應用程式伺服器傳輸
 
@@ -293,7 +293,7 @@ OpenClaw 會話通道，以免後續聊天訊息被卡在過時的
 - GPT-5.4 mini
 - GPT-5.2
 
-目前隨附的 harness 是 `@openai/codex` `0.134.0`。對該隨附 app-server 執行的 `model/list` 探測返回：
+目前隨附的 harness 為 `@openai/codex` `0.135.0`。針對該隨附的 app-server 進行的 `model/list` 探測傳回：
 
 | Model id              | 預設 | 隱藏 | 輸入模式    | 推理強度                 |
 | --------------------- | ---- | ---- | ----------- | ------------------------ |

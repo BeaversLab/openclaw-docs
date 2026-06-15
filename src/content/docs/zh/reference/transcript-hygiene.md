@@ -25,7 +25,7 @@ OpenClaw 在运行之前（构建模型上下文时）对脚本应用**提供商
 
 如果您需要记录存储的详细信息，请参阅：
 
-- [Session management deep dive](/zh/reference/session-management-compaction)
+- [会话管理深入探讨](/zh/reference/session-management-compaction)
 
 ---
 
@@ -112,49 +112,48 @@ OpenClaw 还会在路由提示文本之前添加一个同轮 OpenClaw`[Inter-ses
 - 历史助手思考/推理块会在重放之前被剥离，因此本地和代理风格的 OpenAI 兼容服务器不会收到诸如 `reasoning` 或 `reasoning_content` 之类的先前轮次推理字段。
 - 当前同回合工具调用延续会将助手推理块
   附加到工具调用上，直到工具结果被重放为止。
-- 提供商拥有的例外可以在其线路协议需要重放推理元数据时选择退出。
+- 带有 `reasoning: true` 的自定义/自托管模型条目会保留重放的推理元数据。
+- 当提供商拥有的异常情况的线协议需要重放的推理元数据时，可以选择退出。
 
-**Google (Generative AI / Gemini CLI / Antigravity)**
+**Google (生成式 AI / Gemini CLI / Antigravity)**
 
 - 工具调用 ID 清理：严格的字母数字。
 - 工具结果配对修复和合成工具结果。
-- 轮次验证 (Gemini 风格的轮次交替)。
-- Google 轮次排序修复 (如果历史记录以助手开头，则在前面添加一个微小的用户引导)。
-- Antigravity Claude：规范化思考签名；丢弃未签名的思考块。
+- 轮次验证（Gemini 风格的轮次交替）。
+- Google 轮次排序修正（如果历史记录以助手开头，则在前面添加一个微小的用户引导）。
+- Antigravity Claude：规范化思考签名；删除未签名的思考块。
 
 **Anthropic / Minimax (Anthropic 兼容)**
 
 - 工具结果配对修复和合成工具结果。
-- 轮次验证 (合并连续的用户轮次以满足严格的交替要求)。
-- 当启用思考功能时，从传出的 Anthropic 消息
-  负载中剥离尾部的助手预填充轮次，包括 Cloudflare AI 网关路由。
-- 缺失、空白或重放签名为空的思考块会在提供商转换之前被剥离。
-  如果这清空了助手轮次，OpenClaw 会使用非空的“省略推理”文本来保持轮次形状。
-- 必须被剥离的旧版仅思考助手轮次会被替换为
-  非空的“省略推理”文本，以便提供商适配器不会丢弃重放
-  轮次。
+- 轮次验证（合并连续的用户轮次以满足严格的交替要求）。
+- 当启用思考功能时，末尾的助手预填充轮次会从传出的 Anthropic 消息负载中剥离，包括 Cloudflare AI Gateway(网关) 路由。
+- 缺少、空白或空重放签名的思考块会在提供商转换之前被剥离。如果这清空了助手轮次，OpenClaw 会使用非空的“已省略推理”文本来保持轮次形状。
+- 必须被剥离的旧式仅思考助手轮次会被替换为非空的“已省略推理”文本，以便提供商适配器不会丢弃重放轮次。
 
 **Amazon Bedrock (Converse API)**
 
-- 空的助手流错误轮次在重放之前会被修复为非空的回退文本块。Bedrock Converse 会拒绝带有 `content: []` 的助手消息，因此在加载之前，具有 `stopReason: "error"` 和空内容的持久化助手轮次也会在磁盘上被修复。
-- 仅包含空白文本块的助手流错误轮次将从内存中的重放副本中删除，
-  而不是重放无效的空白块。
-- 缺少、为空或空白重放签名的 Claude 思考块会在 Converse 重放之前被剥离。如果这导致助手轮次变空，OpenClaw 会保留非空的 omitted-reasoning 文本以维持轮次形状。
-- 必须被剥离的较旧的纯思考助手轮次会被替换为非空的 omitted-reasoning 文本，以便 Converse 重放保持严格的轮次形状。
-- 重放会过滤掉 OpenClaw 交付镜像和网关注入的助手轮次。
-- 应用全局规则进行图像清理。
+- 空的助手流错误轮次会在重放之前被修复为非空的回退文本块。Bedrock Converse 拒绝带有 `content: []` 的助手消息，因此带有 `stopReason: "error"` 和空内容的持久化助手轮次也会在加载之前在磁盘上被修复。
+- 仅包含空白文本块的助手流错误轮次会从内存中的重放副本中删除，而不是重放无效的空白块。
+- 缺少、空白或空重放签名的 Claude 思考块会在 Converse 重放之前被剥离。如果这清空了助手轮次，OpenClaw 会使用非空的“已省略推理”文本来保持轮次形状。
+- 必须被删除的旧版仅思考助手轮次被替换为
+  非空的省略推理文本，以便 Converse 重放保持严格的轮次形状。
+- 重放会过滤 OpenClaw 交付镜像和网关注入的助手轮次。
+- 图像清理通过全局规则应用。
 
-**Mistral（包括基于模型ID的检测）**
+**Mistral（包括基于模型 ID 的检测）**
 
-- 工具调用 ID 清理：strict9（长度为 9 的字母数字）。
+- 工具调用 ID 清理：strict9（字母数字长度 9）。
 
 **OpenRouter Gemini**
 
-- 思维签名清理：去除非 base64 的 `thought_signature` 值（保留 base64）。
+- 思维签名清理：去除非 base64 `thought_signature` 值（保留 base64）。
 
 **OpenRouter Anthropic**
 
-- 当启用推理时，尾随的助手预填充轮次会从经过验证的 OpenRouter OpenAI 兼容 Anthropic 模型负载中剥离，以匹配直接 Anthropic 和 Cloudflare Anthropic 的重放行为。
+- 当启用推理时，尾部助手预填充轮次将从已验证的 OpenRouter
+  OpenAI 兼容 Anthropic 模型负载中剥离，以匹配
+  直接 Anthropic 和 Cloudflare Anthropic 重放行为。
 
 **其他所有情况**
 
@@ -164,19 +163,20 @@ OpenClaw 还会在路由提示文本之前添加一个同轮 OpenClaw`[Inter-ses
 
 ## 历史行为（2026.1.22 之前）
 
-在 2026.1.22 版本发布之前，OpenClaw 应用多层记录清理：
+在 2026.1.22 版本发布之前，OpenClaw 应用了多层转录清理：
 
-- 一个 **transcript-sanitize 扩展** 在每次构建上下文时运行，并且可以：
+- 一个 **transcript-sanitize 扩展** 在每次上下文构建时运行，并且可以：
   - 修复工具使用/结果配对。
-  - 清理工具调用 ID（包括一种保留了 `_`/`-` 的非严格模式）。
+  - 清理工具调用 ID（包括保留 `_`/`-` 的非严格模式）。
 - 运行器还执行了特定于提供商的清理，这导致了工作重复。
 - 在提供商策略之外还发生了额外的变更，包括：
-  - 在持久化之前从助手文本中去除 `<final>` 标签。
+  - 在持久化之前从助手文本中剥离 `<final>` 标签。
   - 删除空的助手错误轮次。
-  - 在工具调用之后修剪助手内容。
+  - 修剪工具调用后的助手内容。
 
-这种复杂性导致了跨提供商回归（特别是 `openai-responses`
-`call_id|fc_id` 配对）。2026.1.22 的清理工作移除了该扩展，将逻辑集中在运行器中，并使 OpenAI 除了图像清理外保持**不干预**（no-touch）。
+这种复杂性导致了跨提供商的回归（尤其是 `openai-responses`
+`call_id|fc_id` 配对）。2026.1.22 的清理删除了该扩展，将逻辑
+集中在运行器中，并使 OpenAI 除了图像清理之外变为 **no-touch**。
 
 ## 相关
 

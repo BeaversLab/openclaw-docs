@@ -184,8 +184,8 @@ La retención y la poda se controlan en la configuración:
 ## Migración de trabajos antiguos
 
 <Note>
-  Si tiene trabajos de cron anteriores al formato de entrega y almacenamiento actual, ejecute `openclaw doctor --fix`. Doctor normaliza los campos de cron heredados (`jobId`, `schedule.cron`, campos de entrega de nivel superior incluyendo `threadId` heredado, alias de entrega de carga útil `provider`) y migra los trabajos de reserva de webhook simples `notify: true` a una entrega de webhook
-  explícita cuando `cron.webhook` está configurado.
+  Si tiene trabajos cron anteriores al formato actual de entrega y almacenamiento, ejecute `openclaw doctor --fix`. Doctor normaliza los campos de cron heredados (`jobId`, `schedule.cron`, campos de entrega de nivel superior, incluidos los `threadId` heredados, alias de entrega de carga útil `provider`) y migra los trabajos de respaldo de webhook `notify: true` de `cron.webhook` a una entrega de
+  webhook explícita. Los trabajos que ya anuncian a un chat mantienen esa entrega y obtienen un destino de webhook de finalización.
 </Note>
 
 ## Ediciones comunes

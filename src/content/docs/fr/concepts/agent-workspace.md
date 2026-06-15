@@ -82,8 +82,8 @@ Voici les fichiers standards que OpenClaw s'attend à trouver dans l'espace de t
 </AccordionGroup>
 
 <Note>
-  Si un fichier d'amorçage est manquant, OpenClaw injecte un marqueur de "fichier manquant" dans la session et continue. Les fichiers d'amorçage volumineux sont tronqués lors de l'injection ; ajustez les limites avec OpenClaw`agents.defaults.bootstrapMaxChars` (par défaut : 12000) et `agents.defaults.bootstrapTotalMaxChars` (par défaut : 60000). `openclaw setup` peut recréer les valeurs par défaut
-  manquantes sans écraser les fichiers existants.
+  Si un fichier d'amorçage est manquant, OpenClaw injecte un marqueur de « fichier manquant » dans la session et continue. Les fichiers d'amorçage volumineux sont tronqués lors de l'injection ; ajustez les limites avec OpenClaw`agents.defaults.bootstrapMaxChars` (par défaut : 20000) et `agents.defaults.bootstrapTotalMaxChars` (par défaut : 60000). `openclaw setup` peut recréer les valeurs par
+  défaut manquantes sans écraser les fichiers existants.
 </Note>
 
 ## Ce qui n'est PAS dans l'espace de travail

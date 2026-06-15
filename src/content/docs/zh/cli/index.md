@@ -24,22 +24,22 @@ title: "CLI 参考"
 | 消息和代理           | [`message`](/zh/cli/message) · [`agent`](/zh/cli/agent) · [`agents`](/zh/cli/agents) · [`acp`](/zh/cli/acp) · [`mcp`](/zh/cli/mcp)                                                                                                                                |
 | 健康检查和会话       | [`status`](/zh/cli/status) · [`health`](/zh/cli/health) · [`sessions`](/zh/cli/sessions)                                                                                                                                                                          |
 | Gateway(网关) 和日志 | [`gateway`](/zh/cli/gateway) · [`logs`](/zh/cli/logs) · [`system`](/zh/cli/system)                                                                                                                                                                                |
-| 模型和推理           | [`models`](/zh/cli/models) · [`infer`](/zh/cli/infer) · `capability`（[`infer`](/zh/cli/infer) 的别名） · [`memory`](/zh/cli/memory) · [`commitments`](/zh/cli/commitments) · [`wiki`](/zh/cli/wiki)                                                              |
+| 模型和推理           | [`models`](/zh/cli/models) · [`infer`](/zh/cli/infer) · `capability` (alias for [`infer`](/zh/cli/infer)) · [`memory`](/zh/cli/memory) · [`commitments`](/zh/cli/commitments) · [`wiki`](/zh/cli/wiki)                                                            |
 | 网络和节点           | [`directory`](/zh/cli/directory) · [`nodes`](/zh/cli/nodes) · [`devices`](/zh/cli/devices) · [`node`](/zh/cli/node)                                                                                                                                               |
-| 运行时和沙盒         | [`approvals`](/zh/cli/approvals) · `exec-policy`（参见 [`approvals`](/zh/cli/approvals)） · [`sandbox`](/zh/cli/sandbox) · [`tui`](/zh/cli/tui) · `chat`/`terminal`（[`tui --local`](/zh/cli/tui) 的别名） · [`browser`](/zh/cli/browser)                         |
+| 运行时和沙盒         | [`approvals`](/zh/cli/approvals) · `exec-policy` (参见 [`approvals`](/zh/cli/approvals)) · [`sandbox`](/zh/cli/sandbox) · [`tui`](/zh/cli/tui) · `chat`/`terminal` ([`tui --local`](/zh/cli/tui) 的别名) · [`browser`](/zh/cli/browser)                           |
 | 自动化               | [`cron`](/zh/cli/cron) · [`tasks`](/zh/cli/tasks) · [`hooks`](/zh/cli/hooks) · [`webhooks`](/zh/cli/webhooks) · [`transcripts`](/zh/cli/transcripts)                                                                                                              |
 | 设备发现和文档       | [`dns`](/zh/cli/dns) · [`docs`](/zh/cli/docs)                                                                                                                                                                                                                     |
 | 配对和频道           | [`pairing`](/zh/cli/pairing) · [`qr`](/zh/cli/qr) · [`channels`](/zh/cli/channels)                                                                                                                                                                                |
 | 安全性与插件         | [`security`](/zh/cli/security) · [`secrets`](/zh/cli/secrets) · [`skills`](/zh/cli/skills) · [`plugins`](/zh/cli/plugins) · [`proxy`](/zh/cli/proxy)                                                                                                              |
 | 旧版别名             | [`daemon`](/zh/cli/daemon) (gateway service) · [`clawbot`](/zh/cli/clawbot) (namespace)                                                                                                                                                                           |
-| 插件（可选）         | [`path`](/zh/cli/path) · [`policy`](/zh/cli/policy) · [`voicecall`](/zh/cli/voicecall) (if installed)                                                                                                                                                             |
+| 插件（可选）         | [`path`](/zh/cli/path) · [`policy`](/zh/cli/policy) · [`voicecall`](/zh/cli/voicecall) · [`workboard`](/zh/cli/workboard) （如果已安装）                                                                                                                          |
 
 ## 全局标志
 
 | 标志                    | 用途                                                       |
 | ----------------------- | ---------------------------------------------------------- |
-| `--dev`                 | 将状态隔离在 `~/.openclaw-dev` 下并移动默认端口            |
-| `--profile <name>`      | 将状态隔离在 `~/.openclaw-<name>` 下                       |
+| `--dev`                 | 在 `~/.openclaw-dev` 下隔离状态并移动默认端口              |
+| `--profile <name>`      | 在 `~/.openclaw-<name>` 下隔离状态                         |
 | `--container <name>`    | 指定命名的容器以供执行                                     |
 | `--no-color`            | 禁用 ANSI 颜色（同时也遵守 `NO_COLOR=1`）                  |
 | `--update`              | [`openclaw update`](/zh/cli/update) 的简写（仅限源码安装） |
@@ -50,10 +50,10 @@ title: "CLI 参考"
 - ANSI 颜色和进度指示器仅在 TTY 会话中渲染。
 - OSC-8 超链接在支持的地方渲染为可点击链接；否则 CLI
   会回退到纯文本 URL。
-- `--json`（以及在支持的情况下的 `--plain`）会禁用样式以输出干净的文本。
+- `--json`（以及在支持的情况下 `--plain`）会禁用样式以生成干净输出。
 - 长时间运行的命令会显示进度指示器（支持时使用 OSC 9;4）。
 
-调色板的唯一真实来源：`src/terminal/palette.ts`。
+配色板事实来源：`src/terminal/palette.ts`。
 
 ## 命令树
 
@@ -121,6 +121,11 @@ openclaw [--dev] [--profile <name>] <command>
     disable
     doctor
     marketplace list
+  workboard
+    list
+    create
+    show
+    dispatch
   memory
     status
     index
@@ -365,13 +370,14 @@ openclaw [--dev] [--profile <name>] <command>
   terminal (alias: tui --local)
 ```
 
-插件可以添加额外的顶级命令（例如 `openclaw voicecall`）。
+插件可以添加额外的顶级命令，例如
+[`openclaw workboard`](/zh/cli/workboard) 或 `openclaw voicecall`。
 
 </Accordion>
 
 ## 聊天斜杠命令
 
-聊天消息支持 `/...` 命令。请参阅 [斜杠命令](/zh/tools/slash-commands)。
+聊天消息支持 `/...` 命令。参见 [斜杠命令](/zh/tools/slash-commands)。
 
 亮点：
 
@@ -382,9 +388,9 @@ openclaw [--dev] [--profile <name>] <command>
 
 ## 使用情况跟踪
 
-当可用 OAuth/API 凭据时，`openclaw status --usage`OAuthAPI 和 Control UI 会显示提供商的使用情况/配额。数据直接来自提供商的使用终端，并已标准化为 `X% left`AnthropicGitHubCLIOpenAIMiniMaxXiaomi。具有当前使用窗口的提供商包括：Anthropic、GitHub Copilot、Gemini CLI、OpenAI Codex、MiniMax、Xiaomi 和 z.ai。
+`openclaw status --usage` 和控制界面会在提供 OAuth/API 凭据时显示提供商的使用情况/配额。数据直接来自提供商的使用端点，并标准化为 `X% left`。具有当前使用时间窗口的提供商包括：Anthropic、GitHub Copilot、Gemini CLI、OpenAI Codex、MiniMax、Xiaomi 以及 z.ai。
 
-有关详细信息，请参阅[使用跟踪](/zh/concepts/usage-tracking)。
+有关详细信息，请参阅[使用情况跟踪](/zh/concepts/usage-tracking)。
 
 ## 相关
 

@@ -122,7 +122,7 @@ Top tools (schema size):
 - `HEARTBEAT.md`
 - `BOOTSTRAP.md`（仅首次运行时）
 
-大文件会按文件使用 `agents.defaults.bootstrapMaxChars` 进行截断（默认 `12000`OpenClaw 个字符）。OpenClaw 还使用 `agents.defaults.bootstrapTotalMaxChars`（默认 `60000` 个字符）在所有文件间强制执行引导注入总数上限。`/context` 显示 **原始与注入** 大小以及是否发生了截断。
+大文件会使用 `agents.defaults.bootstrapMaxChars` 按文件进行截断（默认 `20000`OpenClaw 个字符）。OpenClaw 还通过 `agents.defaults.bootstrapTotalMaxChars` 对跨所有文件的总引导注入量设置了上限（默认 `60000` 个字符）。`/context` 显示了**原始大小与注入后大小**的对比以及是否发生了截断。
 
 当发生截断时，运行时可以在项目上下文下注入一个提示内警告块。通过 `agents.defaults.bootstrapPromptTruncationWarning` 进行配置（`off`、`once`、`always`；默认为 `always`）。
 

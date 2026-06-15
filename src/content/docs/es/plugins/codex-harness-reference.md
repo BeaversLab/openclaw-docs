@@ -36,14 +36,14 @@ Todos los ajustes del arnés Codex se encuentran en `plugins.entries.codex.confi
 
 Campos de nivel superior compatibles:
 
-| Campo                      | Predeterminado                              | Significado                                                                                                                                                                                  |
-| -------------------------- | ------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `discovery`                | habilitado                                  | Configuración de descubrimiento de modelos para el servidor de aplicaciones Codex `model/list`.                                                                                              |
-| `appServer`                | servidor de aplicaciones stdio administrado | Configuraciones de transporte, comando, autenticación, aprobación, espacio aislado y tiempo de espera.                                                                                       |
-| `codexDynamicToolsLoading` | `"searchable"`                              | Use `"direct"` para colocar las herramientas dinámicas de OpenClaw directamente en el contexto de la herramienta Codex inicial.                                                              |
-| `codexDynamicToolsExclude` | `[]`                                        | Nombres de herramientas dinámicas adicionales de OpenClaw para omitir en los turnos del servidor de aplicaciones de Codex.                                                                   |
-| `codexPlugins`             | deshabilitado                               | Compatibilidad nativa de complementos/aplicaciones de Codex para complementos curados instalados desde fuente y migrados. Consulte [Native Codex plugins](/es/plugins/codex-native-plugins). |
-| `computerUse`              | deshabilitado                               | Configuración de uso de computadora Codex. Consulte [Codex Computer Use](/es/plugins/codex-computer-use).                                                                                    |
+| Campo                      | Predeterminado                              | Significado                                                                                                                                                                                         |
+| -------------------------- | ------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `discovery`                | habilitado                                  | Configuración de descubrimiento de modelos para el servidor de aplicaciones Codex `model/list`.                                                                                                     |
+| `appServer`                | servidor de aplicaciones stdio administrado | Configuraciones de transporte, comando, autenticación, aprobación, espacio aislado y tiempo de espera.                                                                                              |
+| `codexDynamicToolsLoading` | `"searchable"`                              | Use `"direct"` para colocar las herramientas dinámicas de OpenClaw directamente en el contexto de la herramienta Codex inicial.                                                                     |
+| `codexDynamicToolsExclude` | `[]`                                        | Nombres de herramientas dinámicas adicionales de OpenClaw para omitir en los turnos del servidor de aplicaciones de Codex.                                                                          |
+| `codexPlugins`             | deshabilitado                               | Compatibilidad con complementos/aplicaciones nativas de Codex para complementos de Codex de primera parte configurados. Consulte [Complementos nativos de Codex](/es/plugins/codex-native-plugins). |
+| `computerUse`              | deshabilitado                               | Configuración de uso de computadora Codex. Consulte [Codex Computer Use](/es/plugins/codex-computer-use).                                                                                           |
 
 ## Transporte del servidor de aplicaciones
 
@@ -299,7 +299,8 @@ Si el descubrimiento falla o se agota el tiempo, OpenClaw usa un catálogo de re
 - GPT-5.4 mini
 - GPT-5.2
 
-El arnés incluido actual es `@openai/codex` `0.134.0`. Un sondeo `model/list` contra ese servidor de aplicaciones incluido devolvió:
+El arnés incluido actualmente es `@openai/codex` `0.135.0`. Una sonda `model/list`
+contra ese servidor de aplicaciones incluido devolvió:
 
 | Id. de modelo         | Predeterminado | Oculto | Modalidades de entrada | Esfuerzos de razonamiento |
 | --------------------- | -------------- | ------ | ---------------------- | ------------------------- |

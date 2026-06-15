@@ -171,8 +171,9 @@ What you set:
     提示输入账户 ID、网关 ID 和 `CLOUDFLARE_AI_GATEWAY_API_KEY`。
     更多详情：[Cloudflare AI Gateway(网关)](/zh/providers/cloudflare-ai-gateway)。
   </Accordion>
-  <Accordion title="MiniMax">
-    配置会自动写入。托管的默认值为 `MiniMax-M2.7`；API 设置使用 `minimax/...`，而 OAuth 设置使用 `minimax-portal/...`。
+  <Accordion title="MiniMaxMiniMax">
+    配置会自动写入。托管默认为 `MiniMax-M3`API；API 密钥设置使用
+    `minimax/...`OAuth，OAuth 设置使用 `minimax-portal/...`MiniMax。
     更多详情：[MiniMax](/zh/providers/minimax)。
   </Accordion>
   <Accordion title="StepFun">
@@ -195,21 +196,21 @@ What you set:
     Moonshot (Kimi K2) 和 Kimi Coding 配置将自动写入。
     更多详情：[Moonshot AI (Kimi + Kimi Coding)](/zh/providers/moonshot)。
   </Accordion>
-  <Accordion title="Custom 提供商"OpenAIAnthropicAPIAPIAPI>
-    适用于兼容 OpenAI 和兼容 Anthropic 的端点。
+  <Accordion title="自定义提供商"OpenAIAnthropicAPIAPIAPI>
+    适用于 OpenAI 兼容和 Anthropic 兼容的端点。
 
     交互式新手引导支持与其他提供商 API 密钥流程相同的 API 密钥存储选项：
-    - **立即粘贴 API 密钥**（纯文本）
-    - **使用密钥引用**（环境变量引用或已配置的提供商引用，带有预检验证）
+    - **立即粘贴 API 密钥**（明文）
+    - **使用密钥引用**（环境变量引用或配置的提供商引用，带有预检验证）
 
     非交互式标志：
     - `--auth-choice custom-api-key`
     - `--custom-base-url`
     - `--custom-model-id`
-    - `--custom-api-key`（可选；回退至 `CUSTOM_API_KEY`）
+    - `--custom-api-key`（可选；回退到 `CUSTOM_API_KEY`）
     - `--custom-provider-id`（可选）
-    - `--custom-compatibility <openai|anthropic>`（可选；默认为 `openai`）
-    - `--custom-image-input` / `--custom-text-input`（可选；覆盖推断出的模型输入能力）
+    - `--custom-compatibility <openai|openai-responses|anthropic>`（可选；默认 `openai`）
+    - `--custom-image-input` / `--custom-text-input`（可选；覆盖推断的模型输入能力）
 
   </Accordion>
   <Accordion title="跳过">

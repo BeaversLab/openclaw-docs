@@ -25,7 +25,7 @@ OpenClaw 在運行（建立模型上下文）之前會對記錄套用**供應商
 
 如果您需要關於文字記錄儲存的詳細資訊，請參閱：
 
-- [會話管理深度剖析](/zh-Hant/reference/session-management-compaction)
+- [Session management deep dive](/zh-Hant/reference/session-management-compaction)
 
 ---
 
@@ -115,77 +115,82 @@ OpenClaw 也會在路由提示文字前面加上一個同輪次的 `[Inter-sessi
 
 - 歷史助手思考/推理區塊會在重放之前被剝離，以便本地和代理風格的 OpenAI 兼容伺服器不會收到先前的推理字段，例如 `reasoning` 或 `reasoning_content`。
 - 目前的同輪次工具呼叫延續會將助理推理區塊附加到工具呼叫上，直到工具結果被重播為止。
-- 當提供者的線上協定要求
-  重播推理元資料時，提供者擁有的例外可以選擇不加入。
+- Custom/self-hosted model entries with `reasoning: true` preserve replayed
+  reasoning metadata.
+- Provider-owned exceptions can opt out when their wire protocol requires
+  replayed reasoning metadata.
 
 **Google (Generative AI / Gemini CLI / Antigravity)**
 
-- 工具呼叫 ID 清理：僅限純英數字元。
-- 工具結果配對修復與合成工具結果。
-- 輪次驗證 (Gemini 風格的輪次交替)。
-- Google 輪次排序修復 (如果歷史紀錄以助理開頭，則在前面加上一個微小的使用者引導)。
-- Antigravity Claude：正規化思考簽章；捨棄未簽署的思考區塊。
+- Tool call id sanitization: strict alphanumeric.
+- Tool result pairing repair and synthetic tool results.
+- Turn validation (Gemini-style turn alternation).
+- Google turn ordering fixup (prepend a tiny user bootstrap if history starts with assistant).
+- Antigravity Claude: normalize thinking signatures; drop unsigned thinking blocks.
 
-**Anthropic / Minimax (Anthropic 相容)**
+**Anthropic / Minimax (Anthropic-compatible)**
 
-- 工具結果配對修復與合成工具結果。
-- 輪次驗證 (合併連續的使用者輪次以滿足嚴格的交替要求)。
-- 當啟用思考功能時，尾隨的助理預填充輪次會從傳出的 Anthropic Messages
-  載荷中移除，包括 Cloudflare AI Gateway 路由。
-- 缺少、空白或僅含空白字元重播簽章的思考區塊會在
-  提供者轉換前被移除。如果這使得助理輪次變為空，OpenClaw 會
-  保持輪次結構並使用非空白的「已省略推理」文字。
-- 必須移除的僅含思考的舊版助理輪次會被替換為
-  非空白的「已省略推理」文字，以免提供者介接器捨棄該
-  重播輪次。
+- Tool result pairing repair and synthetic tool results.
+- Turn validation (merge consecutive user turns to satisfy strict alternation).
+- Trailing assistant prefill turns are stripped from outgoing Anthropic Messages
+  payloads when thinking is enabled, including Cloudflare AI Gateway routes.
+- Thinking blocks with missing, empty, or blank replay signatures are stripped
+  before provider conversion. If that empties an assistant turn, OpenClaw keeps
+  turn shape with non-empty omitted-reasoning text.
+- Older thinking-only assistant turns that must be stripped are replaced with
+  non-empty omitted-reasoning text so provider adapters do not drop the replay
+  turn.
 
 **Amazon Bedrock (Converse API)**
 
-- 空的助手串流錯誤輪次會在重放之前被修復為非空的後備文字區塊。Bedrock Converse 會拒絕包含 `content: []` 的助手訊息，因此在載入之前，磁碟上包含 `stopReason: "error"` 且內容為空的已持久化助手輪次也會被修復。
-- 若助理串流錯誤輪次僅包含空白文字區塊，將會從
-  記憶體中的重播副本中移除，而不是重播無效的空白區塊。
-- 缺少、空白或僅含空白字元重播簽章的 Claude 思考區塊會
-  在 Converse 重播前被移除。如果這使得助理輪次變為空，OpenClaw
-  會保持輪次結構並使用非空白的「已省略推理」文字。
-- 必須移除的舊版僅思考助理輪次會被替換為非空白的 omitted-reasoning 文字，以便 Converse 重放保持嚴格的輪次結構。
-- 重放會過濾掉 OpenClaw 的傳遞鏡像和閘道注入的助理輪次。
-- 影像清理透過全域規則套用。
+- Empty assistant stream-error turns are repaired to a non-empty fallback text block
+  before replay. Bedrock Converse rejects assistant messages with `content: []`, so
+  persisted assistant turns with `stopReason: "error"` and empty content are also
+  repaired on disk before load.
+- Assistant stream-error turns that contain only blank text blocks are dropped
+  from the in-memory replay copy instead of replaying an invalid blank block.
+- Claude thinking blocks with missing, empty, or blank replay signatures are
+  stripped before Converse replay. If that empties an assistant turn, OpenClaw
+  keeps turn shape with non-empty omitted-reasoning text.
+- Older thinking-only assistant turns that must be stripped are replaced with
+  non-empty omitted-reasoning text so the Converse replay keeps strict turn shape.
+- Replay 會過濾 OpenClaw 的 delivery-mirror 和 gateway 注入的 assistant 輪次。
+- 映像清理會透過全域規則套用。
 
-**Mistral（包括基於模型 ID 的偵測）**
+**Mistral（包含基於 model-id 的偵測）**
 
-- 工具呼叫 ID 清理：strict9（長度為 9 的英數字元）。
+- 工具呼叫 id 清理：strict9（長度為 9 的英數字元）。
 
 **OpenRouter Gemini**
 
-- 思考簽名清理：剝除非 base64 的 `thought_signature` 值（保留 base64）。
+- Thought 簽章清理：移除非 base64 `thought_signature` 值（保留 base64）。
 
 **OpenRouter Anthropic**
 
-- 當啟用推理時，會從已驗證的 OpenRouter OpenAI 相容 Anthropic 模型酬載中移除結尾的助理預填輪次，以符合直接 Anthropic 和 Cloudflare Anthropic 的重放行為。
+- 當啟用推理時，會從已驗證的 OpenRouter OpenAI 相容 Anthropic 模型 payload 中移除尾隨的 assistant prefill 輪次，這符合直接 Anthropic 和 Cloudflare Anthropic replay 的行為。
 
-**其他所有提供者**
+**其他所有項目**
 
-- 僅進行影像清理。
+- 僅進行映像清理。
 
 ---
 
 ## 歷史行為（2026.1.22 之前）
 
-在 2026.1.22 版本發布之前，OpenClaw 套用了多層的文字記錄清理：
+在 2026.1.22 版本發布之前，OpenClaw 套用了多層的 transcript 清理：
 
-- 每個情境建置時都會執行 **transcript-sanitize 擴充功能**，並且可以：
+- 一個 **transcript-sanitize 擴充功能** 在每次建構 context 時執行，並且可以：
   - 修復工具使用/結果配對。
-  - 清理工具調用 ID（包括保留了 `_`/`-` 的非嚴格模式）。
-- 執行器也會執行特定提供者的清理，這導致了工作重複。
-- 在提供者原則之外發生了額外的變異，包括：
-  - 在持久化之前從助手文字中剝離 `<final>` 標籤。
-  - 捨棄空的助理錯誤輪次。
-  - 在工具呼叫之後修剪助理內容。
+  - 清理工具呼叫 id（包括一個保留 `_`/`-` 的非嚴格模式）。
+- Runner 也執行了提供者專屬的清理，這導致了重複的工作。
+- 額外的變更發生在提供者原則之外，包括：
+  - 在持續化之前，從 assistant 文字中移除 `<final>` 標籤。
+  - 捨棄空的 assistant 錯誤輪次。
+  - 在工具呼叫之後修剪 assistant 內容。
 
-這種複雜性導致了跨供應商的回歸（特別是 `openai-responses`
-`call_id|fc_id` 配對）。2026.1.22 的清理工作移除了該擴充功能，將邏輯集中在執行器中，並使得 OpenAI 在圖片清理之外保持 **no-touch**（不干预）。
+這種複雜性導致了跨提供者的回歸（特別是 `openai-responses` `call_id|fc_id` 配對）。2026.1.22 的清理移除了該擴充功能，將邏輯集中於 runner 中，並使 OpenAI 除了映像清理之外保持 **no-touch**。
 
 ## 相關
 
-- [Session management](/zh-Hant/concepts/session)
-- [Session pruning](/zh-Hant/concepts/session-pruning)
+- [Session 管理](/zh-Hant/concepts/session)
+- [Session 修剪](/zh-Hant/concepts/session-pruning)

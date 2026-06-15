@@ -13,7 +13,7 @@ title: "Browser"
 
 相關：
 
-- 瀏覽器工具 + API：[Browser tool](/zh-Hant/tools/browser)
+- Browser 工具 + API：[Browser 工具](/zh-Hant/tools/browser)
 
 ## 通用旗標
 
@@ -48,7 +48,7 @@ openclaw browser --browser-profile openclaw tabs
 openclaw browser --browser-profile openclaw open https://example.com
 ```
 
-詳細指南：[Browser troubleshooting](/zh-Hant/tools/browser#cdp-startup-failure-vs-navigation-ssrf-block)
+詳細指引：[Browser 疑難排解](/zh-Hant/tools/browser#cdp-startup-failure-vs-navigation-ssrf-block)
 
 ## 生命週期
 
@@ -99,7 +99,7 @@ openclaw browser --browser-profile openclaw reset-profile
 明確的根 `browser` 區塊，例如 `browser.enabled=true` 或
 `browser.profiles.<name>`，也會在嚴格的外掛程式允許清單下啟用捆綁的瀏覽器外掛程式。
 
-相關：[Browser tool](/zh-Hant/tools/browser#missing-browser-command-or-tool)
+相關：[Browser 工具](/zh-Hant/tools/browser#missing-browser-command-or-tool)
 
 ## 設定檔
 
@@ -136,14 +136,17 @@ openclaw browser focus docs
 openclaw browser close t1
 ```
 
-`tabs` 首先回傳 `suggestedTargetId`，然後是穩定的 `tabId`（例如 `t1`）、
-可選的標籤以及原始的 `targetId`。代理程式應將
-`suggestedTargetId` 傳回給 `focus`、`close`、快照和動作。您可以使用
-`open --label`、`tab new --label` 或 `tab label` 指派標籤；系統接受標籤、
-tab id、原始 target id 和唯一的 target-id 前綴。
-當 Chromium 在導覽或表單提交期間替換底層的原始目標時，只要能證明
-匹配，OpenClaw 就會將穩定的 `tabId`/標籤附加到替換分頁上。
-原始 target id 保持不穩定；請優先使用
+`tabs` 首先返回 `suggestedTargetId`，然後是穩定的 `tabId`（例如 `t1`）、
+可選的標籤，以及原始 `targetId`。代理應將
+`suggestedTargetId` 傳回給 `focus`、`close`、快照和動作。您可以
+使用 `open --label`、`tab new --label` 或 `tab label` 指派標籤；
+標籤、tab id、原始 target id 和唯一的 target-id 前綴均被接受。
+為了相容性，請求欄位仍命名為 `targetId`，但它接受
+這些 tab 參考。請將原始 target id 視為診斷句柄，而非持久的
+代理記憶。
+當 Chromium 在導覽或表單提交期間替換底層原始 target 時，
+只要 OpenClaw 能證明匹配，就會將穩定的 `tabId`/標籤
+附加到替換的 tab 上。原始 target id 保持不穩定；請優先使用
 `suggestedTargetId`。
 
 ## 快照 / 截圖 / 動作
@@ -166,12 +169,14 @@ openclaw browser screenshot --labels
 
 備註：
 
-- `--full-page` 僅用於頁面擷取；無法與 `--ref`
+- `--full-page` 僅用於頁面擷取；它無法與 `--ref`
   或 `--element` 結合使用。
-- `existing-session` / `user` 設定檔支援頁面截圖和來自快照輸出的 `--ref`
-  截圖，但不支援 CSS `--element` 截圖。
-- `--labels` 會在截圖上疊加目前的快照參照。
-- `snapshot --urls` 會將探索到的連結目標附加到 AI 快照中，以便代理可以選擇直接導覽目標，而不是僅從連結文字進行猜測。
+- `existing-session` / `user` 設定檔支援頁面螢幕擷圖和來自快照輸出的 `--ref`
+  螢幕擷圖，但不支援 CSS `--element` 螢幕擷圖。
+- `--labels` 會在螢幕擷圖上疊加目前的快照參考。
+- `snapshot --urls` 會將探索到的連結目的地附加到 AI 快照，以便
+  代理可以選擇直接導覽目標，而不僅僅是從連結
+  文字進行猜測。
 
 導覽/點擊/輸入（基於 ref 的 UI 自動化）：
 
@@ -191,9 +196,9 @@ openclaw browser evaluate --fn '(el) => el.textContent' --ref <ref>
 openclaw browser evaluate --timeout-ms 30000 --fn 'async () => { await window.ready; return true; }'
 ```
 
-當頁面端函數可能需要比預設評估逾時更長的時間時，請使用 `evaluate --timeout-ms <ms>`。
+當頁面端函式可能需要的時間超過預設的評估逾時時，請使用 `evaluate --timeout-ms <ms>`。
 
-當 OpenClaw 能夠證明替換的分頁時，動作回應會在動作觸發的頁面替換後傳回目前的原始 `targetId`。腳本仍應儲存並傳遞 `suggestedTargetId`/標籤，以用於長期工作流程。
+動作回應會在 OpenClaw 能夠證明替換分頁時，傳回動作觸發頁面替換後的目前原始 `targetId`。腳本仍應儲存並傳遞 `suggestedTargetId`/標籤以用於長期工作流程。
 
 檔案 + 對話方塊輔助工具：
 
@@ -206,18 +211,8 @@ openclaw browser dialog --accept
 openclaw browser dialog --dismiss --dialog-id d1
 ```
 
-受管理的 Chrome 設定檔會將一般點擊觸發的下載儲存到 OpenClaw
-下載目錄中（預設為 `/tmp/openclaw/downloads`，或設定的暫存
-根目錄）。當代理程式需要等待
-特定檔案並傳回其路徑時，請使用 `waitfordownload` 或 `download`；這些明確的等待程式會擁有下一個下載。
-上傳會接受來自 OpenClaw 暫存上傳根目錄和 OpenClaw 管理的
-傳入媒體的檔案，包括 `media://inbound/<id>` 和沙箱相對的
-`media/inbound/<id>` 參考。巢狀媒體參考、周遊和任意
-本機路徑仍會被拒絕。
-當動作開啟模態對話方塊時，動作回應會傳回
-`blockedByDialog` 以及 `browserState.dialogs.pending`；請傳遞 `--dialog-id` 以
-直接回應它。在 OpenClaw 外部處理的對話方塊會出現在
-`browserState.dialogs.recent` 之下。
+受管理的 Chrome 設定檔會將一般的點擊觸發下載儲存到 OpenClaw 下載目錄中（預設為 `/tmp/openclaw/downloads`，或設定的暫存根目錄）。當代理程式需要等待特定檔案並傳回其路徑時，請使用 `waitfordownload` 或 `download`；這些明確的等待程式會擁有下一次的下載。上傳會接受來自 OpenClaw 暫存上傳根目錄和 OpenClaw 管理的輸入媒體的檔案，包括 `media://inbound/<id>` 和相對於沙箱的 `media/inbound/<id>` 參考。巢狀媒體參考、巡覽和任意本機路徑仍會被拒絕。
+當動作開啟強制回應對話方塊時，動作回應會傳回具有 `browserState.dialogs.pending` 的 `blockedByDialog`；請傳遞 `--dialog-id` 以直接回應它。在 OpenClaw 之外處理的對話方塊會顯示在 `browserState.dialogs.recent` 下。
 
 ## 狀態與儲存空間
 
@@ -276,26 +271,25 @@ openclaw browser --browser-profile chrome-live tabs
 目前現有工作階段的限制：
 
 - 快照驅動的動作使用參照，而非 CSS 選取器
-- 當呼叫者省略 `timeoutMs` 時，`browser.actionTimeoutMs` 預設會將支援的 `act` 要求設為 60000 毫秒；
-  每次呼叫的 `timeoutMs` 仍然優先。
+- 當呼叫者省略 `timeoutMs` 時，`browser.actionTimeoutMs` 會將支援的 `act` 要求預設為 60000 毫秒；每次呼叫的 `timeoutMs` 仍然優先。
 - `click` 僅支援左鍵點擊
 - `type` 不支援 `slowly=true`
 - `press` 不支援 `delayMs`
-- `hover`、`scrollintoview`、`drag`、`select`、`fill` 和 `evaluate` 會拒絕
-  每次呼叫的逾時覆寫
+- `hover`、`scrollintoview`、`drag`、`select`、`fill` 和 `evaluate` 會拒絕每次呼叫的逾時覆寫
 - `select` 僅支援一個值
 - 不支援 `wait --load networkidle`
 - 檔案上傳需要 `--ref` / `--input-ref`，不支援 CSS
   `--element`，且目前一次僅支援一個檔案
-- 對話鉤子不支援 `--timeout`
+- 對話框掛鉤不支援 `--timeout`
 - 螢幕截圖支援頁面擷取和 `--ref`，但不支援 CSS `--element`
-- `responsebody`、下載攔截、PDF 匯出和批次動作仍需要受管理的瀏覽器或原始 CDP 設定檔
+- `responsebody`、下載攔截、PDF 匯出和批次動作仍然
+  需要受管理的瀏覽器或原始 CDP 設定檔
 
 ## 遠端瀏覽器控制 (節點主機代理)
 
 如果 Gateway 和瀏覽器執行在不同的機器上，請在安裝了 Chrome/Brave/Edge/Chromium 的機器上執行 **node host**。Gateway 會將瀏覽器操作代理到該節點 (不需要單獨的瀏覽器控制伺服器)。
 
-使用 `gateway.nodes.browser.mode` 來控制自動路由，如果連接了多個節點，使用 `gateway.nodes.browser.node` 來釘選特定節點。
+使用 `gateway.nodes.browser.mode` 控制自動路由，並在連線多個節點時使用 `gateway.nodes.browser.node` 固定特定節點。
 
 安全性 + 遠端設定：[Browser tool](/zh-Hant/tools/browser)、[Remote access](/zh-Hant/gateway/remote)、[Tailscale](/zh-Hant/gateway/tailscale)、[Security](/zh-Hant/gateway/security)
 

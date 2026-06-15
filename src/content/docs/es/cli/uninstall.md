@@ -35,10 +35,11 @@ openclaw uninstall --dry-run
 Notas:
 
 - Ejecuta `openclaw backup create` primero si deseas una instantánea restaurable antes de eliminar el estado o los espacios de trabajo.
-- `--all` es una abreviatura para eliminar el servicio, el estado, el espacio de trabajo y la aplicación juntos.
+- `--state` conserva los directorios del espacio de trabajo configurados a menos que también se seleccione `--workspace`.
+- `--all` es una forma abreviada de eliminar el servicio, el estado, el espacio de trabajo y la aplicación juntos.
 - `--non-interactive` requiere `--yes`.
 
 ## Relacionado
 
-- [Referencia de la CLI](/es/cli)
+- [Referencia de CLI](/es/cli)
 - [Desinstalar](/es/install/uninstall)

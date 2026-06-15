@@ -385,7 +385,7 @@ Champs de routage :
 - `match.peer.kind` : `"direct"` (DM) ou `"group"` (chat de groupe)
 - `match.peer.id` : Open ID de l'utilisateur (`ou_xxx`) ou ID de groupe (`oc_xxx`)
 
-Voir [Get group/user IDs](#get-groupuser-ids) pour des conseils de recherche.
+Voir [Obtenir les ID de groupe/d'utilisateur](#get-groupuser-ids) pour des conseils de recherche.
 
 ---
 
@@ -401,8 +401,8 @@ Activez `dynamicAgentCreation` pour créer automatiquement des **instances d'age
 Ceci est essentiel pour les bots publics où vous souhaitez que chaque utilisateur ait sa propre expérience d'assistant IA privée.
 
 <Note>
-  **Limitation du compte** : `dynamicAgentCreation` fonctionne actuellement uniquement avec le **compte Feishu par défaut**. Les configurations nommées/multi-comptes ne sont pas encore entièrement prises en charge — les liaisons dynamiques sont créées sans `accountId`, les messages destinés aux comptes nommés peuvent donc toujours être acheminés vers `agent:main`. Suivez les progrès dans le [Issue
-  #42837](https://github.com/openclaw/openclaw/issues/42837).
+  **Limite de compte** : `dynamicAgentCreation` fonctionne actuellement avec le **compte Feishu par défaut uniquement**. Les configurations de comptes nommés/multiples ne sont pas encore entièrement prises en charge — les liaisons dynamiques sont créées sans `accountId`, les messages destinés aux comptes nommés peuvent donc toujours être routés vers `agent:main`. Suivez les progrès dans le
+  [Problème #42837](https://github.com/openclaw/openclaw/issues/42837).
 </Note>
 
 ### Configuration rapide
@@ -534,7 +534,7 @@ ls -la ~/.openclaw/workspace-*
 
 ## Référence de configuration
 
-Configuration complète : [Configuration Gateway](/fr/gateway/configuration)
+Configuration complète : [configuration Gateway](/fr/gateway/configuration)
 
 | Paramètre                                                | Description                                                                                              | Par défaut                           |
 | -------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- | ------------------------------------ |
@@ -568,6 +568,10 @@ Configuration complète : [Configuration Gateway](/fr/gateway/configuration)
 | `channels.feishu.blockStreaming`                         | Flux continu des réponses aux blocs terminés                                                             | `false`                              |
 | `channels.feishu.typingIndicator`                        | Envoyer des réactions de frappe                                                                          | `true`                               |
 | `channels.feishu.resolveSenderNames`                     | Résoudre les noms d'affichage des expéditeurs                                                            | `true`                               |
+| `channels.feishu.tools.bitable`                          | Activer les outils Bitable/Base                                                                          | `true`                               |
+| `channels.feishu.tools.base`                             | Alias pour `channels.feishu.tools.bitable` ; `bitable` explicite l'emporte si les deux sont définis      | `true`                               |
+| `channels.feishu.accounts.<id>.tools.bitable`            | Portail d'outils Bitable/Base par compte                                                                 | hérité                               |
+| `channels.feishu.accounts.<id>.tools.base`               | Alias par compte pour `tools.bitable`                                                                    | hérité                               |
 
 ---
 
@@ -583,14 +587,12 @@ Configuration complète : [Configuration Gateway](/fr/gateway/configuration)
 - ✅ Vidéo/médias
 - ✅ Autocollants
 
-Les messages audio entrants Feishu/Lark sont normalisés sous forme de substituants de média plutôt
-que de JSON brut `file_key`. Lorsque `tools.media.audio` est configuré, OpenClaw
-télécharge la ressource de la note vocale et exécute une transcription audio partagée avant le tour
-de l'agent, afin que l'agent reçoive la transcription parlée. Si Feishu inclut directement
-le texte de la transcription dans la charge utile audio, ce texte est utilisé sans nouvel appel
-ASR. Sans fournisseur de transcription audio, l'agent reçoit toujours un
-substituant `<media:audio>` ainsi que la pièce jointe enregistrée, et non la charge utile brute de la
-ressource Feishu.
+Les messages audio entrants Feishu/Lark sont normalisés en tant qu'espaces réservés média au lieu du JSON brut `file_key`. Lorsque `tools.media.audio` est configuré, OpenClaw
+télécharge la ressource de la note vocale et exécute la transcription audio partagée avant le
+tour de l'agent, afin que l'agent reçoive la transcription parlée. Si Feishu inclut
+le texte de transcription directement dans la charge utile audio, ce texte est utilisé sans autre
+appel ASR. Sans fournisseur de transcription audio, l'agent reçoit toujours un
+espace réservé `<media:audio>` ainsi que la pièce jointe enregistrée, et non la charge utile de ressource brute Feishu.
 
 ### Envoi
 
@@ -604,25 +606,30 @@ ressource Feishu.
 
 Les bulles audio natives Feishu/Lark utilisent le type de message Feishu `audio` et nécessitent
 un média de téléchargement Ogg/Opus (`file_type: "opus"`). Les médias `.opus` et `.ogg` existants
-sont envoyés directement en tant qu'audio natif. Les formats audio probables MP3/WAV/M4A et autres
+sont envoyés directement sous forme d'audio natif. Les formats audio probables tels que MP3/WAV/M4A et autres
 sont transcodés en Ogg/Opus 48kHz avec `ffmpeg` uniquement lorsque la réponse demande une livraison vocale
-(`audioAsVoice` / outil de message `asVoice`, y compris les réponses en notes vocales TTS).
-Les pièces jointes MP3 ordinaires restent des fichiers standards. Si `ffmpeg` est manquant ou
-si la conversion échoue, OpenClaw revient à une pièce jointe de fichier et enregistre la raison.
+(`audioAsVoice` / outil de message `asVoice`, y compris les réponses vocales TTS).
+Les pièces jointes MP3 ordinaires restent des fichiers réguliers. Si `ffmpeg` est manquant ou
+si la conversion échoue, OpenClaw revient à une pièce jointe de fichier et consigne la raison.
 
 ### Fil de discussion et réponses
 
 - ✅ Réponses en ligne
-- ✅ Réponses dans le fil
+- ✅ Réponses en fil de discussion
 - ✅ Les réponses média restent conscientes du fil lors d'une réponse à un message de fil
 
-Pour `groupSessionScope: "group_topic"` et `"group_topic_sender"`, les groupes de sujets natifs Feishu/Lark utilisent l'événement `thread_id` (`omt_*`) comme clé de session de sujet canonique. Si un événement de démarrage de sujet natif omet `thread_id`OpenClawOpenClaw, OpenClaw le réhydrate à partir de Feishu avant d'acheminer le tour. Les réponses de groupe normales qu'OpenClaw transforme en fils de discussion continuent d'utiliser l'ID du message racine de la réponse (`om_*`) afin que le premier tour et les tours suivants restent dans la même session.
+Pour `groupSessionScope: "group_topic"` et `"group_topic_sender"`, les groupes de sujets natifs
+Feishu/Lark utilisent l'événement `thread_id` (`omt_*`) comme clé de session de sujet canonique.
+Si un événement démarreur de sujet natif omet `thread_id`, OpenClaw
+l'hydrate depuis Feishu avant d'acheminer le tour. Les réponses de groupe normales que
+OpenClaw transforme en fils continuent d'utiliser l'ID du message racine de réponse (`om_*`) afin que
+le premier tour et les tours suivants restent dans la même session.
 
 ---
 
 ## Connexes
 
-- [Aperçu des canaux](/fr/channels) - tous les canaux pris en charge
+- [Vue d'ensemble des canaux](/fr/channels) - tous les canaux pris en charge
 - [Appairage](/fr/channels/pairing) - authentification DM et flux d'appairage
 - [Groupes](/fr/channels/groups) - comportement des discussions de groupe et filtrage par mention
 - [Routage de canal](/fr/channels/channel-routing) - routage de session pour les messages

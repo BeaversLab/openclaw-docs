@@ -235,9 +235,9 @@ Notas:
 
 ## Relación de uso de computadora
 
-La aplicación de iOS es una superficie de nodo móvil, no un backend de uso de computadora de Codex. Codex
+La aplicación iOS es una superficie de nodo móvil, no un backend de Codex Computer Use. Codex
 Computer Use y `cua-driver mcp` controlan un escritorio macOS local a través de herramientas
-MCP; la aplicación de iOS expone las capacidades del iPhone a través de comandos de nodo de OpenClaw
+MCP; la aplicación iOS expone las capacidades de iPhone y iPad a través de comandos de nodo de OpenClaw
 tales como `canvas.*`, `camera.*`, `screen.*`, `location.*`, y `talk.*`.
 
 Los agentes aún pueden operar la aplicación de iOS a través de OpenClaw invocando comandos

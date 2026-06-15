@@ -177,13 +177,7 @@ Sur les harnais non-Codex, les fichiers d'amorçage continuent d'être composés
   peut ajouter la mémoire quotidienne récente comme bloc de contexte de démarrage unique pour ce premier tour.
 </Note>
 
-Les fichiers volumineux sont tronqués avec un marqueur. La taille maximale par fichier est contrôlée par
-`agents.defaults.bootstrapMaxChars` (par défaut : 12000). Le contenu total de démarrage injecté sur tous les fichiers est plafonné par `agents.defaults.bootstrapTotalMaxChars`
-(par défaut : 60000). Les fichiers manquants injectent un marqueur court de fichier manquant. Lorsqu'une troncation
-se produit, OpenClaw peut injecter un avertissement concis dans le système de prompt ; contrôlez ceci avec
-`agents.defaults.bootstrapPromptTruncationWarning` (`off`, `once`, `always` ;
-par défaut : `always`). Les comptes détaillés bruts/injectés restent dans les diagnostics tels que
-`/context`, `/status`, doctor et les journaux.
+Les fichiers volumineux sont tronqués à l'aide d'un marqueur. La taille maximale par fichier est contrôlée par `agents.defaults.bootstrapMaxChars` (par défaut : 20000). Le contenu total d'amorçage injecté sur tous les fichiers est plafonné par `agents.defaults.bootstrapTotalMaxChars` (par défaut : 60000). Les fichiers manquants injectent un marqueur court de fichier manquant. Lorsqu'une troncation se produit, OpenClaw peut injecter un avis d'avertissement concis sur le système de prompt ; contrôlez cela avec `agents.defaults.bootstrapPromptTruncationWarning` (`off`, `once`, `always` ; par défaut : `always`). Les comptes bruts/injectés détaillés restent dans les diagnostics tels que `/context`, `/status`, doctor et les journaux.
 
 Pour les fichiers mémoire, la troncation n'est pas une perte de données : le fichier reste intact sur le disque.
 Sur Codex natif, `MEMORY.md` est lu à la demande via les outils de mémoire lorsque

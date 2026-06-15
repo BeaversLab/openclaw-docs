@@ -44,8 +44,12 @@ type MessagePresentation = {
 
 type MessagePresentationBlock = { type: "text"; text: string } | { type: "context"; text: string } | { type: "divider" } | { type: "buttons"; buttons: MessagePresentationButton[] } | { type: "select"; placeholder?: string; options: MessagePresentationOption[] };
 
+type MessagePresentationAction = { type: "command"; command: string } | { type: "callback"; value: string };
+
 type MessagePresentationButton = {
   label: string;
+  action?: MessagePresentationAction;
+  /** Legacy callback value. Prefer action for new controls. */
   value?: string;
   url?: string;
   webApp?: { url: string };
@@ -59,7 +63,9 @@ type MessagePresentationButton = {
 
 type MessagePresentationOption = {
   label: string;
-  value: string;
+  action?: MessagePresentationAction;
+  /** Legacy callback value. Prefer action for new controls. */
+  value?: string;
 };
 
 type ReplyPayloadDelivery = {
@@ -75,28 +81,38 @@ type ReplyPayloadDelivery = {
 
 按鈕語意：
 
-- `value` 是一個應用程式動作值，當頻道支援可點擊控制項時，會透過頻道的現有互動路徑回傳。
-- `url` 是連結按鈕。它可以在沒有 `value` 的情況下存在。
-- `webApp` 描述頻道原生網頁應用程式按鈕。Telegram 將其渲染為
-  `web_app` 且僅在私人聊天中支援。`web_app` 在寬鬆 JSON 載荷中仍
-  被接受以保持相容性，但 TypeScript 生產者應使用 `webApp`。
-- `label` 是必填的，並且也用於文字後援。
-- `style` 是參考性質。渲染器應將不支援的樣式對應至安全的
+- `action.type: "command"` 透過核心的指令路徑執行原生斜線指令。
+  請將此用於內建指令按鈕和選單。
+- `action.type: "callback"` 沿著頻道的互動路徑傳遞不透明的插件資料。
+  頻道插件絕不得將回呼資料重新解釋為斜線指令。
+- `value` 是舊版的不透明回呼值。新的控制項應使用 `action`，
+  讓頻道插件無需從文字猜測即可對應指令和回呼。
+- `url` 是連結按鈕。它可以不存在 `value`。
+- `webApp` 描述頻道原生的網頁應用程式按鈕。Telegram 將其
+  渲染為 `web_app` 且僅在私人聊天中支援。`web_app` 為了相容性，在寬鬆的 JSON 載荷中仍被接受，但 TypeScript 生產者
+  應使用 `webApp`。
+- `label` 是必填的，同時也用於文字後援。
+- `style` 僅供參考。渲染器應將不支援的樣式對應至安全的
   預設值，而不是導致發送失敗。
-- `priority` 是選填的。當頻道宣佈動作限制且必須捨棄控制項時，
-  核心會優先保留高優先級按鈕，並在相同優先級的按鈕中保持原始順序。
-  當所有控制項都能容納時，則保留建立的順序。
-- `disabled` 是選填的。頻道必須透過 `supportsDisabled` 宣告加入；
+- `priority` 是選填的。當頻道宣傳動作限制且必須捨棄控制項時，
+  核心會優先保留高優先級的按鈕，並在同等優先級的按鈕中保持原始順序。當所有控制項皆可容納時，則保留
+  編寫順序。
+- `disabled` 是選填的。頻道必須透過 `supportsDisabled` 加入；
   否則核心會將停用的控制項降級為非互動式後援文字。
-- `reusable` 為選填。支援可重複使用原生回呼的頻道，可以在成功互動後保留該動作。將其用於可重複或等冪的動作，例如重新整理、檢查或更多詳情；對於一般的一次性批准和破壞性動作，請勿設定此項。
+- `reusable` 是選填的。支援可重複使用原生回呼的頻道可能會
+  在成功互動後讓動作保持可用。請將其用於
+  可重複或等幂的動作，例如重新整理、檢查或更多詳細資訊；
+  對於正常的一次性審核和破壞性動作，請勿設定此項。
 
 選取語意：
 
-- `options[].value` 是選取的應用程式值。
-- `placeholder` 僅供參考，可能會被不支援原生選取功能的頻道忽略。
-- 如果頻道不支援選取功能，後備文字會列出標籤。
+- `options[].action` 與按鈕 `action` 具有相同的指令/回呼含義。
+- `options[].value` 是舊版的選取應用程式值。
+- `placeholder` 僅供參考，且可能被不支援
+  原生選取的頻道忽略。
+- 如果頻道不支援選取，後備文字會列出標籤。
 
-## Producer examples
+## 生產者範例
 
 簡單卡片：
 
@@ -118,7 +134,7 @@ type ReplyPayloadDelivery = {
 }
 ```
 
-純 URL 連結按鈕：
+僅連結按鈕：
 
 ```json
 {
@@ -172,7 +188,7 @@ openclaw message send --channel slack \
   --presentation '{"title":"Deploy approval","tone":"warning","blocks":[{"type":"text","text":"Canary is ready."},{"type":"buttons","buttons":[{"label":"Approve","value":"deploy:approve","style":"success"},{"label":"Decline","value":"deploy:decline","style":"danger"}]}]}'
 ```
 
-釘選遞送：
+釘選傳遞：
 
 ```bash
 openclaw message send --channel telegram \
@@ -181,7 +197,7 @@ openclaw message send --channel telegram \
   --pin
 ```
 
-含明確 JSON 的釘選遞送：
+使用明確 JSON 的釘選傳遞：
 
 ```json
 {
@@ -193,9 +209,9 @@ openclaw message send --channel telegram \
 }
 ```
 
-## Renderer contract
+## 轉譯器合約
 
-頻道外掛程式會在其輸出轉接器上宣告轉譯支援：
+頻道外掛程式在其輸出配接器上宣告轉譯支援：
 
 ```ts
 const adapter: ChannelOutboundAdapter = {
@@ -240,7 +256,8 @@ const adapter: ChannelOutboundAdapter = {
 };
 ```
 
-功能布林值描述轉譯器可以將哪些項目設為互動式。選用的 `limits` 描述核心在呼叫轉譯器之前可以調整的通用信封：
+功能布林值描述轉譯器可以將什麼設為互動式。選用的
+`limits` 描述核心在呼叫轉譯器之前可以調整的通用外殼：
 
 ```ts
 type ChannelPresentationCapabilities = {
@@ -275,93 +292,93 @@ type ChannelPresentationCapabilities = {
 };
 ```
 
-核心會在轉譯前對語意控制套用通用限制。轉譯器仍擁有最終的提供者特定驗證與裁剪，處理原生區塊計數、卡片大小、URL 限制，以及無法在通用合約中表示的提供者特性。如果限制移除了區塊中的所有控制項，核心會將標籤保留為非互動式內容文字，以便傳送訊息仍具有可見的後備方案。
+核心會在轉譯之前對語意控制項套用通用限制。轉譯器仍然擁有最終針對特定提供者的驗證和修剪，用於原生區塊計數、卡片大小、URL 限制，以及無法在通用合約中表達的提供者怪癖。如果限制從區塊中移除了所有控制項，核心會將標籤保留為非互動式內容文字，以便傳遞的訊息仍然具有可見的後備方案。
 
-## Core render flow
+## 核心轉譯流程
 
-當 `ReplyPayload` 或訊息動作包含 `presentation` 時，核心會：
+當 `ReplyPayload` 或訊息動作包含 `presentation` 時，核心：
 
-1. 正規化展示載荷。
-2. 解析目標頻道的輸出轉接器。
+1. 正規化呈現載荷。
+2. 解析目標頻道的輸出配接器。
 3. 讀取 `presentationCapabilities`。
-4. 當轉接器通告時，套用通用功能限制，例如動作計數、標籤長度和選取選項計數。
-5. 當轉接器可以轉譯載荷時，呼叫 `renderPresentation`。
-6. 當轉接器不存在或無法轉譯時，回退為保守的文字。
-7. 透過一般的頻道遞送路徑傳送產生的載荷。
-8. 在第一封成功傳送的訊息之後，套用遞送中繼資料，例如 `delivery.pin`。
+4. 當配接器宣稱支援時，套用通用功能限制，例如動作計數、標籤長度和選取選項計數。
+5. 當配接器可以轉譯載荷時，呼叫 `renderPresentation`。
+6. 當配接器不存在或無法轉譯時，後退為保守文字。
+7. 透過正常頻道傳遞路徑傳送產生的載荷。
+8. 在第一個成功傳送的訊息之後，套用傳遞中繼資料，例如 `delivery.pin`。
 
-核心擁有回退行為，因此生產者可以保持與頻道無關。頻道外掛程式擁有原生轉譯和互動處理。
+核心擁有後備行為，以便生產者可以保持與頻道無關。頻道外掛程式擁有原生轉譯和互動處理。
 
-## Degradation rules
+## 降級規則
 
-簡報必須安全地發送到有限制的頻道。
+呈現必須能夠安全地在受限頻道上傳送。
 
 後備文字包括：
 
 - `title` 作為第一行
-- `text` 區塊作為普通段落
-- `context` 區塊作為簡潔的上下文行
+- `text` 區塊作為正常段落
+- `context` 區塊作為精簡內容行
 - `divider` 區塊作為視覺分隔符
 - 按鈕標籤，包括連結按鈕的 URL
 - 選取選項標籤
 
-不支援的原生控制項應該降級，而不是導致整個發送失敗。
+不支援的原生控制項應該降級，而不是導致整個傳送失敗。
 範例：
 
-- 停用內聯按鈕的 Telegram 會發送後備文字。
-- 不支援選取功能的頻道會以文字形式列出選取選項。
-- 僅 URL 的按鈕會變成原生連結按鈕或後備 URL 行。
-- 可選的置頂失敗不會導致已發送的消息失敗。
+- 停用內聯按鈕的 Telegram 會傳送文字後援方案。
+- 不支援選取功能的頻道會將選取選項以文字列表顯示。
+- 僅含 URL 的按鈕會變成原生連結按鈕或後援 URL 行。
+- 選用性的釘選失敗不會導致傳送的訊息失敗。
 
-主要的例外是 `delivery.pin.required: true`；如果請求
-必須置頂且頻道無法置頂已發送的消息，傳遞將報告失敗。
+主要的例外是 `delivery.pin.required: true`；如果要求將釘選設為
+必要且頻道無法釘選傳送的訊息，傳送回報將會失敗。
 
 ## 供應商對應
 
-目前捆綁的渲染器：
+目前內建的渲染器：
 
-| 頻道            | 原生渲染目標     | 備註                                                                                                         |
-| --------------- | ---------------- | ------------------------------------------------------------------------------------------------------------ |
-| Discord         | 元件和元件容器   | 為現有的供應商原生負載生產器保留舊版 `channelData.discord.components`，但新的共享發送應使用 `presentation`。 |
-| Slack           | Block Kit        | 為現有的供應商原生負載生產器保留舊版 `channelData.slack.blocks`，但新的共享發送應使用 `presentation`。       |
-| Telegram        | 文字加上內聯鍵盤 | 按鈕/選取器需要目標介面具備內聯按鈕功能；否則會使用文字後備。                                                |
-| Mattermost      | 文字加上互動屬性 | 其他區塊會降級為文字。                                                                                       |
-| Microsoft Teams | Adaptive Cards   | 當同時提供兩者時，純 `message` 文字會隨卡片一起包含。                                                        |
-| Feishu          | 互動式卡片       | 卡片標頭可以使用 `title`；主體避免重複該標題。                                                               |
-| 純文字頻道      | 文字後備         | 沒有渲染器的頻道仍然會獲得可讀的輸出。                                                                       |
+| 頻道            | 原生渲染目標     | 備註                                                                                                              |
+| --------------- | ---------------- | ----------------------------------------------------------------------------------------------------------------- |
+| Discord         | 元件與元件容器   | 為現有的供應商原生 Payload 生產器保留舊版 `channelData.discord.components`，但新的共用傳送應使用 `presentation`。 |
+| Slack           | Block Kit        | 為現有的供應商原生 Payload 生產器保留舊版 `channelData.slack.blocks`，但新的共用傳送應使用 `presentation`。       |
+| Telegram        | 文字加上內聯鍵盤 | 按鈕/選取項目需要目標介面具備內聯按鈕功能；否則會使用文字後援方案。                                               |
+| Mattermost      | 文字加上互動屬性 | 其他區塊會降級為文字。                                                                                            |
+| Microsoft Teams | Adaptive Cards   | 當同時提供卡片與純 `message` 文字時，純文字會隨附於卡片中。                                                       |
+| Feishu          | 互動式卡片       | 卡片標頭可以使用 `title`；內文會避免重複該標題。                                                                  |
+| 純文字頻道      | 文字後援方案     | 沒有渲染器的頻道仍然會收到可讀的輸出。                                                                            |
 
-供應商原生負載相容性是現有回覆生產器的過渡輔助。
-這不是新增共享原生欄位的理由。
+供應商原生 Payload 相容性是現有回覆生產器的過渡輔助功能。
+這不是新增共用原生欄位的理由。
 
-## Presentation vs InteractiveReply
+## Presentation 與 InteractiveReply
 
 `InteractiveReply` 是核准和互動
-幫手使用的較舊內部子集。它支援：
+輔助程式使用的較舊內部子集。它支援：
 
 - 文字
 - 按鈕
-- 選取器
+- 選取項目
 
-`MessagePresentation` 是標準的共用發送契約。它增加了：
+`MessagePresentation` 是標準的共用傳送合約。它新增了：
 
-- title
-- tone
-- context
-- divider
-- 僅限 URL 的按鈕
-- 透過 `ReplyPayload.delivery` 提供通用的傳遞中繼資料
+- 標題
+- 語氣
+- 上下文
+- 分隔線
+- 僅含 URL 的按鈕
+- 透過 `ReplyPayload.delivery` 傳遞的一般傳送中繼資料
 
-橋接舊有程式碼時，請使用 `openclaw/plugin-sdk/interactive-runtime` 中的輔助函式：
+銜接舊程式碼時，請使用 `openclaw/plugin-sdk/interactive-runtime` 中的輔助程式：
 
 ```ts
 import { adaptMessagePresentationForChannel, applyPresentationActionLimits, interactiveReplyToPresentation, normalizeMessagePresentation, presentationPageSize, presentationToInteractiveControlsReply, presentationToInteractiveReply, renderMessagePresentationFallbackText } from "openclaw/plugin-sdk/interactive-runtime";
 ```
 
 新程式碼應直接接受或產生 `MessagePresentation`。現有的
-`interactive` Payload 是 `presentation` 的已棄用子集；執行時期
-仍保留對舊有產生器的支援。
+`interactive` Payload 是 `presentation` 的已棄用子集；執行時
+仍支援較舊的 Producer。
 
-舊版的 `InteractiveReply*` 型別和轉換輔助函式在 SDK 中已標記為
+舊版的 `InteractiveReply*` 型別和轉換輔助程式在 SDK 中已標記為
 `@deprecated`：
 
 - `InteractiveReply`、`InteractiveReplyBlock`、`InteractiveReplyButton`、
@@ -376,53 +393,54 @@ import { adaptMessagePresentationForChannel, applyPresentationActionLimits, inte
 - `reduceInteractiveReply(...)`
 
 `presentationToInteractiveReply(...)` 和
-`presentationToInteractiveControlsReply(...)` 仍可作為舊版通道實作的轉譯器橋樑。
-新的產生器程式碼不應呼叫它們；請發送 `presentation` 並讓核心/通道調適層處理轉譯。
+`presentationToInteractiveControlsReply(...)` 仍可作為舊版 Channel 實作的轉譯器橋接器使用。
+新的 Producer 程式碼不應呼叫它們；請傳送 `presentation` 並讓 Core/Channel
+轉接處理轉譯。
 
-核准輔助函式也有以呈現為優先的取代項目：
+核准輔助程式也有優先採用 Presentation 的替代方案：
 
-- 使用 `buildApprovalPresentationFromActionDescriptors(...)` 代替
+- 使用 `buildApprovalPresentationFromActionDescriptors(...)` 而非
   `buildApprovalInteractiveReplyFromActionDescriptors(...)`
-- 使用 `buildApprovalPresentation(...)` 代替
+- 使用 `buildApprovalPresentation(...)` 而非
   `buildApprovalInteractiveReply(...)`
-- 使用 `buildExecApprovalPresentation(...)` 代替
+- 使用 `buildExecApprovalPresentation(...)` 而非
   `buildExecApprovalInteractiveReply(...)`
 
-對於沒有文字後備的呈現區塊（例如僅有分隔線的呈現），
-`renderMessagePresentationFallbackText(...)` 會傳回空字串。需要非空發送主體的傳輸層
-可以傳入 `emptyFallback` 以選擇最小化的主體，而無需改變預設後備契約。
+`renderMessagePresentationFallbackText(...)` 對於沒有文字後援的 Presentation 區塊（例如僅包含分隔線的
+Presentation）會傳回空字串。需要非空傳送主體的 Transport 可以傳遞
+`emptyFallback` 以選擇最小主體，而不變更預設後援合約。
 
-## 傳遞釘選
+## 傳遞固定
 
-釘選是傳遞行為，而非呈現。請使用 `delivery.pin` 代替
-提供者原生的欄位（例如 `channelData.telegram.pin`）。
+固定是傳遞行為，而非呈現方式。請使用 `delivery.pin` 而非
+Provider 原生欄位，例如 `channelData.telegram.pin`。
 
 語意：
 
-- `pin: true` 會釘選第一則成功傳遞的訊息。
+- `pin: true` 會固定第一個成功傳遞的訊息。
 - `pin.notify` 預設為 `false`。
 - `pin.required` 預設為 `false`。
-- 選用性釘選失敗會降級並保持已傳送訊息不變。
-- 必要釘選失敗會導致傳送失敗。
-- 分塊訊息會釘選第一個傳送的區塊，而不是尾部區塊。
+- 選用性固定的失敗會降級並保持傳送訊息完整。
+- 必要性的固定失敗會導致傳遞失敗。
+- 分段訊息會固定傳遞的第一個區塊，而非尾部區塊。
 
-在提供者支援這些操作的現有訊息中，手動 `pin`、`unpin` 和 `pins` 訊息動作仍然存在。
+在提供者支援這些操作的現有訊息中，手動的 `pin`、`unpin` 和 `pins` 訊息動作仍然存在。
 
 ## 外掛作者檢查清單
 
-- 當管道可以轉譯或安全降級語意呈現時，從 `describeMessageTool(...)` 宣告 `presentation`。
-- 將 `presentationCapabilities` 新增至執行時期輸出介面卡。
+- 當頻道能夠呈現或安全降級語意呈現時，從 `describeMessageTool(...)` 宣告 `presentation`。
+- 將 `presentationCapabilities` 新增至執行時期出站配接器。
 - 在執行時期程式碼中實作 `renderPresentation`，而非控制平面外掛設定程式碼。
-- 請勿將原生 UI 程式庫放入熱設定/目錄路徑中。
+- 保持原生 UI 函式庫不包含在熱設定/目錄路徑中。
 - 當已知通用功能限制時，在 `presentationCapabilities.limits` 上宣告它們。
-- 在轉譯器和測試中保留最終的平台限制。
-- 針對不支援的按鈕、選取器、URL 按鈕、標題/文字重複，以及混合 `message` 加上 `presentation` 的傳送，新增後備測試。
-- 僅當提供者能夠釘選已傳送訊息 ID 時，透過 `deliveryCapabilities.pin` 和 `pinDeliveredMessage` 新增傳送釘選支援。
-- 請勿透過共享訊息動作架構公開新的提供者原生卡片/區塊/元件/按鈕欄位。
+- 在轉譯器和測試中保留最終平台限制。
+- 針對不支援的按鈕、選單、URL 按鈕、標題/文字重複，以及混合的 `message` 加上 `presentation` 傳送，新增後援測試。
+- 僅當提供者能夠固定已傳送訊息 ID 時，才透過 `deliveryCapabilities.pin` 和 `pinDeliveredMessage` 新增傳遞固定支援。
+- 不要透過共用的訊息動作架構公開新的提供者原生卡片/區塊/元件/按鈕欄位。
 
 ## 相關文件
 
 - [訊息 CLI](/zh-Hant/cli/message)
-- [外掛 SDK 概覽](/zh-Hant/plugins/sdk-overview)
+- [外掛 SDK 總覽](/zh-Hant/plugins/sdk-overview)
 - [外掛架構](/zh-Hant/plugins/architecture-internals#message-tool-schemas)
-- [管道呈現重構計畫](/zh-Hant/plan/ui-channels)
+- [頻道呈現重構計畫](/zh-Hant/plan/ui-channels)

@@ -300,7 +300,7 @@ Consulte [/providers/kilocode](/es/providers/kilocode) para obtener detalles de 
 | Hugging Face Inference                     | `huggingface`                    | `HUGGINGFACE_HUB_TOKEN` o `HF_TOKEN`                         | `huggingface/deepseek-ai/DeepSeek-R1`                      |
 | Kilo Gateway                               | `kilocode`                       | `KILOCODE_API_KEY`                                           | `kilocode/kilo/auto`                                       |
 | Kimi Coding                                | `kimi`                           | `KIMI_API_KEY` o `KIMICODE_API_KEY`                          | `kimi/kimi-for-coding`                                     |
-| MiniMax                                    | `minimax` / `minimax-portal`     | `MINIMAX_API_KEY` / `MINIMAX_OAUTH_TOKEN`                    | `minimax/MiniMax-M2.7`                                     |
+| MiniMax                                    | `minimax` / `minimax-portal`     | `MINIMAX_API_KEY` / `MINIMAX_OAUTH_TOKEN`                    | `minimax/MiniMax-M3`                                       |
 | Mistral                                    | `mistral`                        | `MISTRAL_API_KEY`                                            | `mistral/mistral-large-latest`                             |
 | Moonshot                                   | `moonshot`                       | `MOONSHOT_API_KEY`                                           | `moonshot/kimi-k2.6`                                       |
 | NVIDIA                                     | `nvidia`                         | `NVIDIA_API_KEY`                                             | `nvidia/nvidia/nemotron-3-super-120b-a12b`                 |
@@ -328,7 +328,7 @@ Consulte [/providers/kilocode](/es/providers/kilocode) para obtener detalles de 
     Las referencias respaldadas por Gemini siguen la misma ruta de saneamiento proxy-Gemini; `kilocode/kilo/auto` y otras referencias no compatibles con razonamiento proxy omiten la inyección de razonamiento proxy.
   </Accordion>
   <Accordion title="MiniMax">
-    La incorporación de API-key escribe definiciones explícitas de modelos de chat M2.7 solo de texto; la comprensión de imágenes permanece en el proveedor de medios `MiniMax-VL-01` propiedad del complemento.
+    La incorporación con clave de API escribe definiciones explícitas de modelos de chat M3 y M2.7; la comprensión de imágenes se mantiene en el proveedor de medios `MiniMax-VL-01` propiedad del complemento.
   </Accordion>
   <Accordion title="NVIDIA">
     Los ID de modelo utilizan un espacio de nombres `nvidia/<vendor>/<model>` (por ejemplo `nvidia/nvidia/nemotron-...` junto con `nvidia/moonshotai/kimi-k2.5`); los selectores preservan la composición literal `<provider>/<model-id>` mientras que la clave canónica enviada a la API se mantiene con prefijo único.
@@ -532,7 +532,7 @@ Consulte [/providers/minimax](/es/providers/minimax) para obtener detalles de co
 
 División de capacidades propiedad del complemento:
 
-- Los valores predeterminados de texto/chat se mantienen en `minimax/MiniMax-M2.7`
+- Los valores predeterminados de texto/chat se mantienen en `minimax/MiniMax-M3`
 - La generación de imágenes es `minimax/image-01` o `minimax-portal/image-01`
 - La comprensión de imágenes es `MiniMax-VL-01` propiedad del complemento en ambas rutas de autenticación de MiniMax
 - La búsqueda web se mantiene en el id de proveedor `minimax`

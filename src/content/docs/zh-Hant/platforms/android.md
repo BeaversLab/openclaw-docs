@@ -8,20 +8,21 @@ title: "Android 應用程式"
 ---
 
 <Note>
-  官方 Android 應用程式可在 [Google Play](https://play.google.com/store/apps/details?id=ai.openclaw.app&hl=en_IN) 上取得。它是一個同伴節點，需要一個執行中的 OpenClaw Gateway。原始碼也可在 [OpenClaw repository](https://github.com/openclaw/openclaw) 中的 `apps/android` 下取得；請參閱 [apps/android/README.md](https://github.com/openclaw/openclaw/blob/main/apps/android/README.md) 以了解建置說明。
+  官方的 Android 應用程式可在 [Google Play](https://play.google.com/store/apps/details?id=ai.openclaw.app&hl=en_IN) 上取得。它是一個伴隨節點，需要一個運行中的 OpenClaw Gateway。原始碼也可在 [OpenClaw repository](https://github.com/openclaw/openclaw) 中取得，位於 `apps/android` 下；請參閱 [apps/android/README.md](https://github.com/openclaw/openclaw/blob/main/apps/android/README.md)
+  以了解建置說明。
 </Note>
 
 ## 支援快照
 
 - 角色：同伴節點應用程式（Android 不託管 Gateway）。
 - 需要 Gateway：是（透過 WSL2 在 macOS、Linux 或 Windows 上執行）。
-- 安裝：應用程式請至 [Google Play](https://play.google.com/store/apps/details?id=ai.openclaw.app&hl=en_IN)，Gateway 請參閱 [Getting Started](/zh-Hant/start/getting-started)，然後進行 [Pairing](/zh-Hant/channels/pairing)。
+- 安裝：應用程式請至 [Google Play](https://play.google.com/store/apps/details?id=ai.openclaw.app&hl=en_IN)，Gateway 請參閱 [Getting Started](/zh-Hant/start/getting-started)，然後進行 [配對](/zh-Hant/channels/pairing)。
 - Gateway：[Runbook](/zh-Hant/gateway) + [Configuration](/zh-Hant/gateway/configuration)。
-  - 協定：[Gateway protocol](/zh-Hant/gateway/protocol)（節點 + 控制平面）。
+  - 通訊協定：[Gateway protocol](/zh-Hant/gateway/protocol)（節點 + 控制平面）。
 
 ## 系統控制
 
-系統控制 位於 Gateway 主機上。請參閱 [Gateway](/zh-Hant/gateway)。
+系統控制（launchd/systemd）位於 Gateway 主機上。請參閱 [Gateway](/zh-Hant/gateway)。
 
 ## 連接手冊
 
@@ -71,7 +72,7 @@ openclaw gateway --tailscale serve
 dns-sd -B _openclaw-gw._tcp local.
 ```
 
-更多除錯備註：[Bonjour](/zh-Hant/gateway/bonjour)。
+更多除錯說明：[Bonjour](/zh-Hant/gateway/bonjour)。
 
 如果您也設定了廣域探索網域，請進行比較：
 
@@ -122,7 +123,7 @@ openclaw devices approve <requestId>
 openclaw devices reject <requestId>
 ```
 
-配對詳情：[配對](/zh-Hant/channels/pairing)。
+配對詳情：[Pairing](/zh-Hant/channels/pairing)。
 
 選用：如果 Android 節點始終從嚴格控制的子網路連線，您可以選擇加入使用明確 CIDR 或確切 IP 進行的首次節點自動批准：
 
@@ -193,7 +194,7 @@ A2UI 主機位於 `http://<gateway-host>:18789/__openclaw__/a2ui/`。
 - `camera.snap` (jpg)
 - `camera.clip` (mp4)
 
-請參閱 [Camera node](/zh-Hant/nodes/camera) 以了解參數和 CLI 輔助工具。
+參閱 [Camera node](/zh-Hant/nodes/camera) 以了解參數和 CLI 輔助工具。
 
 ### 8) 語音 + 擴展的 Android 指令介面
 
@@ -202,37 +203,41 @@ A2UI 主機位於 `http://<gateway-host>:18789/__openclaw__/a2ui/`。
 - 預設情況下，Android 對話使用原生語音辨識、Gateway 聊天，以及透過設定的 Gateway 對話提供者使用 `talk.speak`。只有在 `talk.speak` 不可用時才會使用本機系統 TTS。
 - 只有在 `talk.realtime.mode` 為 `realtime` 且 `talk.realtime.transport` 為 `gateway-relay` 時，Android 對話才會使用即時 Gateway 中繼。
 - 語音喚醒在 Android UX/執行時中仍保持停用狀態。
-- 額外的 Android 指令系列（可用性取決於裝置 + 權限）：
+- 額外的 Android 指令系列（可用性取決於裝置、權限和使用者設定）：
   - `device.status`, `device.info`, `device.permissions`, `device.health`
-  - `notifications.list`, `notifications.actions` (請參閱下方的 [通知轉發](#notification-forwarding))
+  - `device.apps` 僅在啟用 **Settings > Phone Capabilities > Installed Apps** 時可用；預設會列出啟動器中可見的應用程式。
+  - `notifications.list`、`notifications.actions`（請參閱下方的 [Notification forwarding](#notification-forwarding)）
   - `photos.latest`
-  - `contacts.search`, `contacts.add`
-  - `calendar.events`, `calendar.add`
+  - `contacts.search`、`contacts.add`
+  - `calendar.events`、`calendar.add`
   - `callLog.search`
   - `sms.search`
   - `motion.activity`, `motion.pedometer`
 
-## 助理入口
+## 助理入口點
 
-Android 支援從系統助理觸發程式 (Google Assistant) 啟動 OpenClaw。設定完成後，按住主頁按鈕或說「Hey Google, ask OpenClaw...」會開啟應用程式並將提示詞傳遞至聊天編輯器。
+Android 支援透過系統助理觸發程序（Google
+助理）啟動 OpenClaw。設定完成後，長按主畫面按鈕或說出「Hey Google，問
+OpenClaw...」即可開啟應用程式，並將提示詞傳送至聊天編輯器。
 
-這使用了在應用程式清單中宣告的 Android **App Actions** 中繼資料。閘道端不需要額外的配置 -- 助理意圖完全由 Android 應用程式處理，並作為一般聊天訊息轉發。
+這使用了應用程式資訊清單中宣告的 Android **App Actions** 中繼資料。在
+閘道端無需額外設定——助理意圖完全由 Android 應用程式處理，並作為一般聊天訊息轉發。
 
-<Note>App Actions 的可用性取決於裝置、Google Play Services 版本，以及使用者是否將 OpenClaw 設為預設助理應用程式。</Note>
+<Note>App Actions 的可用性取決於裝置、Google Play Services 版本， 以及使用者是否已將 OpenClaw 設定為預設助理應用程式。</Note>
 
 ## 通知轉發
 
-Android 可以將裝置通知作為事件轉發到閘道。有幾個控制項可讓您指定轉發哪些通知以及轉發的時間。
+Android 可以將裝置通知以事件形式轉發至閘道。多項控制設定可讓您限定轉發的通知及時機。
 
-| 鍵                               | 類型           | 說明                                                               |
-| -------------------------------- | -------------- | ------------------------------------------------------------------ |
-| `notifications.allowPackages`    | string[]       | 僅轉發來自這些套件名稱的通知。如果設定，則會忽略所有其他套件。     |
-| `notifications.denyPackages`     | string[]       | 絕不轉發來自這些套件名稱的通知。在 `allowPackages` 之後套用。      |
-| `notifications.quietHours.start` | string (HH:mm) | 靜音時段視窗的開始時間（本地裝置時間）。在此視窗期間通知將被抑制。 |
-| `notifications.quietHours.end`   | string (HH:mm) | 靜音時段視窗的結束時間。                                           |
-| `notifications.rateLimit`        | number         | 每個套件每分鐘轉發的最大通知數量。超出部分的通知將被丟棄。         |
+| 金鑰                             | 類型           | 說明                                                             |
+| -------------------------------- | -------------- | ---------------------------------------------------------------- |
+| `notifications.allowPackages`    | string[]       | 僅轉發來自這些套件名稱的通知。若設定此項，則會忽略所有其他套件。 |
+| `notifications.denyPackages`     | string[]       | 絕不轉發來自這些套件名稱的通知。於 `allowPackages` 之後套用。    |
+| `notifications.quietHours.start` | string (HH:mm) | 安靜時段視窗的開始時間（本地裝置時間）。在此期間將抑制通知。     |
+| `notifications.quietHours.end`   | string (HH:mm) | 安靜時段視窗的結束時間。                                         |
+| `notifications.rateLimit`        | number         | 每個套件每分鐘最多轉發的通知數量。超出的通知將被捨棄。           |
 
-通知選擇器對轉發的通知事件也使用更安全的行為，以防止意外轉發敏感的系統通知。
+通知選擇器也會針對轉發的通知事件使用更安全的行為，以防止意外轉發敏感的系統通知。
 
 配置範例：
 
@@ -250,7 +255,7 @@ Android 可以將裝置通知作為事件轉發到閘道。有幾個控制項可
 }
 ```
 
-<Note>通知轉發需要 Android 通知監聽器權限。應用程式會在設定過程中提示授予此權限。</Note>
+<Note>通知轉發需要 Android 的「通知監聽」權限。應用程式會在設定過程中提示您授予此權限。</Note>
 
 ## 相關
 

@@ -77,38 +77,42 @@ Notes:
 - 在非 Windows 主機上，如果設定了 `SHELL`，exec 會使用它；如果 `SHELL` 是 `fish`，它會優先使用 `PATH` 中的 `bash`（或 `sh`）以避免不相容於 fish 的腳本，如果兩者都不存在則回退到 `SHELL`。
 - 在 Windows 主機上，exec 優先尋找 PowerShell 7 (`pwsh`)（先找 Program Files、ProgramW6432，然後是 PATH），
   然後回退到 Windows PowerShell 5.1。
+- 在非 Windows 的 Gateway 主機上，bash 和 zsh exec 指令使用啟動快照。OpenClaw 從 Shell 啟動檔案中捕獲可 source 的
+  別名/函式以及一組小型安全環境變數至 `$OPENCLAW_STATE_DIR/cache/shell-snapshots/`，然後在每次 exec 指令前 source 該快照。
+  看起來像機密的變數會被排除；沙箱和節點 exec 不使用此快照。在 Gateway 程序環境中設定
+  `OPENCLAW_EXEC_SHELL_SNAPSHOT=0` 即可停用此快照路徑。
 - 主機執行 (`gateway`/`node`) 會拒絕 `env.PATH` 和載入器覆寫 (`LD_*`/`DYLD_*`) 以
   防止二進位劫持或注入程式碼。
-- OpenClaw 在產生的指令環境中（包括 PTY 和沙箱執行）設定 `OPENCLAW_SHELL=exec`，以便 shell/profile 規則可以偵測 exec-tool 語境。
-- 由於 `openclaw channels login` 是互動式的通道驗證流程，因此被從 `exec` 中封鎖；請在閘道主機上的終端機中執行它，或在有提供時從聊天中使用通道原生的登入工具。
-- 重要：沙箱功能**預設關閉**。如果沙箱功能關閉，隱含的 `host=auto`
-  會解析為 `gateway`。顯式的 `host=sandbox` 仍然會失敗關閉，而不是在
-  閘道主機上靜默執行。請啟用沙箱功能，或在取得批准後使用 `host=gateway`。
-- 腳本預檢檢查（針對常見的 Python/Node shell 語法錯誤）僅會檢查有效 `workdir` 邊界內的檔案。
-  如果腳本路徑解析到 `workdir` 之外，則會跳過該檔案的預檢。
-- 對於現在開始的長時間執行工作，請啟動一次並在啟用且指令發出輸出或失敗時依賴自動完成喚醒。
-  使用 `process` 來查看日誌、狀態、輸入或進行干預；不要使用 sleep 迴圈、timeout 迴圈或重複輪詢來模擬排程。
-- 對於應該稍後發生或按排程進行的工作，請使用 cron，而不是
+- OpenClaw 在產生的指令環境中 (包括 PTY 和沙箱執行) 設定 `OPENCLAW_SHELL=exec`，以便 Shell/Profile 規則能偵測 exec-tool 語境。
+- `openclaw channels login` 在 `exec` 中被封鎖，因為它是互動式通道驗證流程；請在 Gateway 主機的終端機中執行它，或者在存在時從聊天中使用通道原生的登入工具。
+- 重要：沙箱預設為**關閉**。如果沙箱已關閉，隱含的 `host=auto`
+  會解析為 `gateway`。明確的 `host=sandbox` 仍會以失敗封閉，而不是靜默地
+  在 Gateway 主機上執行。請啟用沙箱或使用帶有批准的 `host=gateway`。
+- 腳本預檢檢查 (針對常見的 Python/Node Shell 語法錯誤) 僅會檢查有效 `workdir` 邊界內的
+  檔案。如果腳本路徑解析到 `workdir` 之外，則會跳過該檔案的預檢。
+- 對於現在開始的長期工作，請啟動一次並在啟用且指令發出輸出或失敗時依賴自動
+  完成喚醒。使用 `process` 查看日誌、狀態、輸入或介入；不要使用 sleep 迴圈、timeout 迴圈或重複輪詢來模擬排程。
+- 對於應該稍後發生或按排程進行的工作，請使用 cron 而不是
   `exec` 的 sleep/delay 模式。
 
 ## Config
 
-- `tools.exec.notifyOnExit` (預設值：true)：當為 true 時，後台執行的 exec 工作階段會將一個系統事件加入佇列，並在退出時請求心跳。
-- `tools.exec.approvalRunningNoticeMs` (預設值：10000)：當需要審核的 exec 執行時間超過此值時，發出單一「執行中」通知 (0 則停用)。
-- `tools.exec.timeoutSec` (預設值：1800)：每個指令的預設 exec 逾時時間（秒）。單次呼叫的 `timeout` 會覆寫此設定；單次呼叫的 `timeout: 0` 則會停用 exec 處理程序逾時。
-- `tools.exec.host` (預設值：`auto`；當沙盒執行環境啟用時解析為 `sandbox`，否則為 `gateway`)
-- `tools.exec.security` (預設值：沙盒為 `deny`，若未設定則 gateway + node 為 `full`)
-- `tools.exec.ask` (預設值：`off`)
-- 對於 gateway + node，無需審核的 host exec 是預設行為。如果您需要審核/允許清單行為，請同時收緊 `tools.exec.*` 和 host `~/.openclaw/exec-approvals.json`；請參閱 [Exec approvals](/zh-Hant/tools/exec-approvals#yolo-mode-no-approval)。
-- YOLO 來自主機原則預設值 (`security=full`、`ask=off`)，而非來自 `host=auto`。如果您想要強制使用 gateway 或 node 路由，請設定 `tools.exec.host` 或使用 `/exec host=...`。
-- 在 `security=full` 加上 `ask=off` 模式下，主機執行會直接遵循設定的原則；沒有額外的啟發式指令混淆前置過濾器或腳本預檢拒絕層。
-- `tools.exec.node` (預設值：未設定)
-- `tools.exec.strictInlineEval` (預設值: false)：設為 true 時，內聯解釋器 eval 形式（如 `python -c`、`node -e`、`ruby -e`、`perl -e`、`php -r`、`lua -e` 和 `osascript -e`）需要審核者或明確批准。在 `mode=auto` 中，正常的 exec 批准路徑可能會允許原生自動審核者批准明顯低風險的一次性指令；直接 node-host `system.run` 呼叫仍需要明確批准，因為它們無法將指令移交給人工審核路徑。如果審核者提出要求，請求將轉給人員。`allow-always` 仍然可以保存良性解釋器/指令碼調用，但內聯 eval 形式不會變成持久的允許規則。
-- `tools.exec.commandHighlighting` (預設值: false)：設為 true 時，批准提示可以突顯指令文字中由解析器衍生的指令範圍。全域設定或針對每個代理 設定為 `true`，即可在不變更 exec 批准策略的情況下啟用指令文字突顯。
-- `tools.exec.pathPrepend`：要前置到 exec 執行的 `PATH` 的目錄清單（僅限 gateway + sandbox）。
-- `tools.exec.safeBins`：僅 stdin 的安全二進位檔，無需明確的允許清單條目即可執行。有關行為的詳細資訊，請參閱 [Safe bins](/zh-Hant/tools/exec-approvals-advanced#safe-bins-stdin-only)。
-- `tools.exec.safeBinTrustedDirs`：用於 `safeBins` 路徑檢查的其他受信任明確目錄。`PATH` 條目永不會自動受信任。內建預設值為 `/bin` 和 `/usr/bin`。
-- `tools.exec.safeBinProfiles`：每個安全 bin 的可選自訂 argv 策略 (`minPositional`、`maxPositional`、`allowedValueFlags`、`deniedFlags`)。
+- `tools.exec.notifyOnExit` (預設：true)：當為 true 時，背景執行的 exec 工作階段會將系統事件加入佇列，並在結束時請求心跳。
+- `tools.exec.approvalRunningNoticeMs` (預設：10000)：當需要審批的 exec 執行時間超過此值時，發出單一「執行中」通知 (0 表示停用)。
+- `tools.exec.timeoutSec` (預設：1800)：每個指令的預設 exec 逾時時間（秒）。單次呼叫的 `timeout` 會覆寫此設定；單次呼叫的 `timeout: 0` 則會停用 exec 程序逾時。
+- `tools.exec.host` (預設：`auto`；當沙箱執行環境作用時解析為 `sandbox`，否則為 `gateway`)
+- `tools.exec.security` (預設：沙箱為 `deny`，若未設定則 gateway + node 為 `full`)
+- `tools.exec.ask` (預設：`off`)
+- 免審批的主機 exec 是 gateway + node 的預設設定。如果您希望使用審批/允許清單行為，請同時收緊 `tools.exec.*` 與主機 `~/.openclaw/exec-approvals.json`；請參閱 [Exec approvals](/zh-Hant/tools/exec-approvals#yolo-mode-no-approval)。
+- YOLO 源自主機原則預設值 (`security=full`、`ask=off`)，而非來自 `host=auto`。如果您希望強制使用 gateway 或 node 路由，請設定 `tools.exec.host` 或使用 `/exec host=...`。
+- 在 `security=full` 加上 `ask=off` 模式下，主機 exec 直接遵循設定的原則；沒有額外的啟發式指令混淆預濾器或腳本預檢拒絕層。
+- `tools.exec.node` (預設：未設定)
+- `tools.exec.strictInlineEval` (預設值：false)：當為 true 時，內嵌直譯器 eval 形式（如 `python -c`、`node -e`、`ruby -e`、`perl -e`、`php -r`、`lua -e` 和 `osascript -e`）需要審閱者或明確批准。在 `mode=auto` 中，正常的 exec 批准路徑可能允許原生自動審閱者批准明顯低風險的一次性指令；直接的節點主機 `system.run` 呼叫仍需要明確批准，因為它們無法將指令交給人工批准路徑。如果審閱者提出請求，請求將發送給人員。`allow-always` 仍可持續記錄良性的直譯器/腳本呼叫，但內嵌 eval 形式不會變為持久的允許規則。
+- `tools.exec.commandHighlighting` (預設值：false)：當為 true 時，批准提示可以在指令文字中高亮顯示剖析器衍生的指令範圍。設為 `true`（全域或針對特定代理程式）以啟用指令文字高亮，而不變更 exec 批准原則。
+- `tools.exec.pathPrepend`：要在 exec 執行時（僅限 gateway + sandbox）前置至 `PATH` 的目錄清單。
+- `tools.exec.safeBins`：僅限 stdin 的安全二進位檔，可以在沒有明確允許清單項目的情況下執行。如需行為細節，請參閱 [Safe bins](/zh-Hant/tools/exec-approvals-advanced#safe-bins-stdin-only)。
+- `tools.exec.safeBinTrustedDirs`：用於 `safeBins` 路徑檢查的額外明確信任目錄。`PATH` 項目永遠不會被自動信任。內建預設值為 `/bin` 和 `/usr/bin`。
+- `tools.exec.safeBinProfiles`：每個安全 bin 的可選自訂 argv 原則（`minPositional`、`maxPositional`、`allowedValueFlags`、`deniedFlags`）。
 
 範例：
 
@@ -124,31 +128,33 @@ Notes:
 
 ### PATH 處理
 
-- `host=gateway`: 將您的登入 shell `PATH` 合併到 exec 環境中。針對主機執行，會拒絕 `env.PATH` 覆寫。Daemon 本身仍以最精簡的 `PATH` 執行：
-  - macOS: `/opt/homebrew/bin`, `/usr/local/bin`, `/usr/bin`, `/bin`
-  - Linux: `/usr/local/bin`, `/usr/bin`, `/bin`
-    - 為防止使用者 shell 配置（例如 `~/.zshenv` 或 `/etc/zshenv`）在啟動期間覆寫優先路徑，`tools.exec.pathPrepend` 項目會在執行前安全地預先附加到 shell 指令內的最終 `PATH` 中。
-- `host=sandbox`: 在容器內執行 `sh -lc` (登入 shell)，因此 `/etc/profile` 可能會重設 `PATH`。
-  OpenClaw 會在載入 profile 後透過內部環境變數（不經 shell 插值）將 `env.PATH` 預先附加；
+- `host=gateway`：將您的 login-shell `PATH` 合併到 exec 環境中。`env.PATH` 覆寫會
+  在主機執行時被拒絕。守護程式本身仍以最小的 `PATH` 執行：
+  - macOS：`/opt/homebrew/bin`、`/usr/local/bin`、`/usr/bin`、`/bin`
+  - Linux：`/usr/local/bin`、`/usr/bin`、`/bin`
+    - 為了防止使用者 shell 配置（如 `~/.zshenv` 或 `/etc/zshenv`）在啟動期間覆寫優先路徑，`tools.exec.pathPrepend` 項目會在執行前安全地前置於 shell 指令中最終的 `PATH`。
+- `host=sandbox`：在容器內執行 `sh -lc`（login shell），因此 `/etc/profile` 可能會重設 `PATH`。
+  OpenClaw 會透過內部環境變數（無 shell 插值）在載入 profile 後前置 `env.PATH`；
   `tools.exec.pathPrepend` 也適用於此。
-- `host=node`: 只有您傳遞的非封鎖環境變數覆寫會被傳送到節點。針對主機執行會拒絕 `env.PATH` 覆寫，且節點主機會予以忽略。如果您在節點上需要額外的 PATH 項目，
-  請設定節點主機服務環境 (systemd/launchd) 或將工具安裝在標準位置。
+- `host=node`：只有您傳遞的非封鎖環境變數覆寫會傳送到節點。`env.PATH` 覆寫會
+  在主機執行時被拒絕，並被節點主機忽略。如果您在節點上需要額外的 PATH 項目，
+  請設定節點主機服務環境（systemd/launchd）或將工具安裝在標準位置。
 
-個別代理節點綁定（使用設定中的代理清單索引）：
+每個代理程式的節點綁定（使用設定中的代理程式列表索引）：
 
 ```bash
 openclaw config get agents.list
 openclaw config set 'agents.list[0].tools.exec.node' "node-id-or-name"
 ```
 
-控制 UI：「節點」分頁包含一個小型的「Exec node binding」面板，用於相同設定。
+Control UI：Nodes 分頁包含一個小型的「Exec node binding」面板，用於相同的設定。
 
 ## Session overrides (`/exec`)
 
-使用 `/exec` 來設定 `host`、`security`、`ask` 和 `node` 的 **per-session** 預設值。
-傳送不帶任何參數的 `/exec` 以顯示目前的數值。
+使用 `/exec` 為 `host`、`security`、`ask` 和 `node` 設定 **per-session** 預設值。
+發送不帶參數的 `/exec` 以顯示當前值。
 
-範例：
+Example：
 
 ```
 /exec host=auto security=allowlist ask=on-miss node=mac-1
@@ -156,46 +162,48 @@ openclaw config set 'agents.list[0].tools.exec.node' "node-id-or-name"
 
 ## 授權模型
 
-`/exec` 僅對 **經授權的傳送者**（通道允許清單/配對加上 `commands.useAccessGroups`）有效。
-它僅更新 **工作階段狀態** 且不寫入設定。經授權的外部通道傳送者可以
-設定這些工作階段預設值。內部 Gateway/Webchat 用戶端需要 `operator.admin` 來將其持久化。
-若要徹底停用 exec，請透過工具原則（`tools.deny: ["exec"]` 或個別代理程式）拒絕它。除非您明確設定 `security=full` 和 `ask=off`，否則主機核准
+`/exec` 僅對 **已授權的發送者**（通道允許清單/配對加上 `commands.useAccessGroups`）有效。
+它僅更新 **會話狀態** 而不寫入設定。已授權的外部通道發送者可以
+設定這些會話預設值。內部閘道/webchat 用戶端需要 `operator.admin` 來保存它們。
+要完全停用 exec，請透過工具政策（`tools.deny: ["exec"]` 或每個代理程式）拒絕它。除非您明確設定 `security=full` 和 `ask=off`，否則主機核准
 仍然適用。
 
-## Exec 核准（伴隨應用程式 / 節點主機）
+## Exec 核准（Companion 應用程式 / 節點主機）
 
-沙箱化的代理程式在 `exec` 於 Gateway 或節點主機上執行之前，可能需要每次請求的核准。
-請參閱 [Exec approvals](/zh-Hant/tools/exec-approvals) 以了解原則、允許清單和 UI 流程。
+沙盒代理程式可以要求在 `exec` 於閘道或節點主機上執行之前進行每次請求的核准。
+請參閱 [Exec 核准](/zh-Hant/tools/exec-approvals) 以了解政策、允許清單和 UI 流程。
 
-當需要核准時，exec 工具會立即回傳
+當需要核准時，exec 工具會立即傳回
 `status: "approval-pending"` 和一個核准 ID。一旦核准（或拒絕/逾時），
-Gateway 僅針對已核准的執行發出指令進度和完成系統事件
-（`Exec running` / `Exec finished`）。被拒絕或逾時的核准屬於終止狀態，且不會
-透過拒絕系統事件喚醒代理程式工作階段。
-在具有原生核准卡片/按鈕的通道上，代理程式應優先依賴該
-原生 UI，並僅在工具結果明確指出聊天核准不可用或手動核准為
-唯一途徑時，才包含手動 `/approve` 指令。
+閘道僅針對已核准的執行發出命令進度和完成系統事件
+（`Exec running` / `Exec finished`）。被拒絕或逾時的核准是終止的，並且不會
+使用拒絕系統事件喚醒代理程式會話。
+在具有原生核准卡片/按鈕的通道上，代理程式應該先依賴該
+原生 UI，並且僅在工具
+結果明確指出聊天核准不可用或手動核准是
+唯一途徑時，才包含手動 `/approve` 命令。
 
 ## 允許清單 + 安全 bins
 
-手動允許清單執行比對解析後的二進位路徑萬用字元和純指令名稱萬用字元。純名稱僅比對透過 PATH 呼叫的指令，因此當指令是 `rg` 時，`rg` 可以比對 `/opt/homebrew/bin/rg`，但不能比對 `./rg` 或 `/tmp/rg`。
-當 `security=allowlist` 時，Shell 指令只有在每個管線區段都在允許清單中或是安全 bin 時才會自動允許。鏈結 (`;`, `&&`, `||`) 和重導向在允許清單模式下會被拒絕，除非每個頂層區段都滿足允許清單 (包括安全 bin)。重導向仍然不受支援。持久的 `allow-always` 信任並不會繞過該規則：鏈結指令仍然要求每個頂層區段都要符合。
+手動執行允許清單強制執行會比對解析後的二進位路徑 glob 模式與純指令名稱 glob 模式。純名稱僅比對透過 PATH 呼叫的指令，因此當指令是 `rg` 時，`rg` 可以比對 `/opt/homebrew/bin/rg`，但不能比對 `./rg` 或 `/tmp/rg`。
+當 `security=allowlist` 時，只有當管線中的每個區段都在允許清單中或是安全 bin 時，Shell 指令才會被自動允許。除非每個頂層區段都滿足允許清單（包括安全 bin），否則鏈結（`;`、`&&`、`||`）和重導向在允許清單模式下會被拒絕。重導向仍然不受支援。
+持久的 `allow-always` 信任權限無法繞過該規則：鏈結指令仍需要每個頂層區段都符合。
 
-`autoAllowSkills` 是 exec 核准中的一個單獨便利路徑。它與手動路徑允許清單項目不同。若要嚴格執行明確信任，請將 `autoAllowSkills` 保持停用。
+`autoAllowSkills` 是 exec 批准中一個單獨的便利途徑。它與手動路徑允許清單項目不同。若要嚴格地明確指定信任，請將 `autoAllowSkills` 設為停用。
 
 使用這兩個控制項來處理不同的工作：
 
-- `tools.exec.safeBins`：小型、僅 stdin 的串流篩選器。
-- `tools.exec.safeBinTrustedDirs`：針對安全 bin 可執行檔路徑的明確額外信任目錄。
-- `tools.exec.safeBinProfiles`：針對自訂安全 bin 的明確 argv 原則。
+- `tools.exec.safeBins`：小型、僅限 stdin 的串流篩選器。
+- `tools.exec.safeBinTrustedDirs`：針對安全 bin 可執行檔路徑的額外明確受信任目錄。
+- `tools.exec.safeBinProfiles`：針對自訂安全 bin 的明確 argv 政策。
 - allowlist：針對可執行檔路徑的明確信任。
 
-不要將 `safeBins` 視為通用允許清單，且不要新增直譯器/執行期二進位檔（例如 `python3`、`node`、`ruby`、`bash`）。如果您需要這些，請使用明確的允許清單項目，並保持批准提示為啟用狀態。
-當直譯器/執行期 `safeBins` 項目缺少明確的設定檔時，`openclaw security audit` 會發出警告，而 `openclaw doctor --fix` 可以產生缺少的自訂 `safeBinProfiles` 項目。
-當您明確將行為廣泛的 bins（例如 `jq`）新增回 `safeBins` 時，`openclaw security audit` 和 `openclaw doctor` 也會發出警告。
-如果您明確允許清單直譯器，請啟用 `tools.exec.strictInlineEval`，以便內聯程式碼評估表單仍需要審查者或明確批准。
+請勿將 `safeBins` 視為通用允許清單，且勿加入直譯器/執行時期二進位檔（例如 `python3`、`node`、`ruby`、`bash`）。如果您需要這些功能，請使用明確的允許清單項目，並保持批准提示為啟用狀態。
+當直譯器/執行時期的 `safeBins` 項目缺少明確的設定檔時，`openclaw security audit` 會發出警告，而 `openclaw doctor --fix` 可以針對缺少的自訂 `safeBinProfiles` 項目建立基礎架構。
+當您將廣泛行為的二元檔（例如 `jq`）明確加回 `safeBins` 時，`openclaw security audit` 和 `openclaw doctor` 也會發出警告。
+如果您明確允許直譯器，請啟用 `tools.exec.strictInlineEval`，這樣內聯程式碼評估表單仍需要審閱者或明確批准。
 
-如需完整的政策詳細資訊和範例，請參閱 [Exec approvals](/zh-Hant/tools/exec-approvals-advanced#safe-bins-stdin-only) 和 [Safe bins versus allowlist](/zh-Hant/tools/exec-approvals-advanced#safe-bins-versus-allowlist)。
+如需完整的政策細節與範例，請參閱 [Exec 批准](/zh-Hant/tools/exec-approvals-advanced#safe-bins-stdin-only) 和 [安全 binaries 與允許清單](/zh-Hant/tools/exec-approvals-advanced#safe-bins-versus-allowlist)。
 
 ## 範例
 
@@ -212,9 +220,9 @@ Gateway 僅針對已核准的執行發出指令進度和完成系統事件
 {"tool":"process","action":"poll","sessionId":"<id>"}
 ```
 
-輪詢是為了隨選狀態，而非等待迴圈。如果啟用了自動完成喚醒，當指令輸出內容或失敗時，它可以喚醒工作階段。
+輪詢是為了隨需狀態，而非等待迴圈。如果啟用自動完成喚醒功能，指令在輸出內容或失敗時可以喚醒工作階段。
 
-傳送按鍵 (tmux 樣式)：
+傳送按鍵（tmux 風格）：
 
 ```json
 {"tool":"process","action":"send-keys","sessionId":"<id>","keys":["Enter"]}
@@ -222,13 +230,13 @@ Gateway 僅針對已核准的執行發出指令進度和完成系統事件
 {"tool":"process","action":"send-keys","sessionId":"<id>","keys":["Up","Up","Enter"]}
 ```
 
-提交 (僅傳送 CR)：
+提交（僅傳送 CR）：
 
 ```json
 { "tool": "process", "action": "submit", "sessionId": "<id>" }
 ```
 
-貼上 (預設加上括號)：
+貼上（預設使用括號模式）：
 
 ```json
 { "tool": "process", "action": "paste", "sessionId": "<id>", "text": "line1\nline2\n" }
@@ -237,7 +245,7 @@ Gateway 僅針對已核准的執行發出指令進度和完成系統事件
 ## apply_patch
 
 `apply_patch` 是 `exec` 的子工具，用於結構化的多檔案編輯。
-對於 OpenAI 和 OpenAI Codex 模型，它預設為啟用。僅當您想要停用它或將其限制為特定模型時才使用設定：
+它預設針對 OpenAI 和 OpenAI Codex 模型啟用。僅在當您想要停用它或將其限制為特定模型時才使用設定：
 
 ```json5
 {
@@ -249,18 +257,18 @@ Gateway 僅針對已核准的執行發出指令進度和完成系統事件
 }
 ```
 
-備註：
+注意：
 
 - 僅適用於 OpenAI/OpenAI Codex 模型。
-- 工具政策仍然適用；`allow: ["write"]` 隱含允許 `apply_patch`。
-- `deny: ["write"]` 不會拒絕 `apply_patch`；當 patch 寫入也應被封鎖時，請明確拒絕 `apply_patch` 或使用 `deny: ["group:fs"]`。
+- 工具政策仍然適用；`allow: ["write"]` 隱含地允許 `apply_patch`。
+- `deny: ["write"]` 並不拒絕 `apply_patch`；若當修補寫入也應被阻擋時，請明確拒絕 `apply_patch` 或使用 `deny: ["group:fs"]`。
 - 設定位於 `tools.exec.applyPatch` 之下。
-- `tools.exec.applyPatch.enabled` 預設為 `true`；將其設定為 `false` 以停用 OpenAI 模型的此工具。
-- `tools.exec.applyPatch.workspaceOnly` 預設為 `true`（工作區包含）。僅當您有意讓 `apply_patch` 在工作區目錄之外寫入/刪除時，才將其設定為 `false`。
+- `tools.exec.applyPatch.enabled` 預設為 `true`；將其設定為 `false` 即可針對 OpenAI 模型停用此工具。
+- `tools.exec.applyPatch.workspaceOnly` 預設為 `true` (工作區範圍內)。僅當您有意讓 `apply_patch` 在工作區目錄之外寫入/刪除時，才將其設定為 `false`。
 
 ## 相關
 
-- [Exec Approvals](/zh-Hant/tools/exec-approvals) — Shell 指令的審核閘門
+- [Exec Approvals](/zh-Hant/tools/exec-approvals) — 殼層指令的核准閘門
 - [Sandboxing](/zh-Hant/gateway/sandboxing) — 在沙箱環境中執行指令
-- [Background Process](/zh-Hant/gateway/background-process) — 長時間執行的 exec 和 process 工具
-- [Security](/zh-Hant/gateway/security) — 工具政策和提權存取
+- [Background Process](/zh-Hant/gateway/background-process) — 長時間執行的 exec 和處理程序工具
+- [Security](/zh-Hant/gateway/security) — 工具原則與提升存取權限

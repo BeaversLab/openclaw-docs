@@ -77,24 +77,22 @@ WebChat 有兩個獨立的資料路徑：
 
 ## 設定參考 (WebChat)
 
-完整設定：[設定](/zh-Hant/gateway/configuration)
+完整配置：[Configuration](/zh-Hant/gateway/configuration)
 
-WebChat 選項：
+WebChat 沒有持續保存的配置區段。Gateway 使用內建的 `chat.history` 顯示限制；API 客戶端可以發送單次請求的 `maxChars` 來為單一 `chat.history` 呼叫覆寫此限制。舊版的 `channels.webchat` 和 `gateway.webchat` 配置已退役；請執行 `openclaw doctor --fix` 將其移除。
 
-- `gateway.webchat.chatHistoryMaxChars`：`chat.history` 回應中文字欄位的最大字元數。當逐字稿項目超過此限制時，閘道會截斷長文字欄位，並可能用預留位置取代過大的訊息。用戶端也可以傳送每個請求的 `maxChars` 來覆寫單一 `chat.history` 呼叫的此預設值。
+相關全域選項：
 
-相關的全域選項：
+- `gateway.port`, `gateway.bind`：WebSocket 主機/埠。
+- `gateway.auth.mode`, `gateway.auth.token`, `gateway.auth.password`：
+  共用密鑰 WebSocket 驗證。
+- `gateway.auth.allowTailscale`：當啟用時，瀏覽器控制 UI 的聊天分頁可以使用 Tailscale
+  Serve 身份標頭。
+- `gateway.auth.mode: "trusted-proxy"`：針對位於具備身份感知能力的 **非本地回環** 代理來源後方的瀏覽器客戶端，進行反向代理驗證（請參閱 [Trusted Proxy Auth](/zh-Hant/gateway/trusted-proxy-auth)）。
+- `gateway.remote.url`, `gateway.remote.token`, `gateway.remote.password`：遠端 Gateway 目標。
+- `session.*`：會話儲存和主金鑰預設值。
 
-- `gateway.port`、`gateway.bind`：WebSocket 主機/連接埠。
-- `gateway.auth.mode`、`gateway.auth.token`、`gateway.auth.password`：
-  共用金鑰 WebSocket 驗證。
-- `gateway.auth.allowTailscale`：啟用時，瀏覽器控制 UI 聊天分頁可以使用 Tailscale
-  Serve 身分標頭。
-- `gateway.auth.mode: "trusted-proxy"`：針對位於具身分識別感知 **非回送** 來源代理後方的瀏覽器用戶端進行反向代理驗證 (請參閱 [受信任的代理驗證](/zh-Hant/gateway/trusted-proxy-auth))。
-- `gateway.remote.url`、`gateway.remote.token`、`gateway.remote.password`：遠端閘道目標。
-- `session.*`：工作階段儲存與主金鑰預設值。
+## 相關連結
 
-## 相關
-
-- [控制 UI](/zh-Hant/web/control-ui)
-- [儀表板](/zh-Hant/web/dashboard)
+- [Control UI](/zh-Hant/web/control-ui)
+- [Dashboard](/zh-Hant/web/dashboard)

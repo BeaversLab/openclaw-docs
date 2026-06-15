@@ -55,7 +55,7 @@ La même surface de compatibilité inclut également :
 - `POST /v1/embeddings`
 - `POST /v1/chat/completions`
 
-Pour l'explication canonique de la manière dont les modèles ciblés par les agents, `openclaw/default`, le transfert d'embeddings et les substitutions de modèles backend s'articulent, consultez [OpenAI Chat Completions](/fr/gateway/openai-http-api#agent-first-model-contract) et [Model list and agent routing](/fr/gateway/openai-http-api#model-list-and-agent-routing).
+Pour l'explication canonique de la manière dont les modèles ciblés par des agents, `openclaw/default`, le passage direct des embeddings et les substitutions de modèles backend s'assemblent, consultez [OpenAI Chat Completions](/fr/gateway/openai-http-api#agent-first-model-contract) et [Model list and agent routing](/fr/gateway/openai-http-api#model-list-and-agent-routing).
 
 ## Comportement de la session
 
@@ -71,7 +71,7 @@ La requête suit l'OpenResponses API avec une entrée basée sur des éléments.
 - `input` : chaîne ou tableau d'objets d'élément.
 - `instructions` : fusionné dans le prompt système.
 - `tools` : définitions d'outils client (fonctions outils).
-- `tool_choice` : filtrer ou exiger des outils client.
+- `tool_choice` : `"auto"`, `"none"`, `"required"` ou `{ "type": "function", "name": "..." }` pour filtrer ou exiger des outils client.
 - `stream` : active le streaming SSE.
 - `max_output_tokens` : limite de sortie au mieux (dépend du fournisseur).
 - `temperature` : température d'échantillonnage au mieux transmise au fournisseur. Ignoré par le backend Codex Responses basé sur ChatGPT, qui utilise un échantillonnage fixe côté serveur.
@@ -88,7 +88,7 @@ Accepté mais **actuellement ignoré** :
 
 Pris en charge :
 
-- `previous_response_id` : OpenClaw réutilise la session de réponse précédente lorsque la requête reste dans le même périmètre agent/utilisateur/session-demandée.
+- `previous_response_id` : OpenClaw réutilise la session de réponse précédente lorsque la requête reste dans la même portée d'agent/utilisateur/session-demandée.
 
 ## Éléments (entrée)
 
@@ -100,7 +100,7 @@ Rôles : `system`, `developer`, `user`, `assistant`.
 - L'élément `user` ou `function_call_output` le plus récent devient le « message actuel ».
 - Les messages précédents de l'utilisateur/de l'assistant sont inclus sous forme d'historique pour le contexte.
 
-### `function_call_output` (outils basés sur les tours)
+### `function_call_output` (outils par tour)
 
 Renvoyez les résultats des outils au modèle :
 
@@ -118,10 +118,12 @@ Acceptés pour la compatibilité du schéma mais ignorés lors de la constructio
 
 ## Outils (outils de fonction côté client)
 
-Fournissez des outils avec `tools: [{ type: "function", function: { name, description?, parameters? } }]`.
+Fournissez les outils avec `tools: [{ type: "function", name, description?, parameters? }]`.
 
 Si l'agent décide d'appeler un outil, la réponse renvoie un élément de sortie `function_call`.
-Vous envoyez ensuite une requête de suivi avec `function_call_output` pour continuer le tour.
+Vous envoyez ensuite une demande de suivi avec `function_call_output` pour continuer le tour.
+
+Pour `tool_choice: "required"` et les `tool_choice` épinglés par fonction, le point de termination réduit l'ensemble d'outils de fonction client exposés, demande au runtime d'appeler un outil client avant de répondre, et rejette le tour s'il n'inclut pas d'appel d'outil client structuré correspondant. Ce contrat s'applique à la liste `tools`OpenClaw HTTP fournie par l'appelant, et non à chaque outil d'agent OpenClaw interne. Les demandes non diffusées en flux continu renvoient `502` avec un `api_error` ; les demandes en flux continu émettent un événement `response.failed`. Cela correspond au contrat `/v1/chat/completions`.
 
 ## Images (`input_image`)
 
@@ -135,7 +137,7 @@ Prend en charge les sources base64 ou URL :
 ```
 
 Types MIME autorisés (actuel) : `image/jpeg`, `image/png`, `image/gif`, `image/webp`, `image/heic`, `image/heif`.
-Taille max. (actuelle) : 10 Mo.
+Taille maximale (actuelle) : 10 Mo.
 
 ## Fichiers (`input_file`)
 
@@ -156,41 +158,41 @@ Prend en charge les sources base64 ou URL :
 Types MIME autorisés (actuel) : `text/plain`, `text/markdown`, `text/html`, `text/csv`,
 `application/json`, `application/pdf`.
 
-Taille max. (actuelle) : 5 Mo.
+Taille maximale (actuelle) : 5 Mo.
 
 Comportement actuel :
 
-- Le contenu du fichier est décodé et ajouté au **prompt système**, et non au message de l'utilisateur,
-  il reste donc éphémère (non conservé dans l'historique de session).
-- Le texte du fichier décodé est encapsulé en tant que **contenu externe non approuvé** avant d'être ajouté,
-  les octets du fichier sont donc traités comme des données et non comme des instructions de confiance.
+- Le contenu du fichier est décodé et ajouté au **prompt système**, et non au message utilisateur,
+  il reste donc éphémère (non persisté dans l'historique de session).
+- Le texte du fichier décodé est encapsulé en tant que **contenu externe non fiable** avant d'être ajouté,
+  les octets du fichier sont donc traités comme des données, et non comme des instructions de confiance.
 - Le bloc injecté utilise des marqueurs de limite explicites comme
   `<<<EXTERNAL_UNTRUSTED_CONTENT id="...">>>` /
   `<<<END_EXTERNAL_UNTRUSTED_CONTENT id="...">>>` et inclut une
   ligne de métadonnées `Source: External`.
 - Ce chemin d'entrée de fichier omet intentionnellement la longue bannière `SECURITY NOTICE:` pour
-  préserver le budget du prompt ; les marqueurs de limite et les métadonnées restent en place.
+  préserver le budget de prompt ; les marqueurs de limite et les métadonnées restent toutefois en place.
 - Les PDF sont d'abord analysés pour le texte. Si peu de texte est trouvé, les premières pages sont
-  converties en images et transmises au modèle, et le bloc de fichier injecté utilise
+  pixellisées en images et transmises au modèle, et le bloc de fichier injecté utilise
   l'espace réservé `[PDF content rendered to images]`.
 
-L'analyse PDF est fournie par le plugin `document-extract` inclus, qui utilise
+L'analyse PDF est fournie par le plugin intégré `document-extract`, qui utilise
 `clawpdf` et son runtime PDFium WebAssembly empaqueté pour l'extraction de texte et
-le rendu de page.
+le rendu des pages.
 
 Valeurs par défaut de récupération d'URL :
 
 - `files.allowUrl` : `true`
 - `images.allowUrl` : `true`
-- `maxUrlParts` : `8` (total des parties `input_file` et `input_image` basées sur une URL par requête)
+- `maxUrlParts` : `8` (total des parties basées sur l'URL `input_file` + `input_image` par requête)
 - Les requêtes sont protégées (résolution DNS, blocage des IP privées, limites de redirection, délais d'attente).
-- Des listes d'autorisation de noms d'hôte (hostname allowlists) optionnelles sont prises en charge par type d'entrée (`files.urlAllowlist`, `images.urlAllowlist`).
+- Des listes d'autorisation de noms d'hôte facultatives sont prises en charge par type d'entrée (`files.urlAllowlist`, `images.urlAllowlist`).
   - Hôte exact : `"cdn.example.com"`
-  - Sous-domaines génériques : `"*.assets.example.com"` (ne correspond pas au domaine racine)
-  - Les listes d'autorisation vides ou omises signifient qu'il n'y a aucune restriction de nom d'hôte.
-- Pour désactiver entièrement les récupérations basées sur des URL, définissez `files.allowUrl: false` et/ou `images.allowUrl: false`.
+  - Sous-domaines génériques : `"*.assets.example.com"` (ne correspond pas à l'apex)
+  - Les listes d'autorisation vides ou omises signifient qu'il n'y a aucune restriction de liste d'autorisation de nom d'hôte.
+- Pour désactiver entièrement les récupérations basées sur l'URL, définissez `files.allowUrl: false` et/ou `images.allowUrl: false`.
 
-## Limites de fichiers et d'images (configuration)
+## Limites de fichiers + images (config)
 
 Les valeurs par défaut peuvent être ajustées sous `gateway.http.endpoints.responses` :
 
@@ -246,18 +248,18 @@ Valeurs par défaut en cas d'omission :
 - `images.maxBytes` : 10 Mo
 - `images.maxRedirects` : 3
 - `images.timeoutMs` : 10 s
-- Les sources `input_image` HEIC/HEIF sont acceptées lorsqu'un convertisseur système est disponible et sont normalisées en JPEG avant la livraison par le provider. Les convertisseurs pris en charge sont macOS `sips`, ImageMagick, GraphicsMagick ou ffmpeg.
+- Les sources d'`input_image` HEIC/HEIF sont acceptées lorsqu'un convertisseur système est disponible et sont normalisées en JPEG avant la livraison au fournisseur. Les convertisseurs pris en charge sont macOS `sips`, ImageMagick, GraphicsMagick ou ffmpeg.
 
 Note de sécurité :
 
-- Les listes d'autorisation d'URL sont appliquées avant la récupération et lors des sauts de redirection.
+- Les listes d'autorisation d'URL sont appliquées avant la récupération et lors des étapes de redirection.
 - L'autorisation d'un nom d'hôte ne contourne pas le blocage des IP privées/internes.
-- Pour les passerelles exposées à Internet, appliquez des contrôles de sortie réseau en plus des gardes au niveau de l'application.
+- Pour les passerelles exposées sur Internet, appliquez des contrôles de sortie réseau en plus des gardes au niveau de l'application.
   Voir [Sécurité](/fr/gateway/security).
 
 ## Streaming (SSE)
 
-Définissez `stream: true` pour recevoir les événements Server-Sent (SSE) :
+Définissez `stream: true` pour recevoir les Server-Sent Events (SSE) :
 
 - `Content-Type: text/event-stream`
 - Chaque ligne d'événement est `event: <type>` et `data: <json>`
@@ -278,14 +280,13 @@ Types d'événements actuellement émis :
 
 ## Utilisation
 
-`usage` est renseigné lorsque le provider sous-jacent signale les comptes de jetons.
-OpenClaw normalise les alias courants de type OpenAI avant que ces compteurs n'atteignent
-les surfaces de statut/session en aval, y compris `input_tokens` / `output_tokens`
+`usage` est renseigné lorsque le provider sous-jacent signale des comptes de jetons.
+OpenClaw normalise les alias courants de style OpenAI avant que ces compteurs n'atteignent les surfaces de statut/session en aval, y compris `input_tokens` / `output_tokens`
 et `prompt_tokens` / `completion_tokens`.
 
 ## Erreurs
 
-Les erreurs utilisent un objet JSON comme suit :
+Les erreurs utilisent un objet JSON tel que :
 
 ```json
 { "error": { "message": "...", "type": "invalid_request_error" } }
@@ -293,7 +294,7 @@ Les erreurs utilisent un objet JSON comme suit :
 
 Cas courants :
 
-- `401` auth manquante/invalide
+- `401` authentification manquante/invalide
 - `400` corps de requête invalide
 - `405` mauvaise méthode
 
@@ -328,5 +329,5 @@ curl -N http://127.0.0.1:18789/v1/responses \
 
 ## Connexes
 
-- [complétions de chat OpenAI](/fr/gateway/openai-http-api)
+- [Complétions de chat OpenAI](/fr/gateway/openai-http-api)
 - [OpenAI](/fr/providers/openai)

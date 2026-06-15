@@ -17,7 +17,7 @@ OpenClaw 的 Gateway 可以提供一個與 OpenResponses 相容的 `POST /v1/res
 
 ## 驗證、安全性和路由
 
-操作行為符合 [OpenAI Chat Completions](/zh-Hant/gateway/openai-http-api)：
+運作行為符合 [OpenAI 聊天補全](/zh-Hant/gateway/openai-http-api)：
 
 - 使用相符的 Gateway HTTP 驗證路徑：
   - shared-secret 驗證（`gateway.auth.mode="token"` 或 `"password"`）：`Authorization: Bearer <token-or-password>`
@@ -55,7 +55,7 @@ OpenClaw 的 Gateway 可以提供一個與 OpenResponses 相容的 `POST /v1/res
 - `POST /v1/embeddings`
 - `POST /v1/chat/completions`
 
-有關代理目標模型、`openclaw/default`、嵌入直通以及後端模型覆蓋如何協同運作的正式說明，請參閱 [OpenAI Chat Completions](/zh-Hant/gateway/openai-http-api#agent-first-model-contract) 和 [模型列表與代理路由](/zh-Hant/gateway/openai-http-api#model-list-and-agent-routing)。
+關於代理目標模型、`openclaw/default`、嵌入層直通 以及後端模型覆寫如何結合的標準解釋，請參閱 [OpenAI 聊天補全](/zh-Hant/gateway/openai-http-api#agent-first-model-contract) 和 [模型列表與代理路由](/zh-Hant/gateway/openai-http-api#model-list-and-agent-routing)。
 
 ## Session 行為
 
@@ -70,11 +70,11 @@ OpenClaw 的 Gateway 可以提供一個與 OpenResponses 相容的 `POST /v1/res
 - `input`：字串或項目物件陣列。
 - `instructions`：合併至系統提示中。
 - `tools`：用戶端工具定義（函式工具）。
-- `tool_choice`：篩選或要求用戶端工具。
+- `tool_choice`：`"auto"`、`"none"`、`"required"` 或 `{ "type": "function", "name": "..." }` 用於篩選或要求用戶端工具。
 - `stream`：啟用 SSE 串流。
 - `max_output_tokens`：盡力而為的輸出限制（取決於供應商）。
-- `temperature`：盡力而為的取樣溫度，會轉發給供應商。基於 ChatGPT 的 Codex Responses 後端會忽略此設定，因為它使用固定的伺服器端取樣。
-- `top_p`：盡力而為的核心採樣，會轉發給供應商。關於 Codex Responses 的注意事項與 `temperature` 相同。
+- `temperature`：盡力而為的取樣溫度，會轉發給提供者。對於基於 ChatGPT 的 Codex Responses 後端會忽略此參數，該後端使用固定的服務器端取樣。
+- `top_p`：盡力而為的核取樣，會轉發給提供者。與 `temperature` 相同，對 Codex Responses 也有相同的注意事項。
 - `user`：穩定的會話路由。
 
 接受但 **目前忽略**：
@@ -87,7 +87,7 @@ OpenClaw 的 Gateway 可以提供一個與 OpenResponses 相容的 `POST /v1/res
 
 支援：
 
-- `previous_response_id`：當請求保持在相同的代理/使用者/要求會話範圍內時，OpenClaw 會重複使用先前的回應會話。
+- `previous_response_id`：當請求保持在同一個代理/使用者/請求的會話範圍內時，OpenClaw 會重用先前的回應會話。
 
 ## 項目（輸入）
 
@@ -95,11 +95,11 @@ OpenClaw 的 Gateway 可以提供一個與 OpenResponses 相容的 `POST /v1/res
 
 角色：`system`、`developer`、`user`、`assistant`。
 
-- `system` 和 `developer` 會附加至系統提示。
-- 最近的 `user` 或 `function_call_output` 項目會成為「目前訊息」。
+- `system` 和 `developer` 會附加到系統提示詞。
+- 最近的 `user` 或 `function_call_output` 項目會變成「目前訊息」。
 - 先前的使用者/助理訊息會作為上下文歷史記錄包含在內。
 
-### `function_call_output`（回合制工具）
+### `function_call_output`（基於回合的工具）
 
 將工具結果傳回給模型：
 
@@ -117,10 +117,12 @@ OpenClaw 的 Gateway 可以提供一個與 OpenResponses 相容的 `POST /v1/res
 
 ## 工具 (用戶端函式工具)
 
-使用 `tools: [{ type: "function", function: { name, description?, parameters? } }]` 提供工具。
+透過 `tools: [{ type: "function", name, description?, parameters? }]` 提供工具。
 
-如果代理程式決定呼叫工具，回應會傳回一個 `function_call` 輸出項目。
-然後您會傳送一個包含 `function_call_output` 的後續請求以繼續對話。
+如果代理決定呼叫工具，回應會傳回一個 `function_call` 輸出項目。
+然後，您傳送一個包含 `function_call_output` 的後續請求以繼續此回合。
+
+對於 `tool_choice: "required"` 和函數釘選的 `tool_choice`，端點會縮小公開的用戶端函數工具集，指示執行階段在回應前呼叫用戶端工具，並且如果回合未包含相符的結構化用戶端工具呼叫則予以拒絕。此合約適用於呼叫者提供的 HTTP `tools` 列表，而非每個內部 OpenClaw 代理工具。非串流請求會傳回帶有 `api_error` 的 `502`；串流請求則會發出 `response.failed` 事件。這符合 `/v1/chat/completions` 合約。
 
 ## 圖片 (`input_image`)
 
@@ -133,8 +135,8 @@ OpenClaw 的 Gateway 可以提供一個與 OpenResponses 相容的 `POST /v1/res
 }
 ```
 
-允許的 MIME 類型 (目前)： `image/jpeg`, `image/png`, `image/gif`, `image/webp`, `image/heic`, `image/heif`.
-最大大小 (目前)： 10MB。
+允許的 MIME 類型 (目前)：`image/jpeg`、`image/png`、`image/gif`、`image/webp`、`image/heic`、`image/heif`。
+最大大小 (目前)：10MB。
 
 ## 檔案 (`input_file`)
 
@@ -152,44 +154,44 @@ OpenClaw 的 Gateway 可以提供一個與 OpenResponses 相容的 `POST /v1/res
 }
 ```
 
-允許的 MIME 類型 (目前)： `text/plain`, `text/markdown`, `text/html`, `text/csv`,
-`application/json`, `application/pdf`。
+允許的 MIME 類型 (目前)：`text/plain`、`text/markdown`、`text/html`、`text/csv`、
+`application/json`、`application/pdf`。
 
-最大大小 (目前)： 5MB。
+最大大小 (目前)：5MB。
 
 目前行為：
 
-- 檔案內容會被解碼並加入 **系統提示** 中，而非使用者訊息，
-  因此它保持暫時性 (不會保存在對話歷史中)。
+- 檔案內容會被解碼並加入 **系統提示詞** 中，而非使用者訊息，
+  因此它保持暫時性 (不會保存在會話歷史中)。
 - 解碼後的檔案文字在加入前會被包裝為 **不受信任的外部內容**，
-  因此檔案位元組會被視為資料，而非受信任的指令。
-- 注入的區塊會使用明確的邊界標記，例如
+  因此檔案位元組被視為資料，而非受信任的指令。
+- 注入的區塊使用明確的邊界標記，例如
   `<<<EXTERNAL_UNTRUSTED_CONTENT id="...">>>` /
-  `<<<END_EXTERNAL_UNTRUSTED_CONTENT id="...">>>` 並包含一個
+  `<<<END_EXTERNAL_UNTRUSTED_CONTENT id="...">>>`，並包含一個
   `Source: External` 中繼資料行。
-- 此檔案輸入路徑故意省略了冗長的 `SECURITY NOTICE:` 橫幅以
-  保留提示預算；邊界標記和中繼資料仍然保留。
-- PDF 會先解析文字。如果找到的文字很少，前幾頁會
-  被柵格化為圖片並傳給模型，且注入的檔案區塊會使用
+- 此檔案輸入路徑故意省略長 `SECURITY NOTICE:` 橫幅以
+  保留提示詞預算；邊界標記和中繼資料仍然保留。
+- PDF 會先剖析文字。如果找到的文字很少，前幾頁會
+  轉換成圖像並傳遞給模型，且插入的檔案區塊會使用
   預留位置 `[PDF content rendered to images]`。
 
 PDF 解析由內建的 `document-extract` 外掛程式提供，該外掛程式使用
-`clawpdf` 及其隨附的 PDFium WebAssembly 運行時來進行文字擷取和
-頁面呈現。
+`clawpdf` 及其封裝的 PDFium WebAssembly 執行時進行文字提取和
+頁面渲染。
 
-URL 獲取預設值：
+URL 擷取預設值：
 
-- `files.allowUrl`: `true`
-- `images.allowUrl`: `true`
-- `maxUrlParts`: `8` (每個請求總共的 URL-based `input_file` + `input_image` parts)
-- 請求受到保護 (DNS 解析、私有 IP 封鎖、重新導向上限、逾時)。
-- 支援根據輸入類型設定選用的主機名稱允許清單 (`files.urlAllowlist`, `images.urlAllowlist`)。
-  - 完全相符的主機: `"cdn.example.com"`
-  - 萬用字元子網域: `"*.assets.example.com"` (不匹配 apex domain)
-  - 空白或省略的允許清單表示不限制主機名稱允許清單。
-- 若要完全停用基於 URL 的獲取，請設定 `files.allowUrl: false` 和/或 `images.allowUrl: false`。
+- `files.allowUrl`：`true`
+- `images.allowUrl`：`true`
+- `maxUrlParts`：`8`（每個請求總共基於 URL 的 `input_file` + `input_image` 部分數量）
+- 請求受保護（DNS 解析、私有 IP 封鎖、重新導向上限、逾時）。
+- 支援依輸入類型設定可選的主機名稱允許清單（`files.urlAllowlist`、`images.urlAllowlist`）。
+  - 完全相符的主機：`"cdn.example.com"`
+  - 萬用字元子網域：`"*.assets.example.com"`（不符合 apex 網域）
+  - 空白或省略的允許清單代表沒有主機名允許清單限制。
+- 若要完全停用基於 URL 的擷取，請設定 `files.allowUrl: false` 和/或 `images.allowUrl: false`。
 
-## 檔案 + 圖片限制 (配置)
+## 檔案 + 圖片限制 (config)
 
 可以在 `gateway.http.endpoints.responses` 下調整預設值：
 
@@ -233,33 +235,33 @@ URL 獲取預設值：
 
 省略時的預設值：
 
-- `maxBodyBytes`: 20MB
-- `maxUrlParts`: 8
-- `files.maxBytes`: 5MB
-- `files.maxChars`: 200k
-- `files.maxRedirects`: 3
-- `files.timeoutMs`: 10s
-- `files.pdf.maxPages`: 4
-- `files.pdf.maxPixels`: 4,000,000
-- `files.pdf.minTextChars`: 200
-- `images.maxBytes`: 10MB
-- `images.maxRedirects`: 3
-- `images.timeoutMs`: 10s
-- 當有可用的系統轉換器時，會接受 HEIC/HEIF `input_image` 來源，並在提供者傳遞之前將其正規化為 JPEG。支援的轉換器包括 macOS `sips`、ImageMagick、GraphicsMagick 或 ffmpeg。
+- `maxBodyBytes`：20MB
+- `maxUrlParts`：8
+- `files.maxBytes`：5MB
+- `files.maxChars`：200k
+- `files.maxRedirects`：3
+- `files.timeoutMs`：10s
+- `files.pdf.maxPages`：4
+- `files.pdf.maxPixels`：4,000,000
+- `files.pdf.minTextChars`：200
+- `images.maxBytes`：10MB
+- `images.maxRedirects`：3
+- `images.timeoutMs`：10s
+- 當系統轉換器可用時，會接受 HEIC/HEIF `input_image` 來源，並在交付給供應商之前將其正規化為 JPEG。支援的轉換器包括 macOS `sips`、ImageMagick、GraphicsMagick 或 ffmpeg。
 
-安全提示：
+安全性注意：
 
-- URL 允許清單會在獲取之前以及重新導向跳躍時強制執行。
-- 將主機名稱加入允許清單並不會繞過私有/內部 IP 的封鎖。
-- 對於面向網際網路的閘道，除了應用層級的防護之外，還應套用網路出口控制。
-  請參閱 [安全性](/zh-Hant/gateway/security)。
+- URL 允許清單會在擷取之前以及重新導向跳躍時強制執行。
+- 允許清單中的主機名稱並不會繞過私有/內部 IP 封鎖。
+- 對於暴露於網際網路的閘道，除了應用程式層級的防護外，還應套用網路出口控制。
+  請參閱[安全性](/zh-Hant/gateway/security)。
 
 ## 串流 (SSE)
 
-設定 `stream: true` 以接收伺服器發送事件 (SSE)：
+設定 `stream: true` 以接收伺服器傳送事件 (SSE)：
 
 - `Content-Type: text/event-stream`
-- 每個事件行為 `event: <type>` 和 `data: <json>`
+- 每個事件行都是 `event: <type>` 和 `data: <json>`
 - 串流以 `data: [DONE]` 結束
 
 目前發出的事件類型：
@@ -273,13 +275,13 @@ URL 獲取預設值：
 - `response.content_part.done`
 - `response.output_item.done`
 - `response.completed`
-- `response.failed` (發生錯誤時)
+- `response.failed` (錯誤時)
 
-## 用法
+## 使用量
 
-當基礎提供者回報 token 計數時，會填入 `usage`。
-在這些計數器到達下游狀態/工作階段層面之前，OpenClaw 會將常見的 OpenAI 風格別名正規化，包括 `input_tokens` / `output_tokens`
-以及 `prompt_tokens` / `completion_tokens`。
+當底層供應商回報 token 計數時，會填入 `usage`。
+OpenClaw 會在這些計數器到達下游狀態/會話表面之前，正規化常見的 OpenAI 風格別名，包括 `input_tokens` / `output_tokens`
+和 `prompt_tokens` / `completion_tokens`。
 
 ## 錯誤
 
@@ -292,7 +294,7 @@ URL 獲取預設值：
 常見情況：
 
 - `401` 缺少/無效的驗證
-- `400` 無效的請求本體
+- `400` 無效的請求主體
 - `405` 錯誤的方法
 
 ## 範例
@@ -326,5 +328,5 @@ curl -N http://127.0.0.1:18789/v1/responses \
 
 ## 相關
 
-- [OpenAI chat completions](/zh-Hant/gateway/openai-http-api)
+- [OpenAI 聊天完成](/zh-Hant/gateway/openai-http-api)
 - [OpenAI](/zh-Hant/providers/openai)

@@ -9,7 +9,7 @@ read_when:
 
 OpenClaw exporte les diagnostics via le plugin officiel OpenClaw`diagnostics-otel`
 en utilisant **OTLP/HTTP (protobuf)**. Tout collecteur ou backend acceptant OTLP/HTTP
-fonctionne sans modification de code. Pour les journaux de fichiers locaux et comment les lire, voir
+fonctionne sans modification de code. Pour les journaux de fichiers locaux et leur lecture, voir
 [Logging](/fr/logging).
 
 ## Fonctionnement global
@@ -160,8 +160,8 @@ Lorsqu'une sous-clé est activée, les spans de modèle et d'outil obtiennent de
 - `gen_ai.client.operation.duration` (histogram, secondes, métrique de conventions sémantiques GenAI, attrs : `gen_ai.provider.name`, `gen_ai.operation.name`, `gen_ai.request.model`, optionnel `error.type`)
 - `openclaw.model_call.duration_ms` (histogram, attrs : `openclaw.provider`, `openclaw.model`, `openclaw.api`, `openclaw.transport`, plus `openclaw.errorCategory` et `openclaw.failureKind` pour les erreurs classées)
 - `openclaw.model_call.request_bytes` (histogram, taille en octets UTF-8 de la charge utile finale de la requête du modèle ; pas de contenu de charge utile brute)
-- `openclaw.model_call.response_bytes` (histogram, taille en octets UTF-8 des événements de réponse du modèle diffusés en flux ; pas de contenu de réponse brute)
-- `openclaw.model_call.time_to_first_byte_ms` (histogram, temps écoulé avant le premier événement de réponse diffusé en flux)
+- `openclaw.model_call.response_bytes` (histogramme, taille en octets UTF-8 des événements de réponse de modèle diffusés excluant les instantanés `partial` accumulés sur les événements delta ; pas de contenu de réponse brut)
+- `openclaw.model_call.time_to_first_byte_ms` (histogramme, temps écoulé avant le premier événement de réponse diffusé)
 - `openclaw.model.failover` (compteur, attrs : `openclaw.provider`, `openclaw.model`, `openclaw.failover.to_provider`, `openclaw.failover.to_model`, `openclaw.failover.reason`, `openclaw.failover.suspended`, `openclaw.lane`)
 - `openclaw.skill.used` (compteur, attrs : `openclaw.skill.name`, `openclaw.skill.source`, `openclaw.skill.activation`, optionnel `openclaw.agent`, optionnel `openclaw.toolName`)
 
@@ -169,66 +169,51 @@ Lorsqu'une sous-clé est activée, les spans de modèle et d'outil obtiennent de
 
 - `openclaw.webhook.received` (compteur, attrs : `openclaw.channel`, `openclaw.webhook`)
 - `openclaw.webhook.error` (compteur, attrs : `openclaw.channel`, `openclaw.webhook`)
-- `openclaw.webhook.duration_ms` (histogram, attrs : `openclaw.channel`, `openclaw.webhook`)
+- `openclaw.webhook.duration_ms` (histogramme, attrs : `openclaw.channel`, `openclaw.webhook`)
 - `openclaw.message.queued` (compteur, attrs : `openclaw.channel`, `openclaw.source`)
 - `openclaw.message.received` (compteur, attrs : `openclaw.channel`, `openclaw.source`)
 - `openclaw.message.dispatch.started` (compteur, attrs : `openclaw.channel`, `openclaw.source`)
 - `openclaw.message.dispatch.completed` (compteur, attrs : `openclaw.channel`, `openclaw.outcome`, `openclaw.reason`, `openclaw.source`)
-- `openclaw.message.dispatch.duration_ms` (histogramme, attrs : `openclaw.channel`, `openclaw.outcome`, `openclaw.reason`, `openclaw.source`)
-- `openclaw.message.processed` (compteur, attrs : `openclaw.channel`, `openclaw.outcome`)
-- `openclaw.message.duration_ms` (histogramme, attrs : `openclaw.channel`, `openclaw.outcome`)
-- `openclaw.message.delivery.started` (compteur, attrs : `openclaw.channel`, `openclaw.delivery.kind`)
-- `openclaw.message.delivery.duration_ms` (histogramme, attrs : `openclaw.channel`, `openclaw.delivery.kind`, `openclaw.outcome`, `openclaw.errorCategory`)
+- `openclaw.message.dispatch.duration_ms` (histogram, attrs : `openclaw.channel`, `openclaw.outcome`, `openclaw.reason`, `openclaw.source`)
+- `openclaw.message.processed` (counter, attrs : `openclaw.channel`, `openclaw.outcome`)
+- `openclaw.message.duration_ms` (histogram, attrs : `openclaw.channel`, `openclaw.outcome`)
+- `openclaw.message.delivery.started` (counter, attrs : `openclaw.channel`, `openclaw.delivery.kind`)
+- `openclaw.message.delivery.duration_ms` (histogram, attrs : `openclaw.channel`, `openclaw.delivery.kind`, `openclaw.outcome`, `openclaw.errorCategory`)
 
 ### Talk
 
-- `openclaw.talk.event` (compteur, attrs : `openclaw.talk.event_type`, `openclaw.talk.mode`, `openclaw.talk.transport`, `openclaw.talk.brain`, `openclaw.talk.provider`)
-- `openclaw.talk.event.duration_ms` (histogramme, attrs : identiques à `openclaw.talk.event` ; émis lorsqu'un événement Talk signale une durée)
-- `openclaw.talk.audio.bytes` (histogramme, attrs : identiques à `openclaw.talk.event` ; émis pour les événements de trame audio Talk qui signalent une longueur en octets)
+- `openclaw.talk.event` (counter, attrs : `openclaw.talk.event_type`, `openclaw.talk.mode`, `openclaw.talk.transport`, `openclaw.talk.brain`, `openclaw.talk.provider`)
+- `openclaw.talk.event.duration_ms` (histogram, attrs : identiques à `openclaw.talk.event` ; émis lorsqu'un événement Talk signale une durée)
+- `openclaw.talk.audio.bytes` (histogram, attrs : identiques à `openclaw.talk.event` ; émis pour les événements de trame audio Talk qui signalent une longueur en octets)
 
 ### Files d'attente et sessions
 
-- `openclaw.queue.lane.enqueue` (compteur, attrs : `openclaw.lane`)
-- `openclaw.queue.lane.dequeue` (compteur, attrs : `openclaw.lane`)
-- `openclaw.queue.depth` (histogramme, attrs : `openclaw.lane` ou `openclaw.channel=heartbeat`)
+- `openclaw.queue.lane.enqueue` (counter, attrs : `openclaw.lane`)
+- `openclaw.queue.lane.dequeue` (counter, attrs : `openclaw.lane`)
+- `openclaw.queue.depth` (histogram, attrs : `openclaw.lane` ou `openclaw.channel=heartbeat`)
 - `openclaw.queue.wait_ms` (histogram, attrs : `openclaw.lane`)
 - `openclaw.session.state` (counter, attrs : `openclaw.state`, `openclaw.reason`)
-- `openclaw.session.stuck` (counter, attrs : `openclaw.state` ; émis pour la comptabilité des sessions périmées récupérables)
-- `openclaw.session.stuck_age_ms` (histogram, attrs : `openclaw.state` ; émis pour la comptabilité des sessions périmées récupérables)
-- `openclaw.session.turn.created` (counter, attrs : `openclaw.agent`, `openclaw.channel`, `openclaw.trigger`)
-- `openclaw.session.recovery.requested` (counter, attrs : `openclaw.state`, `openclaw.action`, `openclaw.active_work_kind`, `openclaw.reason`)
-- `openclaw.session.recovery.completed` (counter, attrs : `openclaw.state`, `openclaw.action`, `openclaw.status`, `openclaw.active_work_kind`, `openclaw.reason`)
-- `openclaw.session.recovery.age_ms` (histogram, attrs : identiques à ceux du compteur de récupération correspondant)
-- `openclaw.run.attempt` (counter, attrs : `openclaw.attempt`)
+- `openclaw.session.stuck` (counter, attrs : `openclaw.state` ; émis pour la gestion des sessions périmées récupérables)
+- `openclaw.session.stuck_age_ms` (histogram, attrs : `openclaw.state` ; émis pour la gestion des sessions périmées récupérables)
+- `openclaw.session.turn.created` (compteur, attrs : `openclaw.agent`, `openclaw.channel`, `openclaw.trigger`)
+- `openclaw.session.recovery.requested` (compteur, attrs : `openclaw.state`, `openclaw.action`, `openclaw.active_work_kind`, `openclaw.reason`)
+- `openclaw.session.recovery.completed` (compteur, attrs : `openclaw.state`, `openclaw.action`, `openclaw.status`, `openclaw.active_work_kind`, `openclaw.reason`)
+- `openclaw.session.recovery.age_ms` (histogramme, attrs : identiques à ceux du compteur de récupération correspondant)
+- `openclaw.run.attempt` (compteur, attrs : `openclaw.attempt`)
 
 ### Télémétrie de l'activité des sessions
 
-`diagnostics.stuckSessionWarnMs` est le seuil d'âge sans progression pour les diagnostics d'activité de session. Une session `processing` n'atteint pas ce seuil tant que OpenClaw observe des progrès au niveau des réponses, des outils, du statut, des blocs ou de l'exécution ACP. Les keepalives de saisie ne sont pas comptés comme des progrès, donc un model ou un harnais silencieux peut toujours être détecté.
+`diagnostics.stuckSessionWarnMs` est le seuil d'ancienneté sans progression pour les diagnostics de vivacité de session. Une session `processing` ne vieillit pas vers ce seuil tant que OpenClaw observe une progression de réponse, d'outil, de statut, de bloc ou du runtime ACP. Les keepalives de frappe ne sont pas comptés comme une progression, un modèle ou un harnais silencieux peut donc toujours être détecté.
 
 OpenClaw classe les sessions en fonction du travail qu'il peut encore observer :
 
-- `session.long_running` : le travail embarqué actif, les appels de model ou les appels d'outil progressent encore.
-- `session.stalled` : un travail actif existe, mais l'exécution active n'a pas signalé
-  de progrès récents. Les exécutions intégrées bloquées restent d'abord en observation seule, puis
-  abandonnent et drainent après `diagnostics.stuckSessionAbortMs` sans progrès pour que les tours
-  mis en file d'attente derrière la voie puissent reprendre. Si non défini, le seuil d'abandon par défaut est
-  la fenêtre étendue plus sûre d'au moins 5 minutes et 3x
-  `diagnostics.stuckSessionWarnMs`.
-- `session.stuck` : gestion de session obsolète sans travail actif, ou une session
-  mise en file d'attente inactive avec une activité de model/tool obsolète sans propriétaire. Cela libère
-  la voie de session affectée immédiatement après le passage des portes de récupération.
+- `session.long_running` : le travail intégré actif, les appels au modèle ou les appels à l'outil progressent toujours.
+- `session.stalled` : un travail actif existe, mais l'exécution active n'a pas signalé de progression récente. Les exécutions intégrées bloquées restent d'abord en observation seule, puis sont interrompues-vidées après `diagnostics.stuckSessionAbortMs` sans progression afin que les tours en file d'attente derrière la voie puissent reprendre. S'il n'est pas défini, le seuil d'interruption correspond par défaut à la fenêtre étendue plus sûre d'au moins 5 minutes et 3x `diagnostics.stuckSessionWarnMs`.
+- `session.stuck` : gestion de session obsolète sans travail actif, ou une session en file d'attente inactive avec une activité de modèle/outil sans propriétaire obsolète. Cela libère la voie de session affectée immédiatement après le passage des portes de récupération.
 
-La récupération émet des événements structurés `session.recovery.requested` et
-`session.recovery.completed`. L'état de diagnostic de la session est marqué inactif
-seulement après un résultat de récupération modifiant (`aborted` ou `released`) et seulement si la
-même génération de traitement est toujours actuelle.
+La récupération émet des événements structurés `session.recovery.requested` et `session.recovery.completed`. L'état de diagnostic de la session est marqué inactif uniquement après un résultat de récupération mutateur (`aborted` ou `released`) et uniquement si la même génération de traitement est toujours actuelle.
 
-Seul `session.stuck` émet le compteur `openclaw.session.stuck`, l'histogramme
-`openclaw.session.stuck_age_ms` et la span `openclaw.session.stuck`.
-Les diagnostics `session.stuck` répétés diminuent tandis que la session reste
-inchangée, donc les tableaux de bord doivent alerter sur les augmentations soutenues plutôt qu'à chaque
-tic de rythme cardiaque. Pour le bouton de configuration et les valeurs par défaut, voir
-[Configuration reference](/fr/gateway/configuration-reference#diagnostics).
+Seul `session.stuck` émet le compteur `openclaw.session.stuck`, l'histogramme `openclaw.session.stuck_age_ms` et la portée `openclaw.session.stuck`. Les diagnostics `session.stuck` répétés se désengagent tant que la session reste inchangée, les tableaux de bord doivent donc alerter sur les augmentations soutenues plutôt qu'à chaque battement de cœur. Pour le paramètre de configuration et les valeurs par défaut, consultez [Référence de configuration](/fr/gateway/configuration-reference#diagnostics).
 
 Les avertissements de vivacité émettent également :
 
@@ -240,21 +225,21 @@ Les avertissements de vivacité émettent également :
 
 ### Cycle de vie du harnais
 
-- `openclaw.harness.duration_ms` (histogramme, attrs : `openclaw.harness.id`, `openclaw.harness.plugin`, `openclaw.outcome`, `openclaw.harness.phase` en cas d'erreur)
+- `openclaw.harness.duration_ms` (histogramme, attrs : `openclaw.harness.id`, `openclaw.harness.plugin`, `openclaw.outcome`, `openclaw.harness.phase` en cas d'erreurs)
 
 ### Exécution d'outil
 
-- `openclaw.tool.execution.duration_ms` (histogram, attrs : `gen_ai.tool.name`, `openclaw.toolName`, `openclaw.tool.source`, `openclaw.tool.owner`, `openclaw.tool.params.kind`, plus `openclaw.errorCategory` on errors)
-- `openclaw.tool.execution.blocked` (counter, attrs : `gen_ai.tool.name`, `openclaw.toolName`, `openclaw.tool.source`, `openclaw.tool.owner`, `openclaw.tool.params.kind`, `openclaw.deniedReason`)
+- `openclaw.tool.execution.duration_ms` (histogramme, attrs : `gen_ai.tool.name`, `openclaw.toolName`, `openclaw.tool.source`, `openclaw.tool.owner`, `openclaw.tool.params.kind`, plus `openclaw.errorCategory` en cas d'erreurs)
+- `openclaw.tool.execution.blocked` (compteur, attrs : `gen_ai.tool.name`, `openclaw.toolName`, `openclaw.tool.source`, `openclaw.tool.owner`, `openclaw.tool.params.kind`, `openclaw.deniedReason`)
 
 ### Exec
 
-- `openclaw.exec.duration_ms` (histogram, attrs : `openclaw.exec.target`, `openclaw.exec.mode`, `openclaw.outcome`, `openclaw.failureKind`)
+- `openclaw.exec.duration_ms` (histogramme, attrs : `openclaw.exec.target`, `openclaw.exec.mode`, `openclaw.outcome`, `openclaw.failureKind`)
 
 ### Diagnostics internals (memory and tool loop)
 
-- `openclaw.payload.large` (counter, attrs : `openclaw.payload.surface`, `openclaw.payload.action`, `openclaw.channel`, `openclaw.plugin`, `openclaw.reason`)
-- `openclaw.payload.large_bytes` (histogram, attrs : same as `openclaw.payload.large`)
+- `openclaw.payload.large` (compteur, attrs : `openclaw.payload.surface`, `openclaw.payload.action`, `openclaw.channel`, `openclaw.plugin`, `openclaw.reason`)
+- `openclaw.payload.large_bytes` (histogramme, attrs : identiques à `openclaw.payload.large`)
 - `openclaw.memory.heap_used_bytes` (histogram, attrs : `openclaw.memory.kind`)
 - `openclaw.memory.rss_bytes` (histogram)
 - `openclaw.memory.pressure` (counter, attrs : `openclaw.memory.level`)
@@ -266,21 +251,21 @@ Les avertissements de vivacité émettent également :
 - `openclaw.model.usage`
   - `openclaw.channel`, `openclaw.provider`, `openclaw.model`
   - `openclaw.tokens.*` (input/output/cache_read/cache_write/total)
-  - `gen_ai.system` by default, or `gen_ai.provider.name` when the latest GenAI semantic conventions are opted in
+  - `gen_ai.system` par défaut, ou `gen_ai.provider.name` lorsque les dernières conventions sémantiques GenAI sont activées
   - `gen_ai.request.model`, `gen_ai.operation.name`, `gen_ai.usage.*`
 - `openclaw.run`
   - `openclaw.outcome`, `openclaw.channel`, `openclaw.provider`, `openclaw.model`, `openclaw.errorCategory`
 - `openclaw.model.call`
   - `gen_ai.system` par défaut, ou `gen_ai.provider.name` lorsque les dernières conventions sémantiques GenAI sont activées
   - `gen_ai.request.model`, `gen_ai.operation.name`, `openclaw.provider`, `openclaw.model`, `openclaw.api`, `openclaw.transport`
-  - `openclaw.errorCategory` et `openclaw.failureKind` facultatif en cas d'erreur
+  - `openclaw.errorCategory` et `openclaw.failureKind` facultatif en cas d'erreurs
   - `openclaw.model_call.request_bytes`, `openclaw.model_call.response_bytes`, `openclaw.model_call.time_to_first_byte_ms`
-  - `openclaw.provider.request_id_hash` (hachage basé sur SHA borné de l'id de requête du fournisseur en amont ; les ids bruts ne sont pas exportés)
-  - Avec `OTEL_SEMCONV_STABILITY_OPT_IN=gen_ai_latest_experimental`, les spans d'appel de modèle utilisent le dernier nom de span d'inférence GenAI `{gen_ai.operation.name} {gen_ai.request.model}` et le type de span `CLIENT` au lieu de `openclaw.model.call`.
+  - `openclaw.provider.request_id_hash` (haché borné basé sur SHA de l'id de requête du fournisseur amont ; les ids bruts ne sont pas exportés)
+  - Avec `OTEL_SEMCONV_STABILITY_OPT_IN=gen_ai_latest_experimental`, les spans d'appel de modèle utilisent le dernier nom de span d'inférence GenAI `{gen_ai.operation.name} {gen_ai.request.model}` et le kind de span `CLIENT` au lieu de `openclaw.model.call`.
 - `openclaw.harness.run`
   - `openclaw.harness.id`, `openclaw.harness.plugin`, `openclaw.outcome`, `openclaw.provider`, `openclaw.model`, `openclaw.channel`
-  - Lors de la fin : `openclaw.harness.result_classification`, `openclaw.harness.yield_detected`, `openclaw.harness.items.started`, `openclaw.harness.items.completed`, `openclaw.harness.items.active`
-  - En cas d'erreur : `openclaw.harness.phase`, `openclaw.errorCategory`, `openclaw.harness.cleanup_failed` facultatif
+  - À la fin : `openclaw.harness.result_classification`, `openclaw.harness.yield_detected`, `openclaw.harness.items.started`, `openclaw.harness.items.completed`, `openclaw.harness.items.active`
+  - En cas d'erreur : `openclaw.harness.phase`, `openclaw.errorCategory`, facultatif `openclaw.harness.cleanup_failed`
 - `openclaw.tool.execution`
   - `gen_ai.tool.name`, `openclaw.toolName`, `openclaw.errorCategory`, `openclaw.tool.params.*`
 - `openclaw.exec`
@@ -296,13 +281,13 @@ Les avertissements de vivacité émettent également :
 - `openclaw.session.stuck`
   - `openclaw.state`, `openclaw.ageMs`, `openclaw.queueDepth`
 - `openclaw.context.assembled`
-  - `openclaw.prompt.size`, `openclaw.history.size`, `openclaw.context.tokens`, `openclaw.errorCategory` (pas de prompt, d'historique, de réponse ou de contenu de session-key)
+  - `openclaw.prompt.size`, `openclaw.history.size`, `openclaw.context.tokens`, `openclaw.errorCategory` (aucun contenu de prompt, d'historique, de réponse ou de clé de session)
 - `openclaw.tool.loop`
-  - `openclaw.toolName`, `openclaw.outcome`, `openclaw.iterations`, `openclaw.errorCategory` (pas de messages de boucle, de paramètres ou de sortie d'outil)
+  - `openclaw.toolName`, `openclaw.outcome`, `openclaw.iterations`, `openclaw.errorCategory` (pas de messages de boucle, de paramètres ou de sortie de tool)
 - `openclaw.memory.pressure`
   - `openclaw.memory.level`, `openclaw.memory.heap_used_bytes`, `openclaw.memory.rss_bytes`
 
-Lorsque la capture de contenu est explicitement activée, les spans de modèle et d'outil peuvent également inclure des attributs `openclaw.content.*` bornés et rédigés pour les classes de contenu spécifiques que vous avez choisies.
+Lorsque la capture de contenu est explicitement activée, les spans de model et de tool peuvent également inclure des attributs `openclaw.content.*` délimités et masqués pour les classes de contenu spécifiques que vous avez choisies.
 
 ## Catalogue des événements de diagnostic
 
@@ -310,7 +295,7 @@ Les événements ci-dessous prennent en charge les métriques et les spans ci-de
 
 **Utilisation du modèle**
 
-- `model.usage` - jetons, coût, durée, contexte, fournisseur/modèle/canal, ids de session. `usage` est la comptabilité fournisseur/tour pour le coût et la télémétrie ; `context.used` est l'instantané actuel du prompt/contexte et peut être inférieur au `usage.total` du fournisseur lorsque des entrées mises en cache ou des appels de boucle d'outils sont impliqués.
+- `model.usage` - tokens, coût, durée, contexte, provider/model/channel, ids de session. `usage` est la comptabilité provider/turn pour le coût et la télémétrie ; `context.used` est l'instantané actuel du prompt/contexte et peut être inférieur au `usage.total` du provider lorsque des entrées mises en cache ou des appels tool-loop sont impliqués.
 
 **Flux de messages**
 
@@ -323,22 +308,16 @@ Les événements ci-dessous prennent en charge les métriques et les spans ci-de
 - `queue.lane.enqueue` / `queue.lane.dequeue`
 - `session.state` / `session.long_running` / `session.stalled` / `session.stuck`
 - `run.attempt` / `run.progress`
-- `diagnostic.heartbeat` (compteurs agrégés : webhooks/file d'attente/session)
+- `diagnostic.heartbeat` (compteurs agrégés : webhooks/queue/session)
 
 **Cycle de vie du harnais**
 
-- `harness.run.started` / `harness.run.completed` / `harness.run.error` -
-  cycle de vie par exécution pour le harnais de l'agent. Inclut `harnessId`, optionnel
-  `pluginId`, provider/model/channel, et l'id d'exécution. La complétion ajoute
-  `durationMs`, `outcome`, optionnel `resultClassification`, `yieldDetected`,
-  et les comptes `itemLifecycle`. Les erreurs ajoutent `phase`
-  (`prepare`/`start`/`send`/`resolve`/`cleanup`), `errorCategory`, et
-  optionnel `cleanupFailed`.
+- `harness.run.started` / `harness.run.completed` / `harness.run.error` - cycle de vie par exécution pour le harnais de l'agent. Inclut `harnessId`, `pluginId` en option, provider/model/channel, et l'id d'exécution. L'achèvement ajoute `durationMs`, `outcome`, `resultClassification` en option, `yieldDetected`, et les comptes `itemLifecycle`. Les erreurs ajoutent `phase` (`prepare`/`start`/`send`/`resolve`/`cleanup`), `errorCategory`, et `cleanupFailed` en option.
 
 **Exec**
 
-- `exec.process.completed` - résultat final, durée, cible, mode, code de
-  sortie, et type d'échec. Le texte de la commande et les répertoires de travail ne sont
+- `exec.process.completed` - résultat final, durée, cible, mode, code
+  de sortie et type d'échec. Le texte de la commande et les répertoires de travail ne sont
   pas inclus.
 
 ## Sans exportateur
@@ -353,7 +332,7 @@ exécuter `diagnostics-otel` :
 ```
 
 Pour une sortie de débogage ciblée sans déclencher `logging.level`, utilisez les drapeaux
-de diagnostic. Les drapeaux ne sont pas sensibles à la casse et supportent les caractères génériques (ex. `telegram.*` ou
+de diagnostic. Les drapeaux ne tiennent pas compte de la casse et prennent en charge les caractères génériques (ex. `telegram.*` ou
 `*`) :
 
 ```json5
@@ -368,8 +347,8 @@ Ou en tant que substitution d'environnement ponctuelle :
 OPENCLAW_DIAGNOSTICS=telegram.http,telegram.payload openclaw gateway
 ```
 
-La sortie du drapeau va vers le fichier journal standard (`logging.file`) et est toujours
-masquée par `logging.redactSensitive`. Guide complet :
+La sortie des drapeaux va vers le fichier journal standard (`logging.file`) et est toujours
+rédigée par `logging.redactSensitive`. Guide complet :
 [Diagnostics flags](/fr/diagnostics/flags).
 
 ## Désactiver
@@ -385,8 +364,8 @@ Vous pouvez également omettre `diagnostics-otel` de `plugins.allow`, ou exécut
 
 ## Connexes
 
-- [Logging](/fr/logging) - journaux de fichiers, sortie console, suivi CLI, et l'onglet Logs de l'UI de contrôle
-- [Gateway logging internals](/fr/gateway/logging) - styles de journal WS, préfixes de sous-système et capture console
-- [Diagnostics flags](/fr/diagnostics/flags) - indicateurs de journal de débogage ciblés
-- [Diagnostics export](/fr/gateway/diagnostics) - outil de support bundle pour opérateur (séparé de l'export OTEL)
+- [Logging](/fr/logging) - journaux de fichiers, sortie console, suivi CLI et l'onglet Logs de l'UI de contrôle
+- [Gateway logging internals](/fr/gateway/logging) - styles de journaux WS, préfixes de sous-système et capture console
+- [Diagnostics flags](/fr/diagnostics/flags) - drapeaux de journal de débogage ciblés
+- [Diagnostics export](/fr/gateway/diagnostics) - outil de bundle de support pour l'opérateur (séparé de l'export OTEL)
 - [Configuration reference](/fr/gateway/configuration-reference#diagnostics) - référence complète du champ `diagnostics.*`

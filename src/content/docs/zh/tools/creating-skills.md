@@ -1,76 +1,69 @@
 ---
-summary: "使用 SKILL.md 构建和测试自定义工作区技能"
-title: "创建技能"
+title: "创建 Skills"
+sidebarTitle: "创建 Skills"
+summary: "为您的 OpenClaw 代理构建、测试和发布基于 SKILL.md 的自定义工作区 Skills。"
 read_when:
-  - You are creating a new custom skill in your workspace
+  - You are creating a new custom skill
   - You need a quick starter workflow for SKILL.md-based skills
+  - You want to use Skill Workshop to propose a skill for agent review
 ---
 
-Skills 教会智能体如何以及何时使用工具。每个 Skill 是一个包含带有 YAML 前置内容和 markdown 指令的 `SKILL.md` 文件的目录。
-
-有关 Skills 如何加载和确定优先级的信息，请参阅 [Skills](/zh/tools/skills)。
+Skills 教会代理如何以及何时使用工具。每个 Skill 都是一个包含 `SKILL.md` 文件的目录，该文件包含 YAML 前置数据和 markdown 指令。
+OpenClaw 会按照定义的 [优先顺序](/zh/tools/skills#loading-order) 从多个根目录加载 Skills。
 
 ## 创建你的第一个 Skill
 
 <Steps>
-  <Step title="创建技能目录">
-    Skills 位于您的工作区中。创建一个新文件夹：
+  <Step title="创建 Skill 目录">
+    Skills 位于您的工作区 `skills/` 文件夹中。为您的新 Skill 创建一个目录：
 
     ```bash
     mkdir -p ~/.openclaw/workspace/skills/hello-world
     ```
 
-    当您的库变大时，您可以在子文件夹中组织 Skills：
+    为了便于组织，您可以将 Skills 分组在子文件夹中 — Skill 仍然由 `SKILL.md` 前置数据命名，而不是由文件夹路径命名：
 
     ```bash
     mkdir -p ~/.openclaw/workspace/skills/personal/hello-world
+    # skill name is still "hello-world", invoked as /hello-world
     ```
-
-    分组文件夹仅用于组织。Skill 仍然由 `SKILL.md` 前置内容命名，因此 `name: hello-world` 被调用为
-    `/hello-world`。
 
   </Step>
 
   <Step title="编写 SKILL.md">
-    在该目录中创建 `SKILL.md`。前置内容定义元数据，
-    markdown 主体包含针对智能体的指令。
+    在目录内创建 `SKILL.md`。前置数据定义元数据；正文向代理提供指令。
 
     ```markdown
     ---
     name: hello-world
-    description: A simple skill that says hello.
+    description: A simple skill that prints a greeting.
     ---
 
-    # Hello World Skill
+    # Hello World
 
-    When the user asks for a greeting, use the `echo` tool to say
-    "Hello from your custom skill!".
+    When the user asks for a greeting, use the `exec` tool to run:
+
+    ```bash
+    echo "Hello from your custom skill!"
+    ```
     ```
 
-    对于 skill `name`，请使用连字符格式，包含小写字母、数字和连字符。保持叶文件夹名称与前置内容 `name` 一致。
+    命名规则：
+    - `name` 使用小写字母、数字和连字符。
+    - 保持目录名称和前置数据 `name` 一致。
+    - `description` 会显示给代理并在斜杠命令发现中显示 — 请保持其为一行且不超过 160 个字符。
 
   </Step>
 
-  <Step title="添加工具（可选）">
-    您可以在前置内容中定义自定义工具架构，或指示智能体
-    使用现有的系统工具（如 `exec` 或 `browser`）。Skills 也可以
-    随其记录的工具一起在插件内发布。
-
-  </Step>
-
-  <Step title="加载技能">
-    验证技能已加载：
-
+  <Step title="验证 Skill 已加载">
     ```bash
     openclaw skills list
     ```
 
-    OpenClaw 会监视 skills 根目录下嵌套的 `SKILL.md` 文件。如果监视器
-    被禁用，或者您正在继续现有的会话，请启动一个新的会话
-    以便模型接收刷新后的 skills 列表：
+    OpenClaw 默认会监视 Skills 根目录下的 `SKILL.md` 文件。如果监视器已禁用或您正在继续现有的会话，请启动一个新的会话，以便代理接收刷新后的列表：
 
     ```bash
-    # From chat
+    # From chat — archive current session and start fresh
     /new
 
     # Or restart the gateway
@@ -80,111 +73,184 @@ Skills 教会智能体如何以及何时使用工具。每个 Skill 是一个包
   </Step>
 
   <Step title="测试它">
-    发送一条应触发该技能的消息：
+    发送一条应该触发该技能的消息：
 
     ```bash
     openclaw agent --message "give me a greeting"
     ```
 
-    或者直接与代理聊天并请求问候。
+    或者打开聊天窗口直接询问 agent。使用 `/skill hello-world` 来
+    按名称显式调用它。
 
   </Step>
 </Steps>
 
-## 应用前先提议
+## SKILL.md 参考
 
-对于代理生成的程序，请使用 Skill Workshop 提案而不是直接写入 `SKILL.md`：
+### 必填字段
+
+| 字段          | 描述                                      |
+| ------------- | ----------------------------------------- |
+| `name`        | 使用小写字母、数字和连字符的唯一标识符    |
+| `description` | 展示给 agent 并在发现输出中显示的单行描述 |
+
+### 可选 Frontmatter 键
+
+| 字段                       | 默认值  | 描述                                                        |
+| -------------------------- | ------- | ----------------------------------------------------------- |
+| `user-invocable`           | `true`  | 将技能作为用户斜杠命令公开                                  |
+| `disable-model-invocation` | `false` | 将技能排除在 agent 的系统提示之外（仍可通过 `/skill` 运行） |
+| `command-dispatch`         | —       | 设置为 `tool` 可将斜杠命令直接路由到工具，绕过模型          |
+| `command-tool`             | —       | 设置 `command-dispatch: tool` 时要调用的工具名称            |
+| `command-arg-mode`         | `raw`   | 对于工具调度，将原始参数字符串转发给工具                    |
+| `homepage`                 | —       | 在 macOS Skills UI 中显示为“网站”的 URL                     |
+
+有关门控字段（`requires.bins`，`requires.env` 等），请参阅
+[Skills — Gating](/zh/tools/skills#gating)。
+
+### 使用 `{baseDir}`
+
+在技能正文中使用 `{baseDir}` 来引用技能目录内的文件，
+而无需硬编码路径：
+
+```markdown
+Run the helper script at `{baseDir}/scripts/run.sh`.
+```
+
+## 添加条件激活
+
+设置技能门控，使其仅在依赖项可用时加载：
+
+```markdown
+---
+name: gemini-search
+description: Search using Gemini CLI.
+metadata: { "openclaw": { "requires": { "bins": ["gemini"] }, "primaryEnv": "GEMINI_API_KEY" } }
+---
+```
+
+<AccordionGroup>
+  <Accordion title="选项控制">
+    | 键 | 描述 |
+    | --- | --- |
+    | `requires.bins` | 所有二进制文件必须存在于 `PATH` 上 |
+    | `requires.anyBins` | 至少有一个二进制文件必须存在于 `PATH` 上 |
+    | `requires.env` | 每个环境变量必须存在于进程或配置中 |
+    | `requires.config` | 每个 `openclaw.json` 路径必须为真 |
+    | `os` | 平台过滤器：`["darwin"]`、`["linux"]`、`["win32"]` |
+    | `always` | 设置 `true` 以跳过所有检查并始终包含该技能 |
+
+    完整参考：[Skills — Gating](/zh/tools/skills#gating)。
+
+  </Accordion>
+  <Accordion title="环境和 API 密钥">
+    将 API 密钥连接到 `openclaw.json` 中的技能条目：
+
+    ```json5
+    {
+      skills: {
+        entries: {
+          "gemini-search": {
+            enabled: true,
+            apiKey: { source: "env", provider: "default", id: "GEMINI_API_KEY" },
+          },
+        },
+      },
+    }
+    ```
+
+    密钥仅在对应的代理轮次中注入到宿主进程。
+    它不会到达沙箱 —— 请参阅
+    [沙箱隔离 环境变量](/zh/tools/skills-config#sandboxed-skills-and-env-vars)。
+
+  </Accordion>
+</AccordionGroup>
+
+## 通过 Skill Workshop 提议
+
+对于由代理起草的技能，或者当您希望在技能上线前由操作员进行审查时，请使用 [Skill Workshop](/zh/tools/skill-workshop) 提案，而不是直接编写
+`SKILL.md`。
 
 ```bash
+# Propose a brand-new skill
 openclaw skills workshop propose-create \
   --name "hello-world" \
-  --description "A simple skill that says hello." \
+  --description "A simple skill that prints a greeting." \
   --proposal ./PROPOSAL.md
+
+# Propose an update to an existing skill
+openclaw skills workshop propose-update hello-world \
+  --proposal ./PROPOSAL.md \
+  --description "Updated greeting skill"
 ```
 
-当提案还包含支持文件时，请使用 `--proposal-dir`：
+当提案包含支持文件时，使用 `--proposal-dir`：
 
 ```bash
 openclaw skills workshop propose-create \
   --name "hello-world" \
-  --description "A simple skill that says hello." \
-  --proposal-dir ./hello-world-proposal
+  --description "A simple skill that prints a greeting." \
+  --proposal-dir ./hello-world-proposal/
 ```
 
-草稿存储在 `<OPENCLAW_STATE_DIR>/skill-workshop/proposals/<proposal-id>/PROPOSAL.md` 下，
-并在操作员审核并应用之前保持非活动状态。默认状态目录为
-`~/.openclaw`。提案目录必须包含 `PROPOSAL.md`。
-支持文件可以包含在 `assets/`、`examples/`、`references/`、
-`scripts/` 或 `templates/`OpenClaw 中；OpenClaw 会与提案一起存储并扫描它们：
+该目录必须包含 `PROPOSAL.md`。支持文件可以放在 `assets/`、
+`examples/`、`references/`、`scripts/` 或 `templates/` 中。
+
+审查之后：
 
 ```bash
 openclaw skills workshop inspect <proposal-id>
-openclaw skills workshop revise <proposal-id> --proposal ./PROPOSAL.md
 openclaw skills workshop apply <proposal-id>
 ```
 
-应用后，OpenClaw 会将最终的 OpenClaw`SKILL.md` 写入工作区 `skills/`
-根目录，将批准的支持文件写入其旁边，并移除仅限提案的前置元数据
-（frontmatter），例如 `status: proposal`、提案 `version` 和提案
-`date`。
+有关完整的提案生命周期，请参阅 [Skill Workshop](/zh/tools/skill-workshop)。
 
-## 技能元数据参考
+## 发布到 ClawHub
 
-YAML 前置元数据支持以下字段：
+<Steps>
+  <Step title="确保您的 SKILL.md 已完成">
+    确保 `name`、`description` 以及任何 `metadata.openclaw` 控制字段
+    已设置。如果您有项目页面，请添加 `homepage` URL。
+  </Step>
+  <Step title="ClawHub安装 ClawHub 技能"ClawHub>
+    ClawHub 技能记录了当前发布命令的形式和必需的
+    元数据：
 
-| 字段                                | 必需 | 描述                                           |
-| ----------------------------------- | ---- | ---------------------------------------------- |
-| `name`                              | 是   | 使用小写字母、数字和连字符的唯一标识符         |
-| `description`                       | 是   | 向代理显示的单行描述                           |
-| `metadata.openclaw.os`              | 否   | 操作系统过滤器（`["darwin"]`、`["linux"]` 等） |
-| `metadata.openclaw.requires.bins`   | 否   | PATH 上需要的二进制文件                        |
-| `metadata.openclaw.requires.config` | 否   | 所需的配置键                                   |
+    ```bash
+    openclaw skills install clawhub-publish
+    ```
 
-## 高级功能
+  </Step>
+  <Step title="发布">
+    ```bash
+    clawhub publish
+    ```ClawHub
 
-当基本技能运行正常后，这些字段有助于使其可靠且可移植：
+    查看 [ClawHub — Publishing](/en/clawhub/publishing) 了解完整流程。
 
-- **条件激活** — 使用 `requires.bins`、`requires.env` 或
-  `requires.config`，以便仅在所需的依赖项可用时加载该技能。请参阅 [Skills reference: gating](/zh/tools/skills#gating)。
-- **环境和 API 密钥连接** — 使用 API`skills.entries.<name>.env` 和
-  `skills.entries.<name>.apiKey` 为 Skill 轮次注入主机端环境。请参阅 [Skills 参考：配置连接](/zh/tools/skills#config-wiring)。
-- **调用控制** — 设置 `user-invocable: false` 以隐藏斜杠命令，
-  或设置 `disable-model-invocation: true` 以使命令式 Skill 不出现在
-  模型提示中。请参阅 [Skills 参考：Frontmatter](/zh/tools/skills#frontmatter)。
-- **直接命令调度** — 当斜杠命令应直接调用工具而不是
-  通过模型路由时，请将 `command-dispatch: tool` 与
-  `command-tool` 一起使用。
-- **可移植路径** — 在 `SKILL.md` 中引用 Skill 目录内的脚本
-  或资产时，请使用 `{baseDir}`。
-- **发布** — 在准备发布 Skill 时，请使用 ClawHub Skill。
-  它记录了当前的 ClawHub`clawhub publish` 命令形状和所需
-  元数据。
+  </Step>
+</Steps>
 
 ## 最佳实践
 
-- **保持简洁** — 指示模型做*什么*，而不是如何成为一个 AI
-- **安全第一** — 如果您的 Skill 使用 `exec`，请确保提示不允许来自不受信任输入的任意命令注入
-- **本地测试** — 在分享之前使用 `openclaw agent --message "..."` 进行测试
-- **使用 ClawHub** — 在 [ClawHub](ClawHubClawHubhttps://clawhub.ai) 浏览和贡献 Skills
-
-## Skills 的位置
-
-| 位置                            | 优先级 | 范围                |
-| ------------------------------- | ------ | ------------------- |
-| `\<workspace\>/skills/`         | 最高   | 每个 Agent          |
-| `\<workspace\>/.agents/skills/` | 高     | 每个工作区 Agent    |
-| `~/.agents/skills/`             | 中等   | 共享 Agent 配置文件 |
-| `~/.openclaw/skills/`           | 中等   | 共享（所有 Agents） |
-| 捆绑（随 OpenClaw 附带）        | 低     | 全局                |
-| `skills.load.extraDirs`         | 最低   | 自定义共享文件夹    |
-
-每个 Skills 根目录都可以包含直接的 Skill 文件夹，例如
-`skills/hello-world/SKILL.md`，或分组文件夹，例如
-`skills/personal/hello-world/SKILL.md`。
+<Tip>- **保持简洁** — 指示模型做*什么*，而不是如何成为一个 AI。 - **安全第一** — 如果您的技能使用了 `exec`，请确保提示词不允许 来自不受信任输入的任意命令注入。 - **本地测试** — 在分享之前使用 `openclaw agent --message "..."`ClawHub。 - **使用 ClawHub** — 在从头开始构建之前， 浏览 [clawhub.ai](https://clawhub.ai) 上的社区技能。</Tip>
 
 ## 相关
 
-- [Skills 参考](/zh/tools/skills) — 加载、优先级和门控规则
-- [Skills 配置](/zh/tools/skills-config) — `skills.*` 配置架构
-- [ClawHub](ClawHub/en/clawhub) — 公共技能注册表
-- [构建插件](/zh/plugins/building-plugins) — 插件可以附带技能
+<CardGroup cols={2}>
+  <Card title="Skills 参考" href="/en/tools/skills" icon="puzzle-piece">
+    加载顺序、控制、允许列表和 SKILL.md 格式。
+  </Card>
+  <Card title="Skill Workshop" href="/en/tools/skill-workshop" icon="flask">
+    代理起草技能的提案队列。
+  </Card>
+  <Card title="Skills 配置" href="/en/tools/skills-config" icon="gear">
+    完整的 `skills.*` 配置架构。
+  </Card>
+  <Card title="ClawHubClawHub" href="/en/clawhub" icon="cloud">
+    在公共注册表中浏览和发布技能。
+  </Card>
+  <Card title="Building plugins" href="/en/plugins/building-plugins" icon="plug">
+    插件可以随其文档的工具一起提供技能。
+  </Card>
+</CardGroup>

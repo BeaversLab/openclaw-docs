@@ -74,23 +74,22 @@ Las respuestas finales normales de ejecución de agente deben ser duraderas porq
 
 ## Referencia de configuración (WebChat)
 
-Configuración completa: [Configuración](/es/gateway/configuration)
+Configuración completa: [Configuration](/es/gateway/configuration)
 
-Opciones de WebChat:
-
-- `gateway.webchat.chatHistoryMaxChars`: recuento máximo de caracteres para los campos de texto en las respuestas de `chat.history`. Cuando una entrada de la transcripción excede este límite, Gateway trunca los campos de texto largos y puede reemplazar los mensajes demasiado grandes con un marcador de posición. El cliente también puede enviar un `maxChars` por solicitud para anular este valor predeterminado para una única llamada de `chat.history`.
+WebChat no tiene una sección de configuración persistente. Gateway usa el límite de visualización `chat.history` integrado; los clientes de API pueden enviar `maxChars` por solicitud para anularlo para una sola llamada `chat.history`. La configuración heredada `channels.webchat` y `gateway.webchat` está retirada; ejecute `openclaw doctor --fix` para eliminarla.
 
 Opciones globales relacionadas:
 
-- `gateway.port`, `gateway.bind`: host/puerto del WebSocket.
+- `gateway.port`, `gateway.bind`: host/puerto de WebSocket.
 - `gateway.auth.mode`, `gateway.auth.token`, `gateway.auth.password`:
-  autenticación WebSocket de secreto compartido.
-- `gateway.auth.allowTailscale`: la pestaña de chat de la interfaz de usuario de Control del navegador puede usar los encabezados de identidad de Tailscale Serve cuando está habilitada.
-- `gateway.auth.mode: "trusted-proxy"`: autenticación de proxy inverso para clientes de navegador detrás de un origen de proxy consciente de la identidad **que no sea de bucle local** (ver [Trusted Proxy Auth](/es/gateway/trusted-proxy-auth)).
+  autenticación de WebSocket de secreto compartido.
+- `gateway.auth.allowTailscale`: la pestaña de chat de la interfaz de usuario de control del navegador puede usar Tailscale
+  Sirve encabezados de identidad cuando está habilitado.
+- `gateway.auth.mode: "trusted-proxy"`: autenticación de proxy inverso para clientes del navegador detrás de una fuente de proxy **que no sea de bucle invertido** con reconocimiento de identidad (consulte [Trusted Proxy Auth](/es/gateway/trusted-proxy-auth)).
 - `gateway.remote.url`, `gateway.remote.token`, `gateway.remote.password`: destino de puerta de enlace remota.
 - `session.*`: almacenamiento de sesión y valores predeterminados de clave principal.
 
 ## Relacionado
 
-- [Interfaz de usuario de Control](/es/web/control-ui)
-- [Panel de control](/es/web/dashboard)
+- [Control UI](/es/web/control-ui)
+- [Dashboard](/es/web/dashboard)

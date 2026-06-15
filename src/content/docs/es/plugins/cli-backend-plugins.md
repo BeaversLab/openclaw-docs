@@ -16,7 +16,7 @@ acme-cli/acme-large
 
 Use un backend de CLI cuando la integración ascendente ya esté expuesta como un comando local, cuando la CLI posea el estado de inicio de sesión local, o cuando la CLI sea una alternativa útil si los proveedores de API no están disponibles.
 
-<Info>Si el servicio ascendente expone una API de modelo HTTP normal, escriba un [complemento de proveedor](/es/plugins/sdk-provider-plugins) en su lugar. Si el tiempo de ejecución ascendente posee sesiones completas de agentes, eventos de herramientas, compactación o estado de tareas en segundo plano, use un [arnés de agentes](/es/plugins/sdk-agent-harness).</Info>
+<Info>Si el servicio upstream expone una API de modelo HTTP normal, escriba un [provider plugin](/es/plugins/sdk-provider-plugins) en su lugar. Si el tiempo de ejecución upstream posee sesiones completas de agente, eventos de herramientas, compactación o estado de tareas en segundo plano, use un [agent harness](/es/plugins/sdk-agent-harness).</Info>
 
 ## Lo que posee el complemento
 
@@ -61,7 +61,9 @@ a `api.registerCliBackend(...)`.
     }
     ```
 
-    Los paquetes publicados deben incluir los archivos de tiempo de ejecución de JavaScript compilados. Si su entrada de origen es `./src/index.ts`, agregue `openclaw.runtimeExtensions` que apunte al par JavaScript compilado. Consulte [Puntos de entrada](/es/plugins/sdk-entrypoints).
+    Los paquetes publicados deben incluir archivos de tiempo de ejecución de JavaScript construidos. Si su punto de
+    entrada fuente es `./src/index.ts`, añada `openclaw.runtimeExtensions` que apunte al
+    par JavaScript construido. Consulte [Puntos de entrada](/es/plugins/sdk-entrypoints).
 
   </Step>
 
@@ -198,12 +200,32 @@ solo para el comportamiento que realmente pertenezca al backend.
 | `authEpochMode`                    | Decidir cómo los cambios de autenticación invalidan las sesiones de CLI almacenadas |
 | `nativeToolMode`                   | Declarar si la CLI tiene herramientas nativas siempre activas                       |
 | `bundleMcp` / `bundleMcpMode`      | Optar por el puente de herramientas MCP de bucle de retorno de OpenClaw             |
+| `ownsNativeCompaction`             | El backend gestiona su propia compactación: OpenClaw delega                         |
 
-Mantenga estos ganchos bajo la propiedad del proveedor. No agregue ramas específicas de la CLI al núcleo cuando un gancho de backend pueda expresar el comportamiento.
+Mantenga estos hooks bajo propiedad del proveedor. No añada ramas específicas de CLI al núcleo cuando un
+backend hook pueda expresar el comportamiento.
+
+### `ownsNativeCompaction`: optar por no participar en la compactación de OpenClaw
+
+Si su backend ejecuta un agente que compacta su **propia** transcripción, configure
+`ownsNativeCompaction: true` para que el resumidor de seguridad de OpenClaw nunca se ejecute sobre sus
+sesiones: el ciclo de vida de compactación de la CLI devuelve una operación nula y el turno continúa. `claude-cli`
+lo declara porque Claude Code compacta internamente sin ningún endpoint de harness. Las sesiones de
+harness nativo como Codex siguen enrutando a su endpoint de compactación de harness.
+
+**Solo declárelo cuando se cumplan todos los siguientes puntos**, o una sesión diferida que exceda el presupuesto puede
+seguir excediendo el presupuesto / volverse obsoleta (OpenClaw ya no la rescata):
+
+- el backend compacta o limita de manera fiable su propia transcripción a medida que se acerca a su ventana;
+- persiste una sesión reanudable para que el estado compactado sobreviva a los turnos
+  (p. ej., `--resume` / `--session-id`);
+- no es una sesión de compactación de harness nativo: las sesiones que coinciden con `agentHarnessId`
+  se enrutan al endpoint de harness en su lugar.
 
 ## Puente de herramientas MCP
 
-Los backends de CLI no reciben las herramientas de OpenClaw de manera predeterminada. Si la CLI puede consumir una configuración de MCP, opte explícitamente:
+Los backends de CLI no reciben las herramientas de OpenClaw por defecto. Si la CLI puede consumir una
+configuración MCP, opte por participar explícitamente:
 
 ```typescript
 return {
@@ -226,8 +248,9 @@ Los modos de puente compatibles son:
 | `codex-config-overrides` | CLIs que aceptan anulaciones de configuración en argv                                 |
 | `gemini-system-settings` | CLI que leen la configuración de MCP desde su directorio de configuración del sistema |
 
-Habilite el puente solo cuando la CLI pueda consumirlo realmente. Si la CLI tiene su propia capa de herramientas integrada que no se puede deshabilitar, configure `nativeToolMode:
-"always-on"` para que OpenClaw pueda fallar de forma cerrada cuando una llamada requiera que no haya herramientas nativas.
+Active el puente solo cuando la CLI pueda consumirlo realmente. Si la CLI tiene su
+propia capa de herramientas integrada que no se puede desactivar, establezca `nativeToolMode:
+"always-on"` para que OpenClaw pueda fallar de forma cerrada cuando un solicitante requiera que no haya herramientas nativas.
 
 ## Configuración de usuario
 
@@ -255,11 +278,13 @@ Los usuarios pueden anular cualquier valor predeterminado del backend:
 }
 ```
 
-Documente la invalidación mínima que los usuarios probablemente necesiten. Por lo general, esa es solo `command` cuando el binario está fuera de `PATH`.
+Documente la anulación mínima que probablemente necesiten los usuarios. Por lo general, eso es solo
+`command` cuando el binario está fuera de `PATH`.
 
 ## Verificación
 
-Para los complementos incluidos, agregue una prueba enfocada alrededor del constructor y el registro de configuración, luego ejecute el carril de prueba específico del complemento:
+Para los complementos incluidos, agregue una prueba enfocada alrededor del constructor y el registro
+de configuración, luego ejecute la canalización de prueba específica del complemento:
 
 ```bash
 pnpm test extensions/acme-cli
@@ -272,22 +297,24 @@ openclaw plugins inspect acme-cli --runtime --json
 openclaw agent --message "reply exactly: backend ok" --model acme-cli/acme-large
 ```
 
-Si el backend admite imágenes o MCP, agregue una prueba de humo en vivo que demuestre esas rutas con el CLI real. No confíe en la inspección estática para el comportamiento de prompt, imagen, MCP o reanudación de sesión.
+Si el backend admite imágenes o MCP, agregue una prueba de humed en vivo que demuestre esas rutas
+con la CLI real. No dependa de la inspección estática para el comportamiento de prompt, imagen, MCP o
+reanudación de sesión.
 
 ## Lista de verificación
 
 <Check>`package.json` tiene `openclaw.extensions` y entradas de tiempo de ejecución compiladas para paquetes publicados</Check>
-<Check>`openclaw.plugin.json` declara `cliBackends` e `activation.onStartup` intencional</Check>
-<Check>`setup.cliBackends` está presente cuando la configuración/descubrimiento del modelo debe ver el backend en frío</Check>
+<Check>`openclaw.plugin.json` declara `cliBackends` e `activation.onStartup` intencionales</Check>
+<Check>`setup.cliBackends` está presente cuando la configuración/el descubrimiento del modelo debe ver el backend en frío</Check>
 <Check>`api.registerCliBackend(...)` usa el mismo id de backend que el manifiesto</Check>
-<Check>Las invalidaciones del usuario bajo `agents.defaults.cliBackends.<id>` aún tienen prioridad</Check>
-<Check>La configuración de sesión, prompt del sistema, imagen y analizador de salida coincide con el contrato real del CLI</Check>
-<Check>Las pruebas específicas y al menos una prueba de humo del CLI en vivo demuestran la ruta del backend</Check>
+<Check>Las anulaciones de usuario bajo `agents.defaults.cliBackends.<id>` aún tienen prioridad</Check>
+<Check>La configuración de sesión, prompt del sistema, imagen y analizador de salida coincide con el contrato real de la CLI</Check>
+<Check>Las pruebas específicas y al menos una prueba de humed de CLI en vivo demuestran la ruta del backend</Check>
 
 ## Relacionado
 
-- [Backends de CLI](/es/gateway/cli-backends) - configuración de usuario y comportamiento en tiempo de ejecución
-- [Construcción de complementos](/es/plugins/building-plugins) - conceptos básicos de paquete y manifiesto
-- [Resumen del SDK de complementos](/es/plugins/sdk-overview) - referencia de API de registro
-- [Manifiesto del complemento](/es/plugins/manifest) - `cliBackends` y descriptores de configuración
-- [Arnés de agentes](/es/plugins/sdk-agent-harness) - tiempos de ejecución de agentes externos completos
+- [CLI backends](/es/gateway/cli-backends) - configuración de usuario y comportamiento en tiempo de ejecución
+- [Building plugins](/es/plugins/building-plugins) - conceptos básicos de paquete y manifiesto
+- [Plugin SDK overview](/es/plugins/sdk-overview) - referencia de la API de registro
+- [Plugin manifest](/es/plugins/manifest) - `cliBackends` y descriptores de configuración
+- [Agent harness](/es/plugins/sdk-agent-harness) - tiempos de ejecución de agentes externos completos

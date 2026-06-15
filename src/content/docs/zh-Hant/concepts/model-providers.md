@@ -296,7 +296,7 @@ Gemini CLI JSON 回覆是從 `response` 解析的；使用量會回退到 `stats
 | Hugging Face Inference                     | `huggingface`                    | `HUGGINGFACE_HUB_TOKEN` 或 `HF_TOKEN`                        | `huggingface/deepseek-ai/DeepSeek-R1`                      |
 | Kilo Gateway                               | `kilocode`                       | `KILOCODE_API_KEY`                                           | `kilocode/kilo/auto`                                       |
 | Kimi Coding                                | `kimi`                           | `KIMI_API_KEY` 或 `KIMICODE_API_KEY`                         | `kimi/kimi-for-coding`                                     |
-| MiniMax                                    | `minimax` / `minimax-portal`     | `MINIMAX_API_KEY` / `MINIMAX_OAUTH_TOKEN`                    | `minimax/MiniMax-M2.7`                                     |
+| MiniMax                                    | `minimax` / `minimax-portal`     | `MINIMAX_API_KEY` / `MINIMAX_OAUTH_TOKEN`                    | `minimax/MiniMax-M3`                                       |
 | Mistral                                    | `mistral`                        | `MISTRAL_API_KEY`                                            | `mistral/mistral-large-latest`                             |
 | Moonshot                                   | `moonshot`                       | `MOONSHOT_API_KEY`                                           | `moonshot/kimi-k2.6`                                       |
 | NVIDIA                                     | `nvidia`                         | `NVIDIA_API_KEY`                                             | `nvidia/nvidia/nemotron-3-super-120b-a12b`                 |
@@ -324,7 +324,7 @@ Gemini CLI JSON 回覆是從 `response` 解析的；使用量會回退到 `stats
     Gemini 支援的引用遵循相同的代理 Gemini 清理路徑；`kilocode/kilo/auto` 和其他不支援代理推理的引用會跳過代理推理注入。
   </Accordion>
   <Accordion title="MiniMax">
-    API 金鑰入門流程會寫入明確的僅文字 M2.7 聊天模型定義；圖片理解保留於外掛擁有的 `MiniMax-VL-01` 媒體供應商。
+    API 金鑰入駐流程會寫入明確的 M3 和 M2.7 聊天模型定義；圖像理解功能保留在外掛程式擁有的 `MiniMax-VL-01` 媒體提供商上。
   </Accordion>
   <Accordion title="NVIDIA">
     模型 ID 使用 `nvidia/<vendor>/<model>` 命名空間（例如 `nvidia/nvidia/nemotron-...` 與 `nvidia/moonshotai/kimi-k2.5` 並存）；選擇器會保留字面上的 `<provider>/<model-id>` 組成，而發送到 API 的標準鍵則保持單一前綴。
@@ -528,7 +528,7 @@ Synthetic 透過 `synthetic` 提供者提供 Anthropic 相容模型:
 
 外掛擁有的功能拆分：
 
-- 文字/聊天預設值保留在 `minimax/MiniMax-M2.7` 上
+- 文字/聊天預設值保留在 `minimax/MiniMax-M3`
 - 影像生成為 `minimax/image-01` 或 `minimax-portal/image-01`
 - 影像理解是外掛擁有的 `MiniMax-VL-01`，適用於兩種 MiniMax 驗證路徑
 - 網路搜尋保留在供應商 ID `minimax` 上

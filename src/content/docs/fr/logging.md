@@ -85,7 +85,7 @@ openclaw doctor
 
 ### Interface utilisateur de contrôle (web)
 
-L'onglet **Journaux** (Logs) de l'interface de contrôle fait le suivi (tail) du même fichier en utilisant `logs.tail`.
+L'onglet **Logs** de l'interface de contrôle effectue le suivi du même fichier en utilisant `logs.tail`.
 Voir [Control UI](/fr/web/control-ui) pour savoir comment l'ouvrir.
 
 ### Journaux canal uniquement
@@ -215,9 +215,9 @@ Les enregistrements de journal du cycle de vie des conversations sont également
 Les diagnostics des appels de modèle enregistrent des mesures de demande/réponse bornées sans capturer le contenu brut du prompt ou de la réponse :
 
 - `requestPayloadBytes` : taille en octets UTF-8 de la charge utile finale de la requête du modèle
-- `responseStreamBytes` : taille en octets UTF-8 des événements de réponse du modèle diffusés en continu
+- `responseStreamBytes` : taille en octets UTF-8 des événements de réponse du modèle diffusés en continu, à l'exclusion des instantanés `partial` accumulés sur les événements delta
 - `timeToFirstByteMs` : temps écoulé avant le premier événement de réponse diffusé en continu
-- `durationMs` : durée totale de l'appel du modèle
+- `durationMs` : durée totale de l'appel au modèle
 
 Ces champs sont disponibles pour les instantanés de diagnostic, les hooks de plugin d'appel de modèle et les spans/métriques OTEL d'appel de modèle lorsque l'exportation des diagnostics est activée.
 
@@ -234,13 +234,19 @@ Ces champs sont disponibles pour les instantanés de diagnostic, les hooks de pl
 OpenClaw peut masquer les jetons sensibles avant qu'ils n'atteignent la sortie console, les journaux de fichiers, les enregistrements de journaux OTLP, le texte de transcription de session persisté, ou les charges utiles d'événements d'outil de l'interface utilisateur de contrôle (arguments de début d'outil, charges utiles de résultats partiels/finaux, sortie d'exécution dérivée, et résumés de correctifs) :
 
 - `logging.redactSensitive` : `off` | `tools` (par défaut : `tools`)
-- `logging.redactPatterns` : liste de chaînes regex pour remplacer l'ensemble par défaut. Les modèles personnalisés s'appliquent par-dessus les valeurs par défaut intégrées pour les charges utiles d'outils de l'interface de contrôle, donc l'ajout d'un modèle n'affaiblit jamais la rédaction des valeurs déjà capturées par les valeurs par défaut.
+- `logging.redactPatterns` : liste de chaînes regex pour remplacer l'ensemble par défaut. Les modèles personnalisés s'appliquent par-dessus les défauts intégrés pour les payloads d'outils de l'interface de contrôle, donc l'ajout d'un modèle n'affaiblit jamais la rédaction des valeurs déjà capturées par les défauts.
 
 Les journaux de fichiers et les transcriptions de session restent en JSONL, mais les valeurs secrètes correspondantes sont masquées avant que la ligne ou le message ne soit écrit sur le disque. Le masquage est de type « best-effort » (meilleur effort) : il s'applique au contenu des messages portant du texte et aux chaînes de journal, et non à chaque identifiant ou champ de charge utile binaire.
 
 Les valeurs par défaut intégrées couvrent les informations d'identification API courantes et les noms de champs d'informations d'identification de paiement tels que le numéro de carte, CVC/CVV, le jeton de paiement partagé, et l'information d'identification de paiement lorsqu'ils apparaissent comme des champs JSON, des paramètres d'URL, des drapeaux CLI, ou des affectations.
 
-`logging.redactSensitive: "off"`OpenClaw désactive uniquement cette stratégie générale de journalisation/de transcription. OpenClaw masque toujours les charges utiles délimitées par la sécurité qui peuvent être affichées aux clients de l'interface utilisateur, aux bundles de support, aux observateurs de diagnostics, aux invites d'approbation ou aux outils d'agent. Les exemples incluent les événements d'appel d'outil de l'interface utilisateur de contrôle, la sortie `sessions_history`Gateway, les exportations de support de diagnostic, les observations d'erreur du fournisseur, l'affichage des commandes d'approbation exec et les journaux de protocole WebSocket du Gateway. Un `logging.redactPatterns` personnalisé peut toujours ajouter des modèles spécifiques au projet sur ces surfaces.
+`logging.redactSensitive: "off"` ne désactive que cette stratégie générale de journal/transcript.
+OpenClaw masque toujours les payloads aux limites de sécurité qui peuvent être affichés aux clients
+UI, aux bundles de support, aux observateurs de diagnostics, aux invites d'approbation ou aux outils d'agent.
+Les exemples incluent les événements d'appel d'outil de l'interface de contrôle, la sortie `sessions_history`,
+les exportations de support de diagnostic, les observations d'erreur de fournisseur, l'affichage des commandes d'approbation d'exécution
+et les journaux de protocole WebSocket du Gateway. Des `logging.redactPatterns` personnalisés
+peuvent toujours ajouter des modèles spécifiques au projet sur ces surfaces.
 
 ## Diagnostics et OpenTelemetry
 
@@ -252,12 +258,12 @@ Deux surfaces adjacentes :
   n'importe quel collecteur ou backend compatible OpenTelemetry (Grafana, Datadog,
   Honeycomb, New Relic, Tempo, etc.). La configuration complète, le catalogue de signaux,
   les noms de métriques/spans, les env vars et le modèle de confidentialité se trouvent sur une page dédiée :
-  [Export OpenTelemetry](/fr/gateway/opentelemetry).
-- **Indicateurs de diagnostic** — indicateurs de journal de débogage ciblés qui acheminent des journaux supplémentaires vers
+  [OpenTelemetry export](/fr/gateway/opentelemetry).
+- **Diagnostics flags** — indicateurs de journal de débogage ciblés qui acheminent des journaux supplémentaires vers
   `logging.file` sans augmenter `logging.level`. Les indicateurs ne sont pas sensibles à la casse
-  et prennent en charge les caractères génériques (`telegram.*`, `*`). Configurez sous `diagnostics.flags`
-  ou via le remplacement d'env `OPENCLAW_DIAGNOSTICS=...`. Guide complet :
-  [Indicateurs de diagnostic](/fr/diagnostics/flags).
+  et prennent en charge les caractères génériques (`telegram.*`, `*`). Configurez-les sous `diagnostics.flags`
+  ou via le remplacement d'environnement `OPENCLAW_DIAGNOSTICS=...`. Guide complet :
+  [Diagnostics flags](/fr/diagnostics/flags).
 
 Pour activer les événements de diagnostic pour les plugins ou les récepteurs personnalisés sans exportation OTLP :
 
@@ -267,18 +273,18 @@ Pour activer les événements de diagnostic pour les plugins ou les récepteurs 
 }
 ```
 
-Pour l'export OTLP vers un collecteur, voir [Export OpenTelemetry](/fr/gateway/opentelemetry).
+Pour l'export OTLP vers un collecteur, consultez [OpenTelemetry export](/fr/gateway/opentelemetry).
 
 ## Conseils de dépannage
 
-- **Gateway inaccessible ?** Exécutez d'abord Gateway`openclaw doctor`.
-- **Journaux vides ?** Vérifiez que le Gateway est en cours d'exécution et écrit dans le chemin de fichier
-  dans Gateway`logging.file`.
+- **Gateway inaccessible ?** Exécutez d'abord `openclaw doctor`.
+- **Journaux vides ?** Vérifiez que le Gateway est en cours d'exécution et qu'il écrit dans le chemin de fichier
+  indiqué dans `logging.file`.
 - **Besoin de plus de détails ?** Définissez `logging.level` sur `debug` ou `trace` et réessayez.
 
 ## Connexes
 
-- [Export OpenTelemetry](/fr/gateway/opentelemetry) — export OTLP/HTTP, catalogue de métriques/spans, modèle de confidentialité
-- [Indicateurs de diagnostic](/fr/diagnostics/flags) — indicateurs de journal de débogage ciblés
-- [Fonctionnement interne de la journalisation du Gateway](Gateway/en/gateway/logging) — styles de journaux WS, préfixes de sous-système et capture de console
-- [Référence de configuration](/fr/gateway/configuration-reference#diagnostics) — référence complète du champ `diagnostics.*`
+- [OpenTelemetry export](/fr/gateway/opentelemetry) — export OTLP/HTTP, catalogue des métriques/span, model de confidentialité
+- [Diagnostics flags](/fr/diagnostics/flags) — indicateurs de journal de débogage ciblés
+- [Gateway logging internals](/fr/gateway/logging) — styles de journal WS, préfixes de sous-système et capture de console
+- [Configuration reference](/fr/gateway/configuration-reference#diagnostics) — référence complète des champs `diagnostics.*`

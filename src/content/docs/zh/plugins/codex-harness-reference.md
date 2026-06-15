@@ -38,14 +38,14 @@ read_when:
 
 支持的顶层字段：
 
-| 字段                       | 默认值                | 含义                                                                                                                         |
-| -------------------------- | --------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| `discovery`                | enabled               | Codex 应用服务器 `model/list` 的模型发现设置。                                                                               |
-| `appServer`                | 托管 stdio 应用服务器 | 传输、命令、身份验证、审批、沙盒和超时设置。                                                                                 |
-| `codexDynamicToolsLoading` | `"searchable"`        | 使用 `"direct"`OpenClaw 将 OpenClaw 动态工具直接置于初始 Codex 工具上下文中。                                                |
-| `codexDynamicToolsExclude` | `[]`                  | 要从 Codex 应用服务器轮次中排除的其他 OpenClaw 动态工具名称。                                                                |
-| `codexPlugins`             | disabled              | 对已迁移的源安装精选插件的 Native Codex 插件/应用程序支持。请参阅 [Native Codex plugins](/zh/plugins/codex-native-plugins)。 |
-| `computerUse`              | disabled              | Codex Computer Use 设置。请参阅 [Codex Computer Use](/zh/plugins/codex-computer-use)。                                       |
+| 字段                       | 默认值                | 含义                                                                                                                       |
+| -------------------------- | --------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| `discovery`                | enabled               | Codex 应用服务器 `model/list` 的模型发现设置。                                                                             |
+| `appServer`                | 托管 stdio 应用服务器 | 传输、命令、身份验证、审批、沙盒和超时设置。                                                                               |
+| `codexDynamicToolsLoading` | `"searchable"`        | 使用 `"direct"`OpenClaw 将 OpenClaw 动态工具直接置于初始 Codex 工具上下文中。                                              |
+| `codexDynamicToolsExclude` | `[]`                  | 要从 Codex 应用服务器轮次中排除的其他 OpenClaw 动态工具名称。                                                              |
+| `codexPlugins`             | disabled              | 针对已配置的第一方 Codex 插件的本地 Codex 插件/应用支持。请参阅 [Native Codex plugins](/zh/plugins/codex-native-plugins)。 |
+| `computerUse`              | disabled              | Codex Computer Use 设置。请参阅 [Codex Computer Use](/zh/plugins/codex-computer-use)。                                     |
 
 ## 应用服务器传输
 
@@ -266,7 +266,7 @@ OpenClaw 拥有的动态工具调用独立于 OpenClaw`appServer.requestTimeoutM
 - GPT-5.4 mini
 - GPT-5.2
 
-当前捆绑的工具链是 `@openai/codex` `0.134.0`。针对该捆绑应用服务器的 `model/list` 探测返回：
+当前捆绑的 harness 是 `@openai/codex` `0.135.0`。针对该捆绑应用服务器的 `model/list` 探测返回：
 
 | 模型 ID               | 默认 | 隐藏 | 输入模态    | 推理强度                 |
 | --------------------- | ---- | ---- | ----------- | ------------------------ |

@@ -32,7 +32,7 @@ Utilisez les commandes de configuration selon l'intention :
 | Appairage et canaux                 | [`pairing`](/fr/cli/pairing) · [`qr`](/fr/cli/qr) · [`channels`](/fr/cli/channels)                                                                                                                                                                                |
 | Sécurité et plugins                 | [`security`](/fr/cli/security) · [`secrets`](/fr/cli/secrets) · [`skills`](/fr/cli/skills) · [`plugins`](/fr/cli/plugins) · [`proxy`](/fr/cli/proxy)                                                                                                              |
 | Alias hérités                       | [`daemon`](/fr/cli/daemon) (service de passerelle) · [`clawbot`](/fr/cli/clawbot) (espace de noms)                                                                                                                                                                |
-| Plugins (en option)                 | [`path`](/fr/cli/path) · [`policy`](/fr/cli/policy) · [`voicecall`](/fr/cli/voicecall) (si installé)                                                                                                                                                              |
+| Plugins (en option)                 | [`path`](/fr/cli/path) · [`policy`](/fr/cli/policy) · [`voicecall`](/fr/cli/voicecall) · [`workboard`](/fr/cli/workboard) (si installé)                                                                                                                           |
 
 ## Indicateurs globaux
 
@@ -121,6 +121,11 @@ openclaw [--dev] [--profile <name>] <command>
     disable
     doctor
     marketplace list
+  workboard
+    list
+    create
+    show
+    dispatch
   memory
     status
     index
@@ -365,7 +370,8 @@ openclaw [--dev] [--profile <name>] <command>
   terminal (alias: tui --local)
 ```
 
-Les plugins peuvent ajouter des commandes de premier niveau supplémentaires (par exemple `openclaw voicecall`).
+Les plugins peuvent ajouter des commandes de premier niveau supplémentaires, telles que
+[`openclaw workboard`](/fr/cli/workboard) ou `openclaw voicecall`.
 
 </Accordion>
 
@@ -376,13 +382,13 @@ Les messages de chat prennent en charge les commandes `/...`. Voir [slash comman
 Points clés :
 
 - `/status` — diagnostics rapides.
-- `/trace` — lignes de trace/débogage de plugin limitées à la session.
+- `/trace` — lignes de trace/débogage de plugin étendues à la session.
 - `/config` — modifications de configuration persistantes.
-- `/debug` — substitutions de configuration uniquement au moment de l'exécution (en mémoire, pas sur disque ; nécessite `commands.debug: true`).
+- `/debug` — substitutions de configuration uniquement lors de l'exécution (mémoire, pas disque ; nécessite `commands.debug: true`).
 
 ## Suivi de l'utilisation
 
-`openclaw status --usage` et l'interface utilisateur Control affichent l'utilisation/le quota du fournisseur lorsque les informations d'identification OAuth/API sont disponibles. Les données proviennent directement des points de terminaison d'utilisation du fournisseur et sont normalisées à `X% left`. Fournisseurs avec des fenêtres d'utilisation actuelles : Anthropic, GitHub Copilot, Gemini CLI, OpenAI Codex, MiniMax, Xiaomi et z.ai.
+`openclaw status --usage` et l'interface utilisateur de Control affichent l'utilisation/le quota du provider lorsque les identifiants OAuth/API sont disponibles. Les données proviennent directement des points de terminaison d'utilisation du provider et sont normalisées à `X% left`. Providers avec des fenêtres d'utilisation actuelles : Anthropic, GitHub Copilot, Gemini CLI, OpenAI Codex, MiniMax, Xiaomi et z.ai.
 
 Voir [Suivi de l'utilisation](/fr/concepts/usage-tracking) pour plus de détails.
 

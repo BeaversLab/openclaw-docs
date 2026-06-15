@@ -75,20 +75,18 @@ Les réponses finales normales d'exécution d'agent doivent être durables car l
 
 Configuration complète : [Configuration](/fr/gateway/configuration)
 
-Options WebChat :
+WebChat n'a pas de section de configuration persistante. Le Gateway utilise la limite d'affichage intégrée WebChatGateway`chat.history`API ; les clients API peuvent envoyer `maxChars` par requête pour la remplacer pour un seul appel `chat.history`. L'ancienne configuration `channels.webchat` et `gateway.webchat` est abandonnée ; exécutez `openclaw doctor --fix` pour la supprimer.
 
-- `gateway.webchat.chatHistoryMaxChars` : nombre maximum de caractères pour les champs de texte dans les réponses `chat.history`. Lorsqu'une entrée de transcription dépasse cette limite, Gateway tronque les champs de texte longs et peut remplacer les messages trop volumineux par un espace réservé. Un `maxChars` par requête peut également être envoyé par le client pour remplacer cette valeur par défaut pour un seul appel `chat.history`.
-
-Options globales connexes :
+Options globales associées :
 
 - `gateway.port`, `gateway.bind` : hôte/port WebSocket.
 - `gateway.auth.mode`, `gateway.auth.token`, `gateway.auth.password` :
-  authentification WebSocket par secret partagé.
-- `gateway.auth.allowTailscale` : l'onglet de chat de l'interface de contrôle du navigateur peut utiliser les en-têtes d'identité Tailscale
-  Serve lorsqu'ils sont activés.
-- `gateway.auth.mode: "trusted-proxy"` : authentification par proxy inverse pour les clients navigateur derrière une source de proxy **non bouclage** sensible à l'identité (voir [Trusted Proxy Auth](/fr/gateway/trusted-proxy-auth)).
-- `gateway.remote.url`, `gateway.remote.token`, `gateway.remote.password` : cible de passerelle distante.
-- `session.*` : stockage de session et clés principales par défaut.
+  auth WebSocket par secret partagé.
+- `gateway.auth.allowTailscale`Tailscale : l'onglet de chat de l'interface de contrôle du navigateur peut utiliser les en-têtes d'identité Tailscale
+  Serve lorsqu'il est activé.
+- `gateway.auth.mode: "trusted-proxy"` : auth reverse-proxy pour les clients navigateurs derrière une source proxy **non-boucle** (loopback) consciente de l'identité (voir [Authentification de proxy de confiance](/fr/gateway/trusted-proxy-auth)).
+- `gateway.remote.url`, `gateway.remote.token`, `gateway.remote.password` : cible distante du Gateway.
+- `session.*` : stockage de session et valeurs par défaut de la clé principale.
 
 ## Connexes
 

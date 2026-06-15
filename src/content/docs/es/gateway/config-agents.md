@@ -103,11 +103,11 @@ Anulación por agente: `agents.list[].contextInjection`. Los valores omitidos he
 
 ### `agents.defaults.bootstrapMaxChars`
 
-Máximo de caracteres por archivo de arranque del espacio de trabajo antes del truncamiento. Predeterminado: `12000`.
+Máximo de caracteres por archivo de arranque del espacio de trabajo antes del truncamiento. Predeterminado: `20000`.
 
 ```json5
 {
-  agents: { defaults: { bootstrapMaxChars: 12000 } },
+  agents: { defaults: { bootstrapMaxChars: 20000 } },
 }
 ```
 
@@ -136,7 +136,7 @@ Use las anulaciones del perfil de arranque por agente cuando un agente necesite 
   agents: {
     defaults: {
       contextInjection: "continuation-skip",
-      bootstrapMaxChars: 12000,
+      bootstrapMaxChars: 20000,
       bootstrapTotalMaxChars: 60000,
     },
     list: [

@@ -194,13 +194,13 @@ debido a los límites de archivos de arranque a continuación.
   anteponer la memoria diaria reciente como un bloque de contexto de inicio de uso único para ese primer turno.
 </Note>
 
-Los archivos grandes se truncan con un marcador. El tamaño máximo por archivo se controla mediante
-`agents.defaults.bootstrapMaxChars` (predeterminado: 12000). El contenido total de arranque inyectado
-entre archivos se limita mediante `agents.defaults.bootstrapTotalMaxChars`
-(predeterminado: 60000). Los archivos faltantes inyectan un marcador breve de archivo faltante. Cuando ocurre el truncamiento,
-OpenClaw puede inyectar un aviso conciso de advertencia en el mensaje del sistema; controle esto con
+Los archivos grandes se truncan con un marcador. El tamaño máximo por archivo está controlado por
+`agents.defaults.bootstrapMaxChars` (predeterminado: 20000). El contenido total de arranque inyectado
+entre archivos está limitado por `agents.defaults.bootstrapTotalMaxChars`
+(predeterminado: 60000). Los archivos faltantes inyectan un marcador corto de archivo faltante. Cuando se produce
+el truncamiento, OpenClaw puede inyectar un aviso de advertencia conciso del sistema; controle esto con
 `agents.defaults.bootstrapPromptTruncationWarning` (`off`, `once`, `always`;
-predeterminado: `always`). Los recuentos detallados brutos/inyectados permanecen en diagnósticos como
+predeterminado: `always`). Los conteos detallados brutos/inyectados permanecen en diagnósticos como
 `/context`, `/status`, doctor y registros.
 
 Para los archivos de memoria, el truncamiento no es una pérdida de datos: el archivo permanece intacto en el disco.

@@ -41,41 +41,41 @@ Cron est le planificateur intégré de la Gateway. Il persiste les tâches, rév
 
 - Cron s'exécute **au sein du processus du Gateway** (et non au sein du modèle).
 - Les définitions de tâches, l'état d'exécution et l'historique des exécutions sont persistés dans la base de données d'état SQLite partagée d'OpenClaw, de sorte que les redémarrages ne fassent pas perdre les planifications.
-- Lors d'une mise à niveau, les fichiers `~/.openclaw/cron/jobs.json`, `jobs-state.json` et `runs/*.jsonl` hérités sont importés une fois et renommés avec un suffixe `.migrated`. Les lignes de tâches malformées sont ignorées lors de l'exécution et copiées dans `jobs-quarantine.json` pour une réparation ou un examen ultérieur.
-- `cron.store` nomme toujours la clé logique de stockage cron et le chemin d'importation hérité. Après l'importation, la modification de ce fichier JSON ne change plus les tâches cron actives ; utilisez plutôt `openclaw cron add|edit|remove` ou les méthodes cron Gateway du RPC.
+- Lors de la mise à niveau, exécutez `openclaw doctor --fix` pour importer les fichiers `~/.openclaw/cron/jobs.json`, `jobs-state.json` et `runs/*.jsonl` hérités vers SQLite et les renommer avec le suffixe `.migrated`. Les lignes de tâches malformées sont ignorées lors de l'exécution et copiées dans `jobs-quarantine.json` pour réparation ou examen ultérieur.
+- `cron.store` nomme toujours la clé logique de stockage cron et le chemin d'importation du docteur. Après l'importation, la modification de ce fichier JSON ne change plus les tâches cron actives ; utilisez plutôt `openclaw cron add|edit|remove` ou les méthodes RPC du cron du GatewayRPC.
 - Toutes les exécutions cron créent des enregistrements de [tâche d'arrière-plan](/fr/automation/tasks).
 - Au démarrage du Gateway, les tâches isolées en attente d'exécution par l'agent (agent-turn) en retard sont replanifiées en dehors de la fenêtre de connexion du canal au lieu d'être rejouées immédiatement, afin que le démarrage de Discord/Telegram et la configuration des commandes natives restent réactifs après les redémarrages.
-- Les tâches ponctuelles (`--at`) sont automatiquement supprimées après succès par défaut.
-- Les exécutions cron isolées tentent au mieux de fermer les onglets/processus de navigateur suivis pour leur session `cron:<jobId>` lorsque l'exécution est terminée, afin que l'automatisation de navigateur détachée ne laisse pas de processus orphelins derrière elle.
+- Les tâches ponctuelles (`--at`) sont supprimées automatiquement après succès par défaut.
+- Les exécutions cron isolées tentent au mieux de fermer les onglets/processus de navigateur suivis pour leur `cron:<jobId>` session lorsque l'exécution est terminée, afin que l'automatisation de navigateur détachée ne laisse pas de processus orphelins.
 - Les exécutions cron isolées qui reçoivent la subvention étroite d'auto-nettoyage cron peuvent toujours lire le statut du planificateur, une liste auto-filtrée de leur tâche actuelle et l'historique d'exécution de cette tâche, afin que les vérifications de statut/heartbeat puissent inspecter leur propre planification sans obtenir un accès plus large à la mutation cron.
-- Les exécutions cron isolées se protègent également contre les réponses d'accusé de réception périmées. Si le premier résultat est juste une mise à jour de statut provisoire (`on it`, `pulling everything together`, et indices similaires) et qu'aucune exécution de sous-agent descendant n'est encore responsable de la réponse finale, OpenClaw redemande une fois le résultat réel avant la livraison.
-- Les exécutions cron isolées utilisent des métadonnées structurées de refus d'exécution provenant de l'exécution intégrée, y compris les wrappers `UNAVAILABLE` de l'hôte de nœud dont le message d'erreur imbriqué commence par `SYSTEM_RUN_DENIED` ou `INVALID_REQUEST`, de sorte qu'une commande bloquée n'est pas signalée comme une exécution réussie (verte) tandis que le texte ordinaire de l'assistant n'est pas traité comme un refus.
+- Les exécutions cron isolées se protègent également contre les réponses d'accusé de réception périmées. Si le premier résultat est seulement une mise à jour de l'état provisoire (`on it`, `pulling everything together`, et indices similaires) et qu'aucune exécution de sous-agent descendant n'est encore responsable de la réponse finale, OpenClaw redemande une fois le résultat réel avant la livraison.
+- Les exécutions cron isolées utilisent des métadonnées structurées de refus d'exécution provenant de l'exécution intégrée, y compris les wrappers `UNAVAILABLE` de nœud hôte dont le message d'erreur imbriqué commence par `SYSTEM_RUN_DENIED` ou `INVALID_REQUEST`, afin qu'une commande bloquée ne soit pas signalée comme une exécution réussie tandis que la prose ordinaire de l'assistant n'est pas traitée comme un refus.
 - Les exécutions cron isolées traitent également les échecs de l'agent au niveau de l'exécution comme des erreurs de tâche même lorsqu'aucune charge utile de réponse n'est produite, de sorte que les échecs du modèle/fournisseur incrémentent les compteurs d'erreurs et déclenchent des notifications d'échec au lieu de marquer la tâche comme réussie.
-- Lorsqu'une tâche de tour d'agent isolé atteint `timeoutSeconds`, cron interrompt l'exécution de l'agent sous-jacente et lui accorde une courte fenêtre de nettoyage. Si l'exécution ne se vide pas, le nettoyage appartenant à Gateway force la suppression de la propriété de session de cette exécution avant que cron n'enregistre le dépassement de délai, afin que le travail de chat mis en file d'attente ne reste pas bloqué derrière une session de traitement obsolète.
-- Si un tour d'agent isolé stalle avant le démarrage du runner ou avant le premier appel au modèle, cron enregistre un dépassement de délai spécifique à la phase, tel que `setup timed out before runner start` ou `stalled before first model call (last phase: context-engine)`. Ces chiens de garde couvrent les fournisseurs intégrés et les fournisseurs pris en charge par la CLI avant que leur processus externe CLI ne soit réellement démarré, et sont plafonnés indépendamment des longues valeurs `timeoutSeconds`, afin que les échecs de démarrage à froid, d'authentification ou de contexte apparaissent rapidement au lieu d'attendre le budget complet de la tâche.
-- Si vous utilisez le cron système ou un autre planificateur externe pour exécuter `openclaw agent`, enveloppez-le d'une escalation d'arrêt forcé même si le CLI gère `SIGTERM`/`SIGINT`. Les exécutions supportées par le Gateway demandent au Gateway d'annuler les exécutions acceptées ; les exécutions de secours locales et intégrées reçoivent le même signal d'annulation. Pour GNU `timeout`, préférez `timeout -k 60 600 openclaw agent ...` à un simple `timeout 600 ...` ; la valeur `-k` est le filet de sécurité du superviseur si le processus ne peut pas se vider. Pour les unités systemd, conservez la même forme en utilisant un signal d'arrêt `SIGTERM` plus une fenêtre de grâce telle que `TimeoutStopSec` avant toute mise à mort finale. Si une nouvelle tentative réutilise un `--run-id` alors que l'exécution Gateway d'origine est toujours active, le doublon est signalé comme en cours de vol au lieu de démarrer une deuxième exécution.
+- Lorsqu'une tâche isolée de tour d'agent atteint `timeoutSeconds`, le cron interrompt l'exécution de l'agent sous-jacente et lui accorde une courte fenêtre de nettoyage. Si l'exécution ne se vide pas, le nettoyage propriété du Gateway force la suppression de la propriété de session de cette exécution avant que le cron n'enregistre le délai d'attente, afin que le travail de chat en file d'attente ne reste pas derrière une session de traitement périmée.
+- Si un tour d'agent isolé stalle avant le démarrage du lanceur ou avant le premier appel de modèle, cron enregistre un délai d'attente spécifique à la phase tel que `setup timed out before runner start` ou `stalled before first model call (last phase: context-engine)`. Ces chiens de garde couvrent les fournisseurs intégrés et les fournisseurs basés sur CLI avant que leur processus externe CLI ne soit réellement démarré, et sont plafonnés indépendamment des longues valeurs `timeoutSeconds` afin que les échecs de démarrage à froid, d'authentification ou de contexte apparaissent rapidement au lieu d'attendre le budget complet de la tâche.
+- Si vous utilisez le cron système ou un autre planificateur externe pour exécuter `openclaw agent`, enveloppez-le d'une escalade de terminaison forcée même si le CLI gère `SIGTERM`/`SIGINT`. Les exécutions soutenues par Gateway demandent au Gateway d'annuler les exécutions acceptées ; les exécutions de secours locales et intégrées reçoivent le même signal d'annulation. Pour GNU `timeout`, préférez `timeout -k 60 600 openclaw agent ...` à un simple `timeout 600 ...` ; la valeur `-k` est le filet de sécurité du superviseur si le processus ne peut pas se drainer. Pour les unités systemd, gardez la même forme en utilisant un signal d'arrêt `SIGTERM` plus une fenêtre de grâce telle que `TimeoutStopSec` avant toute terminaison finale. Si une nouvelle tentative réutilise un `--run-id` alors que l'exécution Gateway d'origine est toujours active, le doublon est signalé comme étant en cours au lieu de démarrer une deuxième exécution.
 
 <a id="maintenance"></a>
 
 <Note>
-La réconciliation des tâches pour cron est d'abord gérée par le runtime, ensuite sauvegardée par l'historique durable : une tâche cron active reste en vie tant que le runtime cron suit toujours cette tâche comme étant en cours d'exécution, même si une ancienne ligne de session enfant existe toujours. Une fois que le runtime cesse de posséder la tâche et que la fenêtre de grâce de 5 minutes expire, la maintenance vérifie les journaux d'exécution persistants et l'état de la tâche pour l'exécution `cron:<jobId>:<startedAt>` correspondante. Si cet historique durable montre un résultat terminal, le registre des tâches est finalisé à partir de celui-ci ; sinon la maintenance détenue par Gateway peut marquer la tâche `lost`. L'audit hors ligne du CLI peut récupérer à partir de l'historique durable, mais il ne traite pas son propre ensemble vide de tâches actives en cours comme une preuve qu'une exécution cron détenue par Gateway a disparu.
+La réconciliation des tâches pour cron est d'abord gérée par le runtime, puis secondairement sauvegardée par l'historique durable : une tâche cron active reste vivante tant que le runtime cron suit toujours ce travail comme étant en cours d'exécution, même si une ancienne ligne de session enfant existe toujours. Une fois que le runtime cesse de posséder le travail et que la fenêtre de grâce de 5 minutes expire, la maintenance vérifie les journaux d'exécution persistants et l'état du travail pour l'exécution `cron:<jobId>:<startedAt>` correspondante. Si cet historique durable montre un résultat terminal, le grand livre des tâches est finalisé à partir de celui-ci ; sinon la maintenance détenue par le Gateway peut marquer la tâche comme `lost`. L'audit hors ligne du CLI peut récupérer à partir de l'historique durable, mais il ne traite pas son propre ensemble vide de travaux actifs en cours comme une preuve qu'une exécution cron détenue par le Gateway a disparu.
 </Note>
 
 ## Types de planification
 
-| Type    | Indicateur CLI | Description                                              |
-| ------- | -------------- | -------------------------------------------------------- |
-| `at`    | `--at`         | Horodatage unique (ISO 8601 ou relatif comme `20m`)      |
-| `every` | `--every`      | Intervalle fixe                                          |
-| `cron`  | `--cron`       | Expression cron sur 5 ou 6 champs avec `--tz` facultatif |
+| Type    | Indicateur CLI | Description                                            |
+| ------- | -------------- | ------------------------------------------------------ |
+| `at`    | `--at`         | Horodatage ponctuel (ISO 8601 ou relatif comme `20m`)  |
+| `every` | `--every`      | Intervalle fixe                                        |
+| `cron`  | `--cron`       | Expression cron à 5 ou 6 champs avec `--tz` facultatif |
 
-Les horodatages sans fuseau horaire sont traités comme UTC. Ajoutez `--tz America/New_York` pour une planification locale à l'heure de l'horloge.
+Les horodatages sans fuseau horaire sont traités comme UTC. Ajoutez `--tz America/New_York` pour une planification locale basée sur l'horloge murale.
 
-Les expressions récurrentes en début d'heure sont automatiquement échelonnées jusqu'à 5 minutes pour réduire les pics de charge. Utilisez `--exact` pour forcer une synchronisation précise ou `--stagger 30s` pour une fenêtre explicite.
+Les expressions récurrentes en début d'heure sont automatiquement échelonnées jusqu'à 5 minutes pour réduire les pics de charge. Utilisez `--exact` pour forcer un timing précis ou `--stagger 30s` pour une fenêtre explicite.
 
 ### Jour du mois et jour de la semaine utilisent une logique OU
 
-Les expressions cron sont analysées par [croner](https://github.com/Hexagon/croner). Lorsque les champs jour du mois et jour de la semaine ne sont pas des caractères génériques, croner correspond lorsque **l'un ou l'autre** des champs correspond — et non les deux. Il s'agit du comportement standard de Vixie cron.
+Les expressions cron sont analysées par [croner](https://github.com/Hexagon/croner). Lorsque les champs jour-du-mois et jour-de-la-semaine sont tous deux non génériques, croner correspond lorsque **l'un ou l'autre** des champs correspond — et non les deux. Il s'agit du comportement standard de Vixie cron.
 
 ```
 # Intended: "9 AM on the 15th, only if it's a Monday"
@@ -83,7 +83,7 @@ Les expressions cron sont analysées par [croner](https://github.com/Hexagon/cro
 0 9 15 * 1
 ```
 
-Cela se déclenche environ 5 à 6 fois par mois au lieu de 0 à 1 fois par mois. OpenClaw utilise ici le comportement OU par défaut de Croner. Pour exiger les deux conditions, utilisez le modificateur de jour de la semaine `+` de Croner (`0 9 15 * +1`) ou planifiez sur un champ et protégez l'autre dans l'invite ou la commande de votre tâche.
+Cela se déclenche environ 5 à 6 fois par mois au lieu de 0 à 1 fois par mois. OpenClaw utilise ici le comportement OR par défaut de Croner. Pour exiger les deux conditions, utilisez le modificateur jour-de-la-semaine `+` de Croner (`0 9 15 * +1`) ou planifiez sur un champ et gardez l'autre dans le prompt ou la commande de votre travail.
 
 ## Styles d'exécution
 
@@ -96,16 +96,13 @@ Cela se déclenche environ 5 à 6 fois par mois au lieu de 0 à 1 fois par mois.
 
 <AccordionGroup>
   <Accordion title="Session principale vs isolée vs personnalisée">
-    Les tâches de **session principale** mettent en file un événement système dans une voie d'exécution propriétaire de cron et réveillent éventuellement le heartbeat (`--wake now` ou `--wake next-heartbeat`). Elles peuvent utiliser le dernier contexte de livraison de la session principale cible pour les réponses, mais elles n'ajoutent pas de tours de cron de routine à la voie de chat humain et n'étendent pas la fraîcheur de réinitialisation quotidiale/inactive pour la session cible. Les tâches **isolées** exécutent un tour d'agent dédié avec une session fraîche. Les **sessions personnalisées** (`session:xxx`) conservent le contexte entre les exécutions, permettant des flux de travail tels que les stand-ups quotidiens qui s'appuient sur des résumés précédents.
+    Les tâches de **session principale** mettent en file un événement système dans une voie d'exécution appartenant à cron et réveillent facultativement le heartbeat (`--wake now` ou `--wake next-heartbeat`). Elles peuvent utiliser le contexte de la dernière livraison de la session principale cible pour les réponses, mais elles n'ajoutent pas de tours cron de routine à la voie de discussion humaine et n'étendent pas la fraîcheur de réinitialisation journalière/inactivité pour la session cible. Les tâches **isolées** exécutent un tour d'agent dédié avec une session fraîche. Les **sessions personnalisées** (`session:xxx`) conservent le contexte entre les exécutions, permettant des flux de travail tels que les stand-ups quotidiens qui s'appuient sur des résumés précédents.
 
-    Les événements cron de session principale sont des rappels d'événements système autonomes. Ils n'incluent
-    pas automatiquement l'instruction "Read HEARTBEAT.md" du prompt heartbeat par défaut. Si un rappel récurrent doit consulter
-    `HEARTBEAT.md`, indiquez-le explicitement dans le texte de l'événement cron ou dans les
-    propres instructions de l'agent.
+    Les événements cron de session principale sont des rappels d'événements système autonomes. Ils n'incluent pas automatiquement l'instruction « Lire HEARTBEAT.md » du prompt heartbeat par défaut. Si un rappel récurrent doit consulter `HEARTBEAT.md`, indiquez-le explicitement dans le texte de l'événement cron ou dans les instructions propres de l'agent.
 
   </Accordion>
-  <Accordion title="Signification de 'session fraîche' pour les tâches isolées">
-    Pour les tâches isolées, "session fraîche" signifie un nouvel ID de transcription/session pour chaque exécution. OpenClaw peut transporter des préférences sécurisées telles que les paramètres de réflexion/rapide/verbeux, les étiquettes et les substitutions explicites de modèle/authentification sélectionnées par l'utilisateur, mais il n'hérite pas du contexte de conversation ambiant d'une ligne cron plus ancienne : routage de channel/groupe, stratégie d'envoi ou de file d'attente, élévation, origine ou liaison d'exécution ACP. Utilisez `current` ou `session:<id>` lorsqu'une tâche récurrente doit délibérément s'appuyer sur le même contexte de conversation.
+  <Accordion title="Ce que signifie « session fraîche » pour les tâches isolées">
+    Pour les tâches isolées, « session fraîche » signifie un nouvel identifiant de transcription/session pour chaque exécution. OpenClaw peut transporter des préférences sécurisées telles que les paramètres de réflexion/rapide/verbeux, les étiquettes et les substitutions de modèle/authentification explicitement sélectionnées par l'utilisateur, mais il n'hérite pas du contexte de conversation ambiant d'une ligne cron plus ancienne : le routage channel/groupe, la politique d'envoi ou de file d'attente, l'élévation, l'origine ou la liaison d'exécution ACP. Utilisez `current` ou `session:<id>` lorsqu'une tâche récurrente doit délibérément s'appuyer sur le même contexte de conversation.
   </Accordion>
   <Accordion title="Nettoyage de l'exécution">
     Pour les tâches isolées, le démontage de l'exécution inclut désormais un nettoyage du navigateur de meilleure volonté pour cette session cron. Les échecs de nettoyage sont ignorés afin que le résultat réel du cron prime toujours.
@@ -124,10 +121,10 @@ Cela se déclenche environ 5 à 6 fois par mois au lieu de 0 à 1 fois par mois.
 ### Options de charge utile pour les tâches isolées
 
 <ParamField path="--message" type="string" required>
-  Texte d'invite (requis pour les tâches isolées).
+  Texte du prompt (requis pour isolated).
 </ParamField>
 <ParamField path="--model" type="string">
-  Remplacement du modèle ; utilise le modèle autorisé sélectionné pour la tâche.
+  Remplacement du model ; utilise le model autorisé sélectionné pour la tâche.
 </ParamField>
 <ParamField path="--thinking" type="string">
   Remplacement du niveau de réflexion.
@@ -136,14 +133,14 @@ Cela se déclenche environ 5 à 6 fois par mois au lieu de 0 à 1 fois par mois.
   Ignorer l'injection du fichier d'amorçage de l'espace de travail.
 </ParamField>
 <ParamField path="--tools" type="string">
-  Restreindre les outils que la tâche peut utiliser, par exemple `--tools exec,read`.
+  Limiter les outils que la tâche peut utiliser, par exemple `--tools exec,read`.
 </ParamField>
 
-`--model` utilise le modèle autorisé sélectionné comme modèle principal de cette tâche. Ce n'est pas la même chose qu'un remplacement `/model` de session de chat : les chaînes de repli configurées s'appliquent toujours lorsque le modèle principal de la tâche échoue. Si le modèle demandé n'est pas autorisé ou ne peut pas être résolu, cron échoue l'exécution avec une erreur de validation explicite au lieu de revenir silencieusement au modèle par défaut/agent de la tâche.
+`--model` utilise le model autorisé sélectionné comme model principal de cette tâche. Ce n'est pas la même chose qu'un remplacement `/model` de session de chat : les chaînes de repli configurées s'appliquent toujours lorsque le model principal de la tâche échoue. Si le model demandé n'est pas autorisé ou ne peut pas être résolu, cron échoue l'exécution avec une erreur de validation explicite au lieu de revenir silencieusement au choix du model par défaut de l'agent/de la tâche.
 
-Les tâches cron peuvent également transporter une liste `fallbacks` au niveau du payload. Lorsqu'elle est présente, cette liste remplace la chaîne de repli configurée pour la tâche. Utilisez `fallbacks: []` dans le payload de la tâche/API lorsque vous souhaitez une exécution cron stricte qui n'essaie que le modèle sélectionné. Si une tâche a `--model` mais ni payload ni replis configurés, OpenClaw transmet une substitution de repli vide explicite afin que le modèle principal de l'agent ne soit pas ajouté comme cible de retry supplémentaire masquée.
+Les tâches cron peuvent également porter des `fallbacks` au niveau du payload. Lorsqu'elle est présente, cette liste remplace la chaîne de repli configurée pour la tâche. Utilisez `fallbacks: []` dans le payload/API de la tâche lorsque vous souhaitez une exécution cron stricte qui n'essaie que le model sélectionné. Si une tâche a `--model` mais ni payload ni replis configurés, OpenClaw transmet un remplacement de repli vide explicite afin que le principal de l'agent ne soit pas ajouté comme cible de retry supplémentaire cachée.
 
-Les vérifications préalables du fournisseur local parcourent les replis configurés avant de marquer une exécution cron comme `skipped` ; `fallbacks: []` maintient ce chemin préalable strict.
+Les vérifications préliminaires du fournisseur local parcourent les replis configurés avant de marquer une exécution cron comme `skipped` ; `fallbacks: []` maintient ce chemin préliminaire strict.
 
 La priorité de sélection du modèle pour les tâches isolées est :
 
@@ -152,11 +149,11 @@ La priorité de sélection du modèle pour les tâches isolées est :
 3. Substitution du modèle de session cron stocké sélectionné par l'utilisateur
 4. Sélection du modèle agent/défaut
 
-Le mode rapide suit également la sélection en direct résolue. Si la configuration du modèle sélectionné a `params.fastMode`, le cron isolé l'utilise par défaut. Une substitution de session stockée `fastMode` l'emporte toujours sur la configuration dans les deux sens.
+Le mode rapide suit également la sélection en direct résolue. Si la configuration du model sélectionné contient `params.fastMode`, le cron isolé l'utilise par défaut. Un remplacement `fastMode` de session stockée prime toujours sur la configuration dans les deux sens.
 
 Si une exécution isolée rencontre un transfert de changement de modèle en direct, le cron réessaie avec le fournisseur/modèle commuté et rend persistante cette sélection en direct pour l'exécution active avant de réessayer. Lorsque le transfert comprend également un nouveau profil d'authentification, le cron rend également persistante cette substitution de profil d'authentification pour l'exécution active. Les tentatives sont limitées : après la tentative initiale plus 2 tentatives de transfert, le cron abandonne au lieu de boucler indéfiniment.
 
-Avant qu'une exécution cron isolée n'entre dans l'exécuteur de l'agent, OpenClaw vérifie les points de terminaison du fournisseur locaux accessibles pour les fournisseurs OpenClaw`api: "ollama"` et `api: "openai-completions"` configurés dont l'`baseUrl` est bouclage (loopback), réseau privé ou `.local`. Si ce point de terminaison est en panne, l'exécution est enregistrée comme `skipped`Ollama avec une erreur claire de fournisseur/modèle au lieu de lancer un appel au modèle. Le résultat du point de terminaison est mis en cache pendant 5 minutes, de sorte que de nombreuses tâches échues utilisant le même serveur local Ollama, vLLM, SGLang ou LM Studio mort partagent une petite sonde au lieu de créer une tempête de requêtes. Les exécutions de pré-vol du fournisseur ignorées n'incrémentent pas le délai d'attente (backoff) en cas d'erreur d'exécution ; activez `failureAlert.includeSkipped` lorsque vous souhaitez des notifications répétées d'ignoraison.
+Avant qu'une exécution cron isolée n'entre dans le runner de l'agent, OpenClaw vérifie les points de terminaison de fournisseurs locaux accessibles pour les fournisseurs OpenClaw`api: "ollama"` et `api: "openai-completions"` configurés dont le `baseUrl` est bouclage (loopback), réseau privé ou `.local`. Si ce point de terminaison est en panne, l'exécution est enregistrée comme `skipped`Ollama avec une erreur claire de fournisseur/modèle au lieu de lancer un appel au modèle. Le résultat du point de terminaison est mis en cache pendant 5 minutes, de sorte que de nombreuses tâches en attente utilisant le même serveur local Ollama, vLLM, SGLang ou LM Studio mort partagent une petite sonde unique au lieu de créer une tempête de requêtes. Les exécutions avec prévol de fournisseur ignorées (skipped) n'incrémentent pas le délai d'attente pour erreur d'exécution ; activez `failureAlert.includeSkipped` lorsque vous souhaitez des notifications répétées d'ignor.
 
 ## Livraison et sortie
 
@@ -166,15 +163,15 @@ Avant qu'une exécution cron isolée n'entre dans l'exécuteur de l'agent, OpenC
 | `webhook`  | POST de la charge utile de l'événement terminé vers une URL                    |
 | `none`     | Aucune livraison de secours de l'exécuteur                                     |
 
-Utilisez `--announce --channel telegram --to "-1001234567890"`Telegram pour la livraison vers le channel. Pour les sujets de forum Telegram, utilisez `-1001234567890:topic:123`OpenClawTelegram ; OpenClaw accepte également l'abréviation `-1001234567890:123`RPC détenue par Telegram. Les appelants directs RPC/config peuvent passer `delivery.threadId`SlackDiscordMattermost sous forme de chaîne ou de nombre. Les cibles Slack/Discord/Mattermost doivent utiliser des préfixes explicites (`channel:<id>`, `user:<id>`Matrix). Les ID de salle Matrix sont sensibles à la casse ; utilisez l'ID de salle exact ou le formulaire `room:!room:server`Matrix de Matrix.
+Utilisez `--announce --channel telegram --to "-1001234567890"`Telegram pour la livraison vers un canal. Pour les sujets de forum Telegram, utilisez `-1001234567890:topic:123`OpenClawTelegram ; OpenClaw accepte également l'abréviation `-1001234567890:123`RPC propriétaire de Telegram. Les appelants directs RPC/config peuvent passer `delivery.threadId`SlackDiscordMattermost sous forme de chaîne ou de nombre. Les cibles Slack/Discord/Mattermost doivent utiliser des préfixes explicites (`channel:<id>`, `user:<id>`Matrix). Les ID de salle Matrix sont sensibles à la casse ; utilisez l'ID de salle exact ou le formulaire `room:!room:server`Matrix provenant de Matrix.
 
-Lorsque la livraison par annonce utilise `channel: "last"` ou omet `channel`, une cible préfixée par fournisseur telle que `telegram:123` peut sélectionner le canal avant que cron ne revienne à l'historique de session ou à un canal configuré unique. Seuls les préfixes annoncés par le plugin chargé sont des sélecteurs de fournisseur. Si `delivery.channel` est explicite, le préfixe de cible doit nommer le même fournisseur ; par exemple, `channel: "whatsapp"` avec `to: "telegram:123"` est rejeté au lieu de laisser WhatsApp interpréter l'ID Telegram comme un numéro de téléphone. Les préfixes de type de cible et de service tels que `channel:<id>`, `user:<id>`, `imessage:<handle>` et `sms:<number>` restent une syntaxe de cible appartenant au canal, et non des sélecteurs de fournisseur.
+Lorsque la livraison d'annonce utilise `channel: "last"` ou omet `channel`, une cible avec un préfixe de fournisseur telle que `telegram:123` peut sélectionner le canal avant que cron ne revienne à l'historique de session ou à un canal configuré unique. Seuls les préfixes annoncés par le plugin chargé sont des sélecteurs de fournisseur. Si `delivery.channel` est explicite, le préfixe de cible doit nommer le même fournisseur ; par exemple, `channel: "whatsapp"` avec `to: "telegram:123"` est rejeté au lieu de laisser WhatsApp interpréter l'ID Telegram comme un numéro de téléphone. Les préfixes de type de cible et de service tels que `channel:<id>`, `user:<id>`, `imessage:<handle>` et `sms:<number>` restent une syntaxe de cible détenue par le canal, et non des sélecteurs de fournisseur.
 
-Pour les tâches isolées, la livraison par chat est partagée. Si une route de chat est disponible, l'agent peut utiliser l'outil `message` même lorsque la tâche utilise `--no-deliver`. Si l'agent envoie à la cible configurée/actuelle, OpenClaw ignore l'annonce de secours. Sinon, `announce`, `webhook` et `none` ne contrôlent que ce que le runner fait avec la réponse finale après le tour de l'agent.
+Pour les tâches isolées, la livraison de chat est partagée. Si un itinéraire de chat est disponible, l'agent peut utiliser l'outil `message` même lorsque la tâche utilise `--no-deliver`. Si l'agent envoie à la cible configurée/actuelle, OpenClaw ignore l'annonce de repli. Sinon, `announce`, `webhook` et `none` ne contrôlent que ce que le runner fait avec la réponse finale après le tour de l'agent.
 
 Lorsqu'un agent crée un rappel isolé à partir d'un chat actif, OpenClaw stocke la cible de livraison live préservée pour la route d'annonce de secours. Les clés de session internes peuvent être en minuscules ; les cibles de livraison par fournisseur ne sont pas reconstruites à partir de ces clés lorsque le contexte de chat actuel est disponible.
 
-La livraison implicite par annonce utilise les listes d'autorisation de canaux configurées pour valider et réacheminer les cibles obsolètes. Les approbations de magasin d'appariement DM ne sont pas des destinataires d'automatisation de secours ; définissez `delivery.to` ou configurez l'entrée de canal `allowFrom` lorsqu'une tâche planifiée doit envoyer proactivement à un DM.
+La livraison d'annonce implicite utilise les listes d'autorisation de canaux configurées pour valider et réacheminer les cibles obsolètes. Les approbations de magasin d'appariement DM ne sont pas des destinataires d'automatisation de repli ; définissez `delivery.to` ou configurez l'entrée `allowFrom` du canal lorsqu'une tâche planifiée doit envoyer de manière proactive à un DM.
 
 ## Langue de sortie
 
@@ -186,15 +183,18 @@ openclaw cron edit <jobId> \
   --message "Summarize the updates. Respond in Chinese; keep URLs, code, and product names unchanged."
 ```
 
-Pour les fichiers de modèle, conservez l'instruction de langue dans le prompt rendu et vérifiez que les espaces réservés tels que `{{language}}` sont remplis avant l'exécution de la tâche. Si la sortie mélange les langues, rendez la règle explicite, par exemple : « Utiliser le chinois pour le texte narratif et conserver les termes techniques en anglais ».
+Pour les fichiers de modèle, conservez l'instruction de langue dans l'invite rendue et
+vérifiez que les espaces réservés tels que `{{language}}` sont remplis avant l'exécution de la tâche. Si
+la sortie mélange les langues, rendez la règle explicite, par exemple : « Utiliser le chinois
+pour le texte narratif et garder les termes techniques en anglais ».
 
 Les notifications d'échec suivent un chemin de destination séparé :
 
 - `cron.failureDestination` définit une valeur par défaut globale pour les notifications d'échec.
-- `job.delivery.failureDestination` remplace cette valeur pour chaque tâche.
-- Si aucun des deux n'est défini et que la tâche est déjà livrée via `announce`, les notifications d'échec reviennent désormais à cette cible d'annonce principale.
+- `job.delivery.failureDestination` remplace cela pour chaque tâche.
+- Si aucun des deux n'est défini et que la tâche délivre déjà via `announce`, les notifications d'échec reviennent désormais à cette cible d'annonce principale.
 - `delivery.failureDestination` n'est pris en charge que sur les tâches `sessionTarget="isolated"`, sauf si le mode de livraison principal est `webhook`.
-- `failureAlert.includeSkipped: true` active les alertes répétées d'exécutions ignorées pour une tâche ou une stratégie d'alerte cron globale. Les exécutions ignorées conservent un compteur consécutif d'ignorances distinct, de sorte qu'elles n'affectent pas l'attente en cas d'erreur d'exécution.
+- `failureAlert.includeSkipped: true` active pour une tâche ou une stratégie d'alerte cron globale des alertes répétées pour les exécutions ignorées. Les exécutions ignorées conservent un compteur consécutif distinct, elles n'affectent donc pas l'attente après erreur d'exécution.
 
 ## Exemples CLI
 
@@ -261,17 +261,17 @@ Les jetons de chaîne de requête sont rejetés.
 
   </Accordion>
   <Accordion title="Mapped hooks (POST /hooks/<name>)">
-    Les noms de hooks personnalisés sont résolus via `hooks.mappings` dans la configuration. Les mappages peuvent transformer des charges utiales arbitraires en actions `wake` ou `agent` à l'aide de modèles ou de transformations de code.
+    Les noms de hooks personnalisés sont résolus via `hooks.mappings` dans la configuration. Les mappages peuvent transformer des charges utiles arbitraires en actions `wake` ou `agent` à l'aide de modèles ou de transformations de code.
   </Accordion>
 </AccordionGroup>
 
 <Warning>
-Gardez les points de terminaison des hooks derrière un bouclage, un tailnet ou un proxy inverse de confiance.
+Maintenez les points de terminaison des hooks derrière une boucle locale (loopback), un tailnet ou un proxy inverse de confiance.
 
-- Utilisez un jeton de hook dédié ; ne réutilisez pas les jetons d'authentification de la passerelle.
+- Utilisez un jeton de hook dédié ; ne réutilisez pas les jetons d'authentification de la Gateway.
 - Gardez `hooks.path` sur un sous-chemin dédié ; `/` est rejeté.
 - Définissez `hooks.allowedAgentIds` pour limiter l'agent effectif qu'un hook peut cibler, y compris l'agent par défaut lorsque `agentId` est omis.
-- Gardez `hooks.allowRequestSessionKey=false` sauf si vous avez besoin de sessions sélectionnées par l'appelant.
+- Conservez `hooks.allowRequestSessionKey=false` sauf si vous nécessitez des sessions sélectionnées par l'appelant.
 - Si vous activez `hooks.allowRequestSessionKey`, définissez également `hooks.allowedSessionKeyPrefixes` pour contraindre les formes de clés de session autorisées.
 - Les charges utiles des hooks sont enveloppées avec des limites de sécurité par défaut.
 
@@ -289,16 +289,16 @@ Connectez les déclencheurs de boîte de réception Gmail à OpenClaw via Google
 openclaw webhooks gmail setup --account openclaw@gmail.com
 ```
 
-Cela écrit la configuration `hooks.gmail`Tailscale, active le préréglage Gmail et utilise Tailscale Funnel pour le point de terminaison de push.
+Cela écrit la configuration `hooks.gmail`Tailscale, active le préréglage Gmail et utilise Tailscale Funnel pour le point de terminaison push.
 
 ### Démarrage automatique de la Gateway
 
-Lorsque `hooks.enabled=true` et `hooks.gmail.account`Gateway sont définis, la Gateway démarre `gog gmail watch serve` au démarrage et renouvelle automatiquement la surveillance. Définissez `OPENCLAW_SKIP_GMAIL_WATCHER=1` pour refuser.
+Lorsque `hooks.enabled=true` et `hooks.gmail.account`Gateway sont définis, la Gateway démarre `gog gmail watch serve` au démarrage et renouvelle automatiquement la surveillance. Définissez `OPENCLAW_SKIP_GMAIL_WATCHER=1` pour désactiver.
 
 ### Configuration manuelle unique
 
 <Steps>
-  <Step title="GCPSélectionner le projet GCP"GCPOAuth>
+  <Step title="GCPSélectionnez le projet GCP"GCPOAuth>
     Sélectionnez le projet GCP qui possède le client OAuth utilisé par `gog` :
 
     ```bash
@@ -377,19 +377,19 @@ openclaw cron create "0 6 * * *" "Check ops queue" --name "Ops sweep" --session 
 openclaw cron edit <jobId> --clear-agent
 ```
 
-`openclaw cron run <jobId>` renvoie après avoir mis en file d'attente l'exécution manuelle. Utilisez `--wait` pour les hooks d'arrêt, les scripts de maintenance ou d'autres automatisations qui doivent bloquer jusqu'à ce que l'exécution en file d'attente soit terminée. Le mode d'attente interroge l'`runId` exact renvoyé ; il sort `0` pour le statut `ok` et non-zéro pour `error`, `skipped`, ou un dépassement de délai d'attente.
+`openclaw cron run <jobId>` renvoie après avoir mis en file d'attente l'exécution manuelle. Utilisez `--wait` pour les hooks d'arrêt, les scripts de maintenance ou d'autres automatisations qui doivent bloquer jusqu'à ce que l'exécution en file d'attente soit terminée. Le mode d'attente interroge le `runId` exact renvoyé ; il quitte avec `0` pour le statut `ok` et une valeur non nulle pour `error`, `skipped`, ou un délai d'attente dépassé.
 
-`openclaw cron create` est un alias pour `openclaw cron add`, et les nouvelles tâches peuvent utiliser un planning positionnel (`"0 9 * * 1"`, `"every 1h"`, `"20m"`, ou un horodatage ISO) suivi d'un invite d'agent positionnel. Utilisez `--webhook <url>` sur `cron add|create` ou `cron edit` pour envoyer (POST) la charge utile de l'exécution terminée à un point de terminaison HTTP. La livraison par Webhook ne peut pas être combinée avec les indicateurs de livraison par chat tels que `--announce`, `--channel`, `--to`, `--thread-id`, ou `--account`.
+`openclaw cron create` est un alias pour `openclaw cron add`, et les nouvelles tâches peuvent utiliser un planning positionnel (`"0 9 * * 1"`, `"every 1h"`, `"20m"`, ou un horodatage ISO) suivi d'un invite d'agent positionnel. Utilisez `--webhook <url>` sur `cron add|create` ou `cron edit` pour envoyer (POST) la charge utile de l'exécution terminée à un point de terminaison HTTP. La livraison par webhook ne peut pas être combinée avec les drapeaux de livraison par chat tels que `--announce`, `--channel`, `--to`, `--thread-id`, ou `--account`.
 
 <Note>
-Remarque sur la substitution du modèle :
+Remarque sur la substitution de modèle :
 
 - `openclaw cron add|edit --model ...` modifie le modèle sélectionné pour la tâche.
 - Si le modèle est autorisé, ce fournisseur/modèle exact atteint l'exécution de l'agent isolé.
-- S'il n'est pas autorisé ou ne peut pas être résolu, cron échoue l'exécution avec une erreur de validation explicite.
-- Les chaînes de secours (fallback) configurées s'appliquent toujours car `--model` de cron est un élément principal de la tâche, et non une substitution de session `/model`.
-- La charge utile `fallbacks` remplace les secours configurés pour cette tâche ; `fallbacks: []` désactive le secours et rend l'exécution stricte.
-- Un `--model` simple sans liste de secours explicite ou configurée ne revient pas à l'élément principal de l'agent comme cible de réessai silencieux supplémentaire.
+- S'il n'est pas autorisé ou ne peut pas être résolu, cron fait échouer l'exécution avec une erreur de validation explicite.
+- Les chaînes de repli configurées s'appliquent toujours car cron `--model` est un primaire de tâche, et non une substitution de session `/model`.
+- La charge utile `fallbacks` remplace les replis configurés pour cette tâche ; `fallbacks: []` désactive le repli et rend l'exécution stricte.
+- Un `--model` simple sans liste de repli explicite ou configurée ne revient pas au primaire de l'agent comme cible de réessai supplémentaire silencieux.
 
 </Note>
 
@@ -413,11 +413,11 @@ Remarque sur la substitution du modèle :
 }
 ```
 
-`maxConcurrentRuns` limite à la fois la répartition cron planifiée et l'exécution du tour d'agent isolé, et par défaut à 8. Les tours d'agent cron isolés utilisent en interne la file d'exécution dédiée `cron-nested` de la file d'attente, donc augmenter cette valeur permet aux exécutions indépendantes du cron LLM de progresser en parallèle au lieu de seulement démarrer leurs wrappers cron externes. La voie partagée non-cron `nested` n'est pas élargie par ce paramètre.
+`maxConcurrentRuns` limite à la fois l'expédition cron planifiée et l'exécution du tour d'agent isolé, et est par défaut de 8. Les tours d'agent cron isolés utilisent en interne la file d'exécution dédiée `cron-nested` de la file d'attente, donc augmenter cette valeur permet aux exécutions cron LLM indépendantes de progresser en parallèle au lieu de simplement démarrer leurs wrappers cron externes. La voie partagée non-cron `nested` n'est pas élargie par ce paramètre.
 
-`cron.store` est une clé de magasin logique et un chemin d'importation hérité. Les magasins existants sont importés dans SQLite lors du premier chargement et archivés ; les futures modifications cron devraient passer par le CLI ou l'Gateway du API.
+`cron.store` est une clé de stockage logique et un chemin d'importation hérité du docteur. Exécutez `openclaw doctor --fix` pour importer les magasins JSON existants dans SQLite et les archiver ; les futures modifications cron doivent passer par le CLI ou l'Gateway du API.
 
-Désactiver cron : `cron.enabled: false` ou `OPENCLAW_SKIP_CRON=1`.
+Désactiver le cron : `cron.enabled: false` ou `OPENCLAW_SKIP_CRON=1`.
 
 <AccordionGroup>
   <Accordion title="Comportement de nouvelle tentative">
@@ -447,8 +447,8 @@ openclaw doctor
 ```
 
 <AccordionGroup>
-  <Accordion title="Cron ne se déclenche pas"`OPENCLAW_SKIP_CRON``cron.enabled`>
-    - Vérifiez la Gateway env var.
+  <Accordion title="Cron not firing">
+    - Vérifiez les env var `cron.enabled` et `OPENCLAW_SKIP_CRON`.
     - Confirmez que le Gateway fonctionne en continu.
     - Pour les planifications `cron`, vérifiez le fuseau horaire (`--tz`) par rapport au fuseau horaire de l'hôte.
     - `reason: not-due` dans la sortie d'exécution signifie qu'une exécution manuelle a été vérifiée avec `openclaw cron run <jobId> --due` et que la tâche n'était pas encore due.
@@ -456,23 +456,23 @@ openclaw doctor
   </Accordion>
   <Accordion title="Cron fired but no delivery">
     - Le mode de livraison `none` signifie qu'aucun envoi de secours par le runner n'est attendu. L'agent peut toujours envoyer directement avec l'outil `message` lorsqu'une route de chat est disponible.
-    - La cible de livraison manquante ou invalide (`channel`/`to`) signifie que l'envoi sortant a été ignoré.
-    - Pour Matrix, les tâches copiées ou héritées avec des ID de salle `delivery.to` en minuscules peuvent échouer car les ID de salle Matrix sont sensibles à la casse. Modifiez la tâche avec la valeur exacte `!room:server` ou `room:!room:server` issue de Matrix.
-    - Les erreurs d'authentification du canal (`unauthorized`, `Forbidden`) signifient que la livraison a été bloquée par les informations d'identification.
-    - Si l'exécution isolée renvoie uniquement le jeton silencieux (`NO_REPLY` / `no_reply`), OpenClaw supprime la livraison sortante directe et supprime également le chemin de résumé mis en file d'attente de secours, donc rien n'est renvoyé au chat.
-    - Si l'agent doit lui-même envoyer un message à l'utilisateur, vérifiez que la tâche dispose d'une route utilisable (`channel: "last"` avec un chat précédent, ou un canal/cible explicite).
+    - La cible de livraison manquante/invalid (`channel`/`to`) signifie que l'envoi sortant a été ignoré.
+    - Pour Matrix, les tâches copiées ou héritées avec des ID de salle `delivery.to` en minuscules peuvent échouer car les ID de salle Matrix sont sensibles à la casse. Modifiez la tâche avec la valeur exacte `!room:server` ou `room:!room:server` de Matrix.
+    - Les erreurs d'auth de channel (`unauthorized`, `Forbidden`) signifient que la livraison a été bloquée par les informations d'identification.
+    - Si l'exécution isolée ne renvoie que le jeton silencieux (`NO_REPLY` / `no_reply`), OpenClaw supprime la livraison sortante directe et supprime également le chemin de résumé mis en file d'attente de secours, donc rien n'est renvoyé au chat.
+    - Si l'agent doit envoyer un message à l'utilisateur lui-même, vérifiez que la tâche a une route utilisable (`channel: "last"` avec un chat précédent, ou un channel/cible explicite).
 
   </Accordion>
   <Accordion title="Cron or heartbeat appears to prevent /new-style rollover">
-    - La fraîcheur de la réinitialisation quotidienne et inactive n'est pas basée sur `updatedAt` ; voir [Gestion de session](/fr/concepts/session#session-lifecycle).
-    - Les réveils Cron, les exécutions de heartbeat, les notifications d'exécution et la tenue de livres de la passerelle peuvent mettre à jour la ligne de session pour le routage/le statut, mais ils n'étendent pas `sessionStartedAt` ou `lastInteractionAt`.
+    - La fraîcheur de la réinitialisation quotidienne et inactive n'est pas basée sur `updatedAt` ; voir [Session management](/fr/concepts/session#session-lifecycle).
+    - Les réveils Cron, les exécutions de heartbeat, les notifications d'exécution et la tenue de livre de la passerelle peuvent mettre à jour la ligne de session pour le routage/le statut, mais ils n'étendent pas `sessionStartedAt` ou `lastInteractionAt`.
     - Pour les lignes héritées créées avant l'existence de ces champs, OpenClaw peut récupérer `sessionStartedAt` à partir de l'en-tête de session JSONL de la transcription lorsque le fichier est toujours disponible. Les lignes inactives héritées sans `lastInteractionAt` utilisent cette heure de début récupérée comme ligne de base inactive.
 
   </Accordion>
   <Accordion title="Pièges de fuseau horaire">
     - Cron sans `--tz` utilise le fuseau horaire de l'hôte de la passerelle.
     - Les planifications `at` sans fuseau horaire sont traitées comme UTC.
-    - Le `activeHours` Heartbeat utilise la résolution de fuseau horaire configurée.
+    - Le `activeHours` de Heartbeat utilise la résolution de fuseau horaire configurée.
 
   </Accordion>
 </AccordionGroup>

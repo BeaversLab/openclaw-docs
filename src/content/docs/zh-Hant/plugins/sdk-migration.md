@@ -424,88 +424,81 @@ await gateway.request("talk.client.steer", { sessionKey, text, mode: "steer" });
 
 ## 匯入路徑參考
 
-<Accordion title="通用匯入路徑表">
-  | 匯入路徑 | 用途 | 主要匯出 | | --- | --- | --- | | `plugin-sdk/plugin-entry` | 標準外掛入口協助程式 | `definePluginEntry` | | `plugin-sdk/core` | 用於頻道入口定義/建構器的舊版通用重新匯出 | `defineChannelPluginEntry`、`createChatChannelPlugin` | | `plugin-sdk/config-schema` | 根設定匯出結構描述 | `OpenClawSchema` | | `plugin-sdk/provider-entry` | 單一提供者入口協助程式 |
-  `defineSingleProviderPluginEntry` | | `plugin-sdk/channel-core` | 專注的頻道入口定義和建構器 | `defineChannelPluginEntry`、`defineSetupPluginEntry`、`createChatChannelPlugin`、`createChannelPluginBase` | | `plugin-sdk/setup` | 共用設定精靈協助程式 | Setup translator、allowlist prompts、setup status builders | | `plugin-sdk/setup-runtime` | 設定期間的執行階段協助程式 |
-  `createSetupTranslator`、import-safe setup patch adapters、lookup-note helpers、`promptResolvedAllowFrom`、`splitSetupEntries`、delegated setup proxies | | `plugin-sdk/setup-adapter-runtime` | 已淘汰的設定配接器別名 | 請使用 `plugin-sdk/setup-runtime` | | `plugin-sdk/setup-tools` | 設定工具協助程式 |
-  `formatCliCommand`、`detectBinary`、`extractArchive`、`resolveBrewExecutable`、`formatDocsLink`、`CONFIG_DIR` | | `plugin-sdk/account-core` | 多帳戶協助程式 | 帳戶清單/設定/動作閘道協助程式 | | `plugin-sdk/account-id` | 帳戶 ID 協助程式 | `DEFAULT_ACCOUNT_ID`、帳戶 ID 正規化 | | `plugin-sdk/account-resolution` | 帳戶查閱協助程式 | 帳戶查閱 + 預設後援協助程式 | | `plugin-sdk/account-helpers` |
-  狹窄帳戶協助程式 | 帳戶清單/帳戶動作協助程式 | | `plugin-sdk/channel-setup` | 設定精靈配接器 | `createOptionalChannelSetupSurface`、`createOptionalChannelSetupAdapter`、`createOptionalChannelSetupWizard`，加上 `DEFAULT_ACCOUNT_ID`、`createTopLevelChannelDmPolicy`、`setSetupChannelEnabled`、`splitSetupEntries` | | `plugin-sdk/channel-pairing` | DM 配對基本元件 | `createChannelPairingController` |
-  | `plugin-sdk/channel-reply-pipeline` | 回覆前綴、輸入中和來源傳遞佈線 | `createChannelReplyPipeline`、`resolveChannelSourceReplyDeliveryMode` | | `plugin-sdk/channel-config-helpers` | 設定配接器 factory 和 DM 存取協助程式 | `createHybridChannelConfigAdapter`、`resolveChannelDmAccess`、`resolveChannelDmAllowFrom`、`resolveChannelDmPolicy`、`normalizeChannelDmPolicy`、`normalizeLegacyDmAliases` |
-  | `plugin-sdk/channel-config-schema` | 設定結構描述建構器 | 僅限共用頻道設定結構描述基本元件和通用建構器 | | `plugin-sdk/bundled-channel-config-schema` | 捆綁設定結構描述 | 僅限 OpenClaw 維護的捆綁外掛；新外掛必須定義外掛本機結構描述 | | `plugin-sdk/channel-config-schema-legacy` | 已淘汰的捆綁設定結構描述 | 僅限相容性別名；針對維護的捆綁外掛請使用 `plugin-sdk/bundled-channel-config-schema` | |
-  `plugin-sdk/telegram-command-config` | Telegram 指令設定協助程式 | 指令名稱正規化、描述修剪、重複/衝突驗證 | | `plugin-sdk/channel-policy` | 群組/DM 原則解析 | `resolveChannelGroupRequireMention` | | `plugin-sdk/channel-lifecycle` | 已淘汰的相容性外觀 | 請使用 `plugin-sdk/channel-outbound` | | `plugin-sdk/inbound-envelope` | 進入訊息信封協助程式 | 共用路由 + 信封建構器協助程式 | |
-  `plugin-sdk/channel-inbound` | 進入接收協助程式 | 內容建置、格式化、roots、runners、準備好的回覆分派和分派述詞 | | `plugin-sdk/messaging-targets` | 已淘汰的目標解析匯入路徑 | 請使用 `plugin-sdk/channel-targets` 進行通用目標解析協助、使用 `plugin-sdk/channel-route` 進行路由比較，並使用外掛擁有的 `messaging.targetResolver` / `messaging.resolveOutboundSessionRoute` 進行特定提供者的目標解析 | |
-  `plugin-sdk/outbound-media` | 傳出媒體協助程式 | 共用傳出媒體載入 | | `plugin-sdk/outbound-send-deps` | 已淘汰的相容性外觀 | 請使用 `plugin-sdk/channel-outbound` | | `plugin-sdk/channel-outbound` | 傳出訊息生命週期協助程式 | 訊息配接器、收據、永續傳送協助程式、即時預覽/串流協助程式、回覆選項、生命週期協助程式、傳出身分識別和承載規劃 | | `plugin-sdk/channel-streaming` | 已淘汰的相容性外觀 |
-  請使用 `plugin-sdk/channel-outbound` | | `plugin-sdk/outbound-runtime` | 已淘汰的相容性外觀 | 請使用 `plugin-sdk/channel-outbound` | | `plugin-sdk/thread-bindings-runtime` | 執行緒繫結協助程式 | 執行緒繫結生命週期和配接器協助程式 | | `plugin-sdk/agent-media-payload` | 舊版媒體承載協助程式 | 用於舊版欄位配置的 Agent 媒體承載建構器 | | `plugin-sdk/channel-runtime` | 已淘汰的相容性 shim |
-  僅限舊版頻道執行階段公用程式 | | `plugin-sdk/channel-send-result` | 傳送結果類型 | 回覆結果類型 | | `plugin-sdk/runtime-store` | 永續外掛儲存體 | `createPluginRuntimeStore` | | `plugin-sdk/runtime` | 廣泛執行階段協助程式 | 執行階段/記錄/備份/外掛安裝協助程式 | | `plugin-sdk/runtime-env` | 狹窄執行階段環境協助程式 | 記錄器/執行階段環境、逾時、重試和退避協助程式 | | `plugin-sdk/plugin-runtime` |
-  共用外掛執行階段協助程式 | 外掛指令/hooks/http/互動式協助程式 | | `plugin-sdk/hook-runtime` | Hook 管線協助程式 | 共用 webhook/內部 hook 管線協助程式 | | `plugin-sdk/lazy-runtime` | 延遲載入執行階段協助程式 | `createLazyRuntimeModule`、`createLazyRuntimeMethod`、`createLazyRuntimeMethodBinder`、`createLazyRuntimeNamedExport`、`createLazyRuntimeSurface` | | `plugin-sdk/process-runtime` |
-  處理序協助程式 | 共用 exec 協助程式 | | `plugin-sdk/cli-runtime` | CLI 執行階段協助程式 | 指令格式化、等候、版本協助程式 | | `plugin-sdk/gateway-runtime` | 閘道協助程式 | 閘道用戶端、事件迴圈就緒啟動協助程式和頻道狀態修補協助程式 | | `plugin-sdk/config-runtime` | 已淘汰的設定相容性 shim | 偏好使用 `config-contracts`、`plugin-config-runtime`、`runtime-config-snapshot` 和 `config-mutation` | |
-  `plugin-sdk/telegram-command-config` | Telegram 指令協助程式 | 當無法使用捆綁的 Telegram 合約介面時，提供穩定後援的 Telegram 指令驗證協助程式 | | `plugin-sdk/approval-runtime` | 核准提示協助程式 | Exec/外掛核准承載、核准功能/設定檔協助程式、原生核准路由/執行階段協助程式和結構化核准顯示路徑格式化 | | `plugin-sdk/approval-auth-runtime` | 核准驗證協助程式 | 核准者解析、相同聊天動作驗證 | |
-  `plugin-sdk/approval-client-runtime` | 核准用戶端協助程式 | 原生 exec核准設定檔/篩選協助程式 | | `plugin-sdk/approval-delivery-runtime` | 核准傳遞協助程式 | 原生核准功能/傳遞配接器 | | `plugin-sdk/approval-gateway-runtime` | 核准閘道協助程式 | 共用核准閘道解析協助程式 | | `plugin-sdk/approval-handler-adapter-runtime` | 核准配接器協助程式 | 用於熱頻道進入點的輕量級原生核准配接器載入協助程式 | |
-  `plugin-sdk/approval-handler-runtime` | 核准處理常式協助程式 | 更廣泛的核准處理常式執行階段協助程式；當它們足夠時，偏好使用較狹窄的配接器/閘道縫隙 | | `plugin-sdk/approval-native-runtime` | 核准目標協助程式 | 原生核准目標/帳戶繫結協助程式 | | `plugin-sdk/approval-reply-runtime` | 核准回覆協助程式 | Exec/外掛核准回覆承載協助程式 | | `plugin-sdk/channel-runtime-context` | 頻道執行階段內容協助程式
-  | 通用頻道執行階段內容註冊/取得/監看協助程式 | | `plugin-sdk/security-runtime` | 安全性協助程式 | 共用信任、DM 閘道、以根為界檔案/路徑協助程式、外部內容和秘密收集協助程式 | | `plugin-sdk/ssrf-policy` | SSRF 原則協助程式 | 主機允許清單和私人網路原則協助程式 | | `plugin-sdk/ssrf-runtime` | SSRF 執行階段協助程式 | 釘選的分派器、受保護的擷取、SSRF 原則協助程式 | | `plugin-sdk/system-event-runtime` |
-  系統事件協助程式 | `enqueueSystemEvent`、`peekSystemEventEntries` | | `plugin-sdk/heartbeat-runtime` | 心跳協助程式 | 心跳喚醒、事件和可見性協助程式 | | `plugin-sdk/delivery-queue-runtime` | 傳遞佇列協助程式 | `drainPendingDeliveries` | | `plugin-sdk/channel-activity-runtime` | 頻道活動協助程式 | `recordChannelActivity` | | `plugin-sdk/dedupe-runtime` | 重複資料刪除協助程式 |
-  記憶體內重複資料刪除快取 | | `plugin-sdk/file-access-runtime` | 檔案存取協助程式 | 安全的本機檔案/媒體路徑協助程式 | | `plugin-sdk/transport-ready-runtime` | 傳輸就緒協助程式 | `waitForTransportReady` | | `plugin-sdk/exec-approvals-runtime` | Exec核准原則協助程式 | `loadExecApprovals`、`resolveExecApprovalsFromFile`、`ExecApprovalsFile` | | `plugin-sdk/collection-runtime` | 有界快取協助程式 |
-  `pruneMapToMaxSize` | | `plugin-sdk/diagnostic-runtime` | 診斷閘道協助程式 | `isDiagnosticFlagEnabled`、`isDiagnosticsEnabled` | | `plugin-sdk/error-runtime` | 錯誤格式化協助程式 | `formatUncaughtError`、`isApprovalNotFoundError`、錯誤圖形協助程式 | | `plugin-sdk/fetch-runtime` | 包裝的擷取/ Proxy 協助程式 | `resolveFetch`、proxy helpers、EnvHttpProxyAgent 選項協助程式 | |
-  `plugin-sdk/host-runtime` | 主機正規化協助程式 | `normalizeHostname`、`normalizeScpRemoteHost` | | `plugin-sdk/retry-runtime` | 重試協助程式 | `RetryConfig`、`retryAsync`、原則執行器 | | `plugin-sdk/allow-from` | 允許清單格式化和輸入對應 | `formatAllowFromLowercase`、`mapAllowlistResolutionInputs` | | `plugin-sdk/command-auth` | 指令閘道和指令介面協助程式 |
-  `resolveControlCommandGate`、寄件者授權協助程式、指令註冊表協助程式，包括動態引數選單格式化 | | `plugin-sdk/command-status` | 指令狀態/說明轉譯器 | `buildCommandsMessage`、`buildCommandsMessagePaginated`、`buildHelpMessage` | | `plugin-sdk/secret-input` | 秘密輸入解析 | 秘密輸入協助程式 | | `plugin-sdk/webhook-ingress` | Webhook 要求協助程式 | Webhook 目標公用程式 | |
-  `plugin-sdk/webhook-request-guards` | Webhook 主體防護協助程式 | 要求主體讀取/限制協助程式 | | `plugin-sdk/reply-runtime` | 共用回覆執行階段 | 進入分派、心跳、回覆規劃器、分塊 | | `plugin-sdk/reply-dispatch-runtime` | 狹窄回覆分派協助程式 | 完成、提供者分派和交談標籤協助程式 | | `plugin-sdk/reply-history` | 回覆歷程協助程式 | `createChannelHistoryWindow`；已淘汰的 map-helper 相容性匯出，例如
-  `buildPendingHistoryContextFromMap`、`recordPendingHistoryEntry` 和 `clearHistoryEntriesIfEnabled` | | `plugin-sdk/reply-reference` | 回覆參考規劃 | `createReplyReferencePlanner` | | `plugin-sdk/reply-chunking` | 回覆區塊協助程式 | 文字/Markdown 區塊協助程式 | | `plugin-sdk/session-store-runtime` | 工作階段存放區協助程式 | 存放區路徑 + updated-at 協助程式 | | `plugin-sdk/state-paths` |
-  狀態路徑協助程式 | 狀態和 OAuth 目錄協助程式 | | `plugin-sdk/routing` | 路由/工作階段金鑰協助程式 | `resolveAgentRoute`、`buildAgentSessionKey`、`resolveDefaultAgentBoundAccountId`、工作階段金鑰正規化協助程式 | | `plugin-sdk/status-helpers` | 頻道狀態協助程式 | 頻道/帳戶狀態摘要建構器、執行階段狀態預設值、問題中繼資料協助程式 | | `plugin-sdk/target-resolver-runtime` | 目標解析器協助程式 |
-  共用目標解析器協助程式 | | `plugin-sdk/string-normalization-runtime` | 字串正規化協助程式 | Slug/字串正規化協助程式 | | `plugin-sdk/request-url` | 要求 URL 協助程式 | 從類似要求的輸入中擷取字串 URL | | `plugin-sdk/run-command` | 計時指令協助程式 | 具有正規化 stdout/stderr 的計時指令執行器 | | `plugin-sdk/param-readers` | 參數讀取器 | 通用工具/CLI 參數讀取器 | | `plugin-sdk/tool-payload` |
-  工具承載擷取 | 從工具結果物件中擷取正規化的承載 | | `plugin-sdk/tool-send` | 工具傳送擷取 | 從工具引數中擷取標準傳送目標欄位 | | `plugin-sdk/temp-path` | 暫存路徑協助程式 | 共用暫存下載路徑協助程式 | | `plugin-sdk/logging-core` | 記錄協助程式 | 子系統記錄器和編修協助程式 | | `plugin-sdk/markdown-table-runtime` | Markdown 表格協助程式 | Markdown 表格模式協助程式 | | `plugin-sdk/reply-payload` |
-  訊息回覆類型 | 回覆承載類型 | | `plugin-sdk/provider-setup` | 精選的本機/託管提供者設定協助程式 | 自我託管提供者探索/設定協助程式 | | `plugin-sdk/self-hosted-provider-setup` | 專注的 OpenAI 相容自我託管提供者設定協助程式 | 相同的自我託管提供者探索/設定協助程式 | | `plugin-sdk/provider-auth-runtime` | 提供者執行階段驗證協助程式 | 執行階段 API 金鑰解析協助程式 | |
-  `plugin-sdk/provider-auth-api-key` | 提供者 API 金鑰設定協助程式 | API 金鑰上架/設定檔寫入協助程式 | | `plugin-sdk/provider-auth-result` | 提供者驗證結果協助程式 | 標準 OAuth 驗證結果建構器 | | `plugin-sdk/provider-selection-runtime` | 提供者選取協助程式 | 已設定或自動提供者選取和原始提供者設定合併 | | `plugin-sdk/provider-env-vars` | 提供者環境變數協助程式 | 提供者驗證環境變數查閱協助程式 | |
-  `plugin-sdk/provider-model-shared` | 共用提供者模型/重播協助程式 | `ProviderReplayFamily`、`buildProviderReplayFamilyHooks`、`normalizeModelCompat`、共用重播原則建構器、提供者端點協助程式和模型 ID 正規化協助程式 | | `plugin-sdk/provider-catalog-shared` | 共用提供者目錄協助程式 |
-  `findCatalogTemplate`、`buildSingleProviderApiKeyCatalog`、`buildManifestModelProviderConfig`、`supportsNativeStreamingUsageCompat`、`applyProviderNativeStreamingUsageCompat` | | `plugin-sdk/provider-onboard` | 提供者上架修補程式 | 上架設定協助程式 | | `plugin-sdk/provider-http` | 提供者 HTTP 協助程式 | 通用提供者 HTTP/端點功能協助程式，包括音訊轉錄多部分表單協助程式 | |
-  `plugin-sdk/provider-web-fetch` | 提供者 Web 擷取協助程式 | Web 擷取提供者註冊/快取協助程式 | | `plugin-sdk/provider-web-search-config-contract` | 提供者 Web 搜尋設定協助程式 | 用於不需要外掛啟用佈線之提供者的狹隘 Web 搜尋設定/認證協助程式 | | `plugin-sdk/provider-web-search-contract` | 提供者 Web 搜尋合約協助程式 | 狹隘的 Web 搜尋設定/認證合約協助程式，例如
-  `createWebSearchProviderContractFields`、`enablePluginInConfig`、`resolveProviderWebSearchPluginConfig` 和範圍認證設定器/取得器 | | `plugin-sdk/provider-web-search` | 提供者 Web 搜尋協助程式 | Web 搜尋提供者註冊/快取/執行階段協助程式 | | `plugin-sdk/provider-tools` | 提供者工具/結構描述相容性協助程式 | `ProviderToolCompatFamily`、`buildProviderToolCompatFamilyHooks` 和 DeepSeek/Gemini/OpenAI
-  結構描述清理 + 診斷 | | `plugin-sdk/provider-usage` | 提供者使用量協助程式 | `fetchClaudeUsage`、`fetchGeminiUsage`、`fetchGithubCopilotUsage` 和其他提供者使用量協助程式 | | `plugin-sdk/provider-stream` | 提供者串流包裝函式協助程式 | `ProviderStreamFamily`、`buildProviderStreamFamilyHooks`、`composeProviderStreamWrappers`、串流包裝函式類型和共用 Anthropic/Bedrock/DeepSeek
-  V4/Google/Kilocode/Moonshot/OpenAI/OpenRouter/Z.A.I/MiniMax/Copilot 包裝函式協助程式 | | `plugin-sdk/provider-transport-runtime` | 提供者傳輸協助程式 | 原生提供者傳輸協助程式，例如受保護的擷取、傳輸訊息轉換和可寫入傳輸事件串流 | | `plugin-sdk/keyed-async-queue` | 排序非同步佇列 | `KeyedAsyncQueue` | | `plugin-sdk/media-runtime` | 共用媒體協助程式 | 媒體擷取/轉換/存放協助程式、ffprobe
-  支援的視訊維度探測和媒體承載建構器 | | `plugin-sdk/media-generation-runtime` | 共用媒體產生協助程式 | 共用容錯移轉協助程式、候選選取和圖片/視訊/音樂產生的遺失模型傳訊 | | `plugin-sdk/media-understanding` | 媒體理解協助程式 | 媒體理解提供者類型加上提供者導向的圖片/音訊協助程式匯出 | | `plugin-sdk/text-runtime` | 已淘汰的廣泛文字相容性匯出 | 請使用
-  `string-coerce-runtime`、`text-chunking`、`text-utility-runtime` 和 `logging-core` | | `plugin-sdk/text-chunking` | 文字分塊協助程式 | 傳出文字分塊協助程式 | | `plugin-sdk/speech` | 語音協助程式 | 語音提供者類型加上提供者導向的指示詞、註冊表、驗證協助程式和 OpenAI 相容的 TTS 建構器 | | `plugin-sdk/speech-core` | 共用語音核心 | 語音提供者類型、註冊表、指示詞、正規化 | |
-  `plugin-sdk/realtime-transcription` | 即時轉錄協助程式 | 提供者類型、註冊表協助程式和共用 WebSocket 工作階段協助程式 | | `plugin-sdk/realtime-voice` | 即時語音協助程式 | 提供者類型、註冊表/解析協助程式、橋接器工作階段協助程式、共用 agent 對話佇列、主動執行語音控制、逐字稿/事件健康狀態、回聲抑制、諮詢問題比對、強制諮詢協調、輪次內容追蹤、輸出活動追蹤和快速內容諮詢協助程式 | |
-  `plugin-sdk/image-generation` | 圖片產生協助程式 | 圖片產生提供者類型加上圖片資產/資料 URL 協助程式和 OpenAI 相容的圖片提供者建構器 | | `plugin-sdk/image-generation-core` | 共用圖片產生核心 | 圖片產生類型、容錯移轉、驗證和註冊表協助程式 | | `plugin-sdk/music-generation` | 音樂產生協助程式 | 音樂產生提供者/要求/結果類型 | | `plugin-sdk/music-generation-core` | 共用音樂產生核心 |
-  音樂產生類型、容錯移轉協助程式、提供者查閱和模型參考解析 | | `plugin-sdk/video-generation` | 視訊產生協助程式 | 視訊產生提供者/要求/結果類型 | | `plugin-sdk/video-generation-core` | 共用視訊產生核心 | 視訊產生類型、容錯移轉協助程式、提供者查閱和模型參考解析 | | `plugin-sdk/interactive-runtime` | 互動式回覆協助程式 | 互動式回覆承載正規化/縮減 | | `plugin-sdk/channel-config-primitives` |
-  頻道設定基本元件 | 狹隘頻道設定結構描述基本元件 | | `plugin-sdk/channel-config-writes` | 頻道設定寫入協助程式 | 頻道設定寫入授權協助程式 | | `plugin-sdk/channel-plugin-common` | 共用頻道前奏 | 共用頻道外掛前奏匯出 | | `plugin-sdk/channel-status` | 頻道狀態協助程式 | 共用頻道狀態快照/摘要協助程式 | | `plugin-sdk/allowlist-config-edit` | 允許清單設定協助程式 | 允許清單設定編輯/讀取協助程式 | |
-  `plugin-sdk/group-access` | 群組存取協助程式 | 共用群組存取決策協助程式 | | `plugin-sdk/direct-dm`、`plugin-sdk/direct-dm-access` | 已淘汰的相容性外觀 | 請使用 `plugin-sdk/channel-inbound` | | `plugin-sdk/direct-dm-guard-policy` | 直接 DM 防護協助程式 | 狹隘的預先加密防護原則協助程式 | | `plugin-sdk/extension-shared` | 共用擴充協助程式 | 被動頻道/狀態和環境 Proxy 協助程式基本元件 | |
-  `plugin-sdk/webhook-targets` | Webhook 目標協助程式 | Webhook 目標註冊表和路由安裝協助程式 | | `plugin-sdk/webhook-path` | 已淘汰的 Webhook 路徑別名 | 請使用 `plugin-sdk/webhook-ingress` | | `plugin-sdk/web-media` | 共用 Web 媒體協助程式 | 遠端/本機媒體載入協助程式 | | `plugin-sdk/zod` | 已淘汰的 Zod 相容性重新匯出 | 直接從 `zod` 匯入 `zod` | | `plugin-sdk/memory-core` | 捆綁記憶體核心協助程式 |
-  記憶體管理員/設定/檔案/CLI 協助程式介面 | | `plugin-sdk/memory-core-engine-runtime` | 記憶體引擎執行階段外觀 | 記憶體索引/搜尋執行階段外觀 | | `plugin-sdk/memory-core-host-engine-foundation` | 記憶體主機基礎引擎 | 記憶體主機基礎引擎匯出 | | `plugin-sdk/memory-core-host-engine-embeddings` | 記憶體主機嵌入引擎 |
-  記憶體嵌入合約、註冊表存取、本機提供者和通用批次/遠端協助程式；具體的遠端提供者位於其擁有的外掛中 | | `plugin-sdk/memory-core-host-engine-qmd` | 記憶體主機 QMD 引擎 | 記憶體主機 QMD 引擎匯出 | | `plugin-sdk/memory-core-host-engine-storage` | 記憶體主機儲存引擎 | 記憶體主機儲存引擎匯出 | | `plugin-sdk/memory-core-host-multimodal` | 記憶體主機多模態協助程式 | 記憶體主機多模態協助程式 | |
-  `plugin-sdk/memory-core-host-query` | 記憶體主機查詢協助程式 | 記憶體主機查詢協助程式 | | `plugin-sdk/memory-core-host-secret` | 記憶體主機秘密協助程式 | 記憶體主機秘密協助程式 | | `plugin-sdk/memory-core-host-events` | 已淘汰的記憶體事件別名 | 請使用 `plugin-sdk/memory-host-events` | | `plugin-sdk/memory-core-host-status` | 記憶體主機狀態協助程式 | 記憶體主機狀態協助程式 | |
-  `plugin-sdk/memory-core-host-runtime-cli` | 記憶體主機 CLI 執行階段 | 記憶體主機 CLI 執行階段協助程式 | | `plugin-sdk/memory-core-host-runtime-core` | 記憶體主機核心執行階段 | 記憶體主機核心執行階段協助程式 | | `plugin-sdk/memory-core-host-runtime-files` | 記憶體主機檔案/執行階段協助程式 | 記憶體主機檔案/執行階段協助程式 | | `plugin-sdk/memory-host-core` | 記憶體主機核心執行階段別名 |
-  記憶體主機核心執行階段協助程式的廠商中性別名 | | `plugin-sdk/memory-host-events` | 記憶體主機事件日誌別名 | 記憶體主機事件日誌協助程式的廠商中性別名 | | `plugin-sdk/memory-host-files` | 已淘汰的記憶體檔案/執行階段別名 | 請使用 `plugin-sdk/memory-core-host-runtime-files` | | `plugin-sdk/memory-host-markdown` | 受控 Markdown 協助程式 | 用於記憶體相鄰外掛的共用受控 Markdown 協助程式 | |
-  `plugin-sdk/memory-host-search` | 主動記憶體搜尋外觀 | 延遲載入主動記憶體搜尋管理員執行階段外觀 | | `plugin-sdk/memory-host-status` | 已淘汰的記憶體主機狀態別名 | 請使用 `plugin-sdk/memory-core-host-status` | | `plugin-sdk/testing` | 測試公用程式 | 存放區本機已淘汰相容性 barrel；請使用專注的存放區本機測試子路徑，例如
+<Accordion title="常見匯入路徑表">
+  | 匯入路徑 | 用途 | 主要匯出 | | --- | --- | --- | | `plugin-sdk/plugin-entry` | 標準插件入口輔助函式 | `definePluginEntry` | | `plugin-sdk/core` | 舊版通道入口定義/建構器的統一重新匯出 | `defineChannelPluginEntry`、`createChatChannelPlugin` | | `plugin-sdk/config-schema` | 根配置架構匯出 | `OpenClawSchema` | | `plugin-sdk/provider-entry` | 單一供應商入口輔助函式 |
+  `defineSingleProviderPluginEntry` | | `plugin-sdk/channel-core` | 專注的通道入口定義和建構器 | `defineChannelPluginEntry`、`defineSetupPluginEntry`、`createChatChannelPlugin`、`createChannelPluginBase` | | `plugin-sdk/setup` | 共用設置精靈輔助函式 | Setup translator、allowlist prompts、setup status builders | | `plugin-sdk/setup-runtime` | 設置階段執行時輔助函式 |
+  `createSetupTranslator`、匯入安全的設置修補程式介面卡、lookup-note 輔助函式、`promptResolvedAllowFrom`、`splitSetupEntries`、委派設置代理程式 | | `plugin-sdk/setup-adapter-runtime` | 已棄用的設置介面卡別名 | 使用 `plugin-sdk/setup-runtime` | | `plugin-sdk/setup-tools` | 設置工具輔助函式 |
+  `formatCliCommand`、`detectBinary`、`extractArchive`、`resolveBrewExecutable`、`formatDocsLink`、`CONFIG_DIR` | | `plugin-sdk/account-core` | 多帳號輔助函式 | 帳號列表/配置/操作閘道輔助函式 | | `plugin-sdk/account-id` | 帳號 ID 輔助函式 | `DEFAULT_ACCOUNT_ID`、帳號 ID 正規化 | | `plugin-sdk/account-resolution` | 帳號查找輔助函式 | 帳號查找和預設後備輔助函式 | | `plugin-sdk/account-helpers` |
+  狹義帳號輔助函式 | 帳號列表/帳號操作輔助函式 | | `plugin-sdk/channel-setup` | 設置精靈介面卡 | `createOptionalChannelSetupSurface`、`createOptionalChannelSetupAdapter`、`createOptionalChannelSetupWizard`，加上 `DEFAULT_ACCOUNT_ID`、`createTopLevelChannelDmPolicy`、`setSetupChannelEnabled`、`splitSetupEntries` | | `plugin-sdk/channel-pairing` | DM 配對基本功能 | `createChannelPairingController` |
+  | `plugin-sdk/channel-reply-pipeline` | 回覆前綴、輸入中狀態和來源傳遞連線 | `createChannelReplyPipeline`、`resolveChannelSourceReplyDeliveryMode` | | `plugin-sdk/channel-config-helpers` | 配置介面卡工廠和 DM 存取輔助函式 | `createHybridChannelConfigAdapter`、`resolveChannelDmAccess`、`resolveChannelDmAllowFrom`、`resolveChannelDmPolicy`、`normalizeChannelDmPolicy`、`normalizeLegacyDmAliases` |
+  | `plugin-sdk/channel-config-schema` | 配置架構建構器 | 僅限共用通道配置架構基本功能和通用建構器 | | `plugin-sdk/bundled-channel-config-schema` | 內建配置架構 | 僅限 OpenClaw 維護的內建插件；新插件必須定義插件本機架構 | | `plugin-sdk/channel-config-schema-legacy` | 已棄用的內建配置架構 | 僅為相容性別名；維護的內建插件請使用 `plugin-sdk/bundled-channel-config-schema` | |
+  `plugin-sdk/telegram-command-config` | Telegram 指令配置輔助函式 | 指令名稱正規化、描述修剪、重複/衝突驗證 | | `plugin-sdk/channel-policy` | 群組/DM 原則解析 | `resolveChannelGroupRequireMention` | | `plugin-sdk/channel-lifecycle` | 已棄用的相容性外觀 | 使用 `plugin-sdk/channel-outbound` | | `plugin-sdk/inbound-envelope` | 傳入信封輔助函式 | 共用路由和信封建構器輔助函式 | |
+  `plugin-sdk/channel-inbound` | 傳入接收輔助函式 | 上下文建構、格式化、根節點、執行器、準備好的回覆分派以及分派述詞 | | `plugin-sdk/messaging-targets` | 已棄用的目標解析匯入路徑 | 通用目標解析輔助函式請使用 `plugin-sdk/channel-targets`，路由比較請使用 `plugin-sdk/channel-route`，供應商特定的目標解析請使用插件擁有的 `messaging.targetResolver` / `messaging.resolveOutboundSessionRoute` | |
+  `plugin-sdk/outbound-media` | 傳出媒體輔助函式 | 共用傳出媒體載入 | | `plugin-sdk/outbound-send-deps` | 已棄用的相容性外觀 | 使用 `plugin-sdk/channel-outbound` | | `plugin-sdk/channel-outbound` | 傳出訊息生命週期輔助函式 | 訊息介面卡、回條、持久傳送輔助函式、即時預覽/串流輔助函式、回覆選項、生命週期輔助函式、傳出身分識別和負載規劃 | | `plugin-sdk/channel-streaming` | 已棄用的相容性外觀 | 使用
+  `plugin-sdk/channel-outbound` | | `plugin-sdk/outbound-runtime` | 已棄用的相容性外觀 | 使用 `plugin-sdk/channel-outbound` | | `plugin-sdk/thread-bindings-runtime` | 執行緒繫結輔助函式 | 執行緒繫結生命週期和介面卡輔助函式 | | `plugin-sdk/agent-media-payload` | 舊版媒體負載輔助函式 | 用於舊版欄位配置的代理程式媒體負載建構器 | | `plugin-sdk/channel-runtime` | 已棄用的相容性填充 |
+  僅限舊版通道執行時公用程式 | | `plugin-sdk/channel-send-result` | 傳送結果類型 | 回覆結果類型 | | `plugin-sdk/runtime-store` | 持久化插件儲存 | `createPluginRuntimeStore` | | `plugin-sdk/runtime` | 廣義執行時輔助函式 | 執行時/日誌/備份/插件安裝輔助函式 | | `plugin-sdk/runtime-env` | 狹義執行時環境輔助函式 | 紀錄器/執行時環境、逾時、重試和退避輔助函式 | | `plugin-sdk/plugin-runtime` |
+  共用插件執行時輔助函式 | 插件指令/Hooks/HTTP/互動輔助函式 | | `plugin-sdk/hook-runtime` | Hook 管線輔助函式 | 共用 Webhook/內部 Hook 管線輔助函式 | | `plugin-sdk/lazy-runtime` | 延遲載入執行時輔助函式 | `createLazyRuntimeModule`、`createLazyRuntimeMethod`、`createLazyRuntimeMethodBinder`、`createLazyRuntimeNamedExport`、`createLazyRuntimeSurface` | | `plugin-sdk/process-runtime` |
+  處理程序輔助函式 | 共用執行輔助函式 | | `plugin-sdk/cli-runtime` | CLI 執行時輔助函式 | 指令格式化、等待、版本輔助函式 | | `plugin-sdk/gateway-runtime` | 閘道輔助函式 | 閘道用戶端、事件循環就緒啟動輔助函式和通道狀態修補輔助函式 | | `plugin-sdk/config-runtime` | 已棄用的配置相容性填充 | 優先使用 `config-contracts`、`plugin-config-runtime`、`runtime-config-snapshot` 和 `config-mutation` | |
+  `plugin-sdk/telegram-command-config` | Telegram 指令輔助函式 | 當內建的 Telegram 合約介面無法使用時，提供後備穩定的 Telegram 指令驗證輔助函式 | | `plugin-sdk/approval-runtime` | 核准提示輔助函式 | 執行/插件核准負載、核准功能/設定檔輔助函式、原生核准路由/執行時輔助函式，以及結構化核准顯示路徑格式化 | | `plugin-sdk/approval-auth-runtime` | 核准驗證輔助函式 | 核准者解析、相同聊天操作驗證 | |
+  `plugin-sdk/approval-client-runtime` | 核准用戶端輔助函式 | 原生執行核准設定檔/篩選輔助函式 | | `plugin-sdk/approval-delivery-runtime` | 核准傳遞輔助函式 | 原生核准功能/傳遞介面卡 | | `plugin-sdk/approval-gateway-runtime` | 核准閘道輔助函式 | 共用核准閘道解析輔助函式 | | `plugin-sdk/approval-handler-adapter-runtime` | 核准介面卡輔助函式 | 用於熱通道入口點的輕量級原生核准介面卡載入輔助函式 | |
+  `plugin-sdk/approval-handler-runtime` | 核准處理器輔助函式 | 更廣泛的核准處理器執行時輔助函式；當足夠時，優先使用較狹隘的介面卡/閘道縫隙 | | `plugin-sdk/approval-native-runtime` | 核准目標輔助函式 | 原生核准目標/帳號繫結輔助函式 | | `plugin-sdk/approval-reply-runtime` | 核准回覆輔助函式 | 執行/插件核准回覆負載輔助函式 | | `plugin-sdk/channel-runtime-context` | 通道執行時上下文輔助函式 |
+  通用通道執行時上下文註冊/取得/監看輔助函式 | | `plugin-sdk/security-runtime` | 安全性輔助函式 | 共用信任、DM 閘道、根邊界檔案/路徑輔助函式、外部內容和祕密收集輔助函式 | | `plugin-sdk/ssrf-policy` | SSRF 原則輔助函式 | 主機允許清單和私人網路原則輔助函式 | | `plugin-sdk/ssrf-runtime` | SSRF 執行時輔助函式 | 釘選分派器、防護擷取、SSRF 原則輔助函式 | | `plugin-sdk/system-event-runtime` |
+  系統事件輔助函式 | `enqueueSystemEvent`、`peekSystemEventEntries` | | `plugin-sdk/heartbeat-runtime` | 心跳輔助函式 | 心跳喚醒、事件和可見性輔助函式 | | `plugin-sdk/delivery-queue-runtime` | 傳遞佇列輔助函式 | `drainPendingDeliveries` | | `plugin-sdk/channel-activity-runtime` | 通道活動輔助函式 | `recordChannelActivity` | | `plugin-sdk/dedupe-runtime` | 去重輔助函式 | 記憶體內去重快取 | |
+  `plugin-sdk/file-access-runtime` | 檔案存取輔助函式 | 安全的本機檔案/媒體路徑輔助函式 | | `plugin-sdk/transport-ready-runtime` | 傳輸就緒輔助函式 | `waitForTransportReady` | | `plugin-sdk/exec-approvals-runtime` | 執行核准原則輔助函式 | `loadExecApprovals`、`resolveExecApprovalsFromFile`、`ExecApprovalsFile` | | `plugin-sdk/collection-runtime` | 有界快取輔助函式 | `pruneMapToMaxSize` | |
+  `plugin-sdk/diagnostic-runtime` | 診斷閘道輔助函式 | `isDiagnosticFlagEnabled`、`isDiagnosticsEnabled` | | `plugin-sdk/error-runtime` | 錯誤格式化輔助函式 | `formatUncaughtError`、`isApprovalNotFoundError`、錯誤圖形輔助函式 | | `plugin-sdk/fetch-runtime` | 包裝擷取/代理輔助函式 | `resolveFetch`、代理輔助函式、EnvHttpProxyAgent 選項輔助函式 | | `plugin-sdk/host-runtime` | 主機正規化輔助函式 |
+  `normalizeHostname`、`normalizeScpRemoteHost` | | `plugin-sdk/retry-runtime` | 重試輔助函式 | `RetryConfig`、`retryAsync`、原則執行器 | | `plugin-sdk/allow-from` | 允許清單格式化和輸入對應 | `formatAllowFromLowercase`、`mapAllowlistResolutionInputs` | | `plugin-sdk/command-auth` | 指令閘道和指令介面輔助函式 |
+  `resolveControlCommandGate`、傳送者驗證輔助函式、指令註冊表輔助函式，包括動態引數選單格式化 | | `plugin-sdk/command-status` | 指令狀態/說明呈現器 | `buildCommandsMessage`、`buildCommandsMessagePaginated`、`buildHelpMessage` | | `plugin-sdk/secret-input` | 祕密輸入解析 | 祕密輸入輔助函式 | | `plugin-sdk/webhook-ingress` | Webhook 要求輔助函式 | Webhook 目標公用程式 | |
+  `plugin-sdk/webhook-request-guards` | Webhook 主體防護輔助函式 | 要求主體讀取/限制輔助函式 | | `plugin-sdk/reply-runtime` | 共用回覆執行時 | 傳入分派、心跳、回覆規劃器、分塊 | | `plugin-sdk/reply-dispatch-runtime` | 狹義回覆分派輔助函式 | 完成、供應商分派和對話標籤輔助函式 | | `plugin-sdk/reply-history` | 回覆歷程輔助函式 | `createChannelHistoryWindow`；已棄用的對應輔助函式相容性匯出，例如
+  `buildPendingHistoryContextFromMap`、`recordPendingHistoryEntry` 和 `clearHistoryEntriesIfEnabled` | | `plugin-sdk/reply-reference` | 回覆參照規劃 | `createReplyReferencePlanner` | | `plugin-sdk/reply-chunking` | 回援分塊輔助函式 | 文字/Markdown 分塊輔助函式 | | `plugin-sdk/session-store-runtime` | 工作階段儲存輔助函式 | 儲存路徑和 updated-at 輔助函式 | | `plugin-sdk/state-paths` |
+  狀態路徑輔助函式 | 狀態和 OAuth 目錄輔助函式 | | `plugin-sdk/routing` | 路由/工作階段金鑰輔助函式 | `resolveAgentRoute`、`buildAgentSessionKey`、`resolveDefaultAgentBoundAccountId`、工作階段金鑰正規化輔助函式 | | `plugin-sdk/status-helpers` | 通道狀態輔助函式 | 通道/帳號狀態摘要建構器、執行時狀態預設值和問題中繼資料輔助函式 | | `plugin-sdk/target-resolver-runtime` | 目標解析器輔助函式 |
+  共用目標解析器輔助函式 | | `plugin-sdk/string-normalization-runtime` | 字串正規化輔助函式 | Slug/字串正規化輔助函式 | | `plugin-sdk/request-url` | 要求 URL 輔助函式 | 從類似要求的輸入中擷取字串 URL | | `plugin-sdk/run-command` | 計時指令輔助函式 | 具有正規化 stdout/stderr 的計時指令執行器 | | `plugin-sdk/param-readers` | 參數讀取器 | 通用工具/CLI 參數讀取器 | | `plugin-sdk/tool-payload` |
+  工具負載擷取 | 從工具結果物件中擷取正規化的負載 | | `plugin-sdk/tool-send` | 工具傳送擷取 | 從工具引數中擷取標準傳送目標欄位 | | `plugin-sdk/temp-path` | 暫存路徑輔助函式 | 共用暫存下載路徑輔助函式 | | `plugin-sdk/logging-core` | 紀錄輔助函式 | 子系統紀錄器和編修輔助函式 | | `plugin-sdk/markdown-table-runtime` | Markdown 表格輔助函式 | Markdown 表格模式輔助函式 | | `plugin-sdk/reply-payload` |
+  訊息回覆類型 | 回覆負載類型 | | `plugin-sdk/provider-setup` | 策展的本機/自託管供應商設置輔助函式 | 自託管供應商探索/配置輔助函式 | | `plugin-sdk/self-hosted-provider-setup` | 專注的 OpenAI 相容自託管供應商設置輔助函式 | 相同的自託管供應商探索/配置輔助函式 | | `plugin-sdk/provider-auth-runtime` | 供應商執行時驗證輔助函式 | 執行時 API 金鑰解析輔助函式 | | `plugin-sdk/provider-auth-api-key` |
+  供應商 API 金鑰設置輔助函式 | API 金鑰入門/設定檔寫入輔助函式 | | `plugin-sdk/provider-auth-result` | 供應商驗證結果輔助函式 | 標準 OAuth 驗證結果建構器 | | `plugin-sdk/provider-selection-runtime` | 供應商選擇輔助函式 | 已設定或自動供應商選擇和原始供應商配置合併 | | `plugin-sdk/provider-env-vars` | 供應商環境變數輔助函式 | 供應商驗證環境變數查找輔助函式 | | `plugin-sdk/provider-model-shared` |
+  共用供應商模型/重播輔助函式 | `ProviderReplayFamily`、`buildProviderReplayFamilyHooks`、`normalizeModelCompat`、共用重播原則建構器、供應商端點輔助函式和模型 ID 正規化輔助函式 | | `plugin-sdk/provider-catalog-shared` | 共用供應商目錄輔助函式 |
+  `findCatalogTemplate`、`buildSingleProviderApiKeyCatalog`、`buildManifestModelProviderConfig`、`supportsNativeStreamingUsageCompat`、`applyProviderNativeStreamingUsageCompat` | | `plugin-sdk/provider-onboard` | 供應商入門修補程式 | 入門配置輔助函式 | | `plugin-sdk/provider-http` | 供應商 HTTP 輔助函式 | 通用供應商 HTTP/端點功能輔助函式，包括音訊轉錄多部分表單輔助函式 | |
+  `plugin-sdk/provider-web-fetch` | 供應商 Web 擷取輔助函式 | Web 擷取供應商註冊/快取輔助函式 | | `plugin-sdk/provider-web-search-config-contract` | 供應商 Web 搜尋配置輔助函式 | 針對不需要插件啟用接線的供應商之狹義 Web 搜尋配置/認證輔助函式 | | `plugin-sdk/provider-web-search-contract` | 供應商 Web 搜尋合約輔助函式 | 狹義 Web 搜尋配置/認證合約輔助函式，例如
+  `createWebSearchProviderContractFields`、`enablePluginInConfig`、`resolveProviderWebSearchPluginConfig` 和範圍認證設定器/取得器 | | `plugin-sdk/provider-web-search` | 供應商 Web 搜尋輔助函式 | Web 搜尋供應商註冊/快取/執行時輔助函式 | | `plugin-sdk/provider-tools` | 供應商工具/架構相容性輔助函式 | `ProviderToolCompatFamily`、`buildProviderToolCompatFamilyHooks`，以及 DeepSeek/Gemini/OpenAI
+  架構清理和診斷 | | `plugin-sdk/provider-usage` | 供應商使用量輔助函式 | `fetchClaudeUsage`、`fetchGeminiUsage`、`fetchGithubCopilotUsage`，以及其他供應商使用量輔助函式 | | `plugin-sdk/provider-stream` | 供應商串流包裝器輔助函式 | `ProviderStreamFamily`、`buildProviderStreamFamilyHooks`、`composeProviderStreamWrappers`、串流包裝器類型，以及共用 Anthropic/Bedrock/DeepSeek
+  V4/Google/Kilocode/Moonshot/OpenAI/OpenRouter/Z.A.I/MiniMax/Copilot 包裝器輔助函式 | | `plugin-sdk/provider-transport-runtime` | 供應商傳輸輔助函式 | 原生供應商傳輸輔助函式，例如防護擷取、傳輸訊息轉換和可寫入傳輸事件串流 | | `plugin-sdk/keyed-async-queue` | 排序的非同步佇列 | `KeyedAsyncQueue` | | `plugin-sdk/media-runtime` | 共用媒體輔助函式 | 媒體擷取/轉換/儲存輔助函式、ffprobe
+  支援的影片維度探測和媒體負載建構器 | | `plugin-sdk/media-generation-runtime` | 共用媒體生成輔助函式 | 共用故障轉移輔助函式、候選選擇，以及圖片/影片/音樂生成的遺失模型訊息傳遞 | | `plugin-sdk/media-understanding` | 媒體理解輔助函式 | 媒體理解供應商類型以及供應商導向的圖片/音訊輔助函式匯出 | | `plugin-sdk/text-runtime` | 已棄用的廣義文字相容性匯出 | 使用
+  `string-coerce-runtime`、`text-chunking`、`text-utility-runtime` 和 `logging-core` | | `plugin-sdk/text-chunking` | 文字分塊輔助函式 | 傳出文字分塊輔助函式 | | `plugin-sdk/speech` | 語音輔助函式 | 語音供應商類型以及供應商導向的指令、註冊表、驗證輔助函式和 OpenAI 相容 TTS 建構器 | | `plugin-sdk/speech-core` | 共用語音核心 | 語音供應商類型、註冊表、指令、正規化 | |
+  `plugin-sdk/realtime-transcription` | 即時轉錄輔助函式 | 供應商類型、註冊表輔助函式和共用 WebSocket 工作階段輔助函式 | | `plugin-sdk/realtime-voice` | 即時語音輔助函式 | 供應商類型、註冊表/解析輔助函式、橋接器工作階段輔助函式、共用代理程式傳回佇列、主動執行語音控制、轉錄/事件健全狀況、迴聲抑制、諮詢問題比對、強制諮詢協調、輪次上下文追蹤、輸出活動追蹤和快速上下文諮詢輔助函式 | |
+  `plugin-sdk/image-generation` | 圖片生成輔助函式 | 圖片生成供應商類型，加上圖片資產/資料 URL 輔助函式和 OpenAI 相容圖片供應商建構器 | | `plugin-sdk/image-generation-core` | 共用圖片生成核心 | 圖片生成類型、故障轉移、驗證和註冊表輔助函式 | | `plugin-sdk/music-generation` | 音樂生成輔助函式 | 音樂生成供應商/要求/結果類型 | | `plugin-sdk/music-generation-core` | 共用音樂生成核心 |
+  音樂生成類型、故障轉移輔助函式、供應商查找和模型參照解析 | | `plugin-sdk/video-generation` | 影片生成輔助函式 | 影片生成供應商/要求/結果類型 | | `plugin-sdk/video-generation-core` | 共用影片生成核心 | 影片生成類型、故障轉移輔助函式、供應商查找和模型參照解析 | | `plugin-sdk/interactive-runtime` | 互動回覆輔助函式 | 互動回覆負載正規化/精簡 | | `plugin-sdk/channel-config-primitives` |
+  通道配置基本功能 | 狹義通道配置架構基本功能 | | `plugin-sdk/channel-config-writes` | 通道配置寫入輔助函式 | 通道配置寫入授權輔助函式 | | `plugin-sdk/channel-plugin-common` | 共用通道前奏 | 共用通道插件前奏匯出 | | `plugin-sdk/channel-status` | 通道狀態輔助函式 | 共用通道狀態快照/摘要輔助函式 | | `plugin-sdk/allowlist-config-edit` | 允許清單配置輔助函式 | 允許清單配置編輯/讀取輔助函式 | |
+  `plugin-sdk/group-access` | 群組存取輔助函式 | 共用群組存取決策輔助函式 | | `plugin-sdk/direct-dm`、`plugin-sdk/direct-dm-access` | 已棄用的相容性外觀 | 使用 `plugin-sdk/channel-inbound` | | `plugin-sdk/direct-dm-guard-policy` | 直接 DM 防護輔助函式 | 狹義預加密防護原則輔助函式 | | `plugin-sdk/extension-shared` | 共用擴充功能輔助函式 | 被動通道/狀態和環境代理輔助基本功能 | |
+  `plugin-sdk/webhook-targets` | Webhook 目標輔助函式 | Webhook 目標註冊表和路由安裝輔助函式 | | `plugin-sdk/webhook-path` | 已棄用的 Webhook 路徑別名 | 使用 `plugin-sdk/webhook-ingress` | | `plugin-sdk/web-media` | 共用 Web 媒體輔助函式 | 遠端/本機媒體載入輔助函式 | | `plugin-sdk/zod` | 已棄用的 Zod 相容性重新匯出 | 直接從 `zod` 匯入 `zod` | | `plugin-sdk/memory-core` | 內建記憶核心輔助函式 |
+  記憶管理員/配置/檔案/CLI 輔助介面 | | `plugin-sdk/memory-core-engine-runtime` | 記憶引擎執行時外觀 | 記憶索引/搜尋執行時外觀 | | `plugin-sdk/memory-core-host-embedding-registry` | 記憶內嵌註冊表 | 輕量級記憶內嵌供應商註冊表輔助函式 | | `plugin-sdk/memory-core-host-engine-foundation` | 記憶主機基礎引擎 | 記憶主機基礎引擎匯出 | | `plugin-sdk/memory-core-host-engine-embeddings` | 記憶主機內嵌引擎 |
+  記憶內嵌合約、註冊表存取、本機供應商和通用批次/遠端輔助函式；具體的遠端供應商位於其擁有的插件中 | | `plugin-sdk/memory-core-host-engine-qmd` | 記憶主機 QMD 引擎 | 記憶主機 QMD 引擎匯出 | | `plugin-sdk/memory-core-host-engine-storage` | 記憶主機儲存引擎 | 記憶主機儲存引擎匯出 | | `plugin-sdk/memory-core-host-multimodal` | 記憶主機多模態輔助函式 | 記憶主機多模態輔助函式 | |
+  `plugin-sdk/memory-core-host-query` | 記憶主機查詢輔助函式 | 記憶主機查詢輔助函式 | | `plugin-sdk/memory-core-host-secret` | 記憶主機祕密輔助函式 | 記憶主機祕密輔助函式 | | `plugin-sdk/memory-core-host-events` | 已棄用的記憶事件別名 | 使用 `plugin-sdk/memory-host-events` | | `plugin-sdk/memory-core-host-status` | 記憶主機狀態輔助函式 | 記憶主機狀態輔助函式 | |
+  `plugin-sdk/memory-core-host-runtime-cli` | 記憶主機 CLI 執行時 | 記憶主機 CLI 執行時輔助函式 | | `plugin-sdk/memory-core-host-runtime-core` | 記憶主機核心執行時 | 記憶主機核心執行時輔助函式 | | `plugin-sdk/memory-core-host-runtime-files` | 記憶主機檔案/執行時輔助函式 | 記憶主機檔案/執行時輔助函式 | | `plugin-sdk/memory-host-core` | 記憶主機核心執行時別名 |
+  記憶主機核心執行時輔助函式的廠商中立別名 | | `plugin-sdk/memory-host-events` | 記憶主機事件日誌別名 | 記憶主機事件日誌輔助函式的廠商中立別名 | | `plugin-sdk/memory-host-files` | 已棄用的記憶檔案/執行時別名 | 使用 `plugin-sdk/memory-core-host-runtime-files` | | `plugin-sdk/memory-host-markdown` | 受控 Markdown 輔助函式 | 用於記憶相鄰插件的共用受控 Markdown 輔助函式 | |
+  `plugin-sdk/memory-host-search` | 主動記憶搜尋外觀 | 延遲載入主動記憶搜尋管理員執行時外觀 | | `plugin-sdk/memory-host-status` | 已棄用的記憶主機狀態別名 | 使用 `plugin-sdk/memory-core-host-status` | | `plugin-sdk/testing` | 測試公用程式 | 存放庫本機已棄用的相容性匯總；使用專注的存放庫本機測試子路徑，例如
   `plugin-sdk/plugin-test-runtime`、`plugin-sdk/channel-test-helpers`、`plugin-sdk/channel-target-testing`、`plugin-sdk/test-env` 和 `plugin-sdk/test-fixtures` |
 </Accordion>
 
-此表格刻意僅包含常見的遷移子集，而非完整的 SDK
-表面。編譯器入口點清單位於
-`scripts/lib/plugin-sdk-entrypoints.json`；套件匯出項是從
-公開子集產生的。
+此表格刻意列出了常見的遷移子集，而非完整的 SDK 表面。編譯器入口點清單位於
+`scripts/lib/plugin-sdk-entrypoints.json`；套件匯出項是根據公開子集產生的。
 
-預留的綑綁外掛程式輔助接縫已從公開 SDK
-匯出對應表中移除，但明確記載的相容性外觀除外，例如為已發布的
-`@openclaw/discord@2026.3.13` 套件保留的已棄用 `plugin-sdk/discord` shim。特定擁有者的輔助工具位於
-擁有者外掛程式套件內；共用主機行為應透過通用 SDK
-合約（例如 `plugin-sdk/gateway-runtime`、`plugin-sdk/security-runtime`
-和 `plugin-sdk/plugin-config-runtime`）遷移。
+預留的打包外掛程式輔助接縫已從公開 SDK 匯出對應表中淘汰，明確記載的相容性外觀除外，例如為已發布的
+`@openclaw/discord@2026.3.13` 套件保留的已棄用 `plugin-sdk/discord` 填充層。特定擁有者的輔助程式位於擁有者外掛程式套件內；共用主機行為應透過通用 SDK 契約（例如 `plugin-sdk/gateway-runtime`、`plugin-sdk/security-runtime`
+和 `plugin-sdk/plugin-config-runtime`）進行轉移。
 
-使用符合該工作的最窄匯入路徑。如果您找不到匯出項，
-請檢查 `src/plugin-sdk/` 的原始碼或詢問維護者應由哪個通用合約
-擁有它。
+使用符合該工作範圍最窄的匯入。如果您找不到匯出項，請檢查 `src/plugin-sdk/` 的原始碼，或詢問維護者應由哪個通用契約擁有它。
 
 ## 目前的棄用項目
 
 適用於整個外掛程式 SDK、提供者合約、執行時表面與資訊清單的更精確棄用項目。每個項目目前仍可運作，但會在未來的主要版本中移除。每個項目下方的條目會將舊 API 對應至其標準取代項目。
 
 <AccordionGroup>
-  <Accordion title="command-auth help builders → command-status">
+  <Accordion title="指令驗證輔助工具 → 指令狀態">
     **舊版 (`openclaw/plugin-sdk/command-auth`)**：`buildCommandsMessage`、
     `buildCommandsMessagePaginated`、`buildHelpMessage`。
 
-    **新版 (`openclaw/plugin-sdk/command-status`)**：相同的簽名、相同的
-    匯出項——只是從更窄的子路徑匯入。`command-auth`
-    將其重新匯出為相容性存根。
+    **新版 (`openclaw/plugin-sdk/command-status`)**：相同的簽章，相同的
+    匯出項——只是從較窄的子路徑匯入。`command-auth`
+    會將它們作為相容性存根重新匯出。
 
     ```typescript
     // Before
@@ -517,14 +510,14 @@ await gateway.request("talk.client.steer", { sessionKey, text, mode: "steer" });
 
   </Accordion>
 
-  <Accordion title="Mention gating helpers → resolveInboundMentionDecision">
-    **舊版**：來自
+  <Accordion title="提及閘道輔助工具 → resolveInboundMentionDecision">
+    **舊版**：`resolveInboundMentionRequirement({ facts, policy })` 和
+    `shouldDropInboundForMention(...)` 來自
     `openclaw/plugin-sdk/channel-inbound` 或
-    `openclaw/plugin-sdk/channel-mention-gating` 的 `resolveInboundMentionRequirement({ facts, policy })` 和
-    `shouldDropInboundForMention(...)`。
+    `openclaw/plugin-sdk/channel-mention-gating`。
 
-    **新版**：`resolveInboundMentionDecision({ facts, policy })` —— 傳回
-    單一決策物件，而非兩個分開的呼叫。
+    **新版**：`resolveInboundMentionDecision({ facts, policy })` - 傳回單一
+    決策物件，而非兩個分開的呼叫。
 
     下游通道外掛程式（Slack、Discord、Matrix、MS Teams）已經
     切換。
@@ -532,51 +525,50 @@ await gateway.request("talk.client.steer", { sessionKey, text, mode: "steer" });
   </Accordion>
 
   <Accordion title="Channel runtime shim and channel actions helpers">
-    `openclaw/plugin-sdk/channel-runtime` 是舊版 channel 外掛的
-    相容性填充層 (shim)。請勿在新程式碼中匯入它；請使用
+    `openclaw/plugin-sdk/channel-runtime` 是較舊頻道外掛的
+    相容性 shim。請勿在新程式碼中匯入它；請使用
     `openclaw/plugin-sdk/channel-runtime-context` 來註冊執行時期
     物件。
 
-    `openclaw/plugin-sdk/channel-actions` 中的 `channelActions*` 輔助函式
-    已與原始的「actions」channel 匯出一同被棄用。請改透過語意化的
-    `presentation` 介面來公開功能 - channel 外掛
-    應宣告它們呈現的內容 (cards、buttons、selects)，而非它們接受的原始
+    `openclaw/plugin-sdk/channel-actions` 中的 `channelActions*` helper
+    已與原始的 "actions" 頻道匯出一同被棄用。請透過語意化的
+    `presentation` 介面來公開功能 - 頻道外掛
+    宣告它們呈現的內容 (cards、buttons、selects)，而不是它們接受的原始
     action 名稱。
 
   </Accordion>
 
   <Accordion title="Web search provider tool() helper → createTool() on the plugin">
     **舊版**：來自 `openclaw/plugin-sdk/provider-web-search` 的
-    `tool()` 工廠。
+    `tool()` factory。
 
-    **新版**：直接在 provider 外掛上實作
-    `createTool(...)`。
-    OpenClaw 不再需要 SDK 輔助函式來註冊工具包裝器。
+    **新版**：直接在提供者外掛上實作
+    `createTool(...)`。OpenClaw 不再需要 SDK helper
+    來註冊工具包裝器。
 
   </Accordion>
 
   <Accordion title="Plaintext channel envelopes → BodyForAgent">
-    **舊版**：`formatInboundEnvelope(...)` (以及
-    `ChannelMessageForAgent.channelEnvelope`) 用來從傳入的 channel 訊息
-    建構一個扁平的純文字提示封套。
+    **舊版**：使用 `formatInboundEnvelope(...)` (以及
+    `ChannelMessageForAgent.channelEnvelope`) 從傳入的頻道訊息
+    建構扁平純文字提示封套。
 
-    **新版**：`BodyForAgent` 加上結構化的使用者內容區塊。Channel
-    外掛將路由元資料 (thread、topic、reply-to、reactions) 以
-    類型欄位附加，而非將其串連至提示字串中。
-    `formatAgentEnvelope(...)` 輔助函式仍支援用於合成的
-    面向助理的封套，但傳入的純文字封套即將被淘汰。
+    **新版**：使用 `BodyForAgent` 加上結構化的使用者
+    上下文區塊。頻道外掛將路由元資料 (thread、topic、reply-to、reactions)
+    作為型別欄位附加，而不是將其串連成提示字串。`formatAgentEnvelope(...)` helper
+    仍然支援合成助理導向的封套，但傳入的純文字封套即將被淘汰。
 
-    受影響的區域：`inbound_claim`、`message_received`，以及任何
-    後處理 `channelEnvelope` 文字的自訂
-    channel 外掛。
+    受影響的區域：`inbound_claim`、
+    `message_received`，以及任何後處理
+    `channelEnvelope` 文字的自訂
+    頻道外掛。
 
   </Accordion>
 
   <Accordion title="deactivate hook → gateway_stop">
     **舊版**：`api.on("deactivate", handler)`。
 
-    **新版**：`api.on("gateway_stop", handler)`。事件和內容是
-    相同的關機清理契約；僅變更了 hook 名稱。
+    **新版**：`api.on("gateway_stop", handler)`。事件和內容是相同的關機清理合約；僅變更了 hook 名稱。
 
     ```typescript
     // Before
@@ -590,18 +582,16 @@ await gateway.request("talk.client.steer", { sessionKey, text, mode: "steer" });
     });
     ```
 
-    `deactivate` 在
-    2026-08-16 之前仍作為已棄用的相容性別名保留。
+    `deactivate` 在 2026-08-16 之前仍作為已棄用的相容性別名保留。
 
   </Accordion>
 
   <Accordion title="subagent_spawning hook → core thread binding">
-    **舊版**：`api.on("subagent_spawning", handler)` 回傳
+    **舊版**：`api.on("subagent_spawning", handler)` 傳回
     `threadBindingReady` 或 `deliveryOrigin`。
 
-    **新版**：讓核心透過通道
-    會話綁定配接器準備 `thread: true` 子代理綁定。僅將 `api.on("subagent_spawned", handler)`
-    用於啟動後的觀察。
+    **新版**：讓核心透過通道 session-binding 介面卡準備 `thread: true` 子代理程式繫結。僅將 `api.on("subagent_spawned", handler)`
+    用於啟動後觀察。
 
     ```typescript
     // Before
@@ -617,50 +607,44 @@ await gateway.request("talk.client.steer", { sessionKey, text, mode: "steer" });
     });
     ```
 
-    當外部外掛遷移時，`subagent_spawning`、`PluginHookSubagentSpawningEvent`、
+    當外部外掛程式進行遷移時，`subagent_spawning`、`PluginHookSubagentSpawningEvent`、
     `PluginHookSubagentSpawningResult` 和
-    `SubagentLifecycleHookRunner.runSubagentSpawning(...)` 僅作為
-    已棄用的相容性介面保留。
+    `SubagentLifecycleHookRunner.runSubagentSpawning(...)` 僅作為已棄用的相容性介面保留。
 
   </Accordion>
 
   <Accordion title="Provider discovery types → provider catalog types">
-    四個探索型別別名現在是目錄時代型別的
-    輕量包裝器：
+    四個探索型別別名現在是目錄時期型別的簡單包裝函式：
 
-    | Old alias                 | New type                  |
+    | 舊版別名                 | 新型別                  |
     | ------------------------- | ------------------------- |
     | `ProviderDiscoveryOrder`  | `ProviderCatalogOrder`    |
     | `ProviderDiscoveryContext`| `ProviderCatalogContext`  |
     | `ProviderDiscoveryResult` | `ProviderCatalogResult`   |
     | `ProviderPluginDiscovery` | `ProviderPluginCatalog`   |
 
-    此外還有舊版 `ProviderCapabilities` 靜態包 - 提供者外掛
-    應使用明確的提供者 hooks，例如 `buildReplayPolicy`、
+    此外還有舊版 `ProviderCapabilities` 靜態包 - 提供者外掛程式應使用明確的提供者 hook，例如 `buildReplayPolicy`、
     `normalizeToolSchemas` 和 `wrapStreamFn`，而不是靜態物件。
 
   </Accordion>
 
   <Accordion title="Thinking policy hooks → resolveThinkingProfile">
-    **舊版**（在 `ProviderThinkingPolicy` 上的三個獨立鉤子）：
+    **舊版**（`ProviderThinkingPolicy` 上的三個獨立 hooks）：
     `isBinaryThinking(ctx)`、`supportsXHighThinking(ctx)` 和
     `resolveDefaultThinkingLevel(ctx)`。
 
-    **新版**：單一 `resolveThinkingProfile(ctx)`，它返回一個
-    `ProviderThinkingProfile`，其中包含標準的 `id`、可選的 `label` 和
-    排序的等級列表。OpenClaw 會根據設定檔等級自動降級過時的儲存值。
+    **新版**：單一 `resolveThinkingProfile(ctx)`，其回傳包含標準 `id`、選用 `label` 和排名等級清單的 `ProviderThinkingProfile`。OpenClaw 會自動依據設定檔排名降級過期的儲存值。
 
-    語境包含 `provider`、`modelId`、可選合併的 `reasoning`
-    和可選合併的模型 `compat` 事實。提供者外掛只有在設定的請求合約支援時，才能使用這些目錄事實來公開特定模型的設定檔。
+    Context 包含 `provider`、`modelId`、選用的合併 `reasoning` 和選用的合併模型 `compat` 事實。供應商外掛可以在設定的請求合約支援時，使用那些目錄事務來公開模型專用的設定檔。
 
-    請實作一個鉤子，而不是三個。舊版鉤子在淘汰期間仍可運作，但未與設定檔結果組合。
+    實作一個 hook 而非三個。舊版 hooks 在棄用期間持續運作，但不會與設定檔結果組合。
 
   </Accordion>
 
   <Accordion title="External auth providers → contracts.externalAuthProviders">
-    **舊版**：實作外部驗證鉤子，而不在外掛清單中宣告提供者。
+    **舊版**：實作外部認證 hooks 而未在外掛 manifest 中宣告供應商。
 
-    **新版**：在外掛清單中宣告 `contracts.externalAuthProviders`
+    **新版**：在外掛 manifest 中宣告 `contracts.externalAuthProviders`
     **並**實作 `resolveExternalAuthProfiles(...)`。
 
     ```json
@@ -674,58 +658,57 @@ await gateway.request("talk.client.steer", { sessionKey, text, mode: "steer" });
   </Accordion>
 
   <Accordion title="Provider env-var lookup → setup.providers[].envVars">
-    **舊版** 清單欄位：`providerAuthEnvVars: { anthropic: ["ANTHROPIC_API_KEY"] }`。
+    **舊版** manifest 欄位：`providerAuthEnvVars: { anthropic: ["ANTHROPIC_API_KEY"] }`。
 
-    **新版**：將相同的環境變數查詢映射到清單上的
-    `setup.providers[].envVars`。這將設定/狀態環境元資料合併在同一位置，並避免僅為了回應環境變數查詢而啟動外掛執行時。
+    **新版**：將相同的環境變數查詢映射到 manifest 上的 `setup.providers[].envVars`。這會將設定/狀態環境中繼資料整合在同一個地方，並避免僅為了回應環境變數查詢而啟動外掛執行時期。
 
-    `providerAuthEnvVars` 在淘汰期間透過相容性轉接器維持支援。
+    `providerAuthEnvVars` 在棄用視窗結束前透過相容性轉接器持續獲得支援。
 
   </Accordion>
 
-  <Accordion title="記憶體插件註冊 → registerMemoryCapability">
-    **舊版**：三個獨立的呼叫 -
+  <Accordion title="Memory plugin registration → registerMemoryCapability">
+    **舊版**：三個分開的呼叫 -
     `api.registerMemoryPromptSection(...)`,
     `api.registerMemoryFlushPlan(...)`,
-    `api.registerMemoryRuntime(...)`。
+    `api.registerMemoryRuntime(...)`.
 
-    **新版**：在記憶體狀態 API 上進行一次呼叫 -
-    `registerMemoryCapability(pluginId, { promptBuilder, flushPlanResolver, runtime })`。
+    **新版**：在 memory-state API 上的單一呼叫 -
+    `registerMemoryCapability(pluginId, { promptBuilder, flushPlanResolver, runtime })`.
 
-    相同的插槽，單一註冊呼叫。附加的提示和語料庫輔助函數
-    (`registerMemoryPromptSupplement`, `registerMemoryCorpusSupplement`) 不
-    受影響。
+    相同的插槽，單一的註冊呼叫。累加式提示和語料庫輔助函式
+    (`registerMemoryPromptSupplement`, `registerMemoryCorpusSupplement`) 不受影響。
 
   </Accordion>
 
-  <Accordion title="記憶體嵌入提供者 API">
+  <Accordion title="Memory embedding provider API">
     **舊版**：`api.registerMemoryEmbeddingProvider(...)` 加上
-    `contracts.memoryEmbeddingProviders`。
+    `contracts.memoryEmbeddingProviders`.
 
     **新版**：`api.registerEmbeddingProvider(...)` 加上
-    `contracts.embeddingProviders`。
+    `contracts.embeddingProviders`.
 
-    通用嵌入提供者契約可在記憶體之外重複使用，並且是新提供者的支援途徑。記憶體特定的註冊 API 在現有提供者遷移期間仍作為已棄用的相容性連線保留。插件檢查會將非套件內的使用報告為相容性技術債。
+    通用嵌入提供者契約可在記憶體之外重複使用，並且是新提供者的支援途徑。記憶體特定的註冊 API 在現有提供者遷移期間仍作為已棄用的相容性連線。外掛程式檢查會將非內綁定的使用報告為相容性債務。
 
   </Accordion>
 
-  <Accordion title="子代理階段訊息類型已重新命名">
-    從 `src/plugins/runtime/types.ts` 匯出的兩個舊版類型別名：
+  <Accordion title="Subagent session messages types renamed">
+    從 `src/plugins/runtime/types.ts` 仍然匯出了兩個舊版類型別名：
 
-    | 舊版                           | 新版                             |
+    | Old                           | New                             |
     | ----------------------------- | ------------------------------- |
     | `SubagentReadSessionParams`   | `SubagentGetSessionMessagesParams` |
     | `SubagentReadSessionResult`   | `SubagentGetSessionMessagesResult` |
 
-    執行時方法 `readSession` 已棄用，改用
-    `getSessionMessages`。簽名相同；舊方法會呼叫新方法。
+    執行時期方法 `readSession` 已棄用，建議改用
+    `getSessionMessages`。簽章相同；舊方法會呼叫新方法。
 
   </Accordion>
 
   <Accordion title="runtime.tasks.flow → runtime.tasks.managedFlows">
-    **舊版**：`runtime.tasks.flow` (單數) 返回即時任務流程存取器。
+    **舊版**：`runtime.tasks.flow` (單數) 傳回即時任務流程存取器。
 
-    **新版**：`runtime.tasks.managedFlows` 針對從流程建立、更新、取消或執行子任務的插件，保留受管理的 TaskFlow 變更執行時。當插件僅需要基於 DTO 的讀取時，請使用 `runtime.tasks.flows`。
+    **新版**：`runtime.tasks.managedFlows` 為從流程建立、更新、取消或執行子任務的外掛程式保留受管理的 TaskFlow 變更
+    執行時期。當外掛程式只需要基於 DTO 的讀取時，請使用 `runtime.tasks.flows`。
 
     ```typescript
     // Before
@@ -736,11 +719,11 @@ await gateway.request("talk.client.steer", { sessionKey, text, mode: "steer" });
 
   </Accordion>
 
-<Accordion title="Embedded extension factories → agent tool-result middleware">已在上文「如何遷移 → 將嵌入式 tool-result 擴充功能遷移至中介軟體」中涵蓋。為了完整性在此列出：已移除的 embedded-runner-only `api.registerEmbeddedExtensionFactory(...)` 路徑已被 `api.registerAgentToolResultMiddleware(...)` 取代，並在 `contracts.agentToolResultMiddleware` 中包含明確的執行時期清單。</Accordion>
+<Accordion title="Embedded extension factories → agent tool-result middleware">上文「如何遷移 → 將嵌入式 tool-result 擴充功能遷移至中介軟體」已涵蓋此內容。為求完整性在此列出：已移除的 embedded-runner-only `api.registerEmbeddedExtensionFactory(...)` 路徑已由 `api.registerAgentToolResultMiddleware(...)` 取代，並在 `contracts.agentToolResultMiddleware` 中提供明確的執行時期清單。</Accordion>
 
   <Accordion title="OpenClawSchemaType alias → OpenClawConfig">
-    從 `openclaw/plugin-sdk` 重新導出的 `OpenClawSchemaType` 現在是
-    `OpenClawConfig` 的單行別名。建議使用標準名稱。
+    從 `openclaw/plugin-sdk` 重新匯出的 `OpenClawSchemaType` 現在是
+    `OpenClawConfig` 的單行別名。建議優先使用正式名稱。
 
     ```typescript
     // Before
@@ -752,7 +735,7 @@ await gateway.request("talk.client.steer", { sessionKey, text, mode: "steer" });
   </Accordion>
 </AccordionGroup>
 
-<Note>擴充功能層級的棄用項目（位於 `extensions/` 下的套件 channel/provider 外掛程式中）是在其各自的 `api.ts` 和 `runtime-api.ts` barrels 中追蹤的。這些項目不會影響第三方外掛程式契約，因此未在此列出。如果您直接使用套件外掛程式的本地 barrel，請在升級前閱讀該 barrel 中的棄用註解。</Note>
+<Note>擴充功能層級的棄用（位於 `extensions/` 下的打包 channel/provider 外掛內部）會在其自己的 `api.ts` 和 `runtime-api.ts` barrels 中追蹤。這些棄用不會影響第三方外掛合約，因此未在此處列出。如果您直接使用打包外掛的本機 barrel，請在升級前閱讀該 barrel 中的棄用註解。</Note>
 
 ## 移除時間表
 
@@ -776,9 +759,9 @@ OPENCLAW_SUPPRESS_EXTENSION_API_WARNING=1 openclaw gateway run
 
 ## 相關資訊
 
-- [入門指南](/zh-Hant/plugins/building-plugins) - 建構您的第一個外掛程式
-- [SDK 概覽](/zh-Hant/plugins/sdk-overview) - 完整的子路徑匯入參考
-- [Channel 外掛程式](/zh-Hant/plugins/sdk-channel-plugins) - 建構 channel 外掛程式
-- [Provider 外掛程式](/zh-Hant/plugins/sdk-provider-plugins) - 建構 provider 外掛程式
-- [外掛程式內部運作](/zh-Hant/plugins/architecture) - 架構深度剖析
-- [外掛程式清單](/zh-Hant/plugins/manifest) - 清單架構參考
+- [Getting Started](/zh-Hant/plugins/building-plugins) - 建構您的第一個外掛
+- [SDK Overview](/zh-Hant/plugins/sdk-overview) - 完整的子路徑匯入參考
+- [Channel Plugins](/zh-Hant/plugins/sdk-channel-plugins) - 建構頻道外掛
+- [Provider Plugins](/zh-Hant/plugins/sdk-provider-plugins) - 建構提供者外掛
+- [Plugin Internals](/zh-Hant/plugins/architecture) - 架構深度剖析
+- [Plugin Manifest](/zh-Hant/plugins/manifest) - Manifest 綱要參考

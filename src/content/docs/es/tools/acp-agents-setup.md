@@ -7,11 +7,12 @@ read_when:
 title: "Agentes ACP — configuración"
 ---
 
-Para obtener información general sobre el manual del operador y los conceptos, consulte [ACP agents](/es/tools/acp-agents).
+Para obtener una descripción general, el manual del operador y los conceptos, consulte [ACP agents](/es/tools/acp-agents).
 
 Las secciones a continuación cubren la configuración del arnés acpx, la configuración del complemento para los puentes MCP y la configuración de permisos.
 
-Use esta página solo cuando esté configurando la ruta ACP/acpx. Para la configuración del tiempo de ejecución del servidor de aplicaciones nativo de Codex, use [Codex harness](/es/plugins/codex-harness). Para las claves de API de OpenAI o la configuración del proveedor de modelos OAuth de Codex, use [OpenAI](/es/providers/openai).
+Utilice esta página únicamente cuando esté configurando la ruta ACP/acpx. Para la configuración del tiempo de ejecución del servidor de aplicaciones nativo de Codex, utilice [Codex harness](/es/plugins/codex-harness). Para las claves de API de OpenAI o la configuración del proveedor de modelos OAuth de Codex, utilice
+[OpenAI](/es/providers/openai).
 
 Codex tiene dos rutas de OpenClaw:
 
@@ -103,7 +104,7 @@ Si la generación de ACP vinculada a hilos no funciona, verifique primero la mar
 
 Los enlaces de conversación actual no requieren la creación de subprocesos. Requieren un contexto de conversación activo y un adaptador de canal que exponga enlaces de conversación ACP.
 
-Consulte [Referencia de configuración](/es/gateway/configuration-reference).
+Consulte [Configuration Reference](/es/gateway/configuration-reference).
 
 ## Configuración del complemento para el backend acpx
 
@@ -251,7 +252,9 @@ El complemento `acpx` otorga a las operaciones de inicio y control del tiempo de
 openclaw config set plugins.entries.acpx.config.timeoutSeconds 180
 ```
 
-Los turnos de tiempo de ejecución utilizan los tiempos de espera de agente/ejecución de OpenClaw, incluidos `/acp timeout` y `sessions_spawn.timeoutSeconds`. Reinicie la puerta de enlace después de cambiar este valor.
+Los turnos de tiempo de ejecución utilizan tiempos de espera de agente/ejecución de OpenClaw, incluyendo `/acp timeout`.
+`sessions_spawn` no acepta anulaciones de tiempo de espera por llamada. Reinicie el
+gateway después de cambiar este valor.
 
 ### Configuración del agente de sonda de estado
 
@@ -269,6 +272,10 @@ Las sesiones de ACP se ejecutan de forma no interactiva; no hay ninguna TTY para
 
 Estos permisos del arnés ACPX son independientes de las aprobaciones de ejecución de OpenClaw e independientes de los indicadores de omisión del proveedor del backend de CLI, como `--permission-mode bypassPermissions` de Claude CLI. `approve-all` de ACPX es el interruptor de emergencia a nivel de arnés para las sesiones de ACP.
 
+Para la comparación más amplia entre OpenClaw `tools.exec.mode`, las aprobaciones de Codex Guardian
+y los permisos del arnés ACPX, consulte
+[Permission modes](/es/tools/permission-modes).
+
 ### `permissionMode`
 
 Controla qué operaciones puede realizar el agente del arnés sin solicitar confirmación.
@@ -281,7 +288,7 @@ Controla qué operaciones puede realizar el agente del arnés sin solicitar conf
 
 ### `nonInteractivePermissions`
 
-Controla qué sucede cuando se mostraría una solicitud de permiso pero no hay ninguna TTY interactiva disponible (lo cual siempre es el caso de las sesiones de ACP).
+Controla qué sucede cuando se mostraría una solicitud de permiso pero no hay un TTY interactivo disponible (lo cual siempre es el caso para las sesiones ACP).
 
 | Valor  | Comportamiento                                                         |
 | ------ | ---------------------------------------------------------------------- |
@@ -297,12 +304,12 @@ openclaw config set plugins.entries.acpx.config.permissionMode approve-all
 openclaw config set plugins.entries.acpx.config.nonInteractivePermissions fail
 ```
 
-Reinicie la puerta de enlace después de cambiar estos valores.
+Reinicie el gateway después de cambiar estos valores.
 
 <Warning>
-OpenClaw tiene como valores predeterminados `permissionMode=approve-reads` y `nonInteractivePermissions=fail`. En sesiones de ACP no interactivas, cualquier escritura o ejecución que active una solicitud de permiso puede fallar con `AcpRuntimeError: Permission prompt unavailable in non-interactive mode`.
+OpenClaw por defecto utiliza `permissionMode=approve-reads` y `nonInteractivePermissions=fail`. En sesiones ACP no interactivas, cualquier escritura o ejecución que active una solicitud de permiso puede fallar con `AcpRuntimeError: Permission prompt unavailable in non-interactive mode`.
 
-Si necesita restringir permisos, establezca `nonInteractivePermissions` en `deny` para que las sesiones se degraden elegantemente en lugar de fallar.
+Si necesita restringir permisos, establezca `nonInteractivePermissions` en `deny` para que las sesiones se degraden elegantemente en lugar de bloquearse.
 
 </Warning>
 

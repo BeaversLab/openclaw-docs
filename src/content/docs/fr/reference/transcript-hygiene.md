@@ -25,7 +25,7 @@ La portée inclut :
 
 Si vous avez besoin de détails sur le stockage des transcripts, consultez :
 
-- [Approfondissement de la gestion de session](/fr/reference/session-management-compaction)
+- [Session management deep dive](/fr/reference/session-management-compaction)
 
 ---
 
@@ -121,47 +121,45 @@ Pendant la reconstruction du contexte, OpenClaw applique le même marqueur aux a
   raisonnement des tours précédents tels que `reasoning` ou `reasoning_content`.
 - Les continuations d'appels de tool du même tour gardent le bloc de raisonnement de l'assistant
   attaché à l'appel de tool jusqu'à ce que le résultat du tool ait été relu.
-- Les exceptions détenues par le fournisseur peuvent choisir de s'exclure lorsque leur protocole de transmission exige des métadonnées de raisonnement relues.
+- Les entrées de model personnalisés/auto-hébergés avec `reasoning: true` préservent les métadonnées de raisonnement rejouées.
+- Les exceptions détenues par le provider peuvent choisir de s'abstenir lorsque leur protocole de liaison exige des métadonnées de raisonnement rejouées.
 
 **Google (Generative AI / Gemini CLI / Antigravity)**
 
-- Assainissement de l'ID d'appel d'outil : alphanumérique strict.
-- Réparation du couplage des résultats d'outil et résultats d'outil synthétiques.
-- Validation des tours (alternance des tours style Gemini).
-- Correction de l'ordre des tours Google (ajouter un petit amorçage utilisateur au début si l'historique commence par l'assistant).
-- Antigravity Claude : normaliser les signatures de réflexion ; supprimer les blocs de réflexion non signés.
+- Assainissement de l'ID d'appel tool : alphanumérique strict.
+- Réparation de l'appariement des résultats tool et résultats tool synthétiques.
+- Validation des tours (alternance de tours style Gemini).
+- Correction de l'ordre des tours Google (ajouter un petit bootstrap utilisateur au début si l'historique commence par un assistant).
+- Antigravity Claude : normaliser les signatures de raisonnement ; supprimer les blocs de raisonnement non signés.
 
-**Anthropic / Minimax (compatible avec Anthropic)**
+**Anthropic / Minimax (compatible Anthropic)**
 
-- Réparation de l'appariement des résultats d'outil et résultats d'outils synthétiques.
+- Réparation de l'appariement des résultats tool et résultats tool synthétiques.
 - Validation des tours (fusionner les tours utilisateur consécutifs pour respecter l'alternance stricte).
-- Les tours de préremplissage de l'assistant en fin de chaîne sont supprimés des charges utiles Messages Anthropic sortantes lorsque la réflexion est activée, y compris sur les routes Cloudflare AI Gateway.
-- Les blocs de réflexion dont les signatures de relecture sont manquantes, vides ou vierges sont supprimés avant la conversion du fournisseur. Si cela vide un tour d'assistant, OpenClaw conserve la forme du tour avec un texte non vide indiquant un raisonnement omis.
-- Les anciens tours d'assistant de réflexion seule qui doivent être supprimés sont remplacés par un texte non vide indiquant un raisonnement omis, pour que les adaptateurs de fournisseur ne suppriment pas le tour de relecture.
+- Les tours de préremplissage d'assistant à la fin sont supprimés des payloads Messages Anthropic sortants lorsque la réflexion est activée, y compris sur les routes Cloudflare AI Gateway.
+- Les blocs de raisonnement avec des signatures de relecture manquantes, vides ou vides sont supprimés avant la conversion du provider. Si cela vide un tour d'assistant, OpenClaw conserve la forme du tour avec un texte de raisonnement omis non vide.
+- Les anciens tours d'assistant contenant uniquement de la réflexion qui doivent être supprimés sont remplacés par un texte de raisonnement omis non vide pour que les adaptateurs du provider ne suppriment pas le tour de relecture.
 
-**Amazon BedrockAPI (API Converse)**
+**Amazon Bedrock (Converse API)**
 
-- Les tours vides d'erreurs de flux de l'assistant sont réparés en un bloc de texte de repli non vide
-  avant la relecture. Bedrock Converse rejette les messages de l'assistant avec `content: []`, donc
-  les tours d'assistant persistés avec `stopReason: "error"` et un contenu vide sont également
-  réparés sur le disque avant le chargement.
-- Les tours d'erreur de flux de l'assistant qui ne contiennent que des blocs de texte vierges sont supprimés de la copie de relecture en mémoire, au lieu de relire un bloc vierge invalide.
-- Les blocs de réflexion de Claude dont les signatures de relecture sont manquantes, vides ou ne contiennent que des espaces sont supprimés avant la relecture Converse. Si cela vide un tour d'assistant, OpenClaw conserve la forme du tour avec un texte omitted-reasoning non vide.
-- Les anciens tours d'assistant de réflexion uniquement qui doivent être supprimés sont remplacés par un texte omitted-reasoning non vide afin que la relecture Converse conserve une forme de tour stricte.
-- La relecture filtre les tours d'assistant injectés par le miroir de livraison OpenClaw et par la passerelle.
+- Les tours d'erreur de flux d'assistant vides sont réparés en un bloc de texte de repli non vide avant la relecture. Bedrock Converse rejette les messages d'assistant avec `content: []`, donc les tours d'assistant persistants avec `stopReason: "error"` et un contenu vide sont également réparés sur le disque avant le chargement.
+- Les tours d'erreur de flux d'assistant qui ne contiennent que des blocs de texte vides sont supprimés de la copie de relecture en mémoire au lieu de rejouer un bloc vide invalide.
+- Les blocs de raisonnement Claude avec des signatures de relecture manquantes, vides ou vides sont supprimés avant la relecture Converse. Si cela vide un tour d'assistant, OpenClaw conserve la forme du tour avec un texte de raisonnement omis non vide.
+- Les anciens tours d'assistant de réflexion uniquement qui doivent être supprimés sont remplacés par du texte de raison omise non vide afin que la relecture Converse maintienne une forme stricte des tours.
+- La relecture filtre les tours d'assistant injectés par la passerelle et le miroir de livraison OpenClaw.
 - La nettoyage des images s'applique via la règle globale.
 
 **Mistral (y compris la détection basée sur l'ID de modèle)**
 
-- Nettoyage des ID d'appel d'outil : strict9 (longueur alphanumérique de 9).
+- Nettoyage des ID d'appel d'outil : strict9 (longueur alphanumérique 9).
 
 **OpenRouter Gemini**
 
-- Nettoyage de la signature de pensée : supprimer les valeurs `thought_signature` non base64 (conserver le base64).
+- Nettoyage de la signature de pensée : supprimer les valeurs `thought_signature` non base64 (garder le base64).
 
 **OpenRouter Anthropic**
 
-- Les tours de préremplissage d'assistant à la fin sont supprimés des payloads de modèle OpenRouter compatibles OpenAI vérifiés Anthropic lorsque le raisonnement est activé, correspondant au comportement de relecture directe de Anthropic et de Cloudflare Anthropic.
+- Les tours de préremplissage d'assistant à la fin sont supprimés des charges utiles de modèle OpenRouter compatibles OpenAI et vérifiées par Anthropic lorsque le raisonnement est activé, correspondant au comportement de relecture direct Anthropic et Cloudflare Anthropic.
 
 **Tout le reste**
 
@@ -171,19 +169,19 @@ Pendant la reconstruction du contexte, OpenClaw applique le même marqueur aux a
 
 ## Comportement historique (avant le 2026.1.22)
 
-Avant la version 2026.1.22, OpenClaw appliquait plusieurs couches d'hygiène de transcript :
+Avant la version 2026.1.22, OpenClaw appliquait plusieurs couches d'hygiène de transcription :
 
 - Une **extension transcript-sanitize** s'exécutait à chaque construction de contexte et pouvait :
-  - Réparer le pairage utilisation/résultat d'outil.
-  - Nettoyer les IDs d'appel d'outils (y compris un mode non strict qui préservait `_`/`-`).
-- Le lanceur effectuait également une nettoyage spécifique au fournisseur, ce qui doublait le travail.
-- Des mutations supplémentaires se produisaient en dehors de la stratégie du fournisseur, notamment :
+  - Réparer le couplage utilisation/résultat d'outil.
+  - Nettoyer les ID d'appel d'outil (y compris un mode non strict qui préservait `_`/`-`).
+- Le moteur effectuait également une nettoyage spécifique au fournisseur, ce qui dupliquait le travail.
+- Des mutations supplémentaires se produisaient en dehors de la politique du fournisseur, notamment :
   - Suppression des balises `<final>` du texte de l'assistant avant la persistance.
-  - Abandon des tours d'erreur d'assistant vides.
-  - Rogner le contenu de l'assistant après les appels d'outils.
+  - Suppression des tours d'erreur d'assistant vides.
+  - Coupe du contenu de l'assistant après les appels d'outil.
 
-Cette complexité a provoqué des régressions inter-providers (notamment l'appariement `openai-responses`
-`call_id|fc_id`). Le nettoyage du 2026.1.22 a supprimé l'extension, centralisé la logique dans le runner et rendu OpenAI **no-touch** (sans intervention) au-delà de la désinfection des images.
+Cette complexité a provoqué des régressions inter-fournisseurs (notamment le couplage `openai-responses`
+`call_id|fc_id`). Le nettoyage de 2026.1.22 a supprimé l'extension, centralisé la logique dans le moteur, et rendu OpenAI **sans-toucher** au-delà du nettoyage des images.
 
 ## Connexes
 

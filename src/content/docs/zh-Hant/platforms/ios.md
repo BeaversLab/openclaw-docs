@@ -231,9 +231,8 @@ openclaw nodes invoke --node "iOS Node" --command canvas.navigate --params '{"ur
 ## Computer Use 關係
 
 iOS 應用程式是行動節點介面，而非 Codex Computer Use 後端。Codex
-Computer Use 和 `cua-driver mcp` 透 MCP 工具控制本機 macOS 桌面；
-iOS 應用程式則透過 OpenClaw 節點命令（例如 `canvas.*`、`camera.*`、`screen.*`、
-`location.*` 和 `talk.*`）公開 iPhone 功能。
+Computer Use 和 `cua-driver mcp` 透過 MCP 工具控制本機 macOS 桌面；
+iOS 應用程式則透過 OpenClaw 節點指令（例如 `canvas.*`、`camera.*`、`screen.*`、`location.*` 和 `talk.*`）暴露 iPhone 和 iPad 的功能。
 
 Agent 仍可透過呼叫節點命令透過 OpenClaw 操作 iOS 應用程式，但這些呼叫會透過
 Gateway 節點協定並遵循 iOS 前景/背景限制。請使用 [Codex Computer Use](/zh-Hant/plugins/codex-computer-use)

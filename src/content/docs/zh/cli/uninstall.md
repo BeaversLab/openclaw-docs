@@ -35,10 +35,11 @@ openclaw uninstall --dry-run
 注意：
 
 - 如果您在移除状态或工作区之前需要可恢复的快照，请先运行 `openclaw backup create`。
-- `--all` 是同时移除服务、状态、工作区和应用的简写。
+- `--state` 会保留已配置的工作区目录，除非同时选择了 `--workspace`。
+- `--all` 是同时删除服务、状态、工作区和应用程序的简写形式。
 - `--non-interactive` 需要 `--yes`。
 
 ## 相关
 
-- [CLI 参考](/zh/cli)
+- [CLI 参考](CLI/en/cli)
 - [卸载](/zh/install/uninstall)

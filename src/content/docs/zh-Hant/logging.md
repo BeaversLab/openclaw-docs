@@ -80,7 +80,8 @@ openclaw doctor
 
 ### Control UI (web)
 
-Control UI 的 **Logs** 分頁使用 `logs.tail` 追蹤同一個檔案。請參閱 [Control UI](/zh-Hant/web/control-ui) 以了解如何開啟它。
+控制 UI 的 **Logs** 分頁使用 `logs.tail` 即時追蹤同一個檔案。
+請參閱 [Control UI](/zh-Hant/web/control-ui) 以了解如何開啟它。
 
 ### 僅限 Channel 的記錄
 
@@ -195,8 +196,8 @@ Gateway HTTP 請求和 Gateway WebSocket 框架會建立內部請求追蹤範圍
 模型呼叫診斷會記錄有邊界的請求/回應測量數據，而不會擷取原始提示詞或回應內容：
 
 - `requestPayloadBytes`：最終模型請求承載的 UTF-8 位元組大小
-- `responseStreamBytes`：串流模型回應事件的 UTF-8 位元組大小
-- `timeToFirstByteMs`：第一個串流回應事件之前的經過時間
+- `responseStreamBytes`：串流模型回應事件的 UTF-8 位元組大小，不含 delta 事件上累積的 `partial` 快照
+- `timeToFirstByteMs`：首次串流回應事件前的經過時間
 - `durationMs`：模型呼叫總持續時間
 
 當啟用診斷匯出時，這些欄位可用於診斷快照、模型呼叫外掛程式掛鉤以及 OTEL 模型呼叫 spans/metrics。
@@ -205,7 +206,7 @@ Gateway HTTP 請求和 Gateway WebSocket 框架會建立內部請求追蹤範圍
 
 `logging.consoleStyle`：
 
-- `pretty`：人性化、彩色、帶有時間戳記。
+- `pretty`：人性化的彩色輸出，附帶時間戳記。
 - `compact`：更緊湊的輸出（最適合長時間工作階段）。
 - `json`：每行 JSON（供日誌處理器使用）。
 
@@ -213,14 +214,14 @@ Gateway HTTP 請求和 Gateway WebSocket 框架會建立內部請求追蹤範圍
 
 OpenClaw 可以在敏感權杖輸出到主控台、檔案日誌、OTLP 日誌記錄、持久化的工作階段逐字稿文字，或 Control UI 工具事件內容 (工具啟動引數、部分/最終結果內容、衍生的執行輸出和修補摘要) 之前，將其編輯：
 
-- `logging.redactSensitive`：`off` | `tools` (預設值：`tools`)
-- `logging.redactPatterns`：用於覆寫預設集的 Regex 字串清單。自訂模式會套用在 Control UI 工具承載的內建預設值之上，因此新增模式永遠不會削弱已經被預設值攔截的值的遮蔽。
+- `logging.redactSensitive`： `off` | `tools` (預設： `tools`)
+- `logging.redactPatterns`：用於覆蓋預設集的 regex 字串列表。自訂模式會套用在 Control UI 工具載荷的內建預設之上，因此新增模式絕不會削弱已由預設模式攔截到的值之編校效果。
 
 檔案日誌和會話記錄保持 JSONL 格式，但在該行或訊息寫入磁碟之前，相符的秘密值會被遮蔽。編校為盡力而為：它適用於包含文字的訊息內容和日誌字串，而非每個識別碼或二進位負載欄位。
 
 內建預設值涵蓋常見的 API 憑證和付款憑證欄位名稱，例如卡號、CVC/CVV、共用付款權杖和付款憑證，當它們以 JSON 欄位、URL 參數、CLI 標誌或指派形式出現時。
 
-`logging.redactSensitive: "off"` 僅會停用此一般日誌/逐字稿政策。OpenClaw 仍會遮蔽可顯示給 UI 用戶端、支援套件、診斷觀察者、核准提示或 Agent 工具的安全性邊界承載。範例包括 Control UI 工具呼叫事件、`sessions_history` 輸出、診斷支援匯出、提供者錯誤觀察、exec 核准命令顯示，以及 Gateway WebSocket 協定日誌。自訂 `logging.redactPatterns` 仍可在這些介面上新增專案特定的模式。
+`logging.redactSensitive: "off"` 僅會停用此一般日誌/逐字稿原則。OpenClaw 仍會編校可顯示給 UI 用戶端、支援套件、診斷觀察器、核准提示或代理工具的安全邊界載荷。範例包括 Control UI 工具呼叫事件、`sessions_history` 輸出、診斷支援匯出、提供者錯誤觀察、exec 核准命令顯示，以及 Gateway WebSocket 協定日誌。自訂 `logging.redactPatterns` 仍可在這些介面上新增專案專屬的模式。
 
 ## 診斷和 OpenTelemetry
 
@@ -228,16 +229,8 @@ OpenClaw 可以在敏感權杖輸出到主控台、檔案日誌、OTLP 日誌記
 
 兩個相鄰的介面：
 
-- **OpenTelemetry 匯出** — 透過 OTLP/HTTP 將指標、追蹤和日誌
-  傳送到任何相容 OpenTelemetry 的收集器或後端（Grafana、Datadog、
-  Honeycomb、New Relic、Tempo 等）。完整設定、訊號目錄、
-  指標/範圍名稱、環境變數和隱私模型位於專用頁面：
-  [OpenTelemetry 匯出](/zh-Hant/gateway/opentelemetry)。
-- **診斷旗標** — 針對性的除錯日誌旗標，可將額外日誌路由到
-  `logging.file` 而不提高 `logging.level`。旗標不區分大小寫
-  並支援萬用字元（`telegram.*`、`*`）。在 `diagnostics.flags` 下設定
-  或透過 `OPENCLAW_DIAGNOSTICS=...` 環境變數覆寫。完整指南：
-  [診斷旗標](/zh-Hant/diagnostics/flags)。
+- **OpenTelemetry 匯出** — 透過 OTLP/HTTP 將指標、追蹤和日誌傳送到任何相容 OpenTelemetry 的收集器或後端（Grafana、Datadog、Honeycomb、New Relic、Tempo 等）。完整設定、訊號目錄、指標/範圍名稱、環境變數和隱私模型位於專用頁面上：[OpenTelemetry 匯出](/zh-Hant/gateway/opentelemetry)。
+- **診斷旗標** — 針對性的除錯日誌旗標，可將額外的日誌路由至 `logging.file` 而不提高 `logging.level`。旗標不區分大小寫並支援萬用字元（`telegram.*`、`*`）。在 `diagnostics.flags` 下設定或透過 `OPENCLAW_DIAGNOSTICS=...` 環境變數覆寫進行設定。完整指南：[診斷旗標](/zh-Hant/diagnostics/flags)。
 
 若要在不進行 OTLP 匯出的情況下為外掛或自訂接收器啟用診斷事件：
 
@@ -251,14 +244,13 @@ OpenClaw 可以在敏感權杖輸出到主控台、檔案日誌、OTLP 日誌記
 
 ## 疑難排解提示
 
-- **Gateway 無法連線？** 請先執行 `openclaw doctor`。
-- **日誌是空的？** 請檢查 Gateway 是否正在執行並正在寫入
-  `logging.file` 中的檔案路徑。
+- **無法連線到 Gateway？** 請先執行 `openclaw doctor`。
+- **日誌是空的？** 請檢查 Gateway 是否正在執行，並且正在寫入 `logging.file` 中的檔案路徑。
 - **需要更多細節？** 將 `logging.level` 設定為 `debug` 或 `trace` 並重試。
 
 ## 相關
 
-- [OpenTelemetry 匯出](/zh-Hant/gateway/opentelemetry) — OTLP/HTTP 匯出、指標/範圍目錄、隱私模型
-- [診斷旗標](/zh-Hant/diagnostics/flags) — 針對性的除錯日誌旗標
-- [Gateway 日誌內部機制](/zh-Hant/gateway/logging) — WS 日誌樣式、子系統前綴和主控台擷取
+- [OpenTelemetry 匯出](/zh-Hant/gateway/opentelemetry) — OTLP/HTTP 匯出、指標/跨度目錄、隱私模型
+- [診斷旗標](/zh-Hant/diagnostics/flags) — 針對性的偵錯日誌旗標
+- [Gateway 日誌內部機制](/zh-Hant/gateway/logging) — WS 日誌樣式、子系統前綴以及控制台擷取
 - [組態參考](/zh-Hant/gateway/configuration-reference#diagnostics) — 完整的 `diagnostics.*` 欄位參考

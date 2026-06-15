@@ -1,5 +1,5 @@
 ---
-summary: "OpenClaw 載入環境變數的位置以及優先順序"
+summary: "OpenClaw 從何處載入環境變數及其優先順序"
 read_when:
   - You need to know which env vars are loaded, and in what order
   - You are debugging missing API keys in the Gateway
@@ -7,39 +7,39 @@ read_when:
 title: "環境變數"
 ---
 
-OpenClaw 從多個來源提取環境變數。規則是**永不覆蓋現有值**。
-Workspace `.env` 檔案是較低信任度的來源：在套用優先順序之前，OpenClaw 會忽略來自 workspace `.env` 的提供者憑證和受保護的執行時控制項。
+OpenClaw 從多個來源載入環境變數。其規則是**永不覆蓋現有值**。
+Workspace `.env` 檔案屬於較低信任度的來源：在套用優先順序之前，OpenClaw 會忽略 workspace `.env` 中的提供者憑證和受保護的執行時期控制項。
 
-## 優先順序（從高到低）
+## 優先順序 (最高 → 最低)
 
-1. **行程環境**（Gateway 行程從父 shell/daemon 繼承的現有環境）。
-2. **目前工作目錄中的 `.env`**（dotenv 預設值；不覆蓋；提供者憑證和受保護的執行時控制項會被忽略）。
-3. `~/.openclaw/.env` 處的**全域 `.env`**（也稱為 `$OPENCLAW_STATE_DIR/.env`；建議用於提供者 API 金鑰；不覆蓋）。
-4. `~/.openclaw/openclaw.json` 中的 **Config `env` 區塊**（僅在缺失時套用）。
-5. **選用性的 login-shell 匯入**（`env.shellEnv.enabled` 或 `OPENCLAW_LOAD_SHELL_ENV=1`），僅針對缺失的預期金鑰套用。
+1. **程序環境** (Gateway 程序從父 shell/daemon 繼承的現有環境)。
+2. **當前工作目錄中的 `.env`** (dotenv 預設；不會覆蓋；提供者憑證和受保護的執行時期控制項會被忽略)。
+3. `~/.openclaw/.env` 處的 **全域 `.env`** (又稱 `$OPENCLAW_STATE_DIR/.env`；建議用於存放提供者 API 金鑰；不會覆蓋)。
+4. `~/.openclaw/openclaw.json` 中的 **Config `env` 區塊** (僅在缺失時套用)。
+5. **選用性的登入 shell 匯入** (`env.shellEnv.enabled` 或 `OPENCLAW_LOAD_SHELL_ENV=1`)，僅針對缺失的預期金鑰套用。
 
-在使用預設狀態目錄的 Ubuntu 全新安裝上，OpenClaw 在全域 `.env` 之後，也會將 `~/.config/openclaw/gateway.env` 視為相容性備援方案。如果兩個檔案都存在且內容不一致，OpenClaw 將保留 `~/.openclaw/.env` 並列印警告。
+在使用預設狀態目錄的全新 Ubuntu 安裝上，OpenClaw 還會在全域 `.env` 之後，將 `~/.config/openclaw/gateway.env` 視為相容性後備方案。如果兩個檔案都存在且內容不一致，OpenClaw 將保留 `~/.openclaw/.env` 並列印警告。
 
-如果完全缺少設定檔，將跳過步驟 4；如果已啟用，shell 匯入仍會執行。
+如果設定檔完全缺失，步驟 4 將會被跳過；若啟用了 shell 匯入，該功能仍會執行。
 
 ## 提供者憑證與 workspace `.env`
 
-請勿僅將提供者 API 金鑰保留在 workspace `.env` 中。OpenClaw 會忽略來自 workspace `.env` 檔案的提供者憑證環境變數，包括常見金鑰，例如 `GEMINI_API_KEY`、`GOOGLE_API_KEY`、`XAI_API_KEY`、`MISTRAL_API_KEY`、`GROQ_API_KEY`、`DEEPSEEK_API_KEY`、`PERPLEXITY_API_KEY`、`BRAVE_API_KEY`、`TAVILY_API_KEY`、`EXA_API_KEY` 和 `FIRECRAWL_API_KEY`。
+請勿僅將提供者 API 金鑰保存在工作區 `.env` 中。OpenClaw 會忽略工作區 `.env` 檔案中的提供者憑證環境變數，包括常見金鑰，例如 `GEMINI_API_KEY`、`GOOGLE_API_KEY`、`XAI_API_KEY`、`MISTRAL_API_KEY`、`GROQ_API_KEY`、`DEEPSEEK_API_KEY`、`PERPLEXITY_API_KEY`、`BRAVE_API_KEY`、`TAVILY_API_KEY`、`EXA_API_KEY` 和 `FIRECRAWL_API_KEY`。
 
-請使用以下其中一個信任來源儲存提供者憑證：
+請使用下列其中一個信任的來源存放提供者憑證：
 
 - Gateway 程序環境，例如 shell、launchd/systemd unit、容器 secret 或 CI secret。
-- 位於 `~/.openclaw/.env` 或 `$OPENCLAW_STATE_DIR/.env` 的全域執行時 dotenv 檔案。
+- 位於 `~/.openclaw/.env` 或 `$OPENCLAW_STATE_DIR/.env` 的全域執行時期 dotenv 檔案。
 - `~/.openclaw/openclaw.json` 中的 config `env` 區塊。
-- 當啟用 `env.shellEnv.enabled` 或 `OPENCLAW_LOAD_SHELL_ENV=1` 時，可選的登入 shell 匯入。
+- 當啟用 `env.shellEnv.enabled` 或 `OPENCLAW_LOAD_SHELL_ENV=1` 時，選用性的 login-shell 匯入。
 
-如果您之前僅在工作區 `.env` 中儲存了提供者金鑰，請將其移至上述其中一個受信任來源。工作區 `.env` 仍然可以提供非憑證、端點重新導向、主機覆寫或 `OPENCLAW_*` 執行時控制的普通專案變數。
+如果您先前僅在工作區 `.env` 中存放提供者金鑰，請將它們移至上述其中一個信任來源。工作區 `.env` 仍可提供一般的專案變數，這些變數不是憑證、端點重新導向、主機覆寫或 `OPENCLAW_*` 執行時期控制項。
 
-請參閱 [Workspace `.env` files](/zh-Hant/gateway/security#workspace-env-files) 以了解安全性理由。
+請參閱 [工作區 `.env` 檔案](/zh-Hant/gateway/security#workspace-env-files) 以了解安全性理由。
 
 ## Config `env` 區塊
 
-設定內聯環境變數的兩種等效方式（兩者皆不覆寫）：
+設定內聯環境變數的兩種等效方式（兩者皆不會覆寫）：
 
 ```json5
 {
@@ -52,11 +52,11 @@ Workspace `.env` 檔案是較低信任度的來源：在套用優先順序之前
 }
 ```
 
-Config `env` 區塊僅接受字面字串值。它不會擴展
+Config `env` 區塊僅接受字面字串值。它不會展開
 `file:...` 值；例如，`XAI_API_KEY: "file:secrets/xai-api-key.txt"`
-會原封不動地作為該字串傳遞給提供者。
+會以該確切字串傳遞給提供者。
 
-對於基於檔案的提供者金鑰，請在支援的憑證欄位上使用 SecretRef：
+對於檔案支援的提供者金鑰，請在支援的憑證欄位上使用 SecretRef：
 
 ```json5
 {
@@ -79,13 +79,13 @@ Config `env` 區塊僅接受字面字串值。它不會擴展
 }
 ```
 
-請參閱 [Secrets Management](/zh-Hant/gateway/secrets) 和
-[SecretRef credential surface](/zh-Hant/reference/secretref-credential-surface) 以了解
+請參閱 [Secrets 管理](/zh-Hant/gateway/secrets) 和
+[SecretRef 憑證介面](/zh-Hant/reference/secretref-credential-surface) 以了解
 支援的欄位。
 
 ## Shell 環境匯入
 
-`env.shellEnv` 會執行您的登入 shell 並僅匯入**缺失的**預期金鑰：
+`env.shellEnv` 會執行您的登入 shell 並僅匯入**缺失的**預期鍵值：
 
 ```json5
 {
@@ -98,33 +98,40 @@ Config `env` 區塊僅接受字面字串值。它不會擴展
 }
 ```
 
-環境變數等效項：
+等效的環境變數：
 
 - `OPENCLAW_LOAD_SHELL_ENV=1`
 - `OPENCLAW_SHELL_ENV_TIMEOUT_MS=15000`
 
-## 執行時注入的環境變數
+## 執行 shell 快照
+
+在非 Windows Gateway 主機上，bash 和 zsh `exec` 指令預設會使用啟動快照。
+在 Gateway 程序環境中設定 `OPENCLAW_EXEC_SHELL_SNAPSHOT=0` 即可停用此路徑。
+數值 `false`、`no` 和 `off` 也會停用它。單次呼叫的 `exec.env` 數值無法切換
+快照或重新導向快照快取。
+
+## 執行階段注入的環境變數
 
 OpenClaw 也會將上下文標記注入到產生的子程序中：
 
 - `OPENCLAW_SHELL=exec`：為透過 `exec` 工具執行的指令設定。
-- `OPENCLAW_SHELL=acp`：為 ACP 執行時後端程序產生設定（例如 `acpx`）。
-- `OPENCLAW_SHELL=acp-client`：當 `openclaw acp client` 產生 ACP bridge 程序時為其設定。
+- `OPENCLAW_SHELL=acp`：為 ACP 執行階段後端程序產生設定（例如 `acpx`）。
+- `OPENCLAW_SHELL=acp-client`：為 `openclaw acp client` 產生 ACP 橋接程序時設定。
 - `OPENCLAW_SHELL=tui-local`：為本機 TUI `!` shell 指令設定。
 - `OPENCLAW_CLI=1`：為由 CLI 進入點產生的子程序設定。
 
-這些是執行時標記（非必需的使用者設定）。它們可用於 shell/profile 邏輯中
+這些是執行階段標記（而非必需的使用者設定）。它們可用於 shell/profile 邏輯中
 以套用特定於上下文的規則。
 
 ## UI 環境變數
 
-- `OPENCLAW_THEME=light`：當您的終端機具有淺色背景時，強制使用淺色 TUI 調色板。
-- `OPENCLAW_THEME=dark`：強制使用深色 TUI 調色板。
-- `COLORFGBG`：如果您的終端機匯出了此變數，OpenClaw 將使用背景顏色提示自動選擇 TUI 調色板。
+- `OPENCLAW_THEME=light`：當您的終端機具有淺色背景時，強制使用淺色 TUI 色盤。
+- `OPENCLAW_THEME=dark`：強制使用深色 TUI 色盤。
+- `COLORFGBG`：如果您的終端機匯出此變數，OpenClaw 將使用背景顏色提示自動選擇 TUI 色盤。
 
-## 設定檔中的環境變數替換
+## 設定中的環境變數替換
 
-您可以使用 `${VAR_NAME}` 語法直接在設定檔字串值中引用環境變數：
+您可以使用 `${VAR_NAME}` 語法在設定字串值中直接引用環境變數：
 
 ```json5
 {
@@ -138,41 +145,41 @@ OpenClaw 也會將上下文標記注入到產生的子程序中：
 }
 ```
 
-有關詳細資訊，請參閱[設定：環境變數替換](/zh-Hant/gateway/configuration-reference#env-var-substitution)。
+請參閱 [Configuration: Env var substitution](/zh-Hant/gateway/configuration-reference#env-var-substitution) 以了解完整詳情。
 
-## Secret 參照與 `${ENV}` 字串
+## Secret 參考 vs `${ENV}` 字串
 
-OpenClaw 支援兩種由環境變數驅動的模式：
+OpenClaw 支援兩種由環境驅動的模式：
 
-- 設定檔值中的 `${VAR}` 字串替換。
-- SecretRef 物件 (`{ source: "env", provider: "default", id: "VAR" }`)，用於支援 secret 參照的欄位。
+- 設定值中的 `${VAR}` 字串替換。
+- SecretRef 物件 (`{ source: "env", provider: "default", id: "VAR" }`)，用於支援 secret 參考的欄位。
 
-兩者皆會在啟動時從程序環境變數中解析。SecretRef 的詳細資訊記錄於 [Secret 管理](/zh-Hant/gateway/secrets) 中。
-設定檔 `env` 區塊本身不會解析 SecretRef 或 `file:...`
+兩者皆在啟動時從程序環境變數解析。SecretRef 的詳細文件請參閱[秘密管理](/zh-Hant/gateway/secrets)。
+config `env` 區塊本身不會解析 SecretRef 或 `file:...`
 簡寫值。
 
 ## 路徑相關環境變數
 
-| 變數                     | 用途                                                                                                                                                                         |
-| ------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `OPENCLAW_HOME`          | 覆寫用於內部 OpenClaw 路徑預設值的主目錄 (`~/.openclaw/`、代理程式目錄、工作階段、憑證、安裝程式上架以及預設的 dev checkout)。當以專用服務使用者身分執行 OpenClaw 時很有用。 |
-| `OPENCLAW_STATE_DIR`     | 覆寫狀態目錄 (預設為 `~/.openclaw`)。                                                                                                                                        |
-| `OPENCLAW_CONFIG_PATH`   | 覆寫設定檔路徑 (預設為 `~/.openclaw/openclaw.json`)。                                                                                                                        |
-| `OPENCLAW_INCLUDE_ROOTS` | 目錄路徑清單，其中 `$include` 指令可解析設定目錄之外的檔案 (預設：無 — `$include` 僅限於設定目錄)。支援波浪號展開。                                                          |
+| 變數                     | 用途                                                                                                                                                                       |
+| ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `OPENCLAW_HOME`          | 覆寫用於內部 OpenClaw 路徑預設值（`~/.openclaw/`、代理目錄、工作階段、憑證、安裝程式上架，以及預設的開發簽出）的 home 目錄。當將 OpenClaw 作為專用服務使用者執行時很有用。 |
+| `OPENCLAW_STATE_DIR`     | 覆寫狀態目錄（預設 `~/.openclaw`）。                                                                                                                                       |
+| `OPENCLAW_CONFIG_PATH`   | 覆寫設定檔路徑（預設 `~/.openclaw/openclaw.json`）。                                                                                                                       |
+| `OPENCLAW_INCLUDE_ROOTS` | 指令可解析設定目錄以外檔案的目錄路徑清單（預設：無 — `$include``$include` 僅限於設定目錄）。支援波浪號展開。                                                               |
 
-## 記錄
+## 紀錄
 
-| 變數                             | 用途                                                                                                                                               |
-| -------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `OPENCLAW_LOG_LEVEL`             | 覆寫檔案和主控台的記錄層級 (例如 `debug`、`trace`)。優先順序高於設定檔中的 `logging.level` 和 `logging.consoleLevel`。無效的值將被忽略並顯示警告。 |
-| `OPENCLAW_DEBUG_MODEL_TRANSPORT` | 在不啟用全域偵錯日誌的情況下，發出特定層級的模型請求/回應時間診斷資訊。                                                                            |
-| `OPENCLAW_DEBUG_MODEL_PAYLOAD`   | 模型載荷診斷：`summary`、`tools` 或 `full-redacted`。`full-redacted` 會被截斷和編輯，但可能包含提示詞/訊息文字。                                   |
-| `OPENCLAW_DEBUG_SSE`             | 串流診斷：`events` 用於首次/完成時間，`peek` 用於包含前五個經編輯的 SSE 事件。                                                                     |
-| `OPENCLAW_DEBUG_CODE_MODE`       | 程式碼模式模型層級診斷，包括提供者工具隱藏以及僅執行/僅等待強制執行。                                                                              |
+| 變數                             | 用途                                                                                                                                                  |
+| -------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `OPENCLAW_LOG_LEVEL`             | 覆寫檔案與主控台的紀錄層級（例如 `debug`、`trace`）。優先順序高於設定中的 `logging.level` 和 `logging.consoleLevel`。無效的數值將會被忽略並顯示警告。 |
+| `OPENCLAW_DEBUG_MODEL_TRANSPORT` | 在 `info` 層級輸出針對模型請求/回應的時序診斷資訊，而無需啟用全域除錯紀錄。                                                                           |
+| `OPENCLAW_DEBUG_MODEL_PAYLOAD`   | Model payload diagnostics: `summary`, `tools`, or `full-redacted`. `full-redacted` is capped and redacted but may include prompt/message text.        |
+| `OPENCLAW_DEBUG_SSE`             | Streaming diagnostics: `events` for first/done timing, `peek` to include the first five redacted SSE events.                                          |
+| `OPENCLAW_DEBUG_CODE_MODE`       | Code-mode model-surface diagnostics, including provider-tool hiding and exec/wait-only enforcement.                                                   |
 
 ### `OPENCLAW_HOME`
 
-設定後，`OPENCLAW_HOME` 將取代系統主目錄（`$HOME` / `os.homedir()`）作為內部 OpenClaw 路徑預設值。這包括預設狀態目錄、設定路徑、代理程式目錄、憑證、安裝程式入門工作區，以及 `openclaw update --channel dev` 使用的預設開發检出。
+設定時，`OPENCLAW_HOME` 會取代內部 OpenClaw 路徑預設值的系統 home 目錄 (`$HOME` / `os.homedir()`)。這包括預設狀態目錄、設定路徑、代理程式目錄、憑證、安裝程式 onboarding 工作區，以及 `openclaw update --channel dev` 使用的預設 dev checkout。
 
 **優先順序：** `OPENCLAW_HOME` > `$HOME` > `USERPROFILE` > Android 上的 Termux `PREFIX` home 後備 > `os.homedir()`
 
@@ -186,47 +193,48 @@ OpenClaw 支援兩種由環境變數驅動的模式：
 </dict>
 ```
 
-`OPENCLAW_HOME` 也可以設定為波浪號路徑（例如 `~/svc`），在使用前會使用相同的 OS home 後備鏈進行展開。
+`OPENCLAW_HOME` 也可以設定為波浪號路徑 (例如 `~/svc`)，它會在使用前透過相同的 OS home 後備鏈進行擴充。
 
-明確的路徑變數（例如 `OPENCLAW_STATE_DIR`、`OPENCLAW_CONFIG_PATH` 和 `OPENCLAW_GIT_DIR`）仍然具有優先權。OS 帳戶任務（例如 Shell 啟動檔案偵測、套件管理器設定和主機 `~` 展開）可能仍會使用真實的系統主目錄。
+明確的路徑變數，如 `OPENCLAW_STATE_DIR`、`OPENCLAW_CONFIG_PATH` 和 `OPENCLAW_GIT_DIR` 仍然具有優先權。OS 帳號任務，例如 shell 啟動檔案偵測、套件管理員設定，以及主機 `~` 擴充可能仍會使用實際的系統 home。
 
 ## nvm 使用者：web_fetch TLS 失敗
 
-如果 Node.js 是透過 **nvm**（而非系統套件管理員）安裝的，內建的 `fetch()` 會使用
-nvm 捆綁的 CA 儲存庫，這可能缺少現代的根 CA（例如 Let's Encrypt 的 ISRG Root X1/X2、
-DigiCert Global Root G2 等）。這會導致 `web_fetch` 在大多數 HTTPS 網站上因 `"fetch failed"` 而失敗。
+如果 Node.js 是透過 **nvm** (而非系統套件管理員) 安裝，內建的 `fetch()` 會使用
+nvm 捆綁的 CA 存儲，這可能缺少現代的根 CA (Let's Encrypt 的 ISRG Root X1/X2、
+DigiCert Global Root G2 等)。這會導致 `web_fetch` 在大多數 HTTPS 網站上因 `"fetch failed"` 而失敗。
 
-在 Linux 上，OpenClaw 會自動偵測 nvm 並在實際的啟動環境中套用修復程式：
+在 Linux 上，OpenClaw 會自動偵測 nvm 並在實際的啟動環境中套用修正：
 
-- `openclaw gateway install` 會將 `NODE_EXTRA_CA_CERTS` 寫入 systemd 服務環境中
+- `openclaw gateway install` 會將 `NODE_EXTRA_CA_CERTS` 寫入 systemd 服務環境
 - `openclaw` CLI 進入點會在 Node 啟動前設定 `NODE_EXTRA_CA_CERTS` 並重新執行自身
 
-**手動修復（針對舊版本或直接 `node ...` 啟動）：**
+**手動修正 (適用於舊版本或直接 `node ...` 啟動)：**
 
-在啟動 OpenClaw 之前匯出該變數：
+在啟動 OpenClaw 之前匯出變數：
 
 ```bash
 export NODE_EXTRA_CA_CERTS=/etc/ssl/certs/ca-certificates.crt
 openclaw gateway run
 ```
 
-不要僅依賴寫入 `~/.openclaw/.env` 來設定此變數；Node 會在
-程序啟動時讀取 `NODE_EXTRA_CA_CERTS`。
+不要依賴僅將此變數寫入 `~/.openclaw/.env`；Node 會在程序啟動時讀取
+`NODE_EXTRA_CA_CERTS`。
 
 ## 舊版環境變數
 
 OpenClaw 僅讀取 `OPENCLAW_*` 環境變數。來自早期版本的舊版
-`CLAWDBOT_*` 和 `MOLTBOT_*` 前綴會被
-無聲忽略。
+`CLAWDBOT_*` 和 `MOLTBOT_*` 前綴會被靜默
+忽略。
 
-如果在啟動時 Gateway 程序上仍有設定任何這些變數，OpenClaw 會發出
+如果在啟動時 Gateway 程序上仍然設定了任何這些變數，OpenClaw 會發出
 單一 Node 棄用警告 (`OPENCLAW_LEGACY_ENV_VARS`)，列出
-偵測到的前綴和總數。請透過將舊版前綴替換為 `OPENCLAW_` 來重新命名每個值
+偵測到的前綴和總數。透過將
+舊版前綴替換為 `OPENCLAW_` 來重新命名每個值
 （例如 `CLAWDBOT_GATEWAY_TOKEN` →
 `OPENCLAW_GATEWAY_TOKEN`）；舊名稱將不會生效。
 
 ## 相關
 
-- [Gateway 設定](/zh-Hant/gateway/configuration)
-- [常見問題：環境變數與 .env 載入](/zh-Hant/help/faq#env-vars-and-env-loading)
-- [模型總覽](/zh-Hant/concepts/models)
+- [Gateway 配置](/zh-Hant/gateway/configuration)
+- [FAQ：環境變數與 .env 載入](/zh-Hant/help/faq#env-vars-and-env-loading)
+- [模型概述](/zh-Hant/concepts/models)

@@ -382,7 +382,7 @@ Feishu/Lark 支援私訊和群組主題訊息的 ACP。Feishu/Lark ACP 是由文
 - `match.peer.kind`: `"direct"` (私訊) 或 `"group"` (群組聊天)
 - `match.peer.id`: 使用者 Open ID (`ou_xxx`) 或群組 ID (`oc_xxx`)
 
-請參閱 [取得群組/使用者 ID](#get-groupuser-ids) 以了解查找提示。
+請參閱 [取得群組/使用者 ID](#get-groupuser-ids) 以取得查詢提示。
 
 ---
 
@@ -397,7 +397,7 @@ Feishu/Lark 支援私訊和群組主題訊息的 ACP。Feishu/Lark ACP 是由文
 
 這對於公開機器人至關重要，因為您希望每個使用者都擁有自己的私人 AI 助理體驗。
 
-<Note>**帳號限制**: `dynamicAgentCreation` 目前僅適用於 **預設 Feishu 帳號**。尚未完全支援命名/多重帳號設定——動態綁定是在沒有 `accountId` 的情況下建立的，因此傳送到命名帳號的訊息可能仍會路由至 `agent:main`。請在 [Issue #42837](https://github.com/openclaw/openclaw/issues/42837) 中追蹤進度。</Note>
+<Note>**帳號限制**：`dynamicAgentCreation` 目前僅適用於**預設的 Feishu 帳號**。具名/多重帳號設定尚未完全支援 — 動態綁定在沒有 `accountId` 的情況下建立，因此傳送到具名帳號的訊息可能仍會路由至 `agent:main`。請追蹤 [Issue #42837](https://github.com/openclaw/openclaw/issues/42837) 以瞭解進度。</Note>
 
 ### 快速設定
 
@@ -528,40 +528,44 @@ ls -la ~/.openclaw/workspace-*
 
 ## 配置參考
 
-完整配置：[Gateway 配置](/zh-Hant/gateway/configuration)
+完整設定：[Gateway configuration](/zh-Hant/gateway/configuration)
 
-| 設定                                                     | 描述                                               | 預設值                               |
-| -------------------------------------------------------- | -------------------------------------------------- | ------------------------------------ |
-| `channels.feishu.enabled`                                | 啟用/停用頻道                                      | `true`                               |
-| `channels.feishu.domain`                                 | API 網域 (`feishu` 或 `lark`)                      | `feishu`                             |
-| `channels.feishu.connectionMode`                         | 事件傳輸 (`websocket` 或 `webhook`)                | `websocket`                          |
-| `channels.feishu.defaultAccount`                         | 出站路由的預設帳戶                                 | `default`                            |
-| `channels.feishu.verificationToken`                      | Webhook 模式所需                                   | -                                    |
-| `channels.feishu.encryptKey`                             | Webhook 模式所需                                   | -                                    |
-| `channels.feishu.webhookPath`                            | Webhook 路由路徑                                   | `/feishu/events`                     |
-| `channels.feishu.webhookHost`                            | Webhook 綁定主機                                   | `127.0.0.1`                          |
-| `channels.feishu.webhookPort`                            | Webhook 綁定連接埠                                 | `3000`                               |
-| `channels.feishu.accounts.<id>.appId`                    | App ID                                             | -                                    |
-| `channels.feishu.accounts.<id>.appSecret`                | App Secret                                         | -                                    |
-| `channels.feishu.accounts.<id>.domain`                   | 各帳戶的網域覆寫                                   | `feishu`                             |
-| `channels.feishu.accounts.<id>.tts`                      | 個帳號 TTS 覆蓋                                    | `messages.tts`                       |
-| `channels.feishu.dmPolicy`                               | 私訊政策                                           | `allowlist`                          |
-| `channels.feishu.allowFrom`                              | 私訊白名單 (open_id 清單)                          | [BotOwnerId]                         |
-| `channels.feishu.groupPolicy`                            | 群組政策                                           | `allowlist`                          |
-| `channels.feishu.groupAllowFrom`                         | 群組白名單                                         | -                                    |
-| `channels.feishu.requireMention`                         | 在群組中要求 @提及                                 | `true`                               |
-| `channels.feishu.groups.<chat_id>.requireMention`        | 各群組 @提及覆蓋；明確 ID 也會將群組加入白名單模式 | 繼承                                 |
-| `channels.feishu.groups.<chat_id>.enabled`               | 啟用/停用特定群組                                  | `true`                               |
-| `channels.feishu.dynamicAgentCreation.enabled`           | 啟用自動每個使用者 Agent 建立                      | `false`                              |
-| `channels.feishu.dynamicAgentCreation.workspaceTemplate` | 動態 Agent 工作區路徑範本                          | `~/.openclaw/workspace-{agentId}`    |
-| `channels.feishu.dynamicAgentCreation.agentDirTemplate`  | Agent 目錄名稱範本                                 | `~/.openclaw/agents/{agentId}/agent` |
-| `channels.feishu.dynamicAgentCreation.maxAgents`         | 要建立的最大動態 Agent 數量                        | 無限制                               |
-| `channels.feishu.textChunkLimit`                         | 訊息區塊大小                                       | `2000`                               |
-| `channels.feishu.mediaMaxMb`                             | 媒體大小限制                                       | `30`                                 |
-| `channels.feishu.streaming`                              | 串流卡片輸出                                       | `true`                               |
-| `channels.feishu.blockStreaming`                         | 已完成區塊回覆串流                                 | `false`                              |
-| `channels.feishu.typingIndicator`                        | 發送輸入中反應                                     | `true`                               |
-| `channels.feishu.resolveSenderNames`                     | 解析發送者顯示名稱                                 | `true`                               |
+| 設定                                                     | 描述                                                                      | 預設值                               |
+| -------------------------------------------------------- | ------------------------------------------------------------------------- | ------------------------------------ |
+| `channels.feishu.enabled`                                | 啟用/停用頻道                                                             | `true`                               |
+| `channels.feishu.domain`                                 | API 網域 (`feishu` 或 `lark`)                                             | `feishu`                             |
+| `channels.feishu.connectionMode`                         | 事件傳輸 (`websocket` 或 `webhook`)                                       | `websocket`                          |
+| `channels.feishu.defaultAccount`                         | 出站路由的預設帳戶                                                        | `default`                            |
+| `channels.feishu.verificationToken`                      | Webhook 模式所需                                                          | -                                    |
+| `channels.feishu.encryptKey`                             | Webhook 模式所需                                                          | -                                    |
+| `channels.feishu.webhookPath`                            | Webhook 路由路徑                                                          | `/feishu/events`                     |
+| `channels.feishu.webhookHost`                            | Webhook 綁定主機                                                          | `127.0.0.1`                          |
+| `channels.feishu.webhookPort`                            | Webhook 綁定連接埠                                                        | `3000`                               |
+| `channels.feishu.accounts.<id>.appId`                    | App ID                                                                    | -                                    |
+| `channels.feishu.accounts.<id>.appSecret`                | App Secret                                                                | -                                    |
+| `channels.feishu.accounts.<id>.domain`                   | 各帳戶的網域覆寫                                                          | `feishu`                             |
+| `channels.feishu.accounts.<id>.tts`                      | 個帳號 TTS 覆蓋                                                           | `messages.tts`                       |
+| `channels.feishu.dmPolicy`                               | 私訊政策                                                                  | `allowlist`                          |
+| `channels.feishu.allowFrom`                              | 私訊白名單 (open_id 清單)                                                 | [BotOwnerId]                         |
+| `channels.feishu.groupPolicy`                            | 群組政策                                                                  | `allowlist`                          |
+| `channels.feishu.groupAllowFrom`                         | 群組白名單                                                                | -                                    |
+| `channels.feishu.requireMention`                         | 在群組中要求 @提及                                                        | `true`                               |
+| `channels.feishu.groups.<chat_id>.requireMention`        | 各群組 @提及覆蓋；明確 ID 也會將群組加入白名單模式                        | 繼承                                 |
+| `channels.feishu.groups.<chat_id>.enabled`               | 啟用/停用特定群組                                                         | `true`                               |
+| `channels.feishu.dynamicAgentCreation.enabled`           | 啟用自動每個使用者 Agent 建立                                             | `false`                              |
+| `channels.feishu.dynamicAgentCreation.workspaceTemplate` | 動態 Agent 工作區路徑範本                                                 | `~/.openclaw/workspace-{agentId}`    |
+| `channels.feishu.dynamicAgentCreation.agentDirTemplate`  | Agent 目錄名稱範本                                                        | `~/.openclaw/agents/{agentId}/agent` |
+| `channels.feishu.dynamicAgentCreation.maxAgents`         | 要建立的最大動態 Agent 數量                                               | 無限制                               |
+| `channels.feishu.textChunkLimit`                         | 訊息區塊大小                                                              | `2000`                               |
+| `channels.feishu.mediaMaxMb`                             | 媒體大小限制                                                              | `30`                                 |
+| `channels.feishu.streaming`                              | 串流卡片輸出                                                              | `true`                               |
+| `channels.feishu.blockStreaming`                         | 已完成區塊回覆串流                                                        | `false`                              |
+| `channels.feishu.typingIndicator`                        | 發送輸入中反應                                                            | `true`                               |
+| `channels.feishu.resolveSenderNames`                     | 解析發送者顯示名稱                                                        | `true`                               |
+| `channels.feishu.tools.bitable`                          | 啟用 Bitable/Base 工具                                                    | `true`                               |
+| `channels.feishu.tools.base`                             | `channels.feishu.tools.bitable` 的別名；若同時設定，明確的 `bitable` 優先 | `true`                               |
+| `channels.feishu.accounts.<id>.tools.bitable`            | 每個帳號的 Bitable/Base 工具閘道                                          | 繼承                                 |
+| `channels.feishu.accounts.<id>.tools.base`               | `tools.bitable` 的每個帳號別名                                            | 繼承                                 |
 
 ---
 
@@ -570,14 +574,19 @@ ls -la ~/.openclaw/workspace-*
 ### 接收
 
 - ✅ 文字
-- ✅ 豐富文字 (貼文)
+- ✅ 富文字 (貼文)
 - ✅ 圖片
 - ✅ 檔案
 - ✅ 音訊
 - ✅ 影片/媒體
 - ✅ 貼圖
 
-傳入的 Feishu/Lark 音訊訊息會被標準化為媒體佔位符，而不是原始的 `file_key` JSON。當設定 `tools.media.audio` 時，OpenClaw 會下載語音訊息資源並在代理回應前執行共享的音訊轉錄，因此代理會收到口說的逐字稿。如果 Feishu 直接在音訊 payload 中包含逐字稿文字，則會使用該文字而不進行另一次 ASR 呼叫。如果沒有音訊轉錄提供者，代理仍然會收到一個 `<media:audio>` 佔位符加上已儲存的附件，而不是原始的 Feishu 資源 payload。
+傳入的 Feishu/Lark 音訊訊息會被正規化為媒體佔位符，而不是原始的 `file_key` JSON。當設定 `tools.media.audio` 時，OpenClaw
+會下載語音訊息資源，並在代理回合前執行共用的音訊轉錄，因此代理會收到口語轉錄文字。如果 Feishu
+直接在音訊內容中包含轉錄文字，則會使用該文字而不需要再進行
+另一次 ASR 呼叫。如果沒有音訊轉錄提供者，代理仍然會收到
+`<media:audio>` 佔位符加上已儲存的附件，而不是原始的 Feishu
+資源內容。
 
 ### 傳送
 
@@ -586,25 +595,34 @@ ls -la ~/.openclaw/workspace-*
 - ✅ 檔案
 - ✅ 音訊
 - ✅ 影片/媒體
-- ✅ 互動式卡片（包括串流更新）
-- ⚠️ 豐富文字（文章式格式；不支援完整的 Feishu/Lark 編輯功能）
+- ✅ 互動式卡片 (包括串流更新)
+- ⚠️ 富文字 (貼文樣式格式；不支援完整的 Feishu/Lark 編輯功能)
 
-原生的 Feishu/Lark 音訊氣泡使用 Feishu `audio` 訊息類型，並且需要 Ogg/Opus 上傳媒體 (`file_type: "opus"`)。現有的 `.opus` 和 `.ogg` 媒體會直接作為原生音訊傳送。MP3/WAV/M4A 和其他可能的音訊格式只有在回覆請求語音傳遞 (`audioAsVoice` / 訊息工具 `asVoice`，包括 TTS 語音訊息回覆) 時，才會使用 `ffmpeg` 轉碼為 48kHz Ogg/Opus。一般的 MP3 附件則維持為一般檔案。如果 `ffmpeg` 缺失或轉換失敗，OpenClaw 會回退到檔案附件並記錄原因。
+飛書/Lark 原生音訊氣泡使用飛書 `audio` 訊息類型，並要求
+Ogg/Opus 上傳媒體 (`file_type: "opus"`)。現有的 `.opus` 和 `.ogg` 媒體
+會直接作為原生音訊發送。MP3/WAV/M4A 和其他可能的音訊格式
+僅在回覆請求語音傳遞 (`audioAsVoice` / 訊息工具 `asVoice`，包括 TTS 語音筆記
+回覆) 時，才會透過 `ffmpeg` 轉碼為 48kHz Ogg/Opus。一般的 MP3 附件保持為一般檔案。如果 `ffmpeg` 缺失或
+轉換失敗，OpenClaw 將退回為檔案附件並記錄原因。
 
-### 主題回應與回覆
+### 串列與回覆
 
 - ✅ 內聯回覆
-- ✅ 主題回覆
-- ✅ 回覆主題訊息時，媒體回覆會保持對主題的感知
+- ✅ 串列回覆
+- ✅ 媒體回覆在回覆串列訊息時會保持串列感知
 
-對於 `groupSessionScope: "group_topic"` 和 `"group_topic_sender"`，原生的 Feishu/Lark 主題群組會使用事件 `thread_id` (`omt_*`) 作為標準的主題會話金鑰。如果原生主題起始事件省略了 `thread_id`，OpenClaw 會在路由該輪次前從 Feishu 取得並填補該資訊。OpenClaw 轉換為主題的一般群組回覆會繼續使用回覆根訊息 ID (`om_*`)，以便第一輪和後續輪次保持在同一個會話中。
+對於 `groupSessionScope: "group_topic"` 和 `"group_topic_sender"`，原生
+飛書/Lark 主題群組使用事件 `thread_id` (`omt_*`) 作為標準
+主題會話金鑰。如果原生主題起始事件省略了 `thread_id`，OpenClaw
+會在路由回合之前從飛書補充它。OpenClaw 轉換為串列的一般群組回覆繼續使用回覆根訊息 ID (`om_*`)，以便
+第一個回合和後續回合保持在同一個會話中。
 
 ---
 
 ## 相關
 
-- [頻道概覽](/zh-Hant/channels) - 所有支援的頻道
-- [配對](/zh-Hant/channels/pairing) - 私訊驗證和配對流程
-- [群組](/zh-Hant/channels/groups) - 群聊行為和提及控制
-- [頻道路由](/zh-Hant/channels/channel-routing) - 訊息的會話路由
-- [安全性](/zh-Hant/gateway/security) - 存取模型和加固
+- [通道概覽](/zh-Hant/channels) - 所有支援的通道
+- [配對](/zh-Hant/channels/pairing) - 私訊驗證與配對流程
+- [群組](/zh-Hant/channels/groups) - 群聊行為與提及閘道
+- [通道路由](/zh-Hant/channels/channel-routing) - 訊息的會話路由
+- [安全性](/zh-Hant/gateway/security) - 存取模型與強化

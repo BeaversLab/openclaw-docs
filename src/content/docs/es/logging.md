@@ -87,8 +87,8 @@ openclaw doctor
 
 ### Interfaz de usuario de control (web)
 
-La pestaña **Logs** del Control UI sigue el mismo archivo usando `logs.tail`.
-Consulte [Control UI](/es/web/control-ui) para saber cómo abrirlo.
+La pestaña **Registros** (Logs) de la Interfaz de Control hace un seguimiento del mismo archivo usando `logs.tail`.
+Consulte [Interfaz de Control](/es/web/control-ui) para saber cómo abrirla.
 
 ### Registros solo del canal
 
@@ -221,9 +221,9 @@ Los registros de ciclo de vida de conversación también fluyen hacia los regist
 Los diagnósticos de llamadas al modelo registran mediciones de solicitud/respuesta limitadas sin capturar el contenido sin procesar del prompt o de la respuesta:
 
 - `requestPayloadBytes`: tamaño en bytes UTF-8 de la carga útil final de la solicitud del modelo
-- `responseStreamBytes`: tamaño en bytes UTF-8 de los eventos de respuesta del modelo transmitidos
-- `timeToFirstByteMs`: tiempo transcurrido antes del primer evento de respuesta transmitido
-- `durationMs`: duración total de la llamada al modelo
+- `responseStreamBytes`: Tamaño en bytes UTF-8 de los eventos de respuesta del modelo transmitidos, excluyendo las instantáneas `partial` acumuladas en los eventos delta
+- `timeToFirstByteMs`: Tiempo transcurrido antes del primer evento de respuesta transmitido
+- `durationMs`: Duración total de la llamada al modelo
 
 Estos campos están disponibles para las instantáneas de diagnóstico, los enlaces (hooks) de complementos de llamadas al modelo y los intervalos (spans)/métricas de llamadas al modelo de OTEL cuando la exportación de diagnósticos está habilitada.
 
@@ -231,8 +231,8 @@ Estos campos están disponibles para las instantáneas de diagnóstico, los enla
 
 `logging.consoleStyle`:
 
-- `pretty`: amigable para humanos, coloreado, con marcas de tiempo.
-- `compact`: salida más compacta (ideal para sesiones largas).
+- `pretty`: Amigable para humanos, coloreado, con marcas de tiempo.
+- `compact`: Salida más ajustada (ideal para sesiones largas).
 - `json`: JSON por línea (para procesadores de registros).
 
 ### Redacción
@@ -240,13 +240,19 @@ Estos campos están disponibles para las instantáneas de diagnóstico, los enla
 OpenClaw puede redactar tokens sensibles antes de que lleguen a la salida de la consola, los registros de archivos, los registros de logs de OTLP, el texto de la transcripción de la sesión persistida o las cargas útiles de eventos de herramientas de la UI de Control (argumentos de inicio de herramienta, cargas útiles de resultados parciales/finales, salida exec derivada y resúmenes de parches):
 
 - `logging.redactSensitive`: `off` | `tools` (predeterminado: `tools`)
-- `logging.redactPatterns`: lista de cadenas de regex para anular el conjunto predeterminado. Los patrones personalizados se aplican además de los valores predeterminados integrados para las cargas útiles de herramientas de la interfaz de usuario de control, por lo que agregar un patrón nunca debilita la redacción de los valores ya detectados por los valores predeterminados.
+- `logging.redactPatterns`: lista de cadenas regex para anular el conjunto predeterminado. Los patrones personalizados se aplican además de los valores predeterminados integrados para las cargas útiles de herramientas de la Interfaz de Control, por lo que agregar un patrón nunca debilita la redacción de valores ya capturados por los predeterminados.
 
 Los registros de archivos y las transcripciones de sesión se mantienen en JSONL, pero los valores secretos coincidentes se enmascaran antes de que la línea o el mensaje se escriba en el disco. La redacción es de mejor esfuerzo: se aplica al contenido de mensajes que lleva texto y cadenas de registro, no a todos los identificadores o campos de carga útil binaria.
 
 Los valores predeterminados integrados cubren nombres de campos de credenciales de API comunes y de credenciales de pago, como el número de tarjeta, CVC/CVV, token de pago compartido y credencial de pago cuando aparecen como campos JSON, parámetros de URL, indicadores de CLI o asignaciones.
 
-`logging.redactSensitive: "off"` solo deshabilita esta política general de registro/transcripción. OpenClaw sigue redactando las cargas útiles de límites de seguridad que se pueden mostrar a los clientes de la interfaz de usuario, paquetes de soporte, observadores de diagnóstico, indicaciones de aprobación o herramientas de agente. Los ejemplos incluyen eventos de llamadas a herramientas de la interfaz de usuario de control, salida `sessions_history`, exportaciones de soporte de diagnóstico, observaciones de errores del proveedor, visualización de comandos de aprobación de ejecución y registros del protocolo WebSocket del Gateway. Los `logging.redactPatterns` personalizados aún pueden agregar patrones específicos del proyecto en esas superficies.
+`logging.redactSensitive: "off"` solo deshabilita esta política general de registro/transcripción.
+OpenClaw todavía redacta las cargas útiles del límite de seguridad que se pueden mostrar a los clientes de la interfaz de usuario,
+los paquetes de soporte, los observadores de diagnóstico, las solicitudes de aprobación o las herramientas del agente.
+Los ejemplos incluyen eventos de llamadas a herramientas de la Interfaz de Control, la salida `sessions_history`,
+las exportaciones de soporte de diagnóstico, las observaciones de errores del proveedor, la visualización de comandos de aprobación de ejecución
+y los registros del protocolo WebSocket de la Gateway. El `logging.redactPatterns` personalizado
+aún puede agregar patrones específicos del proyecto en esas superficies.
 
 ## Diagnósticos y OpenTelemetry
 
@@ -254,16 +260,16 @@ Los diagnósticos son eventos estructurados y legibles por máquina para ejecuci
 
 Dos superficies adyacentes:
 
-- **Exportación de OpenTelemetry** — envía métricas, trazas y registros a través de OTLP/HTTP a
+- **Exportación de OpenTelemetry** — envíe métricas, trazas y registros a través de OTLP/HTTP a
   cualquier recopilador o backend compatible con OpenTelemetry (Grafana, Datadog,
   Honeycomb, New Relic, Tempo, etc.). La configuración completa, el catálogo de señales,
-  los nombres de métricas/trazos, las variables de entorno y el modelo de privacidad se encuentran en una página dedicada:
-  [OpenTelemetry export](/es/gateway/opentelemetry).
-- **Marcadores de diagnóstico** — marcadores de registro de depuración específicos que dirigen registros adicionales a
-  `logging.file` sin aumentar `logging.level`. Los marcadores no distinguen entre mayúsculas y minúsculas
-  y admiten comodines (`telegram.*`, `*`). Configúrelos en `diagnostics.flags`
-  o a través de la anulación de la variable de entorno `OPENCLAW_DIAGNOSTICS=...`. Guía completa:
-  [Diagnostics flags](/es/diagnostics/flags).
+  los nombres de métricas/tramos, las variables de entorno y el modelo de privacidad se encuentran en una página dedicada:
+  [Exportación de OpenTelemetry](/es/gateway/opentelemetry).
+- **Marcas de diagnóstico** — marcas de registro de depuración específicas que enrutan registros adicionales a
+  `logging.file` sin elevar `logging.level`. Las marcas no distinguen entre mayúsculas y minúsculas
+  y admiten comodines (`telegram.*`, `*`). Configurar en `diagnostics.flags`
+  o a través de la sobrescritura de entorno `OPENCLAW_DIAGNOSTICS=...`. Guía completa:
+  [Marcas de diagnóstico](/es/diagnostics/flags).
 
 Para habilitar eventos de diagnóstico para complementos o sumideros personalizados sin exportación OTLP:
 
@@ -273,18 +279,18 @@ Para habilitar eventos de diagnóstico para complementos o sumideros personaliza
 }
 ```
 
-Para la exportación OTLP a un recopilador, consulte [OpenTelemetry export](/es/gateway/opentelemetry).
+Para la exportación OTLP a un colector, consulte [Exportación de OpenTelemetry](/es/gateway/opentelemetry).
 
 ## Consejos de solución de problemas
 
-- **¿No se puede alcanzar el Gateway?** Ejecute primero `openclaw doctor`.
-- **¿Registros vacíos?** Verifique que el Gateway se esté ejecutando y escribiendo en la ruta del archivo
+- **¿Gateway no accesible?** Ejecute primero `openclaw doctor`.
+- **¿Registros vacíos?** Verifique que el Gateway se esté ejecutando y escribiendo en la ruta de archivo
   en `logging.file`.
-- **¿Necesita más detalles?** Establezca `logging.level` en `debug` o `trace` y vuelva a intentar.
+- **¿Necesita más detalles?** Establezca `logging.level` en `debug` o `trace` y vuelva a intentarlo.
 
 ## Relacionado
 
-- [OpenTelemetry export](/es/gateway/opentelemetry) — exportación OTLP/HTTP, catálogo de métricas/trazas, modelo de privacidad
-- [Diagnostics flags](/es/diagnostics/flags) — marcadores de registro de depuración específicos
-- [Gateway logging internals](/es/gateway/logging) — estilos de registro WS, prefijos de subsistema y captura de consola
-- [Configuration reference](/es/gateway/configuration-reference#diagnostics) — referencia completa del campo `diagnostics.*`
+- [Exportación de OpenTelemetry](/es/gateway/opentelemetry) — exportación OTLP/HTTP, catálogo de métricas/spans, modelo de privacidad
+- [Marcas de diagnóstico](/es/diagnostics/flags) — marcas de registro de depuración específicas
+- [Aspectos internos del registro del Gateway](/es/gateway/logging) — estilos de registro WS, prefijos de subsistema y captura de consola
+- [Referencia de configuración](/es/gateway/configuration-reference#diagnostics) — referencia completa del campo `diagnostics.*`

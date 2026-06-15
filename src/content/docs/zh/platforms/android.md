@@ -7,19 +7,19 @@ read_when:
 title: "AndroidAndroid 应用"
 ---
 
-<Note>官方 Android 应用可在 [Google Play](https://play.google.com/store/apps/details?id=ai.openclaw.app&hl=en_IN) 上获取。它是一个配套节点，需要运行 OpenClaw Gateway(网关)。源代码也可在 OpenClaw 仓库](https://github.com/openclaw/openclaw) 的 `apps/android` 下获得；有关构建说明，请参阅 [apps/android/README.md](https://github.com/openclaw/openclaw/blob/main/apps/android/README.md)。</Note>
+<Note>官方 Android 应用可在 [Google Play](https://play.google.com/store/apps/details?id=ai.openclaw.app&hl=en_IN) 上获取。它是一个配套节点，需要运行一个 OpenClaw Gateway(网关)。源代码也可在 [OpenClaw 代码库](https://github.com/openclaw/openclaw) 中的 `apps/android` 下获取；有关构建说明，请参阅 [apps/android/README.md](https://github.com/openclaw/openclaw/blob/main/apps/android/README.md)。</Note>
 
 ## 支持快照
 
 - 角色：伴随节点应用（Android 不承载 Gateway(网关)）。
 - 需要 Gateway(网关)：是（请在 macOS、Linux 或通过 Windows 在 WSL2 上运行）。
-- 安装：在 [Google Play](https://play.google.com/store/apps/details?id=ai.openclaw.app&hl=en_IN) 上获取该应用，通过 [入门指南](</en/start/getting-startedGateway(网关)>) 安装 Gateway(网关)，然后进行 [配对](/zh/channels/pairing)。
-- Gateway(网关): [Runbook](<Gateway(网关)/en/gateway>) + [Configuration](/zh/gateway/configuration)。
-  - Protocols: [Gateway(网关) protocol](<Gateway(网关)/en/gateway/protocol>) (nodes + control plane)。
+- 安装：应用请通过 [Google Play](https://play.google.com/store/apps/details?id=ai.openclaw.app&hl=en_IN)，Gateway(网关) 请参阅 [入门指南](/zh/start/getting-started)，然后进行 [配对](/zh/channels/pairing)。
+- Gateway(网关)：[操作手册](/zh/gateway) + [配置](/zh/gateway/configuration)。
+  - 协议：[Gateway(网关) 协议](/zh/gateway/protocol)（节点 + 控制平面）。
 
 ## System control
 
-System control (launchd/systemd) 位于 Gateway(网关) 主机上。请参阅 [Gateway(网关)](/zh/gateway)。
+系统控制 位于 Gateway(网关) 主机上。参见 [Gateway(网关)](/zh/gateway)。
 
 ## Connection runbook
 
@@ -120,7 +120,7 @@ openclaw devices approve <requestId>
 openclaw devices reject <requestId>
 ```
 
-配对详情：[配对](/zh/channels/pairing)。
+配对详细信息：[配对](/zh/channels/pairing)。
 
 可选：如果 Android 节点始终从严格控制的子网连接，
 您可以选择启用首次节点自动审批，并指定明确的 CIDR 或精确 IP：
@@ -192,7 +192,7 @@ Canvas 命令（仅限前台）：
 - `camera.snap` (jpg)
 - `camera.clip` (mp4)
 
-有关参数和 CLI 辅助工具，请参阅 [Camera node](/zh/nodes/camera)。
+有关参数和 CLI 辅助工具，请参阅 [Camera 节点](/zh/nodes/camera)。
 
 ### 8) Voice + expanded Android command surface
 
@@ -201,37 +201,38 @@ Canvas 命令（仅限前台）：
 - 默认情况下，Android Talk 使用原生语音识别、Gateway 聊天以及通过已配置的 gateway Talk 提供商进行的 AndroidGateway(网关)`talk.speak`。仅当 `talk.speak` 不可用时才使用本地系统 TTS。
 - AndroidGateway(网关) Talk 仅在 `talk.realtime.mode` 为 `realtime` 且 `talk.realtime.transport` 为 `gateway-relay` 时使用实时 Gateway(网关) 中继。
 - Android UX/runtime 中语音唤醒仍处于禁用状态。
-- 其他 Android 命令系列（可用性取决于设备 + 权限）：
+- 其他 Android 命令系列（可用性取决于设备、权限和用户设置）：
   - `device.status`, `device.info`, `device.permissions`, `device.health`
-  - `notifications.list`, `notifications.actions` (参见下方的 [Notification forwarding](#notification-forwarding))
+  - `device.apps` 仅在启用 **设置 > 手机功能 > 已安装应用** 时可用；默认情况下，它列出启动器可见的应用程序。
+  - `notifications.list`、`notifications.actions`（请参阅下面的 [通知转发](#notification-forwarding)）
   - `photos.latest`
-  - `contacts.search`， `contacts.add`
-  - `calendar.events`， `calendar.add`
+  - `contacts.search`、`contacts.add`
+  - `calendar.events`、`calendar.add`
   - `callLog.search`
   - `sms.search`
-  - `motion.activity`，`motion.pedometer`
+  - `motion.activity`、`motion.pedometer`
 
-## 助手入口点
+## Assistant 入口点
 
-Android 支持通过系统助手触发器启动 OpenClaw。配置完成后，按住主屏幕按钮或说“Hey Google，询问 OpenClaw...”将打开应用程序并将提示输入到聊天编辑器中。
+Android 支持通过系统助理触发器（Google 助理）启动 OpenClaw。配置完成后，按住主屏幕按钮或说“Hey Google, ask OpenClaw...”即可打开应用并将提示词输入到聊天编辑器中。
 
-这使用了应用清单中声明的 Android **App Actions** 元数据。网关端不需要额外的配置——助手意图完全由 AndroidAndroid 应用处理，并作为普通聊天消息转发。
+这使用了在应用清单中声明的 Android **App Actions** 元数据。网关端无需额外配置——助理意图完全由 Android 应用处理，并作为普通聊天消息转发。
 
-<Note>App Actions 的可用性取决于设备、Google Play 服务版本， 以及用户是否已将 OpenClaw 设置为默认助手应用。</Note>
+<Note>App Actions 的可用性取决于设备、Google Play Services 版本以及用户是否将 OpenClaw 设置为默认助理应用。</Note>
 
 ## 通知转发
 
-Android 可以将设备通知作为事件转发到网关。多项控件允许您限定转发哪些通知以及何时转发。
+Android 可以将设备通知作为事件转发到网关。您可以通过多种控制来限定转发哪些通知以及何时转发。
 
-| 键                               | 类型           | 描述                                                           |
-| -------------------------------- | -------------- | -------------------------------------------------------------- |
-| `notifications.allowPackages`    | string[]       | 仅转发来自这些包名的通知。如果设置，则忽略所有其他包。         |
-| `notifications.denyPackages`     | string[]       | 绝不转发来自这些包名的通知。在 `allowPackages` 之后应用。      |
-| `notifications.quietHours.start` | string (HH:mm) | “免打扰时段的开始时间（本地设备时间）。在此期间通知将被抑制。” |
-| `notifications.quietHours.end`   | 字符串 (HH:mm) | 免打扰时段的结束时间。                                         |
-| `notifications.rateLimit`        | 数字           | 每个应用每分钟转发的最大通知数量。超出部分将被丢弃。           |
+| 键                               | 类型           | 描述                                                             |
+| -------------------------------- | -------------- | ---------------------------------------------------------------- |
+| `notifications.allowPackages`    | string[]       | 仅转发来自这些包名的通知。如果设置了此项，则忽略所有其他包。     |
+| `notifications.denyPackages`     | string[]       | 从不转发来自这些包名的通知。在 `allowPackages` 之后应用。        |
+| `notifications.quietHours.start` | string (HH:mm) | 免打扰时段的开始时间（本地设备时间）。在此时间段内通知将被抑制。 |
+| `notifications.quietHours.end`   | string (HH:mm) | 免打扰时段的结束时间。                                           |
+| `notifications.rateLimit`        | number         | 每个包每分钟最多转发的通知数量。超出限制的通知将被丢弃。         |
 
-通知选择器对转发的通知事件也使用了更安全的行为，以防止意外转发敏感的系统通知。
+通知选择器对转发的通知事件也采用了更安全的行为，以防止意外转发敏感的系统通知。
 
 配置示例：
 
@@ -249,7 +250,7 @@ Android 可以将设备通知作为事件转发到网关。多项控件允许您
 }
 ```
 
-<Note>通知转发需要 Android 通知监听权限。应用会在设置过程中提示授予此权限。</Note>
+<Note>通知转发需要 Android 通知监听器权限。应用会在设置过程中提示您授予此权限。</Note>
 
 ## 相关
 

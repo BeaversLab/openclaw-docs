@@ -9,9 +9,8 @@ title: "Seguimiento de uso"
 ## Qué es
 
 - Obtiene el uso/cuota del proveedor directamente desde sus puntos de conexión de uso.
-- Sin costos estimados; solo las ventanas reportadas por el proveedor.
-- La salida de estado legible por humanos se normaliza a `X% left`, incluso cuando una
-  API upstream reporta cuota consumida, cuota restante o solo recuentos brutos.
+- No hay costos estimados; solo ventanas de cuota informadas por el proveedor o resúmenes del estado de la cuenta.
+- El resultado del estado de la ventana de cuota legible por humanos se normaliza a `X% left`, incluso cuando una API aguas arriba informa cuota consumida, cuota restante o solo conteos brutos. Los proveedores sin ventanas de cuota reiniciables pueden mostrar el texto de resumen del proveedor en su lugar, como un saldo.
 - El `/status` y el `session_status` a nivel de sesión pueden volver a la última
   entrada de uso de la transcripción cuando la instantánea de la sesión en vivo es escasa. Esa
   recuperación llena los contadores de tokens/caché faltantes, puede recuperar la etiqueta del
@@ -21,7 +20,7 @@ title: "Seguimiento de uso"
 
 ## Dónde aparece
 
-- `/status` en chats: tarjeta de estado llena de emojis con tokens de sesión + costo estimado (solo API key). El uso del proveedor se muestra para el **proveedor del modelo actual** cuando está disponible como una ventana `X% left` normalizada.
+- `/status` en los chats: tarjeta de estado rica en emojis con tokens de sesión + costo estimado (solo clave de API). El uso del proveedor se muestra para el **proveedor del modelo actual** cuando está disponible como una ventana normalizada `X% left` o texto de resumen del proveedor.
 - `/usage off|tokens|full` en chats: pie de página de uso por respuesta (OAuth muestra solo tokens).
 - `/usage cost` en chats: resumen de costos locales agregado a partir de registros de sesión de OpenClaw.
 - CLI: `openclaw status --usage` imprime un desglose completo por proveedor.
@@ -54,14 +53,12 @@ title: "Seguimiento de uso"
     del modelo en la etiqueta del plan.
 - **Xiaomi MiMo**: API key a través de env/config/auth store (`XIAOMI_API_KEY`).
 - **z.ai**: clave de API a través de env/config/auth store.
+- **DeepSeek**: clave de API a través de env/config/auth store (`DEEPSEEK_API_KEY`). OpenClaw llama al endpoint de saldo de DeepSeek y muestra el saldo informado por el proveedor como texto en lugar de una ventana de cuota de porcentaje restante.
 
-El uso se oculta cuando no se puede resolver ninguna autenticación de uso del proveedor utilizable. Los proveedores
-pueden suministrar lógica de autenticación de uso específica del complemento; de lo contrario, OpenClaw recurre a
-coincidir las credenciales de OAuth/clave de API de los perfiles de autenticación, las variables de entorno
-o la configuración.
+El uso se oculta cuando no se puede resolver ninguna autenticación de uso del proveedor utilizable. Los proveedores pueden suministrar lógica de autenticación de uso específica del complemento; de lo contrario, OpenClaw recurre a hacer coincidir las credenciales OAuth/API de claves de perfiles de autenticación, variables de entorno o configuración.
 
 ## Relacionado
 
-- [Uso y costos de tokens](/es/reference/token-use)
-- [Uso y costos de la API](/es/reference/api-usage-costs)
-- [Caché de prompts](/es/reference/prompt-caching)
+- [Uso de tokens y costos](/es/reference/token-use)
+- [Uso de API y costos](/es/reference/api-usage-costs)
+- [Caché de avisos](/es/reference/prompt-caching)

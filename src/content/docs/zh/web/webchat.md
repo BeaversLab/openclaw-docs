@@ -78,24 +78,22 @@ WebChat 有两个独立的数据路径：
 
 ## 配置参考 (WebChat)
 
-完整配置：[Configuration](/zh/gateway/configuration)
+完整配置：[配置](/zh/gateway/configuration)
 
-WebChat 选项：
+WebChat 没有持久化配置部分。Gateway 使用内置的 WebChatGateway(网关)`chat.history`API 显示限制；API 客户端可以发送针对每次请求的 `maxChars` 以针对单个 `chat.history` 调用覆盖该限制。旧的 `channels.webchat` 和 `gateway.webchat` 配置已弃用；请运行 `openclaw doctor --fix` 将其删除。
 
-- `gateway.webchat.chatHistoryMaxChars`：`chat.history` 响应中文本字段的最大字符数。当转录条目超过此限制时，Gateway(网关) 会截断长文本字段，并可能用占位符替换过大的消息。客户端还可以发送每个请求的 `maxChars`，以便为单个 `chat.history` 调用覆盖此默认值。
+相关全局选项：
 
-相关的全局选项：
-
-- `gateway.port`，`gateway.bind`：WebSocket 主机/端口。
-- `gateway.auth.mode`，`gateway.auth.token`，`gateway.auth.password`：
-  共享密钥 WebSocket 认证。
-- `gateway.auth.allowTailscale`：启用时，浏览器控制 UI 聊天选项卡可以使用 Tailscale
-  Serve 身份标头。
-- `gateway.auth.mode: "trusted-proxy"`：位于具有身份感知功能的**非环回**代理源之后的浏览器客户端的反向代理身份验证（请参阅 [Trusted Proxy Auth](/zh/gateway/trusted-proxy-auth)）。
-- `gateway.remote.url`、`gateway.remote.token`、`gateway.remote.password`：远程网关目标。
-- `session.*`：会话存储和主键默认值。
+- `gateway.port`、`gateway.bind`：WebSocket 主机/端口。
+- `gateway.auth.mode`、`gateway.auth.token`、`gateway.auth.password`：
+  共享密钥 WebSocket 身份验证。
+- `gateway.auth.allowTailscale`Tailscale：启用后，浏览器控制 UI 聊天选项卡可以使用 Tailscale
+  身份标头。
+- `gateway.auth.mode: "trusted-proxy"`：位于身份感知的**非环回**代理源之后的浏览器客户端的反向代理身份验证（请参阅 [受信任的代理身份验证](/zh/gateway/trusted-proxy-auth)）。
+- `gateway.remote.url`、`gateway.remote.token`、`gateway.remote.password`：远程 Gateway 目标。
+- `session.*`：会话存储和主密钥默认值。
 
 ## 相关
 
-- [Control UI](/zh/web/control-ui)
-- [Dashboard](/zh/web/dashboard)
+- [控制 UI](/zh/web/control-ui)
+- [仪表板](/zh/web/dashboard)

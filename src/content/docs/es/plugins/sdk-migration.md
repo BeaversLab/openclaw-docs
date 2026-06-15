@@ -477,85 +477,86 @@ pero los complementos existentes no deberían romperse durante versiones menores
 
 ## Referencia de la ruta de importación
 
-<Accordion title="Tabla de rutas de importación comunes">
-  | Ruta de importación | Propósito | Exportaciones clave | | --- | --- | --- | | `plugin-sdk/plugin-entry` | Auxiliar de entrada de complemento canónico | `definePluginEntry` | | `plugin-sdk/core` | Reexportación paraguas heredada para definiciones/constructores de entrada de canal | `defineChannelPluginEntry`, `createChatChannelPlugin` | | `plugin-sdk/config-schema` | Exportación del esquema de
-  configuración raíz | `OpenClawSchema` | | `plugin-sdk/provider-entry` | Auxiliar de entrada de proveedor único | `defineSingleProviderPluginEntry` | | `plugin-sdk/channel-core` | Definiciones y constructores de entrada de canal enfocados | `defineChannelPluginEntry`, `defineSetupPluginEntry`, `createChatChannelPlugin`, `createChannelPluginBase` | | `plugin-sdk/setup` | Auxiliares compartidos del
-  asistente de configuración | Traductor de configuración, avisos de lista de permitidos, constructores de estado de configuración | | `plugin-sdk/setup-runtime` | Auxiliares de tiempo de ejecución de configuración | `createSetupTranslator`, adaptadores de parches de configuración seguros para importar, auxiliares de notas de búsqueda, `promptResolvedAllowFrom`, `splitSetupEntries`, proxies de
+<Accordion title="Tabla común de rutas de importación">
+  | Ruta de importación | Propósito | Exportaciones clave | | --- | --- | --- | | `plugin-sdk/plugin-entry` | Auxiliar de entrada canónica de complementos | `definePluginEntry` | | `plugin-sdk/core` | Reexportación heredada paraguas para definiciones/constructores de entrada de canal | `defineChannelPluginEntry`, `createChatChannelPlugin` | | `plugin-sdk/config-schema` | Exportación del esquema de
+  configuración raíz | `OpenClawSchema` | | `plugin-sdk/provider-entry` | Auxiliar de entrada de proveedor único | `defineSingleProviderPluginEntry` | | `plugin-sdk/channel-core` | Definiciones y constructores de entrada de canal centrados | `defineChannelPluginEntry`, `defineSetupPluginEntry`, `createChatChannelPlugin`, `createChannelPluginBase` | | `plugin-sdk/setup` | Auxiliares compartidos del
+  asistente de configuración | Traductor de configuración, avisos de lista de permitidos, constructores de estado de configuración | | `plugin-sdk/setup-runtime` | Auxiliares de tiempo de ejecución de configuración | `createSetupTranslator`, adaptadores de parches de configuración seguros para importar, auxiliares de nota de búsqueda, `promptResolvedAllowFrom`, `splitSetupEntries`, proxies de
   configuración delegados | | `plugin-sdk/setup-adapter-runtime` | Alias de adaptador de configuración obsoleto | Use `plugin-sdk/setup-runtime` | | `plugin-sdk/setup-tools` | Auxiliares de herramientas de configuración | `formatCliCommand`, `detectBinary`, `extractArchive`, `resolveBrewExecutable`, `formatDocsLink`, `CONFIG_DIR` | | `plugin-sdk/account-core` | Auxiliares multicuenta | Auxiliares
-  de lista/configuración/compu de acción de cuenta | | `plugin-sdk/account-id` | Auxiliares de id de cuenta | `DEFAULT_ACCOUNT_ID`, normalización de id de cuenta | | `plugin-sdk/account-resolution` | Auxiliares de búsqueda de cuenta | Auxiliares de búsqueda de cuenta + respaldo predeterminado | | `plugin-sdk/account-helpers` | Auxiliares de cuenta estrechos | Auxiliares de lista de cuenta/acción
-  de cuenta | | `plugin-sdk/channel-setup` | Adaptadores del asistente de configuración | `createOptionalChannelSetupSurface`, `createOptionalChannelSetupAdapter`, `createOptionalChannelSetupWizard`, además de `DEFAULT_ACCOUNT_ID`, `createTopLevelChannelDmPolicy`, `setSetupChannelEnabled`, `splitSetupEntries` | | `plugin-sdk/channel-pairing` | Primitivas de emparejamiento MD |
-  `createChannelPairingController` | | `plugin-sdk/channel-reply-pipeline` | Cableado de prefijo de respuesta, escritura y entrega de origen | `createChannelReplyPipeline`, `resolveChannelSourceReplyDeliveryMode` | | `plugin-sdk/channel-config-helpers` | Fábricas de adaptadores de configuración y auxiliares de acceso MD | `createHybridChannelConfigAdapter`, `resolveChannelDmAccess`,
-  `resolveChannelDmAllowFrom`, `resolveChannelDmPolicy`, `normalizeChannelDmPolicy`, `normalizeLegacyDmAliases` | | `plugin-sdk/channel-config-schema` | Constructores de esquema de configuración | Primitivas de esquema de configuración de canal compartidas y solo el constructor genérico | | `plugin-sdk/bundled-channel-config-schema` | Esquemas de configuración agrupados | Solo para complementos
-  agrupados mantenidos por OpenClaw; los nuevos complementos deben definir esquemas locales de complemento | | `plugin-sdk/channel-config-schema-legacy` | Esquemas de configuración agrupados obsoletos | Solo alias de compatibilidad; use `plugin-sdk/bundled-channel-config-schema` para complementos agrupados mantenidos | | `plugin-sdk/telegram-command-config` | Auxiliares de configuración de
-  comandos de Telegram | Normalización de nombre de comando, recorte de descripción, validación de duplicados/conflictos | | `plugin-sdk/channel-policy` | Resolución de política de grupo/MD | `resolveChannelGroupRequireMention` | | `plugin-sdk/channel-lifecycle` | Fachada de compatibilidad obsoleta | Use `plugin-sdk/channel-outbound` | | `plugin-sdk/inbound-envelope` | Auxiliares de sobre de
-  entrada | Auxiliares de construcción de sobre + ruta compartida | | `plugin-sdk/channel-inbound` | Auxiliares de recepción de entrada | Construcción de contexto, formato, raíces, ejecutores, envío de respuesta preparada y predicados de envío | | `plugin-sdk/messaging-targets` | Ruta de importación de análisis de destino obsoleta | Use `plugin-sdk/channel-targets` para auxiliares genéricos de
-  análisis de destino, `plugin-sdk/channel-route` para comparación de rutas, y `messaging.targetResolver` / `messaging.resolveOutboundSessionRoute` propiedad del complemento para resolución de destino específica del proveedor | | `plugin-sdk/outbound-media` | Auxiliares de medios de salida | Carga de medios de salida compartida | | `plugin-sdk/outbound-send-deps` | Fachada de compatibilidad
-  obsoleta | Use `plugin-sdk/channel-outbound` | | `plugin-sdk/channel-outbound` | Auxiliares del ciclo de vida del mensaje de salida | Adaptadores de mensaje, recibos, auxiliares de envío duradero, auxiliares de vista previa en vivo/transmisión, opciones de respuesta, auxiliares de ciclo de vida, identidad de salida y planificación de carga útil | | `plugin-sdk/channel-streaming` | Fachada de
-  compatibilidad obsoleta | Use `plugin-sdk/channel-outbound` | | `plugin-sdk/outbound-runtime` | Fachada de compatibilidad obsoleta | Use `plugin-sdk/channel-outbound` | | `plugin-sdk/thread-bindings-runtime` | Auxiliares de enlace de hilos | Auxiliares de ciclo de vida y adaptador de enlace de hilos | | `plugin-sdk/agent-media-payload` | Auxiliares de carga útil de medios heredados | Constructor
-  de carga útil de medios de agente para diseños de campo heredados | | `plugin-sdk/channel-runtime` | Shim de compatibilidad obsoleto | Solo utilidades de tiempo de ejecución de canal heredado | | `plugin-sdk/channel-send-result` | Tipos de resultado de envío | Tipos de resultado de respuesta | | `plugin-sdk/runtime-store` | Almacenamiento persistente del complemento | `createPluginRuntimeStore`
-  | | `plugin-sdk/runtime` | Auxiliares amplios de tiempo de ejecución | Auxiliares de tiempo de ejecución/registro/respaldo/instalación de complemento | | `plugin-sdk/runtime-env` | Auxiliares de entorno de tiempo de ejecución estrechos | Registrador/entorno de tiempo de ejecución, tiempo de espera, reintento y auxiliares de retroceso | | `plugin-sdk/plugin-runtime` | Auxiliares compartidos de
-  tiempo de ejecución del complemento | Auxiliares de comandos/ganchos/http/interactivo del complemento | | `plugin-sdk/hook-runtime` | Auxiliares de canalización de ganchos | Auxiliares compartidos de canalización de gancho interno/webhook | | `plugin-sdk/lazy-runtime` | Auxiliares perezosos de tiempo de ejecución | `createLazyRuntimeModule`, `createLazyRuntimeMethod`,
-  `createLazyRuntimeMethodBinder`, `createLazyRuntimeNamedExport`, `createLazyRuntimeSurface` | | `plugin-sdk/process-runtime` | Auxiliares de proceso | Auxiliares de ejecución compartidos | | `plugin-sdk/cli-runtime` | Auxiliares de tiempo de ejecución de CLI | Formato de comando, esperas, auxiliares de versión | | `plugin-sdk/gateway-runtime` | Auxiliares de puerta de enlace | Cliente de puerta
+  de lista/configuración/puerta de acción de cuenta | | `plugin-sdk/account-id` | Auxiliares de ID de cuenta | `DEFAULT_ACCOUNT_ID`, normalización de ID de cuenta | | `plugin-sdk/account-resolution` | Auxiliares de búsqueda de cuenta | Auxiliares de búsqueda de cuenta + alternativas predeterminadas | | `plugin-sdk/account-helpers` | Auxiliares de cuenta estrechos | Auxiliares de lista de
+  cuenta/acción de cuenta | | `plugin-sdk/channel-setup` | Adaptadores del asistente de configuración | `createOptionalChannelSetupSurface`, `createOptionalChannelSetupAdapter`, `createOptionalChannelSetupWizard`, además de `DEFAULT_ACCOUNT_ID`, `createTopLevelChannelDmPolicy`, `setSetupChannelEnabled`, `splitSetupEntries` | | `plugin-sdk/channel-pairing` | Primitivas de emparejamiento MD |
+  `createChannelPairingController` | | `plugin-sdk/channel-reply-pipeline` | Prefijo de respuesta, escritura y cableado de entrega de origen | `createChannelReplyPipeline`, `resolveChannelSourceReplyDeliveryMode` | | `plugin-sdk/channel-config-helpers` | Fábricas de adaptadores de configuración y auxiliares de acceso MD | `createHybridChannelConfigAdapter`, `resolveChannelDmAccess`,
+  `resolveChannelDmAllowFrom`, `resolveChannelDmPolicy`, `normalizeChannelDmPolicy`, `normalizeLegacyDmAliases` | | `plugin-sdk/channel-config-schema` | Constructores de esquema de configuración | Primitivas de esquema de configuración de canal compartido y solo el constructor genérico | | `plugin-sdk/bundled-channel-config-schema` | Esquemas de configuración agrupados | Solo para complementos
+  agrupados mantenidos por OpenClaw; los complementos nuevos deben definir esquemas locales del complemento | | `plugin-sdk/channel-config-schema-legacy` | Esquemas de configuración agrupados obsoletos | Solo alias de compatibilidad; use `plugin-sdk/bundled-channel-config-schema` para complementos agrupados mantenidos | | `plugin-sdk/telegram-command-config` | Auxiliares de configuración de
+  comandos de Telegram | Normalización de nombre de comando, recorte de descripción, validación de duplicados/conflictos | | `plugin-sdk/channel-policy` | Resolución de políticas de grupo/MD | `resolveChannelGroupRequireMention` | | `plugin-sdk/channel-lifecycle` | Fachada de compatibilidad obsoleta | Use `plugin-sdk/channel-outbound` | | `plugin-sdk/inbound-envelope` | Auxiliares de sobre de
+  entrada | Auxiliares compartidos de ruta + constructor de sobre | | `plugin-sdk/channel-inbound` | Auxiliares de recepción de entrada | Construcción de contexto, formato, raíces, ejecutores, despacho de respuesta preparado y predicados de despacho | | `plugin-sdk/messaging-targets` | Ruta de importación de análisis de destino obsoleta | Use `plugin-sdk/channel-targets` para auxiliares genéricos
+  de análisis de destino, `plugin-sdk/channel-route` para comparación de rutas, y `messaging.targetResolver` / `messaging.resolveOutboundSessionRoute` propiedad del complemento para resolución de destino específica del proveedor | | `plugin-sdk/outbound-media` | Auxiliares de medios de salida | Carga de medios de salida compartida | | `plugin-sdk/outbound-send-deps` | Fachada de compatibilidad
+  obsoleta | Use `plugin-sdk/channel-outbound` | | `plugin-sdk/channel-outbound` | Auxiliares del ciclo de vida de mensajes de salida | Adaptadores de mensajes, recibos, auxiliares de envío duraderos, auxiliares de vista previa en vivo/transmisión, opciones de respuesta, auxiliares de ciclo de vida, identidad de salida y planificación de carga útil | | `plugin-sdk/channel-streaming` | Fachada de
+  compatibilidad obsoleta | Use `plugin-sdk/channel-outbound` | | `plugin-sdk/outbound-runtime` | Fachada de compatibilidad obsoleta | Use `plugin-sdk/channel-outbound` | | `plugin-sdk/thread-bindings-runtime` | Auxiliares de vinculación de hilos | Auxiliares de ciclo de vida y adaptador de vinculación de hilos | | `plugin-sdk/agent-media-payload` | Auxiliares de carga útil de medios heredados |
+  Constructor de carga útil de medios de agente para diseños de campo heredados | | `plugin-sdk/channel-runtime` | Shim de compatibilidad obsoleto | Solo utilidades de tiempo de ejecución de canal heredado | | `plugin-sdk/channel-send-result` | Tipos de resultado de envío | Tipos de resultado de respuesta | | `plugin-sdk/runtime-store` | Almacenamiento persistente de complementos |
+  `createPluginRuntimeStore` | | `plugin-sdk/runtime` | Auxiliares amplios de tiempo de ejecución | Auxiliares de tiempo de ejecución/registro/respaldo/instalación de complementos | | `plugin-sdk/runtime-env` | Auxiliares estrechos de entorno de tiempo de ejecución | Registrador/entorno de tiempo de ejecución, tiempo de espera, reintento y auxiliares de retroceso | | `plugin-sdk/plugin-runtime` |
+  Auxiliares compartidos de tiempo de ejecución de complementos | Auxiliares de comandos/ganchos/HTTP/interactivos de complementos | | `plugin-sdk/hook-runtime` | Auxiliares de canalización de ganchos | Auxiliares compartidos de canalización de ganchos web/internos | | `plugin-sdk/lazy-runtime` | Auxiliares perezosos de tiempo de ejecución | `createLazyRuntimeModule`, `createLazyRuntimeMethod`,
+  `createLazyRuntimeMethodBinder`, `createLazyRuntimeNamedExport`, `createLazyRuntimeSurface` | | `plugin-sdk/process-runtime` | Auxiliares de proceso | Auxiliares compartidos de ejecución | | `plugin-sdk/cli-runtime` | Auxiliares de tiempo de ejecución de CLI | Formato de comandos, esperas, auxiliares de versión | | `plugin-sdk/gateway-runtime` | Auxiliares de puerta de enlace | Cliente de puerta
   de enlace, auxiliar de inicio listo para bucle de eventos y auxiliares de parches de estado de canal | | `plugin-sdk/config-runtime` | Shim de compatibilidad de configuración obsoleto | Prefiera `config-contracts`, `plugin-config-runtime`, `runtime-config-snapshot` y `config-mutation` | | `plugin-sdk/telegram-command-config` | Auxiliares de comandos de Telegram | Auxiliares de validación de
-  comandos de Telegram con respaldo estable cuando la superficie del contrato Telegram agrupado no está disponible | | `plugin-sdk/approval-runtime` | Auxiliares de aviso de aprobación | Carga útil de aprobación de ejec/complemento, auxiliares de capacidad/perfil de aprobación, auxiliares de enrutamiento/tiempo de ejecución de aprobación nativa y formato de ruta de visualización de aprobación
-  estructurada | | `plugin-sdk/approval-auth-runtime` | Auxiliares de autenticación de aprobación | Resolución del aprobador, autenticación de acción del mismo chat | | `plugin-sdk/approval-client-runtime` | Auxiliares de cliente de aprobación | Auxiliares de perfil/filtro de aprobación de ejecución nativa | | `plugin-sdk/approval-delivery-runtime` | Auxiliares de entrega de aprobación |
-  Adaptadores de capacidad/entrega de aprobación nativa | | `plugin-sdk/approval-gateway-runtime` | Auxiliares de puerta de enlace de aprobación | Auxiliar compartido de resolución de puerta de enlace de aprobación | | `plugin-sdk/approval-handler-adapter-runtime` | Auxiliares de adaptador de aprobación | Auxiliares de carga de adaptador de aprobación nativa ligera para puntos de entrada de canal
-  en caliente | | `plugin-sdk/approval-handler-runtime` | Auxiliares de controlador de aprobación | Auxiliares de tiempo de ejecución más amplios del controlador de aprobación; prefiera las costuras de adaptador/puerta de enlace más estrechas cuando sean suficientes | | `plugin-sdk/approval-native-runtime` | Auxiliares de destino de aprobación | Auxiliares de enlace de destino/cuenta de aprobación
-  nativa | | `plugin-sdk/approval-reply-runtime` | Auxiliares de respuesta de aprobación | Auxiliares de carga útil de respuesta de aprobación de ejec/complemento | | `plugin-sdk/channel-runtime-context` | Auxiliares de contexto de tiempo de ejecución del canal | Auxiliares genéricos de registro/obtención/observación de contexto de tiempo de ejecución del canal | | `plugin-sdk/security-runtime` |
-  Auxiliares de seguridad | Auxiliares de confianza compartida, compu MD, archivo/ruta delimitado por raíz, contenido externo y colección de secretos | | `plugin-sdk/ssrf-policy` | Auxiliares de política SSRF | Auxiliares de lista de permitidos de host y política de red privada | | `plugin-sdk/ssrf-runtime` | Auxiliares de tiempo de ejecución SSRF | Despachador anclado, búsqueda protegida,
-  auxiliares de política SSRF | | `plugin-sdk/system-event-runtime` | Auxiliares de eventos del sistema | `enqueueSystemEvent`, `peekSystemEventEntries` | | `plugin-sdk/heartbeat-runtime` | Auxiliares de latido | Auxiliares de activación, evento y visibilidad de latido | | `plugin-sdk/delivery-queue-runtime` | Auxiliares de cola de entrega | `drainPendingDeliveries` | |
-  `plugin-sdk/channel-activity-runtime` | Auxiliares de actividad del canal | `recordChannelActivity` | | `plugin-sdk/dedupe-runtime` | Auxiliares de deduplicación | Cachés de deduplicación en memoria | | `plugin-sdk/file-access-runtime` | Auxiliares de acceso a archivos | Auxiliares de ruta de archivo/medios local segura | | `plugin-sdk/transport-ready-runtime` | Auxiliares de preparación del
-  transporte | `waitForTransportReady` | | `plugin-sdk/exec-approvals-runtime` | Auxiliares de política de aprobación de ejecución | `loadExecApprovals`, `resolveExecApprovalsFromFile`, `ExecApprovalsFile` | | `plugin-sdk/collection-runtime` | Auxiliares de caché delimitada | `pruneMapToMaxSize` | | `plugin-sdk/diagnostic-runtime` | Auxiliares de compu de diagnóstico | `isDiagnosticFlagEnabled`,
-  `isDiagnosticsEnabled` | | `plugin-sdk/error-runtime` | Auxiliares de formato de error | `formatUncaughtError`, `isApprovalNotFoundError`, auxiliares de gráfico de errores | | `plugin-sdk/fetch-runtime` | Auxiliares de búsqueda/proxy envueltos | `resolveFetch`, auxiliares de proxy, auxiliares de opción EnvHttpProxyAgent | | `plugin-sdk/host-runtime` | Auxiliares de normalización de host |
-  `normalizeHostname`, `normalizeScpRemoteHost` | | `plugin-sdk/retry-runtime` | Auxiliares de reintento | `RetryConfig`, `retryAsync`, ejecutores de política | | `plugin-sdk/allow-from` | Formato de lista de permitidos y mapeo de entrada | `formatAllowFromLowercase`, `mapAllowlistResolutionInputs` | | `plugin-sdk/command-auth` | Compu de comandos y auxiliares de superficie de comandos |
-  `resolveControlCommandGate`, auxiliares de autorización del remitente, auxiliares de registro de comandos que incluyen el formato de menú de argumentos dinámicos | | `plugin-sdk/command-status` | Procesadores de estado/ayuda de comandos | `buildCommandsMessage`, `buildCommandsMessagePaginated`, `buildHelpMessage` | | `plugin-sdk/secret-input` | Análisis de entrada de secretos | Auxiliares de
-  entrada de secretos | | `plugin-sdk/webhook-ingress` | Auxiliares de solicitud de webhook | Utilidades de destino de webhook | | `plugin-sdk/webhook-request-guards` | Auxiliares de protección de cuerpo de webhook | Auxiliares de lectura/límite del cuerpo de la solicitud | | `plugin-sdk/reply-runtime` | Tiempo de ejecución de respuesta compartida | Envío de entrada, latido, planificador de
-  respuesta, fragmentación | | `plugin-sdk/reply-dispatch-runtime` | Auxiliares de envío de respuesta estrechos | Finalizar, envío de proveedor y auxiliares de etiqueta de conversación | | `plugin-sdk/reply-history` | Auxiliares de historial de respuestas | `createChannelHistoryWindow`; exportaciones de compatibilidad de auxiliar de mapa obsoletas como `buildPendingHistoryContextFromMap`,
-  `recordPendingHistoryEntry` y `clearHistoryEntriesIfEnabled` | | `plugin-sdk/reply-reference` | Planificación de referencia de respuesta | `createReplyReferencePlanner` | | `plugin-sdk/reply-chunking` | Auxiliares de fragmentos de respuesta | Auxiliares de fragmentación de texto/markdown | | `plugin-sdk/session-store-runtime` | Auxiliares de almacén de sesión | Auxiliares de ruta de almacén +
-  actualizado en | | `plugin-sdk/state-paths` | Auxiliares de ruta de estado | Auxiliares de directorio de estado y OAuth | | `plugin-sdk/routing` | Auxiliares de ruta de sesión/enrutamiento | `resolveAgentRoute`, `buildAgentSessionKey`, `resolveDefaultAgentBoundAccountId`, auxiliares de normalización de clave de sesión | | `plugin-sdk/status-helpers` | Auxiliares de estado del canal |
-  Constructores de resumen de estado de canal/cuenta, valores predeterminados de estado de tiempo de ejecución, auxiliares de metadatos de problemas | | `plugin-sdk/target-resolver-runtime` | Auxiliares de resolución de destino | Auxiliares compartidos de resolución de destino | | `plugin-sdk/string-normalization-runtime` | Auxiliares de normalización de cadenas | Auxiliares de normalización de
-  cadena/slug | | `plugin-sdk/request-url` | Auxiliares de URL de solicitud | Extraer URL de cadena de entradas tipo solicitud | | `plugin-sdk/run-command` | Auxiliares de comandos temporizados | Ejecutor de comando temporizado con stdout/stderr normalizado | | `plugin-sdk/param-readers` | Lectores de parámetros | Lectores de parámetros comunes de herramienta/CLI | | `plugin-sdk/tool-payload` |
-  Extracción de carga útil de herramienta | Extraer cargas útiles normalizadas de objetos de resultado de herramienta | | `plugin-sdk/tool-send` | Extracción de envío de herramienta | Extraer campos de destino de envío canónicos de argumentos de herramienta | | `plugin-sdk/temp-path` | Auxiliares de ruta temporal | Auxiliares compartidos de ruta de descarga temporal | | `plugin-sdk/logging-core` |
-  Auxiliares de registro | Auxiliares de registro y redacción de subsistemas | | `plugin-sdk/markdown-table-runtime` | Auxiliares de tabla Markdown | Auxiliares de modo de tabla Markdown | | `plugin-sdk/reply-payload` | Tipos de respuesta de mensaje | Tipos de carga útil de respuesta | | `plugin-sdk/provider-setup` | Auxiliares de configuración de proveedor local/autohospedado curado | Auxiliares
-  de descubrimiento/configuración de proveedor autohospedado | | `plugin-sdk/self-hosted-provider-setup` | Auxiliares de configuración de proveedor autohospedado compatible con OpenAI enfocados | Mismos auxiliares de descubrimiento/configuración de proveedor autohospedado | | `plugin-sdk/provider-auth-runtime` | Auxiliares de autenticación de tiempo de ejecución del proveedor | Auxiliares de
-  resolución de clave de API de tiempo de ejecución | | `plugin-sdk/provider-auth-api-key` | Auxiliares de configuración de clave de API del proveedor | Auxiliares de incorporación/escritura de perfil de clave de API | | `plugin-sdk/provider-auth-result` | Auxiliares de resultado de autenticación del proveedor | Constructor de resultado de autenticación OAuth estándar | |
-  `plugin-sdk/provider-selection-runtime` | Auxiliares de selección de proveedor | Selección de proveedor configurado o automático y fusión de configuración de proveedor sin procesar | | `plugin-sdk/provider-env-vars` | Auxiliares de variable de entorno del proveedor | Auxiliares de búsqueda de variable de entorno de autenticación del proveedor | | `plugin-sdk/provider-model-shared` | Auxiliares
-  compartidos de modelo/reproducción del proveedor | `ProviderReplayFamily`, `buildProviderReplayFamilyHooks`, `normalizeModelCompat`, constructores compartidos de política de reproducción, auxiliares de punto final del proveedor y auxiliares de normalización de id de modelo | | `plugin-sdk/provider-catalog-shared` | Auxiliares compartidos de catálogo de proveedor | `findCatalogTemplate`,
-  `buildSingleProviderApiKeyCatalog`, `buildManifestModelProviderConfig`, `supportsNativeStreamingUsageCompat`, `applyProviderNativeStreamingUsageCompat` | | `plugin-sdk/provider-onboard` | Parches de incorporación del proveedor | Auxiliares de configuración de incorporación | | `plugin-sdk/provider-http` | Auxiliares HTTP del proveedor | Auxiliares de capacidad de HTTP/punto final de proveedor
-  genéricos, incluidos los auxiliares de formulario multiparte de transcripción de audio | | `plugin-sdk/provider-web-fetch` | Auxiliares de búsqueda web del proveedor | Auxiliares de registro/caché de proveedor de búsqueda web | | `plugin-sdk/provider-web-search-config-contract` | Auxiliares de configuración de búsqueda web del proveedor | Auxiliares de configuración/credenciales de búsqueda web
-  estrechos para proveedores que no necesitan cableado de habilitación de complemento | | `plugin-sdk/provider-web-search-contract` | Auxiliares de contrato de búsqueda web del proveedor | Auxiliares de contrato de configuración/credenciales de búsqueda web estrechos como `createWebSearchProviderContractFields`, `enablePluginInConfig`, `resolveProviderWebSearchPluginConfig` y
-  establecedores/obtenedores de credenciales con ámbito | | `plugin-sdk/provider-web-search` | Auxiliares de búsqueda web del proveedor | Auxiliares de registro/caché/tiempo de ejecución del proveedor de búsqueda web | | `plugin-sdk/provider-tools` | Auxiliares de compatibilidad de herramienta/esquema del proveedor | `ProviderToolCompatFamily`, `buildProviderToolCompatFamilyHooks` y
-  limpieza/diagnósticos de esquema DeepSeek/Gemini/OpenAI | | `plugin-sdk/provider-usage` | Auxiliares de uso del proveedor | `fetchClaudeUsage`, `fetchGeminiUsage`, `fetchGithubCopilotUsage` y otros auxiliares de uso del proveedor | | `plugin-sdk/provider-stream` | Auxiliares de contenedor de flujo del proveedor | `ProviderStreamFamily`, `buildProviderStreamFamilyHooks`,
-  `composeProviderStreamWrappers`, tipos de contenedor de flujo y auxiliares de contenedor compartidos Anthropic/Bedrock/DeepSeek V4/Google/Kilocode/Moonshot/OpenAI/OpenRouter/Z.A.I/MiniMax/Copilot | | `plugin-sdk/provider-transport-runtime` | Auxiliares de transporte del proveedor | Auxiliares de transporte de proveedor nativo como búsqueda protegida, transformaciones de mensajes de transporte y
-  flujos de eventos de transporte escribibles | | `plugin-sdk/keyed-async-queue` | Cola asíncrona ordenada | `KeyedAsyncQueue` | | `plugin-sdk/media-runtime` | Auxiliares de medios compartidos | Auxiliares de obtención/transformación/almacenamiento de medios, sondeo de dimensiones de video con respaldo de ffprobe y constructores de carga útil de medios | | `plugin-sdk/media-generation-runtime` |
-  Auxiliares compartidos de generación de medios | Auxiliares compartidos de conmutación por error, selección de candidatos y mensajería de modelo faltante para generación de imagen/video/música | | `plugin-sdk/media-understanding` | Auxiliares de comprensión de medios | Tipos de proveedor de comprensión de medios más exportaciones de auxiliares de imagen/audio para el proveedor | |
-  `plugin-sdk/text-runtime` | Exportación de compatibilidad de texto amplio obsoleta | Use `string-coerce-runtime`, `text-chunking`, `text-utility-runtime` y `logging-core` | | `plugin-sdk/text-chunking` | Auxiliares de fragmentación de texto | Auxiliar de fragmentación de texto de salida | | `plugin-sdk/speech` | Auxiliares de voz | Tipos de proveedor de voz más auxiliares de
-  directiva/registro/validación para el proveedor y constructor TTS compatible con OpenAI | | `plugin-sdk/speech-core` | Núcleo de voz compartido | Tipos de proveedor de voz, registro, directivas, normalización | | `plugin-sdk/realtime-transcription` | Auxiliares de transcripción en tiempo real | Tipos de proveedor, auxiliares de registro y auxiliar compartido de sesión WebSocket | |
-  `plugin-sdk/realtime-voice` | Auxiliares de voz en tiempo real | Tipos de proveedor, auxiliares de registro/resolución, auxiliares de sesión de puente, colas de retorno de conversación del agente compartido, control de voz de ejecución activa, salud de transcripción/evento, supresión de eco, coincidencia de preguntas de consulta, coordinación de consulta forzada, seguimiento del contexto de
-  turno, seguimiento de la actividad de salida y auxiliares de consulta de contexto rápido | | `plugin-sdk/image-generation` | Auxiliares de generación de imágenes | Tipos de proveedor de generación de imágenes más auxiliares de URL de datos/activos de imágenes y el constructor de proveedor de imágenes compatible con OpenAI | | `plugin-sdk/image-generation-core` | Núcleo compartido de generación
-  de imágenes | Tipos de generación de imágenes, conmutación por error, autenticación y auxiliares de registro | | `plugin-sdk/music-generation` | Auxiliares de generación de música | Tipos de solicitud/resultado/proveedor de generación de música | | `plugin-sdk/music-generation-core` | Núcleo compartido de generación de música | Tipos de generación de música, auxiliares de conmutación por error,
-  búsqueda de proveedor y análisis de referencia de modelo | | `plugin-sdk/video-generation` | Auxiliares de generación de video | Tipos de solicitud/resultado/proveedor de generación de video | | `plugin-sdk/video-generation-core` | Núcleo compartido de generación de video | Tipos de generación de video, auxiliares de conmutación por error, búsqueda de proveedor y análisis de referencia de modelo
-  | | `plugin-sdk/interactive-runtime` | Auxiliares de respuesta interactiva | Normalización/reducción de carga útil de respuesta interactiva | | `plugin-sdk/channel-config-primitives` | Primitivas de configuración del canal | Primitivas de esquema de configuración de canal estrecho | | `plugin-sdk/channel-config-writes` | Auxiliares de escritura de configuración del canal | Auxiliares de
-  autorización de escritura de configuración del canal | | `plugin-sdk/channel-plugin-common` | Preludio compartido del canal | Exportaciones compartidas del preludio del complemento de canal | | `plugin-sdk/channel-status` | Auxiliares de estado del canal | Auxiliares compartidos de instantánea/resumen de estado del canal | | `plugin-sdk/allowlist-config-edit` | Auxiliares de configuración de
-  lista de permitidos | Auxiliares de edición/lectura de configuración de lista de permitidos | | `plugin-sdk/group-access` | Auxiliares de acceso de grupo | Auxiliares compartidos de decisión de acceso de grupo | | `plugin-sdk/direct-dm`, `plugin-sdk/direct-dm-access` | Fachadas de compatibilidad obsoletas | Use `plugin-sdk/channel-inbound` | | `plugin-sdk/direct-dm-guard-policy` | Auxiliares de
-  protección de MD directo | Auxiliares de política de protección previa al cifrado estrechos | | `plugin-sdk/extension-shared` | Auxiliares compartidos de extensión | Primitivas de auxiliares de canal pasivo/estado y proxy ambiental | | `plugin-sdk/webhook-targets` | Auxiliares de destino de webhook | Registro de destino de webhook y auxiliares de instalación de ruta | | `plugin-sdk/webhook-path`
-  | Alias de ruta de webhook obsoleto | Use `plugin-sdk/webhook-ingress` | | `plugin-sdk/web-media` | Auxiliares compartidos de medios web | Auxiliares de carga de medios remoto/local | | `plugin-sdk/zod` | Reexportación de compatibilidad Zod obsoleta | Importe `zod` desde `zod` directamente | | `plugin-sdk/memory-core` | Auxiliares agrupados de núcleo de memoria | Superficie de auxiliar de
-  archivo/configuración/CLI del administrador de memoria | | `plugin-sdk/memory-core-engine-runtime` | Fachada de tiempo de ejecución del motor de memoria | Fachada de tiempo de ejecución de índice/búsqueda de memoria | | `plugin-sdk/memory-core-host-engine-foundation` | Motor base del host de memoria | Exportaciones del motor base del host de memoria | |
-  `plugin-sdk/memory-core-host-engine-embeddings` | Motor de incrustación del host de memoria | Contratos de incrustación de memoria, acceso al registro, proveedor local y auxiliares genéricos de proceso remoto; los proveedores remotos concretos viven en sus complementos propietarios | | `plugin-sdk/memory-core-host-engine-qmd` | Motor QMD del host de memoria | Exportaciones del motor QMD del host
-  de memoria | | `plugin-sdk/memory-core-host-engine-storage` | Motor de almacenamiento del host de memoria | Exportaciones del motor de almacenamiento del host de memoria | | `plugin-sdk/memory-core-host-multimodal` | Auxiliares multimodales del host de memoria | Auxiliares multimodales del host de memoria | | `plugin-sdk/memory-core-host-query` | Auxiliares de consulta del host de memoria |
-  Auxiliares de consulta del host de memoria | | `plugin-sdk/memory-core-host-secret` | Auxiliares de secretos del host de memoria | Auxiliares de secretos del host de memoria | | `plugin-sdk/memory-core-host-events` | Alias de evento de memoria obsoleto | Use `plugin-sdk/memory-host-events` | | `plugin-sdk/memory-core-host-status` | Auxiliares de estado del host de memoria | Auxiliares de estado
-  del host de memoria | | `plugin-sdk/memory-core-host-runtime-cli` | Tiempo de ejecución de CLI del host de memoria | Auxiliares de tiempo de ejecución de CLI del host de memoria | | `plugin-sdk/memory-core-host-runtime-core` | Tiempo de ejecución principal del host de memoria | Auxiliares de tiempo de ejecución principal del host de memoria | | `plugin-sdk/memory-core-host-runtime-files` |
-  Auxiliares de archivo/tiempo de ejecución del host de memoria | Auxiliares de archivo/tiempo de ejecución del host de memoria | | `plugin-sdk/memory-host-core` | Alias de tiempo de ejecución principal del host de memoria | Alias neutral del proveedor para los auxiliares de tiempo de ejecución principal del host de memoria | | `plugin-sdk/memory-host-events` | Alias de diario de eventos del host
-  de memoria | Alias neutral del proveedor para los auxiliares de diario de eventos del host de memoria | | `plugin-sdk/memory-host-files` | Alias de archivo/tiempo de ejecución de memoria obsoleto | Use `plugin-sdk/memory-core-host-runtime-files` | | `plugin-sdk/memory-host-markdown` | Auxiliares de Markdown administrado | Auxiliares compartidos de Markdown administrado para complementos
-  adyacentes a la memoria | | `plugin-sdk/memory-host-search` | Fachada de búsqueda de memoria activa | Fachada de tiempo de ejecución del administrador de búsqueda de memoria activa perezosa | | `plugin-sdk/memory-host-status` | Alias de estado del host de memoria obsoleto | Use `plugin-sdk/memory-core-host-status` | | `plugin-sdk/testing` | Utilidades de prueba | Barril de compatibilidad
-  obsoleto local del repositorio; use subrutas de prueba local del repositorio enfocadas como `plugin-sdk/plugin-test-runtime`, `plugin-sdk/channel-test-helpers`, `plugin-sdk/channel-target-testing`, `plugin-sdk/test-env` y `plugin-sdk/test-fixtures` |
+  comandos de Telegram estables alternativos cuando la superficie de contrato de Telegram agrupada no está disponible | | `plugin-sdk/approval-runtime` | Auxiliares de avisos de aprobación | Carga útil de aprobación de ejecución/complemento, auxiliares de capacidad/perfil de aprobación, auxiliares de enrutamiento/tiempo de ejecución de aprobación nativos y formateo de ruta de visualización de
+  aprobación estructurada | | `plugin-sdk/approval-auth-runtime` | Auxiliares de autenticación de aprobación | Resolución de aprobador, autenticación de acción del mismo chat | | `plugin-sdk/approval-client-runtime` | Auxiliares de cliente de aprobación | Auxiliares de perfil/filtro de aprobación de ejecución nativa | | `plugin-sdk/approval-delivery-runtime` | Auxiliares de entrega de aprobación |
+  Adaptadores de capacidad/entrega de aprobación nativos | | `plugin-sdk/approval-gateway-runtime` | Auxiliares de puerta de enlace de aprobación | Auxiliar compartido de resolución de puerta de enlace de aprobación | | `plugin-sdk/approval-handler-adapter-runtime` | Auxiliares de adaptador de aprobación | Auxiliares de carga de adaptador de aprobación nativo ligero para puntos de entrada de canal
+  en caliente | | `plugin-sdk/approval-handler-runtime` | Auxiliares de controlador de aprobación | Auxiliares de tiempo de ejecución más amplios del controlador de aprobación; prefiera las costuras de adaptador/puerta de enlace más estrechas cuando sean suficientes | | `plugin-sdk/approval-native-runtime` | Auxiliares de destino de aprobación | Auxiliares de vinculación de destino/cuenta de
+  aprobación nativos | | `plugin-sdk/approval-reply-runtime` | Auxiliares de respuesta de aprobación | Auxiliares de carga útil de respuesta de aprobación de ejecución/complemento | | `plugin-sdk/channel-runtime-context` | Auxiliares de contexto de tiempo de ejecución de canal | Auxiliares compartidos de registro/obtención/observación de contexto de tiempo de ejecución de canal genérico | |
+  `plugin-sdk/security-runtime` | Auxiliares de seguridad | Auxiliares compartidos de confianza, bloqueo de MD, archivo/ruta delimitado por raíz, contenido externo y recolección de secretos | | `plugin-sdk/ssrf-policy` | Auxiliares de políticas SSRF | Auxiliares de lista de permitidos de host y política de red privada | | `plugin-sdk/ssrf-runtime` | Auxiliares de tiempo de ejecución SSRF |
+  Despachador anclado, búsqueda protegida, auxiliares de políticas SSRF | | `plugin-sdk/system-event-runtime` | Auxiliares de eventos del sistema | `enqueueSystemEvent`, `peekSystemEventEntries` | | `plugin-sdk/heartbeat-runtime` | Auxiliares de latido | Auxiliares de activación, evento y visibilidad de latido | | `plugin-sdk/delivery-queue-runtime` | Auxiliares de cola de entrega |
+  `drainPendingDeliveries` | | `plugin-sdk/channel-activity-runtime` | Auxiliares de actividad del canal | `recordChannelActivity` | | `plugin-sdk/dedupe-runtime` | Auxiliares de deduplicación | Cachés de deduplicación en memoria | | `plugin-sdk/file-access-runtime` | Auxiliares de acceso a archivos | Auxiliares de ruta de archivo/medios locales seguros | | `plugin-sdk/transport-ready-runtime` |
+  Auxiliares de preparación del transporte | `waitForTransportReady` | | `plugin-sdk/exec-approvals-runtime` | Auxiliares de políticas de aprobación de ejecución | `loadExecApprovals`, `resolveExecApprovalsFromFile`, `ExecApprovalsFile` | | `plugin-sdk/collection-runtime` | Auxiliares de caché delimitada | `pruneMapToMaxSize` | | `plugin-sdk/diagnostic-runtime` | Auxiliares de bloqueo de
+  diagnóstico | `isDiagnosticFlagEnabled`, `isDiagnosticsEnabled` | | `plugin-sdk/error-runtime` | Auxiliares de formateo de errores | `formatUncaughtError`, `isApprovalNotFoundError`, auxiliares de gráfico de errores | | `plugin-sdk/fetch-runtime` | Auxiliares de búsqueda/proxy envueltos | `resolveFetch`, auxiliares de proxy, auxiliares de opción EnvHttpProxyAgent | | `plugin-sdk/host-runtime` |
+  Auxiliares de normalización de host | `normalizeHostname`, `normalizeScpRemoteHost` | | `plugin-sdk/retry-runtime` | Auxiliares de reintento | `RetryConfig`, `retryAsync`, ejecutores de políticas | | `plugin-sdk/allow-from` | Formateo de lista de permitidos y mapeo de entrada | `formatAllowFromLowercase`, `mapAllowlistResolutionInputs` | | `plugin-sdk/command-auth` | Bloqueo de comandos y
+  auxiliares de superficie de comandos | `resolveControlCommandGate`, auxiliares de autorización de remitente, auxiliares de registro de comandos incluyendo el formato de menú de argumentos dinámicos | | `plugin-sdk/command-status` | Representadores de estado/ayuda de comandos | `buildCommandsMessage`, `buildCommandsMessagePaginated`, `buildHelpMessage` | | `plugin-sdk/secret-input` | Análisis de
+  entrada de secretos | Auxiliares de entrada de secretos | | `plugin-sdk/webhook-ingress` | Auxiliares de solicitudes de webhook | Utilidades de destino de webhook | | `plugin-sdk/webhook-request-guards` | Auxiliares de guarda de cuerpo de webhook | Auxiliares de lectura/limite de cuerpo de solicitud | | `plugin-sdk/reply-runtime` | Tiempo de ejecución de respuesta compartido | Despacho de
+  entrada, latido, planificador de respuesta, fragmentación | | `plugin-sdk/reply-dispatch-runtime` | Auxiliares estrechos de despacho de respuesta | Finalizar, despacho de proveedor y auxiliares de etiquetas de conversación | | `plugin-sdk/reply-history` | Auxiliares de historial de respuestas | `createChannelHistoryWindow`; exportaciones de compatibilidad de auxiliares de mapas obsoletos como
+  `buildPendingHistoryContextFromMap`, `recordPendingHistoryEntry` y `clearHistoryEntriesIfEnabled` | | `plugin-sdk/reply-reference` | Planificación de referencia de respuesta | `createReplyReferencePlanner` | | `plugin-sdk/reply-chunking` | Auxiliares de fragmentos de respuesta | Auxiliares de fragmentación de texto/markdown | | `plugin-sdk/session-store-runtime` | Auxiliares de tienda de sesión
+  | Auxiliares de ruta de tienda + actualizados en | | `plugin-sdk/state-paths` | Auxiliares de ruta de estado | Auxiliares de directorio de estado y OAuth | | `plugin-sdk/routing` | Auxiliares de ruta/clave de sesión de enrutamiento | `resolveAgentRoute`, `buildAgentSessionKey`, `resolveDefaultAgentBoundAccountId`, auxiliares de normalización de clave de sesión | | `plugin-sdk/status-helpers` |
+  Auxiliares de estado del canal | Constructores de resumen de estado de canal/cuenta, valores predeterminados de estado de tiempo de ejecución, auxiliares de metadatos de problemas | | `plugin-sdk/target-resolver-runtime` | Auxiliares de resolvedor de destino | Auxiliares compartidos de resolvedor de destino | | `plugin-sdk/string-normalization-runtime` | Auxiliares de normalización de cadenas |
+  Auxiliares de normalización de slug/cadena | | `plugin-sdk/request-url` | Auxiliares de URL de solicitud | Extraer cadenas de URL de entradas tipo solicitud | | `plugin-sdk/run-command` | Auxiliares de comandos cronometrados | Ejecutor de comandos cronometrados con stdout/stderr normalizados | | `plugin-sdk/param-readers` | Lectores de parámetros | Lectores comunes de parámetros de
+  herramienta/CLI | | `plugin-sdk/tool-payload` | Extracción de carga útil de herramientas | Extraer cargas útiles normalizadas de objetos de resultado de herramientas | | `plugin-sdk/tool-send` | Extracción de envío de herramientas | Extraer campos de destino de envío canónicos de argumentos de herramientas | | `plugin-sdk/temp-path` | Auxiliares de ruta temporal | Auxiliares compartidos de ruta
+  de descarga temporal | | `plugin-sdk/logging-core` | Auxiliares de registro | Auxiliares de registrador y redacción de subsistemas | | `plugin-sdk/markdown-table-runtime` | Auxiliares de tablas Markdown | Auxiliares de modo de tabla Markdown | | `plugin-sdk/reply-payload` | Tipos de respuesta de mensajes | Tipos de carga útil de respuesta | | `plugin-sdk/provider-setup` | Auxiliares de
+  configuración de proveedor local/autohospedado curado | Auxiliares de descubrimiento/configuración de proveedor autohospedado | | `plugin-sdk/self-hosted-provider-setup` | Auxiliares de configuración de proveedor autohospedado compatible con OpenAI centrados | Mismos auxiliares de descubrimiento/configuración de proveedor autohospedado | | `plugin-sdk/provider-auth-runtime` | Auxiliares de
+  autenticación de tiempo de ejecución de proveedor | Auxiliares de resolución de clave de API de tiempo de ejecución | | `plugin-sdk/provider-auth-api-key` | Auxiliares de configuración de clave de API de proveedor | Auxiliares de escritura de perfil/integración de clave de API | | `plugin-sdk/provider-auth-result` | Auxiliares de resultado de autenticación de proveedor | Constructor de resultado
+  de autenticación OAuth estándar | | `plugin-sdk/provider-selection-runtime` | Auxiliares de selección de proveedor | Selección de proveedor configurada o automática y fusión de configuración de proveedor sin procesar | | `plugin-sdk/provider-env-vars` | Auxiliares de variables de entorno de proveedor | Auxiliares de búsqueda de variable de entorno de autenticación de proveedor | |
+  `plugin-sdk/provider-model-shared` | Auxiliares compartidos de modelo/reproducción de proveedor | `ProviderReplayFamily`, `buildProviderReplayFamilyHooks`, `normalizeModelCompat`, constructores compartidos de políticas de reproducción, auxiliares de punto final de proveedor y auxiliares de normalización de ID de modelo | | `plugin-sdk/provider-catalog-shared` | Auxiliares compartidos de catálogo
+  de proveedor | `findCatalogTemplate`, `buildSingleProviderApiKeyCatalog`, `buildManifestModelProviderConfig`, `supportsNativeStreamingUsageCompat`, `applyProviderNativeStreamingUsageCompat` | | `plugin-sdk/provider-onboard` | Parches de integración de proveedor | Auxiliares de configuración de integración | | `plugin-sdk/provider-http` | Auxiliares HTTP de proveedor | Auxiliares genéricos de
+  capacidad HTTP/punto final de proveedor, incluyendo auxiliares de formulario multiparte de transcripción de audio | | `plugin-sdk/provider-web-fetch` | Auxiliares de recuperación web de proveedor | Auxiliares de registro/caché de proveedor de recuperación web | | `plugin-sdk/provider-web-search-config-contract` | Auxiliares de configuración de búsqueda web de proveedor | Auxiliares estrechos de
+  configuración/credenciales de búsqueda web para proveedores que no necesitan cableado de habilitación de complemento | | `plugin-sdk/provider-web-search-contract` | Auxiliares de contrato de búsqueda web de proveedor | Auxiliares estrechos de contrato de configuración/credenciales de búsqueda web como `createWebSearchProviderContractFields`, `enablePluginInConfig`,
+  `resolveProviderWebSearchPluginConfig` y establecedores/obtenedores de credenciales con alcance | | `plugin-sdk/provider-web-search` | Auxiliares de búsqueda web de proveedor | Auxiliares de registro/caché/tiempo de ejecución de proveedor de búsqueda web | | `plugin-sdk/provider-tools` | Auxiliares de compatibilidad de herramienta/esquema de proveedor | `ProviderToolCompatFamily`,
+  `buildProviderToolCompatFamilyHooks` y limpieza/diagnósticos de esquema DeepSeek/Gemini/OpenAI | | `plugin-sdk/provider-usage` | Auxiliares de uso de proveedor | `fetchClaudeUsage`, `fetchGeminiUsage`, `fetchGithubCopilotUsage` y otros auxiliares de uso de proveedor | | `plugin-sdk/provider-stream` | Auxiliares de envoltorio de flujo de proveedor | `ProviderStreamFamily`,
+  `buildProviderStreamFamilyHooks`, `composeProviderStreamWrappers`, tipos de envoltorio de flujo y auxiliares compartidos de envoltorio Anthropic/Bedrock/DeepSeek V4/Google/Kilocode/Moonshot/OpenAI/OpenRouter/Z.A.I/MiniMax/Copilot | | `plugin-sdk/provider-transport-runtime` | Auxiliares de transporte de proveedor | Auxiliares de transporte de proveedor nativo como búsqueda protegida,
+  transformaciones de mensajes de transporte y flujos de eventos de transporte grabables | | `plugin-sdk/keyed-async-queue` | Cola asíncrona ordenada | `KeyedAsyncQueue` | | `plugin-sdk/media-runtime` | Auxiliares compartidos de medios | Auxiliares de recuperación/transformación/almacenamiento de medios, sondaje de dimensiones de video respaldado por ffprobe y constructores de carga útil de medios
+  | | `plugin-sdk/media-generation-runtime` | Auxiliares compartidos de generación de medios | Auxiliares compartidos de conmutación por error, selección de candidatos y mensajería de modelos faltantes para generación de imagen/video/música | | `plugin-sdk/media-understanding` | Auxiliares de comprensión de medios | Tipos de proveedor de comprensión de medios más exportaciones de auxiliares de
+  imagen/audio orientados al proveedor | | `plugin-sdk/text-runtime` | Exportación de compatibilidad de texto amplio obsoleta | Use `string-coerce-runtime`, `text-chunking`, `text-utility-runtime` y `logging-core` | | `plugin-sdk/text-chunking` | Auxiliares de fragmentación de texto | Auxiliar de fragmentación de texto de salida | | `plugin-sdk/speech` | Auxiliares de voz | Tipos de proveedor de
+  voz más directivas, registro, auxiliares de validación orientados al proveedor y constructor TTS compatible con OpenAI | | `plugin-sdk/speech-core` | Núcleo de voz compartido | Tipos, registro, directivas y normalización del proveedor de voz | | `plugin-sdk/realtime-transcription` | Auxiliares de transcripción en tiempo real | Tipos de proveedor, auxiliares de registro y auxiliar de sesión
+  WebSocket compartida | | `plugin-sdk/realtime-voice` | Auxiliares de voz en tiempo real | Tipos de proveedor, auxiliares de registro/resolución, auxiliares de sesión de puente, colas de retroalimentación de agente compartidas, control de voz de ejecución activa, salud de transcripción/evento, supresión de eco, coincidencia de preguntas de consulta, coordinación de consulta forzada, seguimiento
+  de contexto de turno, seguimiento de actividad de salida y auxiliares de consulta rápida de contexto | | `plugin-sdk/image-generation` | Auxiliares de generación de imágenes | Tipos de proveedor de generación de imágenes más auxiliares de URL de datos/activos de imágenes y el constructor de proveedor de imágenes compatible con OpenAI | | `plugin-sdk/image-generation-core` | Núcleo compartido de
+  generación de imágenes | Tipos, conmutación por error, autenticación y auxiliares de registro de generación de imágenes | | `plugin-sdk/music-generation` | Auxiliares de generación de música | Tipos de solicitud/resultado/proveedor de generación de música | | `plugin-sdk/music-generation-core` | Núcleo compartido de generación de música | Tipos de generación de música, auxiliares de conmutación
+  por error, búsqueda de proveedor y análisis de referencia de modelo | | `plugin-sdk/video-generation` | Auxiliares de generación de video | Tipos de solicitud/resultado/proveedor de generación de video | | `plugin-sdk/video-generation-core` | Núcleo compartido de generación de video | Tipos de generación de video, auxiliares de conmutación por error, búsqueda de proveedor y análisis de
+  referencia de modelo | | `plugin-sdk/interactive-runtime` | Auxiliares de respuesta interactiva | Normalización/reducción de carga útil de respuesta interactiva | | `plugin-sdk/channel-config-primitives` | Primitivas de configuración de canal | Primitivas estrechas de esquema de configuración de canal | | `plugin-sdk/channel-config-writes` | Auxiliares de escritura de configuración de canal |
+  Auxiliares de autorización de escritura de configuración de canal | | `plugin-sdk/channel-plugin-common` | Preludio compartido de canal | Exportaciones de preludio de complemento de canal compartido | | `plugin-sdk/channel-status` | Auxiliares de estado del canal | Auxiliares compartidos de instantánea/resumen de estado de canal | | `plugin-sdk/allowlist-config-edit` | Auxiliares de
+  configuración de lista de permitidos | Auxiliares de edición/lectura de configuración de lista de permitidos | | `plugin-sdk/group-access` | Auxiliares de acceso a grupos | Auxiliares compartidos de decisiones de acceso a grupos | | `plugin-sdk/direct-dm`, `plugin-sdk/direct-dm-access` | Fachadas de compatibilidad obsoletas | Use `plugin-sdk/channel-inbound` | |
+  `plugin-sdk/direct-dm-guard-policy` | Auxiliares de guarda MD directo | Auxiliares estrechos de políticas de guarda previa al cifrado | | `plugin-sdk/extension-shared` | Auxiliares compartidos de extensión | Primitivas de auxiliares de canal pasivo/estado y proxy ambiental | | `plugin-sdk/webhook-targets` | Auxiliares de destino de webhook | Registro de destino de webhook y auxiliares de
+  instalación de ruta | | `plugin-sdk/webhook-path` | Alias de ruta de webhook obsoleto | Use `plugin-sdk/webhook-ingress` | | `plugin-sdk/web-media` | Auxiliares compartidos de medios web | Auxiliares de carga de medios remotos/locales | | `plugin-sdk/zod` | Reexportación de compatibilidad Zod obsoleta | Importe `zod` de `zod` directamente | | `plugin-sdk/memory-core` | Auxiliares de núcleo de
+  memoria agrupado | Superficie de auxiliares de administrador/configuración/archivo/CLI de memoria | | `plugin-sdk/memory-core-engine-runtime` | Fachada de tiempo de ejecución del motor de memoria | Fachada de tiempo de ejecución de indexación/búsqueda de memoria | | `plugin-sdk/memory-core-host-embedding-registry` | Registro de incrustación de memoria | Auxiliares ligeros de registro de
+  proveedor de incrustación de memoria | | `plugin-sdk/memory-core-host-engine-foundation` | Motor base de anfitrión de memoria | Exportaciones del motor base de anfitrión de memoria | | `plugin-sdk/memory-core-host-engine-embeddings` | Motor de incrustación de anfitrión de memoria | Contratos de incrustación de memoria, acceso al registro, proveedor local y auxiliares genéricos de lotes/remotos;
+  los proveedores remotos concretos viven en sus complementos propietarios | | `plugin-sdk/memory-core-host-engine-qmd` | Motor QMD de anfitrión de memoria | Exportaciones del motor QMD de anfitrión de memoria | | `plugin-sdk/memory-core-host-engine-storage` | Motor de almacenamiento de anfitrión de memoria | Exportaciones del motor de almacenamiento de anfitrión de memoria | |
+  `plugin-sdk/memory-core-host-multimodal` | Auxiliares multimodales de anfitrión de memoria | Auxiliares multimodales de anfitrión de memoria | | `plugin-sdk/memory-core-host-query` | Auxiliares de consulta de anfitrión de memoria | Auxiliares de consulta de anfitrión de memoria | | `plugin-sdk/memory-core-host-secret` | Auxiliares de secretos de anfitrión de memoria | Auxiliares de secretos de
+  anfitrión de memoria | | `plugin-sdk/memory-core-host-events` | Alias de evento de memoria obsoleto | Use `plugin-sdk/memory-host-events` | | `plugin-sdk/memory-core-host-status` | Auxiliares de estado de anfitrión de memoria | Auxiliares de estado de anfitrión de memoria | | `plugin-sdk/memory-core-host-runtime-cli` | Tiempo de ejecución de CLI de anfitrión de memoria | Auxiliares de tiempo de
+  ejecución de CLI de anfitrión de memoria | | `plugin-sdk/memory-core-host-runtime-core` | Tiempo de ejecución central de anfitrión de memoria | Auxiliares de tiempo de ejecución central de anfitrión de memoria | | `plugin-sdk/memory-core-host-runtime-files` | Auxiliares de archivo/tiempo de ejecución de anfitrión de memoria | Auxiliares de archivo/tiempo de ejecución de anfitrión de memoria | |
+  `plugin-sdk/memory-host-core` | Alias de tiempo de ejecución central de anfitrión de memoria | Alias neutral al proveedor para auxiliares de tiempo de ejecución central de anfitrión de memoria | | `plugin-sdk/memory-host-events` | Alias de diario de eventos de anfitrión de memoria | Alias neutral al proveedor para auxiliares de diario de eventos de anfitrión de memoria | |
+  `plugin-sdk/memory-host-files` | Alias de archivo/tiempo de ejecución de memoria obsoleto | Use `plugin-sdk/memory-core-host-runtime-files` | | `plugin-sdk/memory-host-markdown` | Auxiliares de markdown administrado | Auxiliares compartidos de markdown administrado para complementos adyacentes a la memoria | | `plugin-sdk/memory-host-search` | Fachada de búsqueda de memoria activa | Fachada de
+  tiempo de ejecución perezosa del administrador de búsqueda de memoria activa | | `plugin-sdk/memory-host-status` | Alias de estado de anfitrión de memoria obsoleto | Use `plugin-sdk/memory-core-host-status` | | `plugin-sdk/testing` | Utilidades de prueba | Barril de compatibilidad obsoleto local al repositorio; use subrutas de prueba locales enfocadas como `plugin-sdk/plugin-test-runtime`,
+  `plugin-sdk/channel-test-helpers`, `plugin-sdk/channel-target-testing`, `plugin-sdk/test-env` y `plugin-sdk/test-fixtures` |
 </Accordion>
 
-Esta tabla es intencionalmente el subconjunto común de migración, no la superficie completa del SDK. El inventario de puntos de entrada del compilador vive en `scripts/lib/plugin-sdk-entrypoints.json`; las exportaciones del paquete se generan a partir del subconjunto público.
+Esta tabla es intencionalmente el subconjunto común de migración, no la superficie completa del SDK. El inventario de puntos de entrada del compilador se encuentra en `scripts/lib/plugin-sdk-entrypoints.json`; las exportaciones de paquetes se generan desde el subconjunto público.
 
-Las costuras de ayuda reservadas para complementos agrupados se han retirado del mapa de exportación del SDK público, excepto para las fachadas de compatibilidad documentadas explícitamente, como el adaptador `plugin-sdk/discord` en desuso retenido para el paquete publicado `@openclaw/discord@2026.3.13`. Las ayudas específicas del propietario viven dentro del paquete del complemento propietario; el comportamiento compartido del host debería moverse a través de contratos genéricos del SDK como `plugin-sdk/gateway-runtime`, `plugin-sdk/security-runtime` y `plugin-sdk/plugin-config-runtime`.
+Las costuras de ayuda reservadas para complementos agrupados (bundled-plugin) se han retirado del mapa de exportación público del SDK, excepto para fachadas de compatibilidad explícitamente documentadas, como el shim obsoleto `plugin-sdk/discord` retenido para el paquete publicado `@openclaw/discord@2026.3.13`. Las ayudas específicas del propietario viven dentro del paquete del complemento propietario; el comportamiento compartido del host debe moverse a través de contratos genéricos del SDK como `plugin-sdk/gateway-runtime`, `plugin-sdk/security-runtime` y `plugin-sdk/plugin-config-runtime`.
 
-Utilice la importación más estrecha que coincida con el trabajo. Si no encuentra una exportación, verifique el código fuente en `src/plugin-sdk/` o pregunte a los mantenedores qué contrato genérico debería ser el propietario.
+Utilice la importación más estrecha que coincida con la tarea. Si no puede encontrar una exportación, verifique el código fuente en `src/plugin-sdk/` o pregunte a los mantenedores qué contrato genérico debería ser el propietario.
 
 ## Deprecaciones activas
 
@@ -566,9 +567,8 @@ Deprecaciones más específicas que se aplican en todo el SDK de complementos, e
     **Antiguo (`openclaw/plugin-sdk/command-auth`)**: `buildCommandsMessage`,
     `buildCommandsMessagePaginated`, `buildHelpMessage`.
 
-    **Nuevo (`openclaw/plugin-sdk/command-status`)**: mismas firmas, mismas
-    exportaciones, simplemente importadas desde la sub-ruta más estrecha. `command-auth`
-    las reexporta como código auxiliar de compatibilidad.
+    **Nuevo (`openclaw/plugin-sdk/command-status`)**: mismas firmas, mismas exportaciones, solo importadas desde la subruta más estrecha. `command-auth`
+    las reexporta como stubs de compatibilidad.
 
     ```typescript
     // Before
@@ -587,49 +587,48 @@ Deprecaciones más específicas que se aplican en todo el SDK de complementos, e
     `openclaw/plugin-sdk/channel-mention-gating`.
 
     **Nuevo**: `resolveInboundMentionDecision({ facts, policy })` - devuelve un
-    único objeto de decisión en lugar de dos llamadas separadas.
+    objeto de decisión único en lugar de dos llamadas separadas.
 
-    Los complementos de canal descendentes (Slack, Discord, Matrix, MS Teams) ya han
-    cambiado.
+    Los complementos de canal descendentes (Slack, Discord, Matrix, MS Teams) ya han cambiado.
 
   </Accordion>
 
   <Accordion title="Shim de tiempo de ejecución del canal y ayudantes de acciones del canal">
     `openclaw/plugin-sdk/channel-runtime` es un shim de compatibilidad para complementos
-    de canal más antiguos. No lo importe en código nuevo; use
-    `openclaw/plugin-sdk/channel-runtime-context` para registrar objetos de
-    tiempo de ejecución.
+    de canal antiguos. No lo importe en código nuevo; use
+    `openclaw/plugin-sdk/channel-runtime-context` para registrar objetos en tiempo de
+    ejecución.
 
     Los ayudantes `channelActions*` en `openclaw/plugin-sdk/channel-actions` están
-    en desuso junto con las exportaciones de canal de "acciones" sin procesar. Exponga las capacidades
-    a través de la superficie semántica `presentation` en su lugar: los complementos
-    de canal declaran lo que renderizan (tarjetas, botones, selecciones) en lugar de qué nombres de
+    obsoletos junto con las exportaciones de canal "actions" (acciones) sin procesar. Exponga las capacidades
+    a través de la superficie semántica `presentation` en su lugar: los complementos de canal
+    declaran lo que representan (tarjetas, botones, selecciones) en lugar de qué nombres de
     acción sin procesar aceptan.
 
   </Accordion>
 
   <Accordion title="Ayudante tool() del proveedor de búsqueda web → createTool() en el complemento">
-    **Anterior**: fábrica `tool()` de `openclaw/plugin-sdk/provider-web-search`.
+    **Antiguo**: fábrica `tool()` de `openclaw/plugin-sdk/provider-web-search`.
 
     **Nuevo**: implemente `createTool(...)` directamente en el complemento del proveedor.
     OpenClaw ya no necesita el ayudante del SDK para registrar el contenedor de la herramienta.
 
   </Accordion>
 
-  <Accordion title="Sobres de canal de texto sin formato → BodyForAgent">
-    **Anterior**: `formatInboundEnvelope(...)` (y
-    `ChannelMessageForAgent.channelEnvelope`) para construir un sobre de
-    prompt de texto sin formato plano a partir de mensajes de canal entrantes.
+  <Accordion title="Sobres de canal de texto plano → BodyForAgent">
+    **Antiguo**: `formatInboundEnvelope(...)` (y
+    `ChannelMessageForAgent.channelEnvelope`) para construir un sobre de mensaje de texto plano
+    a partir de los mensajes entrantes del canal.
 
     **Nuevo**: `BodyForAgent` más bloques de contexto de usuario estructurados. Los complementos
     de canal adjuntan metadatos de enrutamiento (hilo, tema, responder a, reacciones) como
-    campos tipados en lugar de concatenarlos en una cadena de prompt. El
-    ayudante `formatAgentEnvelope(...)` todavía es compatible con sobres sintetizados
-    orientados al asistente, pero los sobres de texto sin formato entrantes están en
-    vías de desaparición.
+    campos tipados en lugar de concatenarlos en una cadena de mensaje. El
+    ayudante `formatAgentEnvelope(...)` todavía es compatible para sobres
+    sintetizados orientados al asistente, pero los sobres de texto plano entrantes están en
+    camino de desaparecer.
 
     Áreas afectadas: `inbound_claim`, `message_received` y cualquier complemento
-    de canal personalizado que haya procesado posteriormente el texto `channelEnvelope`.
+    de canal personalizado que posprocesara texto `channelEnvelope`.
 
   </Accordion>
 
@@ -637,7 +636,7 @@ Deprecaciones más específicas que se aplican en todo el SDK de complementos, e
     **Antiguo**: `api.on("deactivate", handler)`.
 
     **Nuevo**: `api.on("gateway_stop", handler)`. El evento y el contexto son el
-    mismo contrato de limpieza de apagado; solo cambia el nombre del hook.
+    mismo contrato de limpieza de apagado; solo cambia el nombre del enlace (hook).
 
     ```typescript
     // Before
@@ -651,17 +650,17 @@ Deprecaciones más específicas que se aplican en todo el SDK de complementos, e
     });
     ```
 
-    `deactivate` permanece conectado como un alias de compatibilidad en desuso hasta después
-    del 2026-08-16.
+    `deactivate` permanece conectado como un alias de compatibilidad obsoleto hasta después del
+    2026-08-16.
 
   </Accordion>
 
   <Accordion title="subagent_spawning hook → core thread binding">
-    **Antiguo**: `api.on("subagent_spawning", handler)` que devuelve
+    **Antiguo**: `api.on("subagent_spawning", handler)` devolviendo
     `threadBindingReady` o `deliveryOrigin`.
 
-    **Nuevo**: dejar que el núcleo prepare enlaces de subagentes `thread: true` a través del
-    adaptador de enlace de sesión del canal. Usar `api.on("subagent_spawned", handler)`
+    **Nuevo**: permitir que el núcleo prepare enlaces `thread: true` de subagentes a través del
+    adaptador de enlace de sesión del canal. Use `api.on("subagent_spawned", handler)`
     solo para la observación posterior al lanzamiento.
 
     ```typescript
@@ -681,47 +680,48 @@ Deprecaciones más específicas que se aplican en todo el SDK de complementos, e
     `subagent_spawning`, `PluginHookSubagentSpawningEvent`,
     `PluginHookSubagentSpawningResult` y
     `SubagentLifecycleHookRunner.runSubagentSpawning(...)` permanecen solo como
-    superficies de compatibilidad en desuso mientras los complementos externos migran.
+    superficies de compatibilidad obsoletas mientras migran los plugins externos.
 
   </Accordion>
 
   <Accordion title="Provider discovery types → provider catalog types">
-    Cuatro alias de tipos de descubrimiento son ahora envoltorios delgados sobre los
+    Cuatro alias de tipos de descubrimiento ahora son envoltorios delgados sobre los
     tipos de la era del catálogo:
 
-    | Alias antiguo                 | Nuevo tipo                  |
+    | Old alias                 | New type                  |
     | ------------------------- | ------------------------- |
     | `ProviderDiscoveryOrder`  | `ProviderCatalogOrder`    |
     | `ProviderDiscoveryContext`| `ProviderCatalogContext`  |
     | `ProviderDiscoveryResult` | `ProviderCatalogResult`   |
     | `ProviderPluginDiscovery` | `ProviderPluginCatalog`   |
 
-    Además del objeto estático `ProviderCapabilities` heredado: los complementos del proveedor
-    deben usar hooks de proveedor explícitos como `buildReplayPolicy`,
+    Además del contenedor estático `ProviderCapabilities` heredado; los plugins de
+    proveedores deben usar enlaces de proveedor explícitos como `buildReplayPolicy`,
     `normalizeToolSchemas` y `wrapStreamFn` en lugar de un objeto estático.
 
   </Accordion>
 
   <Accordion title="Thinking policy hooks → resolveThinkingProfile">
-    **Antiguo** (tres ganchos separados en `ProviderThinkingPolicy`):
+    **Antiguo** (tres hooks separados en `ProviderThinkingPolicy`):
     `isBinaryThinking(ctx)`, `supportsXHighThinking(ctx)` y
     `resolveDefaultThinkingLevel(ctx)`.
 
     **Nuevo**: un único `resolveThinkingProfile(ctx)` que devuelve un
     `ProviderThinkingProfile` con el `id` canónico, `label` opcional y
-    una lista de niveles clasificados. OpenClaw degrada automáticamente los valores almacenados obsoletos por rango de perfil.
+    lista de niveles clasificados. OpenClaw degrada automáticamente los valores almacenados obsoletos por rango de perfil.
 
-    El contexto incluye `provider`, `modelId`, `reasoning` combinados opcionales
-    y hechos del modelo `compat` combinados opcionales. Los complementos del proveedor pueden usar esos
-    hechos del catálogo para exponer un perfil específico del modelo solo cuando el contrato de solicitud configurado lo admite.
+    El contexto incluye `provider`, `modelId` `reasoning` opcional combinados,
+    y hechos de modelo `compat` opcionales combinados. Los proveedores de complementos pueden usar esos
+    hechos del catálogo para exponer un perfil específico del modelo solo cuando el contrato de
+    solicitud configurado lo admite.
 
-    Implemente un gancho en lugar de tres. Los ganchos heredados siguen funcionando durante
-    el período de obsolescencia, pero no se componen con el resultado del perfil.
+    Implemente un hook en lugar de tres. Los hooks heredados siguen funcionando durante
+    el período de desaprobación, pero no se componen con el resultado del perfil.
 
   </Accordion>
 
   <Accordion title="External auth providers → contracts.externalAuthProviders">
-    **Antiguo**: implementar ganchos de autenticación externa sin declarar el proveedor
+    **Antiguo**: implementar hooks de autenticación externa sin declarar el proveedor
     en el manifiesto del complemento.
 
     **Nuevo**: declarar `contracts.externalAuthProviders` en el manifiesto del complemento
@@ -738,17 +738,19 @@ Deprecaciones más específicas que se aplican en todo el SDK de complementos, e
   </Accordion>
 
   <Accordion title="Provider env-var lookup → setup.providers[].envVars">
-    **Antiguo** campo de manifiesto: `providerAuthEnvVars: { anthropic: ["ANTHROPIC_API_KEY"] }`.
+    Campo de manifiesto **antiguo**: `providerAuthEnvVars: { anthropic: ["ANTHROPIC_API_KEY"] }`.
 
-    **Nuevo**: reflejar la misma búsqueda de variables de entorno en `setup.providers[].envVars`
-    en el manifiesto. Esto consolida los metadatos de entorno de configuración/estado en un solo lugar y evita iniciar el tiempo de ejecución del complemento solo para responder búsquedas de variables de entorno.
+    **Nuevo**: reflejar la misma búsqueda de variable de entorno en `setup.providers[].envVars`
+    en el manifiesto. Esto consolida los metadatos de entorno de configuración/estado en un
+    solo lugar y evita iniciar el tiempo de ejecución del complemento solo para responder búsquedas de
+    variables de entorno.
 
     `providerAuthEnvVars` sigue siendo compatible a través de un adaptador de compatibilidad
-    hasta que cierre el período de obsolescencia.
+    hasta que cierre el período de desaprobación.
 
   </Accordion>
 
-  <Accordion title="Registro del plugin de memoria → registerMemoryCapability">
+  <Accordion title="Registro del complemento de memoria → registerMemoryCapability">
     **Antiguo**: tres llamadas separadas -
     `api.registerMemoryPromptSection(...)`,
     `api.registerMemoryFlushPlan(...)`,
@@ -757,7 +759,7 @@ Deprecaciones más específicas que se aplican en todo el SDK de complementos, e
     **Nuevo**: una llamada en la API de estado de memoria -
     `registerMemoryCapability(pluginId, { promptBuilder, flushPlanResolver, runtime })`.
 
-    Mismas ranuras, llamada de registro única. Los auxiliares de prompt y corpus aditivos
+    Mismas ranuras, llamada de registro única. Los auxiliares de indicador y corpus aditivos
     (`registerMemoryPromptSupplement`, `registerMemoryCorpusSupplement`) no
     se ven afectados.
 
@@ -770,33 +772,33 @@ Deprecaciones más específicas que se aplican en todo el SDK de complementos, e
     **Nuevo**: `api.registerEmbeddingProvider(...)` más
     `contracts.embeddingProviders`.
 
-    El contrato genérico del proveedor de incrustaciones es reutilizable fuera de la memoria y es
-    la ruta compatible para nuevos proveedores. La API de registro específica de memoria
-    permanece cableada como compatibilidad obsoleta mientras los proveedores existentes migran.
-    La inspección de plugins reporta el uso no empaquetado como deuda de compatibilidad.
+    El contrato de proveedor de incrustaciones genérico es reutilizable fuera de la memoria y es
+    la ruta admitida para nuevos proveedores. La API de registro específica de memoria
+    permanece conectada como compatibilidad obsoleta mientras los proveedores existentes migran.
+    La inspección de complementos informa el uso no agrupado como deuda de compatibilidad.
 
   </Accordion>
 
   <Accordion title="Tipos de mensajes de sesión de subagente renombrados">
-    Dos alias de tipo heredados aún se exportan desde `src/plugins/runtime/types.ts`:
+    Dos alias de tipo heredados todavía exportados desde `src/plugins/runtime/types.ts`:
 
     | Antiguo                           | Nuevo                             |
     | ----------------------------- | ------------------------------- |
     | `SubagentReadSessionParams`   | `SubagentGetSessionMessagesParams` |
     | `SubagentReadSessionResult`   | `SubagentGetSessionMessagesResult` |
 
-    El método en tiempo de ejecución `readSession` está obsoleto en favor de
+    El método de tiempo de ejecución `readSession` está obsoleto en favor de
     `getSessionMessages`. La misma firma; el método antiguo llama al
     nuevo.
 
   </Accordion>
 
   <Accordion title="runtime.tasks.flow → runtime.tasks.managedFlows">
-    **Antiguo**: `runtime.tasks.flow` (singular) devolvía un accessor de flujo de tareas en vivo.
+    **Antiguo**: `runtime.tasks.flow` (singular) devolvía un descriptor de flujo de tareas en vivo.
 
-    **Nuevo**: `runtime.tasks.managedFlows` mantiene el tiempo de ejecución de mutación TaskFlow administrada
-    para plugins que crean, actualizan, cancelan o ejecutan tareas secundarias desde un
-    flujo. Use `runtime.tasks.flows` cuando el plugin solo necesite lecturas basadas en DTO.
+    **Nuevo**: `runtime.tasks.managedFlows` mantiene el tiempo de ejecución de mutación
+    TaskFlow administrado para complementos que crean, actualizan, cancelan o ejecutan tareas secundarias desde un
+    flujo. Use `runtime.tasks.flows` cuando el complemento solo necesite lecturas basadas en DTO.
 
     ```typescript
     // Before
@@ -807,13 +809,13 @@ Deprecaciones más específicas que se aplican en todo el SDK de complementos, e
 
   </Accordion>
 
-<Accordion title="Fábricas de extensiones integradas → middleware de resultados de herramientas del agente">
-  Cubierto en "Cómo migrar → Migrar extensiones de resultados de herramientas integradas a middleware" arriba. Incluido aquí para completitud: la ruta `api.registerEmbeddedExtensionFactory(...)` eliminada solo para ejecutor integrado es reemplazada por `api.registerAgentToolResultMiddleware(...)` con una lista de tiempo de ejecución explícita en `contracts.agentToolResultMiddleware`.
+<Accordion title="Embedded extension factories → agent tool-result middleware">
+  Cubierto en "Cómo migrar → Migrar extensiones integradas de resultados de herramientas a middleware" arriba. Incluido aquí para completar: la ruta eliminada solo para embebidos `api.registerEmbeddedExtensionFactory(...)` es reemplazada por `api.registerAgentToolResultMiddleware(...)` con una lista de tiempo de ejecución explícita en `contracts.agentToolResultMiddleware`.
 </Accordion>
 
-  <Accordion title="Alias de OpenClawSchemaType → OpenClawConfig">
+  <Accordion title="OpenClawSchemaType alias → OpenClawConfig">
     `OpenClawSchemaType` reexportado desde `openclaw/plugin-sdk` es ahora un
-    alias de una sola línea para `OpenClawConfig`. Se prefiere el nombre canónico.
+    alias de una sola línea para `OpenClawConfig`. Prefiera el nombre canónico.
 
     ```typescript
     // Before
@@ -826,8 +828,8 @@ Deprecaciones más específicas que se aplican en todo el SDK de complementos, e
 </AccordionGroup>
 
 <Note>
-  Las depreciaciones a nivel de extensión (dentro de los complementos de canal/proveedor empaquetados bajo `extensions/`) se rastrean dentro de sus propios barriles `api.ts` y `runtime-api.ts`. No afectan los contratos de complementos de terceros y no se enumeran aquí. Si consume un barril local de un complemento empaquetado directamente, lea los comentarios de depreciación en ese barril antes de
-  actualizar.
+  Las obsolescencias a nivel de extensión (dentro de complementos de canal/proveedor empaquetados bajo `extensions/`) se rastrean dentro de sus propios contenedores `api.ts` y `runtime-api.ts`. No afectan los contratos de complementos de terceros y no se enumeran aquí. Si consume un contenedor local de un complemento empaquetado directamente, lea los comentarios de obsolescencia en ese contenedor
+  antes de actualizar.
 </Note>
 
 ## Cronograma de eliminación
@@ -853,9 +855,9 @@ Esta es una salida de emergencia temporal, no una solución permanente.
 
 ## Relacionado
 
-- [Introducción](/es/plugins/building-plugins) - construye tu primer complemento
-- [Resumen del SDK](/es/plugins/sdk-overview) - referencia completa de importación de subrutas
+- [Introducción](/es/plugins/building-plugins) - construya su primer complemento
+- [Resumen del SDK](/es/plugins/sdk-overview) - referencia completa de importaciones de subrutas
 - [Complementos de canal](/es/plugins/sdk-channel-plugins) - construcción de complementos de canal
 - [Complementos de proveedor](/es/plugins/sdk-provider-plugins) - construcción de complementos de proveedor
 - [Aspectos internos del complemento](/es/plugins/architecture) - inmersión profunda en la arquitectura
-- [Manifiesto del complemento](/es/plugins/manifest) - referencia del esquema del manifiesto
+- [Manifiesto del complemento](/es/plugins/manifest) - referencia de esquema de manifiesto

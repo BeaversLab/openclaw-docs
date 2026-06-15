@@ -137,14 +137,17 @@ openclaw browser focus docs
 openclaw browser close t1
 ```
 
-`tabs` devuelve primero `suggestedTargetId`, luego el `tabId` estable, como `t1`,
-la etiqueta opcional y el `targetId` sin procesar. Los agentes deben devolver
-`suggestedTargetId` a `focus`, `close`, instantáneas y acciones. Puede
+`tabs` devuelve primero `suggestedTargetId`, luego el `tabId` estable como `t1`,
+la etiqueta opcional y el `targetId` bruto. Los agentes deben devolver
+`suggestedTargetId` a `focus`, `close`, instantáneas y acciones. Puedes
 asignar una etiqueta con `open --label`, `tab new --label` o `tab label`; las etiquetas,
-los ids de pestaña, los ids de destino sin procesar y los prefijos de id de destino únicos son todos aceptados.
-Cuando Chromium reemplaza el destino sin procesar subyacente durante una navegación o envío
-de formulario, OpenClaw mantiene el `tabId`/etiqueta estable asociado a la pestaña de reemplazo
-cuando puede probar la coincidencia. Los ids de destino sin procesar permanecen volátiles; se prefiere
+ids de pestaña, ids de destino brutos y prefijos únicos de ids de destino son todos aceptados.
+El campo de solicitud todavía se llama `targetId` por compatibilidad, pero acepta
+estas referencias de pestaña. Trate los ids de destino brutos como identificadores de diagnóstico, no como memoria
+durable del agente.
+Cuando Chromium reemplaza el destino bruto subyacente durante una navegación o envío de
+formulario, OpenClaw mantiene el `tabId`/etiqueta estable adjunto a la pestaña de reemplazo
+cuando puede probar la coincidencia. Los ids de destino brutos permanecen volátiles; prefiera
 `suggestedTargetId`.
 
 ## Instantánea / captura de pantalla / acciones
@@ -170,11 +173,11 @@ Notas:
 - `--full-page` es solo para capturas de página; no se puede combinar con `--ref`
   o `--element`.
 - Los perfiles `existing-session` / `user` admiten capturas de pantalla de página y capturas de pantalla `--ref`
-  desde la salida de instantánea, pero no capturas de pantalla CSS `--element`.
-- `--labels` superpone las referencias de instantánea actuales en la captura de pantalla.
-- `snapshot --urls` añade los destinos de los enlaces descubiertos a las instantáneas de IA para
-  que los agentes puedan elegir objetivos de navegación directa en lugar de adivinarlos solo por el
-  texto del enlace.
+  de la salida de instantánea, pero no capturas de pantalla CSS `--element`.
+- `--labels` superpone las referencias de instantáneas actuales en la captura de pantalla.
+- `snapshot --urls` añade los destinos de enlace descubiertos a las instantáneas de IA para
+  que los agentes puedan elegir objetivos de navegación directa en lugar de adivinar a partir del texto
+  del enlace solo.
 
 Navegar/hacer clic/escribir (automatización de interfaz de usuario basada en referencias):
 
@@ -197,9 +200,7 @@ openclaw browser evaluate --timeout-ms 30000 --fn 'async () => { await window.re
 Use `evaluate --timeout-ms <ms>` cuando la función del lado de la página pueda necesitar más
 tiempo que el tiempo de espera de evaluación predeterminado.
 
-Las respuestas de acciones devuelven el `targetId` sin procesar actual después del reemplazo
-de la página activado por la acción cuando OpenClaw puede probar la pestaña de reemplazo.
-Los scripts aún deben almacenar y pasar `suggestedTargetId`/etiquetas para flujos de trabajo de larga duración.
+Las respuestas de acciones devuelven el `targetId` sin procesar actual después del reemplazo de página desencadenado por la acción cuando OpenClaw puede probar la pestaña reemplazada. Los scripts aún deben almacenar y pasar `suggestedTargetId`/etiquetas para flujos de trabajo de larga duración.
 
 Auxiliares de archivos + diálogos:
 
@@ -212,8 +213,8 @@ openclaw browser dialog --accept
 openclaw browser dialog --dismiss --dialog-id d1
 ```
 
-Los perfiles administrados de Chrome guardan las descargas ordinarias activadas por clic en el directorio de descargas de OpenClaw (`/tmp/openclaw/downloads` de forma predeterminada, o la raíz temporal configurada). Use `waitfordownload` o `download` cuando el agente necesite esperar un archivo específico y devolver su ruta; esos esperas explícitas se apropian de la siguiente descarga. Las cargas aceptan archivos de la raíz de cargas temporales de OpenClaw y los medios entrantes administrados por OpenClaw, incluidas las referencias `media://inbound/<id>` y relativas al sandbox `media/inbound/<id>`. Las referencias de medios anidadas, el cruce de directorios y las rutas locales arbitrarias siguen siendo rechazadas.
-Cuando una acción abre un diálogo modal, la respuesta de la acción devuelve `blockedByDialog` con `browserState.dialogs.pending`; pase `--dialog-id` para responderlo directamente. Los diálogos manejados fuera de OpenClaw aparecen en `browserState.dialogs.recent`.
+Los perfiles administrados de Chrome guardan las descargas ordinarias desencadenadas por clics en el directorio de descargas de OpenClaw (`/tmp/openclaw/downloads` de forma predeterminada, o la raíz temporal configurada). Use `waitfordownload` o `download` cuando el agente necesite esperar un archivo específico y devolver su ruta; esos esperas explícitas poseen la siguiente descarga. Las cargas aceptan archivos de la raíz temporal de cargas de OpenClaw y los medios entrantes administrados por OpenClaw, incluyendo referencias `media://inbound/<id>` y relativas al sandbox `media/inbound/<id>`. Las referencias de medios anidadas, el cruce de directorios y las rutas locales arbitrarias siguen siendo rechazadas.
+Cuando una acción abre un diálogo modal, la respuesta de la acción devuelve `blockedByDialog` con `browserState.dialogs.pending`; pase `--dialog-id` para responderlo directamente. Los diálogos manejados fuera de OpenClaw aparecen bajo `browserState.dialogs.recent`.
 
 ## Estado y almacenamiento
 
@@ -258,7 +259,7 @@ openclaw browser trace stop --out trace.zip
 
 ## Chrome existente a través de MCP
 
-Use el perfil incorporado `user` o cree su propio perfil `existing-session`:
+Use el perfil incorporado `user`, o cree su propio perfil `existing-session`:
 
 ```bash
 openclaw browser --browser-profile user tabs
@@ -272,26 +273,26 @@ Esta ruta es solo para el host. Para Docker, servidores sin cabeza, Browserless 
 Límites actuales de sesión existente:
 
 - las acciones impulsadas por instantáneas usan referencias, no selectores CSS
-- `browser.actionTimeoutMs` establece de forma predeterminada las solicitudes `act` admitidas a 60000 ms cuando
-  los llamadores omiten `timeoutMs`; el `timeoutMs` por llamada gana.
+- `browser.actionTimeoutMs` establece de forma predeterminada las solicitudes `act` compatibles a 60000 ms cuando los que llaman omiten `timeoutMs`; `timeoutMs` por llamada todavía tiene prioridad.
 - `click` es solo clic izquierdo
-- `type` no soporta `slowly=true`
-- `press` no soporta `delayMs`
+- `type` no admite `slowly=true`
+- `press` no admite `delayMs`
 - `hover`, `scrollintoview`, `drag`, `select`, `fill` y `evaluate` rechazan
   las anulaciones de tiempo de espera por llamada
-- `select` soporta un solo valor
-- `wait --load networkidle` no está soportado
-- las cargas de archivos requieren `--ref` / `--input-ref`, no soportan el selector
-  CSS `--element` y actualmente soportan un archivo a la vez
-- los ganchos de diálogo no son compatibles con `--timeout`
-- las capturas de pantalla admiten capturas de página y `--ref`, pero no `--element` de CSS
-- `responsebody`, la intercepción de descargas, la exportación de PDF y las acciones por lotes aún requieren un navegador administrado o un perfil CDP sin procesar
+- `select` admite un solo valor
+- `wait --load networkidle` no es compatible
+- las cargas de archivos requieren `--ref` / `--input-ref`, no admiten CSS
+  `--element` y actualmente admiten un archivo a la vez
+- los ganchos de diálogo no admiten `--timeout`
+- las capturas de pantalla admiten capturas de página y `--ref`, pero no CSS `--element`
+- `responsebody`, la interceptación de descargas, la exportación de PDF y las acciones por lotes aún
+  requieren un navegador administrado o un perfil CDP sin procesar
 
 ## Control remoto del navegador (proxy de host de nodo)
 
 Si Gateway se ejecuta en una máquina diferente a la del navegador, ejecute un **node host** en la máquina que tenga Chrome/Brave/Edge/Chromium. Gateway transmitirá las acciones del navegador a ese nodo (no se requiere un servidor de control de navegador separado).
 
-Use `gateway.nodes.browser.mode` para controlar el enrutamiento automático y `gateway.nodes.browser.node` para anclar un nodo específico si hay varios conectados.
+Use `gateway.nodes.browser.mode` para controlar el enrutamiento automático y `gateway.nodes.browser.node` para fijar un nodo específico si hay varios conectados.
 
 Seguridad + configuración remota: [Browser tool](/es/tools/browser), [Remote access](/es/gateway/remote), [Tailscale](/es/gateway/tailscale), [Security](/es/gateway/security)
 

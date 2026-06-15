@@ -8,9 +8,9 @@ title: "Migrar"
 
 # `openclaw migrate`
 
-Importe el estado desde otro sistema de agentes a través de un proveedor de migración propiedad de un complemento. Los proveedores integrados cubren el estado de la CLI de Codex, [Claude](/es/install/migrating-claude) y [Hermes](/es/install/migrating-hermes); los complementos de terceros pueden registrar proveedores adicionales.
+Importa el estado de otro sistema de agentes a través de un proveedor de migración propiedad de un complemento. Los proveedores integrados cubren el estado de Codex CLI, [Claude](/es/install/migrating-claude) y [Hermes](/es/install/migrating-hermes); los complementos de terceros pueden registrar proveedores adicionales.
 
-<Tip>Para tutoriales orientados al usuario, consulte [Migrar desde Claude](/es/install/migrating-claude) y [Migrar desde Hermes](/es/install/migrating-hermes). El [centro de migración](/es/install/migrating) enumera todas las rutas.</Tip>
+<Tip>Para ver tutoriales orientados al usuario, consulte [Migrar desde Claude](/es/install/migrating-claude) y [Migrar desde Hermes](/es/install/migrating-hermes). El [centro de migración](/es/install/migrating) enumera todas las rutas.</Tip>
 
 ## Comandos
 
@@ -101,7 +101,7 @@ openclaw onboard --import-from hermes --import-source ~/.hermes
 
 El proveedor Claude incluido detecta el estado de Claude Code en `~/.claude` por defecto. Usa `--from <path>` para importar un directorio home o raíz de proyecto específico de Claude Code.
 
-<Tip>Para un tutorial orientado al usuario, consulta [Migrar desde Claude](/es/install/migrating-claude).</Tip>
+<Tip>Para ver un tutorial orientado al usuario, consulte [Migrar desde Claude](/es/install/migrating-claude).</Tip>
 
 ### Qué importa Claude
 
@@ -185,23 +185,31 @@ Las instalaciones que requieren autenticación en el lado de destino se reportan
 Sus entradas de configuración explícitas se escriben deshabilitadas hasta que las reautorice y
 las habilite. Otros fallos de instalación son resultados `error` con alcance de elemento.
 
-Si el inventario de complementos del servidor de aplicaciones de Codex no está disponible durante la planificación, la migración recurre a elementos informativos de paquetes en caché en lugar de fallar toda la migración.
+La configuración del complemento nativo de Codex también acepta identidades `openai-bundled` de primera parte y `openai-primary-runtime` del marketplace, pero la migración no las descubre ni las instala automáticamente desde el estado de origen.
+
+La disponibilidad de aplicaciones/complementos del lado de OpenAI aún proviene de la cuenta de Codex iniciada y los controles de aplicaciones del espacio de trabajo. Consulte
+[Usar Codex con su plan de ChatGPT](https://help.openai.com/en/articles/11369540-using-codex-with-your-chatgpt-plan)
+para obtener una descripción general de la cuenta y el control del espacio de trabajo de OpenAI, y luego use
+[Complementos nativos de Codex](/es/plugins/codex-native-plugins#manual-first-party-marketplace-entries)
+para entradas manuales del marketplace de primera parte.
+
+Si el inventario de complementos del servidor de aplicaciones de Codex no está disponible durante la planificación, la migración recurre a elementos de asesoramiento del paquete en caché en lugar de fallar toda la migración.
 
 ## Proveedor Hermes
 
-El proveedor Hermes incluido detecta el estado en `~/.hermes` por defecto. Use `--from <path>` cuando Hermes se encuentre en otro lugar.
+El proveedor Hermes incluido detecta el estado en `~/.hermes` de forma predeterminada. Use `--from <path>` cuando Hermes se encuentre en otro lugar.
 
-### Lo que importa Hermes
+### Qué importa Hermes
 
-- Configuración de modelo predeterminada de `config.yaml`.
-- Proveedores de modelos configurados y endpoints personalizados compatibles con OpenAI de `providers` y `custom_providers`.
-- Definiciones de servidor MCP de `mcp_servers` o `mcp.servers`.
+- Configuración predeterminada del modelo desde `config.yaml`.
+- Proveedores de modelos configurados y puntos de conexión personalizados compatibles con OpenAI desde `providers` y `custom_providers`.
+- Definiciones de servidor MCP desde `mcp_servers` o `mcp.servers`.
 - `SOUL.md` y `AGENTS.md` en el espacio de trabajo del agente OpenClaw.
-- `memories/MEMORY.md` y `memories/USER.md` añadidos a los archivos de memoria del espacio de trabajo.
-- Valores predeterminados de configuración de memoria para la memoria de archivos de OpenClaw, además de elementos de archivo o revisión manual para proveedores de memoria externos como Honcho.
+- `memories/MEMORY.md` y `memories/USER.md` agregados a los archivos de memoria del espacio de trabajo.
+- Valores predeterminados de configuración de memoria para la memoria de archivos de OpenClaw, más elementos de archivo o de revisión manual para proveedores de memoria externos como Honcho.
 - Habilidades que incluyen un archivo `SKILL.md` bajo `skills/<name>/`.
 - Valores de configuración por habilidad de `skills.config`.
-- Credenciales OAuth de OpenAI de OpenCode desde OpenCode `auth.json` cuando se acepta la migración interactiva de credenciales, o cuando `--include-secrets` está configurado. Las entradas OAuth de Hermes `auth.json` son un estado heredado informado para la reautenticación manual de OpenAI o la reparación con doctor.
+- Credenciales OAuth de OpenAI de OpenCode desde OpenCode `auth.json` cuando se acepta la migración interactiva de credenciales, o cuando se establece `--include-secrets`. Las entradas OAuth de Hermes `auth.json` son un estado heredado reportado para la reautenticación manual de OpenAI o la reparación con doctor.
 - Claves de API y tokens compatibles de Hermes `.env` y OpenCode `auth.json` cuando se acepta la migración interactiva de credenciales, o cuando se establece `--include-secrets`.
 
 ### Claves `.env` compatibles
@@ -251,7 +259,7 @@ El proveedor Hermes incluido detecta el estado en `~/.hermes` por defecto. Use `
 
 ### Estado de solo archivo
 
-El estado de Hermes que OpenClaw no puede interpretar de manera segura se copia en el informe de migración para su revisión manual, pero no se carga en la configuración o las credenciales activas de OpenClaw. Esto preserva el estado opaco o inseguro sin pretender que OpenClaw pueda ejecutarlo o confiar en él automáticamente:
+El estado de Hermes que OpenClaw no puede interpretar de manera segura se copia en el informe de migración para su revisión manual, pero no se carga en la configuración o credenciales activas de OpenClaw. Esto preserva el estado opaco o inseguro sin pretender que OpenClaw pueda ejecutarlo o confiar en él automáticamente:
 
 - `plugins/`
 - `sessions/`
@@ -278,20 +286,20 @@ Los orígenes de migración son complementos. Un complemento declara sus identif
 }
 ```
 
-En tiempo de ejecución, el complemento llama a `api.registerMigrationProvider(...)`. El proveedor implementa `detect`, `plan` y `apply`. Core se encarga de la orquestación de la CLI, la política de respaldo, las indicaciones, la salida JSON y la verificación previa de conflictos. Core pasa el plan revisado a `apply(ctx, plan)`, y los proveedores pueden reconstruir el plan solo cuando ese argumento está ausente por compatibilidad.
+En tiempo de ejecución, el complemento llama a `api.registerMigrationProvider(...)`. El proveedor implementa `detect`, `plan` y `apply`. Core posee la orquestación de la CLI, la política de respaldo, las indicaciones, la salida JSON y la verificación previa de conflictos. Core pasa el plan revisado a `apply(ctx, plan)`, y los proveedores pueden reconstruir el plan solo cuando ese argumento está ausente para garantizar la compatibilidad.
 
-Los complementos de proveedor pueden usar `openclaw/plugin-sdk/migration` para la construcción de elementos y los recuentos de resumen, además de `openclaw/plugin-sdk/migration-runtime` para copias de archivos con capacidad de detección de conflictos, copias de informes de solo archivo, contenedores de configuración en tiempo de ejecución en caché e informes de migración.
+Los complementos del proveedor pueden usar `openclaw/plugin-sdk/migration` para la construcción de elementos y los conteos de resumen, además de `openclaw/plugin-sdk/migration-runtime` para copias de archivos con reconocimiento de conflictos, copias de informes de solo archivo, contenedores de configuración en tiempo de ejecución en caché e informes de migración.
 
 ## Integración de incorporación
 
 La incorporación puede ofrecer la migración cuando un proveedor detecta un origen conocido. Tanto `openclaw onboard --flow import` como `openclaw setup --wizard --import-from hermes` usan el mismo proveedor de migración del complemento y aún muestran una vista previa antes de aplicar.
 
-<Note>Las importaciones de incorporación requieren una configuración nueva de OpenClaw. Restablezca la configuración, las credenciales, las sesiones y el espacio de trabajo primero si ya tiene un estado local. Las importaciones de copia de seguridad y sobrescritura o fusión están protegidas por funciones para las configuraciones existentes.</Note>
+<Note>Las importaciones de incorporación requieren una configuración nueva de OpenClaw. Restablezca la configuración, las credenciales, las sesiones y el espacio de trabajo primero si ya tiene un estado local. Las importaciones de respaldo más sobrescritura o combinación están limitadas por características para las configuraciones existentes.</Note>
 
 ## Relacionado
 
-- [Migración desde Hermes](/es/install/migrating-hermes): tutorial para el usuario.
-- [Migración desde Claude](/es/install/migrating-claude): tutorial para el usuario.
-- [Migración](/es/install/migrating): mover OpenClaw a una nueva máquina.
+- [Migrar desde Hermes](/es/install/migrating-hermes): tutorial orientado al usuario.
+- [Migrar desde Claude](/es/install/migrating-claude): tutorial orientado al usuario.
+- [Migrar](/es/install/migrating): mover OpenClaw a una máquina nueva.
 - [Doctor](/es/gateway/doctor): verificación de estado después de aplicar una migración.
 - [Plugins](/es/tools/plugin): instalación y registro de complementos.

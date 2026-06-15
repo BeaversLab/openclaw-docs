@@ -8,7 +8,7 @@ title: "迁移"
 
 # `openclaw migrate`
 
-通过插件拥有的迁移提供商从另一个代理系统导入状态。捆绑提供商覆盖 Codex CLI 状态、[Claude](CLI/en/install/migrating-claude) 和 [Hermes](/zh/install/migrating-hermes)；第三方插件可以注册其他提供商。
+通过插件拥有的迁移提供商从另一个代理系统导入状态。内置提供商涵盖 Codex CLI 状态、[Claude](/zh/install/migrating-claude) 和 [Hermes](/zh/install/migrating-hermes)；第三方插件可以注册其他提供商。
 
 <Tip>有关面向用户的演练，请参阅[从 Claude 迁移](/zh/install/migrating-claude)和[从 Hermes 迁移](/zh/install/migrating-hermes)。[迁移中心](/zh/install/migrating)列出了所有路径。</Tip>
 
@@ -154,13 +154,24 @@ Codex `config.toml`、本地 `hooks/hooks.json`、非精选市场、不是源安
 迁移从不写入 `plugins["*"]` 也从不存储本地 marketplace 缓存路径。源端的订阅失败会在手动项目上报告，并带有类型化原因，例如 `codex_subscription_required`、`codex_account_unavailable`、`plugin_disabled` 或 `plugin_read_unavailable`。使用 `--verify-plugin-apps` 时，源端应用清单失败也可能显示为 `app_inaccessible`、`app_disabled`、`app_missing` 或 `app_inventory_unavailable`。被跳过的插件不会写入目标配置。
 目标端需要身份验证的安装会在受影响的插件项目上报告，并带有 `status: "skipped"`、`reason: "auth_required"` 和经过清理的应用标识符。它们的显式配置条目在写入时处于禁用状态，直到您重新授权并启用它们。其他安装失败是项目范围的 `error` 结果。
 
-如果在规划期间 Codex 应用服务器插件清单不可用，迁移
-将回退到缓存捆绑包建议项，而不是导致整个
+原生 Codex 插件配置还接受第一方 `openai-bundled` 和
+`openai-primary-runtime` 市场身份，但迁移不会
+从源状态自动发现或安装它们。
+
+OpenAI 端的应用/插件可用性仍来自已登录的 Codex
+帐户和工作区应用控制。请参阅
+[将 Codex 与您的 ChatGPT 计划一起使用](https://help.openai.com/en/articles/11369540-using-codex-with-your-chatgpt-plan)
+以了解 OpenAI 的帐户和工作区控制概述，然后使用
+[原生 Codex 插件](/zh/plugins/codex-native-plugins#manual-first-party-marketplace-entries)
+进行手动第一方市场条目输入。
+
+如果在规划期间无法获得 Codex 应用服务器插件清单，迁移
+将回退到缓存的捆绑包咨询项目，而不是使整个
 迁移失败。
 
 ## Hermes 提供商
 
-捆绑的 Hermes 提供商默认在 `~/.hermes` 检测状态。当 Hermes 位于其他位置时，请使用 `--from <path>`。
+内置的 Hermes 提供商默认在 `~/.hermes` 检测状态。当 Hermes 位于其他位置时，请使用 `--from <path>`。
 
 ### Hermes 导入的内容
 
@@ -168,12 +179,12 @@ Codex `config.toml`、本地 `hooks/hooks.json`、非精选市场、不是源安
 - 来自 `providers` 和 `custom_providers` 的已配置模型提供商和自定义 OpenAI 兼容端点。
 - 来自 `mcp_servers` 或 `mcp.servers` 的 MCP 服务器定义。
 - `SOUL.md` 和 `AGENTS.md` 到 OpenClaw 代理工作区。
-- 附加到工作区内存文件的 `memories/MEMORY.md` 和 `memories/USER.md`。
-- OpenClaw 文件内存的内存配置默认值，以及 Honcho 等外部内存提供商的存档或人工审查项。
+- `memories/MEMORY.md` 和 `memories/USER.md` 附加到工作区记忆文件。
+- OpenClaw 文件内存的内存配置默认值，以及 Honcho 等外部内存提供程序的存档或手动审查项目。
 - 在 `skills/<name>/` 下包含 `SKILL.md` 文件的 Skills。
-- 来自 `skills.config` 的每项 Skill 配置值。
-- 当接受交互式凭证迁移或设置了 `--include-secrets` 时，从 OpenCode OpenAIOAuth`auth.json` 导入 OpenCode OpenAI OAuth 凭证。Hermes `auth.json`OAuthOpenAI OAuth 条目是遗留状态，用于手动 OpenAI 重新身份验证或 doctor 修复。
-- 当接受交互式凭据迁移，或设置了 `--include-secrets` 时，支持从 Hermes API`.env` 和 OpenCode `auth.json` 导入 API 密钥和令牌。
+- 来自 `skills.config` 的每个 Skill 的配置值。
+- 当接受交互式凭据迁移或设置了 `--include-secrets` 时，来自 OpenCode `auth.json` 的 OpenCode OpenAI OAuth 凭据。Hermes `auth.json` OAuth 条目是报告用于手动 OpenAI 重新身份验证或医生修复的旧版状态。
+- 当接受交互式凭据迁移或设置了 `--include-secrets` 时，来自 Hermes `.env` 和 OpenCode `auth.json` 的受支持的 API 密钥和令牌。
 
 ### 支持的 `.env` 密钥
 
@@ -220,7 +231,7 @@ Codex `config.toml`、本地 `hooks/hooks.json`、非精选市场、不是源安
 - `ZAI_API_KEY`
 - `Z_AI_API_KEY`
 
-### 仅归档状态
+### 仅存档状态
 
 OpenClaw 无法安全解释的 Hermes 状态会被复制到迁移报告中以供人工审查，但不会加载到实际的 OpenClaw 配置或凭据中。这样可以保留不透明或不安全的状态，而无需假装 OpenClaw 可以自动执行或信任它：
 
@@ -237,7 +248,7 @@ OpenClaw 无法安全解释的 Hermes 状态会被复制到迁移报告中以供
 openclaw doctor
 ```
 
-## 插件协议
+## 插件合约
 
 迁移源是插件。插件在 `openclaw.plugin.json` 中声明其提供商 ID：
 
@@ -249,20 +260,20 @@ openclaw doctor
 }
 ```
 
-在运行时，插件调用 `api.registerMigrationProvider(...)`。提供商实现 `detect`、`plan` 和 `apply`CLI。核心负责 CLI 编排、备份策略、提示、JSON 输出和冲突预检。核心将经过审查的计划传递给 `apply(ctx, plan)`，并且为了兼容性，提供商仅在该参数缺失时才重建计划。
+在运行时，插件调用 `api.registerMigrationProvider(...)`。提供商实现 `detect`、`plan` 和 `apply`CLI。核心负责 CLI 编排、备份策略、提示、JSON 输出和冲突预检。核心将审核后的计划传递给 `apply(ctx, plan)`，为了兼容性，仅当该参数缺失时，提供商才可能重建计划。
 
-提供商插件可以使用 `openclaw/plugin-sdk/migration` 进行项目构建和摘要计数，还可以使用 `openclaw/plugin-sdk/migration-runtime` 进行感知冲突的文件复制、仅存档报告复制、缓存的配置-运行时包装器以及迁移报告。
+提供商插件可以使用 `openclaw/plugin-sdk/migration` 进行项目构建和汇总计数，以及使用 `openclaw/plugin-sdk/migration-runtime` 进行感知冲突的文件复制、仅存档报告复制、缓存的配置运行时包装器和迁移报告。
 
 ## 新手引导集成
 
-当提供商检测到已知来源时，新手引导可以提供迁移。`openclaw onboard --flow import` 和 `openclaw setup --wizard --import-from hermes` 都使用相同的插件迁移提供商，并且在应用前仍会显示预览。
+当提供商检测到已知源时，新手引导可以提供迁移。`openclaw onboard --flow import` 和 `openclaw setup --wizard --import-from hermes` 都使用相同的插件迁移提供商，并且在应用之前仍会显示预览。
 
-<Note>新手引导导入需要全新的 OpenClaw 设置。如果您已有本地状态，请先重置配置、凭据、会话和工作区。对于现有设置，备份加覆盖或合并导入功能受到限制。</Note>
+<Note>新手引导导入需要全新的 OpenClaw 设置。如果您已有本地状态，请先重置配置、凭据、会话和工作区。对于现有设置，备份加覆盖或合并导入属于功能限制。</Note>
 
 ## 相关
 
 - [从 Hermes 迁移](/zh/install/migrating-hermes)：面向用户的演练。
 - [从 Claude 迁移](/zh/install/migrating-claude)：面向用户的演练。
 - [迁移](/zh/install/migratingOpenClaw)：将 OpenClaw 移动到新机器。
-- [Doctor](/zh/gateway/doctor)：应用迁移后的健康检查。
-- [Plugins](/zh/tools/plugin)：插件安装和注册。
+- [诊断](/zh/gateway/doctor)：应用迁移后的健康检查。
+- [插件](/zh/tools/plugin)：插件安装和注册。

@@ -41,24 +41,25 @@ Le texte est pris en charge partout ; les médias et les réactions varient selo
 - [QQ Bot](/fr/channels/qqbot) - QQ Bot API ; chat privé, chat de groupe et média enrichi (plugin inclus).
 - [Signal](/fr/channels/signal) - signal-cli ; axé sur la confidentialité.
 - [Slack](/fr/channels/slack) - Bolt SDK ; applications d'espace de travail.
+- [SMS](/fr/channels/sms) - SMS pris en charge par Twilio via le webhook du Gateway (plugin inclus).
 - [Synology Chat](/fr/channels/synology-chat) - Synology NAS Chat via webhooks sortants et entrants (plugin inclus).
 - [Telegram](/fr/channels/telegram) - Bot API via grammY ; prend en charge les groupes.
 - [Tlon](/fr/channels/tlon) - Messagerie basée sur Urbit (plugin inclus).
 - [Twitch](/fr/channels/twitch) - Chat Twitch via connexion IRC (plugin inclus).
 - [Voice Call](/fr/plugins/voice-call) - Téléphonie via Plivo ou Twilio (plugin, installé séparément).
-- [WebChat](/fr/web/webchat) - Interface utilisateur Gateway WebChat via WebSocket.
-- [WeChat](/fr/channels/wechat) - Extension de bot Tencent iLink via connexion QR ; chats privés uniquement (plugin externe).
+- [WebChat](/fr/web/webchat) - Interface utilisateur Gateway WebChat sur WebSocket.
+- [WeChat](/fr/channels/wechat) - Plugin Tencent iLink Bot via connexion QR ; conversations privées uniquement (plugin externe).
 - [WhatsApp](/fr/channels/whatsapp) - Le plus populaire ; utilise Baileys et nécessite un appariement QR.
 - [Yuanbao](/fr/channels/yuanbao) - Bot Tencent Yuanbao (plugin externe).
-- [Zalo](/fr/channels/zalo) - Zalo Bot API ; messagerie populaire au Vietnam (plugin inclus).
+- [Zalo](/fr/channels/zalo) - Bot Zalo API ; messagerie populaire au Vietnam (plugin inclus).
 - [Zalo Personal](/fr/channels/zalouser) - Compte personnel Zalo via connexion QR (plugin inclus).
 
 ## Notes
 
 - Les canaux peuvent fonctionner simultanément ; configurez-en plusieurs et OpenClaw acheminera par chat.
-- La configuration la plus rapide est généralement **Telegram** (simple jeton de bot). WhatsApp nécessite un appariement QR et
+- La configuration la plus rapide est généralement **Telegram** (jeton de bot simple). WhatsApp nécessite un appariement QR et
   stocke plus d'état sur le disque.
-- Le comportement des groupes varie selon le channel ; consultez [Groups](/fr/channels/groups).
-- L'appariement DM et les listes d'autorisation sont appliqués pour la sécurité ; consultez [Security](/fr/gateway/security).
-- Troubleshooting : [Channel troubleshooting](/fr/channels/troubleshooting).
-- Les fournisseurs de modèles sont documentés séparément ; consultez [Model Providers](/fr/providers/models).
+- Le comportement de groupe varie selon le canal ; voir [Groupes](/fr/channels/groups).
+- L'appariement DM et les listes d'autorisation sont appliqués pour la sécurité ; voir [Sécurité](/fr/gateway/security).
+- Dépannage : [Dépannage de canal](/fr/channels/troubleshooting).
+- Les fournisseurs de modèles sont documentés séparément ; voir [Fournisseurs de modèles](/fr/providers/models).

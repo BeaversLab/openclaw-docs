@@ -16,7 +16,7 @@ title: "Application Android"
 
 - Rôle : application nœud compagnon (Android n'héberge pas le AndroidGateway).
 - Gateway requis : oui (exécutez-le sur macOS, Linux ou Windows via WSL2).
-- Installer : [Google Play](https://play.google.com/store/apps/details?id=ai.openclaw.app&hl=en_IN) pour l'application, [Getting Started](/fr/start/getting-started) pour le Gateway, puis [Appairage](/fr/channels/pairing).
+- Install : [Google Play](https://play.google.com/store/apps/details?id=ai.openclaw.app&hl=en_IN) pour l'application, [Getting Started](/fr/start/getting-started) pour le Gateway, puis [Pairing](/fr/channels/pairing).
 - Gateway : [Runbook](/fr/gateway) + [Configuration](/fr/gateway/configuration).
   - Protocoles : [protocole Gateway](/fr/gateway/protocol) (nœuds + plan de contrôle).
 
@@ -72,7 +72,7 @@ Depuis la machine de la passerelle :
 dns-sd -B _openclaw-gw._tcp local.
 ```
 
-Plus de notes de débogage : [Bonjour](Bonjour/en/gateway/bonjour).
+Notes de débogage supplémentaires : [Bonjour](/fr/gateway/bonjour).
 
 Si vous avez également configuré un domaine de découverte étendue, comparez avec :
 
@@ -125,7 +125,7 @@ openclaw devices approve <requestId>
 openclaw devices reject <requestId>
 ```
 
-Détails du couplage : [Couplage](/fr/channels/pairing).
+Détails du jumelage : [Pairing](/fr/channels/pairing).
 
 Optionnel : si le nœud Android se connecte toujours depuis un sous-réseau strictement contrôlé,
 vous pouvez activer l'approbation automatique des nouveaux nœuds avec des CIDRs explicites ou des IP exactes :
@@ -214,8 +214,9 @@ Voir [Camera node](/fr/nodes/camera) pour les paramètres et les aides CLI.
 - Par défaut, Android Talk utilise la reconnaissance vocale native, le chat Gateway et AndroidGateway`talk.speak` via le fournisseur de Talk Gateway configuré. Le TTS du système local est utilisé uniquement lorsque `talk.speak` n'est pas disponible.
 - Android Talk n'utilise le relais Gateway en temps réel que lorsque `talk.realtime.mode` est `realtime` et que `talk.realtime.transport` est `gateway-relay`.
 - Le réveil vocal reste désactivé dans l'UX/runtime Android.
-- Familles de commandes Android supplémentaires (la disponibilité dépend de l'appareil et des permissions) :
+- Familles de commandes Android supplémentaires (la disponibilité dépend de l'appareil, des autorisations et des paramètres utilisateur) :
   - `device.status`, `device.info`, `device.permissions`, `device.health`
+  - `device.apps` uniquement lorsque **Paramètres > Capacités du téléphone > Applications installées** est activé ; il répertorie par défaut les applications visibles dans le lanceur.
   - `notifications.list`, `notifications.actions` (voir [Notification forwarding](#notification-forwarding) ci-dessous)
   - `photos.latest`
   - `contacts.search`, `contacts.add`
@@ -224,11 +225,11 @@ Voir [Camera node](/fr/nodes/camera) pour les paramètres et les aides CLI.
   - `sms.search`
   - `motion.activity`, `motion.pedometer`
 
-## Points d'entrée de l'Assistant
+## Points d'entrée de l'assistant
 
-Android prend en charge le lancement de OpenClaw depuis le déclencheur de l'assistant système (Google
-Assistant). Lorsqu'il est configuré, maintenir le bouton d'accueil enfoncé ou dire « Ok Google, demande à
-OpenClaw... » ouvre l'application et transmet l'invite au compositeur de discussion.
+Android prend en charge le lancement de OpenClaw via le déclencheur de l'assistant système (Google
+Assistant). Lorsqu'il est configuré, maintenir le bouton d'accueil ou dire « Ok Google, demande
+à OpenClaw... » ouvre l'application et transmet l'invite au composeur de chat.
 
 Cela utilise les métadonnées des **App Actions** Android déclarées dans le manifeste de l'application. Aucune
 configuration supplémentaire n'est nécessaire du côté de la passerelle -- l'intention de l'assistant
@@ -242,13 +243,13 @@ Android peut transférer les notifications de l'appareil vers la passerelle sous
 
 | Clé                              | Type           | Description                                                                                                                |
 | -------------------------------- | -------------- | -------------------------------------------------------------------------------------------------------------------------- |
-| `notifications.allowPackages`    | string[]       | Ne transférer que les notifications de ces noms de packages. Si défini, tous les autres packages sont ignorés.             |
+| `notifications.allowPackages`    | string[]       | Transférer uniquement les notifications de ces noms de packages. Si défini, tous les autres packages sont ignorés.         |
 | `notifications.denyPackages`     | string[]       | Ne jamais transférer les notifications de ces noms de packages. Appliqué après `allowPackages`.                            |
-| `notifications.quietHours.start` | chaîne (HH:mm) | Début de la plage des heures de calme (heure locale de l'appareil). Les notifications sont supprimées pendant cette plage. |
-| `notifications.quietHours.end`   | chaîne (HH:mm) | Fin de la plage des heures de calme.                                                                                       |
-| `notifications.rateLimit`        | nombre         | Nombre maximal de notifications transférées par package par minute. Les notifications excédentaires sont ignorées.         |
+| `notifications.quietHours.start` | string (HH:mm) | Début de la fenêtre d'heures calmes (heure locale de l'appareil). Les notifications sont supprimées pendant cette fenêtre. |
+| `notifications.quietHours.end`   | string (HH:mm) | Fin de la fenêtre d'heures calmes.                                                                                         |
+| `notifications.rateLimit`        | number         | Nombre maximum de notifications transférées par package par minute. Les notifications excédentaires sont ignorées.         |
 
-Le sélecteur de notifications utilise également un comportement plus sûr pour les événements de notification transférés, évitant le transfert accidentel de notifications sensibles du système.
+Le sélecteur de notifications utilise également un comportement plus sûr pour les événements de notification transférés, empêchant le transfert accidentel de notifications système sensibles.
 
 Exemple de configuration :
 
@@ -266,10 +267,10 @@ Exemple de configuration :
 }
 ```
 
-<Note>Le transfert de notifications nécessite l'autorisation Android Notification Listener. L'application la demande lors de la configuration.</Note>
+<Note>Le transfert des notifications nécessite la permission Android Notification Listener. L'application demande cette autorisation lors de la configuration.</Note>
 
 ## Connexes
 
-- [iOS app](/fr/platforms/ios)
-- [Nodes](/fr/nodes)
-- [Android node troubleshooting](/fr/nodes/troubleshooting)
+- [Application iOS](/fr/platforms/ios)
+- [Nœuds](/fr/nodes)
+- [Dépannage du nœud Android](/fr/nodes/troubleshooting)

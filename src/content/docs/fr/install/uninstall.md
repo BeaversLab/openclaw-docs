@@ -19,6 +19,8 @@ Recommandé : utilisez le programme de désinstallation intégré :
 openclaw uninstall
 ```
 
+Lors de l'utilisation de la CLI, la suppression de l'état préserve les répertoires de l'espace de travail configurés, sauf si vous sélectionnez également `--workspace`.
+
 Non interactif (automatisation / npx) :
 
 ```bash
@@ -47,14 +49,15 @@ rm -rf "${OPENCLAW_STATE_DIR:-$HOME/.openclaw}"
 ```
 
 Si vous avez défini `OPENCLAW_CONFIG_PATH` sur un emplacement personnalisé en dehors du répertoire d'état, supprimez également ce fichier.
+Si vous souhaitez conserver un espace de travail à l'intérieur du répertoire d'état, tel que `~/.openclaw/workspace`, déplacez-le avant d'exécuter `rm -rf` ou supprimez sélectivement le contenu de l'état.
 
-4. Supprimez votre espace de travail (facultatif, supprime les fichiers de l'agent) :
+4. Supprimez votre espace de travail (optionnel, supprime les fichiers de l'agent) :
 
 ```bash
 rm -rf ~/.openclaw/workspace
 ```
 
-5. Supprimez l'installation du CLI (choisissez celle que vous avez utilisée) :
+5. Supprimez l'installation de la CLI (choisissez celle que vous avez utilisée) :
 
 ```bash
 npm rm -g openclaw
@@ -71,22 +74,22 @@ rm -rf /Applications/OpenClaw.app
 Notes :
 
 - Si vous avez utilisé des profils (`--profile` / `OPENCLAW_PROFILE`), répétez l'étape 3 pour chaque répertoire d'état (ceux par défaut sont `~/.openclaw-<profile>`).
-- En mode distant, le répertoire d'état se trouve sur l'**hôte de la passerelle**, exécutez donc également les étapes 1 à 4 sur celui-ci.
+- En mode distant, le répertoire d'état réside sur l'**hôte de la passerelle**, exécutez donc également les étapes 1 à 4 sur celui-ci.
 
-## Suppression manuelle du service (CLI non installé)
+## Suppression manuelle du service (CLI non installée)
 
-Utilisez ceci si le service de passerelle continue de s'exécuter mais que `openclaw` est manquant.
+Utilisez cette méthode si le service de passerelle continue de fonctionner mais que `openclaw` est manquant.
 
 ### macOS (launchd)
 
-Le label par défaut est `ai.openclaw.gateway` (ou `ai.openclaw.<profile>` ; l'ancien `com.openclaw.*` peut encore exister) :
+L'étiquette par défaut est `ai.openclaw.gateway` (ou `ai.openclaw.<profile>` ; l'ancien `com.openclaw.*` peut encore exister) :
 
 ```bash
 launchctl bootout gui/$UID/ai.openclaw.gateway
 rm -f ~/Library/LaunchAgents/ai.openclaw.gateway.plist
 ```
 
-Si vous avez utilisé un profil, remplacez le label et le nom du plist par `ai.openclaw.<profile>`. Supprimez tous les anciens plists `com.openclaw.*` s'ils sont présents.
+Si vous avez utilisé un profil, remplacez l'étiquette et le nom du plist par `ai.openclaw.<profile>`. Supprimez tous les plists hérités `com.openclaw.*` s'ils sont présents.
 
 ### Linux (unité utilisateur systemd)
 
@@ -101,7 +104,7 @@ systemctl --user daemon-reload
 ### Windows (Tâche planifiée)
 
 Le nom de tâche par défaut est `OpenClaw Gateway` (ou `OpenClaw Gateway (<profile>)`).
-Le script de tâche se trouve dans votre répertoire d'état.
+Le script de tâche réside sous votre répertoire d'état.
 
 ```powershell
 schtasks /Delete /F /TN "OpenClaw Gateway"
@@ -114,14 +117,14 @@ Si vous avez utilisé un profil, supprimez le nom de tâche correspondant et `~\
 
 ### Installation normale (install.sh / npm / pnpm / bun)
 
-Si vous avez utilisé `https://openclaw.ai/install.sh` ou `install.ps1`, le CLI a été installé avec `npm install -g openclaw@latest`.
-Supprimez-le avec `npm rm -g openclaw` (ou `pnpm remove -g` / `bun remove -g` si vous l'avez installé de cette façon).
+Si vous avez utilisé `https://openclaw.ai/install.sh` ou `install.ps1`, la CLI a été installée avec `npm install -g openclaw@latest`.
+Supprimez-la avec `npm rm -g openclaw` (ou `pnpm remove -g` / `bun remove -g` si vous l'avez installée de cette manière).
 
-### Extraction des sources (git clone)
+### Checkout source (git clone)
 
 Si vous exécutez depuis un checkout de dépôt (`git clone` + `openclaw ...` / `bun run openclaw ...`) :
 
-1. Désinstallez le service de passerelle **avant** de supprimer le dépôt (utilisez la méthode facile ci-dessus ou la suppression manuelle du service).
+1. Désinstallez le service passerelle **avant** de supprimer le dépôt (utilisez la voie facile ci-dessus ou la suppression manuelle du service).
 2. Supprimez le répertoire du dépôt.
 3. Supprimez l'état + l'espace de travail comme indiqué ci-dessus.
 
