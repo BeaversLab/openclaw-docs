@@ -27,6 +27,7 @@ model as `provider/model`.
 - [Anthropic (API + Claude CLI)](/en/providers/anthropic)
 - [BytePlus (International)](/en/concepts/model-providers#byteplus-international)
 - [Chutes](/en/providers/chutes)
+- [Cohere](/en/providers/cohere)
 - [ComfyUI](/en/providers/comfy)
 - [Cloudflare AI Gateway](/en/providers/cloudflare-ai-gateway)
 - [DeepInfra](/en/providers/deepinfra)

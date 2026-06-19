@@ -33,6 +33,7 @@ Looking for chat channel docs (WhatsApp/Telegram/Discord/Slack/Mattermost (plugi
 - [BytePlus (International)](/en/concepts/model-providers#byteplus-international)
 - [Cerebras](/en/providers/cerebras)
 - [Chutes](/en/providers/chutes)
+- [Cohere](/en/providers/cohere)
 - [Cloudflare AI Gateway](/en/providers/cloudflare-ai-gateway)
 - [ComfyUI](/en/providers/comfy)
 - [DeepSeek](/en/providers/deepseek)
