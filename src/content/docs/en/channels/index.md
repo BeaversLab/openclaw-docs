@@ -52,6 +52,7 @@ Text is supported everywhere; media and reactions vary by channel.
 - [WhatsApp](/en/channels/whatsapp) - Most popular; uses Baileys and requires QR pairing.
 - [Yuanbao](/en/channels/yuanbao) - Tencent Yuanbao bot (external plugin).
 - [Zalo](/en/channels/zalo) - Zalo Bot API; Vietnam's popular messenger (bundled plugin).
+- [Zalo ClawBot](/en/channels/zaloclawbot) - Personal Zalo assistant via QR login; owner-bound (external plugin).
 - [Zalo Personal](/en/channels/zalouser) - Zalo personal account via QR login (bundled plugin).
 
 ## Notes
