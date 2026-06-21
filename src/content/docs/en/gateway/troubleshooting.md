@@ -160,7 +160,7 @@ it disabled for read-only shared skill roots.
 
 Related:
 
-- [Skills config](/en/tools/skills-config#symlinked-sibling-repos)
+- [Skills config](/en/tools/skills-config#symlinked-skill-roots)
 - [Configuration examples](/en/gateway/configuration-examples#symlinked-sibling-skill-repo)
 
 ## Anthropic 429 extra usage required for long context
