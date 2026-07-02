@@ -39,9 +39,10 @@ Text is supported everywhere; media and reactions vary by channel.
 - [Nextcloud Talk](/en/channels/nextcloud-talk) - Self-hosted chat via Nextcloud Talk (bundled plugin).
 - [Nostr](/en/channels/nostr) - Decentralized DMs via NIP-04 (bundled plugin).
 - [QQ Bot](/en/channels/qqbot) - QQ Bot API; private chat, group chat, and rich media (bundled plugin).
+- [Raft](/en/channels/raft) - Raft CLI wake bridge for human and agent collaboration (external plugin).
 - [Signal](/en/channels/signal) - signal-cli; privacy-focused.
 - [Slack](/en/channels/slack) - Bolt SDK; workspace apps.
-- [SMS](/en/channels/sms) - Twilio-backed SMS through the Gateway webhook (bundled plugin).
+- [SMS](/en/channels/sms) - Twilio-backed SMS through the Gateway webhook (official plugin).
 - [Synology Chat](/en/channels/synology-chat) - Synology NAS Chat via outgoing+incoming webhooks (bundled plugin).
 - [Telegram](/en/channels/telegram) - Bot API via grammY; supports groups.
 - [Tlon](/en/channels/tlon) - Urbit-based messenger (bundled plugin).

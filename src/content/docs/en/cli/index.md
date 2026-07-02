@@ -13,8 +13,8 @@ apply across the CLI.
 
 Use the setup commands by intent:
 
-- `openclaw setup` creates the baseline config and workspace without walking the full guided onboarding flow.
-- `openclaw onboard` is the full guided first-run path for gateway, model auth, workspace, channels, skills, and health.
+- `openclaw setup` and `openclaw onboard` run the full guided first-run path for gateway, model auth, workspace, channels, skills, and health.
+- `openclaw setup --baseline` creates the baseline config and workspace without walking the guided onboarding flow.
 - `openclaw configure` changes targeted parts of an existing setup, such as model auth, gateway, channels, plugins, or skills.
 - `openclaw channels add` configures channel accounts after the baseline exists; run it without flags for guided channel setup or with channel-specific flags for scripts.
 
@@ -24,7 +24,7 @@ Use the setup commands by intent:
 | -------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Setup and onboarding | [`crestodian`](/en/cli/crestodian) · [`setup`](/en/cli/setup) · [`onboard`](/en/cli/onboard) · [`configure`](/en/cli/configure) · [`config`](/en/cli/config) · [`completion`](/en/cli/completion) · [`doctor`](/en/cli/doctor) · [`dashboard`](/en/cli/dashboard) |
 | Reset and uninstall  | [`backup`](/en/cli/backup) · [`reset`](/en/cli/reset) · [`uninstall`](/en/cli/uninstall) · [`update`](/en/cli/update)                                                                                                                                 |
-| Messaging and agents | [`message`](/en/cli/message) · [`agent`](/en/cli/agent) · [`agents`](/en/cli/agents) · [`acp`](/en/cli/acp) · [`mcp`](/en/cli/mcp)                                                                                                                       |
+| Messaging and agents | [`message`](/en/cli/message) · [`agent`](/en/cli/agent) · [`agents`](/en/cli/agents) · [`attach`](/en/cli/attach) · [`acp`](/en/cli/acp) · [`mcp`](/en/cli/mcp)                                                                                             |
 | Health and sessions  | [`status`](/en/cli/status) · [`health`](/en/cli/health) · [`sessions`](/en/cli/sessions)                                                                                                                                                           |
 | Gateway and logs     | [`gateway`](/en/cli/gateway) · [`logs`](/en/cli/logs) · [`system`](/en/cli/system)                                                                                                                                                                 |
 | Models and inference | [`models`](/en/cli/models) · [`infer`](/en/cli/infer) · `capability` (alias for [`infer`](/en/cli/infer)) · [`memory`](/en/cli/memory) · [`commitments`](/en/cli/commitments) · [`wiki`](/en/cli/wiki)                                                      |
@@ -193,6 +193,7 @@ openclaw [--dev] [--profile <name>] <command>
     bind
     unbind
     set-identity
+  attach
   acp
   mcp
     serve
