@@ -5,7 +5,7 @@ read_when:
   - Legacy link to building-extensions
 ---
 
-This page has moved to [Building Plugins](/en/plugins/building-plugins).
+This page has moved. See [Building Plugins](/en/plugins/building-plugins).
 
 ## Related
 

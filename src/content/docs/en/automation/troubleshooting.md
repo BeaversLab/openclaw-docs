@@ -3,7 +3,7 @@ summary: "Redirect to /automation/cron-jobs"
 title: "Automation troubleshooting"
 ---
 
-This page moved to [Scheduled Tasks](/en/automation/cron-jobs#troubleshooting). See [Scheduled Tasks](/en/automation/cron-jobs#troubleshooting) for troubleshooting documentation.
+This page moved. Automation troubleshooting now lives at [Scheduled Tasks](/en/automation/cron-jobs#troubleshooting).
 
 ## Related
 

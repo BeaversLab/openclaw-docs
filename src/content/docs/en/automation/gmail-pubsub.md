@@ -3,9 +3,9 @@ summary: "Redirect to /automation/cron-jobs"
 title: "Gmail PubSub"
 ---
 
-This page moved to [Scheduled Tasks](/en/automation/cron-jobs#gmail-pubsub-integration). See [Scheduled Tasks](/en/automation/cron-jobs#gmail-pubsub-integration) for Gmail PubSub documentation.
+This page moved to [Gmail PubSub integration](/en/automation/cron-jobs#gmail-pubsub-integration) on the Scheduled Tasks page.
 
 ## Related
 
-- [Webhook](/en/automation/webhook)
-- [Automation troubleshooting](/en/automation/troubleshooting)
+- [Webhooks](/en/automation/cron-jobs#webhooks)
+- [Troubleshooting](/en/automation/cron-jobs#troubleshooting)

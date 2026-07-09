@@ -3,7 +3,7 @@ summary: "Redirect to /automation/cron-jobs"
 title: "Webhooks"
 ---
 
-This page moved to [Scheduled Tasks](/en/automation/cron-jobs#webhooks). See [Scheduled Tasks](/en/automation/cron-jobs#webhooks) for webhook documentation.
+This page moved. Webhook documentation now lives at [Scheduled Tasks](/en/automation/cron-jobs#webhooks).
 
 ## Related
 

@@ -9,9 +9,9 @@ title: "Install"
 
 ## System requirements
 
-- **Node 24** (recommended) or Node 22.19+ - the installer script handles this automatically
+- **Node 22.19+, 23.11+, or 24+** - Node 24 is the default target; the installer script handles this automatically.
 - **macOS, Linux, or Windows** - Windows users can start with the native Windows Hub app, the PowerShell CLI installer, or a WSL2 Gateway. See [Windows](/en/platforms/windows).
-- `pnpm` is only needed if you build from source
+- `pnpm` is only needed if you build from source.
 
 ## Recommended: installer script
 
@@ -168,38 +168,20 @@ If you want managed startup after install:
 
 ## Hosting and deployment
 
-Deploy OpenClaw on a cloud server or VPS:
+Deploy OpenClaw on a cloud server or VPS. See [Linux server](/en/vps) for the full
+provider picker (DigitalOcean, Hetzner, Hostinger, Fly.io, GCP, Azure, Railway,
+Northflank, Oracle Cloud, Raspberry Pi, and more), or deploy declaratively on
+[Render](/en/install/render).
 
 <CardGroup cols={3}>
   <Card title="VPS" href="/en/vps">
-    Any Linux VPS.
+    Pick a provider.
   </Card>
   <Card title="Docker VM" href="/en/install/docker-vm-runtime">
     Shared Docker steps.
   </Card>
   <Card title="Kubernetes" href="/en/install/kubernetes">
     K8s deployment.
-  </Card>
-  <Card title="Fly.io" href="/en/install/fly">
-    Deploy on Fly.io.
-  </Card>
-  <Card title="Hetzner" href="/en/install/hetzner">
-    Hetzner deployment.
-  </Card>
-  <Card title="GCP" href="/en/install/gcp">
-    Google Cloud deployment.
-  </Card>
-  <Card title="Azure" href="/en/install/azure">
-    Azure deployment.
-  </Card>
-  <Card title="Railway" href="/en/install/railway">
-    Railway deployment.
-  </Card>
-  <Card title="Render" href="/en/install/render">
-    Render deployment.
-  </Card>
-  <Card title="Northflank" href="/en/install/northflank">
-    Northflank deployment.
   </Card>
 </CardGroup>
 
@@ -219,18 +201,10 @@ Deploy OpenClaw on a cloud server or VPS:
 
 ## Troubleshooting: `openclaw` not found
 
-If the install succeeded but `openclaw` is not found in your terminal:
+Almost always a PATH issue: npm's global bin directory isn't on your shell's `PATH`. See [Node.js troubleshooting](/en/install/node#troubleshooting) for the full fix, including the Windows path.
 
 ```bash
 node -v           # Node installed?
 npm prefix -g     # Where are global packages?
 echo "$PATH"      # Is the global bin dir in PATH?
 ```
-
-If `$(npm prefix -g)/bin` is not in your `$PATH`, add it to your shell startup file (`~/.zshrc` or `~/.bashrc`):
-
-```bash
-export PATH="$(npm prefix -g)/bin:$PATH"
-```
-
-Then open a new terminal. See [Node setup](/en/install/node) for more details.

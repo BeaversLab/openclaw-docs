@@ -1,7 +1,7 @@
 (function () {
-  var TAG = "v2026.7.1-beta.2";
-  var UPDATED_AT = "2026-07-05";
-  var COMMIT = "a580a7fe3fbd1b3329c978d58ca2f70e8ca37aee";
+  var TAG = "v2026.7.1-beta.3";
+  var UPDATED_AT = "2026-07-09";
+  var COMMIT = "dcee1da876e683277c0092e8efdaf019e4dcc303";
   var SHORT_COMMIT = COMMIT.slice(0, 7);
   var META_ID = "openclaw-version-meta";
   var STYLE_ID = "openclaw-version-style";

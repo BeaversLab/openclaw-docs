@@ -6,8 +6,7 @@ read_when:
 title: "Model provider quickstart"
 ---
 
-OpenClaw can use many LLM providers. Pick one, authenticate, then set the default
-model as `provider/model`.
+Pick a provider, authenticate, then set the default model as `provider/model`.
 
 ## Quick start (two steps)
 
@@ -27,15 +26,16 @@ model as `provider/model`.
 - [Anthropic (API + Claude CLI)](/en/providers/anthropic)
 - [BytePlus (International)](/en/concepts/model-providers#byteplus-international)
 - [Chutes](/en/providers/chutes)
+- [Cloudflare AI Gateway](/en/providers/cloudflare-ai-gateway)
 - [Cohere](/en/providers/cohere)
 - [ComfyUI](/en/providers/comfy)
-- [Cloudflare AI Gateway](/en/providers/cloudflare-ai-gateway)
 - [DeepInfra](/en/providers/deepinfra)
 - [fal](/en/providers/fal)
 - [Fireworks](/en/providers/fireworks)
 - [MiniMax](/en/providers/minimax)
 - [Mistral](/en/providers/mistral)
 - [Moonshot AI (Kimi + Kimi Coding)](/en/providers/moonshot)
+- [NovitaAI](/en/providers/novita)
 - [OpenAI (API + Codex)](/en/providers/openai)
 - [OpenCode (Zen + Go)](/en/providers/opencode)
 - [OpenRouter](/en/providers/openrouter)
@@ -44,10 +44,13 @@ model as `provider/model`.
 - [Runway](/en/providers/runway)
 - [StepFun](/en/providers/stepfun)
 - [Synthetic](/en/providers/synthetic)
-- [Vercel AI Gateway](/en/providers/vercel-ai-gateway)
 - [Venice (Venice AI)](/en/providers/venice)
+- [Vercel AI Gateway](/en/providers/vercel-ai-gateway)
 - [xAI](/en/providers/xai)
 - [Z.AI (GLM)](/en/providers/zai)
+
+For the full provider catalog and advanced configuration, see
+[Provider directory](/en/providers/index) and [Model providers](/en/concepts/model-providers).
 
 ## Additional provider variants
 
@@ -55,11 +58,9 @@ model as `provider/model`.
 - `copilot-proxy` - local VS Code Copilot Proxy bridge; use `openclaw onboard --auth-choice copilot-proxy`
 - `google-gemini-cli` - unofficial Gemini CLI OAuth flow; requires a local `gemini` install (`brew install gemini-cli` or `npm install -g @google/gemini-cli`); default model `google-gemini-cli/gemini-3-flash-preview`; use `openclaw onboard --auth-choice google-gemini-cli` or `openclaw models auth login --provider google-gemini-cli --set-default`
 
-For the full provider catalog (xAI, Groq, Mistral, etc.) and advanced configuration,
-see [Model providers](/en/concepts/model-providers).
-
 ## Related
 
+- [Provider directory](/en/providers/index)
 - [Model selection](/en/concepts/model-providers)
 - [Model failover](/en/concepts/model-failover)
 - [Models CLI](/en/cli/models)
