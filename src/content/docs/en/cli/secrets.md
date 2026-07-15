@@ -155,3 +155,4 @@ If `audit --check` still reports plaintext findings, update the remaining report
 
 - [CLI reference](/en/cli)
 - [Secrets management](/en/gateway/secrets)
+- [Vault SecretRefs](/en/plugins/vault)

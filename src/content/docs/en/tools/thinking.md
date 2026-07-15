@@ -59,7 +59,7 @@ title: "Thinking levels"
 ## Application by agent
 
 - **Embedded OpenClaw**: the resolved level is passed to the in-process OpenClaw agent runtime.
-- **Claude CLI backend**: non-off levels are passed to Claude Code as `--effort` when using `claude-cli`; see [CLI backends](/en/gateway/cli-backends).
+- **Claude CLI backend**: concrete non-off levels are passed to Claude Code as `--effort` when using `claude-cli`; `adaptive` removes configured effort flags and delegates effective effort to Claude Code's environment, settings, and model defaults. See [CLI backends](/en/gateway/cli-backends).
 
 ## Fast mode (/fast)
 
@@ -129,6 +129,7 @@ Malformed local-model reasoning tags are handled conservatively. Closed `<think>
 
 - The web chat thinking selector mirrors the session's stored level from the inbound session store/config when the page loads.
 - Picking another level writes the session override immediately via `sessions.patch`; it does not wait for the next send and it is not a one-shot `thinkingOnce` override.
+- Sending while model, reasoning, or speed picker changes are still being applied waits for every pending picker patch; if a change fails, the message stays unsent for review.
 - The first option is always the clear-override choice. It shows `Inherited: <resolved level>`, including `Inherited: Off` when inherited thinking is disabled.
 - Explicit picker choices use their direct level labels while preserving provider labels when present (for example `Maximum` for a provider-labeled `max` option).
 - The picker uses `thinkingLevels` returned by the gateway session row/defaults, with `thinkingOptions` kept as a legacy label list. The browser UI does not keep its own provider regex list; plugins own model-specific level sets.
