@@ -310,6 +310,8 @@ Docker notes:
 - Optional image probe: `OPENCLAW_LIVE_CODEX_HARNESS_IMAGE_PROBE=1`
 - Optional MCP/tool probe: `OPENCLAW_LIVE_CODEX_HARNESS_MCP_PROBE=1`
 - Optional Guardian probe: `OPENCLAW_LIVE_CODEX_HARNESS_GUARDIAN_PROBE=1`
+- Optional loop-relay opt-out probe:
+  `OPENCLAW_LIVE_CODEX_HARNESS_DISABLE_LOOP_RELAY=1`
 - The smoke forces provider/model `agentRuntime.id: "codex"` so a broken Codex
   harness cannot pass by silently falling back to OpenClaw.
 - Auth: Codex app-server auth from the local Codex subscription login, or
@@ -435,7 +437,7 @@ Live is opt-in, so there is no fixed "CI model list." `OPENCLAW_LIVE_MODELS=mode
 | `google/gemini-3.1-pro-preview`               | Gemini API |
 | `google/gemini-3.5-flash`                     | Gemini API |
 | `cohere/command-a-plus-05-2026`               |            |
-| `moonshot/kimi-k2.7-code`                     |            |
+| `moonshot/kimi-k3`                            |            |
 | `anthropic/claude-opus-4-6`                   |            |
 | `deepseek/deepseek-v4-flash`                  |            |
 | `deepseek/deepseek-v4-pro`                    |            |

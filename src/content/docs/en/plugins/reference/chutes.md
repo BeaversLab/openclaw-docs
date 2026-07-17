@@ -16,8 +16,8 @@ Adds Chutes model provider support to OpenClaw.
 
 ## Surface
 
-providers: chutes
+providers: `chutes`
 
 ## Related docs
 
-- [chutes](/en/providers/chutes)
+- [Chutes](/en/providers/chutes)

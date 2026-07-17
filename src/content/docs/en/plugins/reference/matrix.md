@@ -16,8 +16,8 @@ OpenClaw Matrix channel plugin for rooms and direct messages.
 
 ## Surface
 
-channels: matrix
+channels: `matrix`
 
 ## Related docs
 
-- [matrix](/en/channels/matrix)
+- [Matrix](/en/channels/matrix)

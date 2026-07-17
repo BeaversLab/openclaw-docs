@@ -30,6 +30,7 @@ Looking for chat channel docs (WhatsApp/Telegram/Discord/Slack/Mattermost (plugi
 - [Anthropic (API + Claude CLI)](/en/providers/anthropic)
 - [Arcee AI (Trinity models)](/en/providers/arcee)
 - [Azure Speech](/en/providers/azure-speech)
+- [Baseten (Inkling + Model APIs)](/en/providers/baseten)
 - [BytePlus (International)](/en/concepts/model-providers#byteplus-international)
 - [Cerebras](/en/providers/cerebras)
 - [Chutes](/en/providers/chutes)

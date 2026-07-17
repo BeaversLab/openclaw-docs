@@ -90,8 +90,7 @@ Builds the QA site, starts the Docker-backed gateway + QA Lab stack, and prints 
 
 ## Related
 
-- [QA overview](/en/concepts/qa-e2e-automation) - overall stack, transport adapters, scenario authoring
-- [Matrix QA](/en/concepts/qa-matrix) - example live-transport runner that drives a real channel
+- [QA overview](/en/concepts/qa-e2e-automation) - overall stack, transport adapters, Matrix profiles, and scenario authoring
 - [Pairing](/en/channels/pairing)
 - [Groups](/en/channels/groups)
 - [Channels overview](/en/channels)
