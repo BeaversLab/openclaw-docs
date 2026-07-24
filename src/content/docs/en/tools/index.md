@@ -30,6 +30,7 @@ only when the agent should see fewer tools or needs explicit host access.
 | Add a new integration or runtime surface     | [Plugins](#extend-capabilities)                | [Plugins](/en/tools/plugin) and [Build plugins](/en/plugins/building-plugins)                                                                                |
 | Run work later or in the background          | [Automation](/en/automation)                      | [Automation overview](/en/automation)                                                                                                                     |
 | Coordinate multiple agents or harnesses      | [Sub-agents](/en/tools/subagents)                 | [ACP agents](/en/tools/acp-agents) and [Agent send](/en/tools/agent-send)                                                                                    |
+| Orchestrate concurrent agents from code      | [Swarm](/en/tools/swarm)                          | [Code Mode](/en/tools/code-mode) and [Sub-agents](/en/tools/subagents)                                                                                       |
 | Search a large OpenClaw tool catalog         | [Tool Search](/en/tools/tool-search)              | [Tool Search](/en/tools/tool-search)                                                                                                                      |
 | Combine several tools in one compact program | [Code Mode](/en/tools/code-mode)                  | [Code Mode](/en/tools/code-mode)                                                                                                                          |
 
@@ -81,19 +82,20 @@ The table lists representative tools so you can recognize the surface. It is
 not the full policy reference. For exact groups, defaults, and allow/deny
 semantics, use [Tools and custom providers](/en/gateway/config-tools).
 
-| Category                | Use when the agent needs to...                                                          | Representative tools                                                                                 | Read next                                                                                                              |
-| ----------------------- | --------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
-| Runtime                 | Run commands, manage processes, or use provider-backed Python analysis                  | `exec`, `process`, `terminal`, `code_execution`                                                      | [Exec](/en/tools/exec), [Control UI terminal](/en/web/control-ui#operator-terminal), [Code execution](/en/tools/code-execution) |
-| Files                   | Read and change workspace files                                                         | `read`, `write`, `edit`, `apply_patch`                                                               | [Apply patch](/en/tools/apply-patch)                                                                                      |
-| Human input             | Pause for a structured decision owned by the user                                       | `ask_user`                                                                                           | [Ask user](/en/tools/ask-user)                                                                                            |
-| Web                     | Search the web, search X posts, or fetch readable page content                          | `web_search`, `x_search`, `web_fetch`                                                                | [Web tools](/en/tools/web), [Web fetch](/en/tools/web-fetch)                                                                 |
-| Browser                 | Operate a browser session                                                               | `browser`                                                                                            | [Browser](/en/tools/browser)                                                                                              |
-| Messaging and channels  | Send replies or channel actions                                                         | `message`                                                                                            | [Agent send](/en/tools/agent-send)                                                                                        |
-| Sessions and agents     | Inspect sessions, delegate work, steer another run, or report status                    | `sessions_*`, `subagents`, `agents_list`, `session_status`, `get_goal`, `create_goal`, `update_goal` | [Goal](/en/tools/goal), [Sub-agents](/en/tools/subagents), [Session tool](/en/concepts/session-tool)                            |
-| Automation              | Schedule work or respond to background events                                           | `cron`, `heartbeat_respond`                                                                          | [Automation](/en/automation)                                                                                              |
-| Gateway and nodes       | Inspect Gateway state or paired target devices                                          | `gateway`, `nodes`                                                                                   | [Gateway configuration](/en/gateway/configuration), [Nodes](/en/nodes)                                                       |
-| Media                   | Analyze, generate, or speak media                                                       | `image`, `image_generate`, `music_generate`, `video_generate`, `tts`                                 | [Media overview](/en/tools/media-overview)                                                                                |
-| Large OpenClaw catalogs | Search, call, and combine many eligible tools without sending every schema to the model | `exec`, `wait`, `tool_search_code`, `tool_search`, `tool_describe`                                   | [Code Mode](/en/tools/code-mode), [Tool Search](/en/tools/tool-search)                                                       |
+| Category                | Use when the agent needs to...                                                               | Representative tools                                                                                                | Read next                                                                                                              |
+| ----------------------- | -------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| Runtime                 | Run commands, manage processes, or use provider-backed Python analysis                       | `exec`, `process`, `terminal`, `code_execution`                                                                     | [Exec](/en/tools/exec), [Control UI terminal](/en/web/control-ui#operator-terminal), [Code execution](/en/tools/code-execution) |
+| Files                   | Read and change workspace files                                                              | `read`, `write`, `edit`, `apply_patch`                                                                              | [Apply patch](/en/tools/apply-patch)                                                                                      |
+| Human input             | Pause for a structured decision owned by the user                                            | `ask_user`                                                                                                          | [Ask user](/en/tools/ask-user)                                                                                            |
+| Web                     | Search the web, search X posts, or fetch readable page content                               | `web_search`, `x_search`, `web_fetch`                                                                               | [Web tools](/en/tools/web), [Web fetch](/en/tools/web-fetch)                                                                 |
+| Browser                 | Operate a browser session                                                                    | `browser`                                                                                                           | [Browser](/en/tools/browser)                                                                                              |
+| Operator UI             | Arrange connected Control UI panes, panels, and navigation                                   | `screen`                                                                                                            | [Screen](/en/tools/screen)                                                                                                |
+| Messaging and channels  | Send replies or channel actions                                                              | `message`                                                                                                           | [Agent send](/en/tools/agent-send)                                                                                        |
+| Sessions and agents     | Inspect sessions, delegate work, orchestrate collectors, steer another run, or report status | `sessions_*`, `agents_wait`, `subagents`, `agents_list`, `session_status`, `get_goal`, `create_goal`, `update_goal` | [Goal](/en/tools/goal), [Swarm](/en/tools/swarm), [Sub-agents](/en/tools/subagents), [Session tool](/en/concepts/session-tool)     |
+| Automation              | Schedule work or respond to background events                                                | `cron`, `heartbeat_respond`                                                                                         | [Automation](/en/automation)                                                                                              |
+| Gateway and nodes       | Inspect Gateway state or paired target devices                                               | `gateway`, `nodes`                                                                                                  | [Gateway configuration](/en/gateway/configuration), [Nodes](/en/nodes)                                                       |
+| Media                   | Analyze, generate, or speak media                                                            | `image`, `image_generate`, `music_generate`, `video_generate`, `tts`                                                | [Media overview](/en/tools/media-overview)                                                                                |
+| Large OpenClaw catalogs | Search, call, and combine many eligible tools without sending every schema to the model      | `exec`, `wait`, `tool_search_code`, `tool_search`, `tool_describe`                                                  | [Code Mode](/en/tools/code-mode), [Tool Search](/en/tools/tool-search)                                                       |
 
 <Note>
 Code Mode and Tool Search are experimental OpenClaw agent surfaces. Codex
@@ -112,6 +114,7 @@ Common plugin-provided tools include:
 
 - [Diffs](/en/tools/diffs) for rendering file and markdown diffs
 - [Show widget](/en/tools/show-widget) for self-contained inline SVG and HTML in supported chat clients
+- [Screen](/en/tools/screen) for arranging a connected Control UI
 - [LLM Task](/en/tools/llm-task) for JSON-only workflow steps
 - [Lobster](/en/tools/lobster) for typed workflows with resumable approvals
 - [Tokenjuice](/en/tools/tokenjuice) for compacting noisy `exec` and `bash` tool
@@ -176,7 +179,7 @@ the current turn:
 
 ## Related
 
-- [Automation](/en/automation) for cron, tasks, heartbeat, commitments, hooks,
+- [Automation](/en/automation) for cron, tasks, heartbeat, hooks,
   standing orders, and Task Flow
 - [Agents](/en/concepts/agent) for the agent model, sessions, memory, and
   multi-agent coordination
@@ -191,3 +194,4 @@ the current turn:
   discovery
 - [Code Mode](/en/tools/code-mode) for compact JavaScript or TypeScript workflows
   over a hidden OpenClaw tool catalog
+- [Swarm](/en/tools/swarm) for structured fan-out and collection from Code Mode

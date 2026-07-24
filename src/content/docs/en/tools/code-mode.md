@@ -166,6 +166,14 @@ With code mode active, the logged model-facing tool names should be `exec` and
 `wait`. For the full redacted provider payload, add
 `OPENCLAW_DEBUG_MODEL_PAYLOAD=full-redacted` for a short debugging session.
 
+## Use Swarm for agent fan-out
+
+[Swarm](/en/tools/swarm) adds `agents.run()`, `phase()`, and `log()` guest globals
+for orchestrating concurrent sub-agents from Code Mode scripts. Enable both
+`tools.codeMode` and `tools.swarm`, then use normal JavaScript control flow for
+fan-out, decision gates, and structured collection. Swarm is a separate opt-in
+gate; enabling Code Mode alone does not expose the `agents.*` API.
+
 ## Technical tour
 
 The rest of this page covers the runtime contract and implementation details,
@@ -1153,6 +1161,7 @@ Docs-only changes to this page should still run `pnpm check:docs`.
 
 ## Related
 
+- [Swarm](/en/tools/swarm) for fan-out agent orchestration from Code Mode scripts
 - [Tool Search](/en/tools/tool-search)
 - [Agent runtimes](/en/concepts/agent-runtimes)
 - [Exec tool](/en/tools/exec)

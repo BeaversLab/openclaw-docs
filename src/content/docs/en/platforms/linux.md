@@ -19,7 +19,8 @@ The OpenClaw Linux companion is a Tauri desktop app for a local Gateway. It:
 - installs the OpenClaw CLI and managed Node runtime when they are missing; release builds install the stable channel automatically, while development builds ask for the channel first
 - attaches to a healthy Gateway before attempting service changes
 - delegates install, start, stop, and restart operations to the CLI-managed systemd user service
-- discovers nearby Bonjour Gateways and opens their Control UI from the resolved service endpoint
+- discovers nearby Bonjour Gateways and opens each Control UI in a route-scoped window, so several
+  Gateway dashboards can stay connected and be used simultaneously
 - opens the Gateway-served Control UI with its resolved authentication URL
 - opens the Control UI in onboarding mode after its first-run install, which
   offers to import detected Claude Code, Codex, or Hermes memories into the
@@ -62,7 +63,12 @@ Chat's WebView receives neither credentials nor the WebSocket.
 
 When the native connection is unavailable, Quick Chat shows **Gateway
 unreachable — retrying** and disables send until reconnection. A remote device
-that needs approval shows **Pair this device from the dashboard** instead.
+that has reached the pairing phase shows **Approve this device in the dashboard
+(Nodes)** instead, with a short device ID when the Gateway provides one. A
+Gateway that requires a missing shared credential shows **Gateway requires a
+credential — open the dashboard on the gateway host**; no pairing request is
+waiting for approval in that state. Server-provided remediation guidance
+replaces these fallback notices when it is more specific.
 For TLS Gateways, the CLI hands the app the Gateway certificate's SHA-256
 fingerprint; the native client pins that certificate and reports **Gateway TLS
 trust failed — check the certificate fingerprint** separately from downtime.
@@ -70,12 +76,16 @@ Gateways whose shared secret is configured through a SecretRef omit it from the
 CLI handoff. Existing paired installs keep working through their stored device
 token, but a fresh install cannot create a pending pairing request under shared-secret
 authentication without that bootstrap credential.
+Setup-code and `bootstrapToken` redemption need dedicated product UI and remain
+a follow-up; Quick Chat does not attempt either flow.
 
 On X11, use the gear in Quick Chat to record or reset a custom shortcut. The
 **Quick Chat shortcut** tray toggle enables or disables it without disabling the
 plain **Quick Chat** tray item. Global shortcuts are not available on Wayland, so
 the shortcut settings are hidden and the tray item remains the entry point.
-Replies remain in the normal session; open the dashboard to read them.
+After an accepted send, Quick Chat stays open and streams the selected agent's
+plain-text reply below the composer. Press `Esc` to dismiss the bar and its reply;
+`Ctrl+Enter` still opens the dashboard.
 
 ### Canvas
 
@@ -140,7 +150,7 @@ A node can be connected and device-paired while its effective `caps` and `comman
 
 Camera devices must be readable by the service user, commonly through the `video` group. Camera clips use the default PulseAudio or PipeWire source when `includeAudio` is true; microphone audio exists only as that clip track, not as a standalone command. Location requires the node-service user to be permitted by the host's GeoClue policy.
 
-`camera.snap` and `camera.clip` also require explicit Gateway arming through `gateway.nodes.allowCommands`. See [Camera capture](/en/nodes/camera) and [Location command](/en/nodes/location-command) for payloads, limits, and errors.
+`camera.snap` and `camera.clip` also require explicit Gateway arming through `gateway.nodes.commands.allow`. See [Camera capture](/en/nodes/camera) and [Location command](/en/nodes/location-command) for payloads, limits, and errors.
 
 ## Install
 
@@ -193,6 +203,8 @@ KillMode=control-group
 [Install]
 WantedBy=default.target
 ```
+
+Hand-written units do not inherit the adaptive heap sizing that `openclaw gateway install` writes for managed Gateway services. Prefer the managed installer, or set an explicit heap limit in the custom supervisor after accounting for native-memory headroom.
 
 Enable it:
 

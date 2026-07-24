@@ -23,23 +23,26 @@ private conversations with one per-agent setting:
 ```json5
 {
   agents: {
-    list: [
-      {
-        id: "personal",
-        memorySearch: {
-          rememberAcrossConversations: true,
+    entries: {
+      personal: {
+        memory: {
+          search: {
+            rememberAcrossConversations: true,
+          },
         },
       },
-    ],
+    },
   },
 }
 ```
 
-The setting is off by default. When enabled, OpenClaw indexes that agent's
-session transcripts and runs an Active Memory retrieval pass before eligible
-private replies. The pass can read relevant transcript excerpts from the same
-agent's other private conversations. It excludes the conversation already
-being answered.
+The setting defaults on for personal installs: global `session.dmScope` must be
+unset or `"main"`, and no binding may override `session.dmScope`. Any configured
+DM isolation defaults it off. An explicit `true` or `false` always wins. When
+enabled, OpenClaw indexes that agent's session transcripts and runs an Active
+Memory retrieval pass before eligible private replies. The pass can read
+relevant transcript excerpts from the same agent's other private conversations.
+It excludes the conversation already being answered.
 
 The privacy boundary is fixed:
 
@@ -156,8 +159,8 @@ personalization would be surprising.
 Active Memory has two activation paths:
 
 1. **Remember across conversations** automatically targets agents whose
-   `memorySearch.rememberAcrossConversations` setting is enabled, but only for
-   private direct or persistent explicit UI conversations.
+   effective `memory.search.rememberAcrossConversations` setting is enabled, but
+   only for private direct or persistent explicit UI conversations.
 2. **Advanced Active Memory** targets agent IDs listed in
    `plugins.entries.active-memory.config.agents` and applies the plugin's chat
    type and chat ID controls.
@@ -225,7 +228,7 @@ config:
 
 This only affects the current session; it does not change
 `plugins.entries.active-memory.config.enabled`, an agent's
-`memorySearch.rememberAcrossConversations` setting, or other global
+`memory.search.rememberAcrossConversations` setting, or other global
 configuration.
 
 To pause/resume for all sessions instead, use the global form (requires
@@ -492,7 +495,7 @@ Memory automatically uses `memory_recall`; no explicit `toolsAllow` is needed:
 ```
 
 This is the advanced Active Memory path for LanceDB's own stored memories.
-`memorySearch.rememberAcrossConversations` does not expose private session
+`memory.search.rememberAcrossConversations` does not expose private session
 transcripts through `memory_recall`. Use LanceDB's auto-recall or the advanced
 configuration above when LanceDB is the active memory provider.
 
@@ -727,8 +730,8 @@ while warm-up finishes.
 If active memory is not showing up where you expect:
 
 1. Confirm the plugin is enabled under `plugins.entries.active-memory.enabled`.
-2. For Remember across conversations, confirm the agent's
-   `memorySearch.rememberAcrossConversations` setting is `true`, run
+2. For Remember across conversations, confirm the agent's effective
+   `memory.search.rememberAcrossConversations` setting is enabled, run
    `openclaw doctor` to verify the current memory provider supports protected
    transcript recall, and confirm `config.toolsAllow` includes `memory_search`
    when explicitly configured. For advanced Active Memory, confirm the agent ID
@@ -755,14 +758,14 @@ path.
 
 <AccordionGroup>
   <Accordion title="Embedding provider switched or stopped working">
-    If `memorySearch.provider` is unset, OpenClaw uses OpenAI embeddings. Set
-    `memorySearch.provider` explicitly for Bedrock, DeepInfra, Gemini, GitHub
+    If `memory.search.provider` is unset, OpenClaw uses OpenAI embeddings. Set
+    `memory.search.provider` explicitly for Bedrock, DeepInfra, Gemini, GitHub
     Copilot, LM Studio, local, Mistral, Ollama, Voyage, or OpenAI-compatible
     embeddings. If the configured provider cannot run, `memory_search` may
     degrade to lexical-only retrieval; runtime failures after a provider is
     already selected do not fall back automatically.
 
-    Set an optional `memorySearch.fallback` only when you want a deliberate
+    Set an optional `memory.search.fallback` only when you want a deliberate
     single fallback. See [Memory Search](/en/concepts/memory-search) for the full
     list of providers and examples.
 
