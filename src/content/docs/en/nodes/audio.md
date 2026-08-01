@@ -5,6 +5,10 @@ read_when:
 title: "Audio and voice notes"
 ---
 
+This page covers inbound transcription and voice-note handling. For inline
+audio and video players in OpenClaw chat clients, see
+[Media playback](/en/nodes/media-playback).
+
 ## What it does
 
 When audio understanding is enabled (or auto-detected), OpenClaw:
@@ -198,6 +202,7 @@ On channels that support audio preflight, OpenClaw transcribes audio **before** 
 
 ## Related
 
+- [Media playback](/en/nodes/media-playback)
 - [Media understanding](/en/nodes/media-understanding)
 - [Talk mode](/en/nodes/talk)
 - [Voice wake](/en/nodes/voicewake)
