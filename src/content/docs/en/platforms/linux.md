@@ -279,6 +279,7 @@ resource controls (systemd `MemoryMax=`, container memory limits).
 
 - [Install overview](/en/install)
 - [Linux server](/en/vps)
+- [ChromeOS (Crostini)](/en/platforms/chromeos)
 - [Raspberry Pi](/en/platforms/raspberry-pi)
 - [Gateway runbook](/en/gateway)
 - [Gateway configuration](/en/gateway/configuration)

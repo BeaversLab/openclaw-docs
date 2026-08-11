@@ -16,6 +16,7 @@ tuning that applies everywhere.
 
 <CardGroup cols={2}>
   <Card title="Azure" href="/en/install/azure">Linux VM</Card>
+  <Card title="Daytona" href="/en/install/daytona">Cloud sandbox with preview URLs</Card>
   <Card title="DigitalOcean" href="/en/install/digitalocean">Simple paid VPS</Card>
   <Card title="exe.dev" href="/en/install/exe-dev">VM with HTTPS proxy</Card>
   <Card title="Fly.io" href="/en/install/fly">Fly Machines</Card>

@@ -87,7 +87,7 @@ Looking for chat channel docs (WhatsApp/Telegram/Discord/Slack/Mattermost (plugi
 
 ## Shared overview pages
 
-- [Additional provider variants](/en/providers/models#additional-provider-variants) - Anthropic Vertex, Copilot Proxy, and Gemini CLI OAuth
+- [Additional provider variants](/en/providers/models#additional-provider-variants) - Anthropic Vertex, Copilot Proxy, and the optional Gemini CLI runtime
 - [Image Generation](/en/tools/image-generation) - Shared `image_generate` tool, provider selection, and failover
 - [Music Generation](/en/tools/music-generation) - Shared `music_generate` tool, provider selection, and failover
 - [Video Generation](/en/tools/video-generation) - Shared `video_generate` tool, provider selection, and failover

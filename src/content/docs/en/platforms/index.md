@@ -18,21 +18,23 @@ Linux-compatible Gateway runtime.
 
 ## Choose your OS
 
-- macOS: [macOS](/en/platforms/macos)
-- iOS: [iOS](/en/platforms/ios)
 - Android: [Android](/en/platforms/android)
-- Windows: [Windows](/en/platforms/windows)
+- ChromeOS: [ChromeOS (Crostini)](/en/platforms/chromeos)
+- iOS: [iOS](/en/platforms/ios)
 - Linux: [Linux](/en/platforms/linux)
+- macOS: [macOS](/en/platforms/macos)
+- Windows: [Windows](/en/platforms/windows)
 
 ## VPS and hosting
 
 - VPS hub: [VPS hosting](/en/vps)
-- Fly.io: [Fly.io](/en/install/fly)
-- Hetzner (Docker): [Hetzner](/en/install/hetzner)
-- GCP (Compute Engine): [GCP](/en/install/gcp)
 - Azure (Linux VM): [Azure](/en/install/azure)
-- exe.dev (VM + HTTPS proxy): [exe.dev](/en/install/exe-dev)
+- Daytona (cloud sandbox): [Daytona](/en/install/daytona)
 - EasyRunner (Podman + Caddy): [EasyRunner](/en/platforms/easyrunner)
+- exe.dev (VM + HTTPS proxy): [exe.dev](/en/install/exe-dev)
+- Fly.io: [Fly.io](/en/install/fly)
+- GCP (Compute Engine): [GCP](/en/install/gcp)
+- Hetzner (Docker): [Hetzner](/en/install/hetzner)
 
 ## Common links
 
