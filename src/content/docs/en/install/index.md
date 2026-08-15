@@ -151,20 +151,23 @@ curl -fsSL --proto '=https' --tlsv1.2 https://openclaw.ai/install.sh | bash -s -
 ### Containers and package managers
 
 <CardGroup cols={2}>
-  <Card title="Docker" href="/en/install/docker" icon="container">
-    Containerized or headless deployments.
-  </Card>
-  <Card title="Podman" href="/en/install/podman" icon="container">
-    Rootless container alternative to Docker.
-  </Card>
-  <Card title="Nix" href="/en/install/nix" icon="snowflake">
-    Declarative install via Nix flake.
-  </Card>
   <Card title="Ansible" href="/en/install/ansible" icon="server">
     Automated fleet provisioning.
   </Card>
   <Card title="Bun" href="/en/install/bun" icon="zap">
     Optional dependency installer and package-script runner.
+  </Card>
+  <Card title="ClawDock" href="/en/install/clawdock" icon="container">
+    Community Docker Compose setup and shell helpers.
+  </Card>
+  <Card title="Docker" href="/en/install/docker" icon="container">
+    Containerized or headless deployments.
+  </Card>
+  <Card title="Nix" href="/en/install/nix" icon="snowflake">
+    Declarative install via Nix flake.
+  </Card>
+  <Card title="Podman" href="/en/install/podman" icon="container">
+    Rootless container alternative to Docker.
   </Card>
 </CardGroup>
 
@@ -186,12 +189,13 @@ If you want managed startup after install:
 
 Deploy OpenClaw on a cloud server or VPS. See [Linux server](/en/vps) for the full
 provider picker (DigitalOcean, Hetzner, Hostinger, Fly.io, GCP, Azure, Railway,
-Northflank, Oracle Cloud, Raspberry Pi, and more), or deploy declaratively on
-[Render](/en/install/render).
+Northflank, Oracle Cloud, Raspberry Pi, and more), deploy declaratively on
+[Render](/en/install/render), or try the experimental [Cloudflare Containers](/en/install/cloudflare)
+template.
 
 <CardGroup cols={3}>
-  <Card title="VPS" href="/en/vps">
-    Pick a provider.
+  <Card title="Cloudflare" href="/en/install/cloudflare">
+    Experimental Worker + Container deployment.
   </Card>
   <Card title="Docker VM" href="/en/install/docker-vm-runtime">
     Shared Docker steps.
@@ -199,11 +203,23 @@ Northflank, Oracle Cloud, Raspberry Pi, and more), or deploy declaratively on
   <Card title="Kubernetes" href="/en/install/kubernetes">
     K8s deployment.
   </Card>
+  <Card title="macOS VM" href="/en/install/macos-vm">
+    Isolated local or hosted macOS deployment.
+  </Card>
+  <Card title="Upstash Box" href="/en/install/upstash">
+    Managed Linux host with SSH-tunneled access.
+  </Card>
+  <Card title="VPS" href="/en/vps">
+    Pick a provider.
+  </Card>
 </CardGroup>
 
-## Update, migrate, or uninstall
+## Back up, update, migrate, or uninstall
 
 <CardGroup cols={3}>
+  <Card title="Backups" href="/en/install/backups" icon="archive">
+    Create, verify, and restore state archives.
+  </Card>
   <Card title="Updating" href="/en/install/updating" icon="refresh-cw">
     Keep OpenClaw up to date.
   </Card>

@@ -214,7 +214,7 @@ Related:
 
 - Configuration keys and defaults: [Gateway configuration](/en/gateway/config-agents#agentsdefaultssandbox)
 - Debugging why a tool is blocked: [Sandbox vs Tool Policy vs Elevated](/en/gateway/sandbox-vs-tool-policy-vs-elevated)
-- Bind mounts details: [Sandboxing](/en/gateway/sandboxing#custom-bind-mounts)
+- Bind mounts details: [Sandboxing](/en/gateway/sandboxing#multiple-folders-for-one-agent)
 
 ## Display labels
 

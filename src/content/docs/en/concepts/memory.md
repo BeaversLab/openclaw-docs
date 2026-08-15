@@ -144,17 +144,6 @@ Use [scheduled tasks](/en/automation/cron-jobs) for exact reminders, timed check
 and recurring work. Memory can still summarize the durable context around that
 work.
 
-## Retired inferred commitments
-
-Some future follow-ups are not durable facts. If a future event should trigger
-an action, use a [standing intent](/en/concepts/standing-intents). If a clock time
-should trigger it, use a [scheduled task](/en/automation/cron-jobs).
-
-The inferred commitments experiment is retired. OpenClaw no longer extracts or
-delivers those follow-ups. Use [scheduled tasks](/en/automation/cron-jobs) for
-future actions; the legacy `openclaw commitments` command remains available to
-inspect or dismiss existing stored rows.
-
 ## Memory tools
 
 The agent has three tools for working with memory:
@@ -184,16 +173,12 @@ a generic OpenAI-compatible endpoint.
 See [Memory search](/en/concepts/memory-search) for how search works, tuning
 options, and provider setup.
 
-## Memory backends
+## Memory engines
 
 <CardGroup cols={3}>
 <Card title="Builtin (default)" icon="database" href="/en/concepts/memory-builtin">
 SQLite-based. Works out of the box with keyword search, vector similarity, and
 hybrid search. No extra dependencies.
-</Card>
-<Card title="QMD" icon="search" href="/en/concepts/memory-qmd">
-Local-first sidecar with reranking, query expansion, and the ability to index
-directories outside the workspace.
 </Card>
 <Card title="Honcho" icon="brain" href="/en/concepts/memory-honcho">
 AI-native cross-session memory with user modeling, semantic search, and
@@ -330,7 +315,6 @@ openclaw memory index --force   # Rebuild the index
 
 - [Memory search](/en/concepts/memory-search): search pipeline, providers, and tuning.
 - [Builtin memory engine](/en/concepts/memory-builtin): default SQLite backend.
-- [QMD memory engine](/en/concepts/memory-qmd): advanced local-first sidecar.
 - [Honcho memory](/en/concepts/memory-honcho): AI-native cross-session memory.
 - [Memory LanceDB](/en/plugins/memory-lancedb): LanceDB-backed plugin with OpenAI-compatible embeddings.
 - [Memory Wiki](/en/plugins/memory-wiki): compiled knowledge vault and wiki-native tools.
