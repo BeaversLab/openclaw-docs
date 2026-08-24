@@ -146,7 +146,7 @@ Use these hubs to discover every page, including deep dives and reference docs t
 - [macOS voice wake](/en/platforms/mac/voicewake)
 - [macOS voice overlay](/en/platforms/mac/voice-overlay)
 - [macOS WebChat](/en/platforms/mac/webchat)
-- [macOS Canvas](/en/platforms/mac/canvas)
+- [macOS widget panel](/en/platforms/mac/canvas)
 - [macOS gateway (launchd)](/en/platforms/mac/bundled-gateway)
 - [macOS health](/en/platforms/mac/health)
 - [macOS icon](/en/platforms/mac/icon)

@@ -199,11 +199,13 @@ then run policy again before continuing. Declined and non-interactive commands
 on the direct CLI may use `--acknowledge-install-policy-warning` as explicit
 approval after review for every warning in that command invocation;
 every approved warning is re-evaluated before continuing.
-Gateway-backed and automatic installs remain blocked on warnings because they
-have no operator-confirmation flow. Use an equivalent direct plugin or skill
-command to review and approve the warning when one exists. Otherwise, change
-`security.installPolicy` to return `allow` for the reviewed request, then retry
-the managed flow. `--force` does not approve policy warnings. A `block`,
+The Control UI can review and approve warnings for its plugin install request;
+that approval covers every warning in the invocation, and each warning is
+still re-evaluated. Other Gateway-backed and automatic installs remain blocked
+when they have no operator-confirmation flow. Use an equivalent direct plugin
+or skill command to review and approve the warning when one exists. Otherwise,
+change `security.installPolicy` to return `allow` for the reviewed request,
+then retry the managed flow. `--force` does not approve policy warnings. A `block`,
 non-zero exit, timeout, invalid JSON, non-object response, missing or invalid
 protocol version or decision, or missing or empty `warn`/`block` reason always
 fails closed.
@@ -480,9 +482,13 @@ workspace/skills      (highest)
 workspace/.agents/skills
 ~/.agents/skills
 ~/.openclaw/skills
-bundled skills
+bundled + Custodian skills
 skills.load.extraDirs (lowest)
 ```
+
+Custodian skills share bundled precedence but load only for the agent selected
+by `agents.defaults.systemAgent.agentId` (or the existing sole-agent fallback).
+See [Custodian skills](/en/tools/custodian-skills).
 
 Changes to skills and config take effect on the next new session when the
 watcher is enabled, or on the next agent turn when the watcher detects a
