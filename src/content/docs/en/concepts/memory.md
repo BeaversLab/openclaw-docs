@@ -319,6 +319,7 @@ openclaw memory index --force   # Rebuild the index
 - [Memory LanceDB](/en/plugins/memory-lancedb): LanceDB-backed plugin with OpenAI-compatible embeddings.
 - [Memory Wiki](/en/plugins/memory-wiki): compiled knowledge vault and wiki-native tools.
 - [Dreaming](/en/concepts/dreaming): background promotion from short-term recall to long-term memory.
+- [Memory provenance and deletion](/en/concepts/memory-provenance): session lineage, admission policy, and `memory forget`.
 - [Memory configuration reference](/en/reference/memory-config): all config knobs.
 - [Compaction](/en/concepts/compaction): how compaction interacts with memory.
 - [Active memory](/en/concepts/active-memory): sub-agent memory for interactive chat sessions.

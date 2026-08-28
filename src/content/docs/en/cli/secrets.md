@@ -45,6 +45,8 @@ Related: [Secrets Management](/en/gateway/secrets) · [1Password plugin](/en/plu
 
 `openclaw secrets store` writes directly to the local shared state database. The store is Gateway-wide and team-scoped; this release accepts only `--scope team`. `--scope me` is rejected because identity scope is not supported yet.
 
+Entries also arrive from **Settings -> Secrets** in the Control UI, and from the agent's [`secrets` tool](/en/tools/secrets), which asks you to type a credential into a masked prompt and stores it without the value reaching the model.
+
 ```bash
 openclaw secrets store list
 openclaw secrets store set <NAME>

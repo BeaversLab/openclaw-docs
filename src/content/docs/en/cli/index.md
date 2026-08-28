@@ -24,7 +24,7 @@ Setup commands by intent:
 | Setup and onboarding         | [`openclaw`](/en/cli/openclaw) · [`setup`](/en/cli/setup) · [`onboard`](/en/cli/onboard) · [`configure`](/en/cli/configure) · [`config`](/en/cli/config) · [`completion`](/en/cli/completion) · [`doctor`](/en/cli/doctor) · [`dashboard`](/en/cli/dashboard) |
 | Reset, backup, and migration | [`backup`](/en/cli/backup) · [`migrate`](/en/cli/migrate) · [`reset`](/en/cli/reset) · [`uninstall`](/en/cli/uninstall) · [`update`](/en/cli/update)                                                                                                 |
 | Messaging and agents         | [`message`](/en/cli/message) · [`agent`](/en/cli/agent) · [`agents`](/en/cli/agents) · [`attach`](/en/cli/attach) · [`acp`](/en/cli/acp) · [`mcp`](/en/cli/mcp)                                                                                         |
-| Health and sessions          | [`status`](/en/cli/status) · [`health`](/en/cli/health) · [`sessions`](/en/cli/sessions) · [`resume`](/en/cli/resume) · [`audit`](/en/cli/audit)                                                                                                     |
+| Health and sessions          | [`status`](/en/cli/status) · [`health`](/en/cli/health) · [`triage`](/en/cli/triage) · [`sessions`](/en/cli/sessions) · [`resume`](/en/cli/resume) · [`audit`](/en/cli/audit)                                                                           |
 | Gateway and logs             | [`gateway`](/en/cli/gateway) · [`logs`](/en/cli/logs) · [`system`](/en/cli/system)                                                                                                                                                             |
 | Models and inference         | [`models`](/en/cli/models) · [`promos`](/en/cli/promos) · [`infer`](/en/cli/infer) · `capability` (alias for [`infer`](/en/cli/infer)) · [`memory`](/en/cli/memory) · [`wiki`](/en/cli/wiki)                                                            |
 | Network and nodes            | [`directory`](/en/cli/directory) · [`nodes`](/en/cli/nodes) · [`devices`](/en/cli/devices) · [`node`](/en/cli/node) · [`worker`](/en/cli/worker)                                                                                                     |
@@ -125,6 +125,7 @@ openclaw [--dev] [--profile <name>] <command>
     validate
   completion
   doctor
+  triage
   dashboard
   backup
     create

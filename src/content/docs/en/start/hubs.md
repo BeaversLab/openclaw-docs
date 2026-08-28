@@ -32,7 +32,7 @@ Use these hubs to discover every page, including deep dives and reference docs t
 - [Docker](/en/install/docker)
 - [Nix](/en/install/nix)
 - [Updating / rollback](/en/install/updating)
-- [Bun workflow (experimental)](/en/install/bun)
+- [Bun workflow](/en/install/bun)
 
 ## Core concepts
 
@@ -103,7 +103,6 @@ Use these hubs to discover every page, including deep dives and reference docs t
 ## Tools + automation
 
 - [Tools surface](/en/tools)
-- [OpenProse](/en/prose)
 - [CLI reference](/en/cli)
 - [Exec tool](/en/tools/exec)
 - [PDF tool](/en/tools/pdf)
