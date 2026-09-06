@@ -29,8 +29,6 @@ A surface is a product area such as Gateway runtime, Discord, or the macOS app. 
 
 ## Product areas
 
-<a id="product-areas" />
-
 <Tabs>
   <Tab title="Core">
 
@@ -545,7 +543,7 @@ A surface is a product area such as Gateway runtime, Discord, or the macOS app. 
         <div><span className="maturity-score maturity-score-stable"><span className="maturity-score-label"><span className="maturity-level-pill maturity-level-stable">Stable</span><span>89%</span></span><span className="maturity-meter" aria-hidden="true"><span style={{ width: "89%" }} /></span></span></div>
         <div className="maturity-category-docs">
 
-    [Protocol](/en/gateway/protocol), [Architecture](/en/concepts/architecture), [Typebox](/en/concepts/typebox), [Bridge Protocol](/en/gateway/bridge-protocol)
+    [Protocol](/en/gateway/protocol), [Architecture](/en/concepts/architecture), [Typebox](/en/concepts/typebox)
 
     </div>
       </div>
@@ -1461,7 +1459,7 @@ A surface is a product area such as Gateway runtime, Discord, or the macOS app. 
         <div><span className="maturity-score maturity-score-beta"><span className="maturity-score-label"><span className="maturity-level-pill maturity-level-beta">Beta</span><span>79%</span></span><span className="maturity-meter" aria-hidden="true"><span style={{ width: "79%" }} /></span></span></div>
         <div className="maturity-category-docs">
 
-    [Telegram](/en/channels/telegram), [Zalo](/en/channels/zalo), [Troubleshooting](/en/channels/troubleshooting), [Imessage From Bluebubbles](/en/channels/imessage-from-bluebubbles), [Gmail Pubsub Integration](/en/automation/cron-jobs#gmail-pubsub-integration), [Gmail Pubsub](/en/automation/gmail-pubsub), [Webhooks](/en/cli/webhooks), [Webhooks](/en/automation/cron-jobs#webhooks), [Webhook](/en/automation/webhook)
+    [Telegram](/en/channels/telegram), [Zalo](/en/channels/zalo), [Troubleshooting](/en/channels/troubleshooting), [Imessage From Bluebubbles](/en/channels/imessage-from-bluebubbles), [Gmail Pubsub Integration](/en/automation/cron-jobs#gmail-pubsub-integration), [Webhooks](/en/cli/webhooks), [Webhooks](/en/automation/cron-jobs#webhooks)
 
     </div>
       </div>
@@ -1517,7 +1515,7 @@ A surface is a product area such as Gateway runtime, Discord, or the macOS app. 
         <div><span className="maturity-score maturity-score-beta"><span className="maturity-score-label"><span className="maturity-level-pill maturity-level-beta">Beta</span><span>79%</span></span><span className="maturity-meter" aria-hidden="true"><span style={{ width: "79%" }} /></span></span></div>
         <div className="maturity-category-docs">
 
-    [Poll](/en/automation/poll), [Message](/en/cli/message), [Telegram](/en/channels/telegram), [Microsoft Teams](/en/channels/msteams), [Background Process](/en/gateway/background-process)
+    [Message](/en/cli/message), [Telegram](/en/channels/telegram), [Microsoft Teams](/en/channels/msteams), [Background Process](/en/gateway/background-process)
 
     </div>
       </div>
@@ -2657,7 +2655,7 @@ A surface is a product area such as Gateway runtime, Discord, or the macOS app. 
         <div><span className="maturity-score maturity-score-beta"><span className="maturity-score-label"><span className="maturity-level-pill maturity-level-beta">Beta</span><span>78%</span></span><span className="maturity-meter" aria-hidden="true"><span style={{ width: "78%" }} /></span></span></div>
         <div className="maturity-category-docs">
 
-    [Bundled Gateway](/en/platforms/mac/bundled-gateway), [Macos](/en/platforms/macos), [Child Process](/en/platforms/mac/child-process), [Dev Setup](/en/platforms/mac/dev-setup)
+    [Bundled Gateway](/en/platforms/mac/bundled-gateway), [Macos](/en/platforms/macos), [Dev Setup](/en/platforms/mac/dev-setup)
 
     </div>
       </div>
@@ -3679,7 +3677,7 @@ A surface is a product area such as Gateway runtime, Discord, or the macOS app. 
       <div className="maturity-category-row">
         <div className="maturity-category-area">
           <span className="maturity-category-title">Access and Identity</span>
-          <span>7 capabilities</span>
+          <span>6 capabilities</span>
         </div>
         <div><span className="maturity-score maturity-score-alpha"><span className="maturity-score-label"><span className="maturity-level-pill maturity-level-alpha">Alpha</span><span>57%</span></span><span className="maturity-meter" aria-hidden="true"><span style={{ width: "57%" }} /></span></span></div>
         <div><span className="maturity-score maturity-score-alpha"><span className="maturity-score-label"><span className="maturity-level-pill maturity-level-alpha">Alpha</span><span>60%</span></span><span className="maturity-meter" aria-hidden="true"><span style={{ width: "60%" }} /></span></span></div>
@@ -3825,7 +3823,7 @@ A surface is a product area such as Gateway runtime, Discord, or the macOS app. 
         <div><span className="maturity-score maturity-score-alpha"><span className="maturity-score-label"><span className="maturity-level-pill maturity-level-alpha">Alpha</span><span>66%</span></span><span className="maturity-meter" aria-hidden="true"><span style={{ width: "66%" }} /></span></span></div>
         <div className="maturity-category-docs">
 
-    [Google Chat](/en/channels/googlechat), [Message](/en/cli/message), [Media Understanding](/en/nodes/media-understanding), [Secretref Credential Surface](/en/reference/secretref-credential-surface), [Reactions](/en/tools/reactions), [Slash Commands](/en/tools/slash-commands), [Config Agents](/en/gateway/config-agents), [Message Lifecycle Refactor](/en/concepts/message-lifecycle-refactor)
+    [Google Chat](/en/channels/googlechat), [Message](/en/cli/message), [Media Understanding](/en/nodes/media-understanding), [Secretref Credential Surface](/en/reference/secretref-credential-surface), [Reactions](/en/tools/reactions), [Slash Commands](/en/tools/slash-commands), [Config Agents](/en/gateway/config-agents), [Sdk Channel Outbound](/en/plugins/sdk-channel-outbound)
 
     </div>
       </div>
@@ -4299,7 +4297,7 @@ A surface is a product area such as Gateway runtime, Discord, or the macOS app. 
         <div><span className="maturity-score maturity-score-beta"><span className="maturity-score-label"><span className="maturity-level-pill maturity-level-beta">Beta</span><span>79%</span></span><span className="maturity-meter" aria-hidden="true"><span style={{ width: "79%" }} /></span></span></div>
         <div className="maturity-category-docs">
 
-    [OpenAI](/en/providers/openai), [Codex Harness](/en/plugins/codex-harness), [Models](/en/concepts/models), [Oauth](/en/concepts/oauth), [Codex Harness Reference](/en/plugins/codex-harness-reference), [Auth Monitoring](/en/automation/auth-monitoring)
+    [OpenAI](/en/providers/openai), [Codex Harness](/en/plugins/codex-harness), [Models](/en/concepts/models), [Oauth](/en/concepts/oauth), [Codex Harness Reference](/en/plugins/codex-harness-reference), [Authentication](/en/gateway/authentication)
 
     </div>
       </div>

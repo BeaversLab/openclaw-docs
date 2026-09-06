@@ -22,12 +22,12 @@ Setup commands by intent:
 | Area                         | Commands                                                                                                                                                                                                                              |
 | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Setup and onboarding         | [`openclaw`](/en/cli/openclaw) · [`setup`](/en/cli/setup) · [`onboard`](/en/cli/onboard) · [`configure`](/en/cli/configure) · [`config`](/en/cli/config) · [`completion`](/en/cli/completion) · [`doctor`](/en/cli/doctor) · [`dashboard`](/en/cli/dashboard) |
-| Reset, backup, and migration | [`backup`](/en/cli/backup) · [`migrate`](/en/cli/migrate) · [`reset`](/en/cli/reset) · [`uninstall`](/en/cli/uninstall) · [`update`](/en/cli/update)                                                                                                 |
+| Reset, backup, and migration | [`backup`](/en/cli/backup) · [`database`](/en/reference/database-schemas) · [`migrate`](/en/cli/migrate) · [`reset`](/en/cli/reset) · [`uninstall`](/en/cli/uninstall) · [`update`](/en/cli/update)                                                     |
 | Messaging and agents         | [`message`](/en/cli/message) · [`agent`](/en/cli/agent) · [`agents`](/en/cli/agents) · [`attach`](/en/cli/attach) · [`acp`](/en/cli/acp) · [`mcp`](/en/cli/mcp)                                                                                         |
 | Health and sessions          | [`status`](/en/cli/status) · [`health`](/en/cli/health) · [`triage`](/en/cli/triage) · [`sessions`](/en/cli/sessions) · [`resume`](/en/cli/resume) · [`audit`](/en/cli/audit)                                                                           |
-| Gateway and logs             | [`gateway`](/en/cli/gateway) · [`logs`](/en/cli/logs) · [`system`](/en/cli/system)                                                                                                                                                             |
+| Gateway and logs             | [`fleet`](/en/cli/fleet) · [`gateway`](/en/cli/gateway) · [`logs`](/en/cli/logs) · [`system`](/en/cli/system)                                                                                                                                     |
 | Models and inference         | [`models`](/en/cli/models) · [`promos`](/en/cli/promos) · [`infer`](/en/cli/infer) · `capability` (alias for [`infer`](/en/cli/infer)) · [`memory`](/en/cli/memory) · [`wiki`](/en/cli/wiki)                                                            |
-| Network and nodes            | [`directory`](/en/cli/directory) · [`nodes`](/en/cli/nodes) · [`devices`](/en/cli/devices) · [`node`](/en/cli/node) · [`worker`](/en/cli/worker)                                                                                                     |
+| Network and nodes            | [`connect`](/en/cli/connect) · [`directory`](/en/cli/directory) · [`nodes`](/en/cli/nodes) · [`devices`](/en/cli/devices) · [`node`](/en/cli/node) · [`worker`](/en/cli/worker)                                                                         |
 | Runtime and sandbox          | [`approvals`](/en/cli/approvals) · `exec-policy` (see [`approvals`](/en/cli/approvals)) · [`sandbox`](/en/cli/sandbox) · [`tui`](/en/cli/tui) · `chat`/`terminal` (aliases for [`tui --local`](/en/cli/tui)) · [`browser`](/en/cli/browser)             |
 | Automation                   | [`cron`](/en/cli/cron) · [`tasks`](/en/cli/tasks) · [`hooks`](/en/cli/hooks) · [`webhooks`](/en/cli/webhooks) · [`transcripts`](/en/cli/transcripts)                                                                                                 |
 | Discovery and docs           | [`dns`](/en/cli/dns) · [`docs`](/en/cli/docs)                                                                                                                                                                                               |
@@ -119,10 +119,16 @@ openclaw [--dev] [--profile <name>] <command>
   config
     get
     set
+    patch
     unset
     file
     schema
     validate
+  database
+    preflight
+    ownership
+      status
+      claim
   completion
   doctor
   triage
@@ -130,6 +136,20 @@ openclaw [--dev] [--profile <name>] <command>
   backup
     create
     verify
+    restore
+    sqlite
+      create
+      list
+      verify
+      restore
+    git
+      init
+      create
+      log
+      verify
+      restore
+    enable
+    disable
   migrate
     list
     plan <provider>
@@ -153,6 +173,7 @@ openclaw [--dev] [--profile <name>] <command>
     capabilities
     resolve
     logs
+    dead-letters list|resubmit
     add
     remove
     login
@@ -289,6 +310,19 @@ openclaw [--dev] [--profile <name>] <command>
     stop
     restart
     run
+  fleet
+    create
+    backup
+    restore
+    doctor
+    list
+    status
+    logs
+    start
+    stop
+    restart
+    upgrade
+    rm
   daemon
     status
     install
@@ -370,6 +404,7 @@ openclaw [--dev] [--profile <name>] <command>
     uninstall
     stop
     restart
+  connect
   worker
   approvals
     get

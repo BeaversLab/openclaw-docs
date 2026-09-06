@@ -95,7 +95,7 @@ Use these hubs to discover every page, including deep dives and reference docs t
 - [Dashboard](/en/web/dashboard)
 - [Control UI](/en/web/control-ui)
 - [Remote access](/en/gateway/remote)
-- [Remote gateway README](/en/gateway/remote-gateway-readme)
+- [macOS SSH tunnel](/en/gateway/remote#macos-persistent-ssh-tunnel-via-launchagent)
 - [Tailscale](/en/gateway/tailscale)
 - [Security](/en/gateway/security)
 - [Troubleshooting](/en/gateway/troubleshooting)
@@ -166,7 +166,7 @@ Use these hubs to discover every page, including deep dives and reference docs t
 - [Agent tools](/en/plugins/building-plugins#registering-agent-tools)
 - [Plugin bundles](/en/plugins/bundles)
 - [ClawHub](/en/clawhub)
-- [Capability cookbook](/en/tools/capability-cookbook)
+- [Adding capabilities](/en/plugins/adding-capabilities)
 - [Voice call plugin](/en/plugins/voice-call)
 - [Zalo user plugin](/en/plugins/zalouser)
 

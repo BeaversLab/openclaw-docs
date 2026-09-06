@@ -117,10 +117,11 @@ See [Configuration Reference](/en/gateway/config-agents#agent-defaults) for full
 
 ## Output details
 
-The tool returns text in `content[0].text` and structured metadata in `details`.
+The tool returns analysis in both `content[0].text` and `details.text`, so [Code Mode](/en/tools/code-mode) and [Tool Search](/en/tools/tool-search) can read the same result.
 
 Common `details` fields:
 
+- `text`: the analysis text
 - `model`: resolved model ref (`provider/model`)
 - `native`: `true` for native provider mode, `false` for fallback
 - `attempts`: fallback attempts that failed before success
