@@ -46,5 +46,5 @@ panels.
 ## Related
 
 - [Control UI](/en/web/control-ui)
-- [Gateway protocol](/en/gateway/protocol#rpc-method-families)
+- [Gateway protocol](/en/gateway/protocol/rpc-methods#rpc-method-families)
 - [Browser tool](/en/tools/browser)

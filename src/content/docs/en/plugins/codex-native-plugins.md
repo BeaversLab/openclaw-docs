@@ -510,5 +510,5 @@ unsafe elicitation schemas and ambiguous plugin identity still fail closed.
 - [Codex harness](/en/plugins/codex-harness)
 - [Codex harness reference](/en/plugins/codex-harness-reference)
 - [Codex harness runtime](/en/plugins/codex-harness-runtime)
-- [Configuration reference](/en/gateway/configuration-reference#codex-harness-plugin-config)
+- [Configuration reference](/en/gateway/config-extensions#codex-harness-plugin-config)
 - [Migrate CLI](/en/cli/migrate)

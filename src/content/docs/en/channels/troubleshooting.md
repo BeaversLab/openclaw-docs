@@ -102,7 +102,7 @@ Full troubleshooting: [Discord troubleshooting](/en/channels/discord#troubleshoo
 | DMs blocked                            | `openclaw pairing list slack`             | Approve pairing or relax DM policy.                                                                                                                  |
 | Channel message ignored                | Check `groupPolicy` and channel allowlist | Allow the channel or switch policy to `open`.                                                                                                        |
 
-Full troubleshooting: [Slack troubleshooting](/en/channels/slack#troubleshooting)
+Full troubleshooting: [Slack troubleshooting](/en/channels/slack/troubleshooting#troubleshooting)
 
 ## iMessage
 

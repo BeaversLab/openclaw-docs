@@ -12,9 +12,15 @@ For a complete map of the docs, see [Docs hubs](/en/start/hubs).
 
 ## Start here
 
-- [Docs hubs (all pages linked)](/en/start/hubs)
-- [Help](/en/help)
+- [Getting started](/en/start/getting-started)
+- [Onboarding (CLI)](/en/start/wizard)
+- [Chat channels](/en/channels)
 - [Configuration](/en/gateway/configuration)
+- [Help](/en/help)
+
+## Setup and reference
+
+- [Docs hubs (all pages linked)](/en/start/hubs)
 - [Configuration examples](/en/gateway/configuration-examples)
 - [Slash commands](/en/tools/slash-commands)
 - [Multi-agent routing](/en/concepts/multi-agent)

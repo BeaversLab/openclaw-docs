@@ -99,7 +99,7 @@ agent:
   falling through to environment auth. Gateway startup degrades this owner to
   configured-unavailable instead of refusing to start.
 
-The database and migration sources respect `$OPENCLAW_STATE_DIR`. Full reference: [/gateway/configuration-reference#auth-storage](/en/gateway/configuration-reference#auth-storage)
+The database and migration sources respect `$OPENCLAW_STATE_DIR`. Full reference: [/gateway/config-secrets-env#auth-storage](/en/gateway/config-secrets-env#auth-storage)
 
 For static secret refs and runtime snapshot activation behavior, see [Secrets Management](/en/gateway/secrets).
 
@@ -268,4 +268,4 @@ Related docs:
 
 - [Authentication](/en/gateway/authentication) - model provider auth overview
 - [Secrets](/en/gateway/secrets) - credential storage and SecretRef
-- [Configuration Reference](/en/gateway/configuration-reference#auth-storage) - auth config keys
+- [Configuration Reference](/en/gateway/config-secrets-env#auth-storage) - auth config keys

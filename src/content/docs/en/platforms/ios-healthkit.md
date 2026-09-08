@@ -172,5 +172,5 @@ summaries are not supported.
 
 - [iOS app](/en/platforms/ios)
 - [Nodes](/en/nodes)
-- [Gateway configuration reference](/en/gateway/configuration-reference#gateway)
+- [Gateway configuration reference](/en/gateway/config-gateway#gateway)
 - [Security audit](/en/gateway/security)

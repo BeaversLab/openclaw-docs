@@ -120,6 +120,6 @@ commit ledger. Likewise, a gateway process restart terminates a pending
 inference turn with a provider error; only a worker WebSocket reconnect can
 reattach to an active same-process inference stream.
 
-See [Gateway protocol](/en/gateway/protocol#worker-role-and-closed-protocol) for the
+See [Gateway protocol](/en/gateway/protocol/handshake#worker-role-and-closed-protocol) for the
 closed worker RPC surface and [Cloud workers](/en/gateway/cloud-workers) for the
 architecture and security model.

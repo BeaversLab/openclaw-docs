@@ -791,5 +791,5 @@ resolved agent workspace rather than assuming the default workspace.
 - [CLI Reference: hooks](/en/cli/hooks)
 - [Plugin hooks](/en/plugins/hooks)
 - [Webhooks](/en/automation/cron-jobs#webhooks)
-- [Configuration](/en/gateway/configuration-reference#hooks)
+- [Configuration](/en/gateway/config-hooks#hooks)
 - [Agent workspace](/en/concepts/agent-workspace)

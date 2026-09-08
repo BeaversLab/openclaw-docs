@@ -18,7 +18,7 @@ Use these hubs to discover every page, including deep dives and reference docs t
 - [Onboarding](/en/start/onboarding)
 - [Onboarding (CLI)](/en/start/wizard)
 - [Setup](/en/start/setup)
-- [Dashboard (local Gateway)](http://127.0.0.1:18789/)
+- [Dashboard](/en/web/dashboard) - on the Gateway host it opens at `http://127.0.0.1:18789/`
 - [Help](/en/help)
 - [Docs directory](/en/start/docs-directory)
 - [Configuration](/en/gateway/configuration)
@@ -29,6 +29,8 @@ Use these hubs to discover every page, including deep dives and reference docs t
 
 ## Installation + updates
 
+- [Install overview](/en/install)
+- [Installer internals](/en/install/installer)
 - [Docker](/en/install/docker)
 - [Nix](/en/install/nix)
 - [Updating / rollback](/en/install/updating)
