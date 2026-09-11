@@ -113,6 +113,7 @@ Moved to [Configuration — browser, UI, and desktop](/en/gateway/config-browser
 
 Moved to [Configuration — gateway](/en/gateway/config-gateway). Sections: OpenAI-compatible endpoints, Multi-instance isolation, `gateway.tls`, `gateway.reload`.
 
+<a id="gateway-field-details"></a>
 <a id="openai-compatible-endpoints"></a>
 <a id="multi-instance-isolation"></a>
 <a id="gatewaytls"></a>
@@ -224,3 +225,5 @@ Moved to [Configuration — environment, secrets, and includes](/en/gateway/conf
 - [Configuration](/en/gateway/configuration)
 - [Configuration examples](/en/gateway/configuration-examples)
 - [Doctor](/en/gateway/doctor)
+- [Cloud Workers](/en/gateway/cloud-workers) — the feature these worker settings configure
+- [`openclaw configure`](/en/cli/configure) — interactive prompts that edit these settings without hand-editing the file

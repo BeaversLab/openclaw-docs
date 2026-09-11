@@ -61,7 +61,7 @@ Local trust:
 ## Security
 
 - [Security overview](/en/gateway/security)
-- [Gateway config reference](/en/gateway/configuration)
+- [Gateway config reference](/en/gateway/configuration-reference)
 - [Troubleshooting](/en/gateway/troubleshooting)
 - [Doctor](/en/gateway/doctor)
 

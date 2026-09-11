@@ -22,7 +22,7 @@ for results, cancel work, or inspect Gateway resources.
   guide pins the verified stable `2026.8.1` packages and explains how package and
   wire versions affect compatibility. If your
   app supervises the Gateway as a child process, also read
-  [Embedding OpenClaw](https://docs.openclaw.ai/gateway/embedding).
+  [Embedding OpenClaw](/en/gateway/embedding).
 </Note>
 
 <Note>
@@ -35,7 +35,7 @@ for results, cancel work, or inspect Gateway resources.
 | Surface                                                       | Status          | Use it for                                                                                    |
 | ------------------------------------------------------------- | --------------- | --------------------------------------------------------------------------------------------- |
 | [Gateway client guide](/en/gateway/clients#install-the-packages) | Stable packages | npm packages, auth, reconnect, history, events, approvals, and version policy.                |
-| [Embedding guide](https://docs.openclaw.ai/gateway/embedding) | Release train   | Child-process environment, readiness, lifecycle, recovery, RPC ownership, and packaging.      |
+| [Embedding guide](/en/gateway/embedding)                         | Release train   | Child-process environment, readiness, lifecycle, recovery, RPC ownership, and packaging.      |
 | [Gateway protocol](/en/gateway/protocol)                         | Ready           | WebSocket transport, connect handshake, auth scopes, protocol versioning, and events.         |
 | [Gateway RPC reference](/en/reference/rpc)                       | Ready           | Current Gateway methods for agents, sessions, tasks, models, tools, artifacts, and approvals. |
 | [`openclaw agent`](/en/cli/agent)                                | Ready           | One-shot script integration when shelling out to the CLI is enough.                           |
@@ -288,7 +288,7 @@ contract.
   plugin and project idempotent full snapshots to the external host adapter.
   The hosting controller should not import the Plugin SDK or reconstruct cron
   state from event deltas. See [Safe external cron
-  projection](/en/plugins/hooks#safe-external-cron-projection).
+  projection](/en/plugins/hooks/lifecycle#safe-external-cron-projection).
 </Tip>
 
 ## App code vs plugin code
@@ -315,8 +315,8 @@ plugins loaded by OpenClaw.
 
 ## Related
 
-- [Building a Gateway client](https://docs.openclaw.ai/gateway/clients)
-- [Embedding OpenClaw](https://docs.openclaw.ai/gateway/embedding)
+- [Building a Gateway client](/en/gateway/clients)
+- [Embedding OpenClaw](/en/gateway/embedding)
 - [Gateway protocol](/en/gateway/protocol)
 - [Gateway RPC reference](/en/reference/rpc)
 - [CLI agent command](/en/cli/agent)

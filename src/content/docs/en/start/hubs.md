@@ -1,5 +1,5 @@
 ---
-summary: "Hubs that link to every OpenClaw doc"
+summary: "Hubs that link the main OpenClaw docs"
 read_when:
   - You want a complete map of the documentation
 title: "Docs hubs"
@@ -9,7 +9,7 @@ title: "Docs hubs"
 If you are new to OpenClaw, start with [Getting Started](/en/start/getting-started).
 </Note>
 
-Use these hubs to discover every page, including deep dives and reference docs that don't appear in the left nav.
+Use these hubs to discover more of the documentation, including deep dives and reference docs that don't appear in the left nav.
 
 ## Start here
 
@@ -68,7 +68,7 @@ Use these hubs to discover every page, including deep dives and reference docs t
 ## Providers + ingress
 
 - [Chat channels hub](/en/channels)
-- [Model providers hub](/en/providers/models)
+- [Model providers hub](/en/providers)
 - [Discord](/en/channels/discord)
 - [iMessage](/en/channels/imessage)
 - [Mattermost](/en/channels/mattermost)

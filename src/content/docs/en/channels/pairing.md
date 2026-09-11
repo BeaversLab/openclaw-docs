@@ -159,6 +159,8 @@ The button is disabled when the current Control UI session does not have
 administrator access. Use the CLI approval flow below from the Gateway host in
 that case.
 
+<a id="pair-via-telegram-recommended-for-ios" />
+
 ### Pair via Telegram
 
 If you use the `device-pair` plugin, you can do first-time device pairing entirely from Telegram:
@@ -297,3 +299,4 @@ imported into SQLite at gateway startup and archived with a `.migrated` suffix.
   - iMessage: [iMessage](/en/channels/imessage)
   - Discord: [Discord](/en/channels/discord)
   - Slack: [Slack](/en/channels/slack)
+- [`openclaw pairing`](/en/cli/pairing) — drive pairing from the CLI

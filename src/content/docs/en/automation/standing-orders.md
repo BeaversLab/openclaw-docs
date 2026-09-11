@@ -238,3 +238,4 @@ Each program should have:
 - [Hooks](/en/automation/hooks): event-driven scripts for agent lifecycle events.
 - [Webhooks](/en/automation/cron-jobs#webhooks): inbound HTTP event triggers.
 - [Agent workspace](/en/concepts/agent-workspace): where standing orders live, including the full list of auto-injected bootstrap files (`AGENTS.md`, `SOUL.md`, etc.).
+- [Goal](/en/tools/goal) — durable per-session objectives and the `/goal` controls

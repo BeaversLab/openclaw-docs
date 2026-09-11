@@ -362,3 +362,4 @@ If you need to restrict permissions, set `nonInteractivePermissions` to `deny` s
 - [ACP agents](/en/tools/acp-agents) — overview, operator runbook, concepts
 - [Sub-agents](/en/tools/subagents)
 - [Multi-agent routing](/en/concepts/multi-agent)
+- [ACPx plugin reference](/en/plugins/reference/acpx) — the acpx runtime plugin's manifest and config, including the Pi session catalog

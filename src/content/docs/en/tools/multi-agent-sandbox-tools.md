@@ -442,3 +442,6 @@ After configuring multi-agent sandbox and tools:
 - [Sandbox vs tool policy vs elevated](/en/gateway/sandbox-vs-tool-policy-vs-elevated) — debugging "why is this blocked?"
 - [Sandboxing](/en/gateway/sandboxing) — full sandbox reference (modes, scopes, backends, images)
 - [Session management](/en/concepts/session)
+- [OpenShell](/en/gateway/openshell) — a managed sandbox backend a per-agent sandbox can delegate to
+- [ACP agents](/en/tools/acp-agents) — a separate boundary: OpenClaw sandbox policy does not wrap ACP harness execution
+- [Sub-agents](/en/tools/subagents) — the spawned sessions these limits clamp

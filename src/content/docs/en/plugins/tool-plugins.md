@@ -450,9 +450,8 @@ Install with an explicit ClawHub locator:
 openclaw plugins install clawhub:your-org/stock-quotes
 ```
 
-Bare npm package specs still install from npm during the launch cutover, but
-ClawHub is the preferred discovery and distribution surface for OpenClaw
-plugins. See [ClawHub publishing](/en/clawhub/publishing) for owner scope and
+Bare npm package specs install from npm, but ClawHub is the preferred
+discovery and distribution surface for OpenClaw plugins. See [ClawHub publishing](/en/clawhub/publishing) for owner scope and
 release review.
 
 ## Troubleshooting
@@ -504,6 +503,7 @@ Check these in order:
 ## See also
 
 - [Building plugins](/en/plugins/building-plugins)
+- [Plugin SDK overview](/en/plugins/sdk-overview)
 - [Plugin entry points](/en/plugins/sdk-entrypoints)
 - [Plugin SDK subpaths](/en/plugins/sdk-subpaths)
 - [Plugin manifest](/en/plugins/manifest)

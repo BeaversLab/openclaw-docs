@@ -122,7 +122,7 @@ fresh attempt; it never resumes the disconnected stdio connection or its
 processes. Normal Codex turns are supported, but `/btw` side questions are not
 yet bound to paired-device placement and fail with an actionable explanation.
 See [Cloud workers and paired-device placement](/en/gateway/cloud-workers) and
-[Node command policy](/en/nodes#command-policy).
+[Node command policy](/en/nodes/command-policy#command-policy).
 
 ## Run Codex on a cloud worker
 

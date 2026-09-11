@@ -26,7 +26,9 @@ tuning that applies everywhere.
   <Card title="Northflank" href="/en/install/northflank">One-click, browser setup</Card>
   <Card title="Oracle Cloud" href="/en/install/oracle">Always Free ARM tier</Card>
   <Card title="Railway" href="/en/install/railway">One-click, browser setup</Card>
+  <Card title="Render" href="/en/install/render">Managed web service</Card>
   <Card title="Raspberry Pi" href="/en/install/raspberry-pi">ARM self-hosted</Card>
+  <Card title="Upstash Box" href="/en/install/upstash">SSH-managed sandbox box</Card>
 </CardGroup>
 
 **AWS (EC2 / Lightsail / free tier)** also works well.
@@ -136,3 +138,6 @@ diagnostics, see [Linux memory pressure and OOM kills](/en/platforms/linux#memor
 - [DigitalOcean](/en/install/digitalocean)
 - [Fly.io](/en/install/fly)
 - [Hetzner](/en/install/hetzner)
+- [Ansible](/en/install/ansible) — automated deployment to remote Debian/Ubuntu servers with Tailscale VPN and firewall isolation
+- [Kubernetes](/en/install/kubernetes) — a minimal Kustomize starting point when you run the Gateway on a cluster instead of a single VPS
+- [macOS VMs](/en/install/macos-vm) — a sandboxed macOS VM when you need macOS itself (iMessage) rather than a Linux host

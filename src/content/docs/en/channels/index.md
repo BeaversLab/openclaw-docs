@@ -61,7 +61,7 @@ starts. Full walkthrough: [Telegram](/en/channels/telegram). Command reference:
 - [Twitch](/en/channels/twitch) - Twitch chat bot: install, credentials, access control, token refresh (official plugin).
 - [WebChat](/en/web/webchat) - Native and Control UI WebChat usage over the Gateway WebSocket (included in core).
 - [WeChat](/en/channels/wechat) - WeChat channel setup through the external openclaw-weixin plugin (external plugin).
-- [WeCom](/en/channels/wecom) - Install the official WeCom plugin and find its versioned setup documentation (external plugin).
+- [WeCom](/en/channels/wecom) - Install the external WeCom plugin and find its versioned setup documentation (external plugin).
 - [WhatsApp](/en/channels/whatsapp) - WhatsApp channel support, access controls, delivery behavior, and operations (official plugin).
 - [Yuanbao](/en/channels/yuanbao) - Yuanbao bot overview, features, and configuration (external plugin).
 - [Zalo](/en/channels/zalo) - Zalo bot support status, capabilities, and configuration (official plugin).

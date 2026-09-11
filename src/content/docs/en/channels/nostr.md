@@ -237,5 +237,5 @@ docker run -p 7777:7777 ghcr.io/hoytech/strfry
 - [Channels Overview](/en/channels) — all supported channels
 - [Pairing](/en/channels/pairing) — DM authentication and pairing flow
 - [Groups](/en/channels/groups) — group chat behavior and mention gating
-- [Channel Routing](/en/channels/channel-routing) — session routing for messages
+- [Channel routing](/en/channels/channel-routing) — session routing for messages
 - [Security](/en/gateway/security) — access model and hardening

@@ -55,6 +55,9 @@ Or edit config directly:
 }
 ```
 
+The login code is your ship's web login code: run `+code` in the ship's dojo to print the current
+one. It rotates, so re-read it whenever authentication starts failing.
+
 Restart the gateway after editing config directly. Then DM the bot or @ mention it in a group
 channel.
 
@@ -332,7 +335,7 @@ Full configuration: [Configuration](/en/gateway/configuration)
 ## Related
 
 - [Channels Overview](/en/channels) — all supported channels
-- [Pairing](/en/channels/pairing) — DM authentication and pairing flow
+- [Pairing](/en/channels/pairing) — DM authentication for channels that declare it; Tlon is not one of them and uses the `dmAllowlist` plus `ownerShip` approval flow above instead
 - [Groups](/en/channels/groups) — group chat behavior and mention gating
-- [Channel Routing](/en/channels/channel-routing) — session routing for messages
+- [Channel routing](/en/channels/channel-routing) — session routing for messages
 - [Security](/en/gateway/security) — access model and hardening

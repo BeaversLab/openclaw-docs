@@ -423,15 +423,15 @@ authority in a future session.
 Memory architecture is mostly convention over configuration; these are the
 knobs that exist:
 
-| Concern                         | Where                                                           | Reference                                                |
-| ------------------------------- | --------------------------------------------------------------- | -------------------------------------------------------- |
-| Dreaming enable, cadence, model | `plugins.entries.memory-core.config.dreaming`                   | [Dreaming](/en/concepts/dreaming)                           |
-| Session admission exclusions    | `plugins.entries.memory-core.config.memoryPolicy`               | [Provenance & deletion](/en/concepts/memory-provenance)     |
-| Search providers, hybrid tuning | `memory.search`                                                 | [Memory config](/en/reference/memory-config)                |
-| Escalation lane mode, scope     | `plugins.entries.active-memory`                                 | [Active memory](/en/concepts/active-memory)                 |
-| Cross-conversation recall       | `agents.entries.<id>.memory.search.rememberAcrossConversations` | [Active memory](/en/concepts/active-memory)                 |
-| Flush behavior                  | `agents.defaults.compaction.memoryFlush`                        | [Memory overview](/en/concepts/memory)                      |
-| Memory plugin selection         | `plugins.slots.memory`                                          | [Builtin](/en/concepts/memory-builtin), [Plugins](/en/plugins) |
+| Concern                         | Where                                                           | Reference                                                     |
+| ------------------------------- | --------------------------------------------------------------- | ------------------------------------------------------------- |
+| Dreaming enable, cadence, model | `plugins.entries.memory-core.config.dreaming`                   | [Dreaming](/en/concepts/dreaming)                                |
+| Session admission exclusions    | `plugins.entries.memory-core.config.memoryPolicy`               | [Provenance & deletion](/en/concepts/memory-provenance)          |
+| Search providers, hybrid tuning | `memory.search`                                                 | [Memory config](/en/reference/memory-config)                     |
+| Escalation lane mode, scope     | `plugins.entries.active-memory`                                 | [Active memory](/en/concepts/active-memory)                      |
+| Cross-conversation recall       | `agents.entries.<id>.memory.search.rememberAcrossConversations` | [Active memory](/en/concepts/active-memory)                      |
+| Flush behavior                  | `agents.defaults.compaction.memoryFlush`                        | [Memory overview](/en/concepts/memory)                           |
+| Memory plugin selection         | `plugins.slots.memory`                                          | [Builtin](/en/concepts/memory-builtin), [Plugins](/en/tools/plugin) |
 
 ## Related
 

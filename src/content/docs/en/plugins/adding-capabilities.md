@@ -131,3 +131,4 @@ If a PR skips the capability layer and hardcodes vendor behavior into a channel/
 - [Building plugins](/en/plugins/building-plugins) — first-plugin tutorial.
 - [SDK overview](/en/plugins/sdk-overview) — import map and registration API reference.
 - [Creating skills](/en/tools/creating-skills) — companion contributor surface.
+- [Plugin architecture internals](/en/plugins/architecture-internals) — load pipeline, registry model, and the guide to adding a capability.

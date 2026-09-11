@@ -7,7 +7,7 @@ read_when:
 title: "Backups"
 ---
 
-# Backups
+<a id="backups" />
 
 OpenClaw keeps its authoritative state in SQLite: one global control-plane
 database under the state directory (usually `~/.openclaw`), plus one database
@@ -382,6 +382,7 @@ first with `openclaw database preflight`; see
 
 - [Agent workspace](/en/concepts/agent-workspace#git-backup-recommended-private) for keeping workspace files in a private git repository
 - [Backup CLI reference](/en/cli/backup)
+- [Cloudflare Containers](/en/install/cloudflare) — continuous Litestream replication to R2 for an ephemeral container deployment
 - [Database schemas](/en/reference/database-schemas)
 - [Migrating between machines](/en/install/migrating)
 - [Updating](/en/install/updating)

@@ -398,7 +398,7 @@ When replying in a Twitch conversation, omit `to` to use the current conversatio
 
 ## Related
 
-- [Channel Routing](/en/channels/channel-routing) — session routing for messages
+- [Channel routing](/en/channels/channel-routing) — session routing for messages
 - [Channels Overview](/en/channels) — all supported channels
 - [Groups](/en/channels/groups) — group chat behavior and mention gating
 - [Pairing](/en/channels/pairing) — DM authentication and pairing flow

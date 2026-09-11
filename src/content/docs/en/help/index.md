@@ -31,6 +31,7 @@ Fastest path to unstuck, by symptom:
 - [Testing](/en/help/testing) - test suites and Docker runners
 - [Update and plugin tests](/en/help/testing-updates-plugins) - package update, migration, and plugin install validation
 - [Live tests](/en/help/testing-live) - network-touching provider and CLI smokes
+- [Scripts](/en/help/scripts) - helper scripts under `scripts/` and when to prefer the CLI
 
 ## Community and meta
 

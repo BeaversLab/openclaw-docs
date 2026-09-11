@@ -90,7 +90,7 @@ For the default account, you can use env vars:
 
 Config values override env vars.
 
-`SYNOLOGY_CHAT_INCOMING_URL` and `SYNOLOGY_NAS_HOST` cannot be set from a workspace `.env`; see [Workspace `.env` files](/en/gateway/security#workspace-env-files).
+`SYNOLOGY_CHAT_INCOMING_URL` and `SYNOLOGY_NAS_HOST` cannot be set from a workspace `.env`; see [Workspace `.env` files](/en/gateway/security/secrets-and-storage#workspace-env-files).
 
 ## DM policy and access control
 
@@ -200,5 +200,5 @@ but duplicate exact paths are still rejected fail-closed. Prefer explicit per-ac
 
 - [Channels Overview](/en/channels) — all supported channels
 - [Groups](/en/channels/groups) — group chat behavior and mention gating
-- [Channel Routing](/en/channels/channel-routing) — session routing for messages
+- [Channel routing](/en/channels/channel-routing) — session routing for messages
 - [Security](/en/gateway/security) — access model and hardening

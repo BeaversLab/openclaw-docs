@@ -230,4 +230,4 @@ The reply cache lives in SQLite plugin state. `openclaw doctor --fix` imports an
 - [iMessage](/en/channels/imessage) — full iMessage channel reference, including `imsg launch` setup and capability detection.
 - `/channels/bluebubbles` — legacy URL that redirects to this migration guide.
 - [Pairing](/en/channels/pairing) — DM authentication and pairing flow.
-- [Channel Routing](/en/channels/channel-routing) — how the gateway picks a channel for outbound replies.
+- [Channel routing](/en/channels/channel-routing) — how the gateway picks a channel for outbound replies.

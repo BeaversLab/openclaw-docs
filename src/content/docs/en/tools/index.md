@@ -217,3 +217,4 @@ the current turn:
 - [Code Mode](/en/tools/code-mode) for compact JavaScript or TypeScript workflows
   over a hidden OpenClaw tool catalog
 - [Swarm](/en/tools/swarm) for structured fan-out and collection from Code Mode
+- [Tools invoke API](/en/gateway/tools-invoke-http-api) — call these tools over HTTP

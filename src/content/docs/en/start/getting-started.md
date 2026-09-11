@@ -199,5 +199,6 @@ Full reference: [Environment variables](/en/help/environment).
 - [Install overview](/en/install)
 - [Channels overview](/en/channels)
 - [Setup](/en/start/setup)
+- [Personal assistant setup](/en/start/openclaw) - end-to-end guide to a dedicated number that behaves like an always-on assistant
 - [Triage](/en/cli/triage)
 - [Troubleshooting](/en/help/troubleshooting)

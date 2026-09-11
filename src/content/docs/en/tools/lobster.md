@@ -410,3 +410,4 @@ not.
 
 - [Automation](/en/automation) - all automation mechanisms
 - [Tools Overview](/en/tools) - all available agent tools
+- [Lobster plugin reference](/en/plugins/reference/lobster) - manifest, config, and tool reference for the plugin

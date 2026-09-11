@@ -105,6 +105,7 @@ Builds the QA site, starts the Docker-backed gateway + QA Lab stack, and prints 
 ## Related
 
 - [QA overview](/en/concepts/qa-e2e-automation) - overall stack, transport adapters, the Matrix live lane, and scenario authoring
+- [Personal agent benchmark pack](/en/concepts/personal-agent-benchmark-pack) - the scenario pack that runs on this channel
 - [Pairing](/en/channels/pairing)
 - [Groups](/en/channels/groups)
 - [Channels overview](/en/channels)

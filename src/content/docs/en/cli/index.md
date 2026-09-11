@@ -7,7 +7,7 @@ title: "CLI reference"
 ---
 
 `openclaw` is the main CLI entry point. Each core command has a dedicated
-reference page or is documented with the command it aliases; this index lists
+reference page or is documented with the command it aliases. This index lists
 the commands, global flags, and output styling rules that apply across the CLI.
 
 Setup commands by intent:
@@ -15,7 +15,9 @@ Setup commands by intent:
 - `openclaw setup` and `openclaw onboard` verify inference first, then start OpenClaw for Gateway, workspace, channels, skills, and health setup.
 - `openclaw setup --baseline` creates the baseline config and workspace without walking the guided onboarding flow.
 - `openclaw configure` changes targeted parts of an existing setup: model auth, gateway, channels, plugins, or skills.
-- `openclaw channels add` configures channel accounts after the baseline exists; a channel selection alone uses guided setup, while account, credential, or channel-config flags use the direct path for scripts.
+- `openclaw channels add` configures channel accounts after the baseline exists. A channel selection alone uses guided setup. Account, credential, or channel-config flags use the direct path for scripts.
+
+<a id="status" />
 
 ## Command pages
 
@@ -27,14 +29,15 @@ Setup commands by intent:
 | Health and sessions          | [`status`](/en/cli/status) · [`health`](/en/cli/health) · [`triage`](/en/cli/triage) · [`sessions`](/en/cli/sessions) · [`resume`](/en/cli/resume) · [`audit`](/en/cli/audit)                                                                           |
 | Gateway and logs             | [`fleet`](/en/cli/fleet) · [`gateway`](/en/cli/gateway) · [`logs`](/en/cli/logs) · [`system`](/en/cli/system)                                                                                                                                     |
 | Models and inference         | [`models`](/en/cli/models) · [`promos`](/en/cli/promos) · [`infer`](/en/cli/infer) · `capability` (alias for [`infer`](/en/cli/infer)) · [`memory`](/en/cli/memory) · [`wiki`](/en/cli/wiki)                                                            |
-| Network and nodes            | [`connect`](/en/cli/connect) · [`directory`](/en/cli/directory) · [`nodes`](/en/cli/nodes) · [`devices`](/en/cli/devices) · [`node`](/en/cli/node) · [`worker`](/en/cli/worker)                                                                         |
+| Network and nodes            | [`connect`](/en/cli/connect) · [`directory`](/en/cli/directory) · [`nodes`](/en/cli/nodes) · [`node`](/en/cli/node) · [`worker`](/en/cli/worker)                                                                                                     |
 | Runtime and sandbox          | [`approvals`](/en/cli/approvals) · `exec-policy` (see [`approvals`](/en/cli/approvals)) · [`sandbox`](/en/cli/sandbox) · [`tui`](/en/cli/tui) · `chat`/`terminal` (aliases for [`tui --local`](/en/cli/tui)) · [`browser`](/en/cli/browser)             |
-| Automation                   | [`cron`](/en/cli/cron) · [`tasks`](/en/cli/tasks) · [`hooks`](/en/cli/hooks) · [`webhooks`](/en/cli/webhooks) · [`transcripts`](/en/cli/transcripts)                                                                                                 |
+| Worktrees                    | [`worktrees`](/en/concepts/managed-worktrees)                                                                                                                                                                                            |
+| Automation                   | [`cron`](/en/cli/cron) (alias `automations`) · [`tasks`](/en/cli/tasks) · [`hooks`](/en/cli/hooks) · [`webhooks`](/en/cli/webhooks) · [`transcripts`](/en/cli/transcripts)                                                                           |
 | Discovery and docs           | [`dns`](/en/cli/dns) · [`docs`](/en/cli/docs)                                                                                                                                                                                               |
-| Pairing and channels         | [`pairing`](/en/cli/pairing) · [`qr`](/en/cli/qr) · [`channels`](/en/cli/channels)                                                                                                                                                             |
+| Pairing and channels         | [`pairing`](/en/cli/pairing) · [`qr`](/en/cli/qr) · [`devices`](/en/cli/devices) · [`channels`](/en/cli/channels)                                                                                                                                 |
 | Security and plugins         | [`security`](/en/cli/security) · [`secrets`](/en/cli/secrets) · [`skills`](/en/cli/skills) · [`plugins`](/en/cli/plugins) · [`proxy`](/en/cli/proxy)                                                                                                 |
 | Legacy aliases               | [`daemon`](/en/cli/daemon) (gateway service) · [`clawbot`](/en/cli/clawbot) (namespace)                                                                                                                                                     |
-| Plugins (optional)           | [`path`](/en/cli/path) · [`policy`](/en/cli/policy) · [`voicecall`](/en/cli/voicecall) · [`workboard`](/en/cli/workboard) (if installed)                                                                                                          |
+| Plugins (optional)           | [`file-transfer`](/en/cli/file-transfer) · [`path`](/en/cli/path) · [`policy`](/en/cli/policy) · [`voicecall`](/en/cli/voicecall) · [`workboard`](/en/cli/workboard) (if installed)                                                                  |
 
 ## Global flags
 
@@ -61,15 +64,15 @@ Use `--` to stop option parsing. Command words still dispatch after it: for exam
 ## Output modes
 
 - ANSI colors and progress indicators render only in TTY sessions.
-- OSC-8 hyperlinks render as clickable links where supported; otherwise the
-  CLI falls back to plain URLs.
-- On bounded reporting commands, `--json` reserves stdout for one JSON document;
-  styling and progress output are suppressed, and warnings and diagnostics stay on
+- OSC-8 hyperlinks render as clickable links where supported. Otherwise the
+  CLI prints plain URLs.
+- On bounded reporting commands, `--json` reserves stdout for one JSON document.
+  The CLI suppresses styling and progress output. Warnings and diagnostics stay on
   stderr.
 - Interactive UIs and wizards, long-running servers and streams, shell integration,
   and pure side-effect commands may omit `--json` when they have no meaningful
   report to return.
-- Long-running commands show a progress indicator (OSC 9;4 when supported).
+- Long-running commands show a progress indicator (`OSC 9;4` when supported).
 
 ### JSON failures
 
@@ -88,8 +91,11 @@ envelope:
 ```
 
 A command may add domain-specific fields, such as per-item results, beside this
-envelope. Failure messages are sanitized. Human-readable diagnostics may also be
-written to stderr, so scripts should parse stdout and still check the exit status.
+envelope. Gateway-backed agent turns that fail after the Gateway accepted the run
+also record the accepted `runId` and `origin: "gateway"` beside the envelope, so
+scripts can report the in-flight run. Failure messages are sanitized. Human-readable
+diagnostics may also be written to stderr, so scripts should parse stdout and still
+check the exit status.
 
 ## Color palette
 
@@ -114,7 +120,7 @@ Palette source of truth: `packages/terminal-core/src/palette.ts`.
 
 This map covers core commands and their primary subcommands. Plugin-added
 subcommands (for example under `skills`, `plugins`, and `wiki`) evolve
-independently; run `<command> --help` for the authoritative, current list.
+independently. Run `<command> --help` for the authoritative, current list.
 
 ```
 openclaw [--dev] [--profile <name>] <command>
@@ -331,6 +337,12 @@ openclaw [--dev] [--profile <name>] <command>
     restart
     upgrade
     rm
+  worktrees
+    list
+    create
+    remove
+    restore
+    gc
   daemon
     status
     install
@@ -498,7 +510,7 @@ Highlights:
 - `/status` - quick diagnostics.
 - `/trace` - session-scoped plugin trace/debug lines.
 - `/config` - persisted config changes.
-- `/debug` - runtime-only config overrides (memory, not disk; requires `commands.debug: true`).
+- `/debug` - runtime-only config overrides in memory, not on disk. Requires `commands.debug: true`.
 
 ## Usage tracking
 

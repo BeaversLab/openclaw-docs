@@ -121,3 +121,4 @@ when a `memory/` folder exists.
 ## Related
 
 - [Agent workspace](/en/concepts/agent-workspace)
+- [Bootstrapping](/en/start/bootstrapping) - the first-run ritual this template drives, and when the file is removed

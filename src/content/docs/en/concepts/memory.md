@@ -154,7 +154,7 @@ The agent has three tools for working with memory:
 - **`intent`** — creates, lists, or explicitly cancels event-conditioned
   standing intents. Time-based reminders continue to use scheduled tasks.
 
-Both tools are provided by the active memory plugin (default: `memory-core`).
+All three tools are provided by the active memory plugin (default: `memory-core`).
 
 ## Memory search
 
@@ -334,3 +334,7 @@ openclaw memory index --force   # Rebuild the index
 - [Active memory](/en/concepts/active-memory): sub-agent memory for interactive chat sessions.
 - [User model](/en/concepts/user-model): directive-based durable preferences and profile facts.
 - [Standing intents](/en/concepts/standing-intents): event-conditioned prospective memory.
+
+## Related
+
+- [`openclaw memory`](/en/cli/memory) — command reference for inspecting and editing memory

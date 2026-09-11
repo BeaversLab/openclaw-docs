@@ -392,3 +392,4 @@ sections are configured.
 - [MiniMax](/en/providers/minimax)
 - [Models](/en/concepts/models) — model configuration and failover
 - [Tools overview](/en/tools)
+- [Media overview](/en/tools/media-overview) — how the media tools fit together

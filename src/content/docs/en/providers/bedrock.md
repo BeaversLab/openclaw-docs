@@ -502,6 +502,12 @@ openclaw models list
   <Card title="Memory config reference" href="/en/reference/memory-config#bedrock-embedding-config" icon="database">
     Full Bedrock embedding model list and dimension options.
   </Card>
+  <Card title="Bedrock Mantle" href="/en/providers/bedrock-mantle" icon="layer-group">
+    Bedrock Mantle OpenAI-compatible and Claude Messages models.
+  </Card>
+  <Card title="Prompt caching" href="/en/reference/prompt-caching" icon="database">
+    How prompt caching works across providers.
+  </Card>
   <Card title="Troubleshooting" href="/en/help/troubleshooting" icon="wrench">
     General troubleshooting and FAQ.
   </Card>

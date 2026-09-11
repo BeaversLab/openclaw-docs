@@ -45,3 +45,4 @@ For provider examples and elapsed-time formatting, see [Date & Time](/en/date-ti
 - [Date & Time](/en/date-time) - full envelope/tool/prompt behavior and examples.
 - [Heartbeat](/en/gateway/heartbeat) - active hours use timezone for scheduling.
 - [Cron Jobs](/en/automation/cron-jobs) - cron expressions use timezone for scheduling.
+- [System prompt](/en/concepts/system-prompt) - the Temporal Context section that carries the user-local date and time zone into the prompt.

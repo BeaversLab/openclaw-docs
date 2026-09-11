@@ -73,3 +73,4 @@ The built-in queue debounce applies to queued `followup` and `collect` delivery.
 - [Steer](/en/tools/steer)
 - [Messages](/en/concepts/messages)
 - [Agent loop](/en/concepts/agent-loop)
+- [Codex harness runtime](/en/plugins/codex-harness-runtime) - `turn/steer` behavior on the native Codex harness

@@ -80,5 +80,8 @@ Every section heading from the previous single-page version keeps its anchor her
 
 ## Related
 
+- [Tests](/en/reference/test)
+- [Scripts](/en/help/scripts)
+- [Maturity scorecard](/en/maturity/scorecard)
 - [Install overview](/en/install)
 - [Release channels](/en/install/development-channels)
