@@ -96,7 +96,7 @@ action. Behavior varies by channel.
 Per-channel `reactionLevel` throttles how often the agent sends its own
 reactions. Values: `off`, `ack`, `minimal`, or `extensive`.
 
-- [Telegram reaction notifications](/en/channels/telegram#feature-reference) - `channels.telegram.reactionLevel` (default `minimal`)
+- [Telegram reaction level](/en/channels/telegram#feature-reference) - `channels.telegram.reactionLevel` (default `minimal`)
 - [WhatsApp reaction level](/en/channels/whatsapp#reaction-level) - `channels.whatsapp.reactionLevel` (default `minimal`)
 - [Signal reactions](/en/channels/signal#reactions-message-tool) - `channels.signal.reactionLevel` (default `minimal`)
 

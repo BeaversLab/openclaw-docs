@@ -71,7 +71,7 @@ Every section heading from the previous single-page version keeps its anchor her
 - <a id="sticker-keyword-search" />[Sticker keyword search](/en/channels/feishu/messaging#sticker-keyword-search)
 - <a id="threads-and-replies" />[Threads and replies](/en/channels/feishu/messaging#threads-and-replies)
 - <a id="run-the-channel-setup-wizard" />[Run the channel setup wizard](/en/channels/feishu/setup#run-the-channel-setup-wizard)
-- <a id="after-setup-completes%2C-restart-the-gateway-to-apply-the-changes" />[After setup completes, restart the gateway to apply the changes](/en/channels/feishu/setup#after-setup-completes%2C-restart-the-gateway-to-apply-the-changes)
+- <a id="after-setup-completes%2C-restart-the-gateway-to-apply-the-changes" />[Verify the channel after setup](/en/channels/feishu/setup#after-setup-completes%2C-restart-the-gateway-to-apply-the-changes)
 - <a id="allow-all-groups-no-@mention-required" />[Allow all groups, no @mention required](/en/channels/feishu/access-control#allow-all-groups-no-@mention-required)
 - <a id="allow-all-groups-still-require-@mention" />[Allow all groups, still require @mention](/en/channels/feishu/access-control#allow-all-groups-still-require-@mention)
 - <a id="get-group/user-ids" />[Get group/user IDs](/en/channels/feishu/access-control#get-group/user-ids)
@@ -97,4 +97,5 @@ Feishu/Lark does not support native slash-command menus, so send these as plain 
 - [Pairing](/en/channels/pairing) - DM authentication and pairing flow
 - [Groups](/en/channels/groups) - group chat behavior and mention gating
 - [Channel routing](/en/channels/channel-routing) - session routing for messages
+- [Reactions](/en/tools/reactions) - emoji reaction semantics for the `message` tool
 - [Security](/en/gateway/security) - access model and hardening

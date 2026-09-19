@@ -135,6 +135,9 @@ Primary reference: [Configuration reference - Slack](/en/gateway/config-channels
   <Card title="Pairing" icon="link" href="/en/channels/pairing">
     Pair a Slack user to the gateway.
   </Card>
+  <Card title="Reactions" icon="thumbs-up" href="/en/tools/reactions">
+    Emoji reaction semantics for the `message` tool.
+  </Card>
   <Card title="Groups" icon="users" href="/en/channels/groups">
     Channel and group DM behavior.
   </Card>

@@ -11,9 +11,8 @@ recommended runtime**. Bun 1.4+ builds with WAL-reset-safe `node:sqlite` can run
 the CLI, Gateway, and managed node host as an explicit opt-in; see
 [Bun](/en/install/bun).
 
-Companion apps exist for Windows Hub, macOS (menu bar app), and mobile nodes
-(iOS/Android). Linux companion apps are planned, but the Gateway is fully
-supported today. On Windows, choose Windows Hub for the desktop app, native
+Companion apps exist for Linux, Windows Hub, macOS (menu bar app), and mobile
+nodes (iOS/Android). On Windows, choose Windows Hub for the desktop app, native
 PowerShell install for terminal-first use, or WSL2 for the most
 Linux-compatible Gateway runtime.
 
@@ -24,6 +23,7 @@ Linux-compatible Gateway runtime.
 - iOS: [iOS](/en/platforms/ios)
 - Linux: [Linux](/en/platforms/linux)
 - macOS: [macOS](/en/platforms/macos)
+- Omarchy: [Omarchy](/en/platforms/omarchy)
 - Windows: [Windows](/en/platforms/windows)
 
 ## VPS and hosting

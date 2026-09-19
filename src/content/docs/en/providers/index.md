@@ -70,6 +70,7 @@ Looking for chat channel docs (WhatsApp/Telegram/Discord/Slack/Mattermost (plugi
 - [Perplexity (web search)](/en/providers/perplexity-provider)
 - [Qianfan](/en/providers/qianfan)
 - [Qwen Cloud](/en/providers/qwen)
+- [Radius](/en/providers/radius)
 - [Runway](/en/providers/runway)
 - [SenseAudio](/en/providers/senseaudio)
 - [SGLang (local models)](/en/providers/sglang)

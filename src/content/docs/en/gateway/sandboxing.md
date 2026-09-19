@@ -14,22 +14,23 @@ This is not a perfect security boundary, but it materially limits filesystem and
 
 ## Sandboxing pages
 
-This page is an index. The sandbox reference is documented on eleven
+This page is an index. The sandbox reference is documented on twelve
 pages. Open the page that matches what you are configuring.
 
-| Page                                                                                 | Read it when                                                                   |
-| ------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------ |
-| [What gets sandboxed](/en/gateway/sandboxing/what-gets-sandboxed)                       | You want to know exactly which execution moves into the sandbox.               |
-| [Modes, scope, and backend](/en/gateway/sandboxing/modes-scope-and-backend)             | You are deciding which sessions run sandboxed and how they share environments. |
-| [Supported capability matrix](/en/gateway/sandboxing/supported-capability-matrix)       | You are comparing Docker, SSH, and OpenShell before choosing a backend.        |
-| [Docker backend](/en/gateway/sandboxing/docker-backend)                                 | You are running the default local backend or enabling the sandboxed browser.   |
-| [Podman backend](/en/gateway/sandboxing/podman-backend)                                 | You are using Podman instead of Docker for sandboxed tool execution.           |
-| [SSH backend](/en/gateway/sandboxing/ssh-backend)                                       | You are offloading sandboxed tool execution to a remote machine over SSH.      |
-| [OpenShell backend](/en/gateway/sandboxing/openshell-backend)                           | You are sandboxing tools in an OpenShell-managed remote environment.           |
-| [Workspace access](/en/gateway/sandboxing/workspace-access)                             | You are deciding what the sandbox can see of the agent workspace.              |
-| [Multiple folders for one agent](/en/gateway/sandboxing/multiple-folders-for-one-agent) | One sandboxed agent needs more than its primary workspace.                     |
-| [Images and setup](/en/gateway/sandboxing/images-and-setup)                             | You need to build or customize a sandbox image.                                |
-| [setupCommand (one-time container setup)](/en/gateway/sandboxing/setup-command)         | You need to run one-time setup inside a newly created sandbox container.       |
+| Page                                                                                 | Read it when                                                                       |
+| ------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------- |
+| [What gets sandboxed](/en/gateway/sandboxing/what-gets-sandboxed)                       | You want to know exactly which execution moves into the sandbox.                   |
+| [Modes, scope, and backend](/en/gateway/sandboxing/modes-scope-and-backend)             | You are deciding which sessions run sandboxed and how they share environments.     |
+| [Supported capability matrix](/en/gateway/sandboxing/supported-capability-matrix)       | You are comparing Docker, SSH, and OpenShell before choosing a backend.            |
+| [Docker backend](/en/gateway/sandboxing/docker-backend)                                 | You are running the default local backend or enabling the sandboxed browser.       |
+| [Podman backend](/en/gateway/sandboxing/podman-backend)                                 | You are using Podman instead of Docker for sandboxed tool execution.               |
+| [SSH backend](/en/gateway/sandboxing/ssh-backend)                                       | You are offloading sandboxed tool execution to a remote machine over SSH.          |
+| [OpenShell backend](/en/gateway/sandboxing/openshell-backend)                           | You are sandboxing tools in an OpenShell-managed remote environment.               |
+| [Crabbox backend](/en/gateway/sandboxing/crabbox-backend)                               | You want tool execution on a Crabbox-leased cloud box while the agent stays local. |
+| [Workspace access](/en/gateway/sandboxing/workspace-access)                             | You are deciding what the sandbox can see of the agent workspace.                  |
+| [Multiple folders for one agent](/en/gateway/sandboxing/multiple-folders-for-one-agent) | One sandboxed agent needs more than its primary workspace.                         |
+| [Images and setup](/en/gateway/sandboxing/images-and-setup)                             | You need to build or customize a sandbox image.                                    |
+| [setupCommand (one-time container setup)](/en/gateway/sandboxing/setup-command)         | You need to run one-time setup inside a newly created sandbox container.           |
 
 ## Where each section moved
 
@@ -45,6 +46,7 @@ points at the page that now holds the content.
 - <a id="podman-backend" />[Podman backend](/en/gateway/sandboxing/podman-backend#podman-backend)
 - <a id="ssh-backend" />[SSH backend](/en/gateway/sandboxing/ssh-backend#ssh-backend)
 - <a id="openshell-backend" />[OpenShell backend](/en/gateway/sandboxing/openshell-backend#openshell-backend)
+- <a id="crabbox-backend" />[Crabbox backend](/en/gateway/sandboxing/crabbox-backend#crabbox-backend)
 - <a id="workspace-access" />[Workspace access](/en/gateway/sandboxing/workspace-access#workspace-access)
 - <a id="multiple-folders-for-one-agent" />[Multiple folders for one agent](/en/gateway/sandboxing/multiple-folders-for-one-agent#multiple-folders-for-one-agent)
 - <a id="other-bind-behavior" />[Other bind behavior](/en/gateway/sandboxing/multiple-folders-for-one-agent#other-bind-behavior)

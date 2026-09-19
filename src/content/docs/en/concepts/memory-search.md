@@ -229,6 +229,7 @@ the managed server endpoints before rebuilding the index.
 ## Related
 
 - [Memory overview](/en/concepts/memory)
+- [Memory architecture](/en/concepts/memory-architecture)
 - [Active memory](/en/concepts/active-memory)
 - [Builtin memory engine](/en/concepts/memory-builtin)
 - [Memory configuration reference](/en/reference/memory-config)

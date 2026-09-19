@@ -296,3 +296,9 @@ diagnostic ids.
 pnpm test src/channels/message-access/message-access.test.ts src/plugin-sdk/channel-ingress-runtime.test.ts
 pnpm plugin-sdk:api:diff --base "$(git merge-base origin/main HEAD)" --head HEAD
 ```
+
+## Related
+
+- [Channel inbound API](/en/plugins/sdk-channel-inbound) — the receive path that consumes this resolver result as `channelIngress`
+- [Channel outbound API](/en/plugins/sdk-channel-outbound) — the send side of the same channel plugin
+- [Building channel plugins](/en/plugins/sdk-channel-plugins) — the full channel plugin walkthrough
