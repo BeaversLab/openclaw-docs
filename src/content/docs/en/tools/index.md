@@ -89,7 +89,7 @@ semantics, use [Tools and custom providers](/en/gateway/config-tools).
 | Human input             | Pause for a structured decision owned by the user, or obtain a credential without seeing it  | `ask_user`, `secrets`                                                                                               | [Ask user](/en/tools/ask-user), [Secrets](/en/tools/secrets)                                                                        |
 | Web                     | Search the web, search X posts, or fetch readable page content                               | `web_search`, `x_search`, `web_fetch`                                                                               | [Web tools](/en/tools/web), [Web fetch](/en/tools/web-fetch)                                                                        |
 | Browser                 | Operate a browser session                                                                    | `browser`                                                                                                           | [Browser](/en/tools/browser)                                                                                                     |
-| Operator UI             | Arrange connected Control UI panes, panels, and navigation                                   | `screen`                                                                                                            | [Screen](/en/tools/screen)                                                                                                       |
+| Operator UI             | Arrange Control UI panes and panels, or select and create appearance themes                  | `screen`, `theme`                                                                                                   | [Screen](/en/tools/screen), [Theme](/en/tools/theme)                                                                                |
 | Session progress        | Update the parent session's durable progress card; unavailable to sub-agents                 | `progress_card`                                                                                                     | [Progress card](/en/tools/progress-card)                                                                                         |
 | Messaging and channels  | Send replies or channel actions                                                              | `message`                                                                                                           | [Agent send](/en/tools/agent-send)                                                                                               |
 | Sessions and agents     | Inspect sessions, delegate work, orchestrate collectors, steer another run, or report status | `sessions_*`, `agents_wait`, `subagents`, `agents_list`, `session_status`, `get_goal`, `create_goal`, `update_goal` | [Goal](/en/tools/goal), [Swarm](/en/tools/swarm), [Sub-agents](/en/tools/subagents), [Session tool](/en/concepts/session-tool)            |
@@ -215,7 +215,7 @@ the current turn:
   creation
 - [Tool Search](/en/tools/tool-search) for compact OpenClaw tool catalog
   discovery
-- [Code Mode](/en/tools/code-mode) for compact JavaScript or TypeScript workflows
+- [Code Mode](/en/tools/code-mode) for compact JavaScript workflows
   over a hidden OpenClaw tool catalog
 - [Swarm](/en/tools/swarm) for structured fan-out and collection from Code Mode
 - [Tools invoke API](/en/gateway/tools-invoke-http-api) — call these tools over HTTP

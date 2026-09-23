@@ -64,6 +64,7 @@ Each entry points at the page that now holds the content.
 - <a id="synthetic" />[Synthetic](/en/concepts/model-providers/custom-providers#synthetic)
 - <a id="minimax" />[MiniMax](/en/concepts/model-providers/custom-providers#minimax)
 - <a id="llama.cpp" /><a id="llama-cpp" />[llama.cpp](/en/concepts/model-providers/custom-providers#llama-cpp)
+- <a id="llmman" />[llmman](/en/concepts/model-providers/custom-providers#llmman)
 - <a id="lm-studio" />[LM Studio](/en/concepts/model-providers/custom-providers#lm-studio)
 - <a id="ollama" />[Ollama](/en/concepts/model-providers/custom-providers#ollama)
 - <a id="vllm" />[vLLM](/en/concepts/model-providers/custom-providers#vllm)

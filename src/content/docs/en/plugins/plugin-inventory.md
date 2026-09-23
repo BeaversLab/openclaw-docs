@@ -50,7 +50,7 @@ Each entry lists the package, distribution route, and description.
 
 ## Core npm package
 
-61 plugins
+63 plugins
 
 - **[a2a](/en/plugins/reference/a2a)** (`@openclaw/a2a`) - included in OpenClaw. A2A v1.0 Agent-to-Agent protocol channel plugin.
 
@@ -76,6 +76,8 @@ Each entry lists the package, distribution route, and description.
 
 - **[clawrouter](/en/plugins/reference/clawrouter)** (`@openclaw/clawrouter`) - included in OpenClaw. Adds ClawRouter model provider support to OpenClaw.
 
+- **[code-mode-quickjs](/en/plugins/reference/code-mode-quickjs)** (`@openclaw/code-mode-quickjs`) - included in OpenClaw. Hardened JavaScript execution for Code Mode using QuickJS in WebAssembly.
+
 - **[copilot-proxy](/en/plugins/reference/copilot-proxy)** (`@openclaw/copilot-proxy`) - included in OpenClaw. Adds Copilot Proxy model provider support to OpenClaw.
 
 - **[crabbox](/en/plugins/reference/crabbox)** (`@openclaw/crabbox-provider`) - included in OpenClaw. Cloud worker provider and lease-backed sandbox backend for the Crabbox CLI.
@@ -95,6 +97,8 @@ Each entry lists the package, distribution route, and description.
 - **[file-transfer](/en/plugins/reference/file-transfer)** (`@openclaw/file-transfer`) - included in OpenClaw. Fetch, list, and write files on paired nodes via dedicated node commands. Bypasses bash stdout truncation by using base64 over node.invoke for binaries up to 16 MB.
 
 - **[geolocation](/en/plugins/reference/geolocation)** (`@openclaw/geolocation-plugin`) - included in OpenClaw. Resolves client IP addresses to a coarse city using a locally cached IP-geolocation database.
+
+- **[github](/en/plugins/reference/github)** (`@openclaw/github`) - included in OpenClaw. Public GitHub link previews and document reader.
 
 - **[github-copilot](/en/plugins/reference/github-copilot)** (`@openclaw/github-copilot-provider`) - included in OpenClaw. Adds GitHub Copilot model provider support to OpenClaw.
 
@@ -176,7 +180,7 @@ Each entry lists the package, distribution route, and description.
 
 ## Official external packages
 
-92 plugins
+95 plugins
 
 - **[acpx](/en/plugins/reference/acpx)** (`@openclaw/acpx`) - npm or ClawHub: `clawhub:@openclaw/acpx`. OpenClaw ACP runtime backend with plugin-owned session and transport management.
 
@@ -229,6 +233,8 @@ Each entry lists the package, distribution route, and description.
 - **[duckduckgo](/en/plugins/reference/duckduckgo)** (`@openclaw/duckduckgo-plugin`) - npm or ClawHub: `clawhub:@openclaw/duckduckgo-plugin`. Adds web search provider support.
 
 - **[exa](/en/plugins/reference/exa)** (`@openclaw/exa-plugin`) - npm or ClawHub: `clawhub:@openclaw/exa-plugin`. Adds web search provider support.
+
+- **[facetime](/en/plugins/reference/facetime)** (`@openclaw/facetime`) - npm or ClawHub: `clawhub:@openclaw/facetime`. Experimental FaceTime realtime voice carrier for OpenClaw agents.
 
 - **[featherless](/en/plugins/reference/featherless)** (`@openclaw/featherless-provider`) - npm or ClawHub: `clawhub:@openclaw/featherless-provider`. OpenClaw Featherless AI provider plugin.
 
@@ -290,6 +296,8 @@ Each entry lists the package, distribution route, and description.
 
 - **[novita](/en/plugins/reference/novita)** (`@openclaw/novita-provider`) - npm or ClawHub: `clawhub:@openclaw/novita-provider`. Adds Novita, Novita AI, Novitaai model provider support to OpenClaw.
 
+- **[onnx](/en/plugins/reference/onnx)** (`@openclaw/onnx`) - npm or ClawHub: `clawhub:@openclaw/onnx`. Local typed decisions using pinned ONNX classifiers.
+
 - **[opencode](/en/plugins/reference/opencode)** (`@openclaw/opencode-provider`) - npm or ClawHub: `clawhub:@openclaw/opencode-provider`. Adds OpenCode model provider support to OpenClaw.
 
 - **[openshell](/en/plugins/reference/openshell)** (`@openclaw/openshell-sandbox`) - npm or ClawHub: `clawhub:@openclaw/openshell-sandbox`. OpenClaw sandbox backend for the NVIDIA OpenShell CLI with mirrored local workspaces and SSH command execution.
@@ -337,6 +345,8 @@ Each entry lists the package, distribution route, and description.
 - **[tokenjuice](/en/plugins/reference/tokenjuice)** (`@openclaw/tokenjuice`) - npm or ClawHub: `clawhub:@openclaw/tokenjuice`. Compacts exec and bash tool results with tokenjuice reducers.
 
 - **[twitch](/en/plugins/reference/twitch)** (`@openclaw/twitch`) - npm or ClawHub: `clawhub:@openclaw/twitch`. OpenClaw Twitch channel plugin for chat and moderation workflows.
+
+- **[typesafe](/en/plugins/reference/typesafe)** (`@openclaw/typesafe`) - npm or ClawHub: `clawhub:@openclaw/typesafe`. Optional typed evaluations, not a conversational model provider.
 
 - **[venice](/en/plugins/reference/venice)** (`@openclaw/venice-provider`) - npm or ClawHub: `clawhub:@openclaw/venice-provider`. Adds Venice model provider support to OpenClaw.
 
