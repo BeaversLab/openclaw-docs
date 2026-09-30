@@ -31,7 +31,7 @@ the TypeBox schemas re-exported from `packages/gateway-protocol/src/schema.ts`.
 - [Handshake and roles](/en/gateway/protocol/handshake) — connect frame, hello-ok payload, client capabilities, roles, and scopes.
 - [Presence and events](/en/gateway/protocol/presence) — presence snapshots, node host stats, and broadcast event scoping.
 - [RPC methods](/en/gateway/protocol/rpc-methods) — RPC method families, discovery, session list bootstrap, and event families.
-- [Ledger RPCs](/en/gateway/protocol/ledgers) — audit ledger and task ledger RPCs, their scopes, cursors, and payloads.
+- [Ledger RPCs](/en/gateway/protocol/ledgers) — audit ledger RPCs, their scopes, cursors, and payloads.
 - [Operator methods](/en/gateway/protocol/operator-methods) — operator helper methods, exec approvals, and agent delivery fallback.
 - [Versioning](/en/gateway/protocol/versioning) — protocol version constants, the N-1 node window, and client defaults.
 - [Auth and device identity](/en/gateway/protocol/auth) — handshake auth paths, device identity, pairing signatures, and TLS pinning.
@@ -75,7 +75,6 @@ Every section heading from the previous single-page version keeps its anchor her
 - <a id="node-helper-methods" />[Node helper methods](/en/gateway/protocol/rpc-methods#node-helper-methods)
 - <a id="node-exec-lifecycle-events" />[Node exec lifecycle events](/en/gateway/protocol/rpc-methods#node-exec-lifecycle-events)
 - <a id="audit-ledger-rpc" />[Audit ledger RPC](/en/gateway/protocol/ledgers#audit-ledger-rpc)
-- <a id="task-ledger-rpcs" />[Task ledger RPCs](/en/gateway/protocol/ledgers#task-ledger-rpcs)
 - <a id="operator-helper-methods" />[Operator helper methods](/en/gateway/protocol/operator-methods#operator-helper-methods)
 - <a id="models.list-views" />[`models.list` views](/en/gateway/protocol/operator-methods#models.list-views)
 - <a id="models-list-views" />[`models.list` views](/en/gateway/protocol/operator-methods#models-list-views)

@@ -32,9 +32,9 @@ Setup commands by intent:
 | Network and nodes            | [`connect`](/en/cli/connect) · [`directory`](/en/cli/directory) · [`nodes`](/en/cli/nodes) · [`node`](/en/cli/node) · [`worker`](/en/cli/worker)                                                                                                     |
 | Runtime and sandbox          | [`approvals`](/en/cli/approvals) · `exec-policy` (see [`approvals`](/en/cli/approvals)) · [`sandbox`](/en/cli/sandbox) · [`tui`](/en/cli/tui) · `chat`/`terminal` (aliases for [`tui --local`](/en/cli/tui)) · [`browser`](/en/cli/browser)             |
 | Worktrees                    | [`worktrees`](/en/concepts/managed-worktrees)                                                                                                                                                                                            |
-| Automation                   | [`cron`](/en/cli/cron) (alias `automations`) · [`tasks`](/en/cli/tasks) · [`hooks`](/en/cli/hooks) · [`webhooks`](/en/cli/webhooks) · [`transcripts`](/en/cli/transcripts)                                                                           |
+| Automation                   | [`cron`](/en/cli/cron) (alias `automations`) · [`hooks`](/en/cli/hooks) · [`webhooks`](/en/cli/webhooks) · [`transcripts`](/en/cli/transcripts)                                                                                                   |
 | Discovery and docs           | [`dns`](/en/cli/dns) · [`docs`](/en/cli/docs)                                                                                                                                                                                               |
-| Pairing and channels         | [`pairing`](/en/cli/pairing) · [`qr`](/en/cli/qr) · [`devices`](/en/cli/devices) · [`channels`](/en/cli/channels)                                                                                                                                 |
+| Pairing and channels         | [`pairing`](/en/cli/pairing) · [`qr`](/en/cli/qr) · [`devices`](/en/cli/devices) · [`channels`](/en/cli/channels) · [`users`](/en/cli/users)                                                                                                         |
 | Security and plugins         | [`security`](/en/cli/security) · [`secrets`](/en/cli/secrets) · [`skills`](/en/cli/skills) · [`plugins`](/en/cli/plugins) · [`proxy`](/en/cli/proxy)                                                                                                 |
 | Legacy aliases               | [`daemon`](/en/cli/daemon) (gateway service) · [`clawbot`](/en/cli/clawbot) (namespace)                                                                                                                                                     |
 | Plugins (optional)           | [`file-transfer`](/en/cli/file-transfer) · [`path`](/en/cli/path) · [`policy`](/en/cli/policy) · [`voicecall`](/en/cli/voicecall) · [`workboard`](/en/cli/workboard) (if installed)                                                                  |
@@ -52,6 +52,8 @@ Setup commands by intent:
 | `-V`, `--version`, `-v` | Print version and exit                                                                                  |
 
 Place command-specific options after their command name, for example `openclaw status --json`. Global options such as `--profile` can precede the command.
+
+Unknown root options fail with an option error and a help hint instead of starting onboarding or the TUI.
 
 A named `--profile` replaces canonical state and config paths inherited from
 another profile, including a running Gateway service. Explicitly customized
@@ -417,6 +419,10 @@ openclaw [--dev] [--profile <name>] <command>
     reject
     rotate
     revoke
+  users
+    list
+    link-email <email> --to <profileId>
+    merge <sourceProfileId> --into <targetProfileId>
   node
     run
     status

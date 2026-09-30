@@ -24,7 +24,6 @@ Use these hubs to discover more of the documentation, including deep dives and r
 - [Configuration](/en/gateway/configuration)
 - [Configuration examples](/en/gateway/configuration-examples)
 - [OpenClaw assistant](/en/start/openclaw)
-- [Showcase](/en/start/showcase)
 - [Lore](/en/start/lore)
 
 ## Installation + updates

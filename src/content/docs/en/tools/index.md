@@ -97,7 +97,12 @@ semantics, use [Tools and custom providers](/en/gateway/config-tools).
 | Gateway and nodes       | Inspect Gateway state or paired target devices                                               | `gateway`, `nodes`                                                                                                  | [Gateway configuration](/en/gateway/configuration), [Nodes](/en/nodes)                                                              |
 | Plugin lifecycle        | Inspect, install, enable, disable, remove, or reload plugins                                 | `plugins`                                                                                                           | [Agent plugin management](/en/plugins/manage-plugins#manage-plugins-from-an-agent-conversation)                                  |
 | Media                   | Analyze, generate, or speak media                                                            | `view_image`, `image_generate`, `music_generate`, `video_generate`, `tts`                                           | [Media overview](/en/tools/media-overview)                                                                                       |
-| Large OpenClaw catalogs | Search, call, and combine many eligible tools without sending every schema to the model      | `exec`, `wait`, `tool_search_code`, `tool_search`, `tool_describe`                                                  | [Code Mode](/en/tools/code-mode), [Tool Search](/en/tools/tool-search)                                                              |
+| Large OpenClaw catalogs | Search, call, and combine many eligible tools without sending every schema to the model      | `exec`, `wait`, `tool_search`, `tool_describe`, `tool_call`                                                         | [Code Mode](/en/tools/code-mode), [Tool Search](/en/tools/tool-search)                                                              |
+
+On multi-user Gateways, `personal_instructions` reads and updates
+the authenticated requester’s personal `USER.md` through the Gateway, even when
+the chat uses a project worktree. It is included in the coding and messaging
+profiles; it does not widen general file-tool access. See [User model](/en/concepts/user-model#personal-user-files-on-a-shared-gateway).
 
 The `edit` tool supports targeted formatting changes, including removing trailing
 spaces or replacing Unicode quotes, dashes, and spaces. These changes are applied
@@ -203,7 +208,7 @@ the current turn:
 ## Related
 
 - [Automation](/en/automation) for cron, tasks, heartbeat, hooks,
-  standing orders, and Task Flow
+  standing orders, and workflows
 - [Agents](/en/concepts/agent) for the agent model, sessions, memory, and
   multi-agent coordination
 - [Tools and custom providers](/en/gateway/config-tools) for the canonical tool

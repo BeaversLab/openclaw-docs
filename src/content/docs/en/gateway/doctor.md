@@ -76,7 +76,7 @@ still resolves. Each entry points at the page that now holds the content.
 - <a id="8c-device-pairing-and-auth-drift" />[8c. Device pairing and auth drift](/en/gateway/doctor/gateway-and-services#8c-device-pairing-and-auth-drift)
 - <a id="9-security-warnings" />[9. Security warnings](/en/gateway/doctor/gateway-and-services#9-security-warnings)
 - <a id="10-systemd-linger-linux" />[10. systemd linger (Linux)](/en/gateway/doctor/gateway-and-services#10-systemd-linger-linux)
-- <a id="11-workspace-status-skills-plugins-and-taskflows" />[11. Workspace status (skills, plugins, and TaskFlows)](/en/gateway/doctor/gateway-and-services#11-workspace-status-skills-plugins-and-taskflows)
+- <a id="11-workspace-status-skills-plugins-and-taskflows" />[11. Workspace status (skills and plugins)](/en/gateway/doctor/gateway-and-services#11-workspace-status-skills-plugins-and-taskflows)
 - <a id="11b-bootstrap-file-size" />[11b. Bootstrap file size](/en/gateway/doctor/gateway-and-services#11b-bootstrap-file-size)
 - <a id="11c-shell-completion" />[11c. Shell completion](/en/gateway/doctor/gateway-and-services#11c-shell-completion)
 - <a id="11d-stale-channel-plugin-cleanup" />[11d. Stale channel plugin cleanup](/en/gateway/doctor/gateway-and-services#11d-stale-channel-plugin-cleanup)
