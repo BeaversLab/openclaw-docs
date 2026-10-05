@@ -99,6 +99,10 @@ semantics, use [Tools and custom providers](/en/gateway/config-tools).
 | Media                   | Analyze, generate, or speak media                                                            | `view_image`, `image_generate`, `music_generate`, `video_generate`, `tts`                                           | [Media overview](/en/tools/media-overview)                                                                                       |
 | Large OpenClaw catalogs | Search, call, and combine many eligible tools without sending every schema to the model      | `exec`, `wait`, `tool_search`, `tool_describe`, `tool_call`                                                         | [Code Mode](/en/tools/code-mode), [Tool Search](/en/tools/tool-search)                                                              |
 
+Session tools and `sessions_spawn` accept `user` (the requester's verified `requester_profile.id`) and
+act with that person's authority. It is required when several people have steered
+the turn. See [Session tools](/en/concepts/session-tool) and [Sub-agent tool reference](/en/tools/subagents/tool-reference).
+
 On multi-user Gateways, `personal_instructions` reads and updates
 the authenticated requester’s personal `USER.md` through the Gateway, even when
 the chat uses a project worktree. It is included in the coding and messaging

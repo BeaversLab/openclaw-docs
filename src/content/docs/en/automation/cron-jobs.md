@@ -124,7 +124,7 @@ This page is an index. Each section below moved to a child page, and every ancho
 - <a id="authentication"></a>[Authentication](/en/automation/cron-jobs/webhooks#authentication)
 - <a id="post-hooks-wake"></a>[POST /hooks/wake](/en/automation/cron-jobs/webhooks#post-hooks-wake)
 - <a id="post-hooks-agent"></a>[POST /hooks/agent](/en/automation/cron-jobs/webhooks#post-hooks-agent)
-- <a id="mapped"></a>[Mapped hooks (`POST /hooks/<name>`)](/en/automation/cron-jobs/webhooks#mapped)
+- <a id="mapped"></a>[Mapped hooks (`POST /hooks/<name>`)](/en/automation/cron-jobs/webhooks#mapped-hooks-post-hooks-name)
 - <a id="verify-and-troubleshoot-hook-requests"></a>[Verify and troubleshoot hook requests](/en/automation/cron-jobs/webhooks#verify-and-troubleshoot-hook-requests)
 
 ### Gmail sections
