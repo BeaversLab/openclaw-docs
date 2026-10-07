@@ -207,6 +207,36 @@ deleting database rows to work around this failure.
 
 ## `update repair`
 
+For a package update stranded by an older updater's launcher ownership checks,
+use the manual installation hop, then repair from the new CLI at the same root:
+
+```bash
+npm install -g openclaw@latest
+openclaw doctor --fix
+openclaw update repair
+```
+
+Follow the [manual update precautions](/en/install/updating/update-methods#alternative-manual-npm-pnpm-or-bun),
+including a verified backup and stopping the managed Gateway during replacement.
+When the installed package directory matches neither recorded generation, repair
+closes the previous package operation as `superseded-by-manual-install`, warns with
+its operation ID, and preserves its staged files and helper beside the installation.
+The original failed history entry remains intact. The pending package-recovery
+gate then clears, so another update can proceed. Same-identity recovery keeps its
+original sealed-helper checks; missing packages, active update owners, and pending
+database or configuration restoration still require their existing recovery path.
+
+If recovery instead reports `managed handoff lease database identity changed`,
+run `openclaw update repair` from a CLI containing this fix. Repair acquires fresh
+update ownership on the current lease database and closes the orphaned package
+operation as `recovery-lease-identity-changed`. It warns with the old operation ID
+and retained artifact path, leaves the installed package and launchers in place,
+and clears package admission for the next update. The original helper cannot
+recover against a replaced lease database. Matching lease identities keep the
+original recovery checks; another live update owner still prevents settlement.
+No recovery artifacts are deleted. An older installed CLI cannot obtain this fix
+from a candidate it has not yet staged; use the manual installation hop above.
+
 Rerun update finalization after the core package already changed but later
 repair work did not finish cleanly. This is the supported recovery path when
 `openclaw update` installed the new core package but post-core plugin sync,
