@@ -59,7 +59,7 @@ activation and verification. See [Keep operations recoverable](/en/gateway/team-
 A Gateway is one trust boundary. Roles and session ownership support
 collaboration; they do not isolate hostile users from each other. Keep untrusted
 code in sandboxes or remote workers. Use separate Gateways, OS users, or hosts
-for mutually untrusted teams. See [Multi-tenant hosting](/en/gateway/multi-tenant-hosting).
+for mutually untrusted teams. See [Security trust model](/en/gateway/security/trust-model).
 
 ## 1. Install under one service account
 

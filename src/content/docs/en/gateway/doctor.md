@@ -97,5 +97,5 @@ still resolves. Each entry points at the page that now holds the content.
 
 - [Gateway runbook](/en/gateway)
 - [Gateway troubleshooting](/en/gateway/troubleshooting)
-- [`openclaw status`](/en/cli/status) — local diagnosis and channel probes
+- [`openclaw status`](/en/cli/status) — local diagnosis and channel checks
 - [Configuration reference](/en/gateway/configuration-reference) — core config keys, defaults, and links to subsystem references

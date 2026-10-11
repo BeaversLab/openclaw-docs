@@ -27,7 +27,7 @@ Setup commands by intent:
 | Reset, backup, and migration | [`backup`](/en/cli/backup) · [`database`](/en/reference/database-schemas) · [`migrate`](/en/cli/migrate) · [`reset`](/en/cli/reset) · [`uninstall`](/en/cli/uninstall) · [`update`](/en/cli/update)                                                     |
 | Messaging and agents         | [`message`](/en/cli/message) · [`agent`](/en/cli/agent) · [`agents`](/en/cli/agents) · [`claws`](/en/cli/claws) · [`attach`](/en/cli/attach) · [`acp`](/en/cli/acp) · [`mcp`](/en/cli/mcp)                                                                 |
 | Health and sessions          | [`status`](/en/cli/status) · [`health`](/en/cli/health) · [`triage`](/en/cli/triage) · [`sessions`](/en/cli/sessions) · [`resume`](/en/cli/resume) · [`audit`](/en/cli/audit)                                                                           |
-| Gateway and logs             | [`fleet`](/en/cli/fleet) · [`gateway`](/en/cli/gateway) · [`logs`](/en/cli/logs) · [`system`](/en/cli/system)                                                                                                                                     |
+| Gateway and logs             | [`gateway`](/en/cli/gateway) · [`logs`](/en/cli/logs) · [`system`](/en/cli/system)                                                                                                                                                             |
 | Models and inference         | [`models`](/en/cli/models) · [`promos`](/en/cli/promos) · [`infer`](/en/cli/infer) · `capability` (alias for [`infer`](/en/cli/infer)) · [`memory`](/en/cli/memory) · [`wiki`](/en/cli/wiki)                                                            |
 | Network and nodes            | [`connect`](/en/cli/connect) · [`directory`](/en/cli/directory) · [`nodes`](/en/cli/nodes) · [`node`](/en/cli/node) · [`worker`](/en/cli/worker)                                                                                                     |
 | Runtime and sandbox          | [`approvals`](/en/cli/approvals) · `exec-policy` (see [`approvals`](/en/cli/approvals)) · [`sandbox`](/en/cli/sandbox) · [`tui`](/en/cli/tui) · `chat`/`terminal` (aliases for [`tui --local`](/en/cli/tui)) · [`browser`](/en/cli/browser)             |
@@ -204,7 +204,7 @@ openclaw [--dev] [--profile <name>] <command>
     install
     update
     verify
-    workshop list|inspect|propose-create|propose-update|revise|apply|reject|quarantine
+    workshop list|changes|show|archive|restore
     list
     info
     check
@@ -328,19 +328,6 @@ openclaw [--dev] [--profile <name>] <command>
     stop
     restart
     run
-  fleet
-    create
-    backup
-    restore
-    doctor
-    list
-    status
-    logs
-    start
-    stop
-    restart
-    upgrade
-    rm
   worktrees
     list
     create
