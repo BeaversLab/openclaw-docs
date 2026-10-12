@@ -131,6 +131,8 @@ back to OpenClaw.
 Changes to `agents.defaults.models`, agent model selection and fallbacks, and
 `models.providers` hot-apply without draining the Codex plugin. Changing Codex's
 own plugin settings still follows its plugin reload policy.
+Overlapping model or credential changes use the newer write's runtime application;
+superseding an earlier publication does not itself require a Gateway restart.
 
 Agent sandbox tool allow/deny lists under `agents.entries.<id>.tools.sandbox`
 hot-apply without restarting plugin services. Workboard reads live session facts;
@@ -212,6 +214,11 @@ Audit collection (`logging.audit.enabled`, `messages`, and `executionIdentity`)
 applies to subsequent events and admissions. Disabling collection drains already
 accepted writes; enabling it does not reconstruct earlier events or add identity
 to runs already admitted without one. Existing retention policy is unchanged.
+
+When Memory Core is selected, changes to `models.providers` reload its index
+service. Cached memory managers close before replacements use the new provider
+configuration, so correcting an embedding endpoint or credential does not require
+a Gateway restart. Existing indexes remain on disk.
 
 Operation settings apply at their next use; they do not restart in-flight runs
 or recreate provisioned workers. Approval expiry changes affect newly issued

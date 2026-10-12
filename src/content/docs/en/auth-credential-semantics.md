@@ -58,6 +58,12 @@ confirm application, the key remains saved and the response includes a restart
 warning. This preserves the configured reload policy, including disabled reloads.
 Removing a key still rejects a binding or credential that changed concurrently.
 
+Provider `apiKey` values that name an existing compatible API-key or token profile
+are profile bindings, not literal credentials. Model discovery resolves those
+bindings through the same profile classification used by chat requests, including
+provider and base-URL compatibility checks. Values that do not name a stored
+profile remain literal keys. Saving a key does not change the stored binding format.
+
 ## Setup replacements
 
 Setup replacement credentials are saved under separate profile IDs with an
@@ -204,6 +210,14 @@ its marker and inherits the shared credential only after verifying that the
 shared credential belongs to the same account. If that identity cannot be
 verified, the peer remains terminally fenced instead of inheriting another
 account.
+
+Catalog discovery fences and settles historical peers through the same
+request-owned native writer as the refreshing credential. Each peer update
+retains its captured database file identity and compares the credential inside
+the write transaction; empty agent stores do not block a shared-store refresh.
+If peer fencing fails before the provider refresh starts, claimed credentials
+are restored. Once the provider request starts, failed refreshes remain terminal
+because the provider may already have consumed the old refresh token.
 
 ## Plugin SDK OAuth validation
 
