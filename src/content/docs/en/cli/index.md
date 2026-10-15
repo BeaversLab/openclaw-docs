@@ -24,7 +24,7 @@ Setup commands by intent:
 | Area                         | Commands                                                                                                                                                                                                                              |
 | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Setup and onboarding         | [`openclaw`](/en/cli/openclaw) · [`setup`](/en/cli/setup) · [`onboard`](/en/cli/onboard) · [`configure`](/en/cli/configure) · [`config`](/en/cli/config) · [`completion`](/en/cli/completion) · [`doctor`](/en/cli/doctor) · [`dashboard`](/en/cli/dashboard) |
-| Reset, backup, and migration | [`backup`](/en/cli/backup) · [`database`](/en/reference/database-schemas) · [`migrate`](/en/cli/migrate) · [`reset`](/en/cli/reset) · [`uninstall`](/en/cli/uninstall) · [`update`](/en/cli/update)                                                     |
+| Reset, backup, and migration | [`backup`](/en/cli/backup) · [`database`](/en/cli#database) · [`migrate`](/en/cli/migrate) · [`reset`](/en/cli/reset) · [`uninstall`](/en/cli/uninstall) · [`update`](/en/cli/update)                                                                   |
 | Messaging and agents         | [`message`](/en/cli/message) · [`agent`](/en/cli/agent) · [`agents`](/en/cli/agents) · [`claws`](/en/cli/claws) · [`attach`](/en/cli/attach) · [`acp`](/en/cli/acp) · [`mcp`](/en/cli/mcp)                                                                 |
 | Health and sessions          | [`status`](/en/cli/status) · [`health`](/en/cli/health) · [`triage`](/en/cli/triage) · [`sessions`](/en/cli/sessions) · [`resume`](/en/cli/resume) · [`audit`](/en/cli/audit)                                                                           |
 | Gateway and logs             | [`gateway`](/en/cli/gateway) · [`logs`](/en/cli/logs) · [`system`](/en/cli/system)                                                                                                                                                             |
@@ -55,7 +55,7 @@ Place command-specific options after their command name, for example `openclaw s
 
 Unknown root options fail with an option error and a help hint instead of starting onboarding or the TUI.
 
-A named `--profile` replaces canonical state and config paths inherited from
+A named `--profile` replaces standard state and config paths inherited from
 another profile, including a running Gateway service. Explicitly customized
 state directories and config paths remain unchanged.
 
@@ -101,6 +101,10 @@ scripts can report the in-flight run. Failure messages are sanitized. Human-read
 diagnostics may also be written to stderr, so scripts should parse stdout and still
 check the exit status.
 
+Onboarding and setup failures retain `phase` and the top-level `message` beside
+the envelope. Use `error.message` for the shared failure description and `phase`
+for onboarding-specific recovery.
+
 ## Color palette
 
 OpenClaw uses a lobster palette for CLI output:
@@ -141,7 +145,10 @@ openclaw [--dev] [--profile <name>] <command>
     schema
     validate
   database
+    port
     preflight
+    preflight-agent
+    verify-preservation
     ownership
       status
       claim
@@ -497,6 +504,32 @@ Plugins can add additional top-level commands, such as
 [`openclaw workboard`](/en/cli/workboard) or `openclaw voicecall`.
 
 </Accordion>
+
+## Database
+
+`openclaw database` provides schema preflight, preservation verification,
+shared-state ownership, and offline workboard engine porting. See
+[database schemas](/en/reference/database-schemas) for compatibility contracts.
+
+```bash
+openclaw database port --to <postgres|sqlite> [--dry-run] [--json]
+openclaw database port --resume <manifest> [--json]
+openclaw database port --rollback <manifest> [--json]
+```
+
+Stop the Gateway and embedded agents first. `--to` selects the destination for
+all existing registered workboard stores; shared state and agent databases remain
+on SQLite. `--dry-run` checks read-only prerequisites without creating migration
+artifacts. Recovery requires the active manifest at
+`<stateDir>/recovery/database-port/manifest.json`; `--resume` and `--rollback` are
+mutually exclusive and cannot be combined with `--to` or `--dry-run`.
+
+Completed ports retain exact original captures and an archived manifest under
+`<stateDir>/recovery/database-port/<operation-id>/`. To keep later writes when
+returning to SQLite, run a new `--to sqlite` port; completed manifests are not an
+undo mechanism. Reverse-port before a raw package-manager downgrade. See the
+[port runbook](/en/reference/database-engines#port-existing-workboard-stores) for
+backup contents, interruption recovery, and restart guidance.
 
 ## Chat slash commands
 
