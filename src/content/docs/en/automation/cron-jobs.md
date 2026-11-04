@@ -4,7 +4,7 @@ summary: "Automations: scheduled jobs, webhooks, and Gmail PubSub triggers for t
 read_when:
   - Scheduling background jobs or wakeups
   - Wiring external triggers (webhooks, Gmail) into OpenClaw
-  - Deciding between heartbeat and automations for scheduled work
+  - Migrating heartbeat monitoring to ordinary scheduled jobs
 title: "Automations"
 sidebarTitle: "Automations"
 ---
@@ -59,6 +59,8 @@ This page is an index. Each section below moved to a child page, and every ancho
 
 - <a id="schedule-types"></a>[Schedule types](/en/automation/cron-jobs/schedules#schedule-types)
 - <a id="heartbeat-task-migration"></a>[Heartbeat task migration](/en/automation/cron-jobs/schedules#heartbeat-task-migration)
+- <a id="monitoring-policies"></a>[Monitoring policies](/en/automation/cron-jobs/schedules#monitoring-policies)
+- <a id="job-scratch-and-quiet-results"></a>[Job scratch and quiet results](/en/automation/cron-jobs/payloads#job-scratch-and-quiet-results)
 - <a id="stream-sources"></a>[Stream sources](/en/automation/cron-jobs/schedules#stream-sources)
 - <a id="dynamic-cadence-pacing"></a><a id="dynamic-cadence-(pacing)"></a>[Dynamic cadence (pacing)](/en/automation/cron-jobs/schedules#dynamic-cadence-pacing)
 - <a id="%2Floop-chat-shortcut"></a><a id="/loop-chat-shortcut"></a>[`/loop` chat shortcut](/en/automation/cron-jobs/schedules#%2Floop-chat-shortcut)
@@ -157,9 +159,7 @@ This page is an index. Each section below moved to a child page, and every ancho
 ## Related
 
 - [Automation](/en/automation) — all automation mechanisms at a glance
-- [Heartbeat](/en/gateway/heartbeat) — periodic main-session turns
+- [Heartbeat migration](/en/gateway/heartbeat) — migrate periodic monitoring to editable jobs
 - [Standing intents](/en/concepts/standing-intents) — event-triggered work instead of a schedule
 - [Standing orders](/en/automation/standing-orders) — the operating authority a scheduled run acts under
 - [Timezone](/en/concepts/timezone) — timezone configuration
-
-Explicitly disabling a job also cancels its active run, including a manually forced run of an already paused job. Editing its description or other display fields does not cancel that run.

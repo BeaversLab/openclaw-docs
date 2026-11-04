@@ -24,6 +24,7 @@ Looking for chat channel docs (WhatsApp/Telegram/Discord/Slack/Mattermost (plugi
 
 ## Provider docs
 
+- [Abliteration](/en/providers/abliteration)
 - [Alibaba Model Studio](/en/providers/alibaba)
 - [Amazon Bedrock](/en/providers/bedrock)
 - [Amazon Bedrock Mantle](/en/providers/bedrock-mantle)
@@ -52,6 +53,9 @@ Looking for chat channel docs (WhatsApp/Telegram/Discord/Slack/Mattermost (plugi
 - [Hugging Face (Inference)](/en/providers/huggingface)
 - [Kie AI](/en/providers/kie)
 - [Kilocode](/en/providers/kilocode)
+- [Levanto Sage (typed decisions, not chat)](/en/providers/levanto)
+- [Liquid AI (Decision models)](/en/providers/liquid-ai)
+- [Liquid Inference](/en/providers/liquid-inference)
 - [LiteLLM (unified gateway)](/en/providers/litellm)
 - [llama.cpp (managed or existing server)](/en/plugins/llama-cpp)
 - [llmman (local + hybrid local/hosted models)](/en/providers/llmman)
@@ -65,6 +69,7 @@ Looking for chat channel docs (WhatsApp/Telegram/Discord/Slack/Mattermost (plugi
 - [NVIDIA](/en/providers/nvidia)
 - [Ollama (cloud + local models)](/en/providers/ollama)
 - [Ollama Cloud](/en/providers/ollama-cloud)
+- [oMLX (local Apple Silicon models)](/en/providers/omlx)
 - [OpenAI (API + Codex)](/en/providers/openai)
 - [OpenCode](/en/providers/opencode)
 - [OpenCode Go](/en/providers/opencode-go)
@@ -74,6 +79,7 @@ Looking for chat channel docs (WhatsApp/Telegram/Discord/Slack/Mattermost (plugi
 - [Qianfan](/en/providers/qianfan)
 - [Qwen Cloud](/en/providers/qwen)
 - [Radius](/en/providers/radius)
+- [Requesty (unified router)](/en/providers/requesty)
 - [Runway](/en/providers/runway)
 - [SenseAudio](/en/providers/senseaudio)
 - [SGLang (local models)](/en/providers/sglang)

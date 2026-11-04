@@ -202,3 +202,4 @@ Full reference: [Environment variables](/en/help/environment).
 - [Personal assistant setup](/en/start/openclaw) - end-to-end guide to a dedicated number that behaves like an always-on assistant
 - [Triage](/en/cli/triage)
 - [Troubleshooting](/en/help/troubleshooting)
+- [Get support](/en/help/support) - official OpenClaw support and reporting routes

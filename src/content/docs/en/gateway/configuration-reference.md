@@ -39,7 +39,7 @@ Dedicated deep references:
 - [Configuration — gateway](/en/gateway/config-gateway) — gateway config: bind, auth, roles, Control UI, terminal, remote, nodes, TLS, and reload.
 - [Configuration — cloud worker environments](/en/gateway/config-cloud-workers) — cloud worker profiles under `cloudWorkers`, including Crabbox and static SSH development.
 - [Storage locations](/en/concepts/storage-locations) — named storage destinations under `storage.locations`, initialization, and encryption.
-- [Database engines (experimental)](/en/reference/database-engines) — SQLite defaults and PostgreSQL selection under `database`, connection SecretRefs, and store support.
+- [Database engines](/en/reference/database-engines) — SQLite defaults and PostgreSQL selection under `database`, connection SecretRefs, and store support.
 - [Configuration — hooks](/en/gateway/config-hooks) — hook config: HTTP contract, agent payload, session policy, mapping, retries, and Gmail.
 - [Configuration — environment, secrets, and includes](/en/gateway/config-secrets-env) — environment variables, secret providers, auth storage, and `$include` config splitting.
 - [Configuration — audit, logging, diagnostics, and telemetry](/en/gateway/config-observability) — observability config: audit, logging, diagnostics, and telemetry keys.
@@ -58,7 +58,7 @@ Per-channel config keys live in [Configuration - channels](/en/gateway/config-ch
 
 See [Configuration - agents](/en/gateway/config-agents) for:
 
-- `agents.defaults.*` (workspace, model, thinking, heartbeat, memory, media, skills, sandbox)
+- `agents.defaults.*` (workspace, model, thinking, memory, media, skills, sandbox)
 - `multiAgent.*` (multi-agent routing and bindings)
 - `session.*` (session lifecycle, compaction, pruning)
 - `messages.*` (message delivery, TTS, markdown rendering)

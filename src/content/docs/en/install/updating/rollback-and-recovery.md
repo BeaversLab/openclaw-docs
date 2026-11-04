@@ -31,6 +31,14 @@ or database migrations. Once state has migrated beyond the older release's
 supported format, the supported recovery is to restore a verified pre-update
 backup with its matching OpenClaw release.
 
+When an older Gateway service refuses newer-written config, run the newer
+OpenClaw binary or reinstall the service from that newer installation. Service
+startup ignores `OPENCLAW_ALLOW_OLDER_BINARY_DESTRUCTIVE_ACTIONS=1`, including
+values set in systemd's environment or unit drop-ins. For an intentional
+downgrade, restore the verified pre-update backup with its matching release as
+described below. The override is for intentional CLI recovery actions; it does
+not reverse migrations or bypass database compatibility checks.
+
 <Warning>
 Fresh shared-state databases created after tenant-container management was retired
 omit `fleet_cells`. Older revisions that require this table can reject them even
@@ -54,6 +62,8 @@ separate recovery mechanisms: cleanup does not manage package or Git runtime
 backups, and retained migration originals are not a full pre-update backup.
 Preserve every recovery location named in the update report until you have
 verified the installation.
+If a launcher backup cannot be restored, the update error names the affected
+launcher and the retained backup path.
 
 Launcher backups compare the link type and target, plus ownership when it can
 be preserved. Symlink permission bits do not block an update; macOS link modes
@@ -181,6 +191,10 @@ already-running older updater.
 While those fingerprints are tracked, the new version's Doctor also reads databases
 through private copies for its schema checks. A Doctor that fails before writing
 therefore leaves the snapshots restorable, and the package rolls back.
+A short-lived OpenClaw command holding state when Doctor starts maintenance does
+not cause that rollback: Doctor first waits for it to finish, while keeping time for
+its own work inside the update step (see
+[how updates run](/en/cli/update/how-updates-run#when-restart-is-skipped-or-fails)).
 On Windows, an eligible capture first runs the same native SQLite exclusion check
 used by rollback. This settles any retained WAL before recording write fingerprints,
 so later check cleanup is not mistaken for another writer. If another connection
@@ -420,7 +434,7 @@ The failed update retains its nonzero exit code even if the agent repairs it.
 
 - For `openclaw update --channel dev` on source checkouts, the updater auto-bootstraps `pnpm` when needed. If you see a pnpm/corepack bootstrap error, install `pnpm` manually (or re-enable `corepack`) and rerun the update.
 - Check: [Troubleshooting](/en/gateway/troubleshooting)
-- Ask in Discord: [https://discord.gg/clawd](https://discord.gg/clawd)
+- For official OpenClaw support, visit [community.openclaw.ai](https://community.openclaw.ai/).
 
 ### Unattended repair on your own inference
 

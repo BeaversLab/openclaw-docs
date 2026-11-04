@@ -198,7 +198,10 @@ OpenClaw release:
         use protected file-descriptor forwarding, including tokens saved with
         `openclaw models auth paste-token --provider anthropic`. API keys saved for
         the `anthropic` provider require an explicit account selection for CLI
-        forwarding. Existing sessions keep their account until you select another
+        forwarding. Saved subscription accounts also make configured Claude CLI
+        models available in the picker without a native `claude auth login`;
+        switching models preserves the configured Claude CLI runtime.
+        Existing sessions keep their account until you select another
         or remove its saved profile. Native-tool approvals remain under OpenClaw
         control. Schema-valid native calls pass through OpenClaw's shared
         tool policy before native approval. Isolated side-question completions
@@ -574,9 +577,9 @@ Approve the node pairing upgrade when those commands first appear.
 
 The sidebar groups rows by their Gateway or paired-node host and shows each
 host's newest bounded page as soon as that computer answers. It reconciles again
-after host-connectivity changes, when the page regains focus, and at most every
-30 seconds while visible, so Claude sessions created outside OpenClaw appear
-without a reload. A changed catalog gets a faster follow-up pass. Use **Load more
+after host-connectivity changes, when the page becomes visible, and every two
+minutes while visible, so Claude sessions created outside OpenClaw appear
+without a reload. Discovery pauses while hidden. Use **Load more
 sessions** below a catalog group to append the next page for every host that has
 more history; appended rows stay visible and are re-fetched to the same depth
 across refreshes. Catalog clients use `sessions.catalog.list`; opening a row uses
@@ -857,7 +860,6 @@ OpenClaw supports Anthropic's prompt caching feature for API-key auth.
       agents: {
         ownership: "explicit",
         defaults: {
-          heartbeat: { agentId: "research" },
           systemAgent: { agentId: "research" },
           authInheritance: { agentId: "research" },
           model: { primary: "anthropic/claude-opus-4-6" },
@@ -1075,6 +1077,31 @@ OpenClaw supports Anthropic's prompt caching feature for API-key auth.
   <Accordion title="Claude Opus 5 1M context">
     `anthropic/claude-opus-5` and its `claude-cli` variant have a 1M context
     window by default; no `params.context1m: true` needed.
+  </Accordion>
+
+  <Accordion title="Claude Code native subagents on managed turns">
+    `plugins.entries.anthropic.config.managedNativeTools` keeps selected Claude
+    Code orchestration tools on `claude-cli` turns that OpenClaw manages. It is
+    off by default. `default` applies to every agent; `agents.<id>` replaces it
+    for one agent, and `[]` opts that agent out. Accepted values: `Agent`,
+    `Workflow`.
+
+    ```json5
+    {
+      plugins: {
+        entries: {
+          anthropic: {
+            config: {
+              managedNativeTools: { default: ["Agent", "Workflow"], agents: { ops: [] } },
+            },
+          },
+        },
+      },
+    }
+    ```
+
+    Scope and limitations: [CLI backends](/en/gateway/cli-backends#keeping-claude-code-orchestration-tools-on-managed-turns).
+
   </Accordion>
 </AccordionGroup>
 

@@ -21,6 +21,7 @@ Pick a provider, authenticate, then set the default model as `provider/model`.
 
 ## Supported providers (starter set)
 
+- [Abliteration](/en/providers/abliteration)
 - [Alibaba Model Studio](/en/providers/alibaba)
 - [Amazon Bedrock](/en/providers/bedrock)
 - [Anthropic (API + Claude CLI)](/en/providers/anthropic)
@@ -43,6 +44,7 @@ Pick a provider, authenticate, then set the default model as `provider/model`.
 - [OpenRouter](/en/providers/openrouter)
 - [Qianfan](/en/providers/qianfan)
 - [Qwen](/en/providers/qwen)
+- [Requesty](/en/providers/requesty)
 - [Runway](/en/providers/runway)
 - [StepFun](/en/providers/stepfun)
 - [Synthetic](/en/providers/synthetic)
