@@ -28,6 +28,15 @@ duplicated. Existing independently managed installations keep their current
 lifecycle. Eligible app-managed Node services move to bundled Bun while keeping
 their always-on service.
 
+For local connections, the app prefers the configured `gateway.auth.token` or
+`gateway.auth.password` over `OPENCLAW_GATEWAY_TOKEN` or
+`OPENCLAW_GATEWAY_PASSWORD` inherited by the app, matching Gateway startup.
+Typed env SecretRefs use the selected provider and its allowlist. The app reads
+the referenced value from the Gateway service environment first, then the app
+environment. An invalid, denied, or missing active typed reference does not fall
+back to an unrelated credential. Only the selected authentication surface is sent
+to the Gateway. Remote connections retain their environment overrides.
+
 Before launching an app-hosted Gateway, the app saves a local authentication
 token when neither configuration nor the child environment supplies credentials
 and token authentication is selected or implicit. Existing credentials, secret
@@ -44,8 +53,17 @@ for the default state directory, `~/.config/openclaw/gateway.env`.
 The app first copies its runtime to `<state>/runtime/<runtimeBuildId>/`, where
 `<state>` is `~/.openclaw` or `~/.openclaw-<profile>`. Copies use one APFS
 directory clone when available, falling back to a file copy, and are published atomically after provenance and
-Bun checks succeed. The child and app-managed Bun service use the concrete
-build directory so each process keeps its matching package and SQLite library.
+Bun checks succeed. The child uses the concrete build directory so it keeps its
+matching package and SQLite library. An app-managed Bun service also loads its
+package and SQLite library from that directory, but runs a copy of that build's
+Bun at the stable path `<state>/runtime/service/bun`. macOS records the
+Messages Automation grant for a standalone executable by its path, so a stable
+path lets later app updates keep it. The first update that moves a service onto
+this path, including a move from Node, still needs Automation approved once for
+the new executable. Full Disk Access is also checked against the executable's
+code signature, so an update that replaces an ad-hoc or source-built Bun can
+lose it while System Settings still shows `bun` as enabled; grant it again for
+`<state>/runtime/service/bun`.
 The `runtime/current` symlink selects the runtime for the terminal CLI shim.
 The app retains the current and previous builds; older copies are removed only
 after Gateway health succeeds and no process runs from them.
@@ -76,8 +94,15 @@ PostgreSQL or the Gateway is unavailable; shared approval policy still requires
 its existing state owner.
 
 The packaged app runs the matching bundled CLI's narrow, noninteractive
-credential preparation before native admission. Gateway and node startup use
-the same migration owner. Ordinary pending migrations and validated remounts
+credential preparation before native admission. That native handoff also settles
+pending local runtime-pin migration before the app chooses its Gateway runtime.
+It preserves explicit pin data rather than forcing a new seed; a migration
+conflict prevents startup and retains recovery guidance. Gateway and node
+startup use the same credential migration owner. When an in-place app update
+leaves the previous build's app-managed Gateway service running, that Gateway
+still owns the state, so the app stops it, prepares credentials, and then
+installs the service on its own runtime. Ordinary pending migrations
+and validated remounts
 complete automatically without a manual Doctor command or a recovery prompt.
 A recognized credential-only native version-zero database can be
 extracted under exclusive custody before PostgreSQL bootstrap. Unknown data or
@@ -215,10 +240,11 @@ neither Doctor nor the CLI start fence may keep the receipt pending; the next
 CLI start/repair or `openclaw doctor` completes it.
 
 A newly installed app-managed Bun service is pinned to
-`<state>/runtime/<runtimeBuildId>/bin/bun`, with the matching package and
-`OPENCLAW_SQLITE_LIBRARY` environment. After an app update, the app reinstalls
-only services it owns whose executable is inside `<state>/runtime/` onto the new
-concrete build. A service using an executable outside that directory stays
+`<state>/runtime/service/bun`, with its matching package and
+`OPENCLAW_SQLITE_LIBRARY` loaded from `<state>/runtime/<runtimeBuildId>/`. After
+an app update, the app reinstalls only services it owns whose executable is
+inside `<state>/runtime/`, keeping the stable Bun path while selecting the new
+concrete build’s package and SQLite library. A service using an executable outside that directory stays
 unchanged, including an unpinned executable. The update window reports
 "Gateway service uses an operator-pinned runtime; update it yourself."
 

@@ -45,6 +45,20 @@ backup.
 
 ## Update implementation contract
 
+Recovery cleanup refusal diagnostics distinguish file-stat checks from generation
+checks and report whether the serving owner permitted destination mutations. These
+labels identify the failed verification stage, not the writer or root cause. Cleanup
+still retains the affected originals and requests a fresh preview; all destination
+identity, content, and live-authority checks remain unchanged.
+
+The candidate macOS app's narrow credential Doctor also completes pending local
+service-runtime intent migration before native startup selects a Gateway. This
+prevents an absent migration receipt from preserving the old seed after credential
+cutover advances shared state. The daemon migration owner keeps explicit pins and
+conflict refusals; preparation does not seed a runtime or start a service. Retry
+also reconciles intent when credential cutover already completed. The candidate
+must contain this fix; older installed updaters are unchanged.
+
 Linux managed updates run in a separate user service and slice, so an agent exec's
 descendant cleanup, Gateway restarts, and the Gateway unit's memory limit do not
 own the handoff. If its recorded helper and updater die, update status or startup
@@ -435,6 +449,22 @@ Before post-core plugin work, the updater releases its temporary Doctor database
 ownership before rechecking profile-backed requester authority. Service custody
 remains with the updater; the next Doctor acquires its own database ownership.
 This avoids refusing the updater's own policy reads during its maintenance window.
+
+Candidate Doctor inspects the managed service even after the previous Gateway
+releases its state lease. On macOS, it unloads a loaded, enabled LaunchAgent
+between KeepAlive respawns before entering maintenance and records that stop for
+finalization to restore. Unloaded or disabled services remain stopped. This fix
+must be present in the candidate; the installed updater does not need it.
+
+Candidate-side predecessor shutdown retains its durable recovery receipt inside
+Doctor's original database-write capture. The ledger writer includes its own
+native connection close before publishing that write; the following Doctor
+rechecks the database before reacquiring native custody. Unrelated writes before
+or after the receipt still refuse migration rather than becoming a new baseline.
+A completed stop keeps its recovery receipt even when that refusal prevents
+Doctor from continuing. A loaded supervised service between crashed processes
+still goes through native service-ownership inspection, even without a live lease.
+This is candidate-side behavior; it does not change an already-running older updater.
 
 After a Doctor child settles, the updater drains its retained handles for the
 affected shared-state database and revokes their schema admission, even when
@@ -1143,6 +1173,11 @@ Post-activation schema inspection preserves captured SQLite database, WAL, and s
 artifacts so the final Doctor can verify the same migration source.
 
 Database rehearsal also avoids a second full backup of each private snapshot.
+Candidate inventory reads database registrations and the installed plugin index
+in one read-only transaction instead of copying the whole shared database just
+for metadata. Sources requiring private recovery keep the snapshot path. The
+candidate worker must contain this improvement; snapshot publication, integrity
+checks, and rollback verification are unchanged.
 Update schema inspection and rehearsal use SQLite online backup with a pinned
 read transaction, so a busy Gateway can keep writing while the copy includes
 committed WAL data. Each acquisition makes one copy instead of retrying until
