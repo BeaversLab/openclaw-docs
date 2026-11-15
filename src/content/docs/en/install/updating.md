@@ -45,6 +45,68 @@ backup.
 
 ## Update implementation contract
 
+After candidate Doctor migrates runtime-pin metadata, activation reads that
+completed intent before rebinding the managed Gateway. Missing metadata at the
+start of an update no longer forces a restart of the old installation against
+newly migrated state. Existing native definition and runtime-intent checks still
+protect operator changes. This requires the installed updater to contain the fix.
+
+Starting or restarting an unchanged service does not require migrating runtime-pin
+metadata; definition rewrites still preserve existing runtime intent. Failed
+split-install activation also keeps recovery results valid when restoring the
+original service is unverified. These fixes must be in the installed updater;
+downloading a candidate cannot change the older driver's behavior.
+
+Lazy SQLite schema catalogs load through the retained updater's module loader.
+An updater that first needs a catalog after Git activation therefore reads its
+own generation, not the candidate's replacement JSON. This fix must be present
+in the running updater; a newer candidate cannot repair an older updater's
+filesystem-based loader. If an older Git updater fails with a catalog `tables`
+TypeError after activation, preserve its recovery artifacts and use the
+[manual source update procedure](/en/install/updating/update-methods#source-checkout-servers-reference-script)
+to install a corrected updater before retrying.
+
+Private plugin projection materializes eligible external data-suffixed file links
+at their logical in-package filenames before recording the final code-link
+inventory. Both the alias and its inventoried canonical target must have one of
+the case-sensitive extensions `.txt`, `.json`, `.yaml`, `.yml`, `.toml`, `.ini`,
+`.cfg`, `.csv`, or `.xml`; the target must be a non-executable regular file
+outside the alias's nearest package root with a regular inventoried `package.json`
+(symlink manifests do not establish this boundary). The existing guarded copy
+checks source identity, bounds bytes, refuses occupied destinations, and creates
+an independent private file. Each alias is included in snapshot space accounting.
+
+This is not general symlink flattening or file-content classification. Package
+scope metadata (`package.json`), relocation-owned files (`.modules.yaml` and
+`.bin` launchers), executable targets, code/native/unknown extensions, internal
+links, directory/dependency/host links, and dangling links keep their existing
+handling. A data-looking alias to a target with a code/native/unknown suffix is
+not eligible. Non-executable binary bytes (including ELF) with allowed data
+suffixes are eligible: this is a path/mode contract, not native-content detection.
+Data that requires symlink identity, shared writes, canonical-parent sibling lookup,
+or a suffix outside this list is not supported by this normalization. Files
+mislabeled as ordinary data are not identified by inspecting their contents.
+
+Projection uses only already inventoried entries and edges; it does not discover
+new paths or grant Doctor additional filesystem authority. Ordinary generation
+capture already detaches file aliases, so resource bytes and logical filenames,
+not original `lstat`, `readlink`, inode, or shared-write identity, are the supported
+data contract. Fix representation at this producer boundary instead of carrying
+exceptions through Doctor and each runtime consumer. Recognized native files
+retain separate identity and admission rules. After binding validation, a late
+alias retarget cannot redirect the copy: it uses the inventoried canonical target
+path, with source identity rechecked by the guarded copier. The runtime performing
+plugin projection must contain this fix; an older projector does not gain it from a receipt or new
+environment variable. Existing update/Doctor admission and rollback checks are
+unchanged.
+
+SQLite header-probe timeouts report the discovery path count and link to the
+manual package-manager hop. A probe batch that misses its 10-second deadline now
+splits and retries, so slow or cold storage gets an answer; a path that cannot
+answer alone still refuses the backup. Backup refusal and rollback safety are
+unchanged. These changes require the updater performing discovery to contain the
+fix; a candidate cannot change an older installed updater's probe.
+
 Recovery cleanup refusal diagnostics distinguish file-stat checks from generation
 checks and report whether the serving owner permitted destination mutations. These
 labels identify the failed verification stage, not the writer or root cause. Cleanup
@@ -254,7 +316,11 @@ contain this fix; it does not change an older migration already running.
 On macOS, reinstall and uninstall reconcile the launchd registration by service
 label even if its plist was deleted. Reinstall warns when the previous definition
 is missing; an existing plist and its private environment files remain backed up
-for rollback if activation fails.
+for rollback if activation fails. After unloading a LaunchAgent, uninstall and
+Doctor legacy cleanup try a timestamped Trash destination to preserve earlier
+Trash items. If macOS denies Trash access with EPERM or EACCES, they remove the
+unloaded plist directly instead. Other removal failures still report an error.
+This fallback requires the candidate performing cleanup to contain the fix.
 
 Update-time service reconciliation also removes the historical macOS
 `NODE_EXTRA_CA_CERTS=/etc/ssl/cert.pem` setting when the candidate installer retires
@@ -477,6 +543,12 @@ other maintenance writes can continue without requiring the database files to
 stop changing for a private copy. Inspection without that admission still uses
 an artifact-preserving copy and refuses an inconsistent source. This is
 candidate-side behavior; the installed updater runs first with its shipped checks.
+
+Captured Doctor session inspection reads a drained SQLite database in place when
+the update owns schema-maintenance custody. This avoids a whole-database scratch
+copy on a full disk. The immutable read adds no sidecars and is rejected if the
+source changes; undrained or uncustodied inspections still use a private copy.
+This is candidate-side behavior, not a change to an older installed updater.
 
 During update finalization, disposable plugin source copies and private SQLite
 inspection snapshots use the candidate helper's absolute `TMPDIR` (including
@@ -856,7 +928,30 @@ a stopped service stays stopped until repaired. On Linux, regeneration preserves
 the order of retained `PATH` entries and prepends newly added managed entries.
 Paths carried over solely from the old definition still pass the existing safety
 filters. If the definition cannot be preserved, reconciliation requires manual repair.
+Named environment-only overrides do not prevent this convergence: the updater
+rewrites the managed base definition and leaves the operator's drop-ins in place,
+including when restoring the original service after a failed update. Launcher
+overrides, environment resets, and overrides that cannot be fully inspected keep
+the service-root update route. The installed updater must contain this selection
+fix; downloading a newer candidate cannot change an older updater's initial target.
 Deployment-owned definitions retain their existing installation owner.
+
+If a service override keeps the Gateway on a different installation, only that
+installation is updated. Your shell CLI stays unchanged and may no longer support
+the shared config or plugins. Use the Gateway's CLI, or update your shell CLI to
+the same version.
+
+Reinstalling cannot replace a custom launcher override. Doctor reports this even
+when it cannot begin repairs. To change a systemd `ExecStart` override:
+
+1. Run `openclaw gateway status --deep` to find the service.
+2. Inspect it with `systemctl --user cat openclaw-gateway.service`.
+3. Update or remove the launcher override, keeping unrelated settings.
+4. Run `systemctl --user daemon-reload`. If needed, reinstall from the CLI you
+   want the Gateway to use, then check its launcher and health with `openclaw gateway status --deep`.
+
+For system services, omit `--user`; for profiles, use the reported unit name.
+These warnings require an updated CLI; an older updater still uses its old routing.
 
 An owned managed **Bun** Gateway at a different package root uses the existing
 service-root update route: only the Gateway installation advances, and the

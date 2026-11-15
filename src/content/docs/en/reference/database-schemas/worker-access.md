@@ -191,8 +191,10 @@ share a brief backoff retry for at most one second, bounded by the caller's
 deadline and cancellation. Transaction retries require a completed rollback;
 feature-schema ensures only replay their own schema work. Each retry asks the
 owner for current facts, even if physical facts arrived before version facts;
-ordinary reads do not poll. A longer publication gap
-still fails visibly. Readers never replay caller work or refresh an imported
+ordinary reads do not poll. A longer publication gap fails with the original
+PostgreSQL admission error, including when the final facts exchange exhausts
+the retry deadline. Cancellation and earlier transport failures remain distinct.
+Readers never replay caller work or refresh an imported
 snapshot, and fragment checks inside a caller's transaction do not retry.
 Schema validation and live ownership checks remain in force.
 
@@ -585,6 +587,10 @@ hot state inside the existing agent writer queue. The main thread keeps an
 immutable receipt-maintained replica, shared across short-lived caller handles.
 A cold actor hydrates entry, membership, pending-input custody, and transcript
 metadata in one statement; a cold mutation hydrates inside its own transaction.
+Pending-input hot state contains only unconsumed custody. Consumed source receipts
+remain in SQLite and use indexed exact-key reads for replay; an absent hot row
+does not prove an input is new. Consumption removes source rows from resident
+state without deleting their durable receipts or changing retention.
 Warm readers use the replica. Complete committed postimages install before the
 command acknowledgement; eviction, replacement, incomplete coverage, and unknown
 outcomes return reads to the canonical worker. Bounded transcript payload reads
