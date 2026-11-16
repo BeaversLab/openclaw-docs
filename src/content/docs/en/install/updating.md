@@ -45,6 +45,18 @@ backup.
 
 ## Update implementation contract
 
+Engine identification reads the committed SQLite engine anchor in an isolated
+read-only transaction without copying a healthy live database. Hot rollback
+journals and incomplete WAL families retain private recovery, and unreadable or
+invalid anchors still refuse admission. Artifact-preserving inspection scopes and
+offline maintenance or exclusive source locks also retain private reads so engine identification cannot
+change retained SHM bytes or borrow another process's native custody.
+This applies to conditional update
+capture, engine admission, and version-zero candidate validation probes. The
+binary performing the probe must contain this fix; a candidate cannot repair an
+older installed updater's preflight. Strict recovery captures keep their separate
+artifact-preservation requirements. No schema or worker-version bump is required.
+
 After candidate Doctor migrates runtime-pin metadata, activation reads that
 completed intent before rebinding the managed Gateway. Missing metadata at the
 start of an update no longer forces a restart of the old installation against
@@ -228,6 +240,12 @@ initiating process; only serializable options cross the migrated-update handoff.
 
 Native `openclaw update migrate` reports progress while inspecting configuration
 and schemas, capturing its database backup, and verifying the migrated schemas.
+Before reporting migration complete, the candidate checks configured and discovered
+nonheld agent databases against its schema and ownership requirements using the
+post-Doctor configuration. This includes stores startup can reopen after their
+registry entries were lost. A refusal retains the recovery backup and prevents
+the supervisor from switching to the candidate. Held deleted-agent databases stay
+outside this check and remain untouched until explicit restoration.
 Update Doctor omits the standalone pre-shutdown transcript archive warmup because
 the updater already owns the stopped-Gateway window. Required archive migrations
 and their integrity and recovery checks still run under maintenance custody.
@@ -515,6 +533,12 @@ Before post-core plugin work, the updater releases its temporary Doctor database
 ownership before rechecking profile-backed requester authority. Service custody
 remains with the updater; the next Doctor acquires its own database ownership.
 This avoids refusing the updater's own policy reads during its maintenance window.
+
+Plugin lifecycle work in update finalization and repair renews its lease from a
+worker, so a blocked main thread cannot expire the lease. Native Doctor and plugin
+install/update operations share this renewal behavior. Ownership checks,
+cancellation, and release still apply. The runtime holding the lease must contain
+this fix; a newer candidate cannot change an already-running lease owner.
 
 Candidate Doctor inspects the managed service even after the previous Gateway
 releases its state lease. On macOS, it unloads a loaded, enabled LaunchAgent
