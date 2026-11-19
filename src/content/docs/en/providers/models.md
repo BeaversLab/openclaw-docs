@@ -42,6 +42,7 @@ Pick a provider, authenticate, then set the default model as `provider/model`.
 - [OpenAI (API + Codex)](/en/providers/openai)
 - [OpenCode (Zen + Go)](/en/providers/opencode)
 - [OpenRouter](/en/providers/openrouter)
+- [Particle](/en/providers/particle)
 - [Qianfan](/en/providers/qianfan)
 - [Qwen](/en/providers/qwen)
 - [Requesty](/en/providers/requesty)

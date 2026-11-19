@@ -57,7 +57,7 @@ entry points at the page that now holds the content.
 - <a id="custom-provider-capability-declarations" />[Custom provider capability declarations](/en/gateway/config-tools/custom-providers#custom-provider-capability-declarations)
 - <a id="amazon-bedrock-discovery" />[Amazon Bedrock discovery](/en/gateway/config-tools/custom-providers#amazon-bedrock-discovery)
 - <a id="provider-examples" />[Provider examples](/en/gateway/config-tools/provider-examples#provider-examples)
-- <a id="cerebras-glm-4-7-gpt-oss" />[Cerebras (GLM 4.7 / GPT OSS)](/en/gateway/config-tools/provider-examples#cerebras-glm-4-7-gpt-oss)
+- <a id="cerebras-glm-4-7-gpt-oss" />[Cerebras (GPT OSS)](/en/gateway/config-tools/provider-examples#cerebras-gpt-oss)
 - <a id="kimi-coding" />[Kimi Coding](/en/gateway/config-tools/provider-examples#kimi-coding)
 - <a id="local-models-llama-cpp-llama-server" />[Local models (llama.cpp / llama-server)](/en/gateway/config-tools/provider-examples#local-models-llama-cpp-llama-server)
 - <a id="local-models-lm-studio" />[Local models (LM Studio)](/en/gateway/config-tools/provider-examples#local-models-lm-studio)

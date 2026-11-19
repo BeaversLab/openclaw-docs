@@ -84,7 +84,7 @@ the page that now holds the content.
 - <a id="gateway-probe-warnings" />[Gateway check warnings](/en/gateway/troubleshooting/config-validation-and-probes#gateway-probe-warnings)
 - <a id="channel-connected%2C-messages-not-flowing" /><a id="channel-connected-messages-not-flowing" />[Channel connected, messages not flowing](/en/gateway/troubleshooting/channel-delivery-and-tools#channel-connected-messages-not-flowing)
 - <a id="cron-and-heartbeat-delivery" />[Cron and heartbeat delivery](/en/gateway/troubleshooting/channel-delivery-and-tools#cron-and-heartbeat-delivery)
-- <a id="common-signatures-3" />[Common signatures (cron and heartbeat)](/en/gateway/troubleshooting/channel-delivery-and-tools#common-signatures)
+- <a id="common-signatures-3" />[Automation delivery diagnostics](/en/gateway/troubleshooting/channel-delivery-and-tools#automation-delivery)
 - <a id="node-paired%2C-tool-fails" /><a id="node-paired-tool-fails" />[Node paired, tool fails](/en/gateway/troubleshooting/channel-delivery-and-tools#node-paired-tool-fails)
 - <a id="browser-tool-fails" />[Browser tool fails](/en/gateway/troubleshooting/channel-delivery-and-tools#browser-tool-fails)
 - <a id="plugin-executable-signatures" />[Plugin / executable signatures](/en/gateway/troubleshooting/channel-delivery-and-tools#plugin-executable-signatures)

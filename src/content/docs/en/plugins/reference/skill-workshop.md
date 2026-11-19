@@ -1,13 +1,16 @@
 ---
-summary: "Captures repeatable workflows as workspace skills, with pending review, safe writes, and skill prompt refresh."
+summary: "Learned skills each agent saves from its own work."
 read_when:
   - You are installing, configuring, or auditing the skill-workshop plugin
-title: "Skill Workshop plugin"
+title: "Skill Workshop plugin reference"
 ---
 
-# Skill Workshop plugin
+<!-- Generated file. Do not edit by hand.
+Run `pnpm plugins:inventory:gen` to rebuild it. Hand-written text survives only
+between the openclaw-plugin-reference:manual-start and
+openclaw-plugin-reference:manual-end comment markers. -->
 
-Captures repeatable workflows as workspace skills, with pending review, safe writes, and skill prompt refresh.
+Learned skills each agent saves from its own work.
 
 ## Distribution
 
@@ -16,8 +19,4 @@ Captures repeatable workflows as workspace skills, with pending review, safe wri
 
 ## Surface
 
-contracts: tools
-
-## Related docs
-
-- [skill-workshop](/en/plugins/skill-workshop)
+- Contracts: `tools`
