@@ -406,7 +406,10 @@ independently of `OPENCLAW_CI_RUNNER_BACKEND` and runner-group variables.
 This release-only route does not change normal CI or nightly runner selection.
 Full Release Validation pins the reusable watcher to an immutable revision; when
 changing that definition, update both caller pins. The watcher checks out the
-caller's pinned tooling and admitted verifier. Both watchers retain their
+caller's pinned tooling and admitted verifier with full source and installs the
+selected verifier's frozen dependencies. The runner_label input is retained
+for the merged reusable-workflow interface; both release callers supply the
+Blacksmith label without provisioning Boat. Both watchers retain their
 720-minute budgets and full evidence collection.
 
 The nightly watcher also keeps its 720-minute budget. When
@@ -433,9 +436,10 @@ outputs reach GitHub can prevent automated cleanup; the provider expiry limits
 compute lifetime, but does not prove data deletion. An unconfirmed deletion
 reports its operation ID for reconciliation with `boat deletion status`.
 
-Mantis Discord and web UI actor authorization, request resolution, and ref
-validation use `ubuntu-24.04`. Their live proof jobs retain separate runtime
-placement and deadlines.
+Mantis Discord and web UI actor authorization, request resolution, ref validation,
+and ordinary proof orchestration use `ubuntu-24.04`. This preserves access for all
+authorized maintainers without requiring Boat account admission. Request-bound
+isolated proof jobs retain their separate runtime placement and deadlines.
 
 Mantis scenario dispatch and QA actor/ref validation also use `ubuntu-24.04`.
 The QA controls honor their `runner_group` input. Reusable live/E2E and QA

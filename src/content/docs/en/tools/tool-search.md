@@ -47,8 +47,9 @@ tools include a bounded expected input signature when one can be rendered,
 plus the received type at the rejected field. Short scalar previews can show
 serialization mistakes such as `"10"` instead of `10`. Sensitive fields and
 registered secrets are redacted; arbitrary text and container contents are
-withheld. Diagnostics are bounded, and invalid arguments still fail before
-the target tool executes.
+withheld. If the signature omits a field, follow the error’s `tool_describe`
+reference for the exact tool ID and input schema. Invalid arguments still fail
+before the target tool executes.
 If a call mistakes an admitted skill name for a tool ID, the error points back
 to the skill’s complete instructions instead of sending the model through tool search.
 
@@ -448,7 +449,10 @@ Deferred names are catalog entries, not directly callable functions in this
 mode. Put the result ID or name in `dispatch_action.id` and all target parameters in
 `dispatch_action.args`, including when other instructions refer to the deferred tool
 by name. A compact search signature may be enough to call it; use
-`tool_describe` when the full schema is needed.
+`tool_describe` when the full schema is needed. In the embedded harness, a direct
+call to a unique deferred catalog name returns guidance to use `dispatch_action`
+without executing or exposing the tool directly. Unknown names, names removed by
+policy, and names requiring an exact ID still return not-found errors.
 
 ### Batch search
 

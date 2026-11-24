@@ -130,6 +130,13 @@ the page topbar while the drawer is closed. Opening the drawer moves that action
 back to the rail, without a second header button. In team mode, creation opens the
 same agent picker as the rail. Native apps keep their native creation controls.
 
+The agent picker sets the sidebar's agent scope. **My sessions**, a named owner,
+**Involving me**, and **All owners** stay within the selected agent; changing the
+owner never expands the list to other agents. Sidebar pins and personal sections
+also follow that agent scope without removing their saved references. Choose
+**Show all** in the agent picker to browse across agents. Explicit rail shortcuts
+remain available across agent selections.
+
 Session activity and unread indicators stay in the leading column across owner
 filters, grouping modes, pinned sessions, and child rows. Idle rows reserve the
 same column so titles stay aligned when status changes or hover and keyboard
@@ -364,6 +371,11 @@ reordering and steering retain their normal behavior.
 Open **Pages → Systems**, or visit `/systems`, to inspect this computer, cloud
 devices, and paired devices available to your connection. Use the pin button
 beside Systems in Pages, or drag it into the rail, to keep a personal shortcut.
+
+On mobile web, opening Systems from Pages keeps the drawer open
+so you can choose from its list. Other page links still dismiss the drawer.
+Press Escape or use the drawer toggle to return to the page. Native hosts keep
+their existing navigation behavior.
 
 While Systems is open, select **Sessions** in the rail to show its contextual
 device list in place of conversations. Pages and Users remain separate views.

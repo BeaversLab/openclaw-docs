@@ -13,7 +13,9 @@ then aborts executing work promptly. This includes accepted turns still preparin
 their runtime when shutdown begins. At the next startup, an interrupted root
 execution gets one ordinary system input asking the agent to inspect current
 state and continue. Recorded yield waits stay parked when their wake source
-survives; a lost source produces a visible failure instead.
+survives. A lost source settles a sub-agent with a visible failure; its registry
+completion wakes the requester. A root with no remaining child settlement or
+delivery receives the ordinary resume input to inspect and reconcile instead.
 The transcript remains the agent's context; the Gateway does not reconstruct or
 replay the old execution. For a captured interrupted turn, the shutdown marker
 retains its original requester's bounded authentication source. Startup revalidates
@@ -21,6 +23,11 @@ that source and current session access before admitting the continuation; a shar
 session's owner or another participant cannot replace it. A revoked or unavailable
 source fails recovery rather than falling back to another person. Older markers
 without a captured source keep the session-principal recovery policy.
+
+Scheduled automation retains its cron owner, even when it runs in an ordinary
+conversation. Shutdown does not turn an interrupted occurrence into an operator
+resume request or an operator-authority failure notice. The cron scheduler owns
+its retry and next-tick behavior. Accepted user work still keeps its resume path.
 
 If the interrupted turn left a managed workspace pending, its recovery input waits
 for the workspace owner to finish preparation before starting the turn. Setup
@@ -158,7 +165,7 @@ heartbeat observer works independently of the optional V8 flight recorder.
 | Running sub-agent                                                 | Stops quietly; its root requester receives the resume input                                       |
 | Session parked in `sessions_yield` with a surviving wake source   | Keeps its recorded wait, including dashboard roots; no startup model request                      |
 | Yielded requester whose descendants were stopped                  | Receives the root resume input to reconcile their work                                            |
-| Yielded session whose external continuation source is gone        | Closes with a recorded, visible failure                                                           |
+| Yielded sub-agent whose external continuation source is gone      | Closes with a recorded, visible failure; its requester receives the child settlement              |
 | Background process                                                | Ends with the old process; its root session receives the resume input                             |
 | Already-produced outbound messages and media                      | Keep the existing delivery queue and delivery reconciliation                                      |
 | Scheduled jobs                                                    | Keep cron's own scheduling, catch-up, and interruption policy                                     |
@@ -665,7 +672,8 @@ is unchanged; Stop, cancellation, archive, and reset keep their normal meanings.
 Graceful shutdown marks the root requester of a running child, then cancels the
 child through the ordinary abort path. The child settles terminally without a
 shutdown completion announcement or a "subagent failed" notice to its parent.
-Children are not adopted or independently resumed at startup.
+Children are not adopted or independently resumed at startup. If a graceful
+restart interrupts a user’s request, the Gateway resumes it automatically.
 
 Collector children retain their captured results. If shutdown recorded a terminal
 child before its collector result finished publishing, startup completes that

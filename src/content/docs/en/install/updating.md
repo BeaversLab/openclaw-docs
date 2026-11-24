@@ -73,6 +73,12 @@ never runs automatically or settles the deferred migration: after explicit
 recovery, rerun `openclaw update repair` or `openclaw doctor --fix`, then restart
 the Gateway. Older installed CLIs do not gain this route from a newer plugin alone.
 
+Update Doctor still defers agent database path repair so the captured rollback
+inventory stays unchanged. It reads the registrations and warns only when one
+needs that repair, with the count; a registry with nothing to repair adds no
+warning to the update result. The candidate must contain this change; the
+installed updater needs no schema or protocol change.
+
 Gateway update handoff preparation and its parent-side lease reads, identity checks,
 and cleanup run in the existing handoff worker. Slow coordinator filesystem work
 does not block the serving Gateway. Parking and terminal commit still await exact
@@ -284,6 +290,10 @@ references protect their files on each cleanup pass. The candidate Gateway must
 contain this fix. It does not restore generations already deleted or discover
 references supplied only through environment variables, relative paths, or external
 symlinks. An incidental path-valued setting can conservatively retain extra files.
+
+If a retained npm marker cannot be read or parsed, cleanup reports that candidate
+and leaves its files intact. Other eligible retired npm installs are still cleaned
+during the same pass, including legacy shared-root installs.
 
 The candidate macOS app's narrow credential Doctor also completes pending local
 service-runtime intent migration before native startup selects a Gateway. This
@@ -606,6 +616,11 @@ last commit checksum are unchanged, and automatic restoration stays available.
 Any commit after admission, including one that restores identical content, still
 refuses. The Doctor of the version being installed owns this check, so updates
 from older releases benefit once the target contains it.
+Each migration also needs every other connection to its database closed. Doctor
+waits up to 5 seconds for an outside reader or probe to close before it gives
+up; a tool that keeps the database open for the whole update still stops the
+migration, and the error names the database it could not take over. Close that
+tool, then run `openclaw update repair`.
 
 The post-plugin Doctor runs for plugin changes, deferred model retirement, and
 pending deferred plugin migrations. Before each Doctor, the updater observes its
@@ -642,10 +657,15 @@ history. The candidate and installed updater must both contain this diagnostic
 fix to retain every reason there;
 older updaters still run the same repairs.
 
-Direct updates from extended-stable 2026.9.33 and 2026.9.34 are supported when
-the candidate contains the legacy database-generation adapter. Under maintenance
-custody, candidate Doctor verifies the older updater's entire physical database
-inventory and derives committed-content generations from the same observation.
+Direct updates from 2026.9.7–2026.9.9 and extended-stable
+2026.9.33–2026.9.37 are supported when the candidate contains the legacy
+database-generation adapter. Under maintenance custody, candidate Doctor
+verifies the older updater's entire physical database inventory and derives
+committed-content generations from the same observation. Unmarked rollback
+inspection reads the recorded parent and version from the captured shared-state
+image, including when the requested inventory omits that store, without reopening
+the live ledger during offline maintenance. Later unmarked updaters keep their
+committed-content format.
 Migration attribution and final settlement use those committed generations;
 receipts sent back to the older updater retain its physical fingerprint format.
 Each Doctor interval verifies its input again. Changed data, intervening commits,
@@ -1483,14 +1503,38 @@ Both pnpm 10's home-level shim and pnpm 11's `bin/` shim are supported, and the
 child PATH includes both locations. The installed updater must contain this fix;
 installing a newer candidate cannot repair an older updater's preflight.
 
-Native pnpm updates also relocate pnpm 12 launcher paths before publishing them.
-After activation, unresolved launcher targets produce a warning with repair
-guidance without rolling back the updated package. These protections require
-the installed updater to contain the fix. If an older updater left `openclaw`
-pointing into a missing `.openclaw-update-native-*` directory, reinstall the
-same version with `pnpm add -g --force openclaw@<installed-version>` using the
-same account and global directories to recreate the launcher. Back up first
-and follow the [manual package-manager procedure](/en/install/updating/update-methods#alternative-manual-npm-pnpm-or-bun).
+Native pnpm updates also relocate pnpm launcher paths before publishing them.
+Each shell word is rewritten by value, so every quoting form pnpm writes is
+covered, including the quoted `"$basedir_abs"/'<target>'` form and paths that
+contain `'`, `"`, `$`, spaces or backslashes. A staged launcher that still points
+into the update stage stops the update before the Gateway is stopped; the
+message names the direct pnpm reinstall and `openclaw triage`. After
+activation, a published launcher whose target does not exist fails the update,
+and the package transaction restores the previous launchers. A launcher format
+the updater cannot read only produces a warning with repair guidance. A pnpm
+package update also restarts the Gateway on the new version even though pnpm
+moved the package to a new versioned store directory. The updater that is already
+installed runs these steps, so updates driven by 2026.11.4, 2026.11.5 or
+2026.11.6 do not get them.
+
+When 2026.11.4 or 2026.11.5 updates a pnpm install to a release with this fix,
+it still publishes a launcher that points into its removed stage. The new
+package's Doctor, which runs during that update, repairs the launcher. Both of
+those updaters hand the later update steps to the new package, which restarts
+the Gateway on the new version. In test runs this first hop ended with a working
+CLI and Gateway.
+
+If `openclaw` still points into a missing `.openclaw-update-native-*` directory,
+the new package's Doctor and Gateway startup repair it. They rewrite a launcher
+whose `cmd-shim-target` names this installation and whose stage directory is
+gone. Only a launcher owned by the account running the repair is rewritten, and
+set-ID bits are not kept; another account's launcher is left unchanged and
+reported with the reinstall command. This automatic repair runs on macOS and Linux only; on Windows, use the
+reinstall steps below. If the Gateway is also down and no new code has run yet, reinstall the same version
+with `pnpm add -g --allow-build=openclaw openclaw@<installed-version>` using the same account and global
+directories, then run `openclaw gateway install --force` and
+`openclaw gateway restart`. Back up first and follow the
+[manual package-manager procedure](/en/install/updating/update-methods#alternative-manual-npm-pnpm-or-bun).
 
 If a pnpm-owned install fails with `IO error: not a terminal`, the installed
 updater may be triggering an interactive pnpm build-approval prompt while
