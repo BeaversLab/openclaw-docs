@@ -426,6 +426,9 @@ available from `native-command-registry`. Their synchronous compatibility APIs
 remain deprecated through 2026-12-31. See
 [session and command preparation](/en/plugins/sdk-migration#session-and-command-preparation).
 
+Official channel plugins load the published model catalog for these menus through
+`loadCommandArgMenuModelCatalog` on the private `command-surface` entrypoint.
+
 For descriptive metadata, use `listSessionEntriesAsync`. For bounded disclosure
 after awaited preparation, use
 `runtime.agent.session.withSessionEntriesAsync` (also exported by
@@ -588,6 +591,10 @@ generic environment sanitization and `assertCurrent` synchronously immediately
 before a process effect. The lease and invocation own its lifetime; saved copies
 do not survive release or cancellation. Use `redactOutput` at diagnostic egress.
 This capability is host-local and is never a wire environment override.
+
+`process-runtime` exports `AGENT_GIT_CONFIG_PARAMETERS` for the host-owned agent Git
+maintenance defaults. Native execution adapters append these parameters after
+resolving their own inherited Git configuration and environment filtering.
 
 `process-runtime` exports `createBoundedLineFramer` for bounded LF-delimited byte
 streams. It preserves incomplete lines and leaves CR handling to the consumer.
