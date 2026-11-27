@@ -266,6 +266,12 @@ and the ordered manifest hash; each child records its sequence range, counts,
 file hash, and sizes. Backups embed each chunk in its own blob. Parents without
 children keep the original single-file representation.
 
+Interrupted file-archive cleanup is discovered incrementally: each maintenance
+pass examines at most 128 archive records and 65,536 transcript rows, resuming by
+session ID and event sequence. Discovery wraps after the final archive; restarting
+the process resets its position. Newly archived transcripts are cleaned immediately.
+Cleanup still commits in batches of at most 256 rows and yields between batches.
+
 The default archive directory is
 `~/.openclaw/agents/<agentId>/sessions/cold/`, with filenames
 `<sha256>.jsonl.zst`. A database in a directory named `agent` uses its sibling
@@ -311,6 +317,11 @@ Retention remains seven days from creation, capped at 100 entries per profile,
 Restarts preserve retained entries, dismissals, and their original expiry times.
 Loading stored state does not replay browser notifications or scan transcripts
 to reconstruct old mentions.
+
+Concurrent Inbox list requests share one maintenance pass. Dismissals and other
+mutations retain FIFO ordering; a list arriving after a queued mutation joins a
+new read wave. Unchanged reads prepare only their viewer's retained targets, and
+each response checks current access before publication.
 
 ### ACP replay accounting
 
@@ -879,3 +890,12 @@ it does not automatically scan or import existing transcripts.
 
 See [usage-ranked tool index](/en/concepts/experimental-features#usage-ranked-tool-index)
 for authenticated inspection, explicit transcript import, reset, and privacy.
+
+### Pending-input endings
+
+Agent schema 43 adds nullable `end_cause` and `origin_source_json` columns to
+`session_pending_inputs` on SQLite and PostgreSQL. The forward migration marks
+legacy cancelled inputs carrying a user Stop or dismissal marker as `user-stop`,
+without changing their message bytes. Stores without the optional pending-input
+table keep it absent until first use. `origin_source_json` reserves storage for
+the original input source; this migration does not populate it.

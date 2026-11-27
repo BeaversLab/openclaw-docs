@@ -36,6 +36,9 @@ limit. Collector admission instead uses Swarm's `maxChildrenPerGroup` (default
 not raise either group limit. [Codex-native subagents](/en/plugins/codex-harness) use Codex's own scheduler
 and limits independently of these OpenClaw queues.
 
+When a session reaches its active subagent limit, web chat shows the count on
+the launch row and tells you to wait for a subagent to finish before retrying.
+
 Suspended completion deliveries do not block new work. Native subagents, ACP
 sessions, and visible sessions retain their normal active-run limits and
 authorization checks independently of the delivery backlog.
@@ -85,6 +88,13 @@ completion delivery and retry. A collector that yields retains its terminal timi
 and reply even if a later turn advances the child session. Retained routing
 metadata does not keep the child running.
 
+When a hidden sub-agent's task ends (it finishes, fails, times out or is stopped),
+OpenClaw stops the processes it still runs: `yieldMs` commands, `background: true`
+services and processes its commands left running. A sub-agent waiting in
+`sessions_yield` keeps the commands it waits on. Use `durable: true`, or start the
+service from the parent session, to keep a service after the sub-agent ends.
+Visible spawned sessions keep their processes until reset, delete or archive.
+
 A graceful Gateway shutdown records the top-level requesters of running children,
 then cancels the children through the ordinary abort path. Children that owe a
 completion retain their error outcome for delivery after startup, including when
@@ -128,7 +138,6 @@ starting a competing requester turn under the old run's operator authority. Once
 the result is committed to the requester transcript, the Gateway owns restarting
 that interrupted turn from its saved conversation; the registry does not replay
 the completion input.
-
 Completions from different operator invocations use separate settle wakes, each
 with its own retained authority. Sandbox setup failures and an unavailable Gateway
 leave uncommitted results owed for retry. Results already committed to the

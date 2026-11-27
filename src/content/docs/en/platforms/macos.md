@@ -58,6 +58,12 @@ Some releases only ship CLI, evidence, or Windows assets. If the newest release
 has no macOS app asset, use the newest one that does, or build from source with
 [macOS dev setup](/en/platforms/mac/dev-setup).
 
+If the app reports **OpenClaw app update required**, the app's bundled runtime
+cannot read the local state schema. Choose **Open Downloads** and install a
+compatible app for your Gateway's release channel. If a compatible build is not
+available yet, keep your state and credentials intact and wait for the matching
+installer. Running Doctor with the older app's CLI cannot downgrade the schema.
+
 ## First run
 
 Install and launch **OpenClaw.app**. On a fresh installation with no saved Gateway
@@ -265,7 +271,7 @@ The titlebar controls follow the app sidebar: while it is expanded, back/forward
 
 Drag the empty space beside the side-panel tabs to move the window. The full height of the header is available, and the draggable space follows tabs as they are added, removed, or resized. Tabs and header buttons keep their normal click and tab-reordering behavior.
 
-Mac tabs stay visible when a menu or hover card opens elsewhere in the dashboard. A tab's page temporarily hides only when the menu overlaps its Browser pane, or while a modal dialog or the command palette is open, and returns when the obstruction clears.
+Mac tabs stay visible when a menu or hover card opens elsewhere in the dashboard. If a menu overlaps the Browser pane or a modal dialog opens, the live page temporarily hides. The command palette leaves a dimmed, non-interactive image of the page behind it. Dismiss the palette to return to the same live page without reloading it.
 
 Drag the empty header space or title in the docked OpenClaw chat panel to move the app window. Its dock-position and close buttons remain clickable.
 

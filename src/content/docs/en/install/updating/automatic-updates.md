@@ -101,9 +101,11 @@ through the old entrypoint logs a warning when automatic updates are enabled.
 
 Look in the foreground node's stderr or its service logs for update preparation,
 busy deferral, activation, and fallback messages. If an update is deferred for
-schema migration or repair, run `openclaw update` on the node machine. Then
-restart its service with `openclaw node restart`, or relaunch the foreground
-`openclaw node run` command.
+schema migration or repair, stop the node with `openclaw node stop` (or end
+the foreground `openclaw node run` command), run `openclaw update` on the node
+machine, then start it again with `openclaw node start` or relaunch
+`openclaw node run`. A running node keeps the state database open, so
+`openclaw update` refuses while its service runs.
 
 If the launcher reports a stale `node-runtime/activation.lock`, confirm that no
 node update is running before removing the exact lock path from the message.
@@ -243,6 +245,14 @@ automatic updates, or use either opt-out below.
 Every failed apply ends the campaign so the UI does not remain on
 **Updating…**. Failures after a managed-service handoff starts are also recorded
 in the restart sentinel and surface after the Gateway returns.
+
+When automatic runs for the same target keep failing the same way, the Gateway
+backs off instead of retrying every hour. Two identical activation failures
+(Doctor, post-update verification, or Gateway startup on the new version) pause
+automatic updates for that target. Other identical failures, such as a refusal
+before anything changed, retry after 1 hour, then 2, 4, 8, and 16 hours, and then
+once a day. The Gateway log names the next attempt time. A new release, a
+successful update, or a manual `openclaw update` resets the backoff.
 
 `update.checkOnStart: false` disables all automatic update checks, feature
 statistics, and update notices, even when `update.auto.enabled` is `true`.

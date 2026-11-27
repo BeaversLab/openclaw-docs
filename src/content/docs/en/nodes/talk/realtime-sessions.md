@@ -25,6 +25,10 @@ matching `agents.defaults.voiceModel` take precedence. File transcription produc
 a final transcript after the utterance ends. The catalog marks file transcription
 ready only when a configured provider or CLI command is available.
 
+The catalog checks only the providers named by your media models when reporting
+file-transcription and voice-note readiness. Periodic refreshes still detect
+changes in credentials, provider availability, and installed transcription commands.
+
 Capture pauses during the agent response and speech playback, then resumes for
 the next utterance. Stop cancels the call's own chat run and playback. A Talk
 failure, including the two-minute answer timeout, ends capture and playback but
@@ -216,6 +220,13 @@ microphone stream granted after cancellation.
 Browser Talk acquires the microphone before creating the provider session, so
 time spent granting permission does not consume a short-lived connection token.
 If session creation fails, Talk releases the microphone before reporting the error.
+
+Composer dictation does the opposite: it creates its Gateway transcription
+session first and opens the microphone only after the Gateway accepts it.
+Stopped recordings keep their sessions until their text arrives, and each
+connection has two. When both are still transcribing, a new recording shows
+"Dictation is busy" without opening the microphone; try again once the earlier
+text appears.
 
 If OpenAI cannot transcribe an utterance, browser Talk shows the provider's error
 without ending the call or inventing a transcript. You can speak again; audio

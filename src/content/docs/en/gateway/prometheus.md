@@ -108,14 +108,14 @@ For traces, logs, OTLP push, and OpenTelemetry GenAI semantic attributes, see [O
 | `openclaw_gc_duration_seconds`                            | histogram | `kind`, `thread`                                                                          |
 | `openclaw_gateway_rpc_requests_total`                     | counter   | `method`                                                                                  |
 | `openclaw_gateway_rpc_client_requests_total`              | counter   | `method`, `client_kind`                                                                   |
-| `openclaw_models_list_requests_total`                     | counter   | `client_kind`, `source`, `view`, `scope`, `refresh`, `prepared_only`                      |
+| `openclaw_models_list_requests_total`                     | counter   | `source`, `view`, `scope`                                                                 |
 | `openclaw_sessions_list_requests_total`                   | counter   | `client_kind`, `source`, `caller_source`, `row_mode`, `filter`                            |
 | `openclaw_sessions_list_response_bytes_total`             | counter   | `client_kind`, `source`, `caller_source`, `row_mode`, `filter`, `rows_outcome`            |
 | `openclaw_sessions_list_baseline_retirements_total`       | counter   | `cause`                                                                                   |
 | `openclaw_sessions_list_base_misses_total`                | counter   | `reason`                                                                                  |
 | `openclaw_chat_history_requests_total`                    | counter   | `client_kind`, `source`, `shape`, `limit_bucket`, `outcome`                               |
 | `openclaw_chat_history_response_bytes_total`              | counter   | `client_kind`, `source`, `shape`, `limit_bucket`, `outcome`                               |
-| `openclaw_cron_list_requests_total`                       | counter   | `client_kind`, `source`, `scope`, `compact`, `page`                                       |
+| `openclaw_cron_list_requests_total`                       | counter   | `source`, `scope`, `compact`, `page`                                                      |
 | `openclaw_gateway_rpc_first_response_seconds`             | histogram | `method`                                                                                  |
 | `openclaw_gateway_rpc_response_bytes`                     | histogram | `method`                                                                                  |
 | `openclaw_gateway_ws_events_total`                        | counter   | `event`                                                                                   |
@@ -506,22 +506,25 @@ sum by (method, client_kind) (
 )
 ```
 
-`openclaw_models_list_requests_total` separately attributes catalog reads to the
-handshake's canonical client kind, such as `openclaw-control-ui`, `openclaw-macos`,
-or `gateway-client`. `source="wire"` identifies client request frames;
-`source="internal"` identifies server-dispatched requests with an adapted response,
+`openclaw_models_list_requests_total` attributes catalog reads to `source`, `view`,
+and `scope`, with at most 40 label combinations. `source="wire"` identifies client
+request frames; `source="internal"` identifies server-dispatched requests,
 including the connection's initial model snapshot. `view` is `default`,
 `configured`, `provider-config`, `all`, or `other` for an invalid value. `scope`
 records parameter presence: `session`, then `auth-profile`, then `agent`, or
-`global` when none is supplied. `refresh` and `prepared_only` record whether the
-corresponding parameter is exactly `true`. Counts include later-rejected requests;
-scope does not describe the authorized result. No agent, session, profile,
-connection, user-agent, or display-name values are exported. Each observed label
-combination uses one sample in the existing shared cap. The method-only request
-counter and timing histograms retain their existing labels.
+`global` when none is supplied. Counts include later-rejected requests; scope
+does not describe the authorized result. No agent, session, profile, connection,
+user-agent, or display-name values are exported.
 
-`openclaw_sessions_list_requests_total` uses the same `client_kind` and `source`
-attribution for session reads. `caller_source` records the protocol's bounded
+The former `client_kind`, `refresh`, and `prepared_only` labels are omitted to
+keep the combination count within the unchanged exporter budget. Update queries
+that select these labels. Use `openclaw_gateway_rpc_client_requests_total` with
+`method="models.list"` for client attribution; detailed request-shape facts remain
+in diagnostic events. The method-only request counter and timing histograms
+retain their existing labels.
+
+`openclaw_sessions_list_requests_total` records the canonical handshake
+`client_kind` and the same `source` attribution for session reads. `caller_source` records the protocol's bounded
 caller tag (`sidebar`, `dashboard`, `activity`, `sessions-page`, `chat-pane`,
 `agent-roster`, `command-palette`, or `skill-workshop`); missing or unknown tags
 become `unspecified`. `row_mode` is `full` when omitted, `compact`, `dashboard`,
@@ -582,14 +585,26 @@ framing or compression, without another serialization or per-row work. No cursor
 offset, identifier, text, or raw limit values become labels; each observed
 combination uses one sample in the shared cap.
 
-`openclaw_cron_list_requests_total` uses the same `client_kind` and `source`
-attribution for cron reads. `scope` records parameter presence: `session` when
-`sessionKey` is supplied, then `agent` for `agentId`, otherwise `global`.
-`compact` records whether the parameter is exactly `true`; `page` is `append`
-for a positive numeric offset and `first` otherwise. Counts include
-later-rejected requests; scope does not describe the authorized result. No
-session, agent, query, or offset values are exported. Each observed combination
-uses one sample in the existing shared cap.
+`openclaw_cron_list_requests_total` uses `source`, `scope`, `compact`, and `page`,
+with at most 24 label combinations. `source` has the same meaning as for model
+catalog reads. `scope` records parameter presence: `session` when `sessionKey` is
+supplied, then `agent` for `agentId`, otherwise `global`. `compact` records whether
+the parameter is exactly `true`; `page` is `append` for a positive numeric offset
+and `first` otherwise. Counts include later-rejected requests; scope does not
+describe the authorized result. No session, agent, query, or offset values are
+exported. The former `client_kind` label is omitted; use
+`openclaw_gateway_rpc_client_requests_total{method="cron.list"}` for client
+attribution. Each observed combination uses one sample in the existing budget.
+
+Queue metrics use a closed `lane` vocabulary: `main`, `system-agent`,
+`system-agent-inference`, `cron`, `cron-nested`, `hook-dispatch`, `background`,
+`restart-recovery`, `subagent`, `active-memory`, `nested`, `session`, `cli`,
+`context-engine-turn-maintenance`, `dreaming-narrative`, `voice`, `talk`,
+`workboard`, `facetime`, and `unknown`. Scoped suffixes are omitted and custom
+prefixes become `unknown`; full lane identities remain in diagnostic events.
+`openclaw_queue_lane_size` reports the last observed individual lane depth within
+a class, not the sum of all lanes. `openclaw_queue_lane_wait_seconds` combines all
+wait observations in that class. Existing metric names and budgets are unchanged.
 
 Outcome totals aggregate by phase and outcome without a
 method dimension. Each method with all four timings, both byte histograms, and the exclusive-sample counter occupies eight aggregate
@@ -1405,6 +1420,51 @@ OpenTelemetry's `openclaw.gc.duration_ms` uses the corresponding
 `openclaw.gc.kind`, `openclaw.gc.thread`, and optional `openclaw.gc.worker_slot`
 attributes.
 
+## Plugin metric families
+
+Enabling Prometheus alone exports core metrics, not every plugin's metrics. To add a plugin's counters, gauges, and histograms to the same scrape, set `plugins.entries.<id>.allowMetrics` to `true` for **that plugin**. If omitted or `false`, its `api.metrics` is undefined. Other plugins are unaffected.
+
+```json5
+{
+  plugins: {
+    entries: {
+      "diagnostics-prometheus": { enabled: true },
+      "my-plugin": { enabled: true, allowMetrics: true },
+    },
+  },
+}
+```
+
+This controls plugin-published metrics, not core measurements or a plugin's own HTTP routes. Anyone who can read the shared scrape can read these metrics; don't put secrets or personal identifiers in labels. The opt-in does not enable the plugin or an exporter. An opted-in plugin can register before Prometheus starts. Samples recorded with no listener are discarded, not buffered. Starting or stopping the exporter does not require the producer to restart. Today only `diagnostics-prometheus` exports these families.
+
+Plugin code can use the optional API:
+
+```ts
+const metrics = api.metrics?.register({
+  families: [
+    { name: "retain_total", type: "counter", help: "Retains by outcome", labels: ["outcome"] },
+    {
+      name: "recall_seconds",
+      type: "histogram",
+      help: "Recall latency",
+      buckets: [0.05, 0.1, 0.5, 1, 5],
+    },
+  ],
+});
+metrics?.counter("retain_total").inc({ outcome: "ok" });
+metrics?.histogram("recall_seconds").observe({}, 0.12);
+```
+
+- The host prefixes every family with `openclaw_plugin_<plugin id>_`; non `[a-z0-9_]` characters in the id become `_`. The example above exports `openclaw_plugin_my_plugin_retain_total` for a plugin with id `my-plugin`. Two plugins cannot register the same exported name, and a histogram also reserves its `_bucket`, `_sum` and `_count` names, so no other family (from the same plugin or another) can use them.
+- Names match `[a-z][a-z0-9_]*`, counters end in `_total`, label names are declared up front, and histogram buckets are finite and strictly ascending. `register()` throws on an invalid declaration, so the error shows up when the plugin loads.
+- Every sample must carry exactly the declared labels. A sample with other labels is dropped and the plugin logger warns once per family. Label values that fail the low-cardinality policy (`[A-Za-z0-9_.:-]`, up to 120 characters) are exported as `other`.
+- Plugin families use the shared total capacity, each family keeps at most 128 label sets, and drops appear in `openclaw_prometheus_family_series_dropped_total{family="openclaw_plugin_..."}`. All families compete for actual retained entries; unused per-family capacity is not withheld.
+- Samples are recorded only while the exporter runs and reset when it stops, like core metrics. Record from runtime paths (routes, services, hooks): the exporter starts after plugins register.
+- Samples are accepted only while the recording plugin instance is the published one. During a reload the replacement instance can register the same families without disturbing the live one, but samples it records before the reload commits (from `register()` or a service start) are dropped, and the live instance keeps recording. If the reload fails and the previous instance is restored, its families and recorders keep working without registering again.
+- Calling `register()` again from the same instance replaces that instance's families: a family left out disappears from the next scrape, and recorders from the earlier call stop recording. A family whose type, help, labels or buckets changed across a reload starts over under its new shape once the reload commits: when the previous instance is disposed, or at the first new sample, whichever comes first.
+- When a plugin instance is disposed (disabled, uninstalled, or replaced by a committed reload), the families no other instance of that plugin still declares are dropped from the scrape and their names are released. Its retained recorders stop recording, and `register()` on its retained `api.metrics` throws.
+- The TypeScript type is `NonNullable<OpenClawPluginApi["metrics"]>`; the SDK exports no separate name for it.
+
 ## Label policy
 
 <AccordionGroup>
@@ -1417,7 +1477,7 @@ attributes.
   <Accordion title="Series cap and overflow accounting">
     The exporter retains at most **16,576 aggregate label sets** across counters, gauges, and histograms. Each histogram consumes one entry, regardless of its bucket count; the rendered scrape has more time series. The WebSocket frame-size family is different: its nine cumulative scalar bounds each consume an entry, so 200 event names use 1,800 entries.
 
-    Capacity is charged only when a label set is retained. Per-family ceilings do not reserve or pre-subtract entries from the total, so a large but mostly unused family cannot starve smaller families. Existing entries continue updating after admission fills. Clearing gauges releases their actual entries for reuse.
+    Capacity is charged only when a label set is retained. Per-family ceilings do not reserve or pre-subtract entries from the total, so a large but mostly unused family cannot starve smaller families. Existing entries continue updating after admission fills. Clearing gauges or retiring plugin families releases their actual entries for reuse.
 
     The following ceilings apply per family (all names have the `openclaw_` prefix):
 
@@ -1430,13 +1490,13 @@ attributes.
     | 384 | `gc_duration_seconds` |
     | 257 | `sqlite_reader_operations_total`, `sqlite_reader_read_bytes_total` (256 operation names plus `other`) |
     | 256 | All other `gateway_rpc_*` families; `gateway_ws_event_bytes_total`, `gateway_ws_event_wire_bytes_total`, `gateway_ws_events_total`, `gateway_ws_session_event_bytes_total`, `gateway_ws_session_event_frames_total`; `heap_space_bytes` |
-    | 128 | Every other core family |
+    | 128 | Every other core or plugin family |
 
     Metric names and labels are unchanged. The former reserved allocation could exhaust its small overflow pool even while thousands of entries were unused. These ceilings retain the former effective per-family maxima, except that the two SQLite reader families now cover their owner's full bounded domain.
 
     Per-family ceilings still contain runaway label growth. Worker phases multiply `kind × request_class × phase`: 400 fully timed combinations need 2,800 phase entries, exceeding that family's 1,024-entry ceiling. The hard total cap applies even when every family is below its own ceiling. At total saturation, a new label set can be refused in any family, including a late-arriving one; no family has a guaranteed allocation.
 
-    Rejected new-series observations increment `openclaw_prometheus_series_dropped_total` and `openclaw_prometheus_family_series_dropped_total{family="..."}`. Repeated observations of the same rejected label set increment again; these counters do not count unique rejected sets. Both counters bypass admission, so saturation cannot hide drops. The family label comes only from the fixed catalog, never from diagnostic label values. The exporter also logs one warning per affected family per process, including across exporter restarts.
+    Rejected new-series observations increment `openclaw_prometheus_series_dropped_total` and `openclaw_prometheus_family_series_dropped_total{family="..."}`. Repeated observations of the same rejected label set increment again; these counters do not count unique rejected sets. Both counters bypass admission, so saturation cannot hide drops. The family label comes only from the fixed catalog or a host-admitted plugin family name, never from diagnostic label values. The exporter also logs one warning per affected family per process, including across exporter restarts.
 
     Drop counters reset when the exporter stops. Drops can reflect legitimate combinations of bounded labels as well as an upstream cardinality leak. Inspect the named family before changing its labels or budget. The exporter never raises its cap automatically; neither per-family ceilings nor the total cap promise complete coverage for arbitrarily many label combinations.
 
@@ -1467,16 +1527,16 @@ sum by (event) (rate(openclaw_gateway_ws_event_wire_bytes_total[5m]))
 histogram_quantile(0.50,
   sum by (event, le) (rate(openclaw_gateway_ws_event_frame_bytes[5m])))
 
-# Model catalog calls per minute by caller and request shape over ten minutes
-60 * sum by (client_kind, source, view, scope, refresh, prepared_only)
+# Model catalog calls per minute by source, view, and scope over ten minutes
+60 * sum by (source, view, scope)
   (rate(openclaw_models_list_requests_total[10m]))
 
 # Session list calls per minute by caller and request shape over ten minutes
 60 * sum by (client_kind, source, caller_source, row_mode, filter)
   (rate(openclaw_sessions_list_requests_total[10m]))
 
-# Cron list calls per minute by caller and request shape over ten minutes
-60 * sum by (client_kind, source, scope, compact, page)
+# Cron list calls per minute by source and request shape over ten minutes
+60 * sum by (source, scope, compact, page)
   (rate(openclaw_cron_list_requests_total[10m]))
 
 # 95th percentile first-response latency by method

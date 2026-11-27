@@ -114,19 +114,25 @@ Run a persistent, always-on OpenClaw Gateway on a Raspberry Pi. Since the Pi is 
   </Step>
 
   <Step title="Access the Control UI">
-    On your computer, get a dashboard URL from the Pi:
+    Keep the Gateway bound to loopback. On your computer, start an [SSH tunnel](/en/gateway/remote)
+    and leave it running:
 
     ```bash
-    ssh user@gateway-host 'openclaw dashboard --no-open'
+    ssh -N -L 127.0.0.1:18789:127.0.0.1:18789 user@gateway-host
     ```
 
-    Then create an SSH tunnel in another terminal:
+    In a second terminal on your computer, get a one-time pairing link from the Pi:
 
     ```bash
-    ssh -N -L 18789:127.0.0.1:18789 user@gateway-host
+    ssh user@gateway-host 'openclaw dashboard --json'
     ```
 
-    Open the printed URL in your local browser. For always-on remote access, see [Tailscale integration](/en/gateway/tailscale).
+    Open the full `browserUrl` from the JSON output in your local browser within ten minutes.
+    The tunnel provides network access, but the plain dashboard URL does not pair a new browser.
+    Treat the pairing link and JSON output as credentials: do not share them in logs or support requests.
+
+    See [Dashboard](/en/web/dashboard) for pairing details and [Tailscale integration](/en/gateway/tailscale)
+    for always-on remote access.
 
   </Step>
 </Steps>

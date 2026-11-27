@@ -142,15 +142,27 @@ The verifier reads the original leaf log and requires completed invocation
 evidence before accepting it. Changed or additional errors, incomplete logs, and
 setup failures remain blocking; aggregate causes are also checked exactly.
 
-A Q change limited to the grant ledger does not change workload identity. With
+An explicitly approved cancellation uses `cancelledStep` instead of
+`testFailures`. It matches only a completed job whose raw conclusion is
+`cancelled`; its only unsuccessful step must have that exact name and also be
+cancelled. It does not accept a different cancelled step, another failed step,
+a timed-out job, or a cancelled workflow. Ordinary failure grants never accept
+cancellation. The original job conclusion remains visible as cancelled, not passed.
+
+Plain-output native extension batches in CI retain separate invocation streams and emit a
+completion receipt only after every planned invocation and its descendants settle.
+An ordinary test failure does not skip later planned batches. Historical logs
+without that framing remain incomplete; never synthesize receipts or infer missing
+signatures from a later replay. Blank lines between a native failure header and
+its error are accepted, but unrelated errors and inconsistent counts still block.
+
+Child receipts record execution at their producer Q, not at the current Q. With
 `reuse_evidence=true`, eligible raw successful or failed child receipts may be
-reused after authentication and reevaluation under the new Q grants. Preserve
-original producer Q, run/attempt, candidate, inputs, artifact digests, and raw
-conclusions; a prior accepted verdict is not a substitute for reevaluation.
-Removing or narrowing a grant can make retained failures blocking again. Broad
-Q changes to executable scripts, workflows, actions, dependencies, or other
-workload inputs still invalidate affected workload evidence; the ledger exception
-is not a general control-only exemption.
+reused across Q after authenticating the producer and reevaluating the raw results
+under current Q grants. Preserve original producer Q, run/attempt, candidate,
+inputs, artifact digests, and raw conclusions. A prior accepted verdict is not a
+substitute for reevaluation: removing or narrowing a grant can make retained
+failures blocking again.
 
 Accepted receipts return before another child is dispatched; the required initial
 run cannot be skipped. Failed parents without final manifests can supply eligible
@@ -184,24 +196,28 @@ separate **not run** records.
 
 <a id="receipt-backed-beta-aggregate-recovery" />
 
-## Unavailable qualification evidence
+## Receipt-backed aggregate recovery
 
-Receipt-backed aggregate recovery is retired for every release profile, including
-beta. An earlier recovery aggregate is not accepted as qualification evidence.
+After a reviewed tooling-only repair, recover the original qualification receipts without
+rerunning tests or rebuilding publication artifacts:
 
-Use the ordinary authenticated qualification flow. If its required execution plan,
-admission, child evidence, or publication artifacts are unavailable, obtain fresh
-qualification for the same immutable candidate. Do not reconstruct missing evidence,
-substitute a recovery aggregate, or relabel the original parent as successful.
+```bash
+pnpm frv recover --run <original-parent-run-id> --workflow-sha <exact-trusted-main-P> --request-file <private-request-path>
+pnpm frv recover --reconcile-request <private-request-path> --json
+```
 
-Ordinary authenticated child and qualification reuse remains available when its
-required evidence exists and passes current admitted policy. A tooling-only repair
-may use a newly admitted Q without changing C; it still requires the normal successful
-qualification parent.
+The new aggregate authenticates the original admission, C/Q, complete child receipts,
+and unchanged npm/SDK/plugin/Docker bytes under current P policy. It never changes the
+original parent result. Qualification retains attempt 1; the request separately pins
+the latest terminal parent attempt. Missing evidence, changed attempts, or lost authority
+fail closed. Keep the private request: reconciliation never redispatches an uncertain
+request. Recovery supports the originally admitted beta, stable, full, or extended-stable
+publication selection; ordinary qualification remains unchanged.
 
 ## Workflow files
 
 - `.github/workflows/full-release-validation.yml`
+- `.github/workflows/full-release-receipt-recovery.yml`
 - `.github/workflows/full-release-candidate.yml`
 - `.github/workflows/openclaw-release-checks.yml`
 - `.github/workflows/openclaw-live-and-e2e-checks-reusable.yml`

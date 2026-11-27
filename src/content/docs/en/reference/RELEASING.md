@@ -150,6 +150,24 @@ status, never invented success. Already-public deferred versions require normal
 integrity/selector checks; remaining recovery needs separate authorization and
 original qualified bytes.
 
+### Beta.1 plugin trust closeout
+
+After core npm, Docker, and GitHub activation complete, both the direct publisher
+and Release Button require **Plugin NPM Trust Closeout** for beta.1. It selects
+packages from successful token-bootstrap jobs in the original npm publication,
+not from current registry contents, and runs the existing trusted-publisher
+preflight in `plugin-npm-release.yml` with the original protected tooling ref.
+Releases without bootstrapped packages need no OIDC exchange.
+
+A failed closeout leaves the release published but the overall release run red.
+Configure the listed packages' npm trusted publisher for `openclaw/openclaw`,
+workflow `plugin-npm-release.yml`, environment `npm-publish`, then rerun **only
+the failed closeout job**. If its linked preflight is waiting for environment
+approval, resolve that run first. Closeout does not publish versions, create
+placeholders, change npm trust, or automate npm login/2FA. A successful exchange
+proves current authentication only, not a subsequent publish or permanent trust
+activation. Native app and ClawHub publication remain independent.
+
 ### Watch publication
 
 After stable dispatch, keep the read-only watcher in a separate shell:
@@ -247,6 +265,9 @@ diagnostics. Local Parallels uses isolated Q harness/frozen dependencies against
 exact validated C tarballs when Q differs.
 
 Reuse preserves producer/consumer identities, inputs, coverage, and provenance.
+[Child evidence reuse](/en/reference/full-release-validation/stages) can cross Q with
+an authenticated producer and reevaluation under current Q grants. Tooling
+changes alone do not force fresh runs; whole-parent reuse still requires exact Q/P.
 [Root-request recovery](/en/reference/full-release-validation/dispatch#retain-and-reconcile-the-root-request)
 owns read-only reconciliation and explicit pre-POST resume: intended Q, empty
 uncertain-ref inventory, revalidated admission/signer, final ref verification.

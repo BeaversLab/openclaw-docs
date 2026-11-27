@@ -60,8 +60,9 @@ totals.
 The Control UI checks incomplete provider usage again after 5, 10, and 20 seconds.
 Session usage refreshes as its background projection publishes progress. Until a
 cold cache has any usage data, the page shows a loading placeholder instead of
-zero totals. Available partial totals stay visible; if a refresh fails, select
-**Refresh** to try again.
+zero totals. Session rows without a usage summary show **—**, not zero; measured
+zero values remain visible as zero. Available partial totals stay visible; if a
+refresh fails, select **Refresh** to try again.
 
 In a selected session's conversation details, search ignores case and matches
 canonically equivalent composed and decomposed Unicode text. Filtering does not
@@ -130,8 +131,9 @@ order of floating-point cost additions. SQLite summary and detail reads use reco
 and transcript mutation facts instead of recounting transcript payloads. Complete
 cost summaries and session reports remain reusable until the owning usage, transcript,
 session, pricing, profile, or visibility facts change. Unchanged detail polls do not
-reread stored rollups just because 30 seconds have passed. Cold SQLite statistics
-are read in cancellable pages;
+reread stored rollups just because 30 seconds have passed. Detailed month reads use indexed
+session ranges even when SQLite statistics describe an older, smaller cache.
+Cold SQLite statistics are read in cancellable pages;
 refresh discovery applies its batch limit before collecting those statistics.
 Hot payload reads yield between pages, with physical reads paced to 16 MiB/s where
 kernel accounting is available. A single oversized row can exceed a page budget.
